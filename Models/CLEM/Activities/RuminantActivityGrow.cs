@@ -593,9 +593,16 @@ namespace Models.CLEM.Activities
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
             ind.PreviousWeight = ind.Weight;
-            ind.Weight += energyPredictedBodyMassChange;
-            ind.Weight = Math.Max(0.0, ind.Weight);
-            ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
+
+            double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
+            double mxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
+            newWt = Math.Min(newWt, mxwt);
+            ind.Weight = newWt;
+            
+            // sped up above using locals
+            //ind.Weight += energyPredictedBodyMassChange;
+            //ind.Weight = Math.Max(0.0, ind.Weight);
+            //ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
