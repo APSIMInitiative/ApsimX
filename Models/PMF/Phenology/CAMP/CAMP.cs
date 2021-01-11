@@ -224,7 +224,7 @@ namespace Models.PMF.Phen
             double minLAR = phenology.FindChild<IFunction>("MinLAR").Value();
             double PTQhf = phenology.FindChild<IFunction>("PTQhf").Value();
             LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
-            return Tt * LARmodel.CalculateLAR(PTQ, maxLAR, minLAR, PTQhf);
+            return 0.7 * (Tt * LARmodel.CalculateLAR(PTQ, maxLAR, minLAR, PTQhf));
         }
 
         // Class constants, assumed the same for all cultivars

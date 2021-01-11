@@ -89,7 +89,7 @@ namespace Models.PMF.Phen
             LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
 
             //Calculate base phyllochron
-            Params.BasePhyllochron = 1 / LARmodel.CalculateLAR(1.0, maxLAR, minLAR, PTQhf);
+            Params.BasePhyllochron = 1.3 * (1 / LARmodel.CalculateLAR(1.0, maxLAR, minLAR, PTQhf));
 
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Base Phyllochrons)
