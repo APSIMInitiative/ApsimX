@@ -251,7 +251,8 @@ namespace UserInterface.Views
                 }
                 else if (block is CodeBlock code)
                 {
-                    textView.Buffer.InsertWithTags(ref insertPos, code.Lines.ToString(), GetTags("Code", indent + 1).Union(tags).ToArray());
+                    string text = code.Lines.ToString().TrimEnd(Environment.NewLine.ToCharArray());
+                    textView.Buffer.InsertWithTags(ref insertPos, text, GetTags("Code", indent + 1).Union(tags).ToArray());
                 }
                 else if (block is Table table)
                 {
