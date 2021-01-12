@@ -649,7 +649,7 @@ namespace UserInterface.Views
                                         linkTag.URL = linkTag.URL.Replace("[drive]", ":");
                                         linkTag.URL = linkTag.URL.Replace("../", "/");
                                     }
-                                    Process.Start(linkTag.URL);
+                                    ProcessUtilities.ProcessStart(linkTag.URL);
                                 }
                             }
                         }
