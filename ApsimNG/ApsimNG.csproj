@@ -515,6 +515,8 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\UnspecifiedTreeItem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureTreeItem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerSequence.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileResource.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityManageExternal.png" />

@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
                     }
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     string viewName = viewAttribute.ToString();
-                    if (!viewName.ToString().Contains(".GridView"))
+                    if (!viewName.ToString().Contains(".Property") & !viewName.ToString().Contains(".GridView"))
                     {
                         viewName = "UserInterface.Views.GridView";
                     }
