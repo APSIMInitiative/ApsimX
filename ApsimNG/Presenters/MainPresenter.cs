@@ -119,20 +119,42 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
+            for (int i = 0; i < Presenters1.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (Presenters1[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, true);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, true);
+                    i--;
+                }
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
+            for (int i = 0; i < presenters2.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (presenters2[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, false);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, false);
+                    i--;
+                }
             }
 
             return ok;
