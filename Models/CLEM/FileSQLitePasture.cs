@@ -293,17 +293,6 @@ namespace Models.CLEM
 
                 DataTable res = SQLiteReader.ExecuteQuery($"SELECT {columnName} FROM {columnName}_distinct;");
                 return res.AsEnumerable().Select(s => Convert.ToDouble(s[0], CultureInfo.InvariantCulture)).ToArray<double>();
-
-                //DataTable res = SQLiteReader.ExecuteQuery("SELECT DISTINCT " + columnName + " FROM " + TableName + " ORDER BY " + columnName + " ASC");
-
-                //double[] results = new double[res.Rows.Count];
-                //int i = 0;
-                //foreach (DataRow row in res.Rows)
-                //{
-                //    results[i] = Convert.ToDouble(row[0], CultureInfo.InvariantCulture);
-                //    i++;
-                //}
-                //return results;
             }
         }
 
@@ -507,8 +496,23 @@ namespace Models.CLEM
             Validator.TryValidateObject(this, validationContext, validationResults, true);
 
             if (OpenSQLiteDB() == false)
-            { 
+            {
                 throw new Exception(ErrorMessage);
+            }
+            else
+            {
+                // create warning if database is not optimised for CLEM
+                var result = SQLiteReader.ExecuteQuery("SELECT count(*) FROM sqlite_master WHERE type='index' and name='CLEM_next_growth';");
+                if (result.Rows.Count >= 0 && Convert.ToInt32(result.Rows[0][0]) != 1)
+                {
+                    // add warning
+                    string warn = $"The database [x={this.FileName.Replace("_", "\\_")}] specified in [x={this.Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
+                    if (!Warnings.Exists(warn))
+                    {
+                        Summary.WriteWarning(this, warn);
+                        Warnings.Add(warn);
+                    }
+                }
             }
 
             // get list of distinct stocking rates available in database
