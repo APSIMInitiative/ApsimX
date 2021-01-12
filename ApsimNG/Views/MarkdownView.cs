@@ -398,7 +398,9 @@ namespace UserInterface.Views
                         // This shouldn't happen.
                         throw new Exception($"Unknown cell type {row[(int)j].GetType()}.");
                 }
-                textView.Buffer.Insert(ref insertPos, "\n");
+                // Insert a newline after each row - except the last row.
+                if (i + 1 < table.Count)
+                    textView.Buffer.Insert(ref insertPos, "\n");
             }
         }
 
