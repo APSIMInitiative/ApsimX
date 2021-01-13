@@ -1583,7 +1583,7 @@
             {
               "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "Flowering",
-              "ReSetEvent": "never",
+              "ReSetEvent": "Germination",
               "Name": "FloweringDAS",
               "Children": [
                 {
