@@ -111,7 +111,7 @@
     /// * Mean age (if the animals are less than one year old )
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Stock : Model
