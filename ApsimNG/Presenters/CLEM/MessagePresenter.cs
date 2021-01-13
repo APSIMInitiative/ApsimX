@@ -129,7 +129,6 @@ namespace UserInterface.Presenters
                                 }
                             }
 
-                            string type = "Message";
                             string title = "Message";
                             switch (dr[errorCol].ToString())
                             {

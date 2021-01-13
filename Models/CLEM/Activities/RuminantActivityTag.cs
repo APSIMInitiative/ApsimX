@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -11,20 +12,19 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Mark specified individual ruminants for sale.</summary>
-    /// <summary>This activity is in addition to those identified in RuminantActivityManage</summary>
+    /// <summary>Add or remove a tag to specified individual ruminants</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
+    [Description("This activity adds or removes a specified tag to/from the specified individuals for customised filtering.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
-    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
+
+    public class RuminantActivityTag : CLEMRuminantActivityBase
     {
         private LabourRequirement labourRequirement;
 
@@ -39,15 +39,21 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Overwrite any currently recorded sale flag
+        /// Tag label
         /// </summary>
-        [Description("Overwrite existing sale flag")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool OverwriteFlag { get; set; }
+        [Description("Label of tag")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Label for tag required")]
+        public string TagLabel { get; set; }
+
+        /// <summary>
+        /// Application style - add or remove tag
+        /// </summary>
+        [Description("Add or remove tag")]
+        [System.ComponentModel.DefaultValueAttribute(TagApplicationStyle.Add)]
+        public TagApplicationStyle ApplicationStyle { get; set; }
 
         private int filterGroupsCount = 0;
         private int numberToTag = 0;
-        private bool labourShortfall = false;
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -73,7 +79,14 @@ namespace Models.CLEM.Activities
                 numberToTag = 0;
                 foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                 {
-                    numberToTag += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                    if (ApplicationStyle == TagApplicationStyle.Add)
+                    {
+                        numberToTag += herd.Filter(item).Where(a => !a.TagExists(TagLabel)).Count();
+                    }
+                    else
+                    {
+                        numberToTag += herd.Filter(item).Where(a => a.TagExists(TagLabel)).Count();
+                    }
                 }
             }
             else
@@ -82,7 +95,6 @@ namespace Models.CLEM.Activities
             }
 
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-
             double daysNeeded = 0;
             double numberUnits = 0;
             labourRequirement = requirement;
@@ -110,15 +122,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void AdjustResourcesNeededForActivity()
         {
-            labourShortfall = false;
-            if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
+            if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
             {
                 switch (labourRequirement.UnitType)
                 {
                     case LabourUnitType.Fixed:
                     case LabourUnitType.perHead:
                         numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
-                        labourShortfall = true;
                         break;
                     default:
                         throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
@@ -127,11 +137,10 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalStock")]
-        private void OnCLEMAnimalStock(object sender, EventArgs e)
+        /// <summary>
+        /// Method used to perform activity if it can occur as soon as resources are available.
+        /// </summary>
+        public override void DoActivity()
         {
             if (this.TimingOK)
             {
@@ -140,19 +149,35 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        foreach (Ruminant ind in herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Filter(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.TagExists(TagLabel): a.TagExists(TagLabel)).Take(numberToTag))
                         {
-                            this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            this.Status = ActivityStatus.Success;
+                            switch (ApplicationStyle)
+                            {
+                                case TagApplicationStyle.Add:
+                                    ind.TagAdd(TagLabel);
+                                    break;
+                                case TagApplicationStyle.Remove:
+                                    ind.TagRemove(TagLabel);
+                                    break;
+                            }
                             numberToTag--;
                         }
                     }
                     if(filterGroupsCount == 0)
                     {
-                        foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.TagExists(TagLabel) : a.TagExists(TagLabel)).Take(numberToTag))
                         {
-                            this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            this.Status = ActivityStatus.Success;
+                            switch (ApplicationStyle)
+                            {
+                                case TagApplicationStyle.Add:
+                                    ind.TagAdd(TagLabel);
+                                    break;
+                                case TagApplicationStyle.Remove:
+                                    ind.TagRemove(TagLabel);
+                                    break;
+                            }
                             numberToTag--;
                         }
                     }
@@ -166,14 +191,6 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.Ignored;
             }
-        }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            // nothing to do. This is performed in the AnimalStock event.
         }
 
         /// <summary>
@@ -222,8 +239,17 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
-        } 
+            string tagstring = "";
+            if (TagLabel != null && TagLabel != "")
+            {
+                tagstring = "<span class=\"setvalue\">" + TagLabel + "</span> ";
+            }
+            else
+            {
+                tagstring = "<span class=\"errorlink\">[NOT SET]</span> ";
+            }
+            return $"\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
+        }
         #endregion
     }
 }

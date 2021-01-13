@@ -529,4 +529,19 @@ namespace Models.CLEM
         ReserveProportion
     }
 
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum TagApplicationStyle
+    {
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Remove tag
+        /// </summary>
+        Remove
+    }
+
 }

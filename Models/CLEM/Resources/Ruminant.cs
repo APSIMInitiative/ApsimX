@@ -396,7 +396,41 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of individual tags
         /// </summary>
-        public List<string> Tags { get; set; }
+        private List<string> tags { get; set; }
+
+        /// <summary>
+        /// Check if the selected tag exists on this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        /// <returns></returns>
+        public bool TagExists(string tag)
+        {
+            return tags.Contains(tag);
+        }
+
+        /// <summary>
+        /// Add the tag to this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        public void TagAdd(string tag)
+        {
+            if (!tags.Contains(tag))
+            {
+                tags.Add(tag); 
+            }
+        }
+
+        /// <summary>
+        /// Remove the tag from this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        public void TagRemove(string tag)
+        {
+            if (tags.Contains(tag))
+            {
+                tags.Remove(tag);
+            }
+        }
 
         /// <summary>
         /// Determines if the change resson is her positive or negative
@@ -658,7 +692,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.Tags = new List<string>();
+            this.tags = new List<string>();
         }
     }
 

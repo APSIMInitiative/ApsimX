@@ -561,7 +561,7 @@ namespace Models.CLEM.Activities
             // these are old purchases that were not made. This list will be regenerated in this method.
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed);
 
-            List<Ruminant> herd = this.CurrentHerd(true).Where(a => !a.Tags.Contains("GrowOut")).ToList();
+            List<Ruminant> herd = this.CurrentHerd(true).Where(a => !a.TagExists("GrowOut")).ToList();
             List<Ruminant> growOutHerd = new List<Ruminant>();
 
             // can sell off males any month as per NABSA
@@ -575,13 +575,13 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 // tag all grow out and move to pasture specified
                 //var check = herd.Where(a => a.Weaned && (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.Tags.Contains("GrowOut"));
-                foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.Tags.Contains("GrowOut")))
+                foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.TagExists("GrowOut")))
                 {
                     ind.Location = ((ind is RuminantFemale) ? GrazeFoodStoreNameGrowOutFemales : GrazeFoodStoreNameGrowOutMales);
-                    ind.Tags.Add("GrowOut");
+                    ind.TagAdd("GrowOut");
                 }
 
-                growOutHerd = this.CurrentHerd(true).Where(a => a.Tags.Contains("GrowOut")).ToList();
+                growOutHerd = this.CurrentHerd(true).Where(a => a.TagExists("GrowOut")).ToList();
 
                 // identify those ready for sale
                 foreach (var ind in growOutHerd.Where(a => (a.Age >= ((a is RuminantMale)? MaleSellingAge: FemaleSellingAge) || a.Weight >= ((a is RuminantMale) ? MaleSellingWeight : FemaleSellingWeight)) ))
@@ -641,7 +641,7 @@ namespace Models.CLEM.Activities
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                List<RuminantFemale> preBreeders = herd.Where(a => a.Gender == Sex.Female && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.Tags.Contains("GrowOut")).Cast<RuminantFemale>().ToList();
+                List<RuminantFemale> preBreeders = herd.Where(a => a.Gender == Sex.Female && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.TagExists("GrowOut")).Cast<RuminantFemale>().ToList();
                 int numberFemaleHeifersInHerd = preBreeders.Count();
 
                 // adjust males sires
@@ -685,7 +685,7 @@ namespace Models.CLEM.Activities
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
-                                male.Tags.Remove("GrowOut");
+                                male.TagRemove("GrowOut");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -697,7 +697,7 @@ namespace Models.CLEM.Activities
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
-                                male.Tags.Remove("GrowOut");
+                                male.TagRemove("GrowOut");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -859,9 +859,9 @@ namespace Models.CLEM.Activities
                         // remove grow out heifers from grow out if of breeding in next year age
                         if (SellFemalesLikeMales & excessBreeders > 0)
                         {
-                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Tags.Contains("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
+                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.TagExists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
                             {
-                                female.Tags.Remove("GrowOut");
+                                female.TagRemove("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = GrazeFoodStoreNameBreeders;
                                 excessBreeders--;

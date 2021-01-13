@@ -163,6 +163,7 @@
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\ResourceActivityManageExternal.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityTag.cs" />
     <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
     <Compile Include="CLEM\ICategoryActivity.cs" />
