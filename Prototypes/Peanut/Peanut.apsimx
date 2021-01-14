@@ -2219,7 +2219,7 @@
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
-                      "End": "EndCanopyDevelopment",
+                      "End": "EndPodDevelopment",
                       "Name": "Vegetative",
                       "Children": [
                         {
@@ -2239,7 +2239,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "EndCanopyDevelopment",
+                      "Start": "EndPodDevelopment",
                       "End": "Maturity",
                       "Name": "Reproductive",
                       "Children": [
@@ -2271,7 +2271,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].MidGrainFilling.Target + [Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target + 1000",
+                                  "Expression": "[Phenology].LateGrainFilling.Target + [Phenology].Maturing.Target + 1000",
                                   "Name": "TTRequired",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -2280,7 +2280,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.ExpressionFunction, Models",
-                                  "Expression": "[Phenology].MidGrainFilling.ProgressThroughPhase + [Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
+                                  "Expression": "[Phenology].LateGrainFilling.ProgressThroughPhase + [Phenology].Maturing.ProgressThroughPhase",
                                   "Name": "TTComplete",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -6769,8 +6769,8 @@
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
-                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,10,11",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,4"
                   ],
                   "Name": "EarlyBunch",
                   "Children": [],
@@ -6865,9 +6865,15 @@
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.20",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.33",
                     "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
-                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,0.5,0.5,0"
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,0.5,0.5,0",
+                    "",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.X = 0, 335",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.Y = 0.6, 0.6",
+                    "",
+                    "[Leaf].SpecificArea.XYPairs.X = 0, 17, 21, 35",
+                    "[Leaf].SpecificArea.XYPairs.Y = .02, .02, .02, .02"
                   ],
                   "Name": "Florunner",
                   "Children": [],
@@ -10823,7 +10829,7 @@
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": "Cv",
                               "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Pop",
+                              "FactorToVaryLines": null,
                               "Marker": 11,
                               "MarkerSize": 0,
                               "Line": 0,
@@ -10850,8 +10856,8 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 0,
                               "MarkerSize": 0,
@@ -17692,7 +17698,7 @@
                               "ColourArgb": -16777216,
                               "FactorToVaryColours": "Cv",
                               "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": "Pop",
+                              "FactorToVaryLines": null,
                               "Marker": 11,
                               "MarkerSize": 0,
                               "Line": 0,
@@ -17730,8 +17736,8 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": -16777216,
-                              "FactorToVaryColours": "Sow",
-                              "FactorToVaryMarkers": "Cv",
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": null,
                               "FactorToVaryLines": null,
                               "Marker": 0,
                               "MarkerSize": 0,
@@ -24896,16 +24902,8 @@
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
-                                  "Key": "SowingDate",
-                                  "Value": "04/28/1988 00:00:00"
-                                },
-                                {
                                   "Key": "CultivarName",
                                   "Value": "EarlyBunch"
-                                },
-                                {
-                                  "Key": "SowingRate",
-                                  "Value": "30"
                                 },
                                 {
                                   "Key": "RowSpacing",
@@ -24914,6 +24912,14 @@
                                 {
                                   "Key": "SowingDepth",
                                   "Value": "50"
+                                },
+                                {
+                                  "Key": "SowingRate",
+                                  "Value": "30"
+                                },
+                                {
+                                  "Key": "SowingDate",
+                                  "Value": "04/28/1988 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -26199,6 +26205,84 @@
                           "TableName": "DailyReport",
                           "XFieldName": "Clock.Today",
                           "YFieldName": "Peanut.Leaf.BranchNumber",
+                          "X2FieldName": null,
+                          "Y2FieldName": null,
+                          "ShowInLegend": true,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Peanut.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": 0.0,
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "KValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Peanut.Leaf.ExtinctionCoefficient",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
