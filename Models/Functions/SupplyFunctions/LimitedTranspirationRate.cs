@@ -433,7 +433,7 @@ namespace Models.Functions.SupplyFunctions
                 hourlyPotDM = DailyGrossPhotosythesis(Plant.Leaf.LAI, Weather.Latitude,
                                                       Clock.Today.DayOfYear, Weather.Radn,
                                                       Weather.MaxT, Weather.MinT,
-                                                      Weather.CO2, Weather.DiffuseFraction, 1.0);
+                                                      Weather.CO2, -1, 1.0);
             }
         }
         //------------------------------------------------------------------------------------------------
