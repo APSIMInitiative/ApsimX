@@ -467,7 +467,7 @@ namespace ApsimNG.Views.CLEM
                 "Resource",
                 "Activity",
                 "ActivityType",
-                "Reason"
+                "Category"
             };
 
             foreach (string option in options)

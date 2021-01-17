@@ -50,6 +50,8 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -147,6 +149,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
-        }
+        } 
+        #endregion
     }
 }

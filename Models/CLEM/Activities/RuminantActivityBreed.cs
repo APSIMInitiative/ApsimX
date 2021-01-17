@@ -520,7 +520,7 @@ namespace Models.CLEM.Activities
                     ResourceTypeName = item.BankAccountName.Split('.').Last(),
                     ActivityModel = this,
                     FilterDetails = null,
-                    Reason = item.Name
+                    Category = item.Name
                 }
                 );
             }
@@ -636,7 +636,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -648,6 +648,8 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -682,6 +684,7 @@ namespace Models.CLEM.Activities
                 html += "</div>";
             }
             return html;
-        }
+        } 
+        #endregion
     }
 }

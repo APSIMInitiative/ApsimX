@@ -65,33 +65,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // make sure finance present
-            // this is performed in the assignment of bankaccount in InitialiseActivity
-
-            // make sure labour hired present
-            if(Resources.Labour().Items.Where(a => a.Hired).Count() == 0)
-            {
-                string[] memberNames = new string[] { "Hired labour" };
-                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\nThis activity will not be performed without hired labour.", memberNames));
-            }
-            // make sure pay rates present
-            if (!Resources.Labour().PricingAvailable)
-            {
-                string[] memberNames = new string[] { "Labour pay rate" };
-                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\nThis activity will not be performed without labour pay rates.", memberNames));
-            }
-            return results;
-        }
-
-        /// <summary>
         /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
         /// </summary>
         public override void AdjustResourcesNeededForActivity()
@@ -165,9 +138,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return 0;
+            return new GetDaysLabourRequiredReturnArgs(0, "Hire labour", null);
         }
 
         /// <summary>
@@ -198,7 +171,7 @@ namespace Models.CLEM.Activities
                 Required = total,
                 ResourceTypeName = this.AccountName,
                 ActivityModel = this,
-                Reason = "Hire labour"
+                Category = "Hire labour"
             }
             );
             return resourcesNeeded;
@@ -213,6 +186,36 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // make sure finance present
+            // this is performed in the assignment of bankaccount in InitialiseActivity
+
+            // make sure labour hired present
+            if (Resources.Labour().Items.Where(a => a.Hired).Count() == 0)
+            {
+                string[] memberNames = new string[] { "Hired labour" };
+                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\nThis activity will not be performed without hired labour.", memberNames));
+            }
+            // make sure pay rates present
+            if (!Resources.Labour().PricingAvailable)
+            {
+                string[] memberNames = new string[] { "Labour pay rate" };
+                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\nThis activity will not be performed without labour pay rates.", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -232,7 +235,8 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

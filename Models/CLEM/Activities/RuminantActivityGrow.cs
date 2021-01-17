@@ -364,14 +364,14 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
+                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
+                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+
                         if (ind.Intake == 0)
                         {
                             unfedcalves++;
                         }
-
-                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
                     }
 
                     // TODO: nabsa adjusts potential intake for digestability of fodder here.
@@ -413,7 +413,7 @@ namespace Models.CLEM.Activities
                 if (methaneEmissions != null)
                 {
                     // g per day -> total kg
-                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed);
+                    methaneEmissions.Add(totalMethane * 30.4 / 1000, this, breed, "Ruminant emissions");
                 }
             }
         }
@@ -770,7 +770,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -782,6 +782,8 @@ namespace Models.CLEM.Activities
         {
             return;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -807,19 +809,16 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
             {
-                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+                html += "<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present";
             }
             else
             {
                 html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
             }
             html += "</div>";
-
-
-
             return html;
-
-        }
+        } 
+        #endregion
 
     }
 }

@@ -14,7 +14,7 @@
     using System.Collections.Generic;
     using Models.Core.Run;
 
-    /// <summary>Presenter class for working with HtmlView</summary>
+    /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
     {
         /// <summary>The summary model to work with.</summary>

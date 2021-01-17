@@ -216,7 +216,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = female,
-                    Reason = "breeding stats"
+                    Category = "breeding stats"
                 };
                 OnFinalFemaleOccurred(args);
             }
@@ -240,8 +240,9 @@ namespace Models.CLEM.Resources
             {
                 Gain = 1,
                 Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
+                Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
+                RelatesToResource = ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -284,8 +285,9 @@ namespace Models.CLEM.Resources
             {
                 Loss = 1,
                 Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
+                Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
+                RelatesToResource = ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -298,7 +300,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = ind,
-                    Reason = "breeding stats"
+                    Category = "breeding stats"
                 };
                 OnFinalFemaleOccurred(args);
             }
@@ -416,6 +418,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -428,5 +431,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
     }
 }

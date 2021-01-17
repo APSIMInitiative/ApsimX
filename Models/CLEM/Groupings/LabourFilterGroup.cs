@@ -37,6 +37,8 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public double Proportion { get; set; }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -94,7 +96,8 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"filter\">Any labour</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

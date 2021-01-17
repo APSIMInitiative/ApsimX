@@ -72,9 +72,6 @@
       <Project>{a3e10705-f2bb-4182-a19c-7f63222584df}</Project>
       <Name>Models</Name>
     </ProjectReference>
-    <Reference Include="Microsoft.Win32.Registry">
-      <HintPath>../packages/Microsoft.Win32.Registry.5.0.0/lib/net461/Microsoft.Win32.Registry.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

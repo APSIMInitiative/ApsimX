@@ -37,6 +37,18 @@ namespace Models.CLEM.Resources
         public double ConditionCutOff { get; set; }
 
         /// <summary>
+        /// Calculate conception rate for a female based on condition score
+        /// </summary>
+        /// <param name="female">Female to calculate conception rate for</param>
+        /// <returns></returns>
+        public double ConceptionRate(RuminantFemale female)
+        {
+            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
+        }
+
+        #region descriptive summary 
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
@@ -58,14 +70,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        /// <summary>
-        /// Calculate conception rate for a female based on condition score
-        /// </summary>
-        /// <param name="female">Female to calculate conception rate for</param>
-        /// <returns></returns>
-        public double ConceptionRate(RuminantFemale female)
-        {
-            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
-        }
+        #endregion
     }
 }
