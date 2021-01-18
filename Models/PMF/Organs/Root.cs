@@ -21,10 +21,21 @@
     /// **Root Growth**
     /// 
     /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
-    /// The RootFrontVelocity is modified by multiplying it by the soil's XF value; which represents any resistance posed by the soil to root extension. 
+    /// The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension. 
+    /// 
+    ///     _Root Depth Increase = RootFrontVelocity x XF<sub>i</sub> x RootDepthStressFactor_
+    /// 
+    /// where i is the index of the soil layer at the rooting front.
+    ///     
     /// Root depth is also constrained by a maximum root depth.
     /// 
-    /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'.
+    /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'. For example, the Root Activity for water is calculated as
+    /// 
+    ///     _RAw<sub>i</sub> = -WaterUptake<sub>i</sub> / LiveRootWt<sub>i</sub> x LayerThickness<sub>i</sub> x ProportionThroughLayer_
+    ///     
+    /// The amount of root mass partitioned to a layer is then proportional to root activity
+    /// 
+    ///     _DMAllocated<sub>i</sub> = TotalDMAllocated x RAw<sub>i</sub> / TotalRAw_
     /// 
     /// **Dry Matter Demands**
     /// 
@@ -46,7 +57,9 @@
     ///     
     ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
     /// 
-    /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plants N demand. 
+    /// As can be seen from the above equations, the values of kNO3 and kNH4 equate to the potential fraction of each mineral N pool which can be taken up per day for wet soil when that pool has a concentration of 1 ppm.
+    /// 
+    /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plant's N demand. The former provides a means to constrain N uptake to a maximum value observed in the field for the crop as a whole.
     /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
     /// each plant instance will be allowed to take up.
     /// 
@@ -98,10 +111,12 @@
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("/d/ppm")]
         private IFunction kno3 = null;
 
         /// <summary>Link to the KNH4 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("/d/ppm")]
         private IFunction knh4 = null;
 
         /// <summary>Soil water factor for N Uptake</summary>
@@ -167,7 +182,7 @@
  
         /// <summary>The maximum daily N uptake</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("kg N/ha")]
+        [Units("kg N/ha/d")]
         private IFunction maxDailyNUptake = null;
 
         /// <summary>The kl modifier</summary>
@@ -182,10 +197,11 @@
         
         /// <summary>Dry matter efficiency function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
         private IFunction dmConversionEfficiency = null;
         
         /// <summary>Carbon concentration</summary>
-        [Units("-")]
+        [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction carbonConcentration = null;
 
