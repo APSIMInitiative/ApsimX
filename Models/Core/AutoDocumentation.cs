@@ -26,7 +26,7 @@
         {
             if (model == null || string.IsNullOrEmpty(fieldName))
                 return string.Empty;
-            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (field != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
@@ -34,7 +34,11 @@
                     return unitsAttribute.ToString();
             }
 
-            return string.Empty;
+            // Didn't find untis - try parent.
+            if (model.Parent != null)
+                return GetUnits(model.Parent, model.Name);
+            else
+                return string.Empty;
         }
 
         /// <summary>Gets the description from a declaraion.</summary>
