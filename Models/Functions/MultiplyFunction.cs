@@ -13,7 +13,7 @@ namespace Models.Functions
     /// \retval Product of value of all children of this node. Return 1 if no child.
     [Serializable]
     [Description("Returns the product of all children function values")]
-    public class MultiplyFunction : Model, IFunction, ICustomDocumentation
+    public class MultiplyFunction : Model, IFunction//, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 420,
+  "ExplorerWidth": 281,
   "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -36,7 +36,7 @@
                   "Text": "The phenology model starts from endodormancy instead of emergence in annual crops. \n\nThe phenology module goes through phases of Endodormancy, Ecodormancy, BudBurst, Flowering, FruitSet, Veraison and LeafFall. Except the LeafFall phase, which is a leaf death phase class, all other phases are parameterised using the generic phase class. The generic phase class has two main properties: target and progression. Progression defines how units were accumulated to achieve the target of the phase on daily time step. It can be defined by any function in the UI. \nThe phenology module assumes the endodormancy starts when a critical photoperiod is reached. Endodormancy is defined as the period when buds are dormant due to physiological conditions, and ecodormancy is defined when buds remain dormant due to unfavourable environmental conditions (Sarvaš, 1974).\n\nThree budburst modelling approaches were tested based on our phenology dataset (Parker et al. 2021): 1) forcing-only approach, which only describes the ecodormancy; 2) chilling-forcing, which describes the endo- and ecodormancy in sequence; 3) chilling-forcing-overlap, which describes the endo- and ecodormancy in sequence plus the effect of chilling units on forcing accumulation through implementation of an exponential decrease function. Chilling-forcing approach was selected in the current grapevine model but users can change to different approaches in the UI. In this approach, ecodormancy is induced when the chilling requirement is satisfied, and then followed by a period with forcing temperatures calculated by growing degree day until bud burst (Chuine, 2000). A negative sigmoid function was selected for simulating the responses of chilling units to different temperatures (Eq. 1) and a growing degree day approach was used for the forcing unit (Eq. 2). \n\n\t\tR_c (Ta)=1/〖1+e〗^((-((Ta-a))/b)) \t\t\t\t\tEq. 1\n\t\tR_f (Ta)={█(         0,■(&      Ta<Tb) @Ta-Tb,■(&  Ta≥ Tb))┤\t\t\tEq. 2\n\nRc(Ta) is the rate of chilling accumulation at hourly air temperature Ta. The rate is further divided by 24 to scale to daily step. a (equal to 12.4°C) and b (-3.8) are fitted parameters. Rf(Ta) is the rate of forcing accumulation. Tb (0°C) is the fitted base temperature. In APSIM, hourly temperature is interpolated based on the method described in Goudriaan and Van Laar (1994). \n\nThe flowering, fruit set and véraison phase was simulated using a thermal day (td) target. The thermal day unit was calculated by the Wang-Engle temperature response function (Eq. 3 to 5), which returns values from zero to one (Wang and Engel, 1998). Thermal day was used for all other time-dependent events and function as well, e.g. leaf appearance and expansion. \nf_T=(2〖(T_ -T_min)〗^α 〖(T_opt-T_min)〗^α-〖(T_ -T_min)〗^2α)/〖(T_opt-T_min)〗^2α    ■(&T_min≤T≤T_max )\t    \tEq. 3 \nα=ln2⁄(ln⁡[((T_max-T_min))⁄((T_opt-T_min))])\t\t\t\t\tEq. 4\nf_Tref=(2〖(T_ref-T_min)〗^α 〖(T_opt-T_min)〗^α-〖(T_ref-T_min)〗^2α)/〖(T_opt-T_min)〗^2α    ■(&T_min≤T_ref≤T_max )\tEq. 5 \n\nThe ratio between f_T  and f_Tref was returned as the final Wang-Engle thermal day unit. T is the hourly interpolated air temperature. Tmin is the minimum temperature, 4°C. Topt is the optimum temperature, 29°C. Tmax is the maximum temperature, 38°C. Tref is the reference temperature, 25°C. Hourly interpolated values were averaged to get the Wang-Engle thermal day unit for a given day. Parameters were optimized for achieving the best prediction for flowering and véraison simultaneously. \n\nAfter summer solstice, the photoperiod decreases. When photoperiod decreases to a critical value (depends on variety and was set to 13.1 h in current model based on Camargo-Alvarez et al. (2020)), the bud for the growth of the following season enter into endodormancy. However, we could not reset the whole plant phenology into endodormancy at this time, as berries are still growing. Although it would be tidy to develop two different phenological clocks, one for the bud and one for the plant in growth, we decide to work around it by resetting the plant phenology phase into endodormancy at winter pruning which was defined in the management script. The chilling accumulation between the critical photoperiod and the pruning event was captured in another function and then added to the total chill accumulation in the endodormancy phase. \n\n\n\n\r\n\r\n\r\n\r\n",
                   "Name": "Phenology",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -588,7 +588,7 @@
                   "$type": "Models.PMF.Phen.LeafDeathPhase, Models",
                   "Start": "Veraison",
                   "End": "LeafFall",
-                  "Name": "LeafDeathPhase",
+                  "Name": "CanopySenescence",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
@@ -609,8 +609,18 @@
                   "Start": "LeafFall",
                   "End": "Unused",
                   "PhaseNameToGoto": "EndoDormancy",
-                  "Name": "GotoPhase",
-                  "Children": [],
+                  "Name": "EnterDormancy",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Phenology is also rewound to the EndoDormant stage by a prun event",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false

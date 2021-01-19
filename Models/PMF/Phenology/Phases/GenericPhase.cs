@@ -14,8 +14,8 @@ namespace Models.PMF.Phen
     /// The <i>Target</i> for completion is calculated as 
     /// [Document Target]
     /// 
-    /// The <i>Progression</i> through the <i>[Name]</i> phase is calculated daily and accumulated 
-    /// until the <i>Target</i> is reached.  <i>Progression</i> is calculated using
+    /// <i>Progression</i> through the <i>[Name]</i> phase is calculated daily and accumulated 
+    /// until the <i>Target</i> is reached.  
     /// [Document Progression]
     /// </summary>
     [Serializable]

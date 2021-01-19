@@ -10,12 +10,13 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// an interpolation function that returns the [agregationMethod] of multiple sub-daily estimates of [ParentName].
-    /// Firstly hourly estimates of Xvalues are calculated using 
-    /// [Document InterpolationMethod]
-    /// The hourly Xvalues are then passed into the following <i>Response</i> function to give hourly responses using
+    /// [Name] is calculated using an interpolation fuction that returns 
+    /// the [agregationMethod] of sub-daily values of the following <i>Response</i>:
     /// [Document Response]
-    /// Finally the [agregationMethod] of the hourly response values is returned to represent daily [ParentName]:
+    /// Sub-daily estimates of Xvalues are calculated using 
+    /// [Document InterpolationMethod]
+    /// Each of these sub-daily Xvalues are then passed into the above <i>Response</i> function to 
+    /// give hourly values and the [agregationMethod] these is returned to represent daily [Name]
     /// </summary>
 
     [Serializable]
@@ -152,7 +153,7 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// the interpolation method of [Goudriaan1994] method based on Tmax, Tmin and daylength (d).  
+    /// the interpolation method of [Goudriaan1994] based on Tmax, Tmin and daylength (d).  
     /// During sunlight hours Ta is calculated each hour using a sinusoidal curve fitted to Tmin and Tmax . 
     /// After sunset Ta is calculated as an exponential decline from Ta at sunset to the Tmin at sunrise the next day.
     /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and the air temperature is assumed 

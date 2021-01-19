@@ -8,7 +8,8 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// an XY matrix (graphed below) to interpolate and return a value of Y corresponding to the Xvalue provided.
+    /// [Name] is calculated from an XY matrix (graphed below) which returns a value for Y 
+    /// interpolated from the Xvalue provided.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.XYPairsView")]
