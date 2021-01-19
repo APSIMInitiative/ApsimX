@@ -163,6 +163,7 @@
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         public IFunction RootDepthStressFactor = null;
 
         /// <summary>The maximum N concentration</summary>
