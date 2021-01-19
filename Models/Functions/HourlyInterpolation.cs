@@ -10,15 +10,19 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps
-    /// and returns either the sum or average depending on the AgrevationMethod selected
+    /// an interpolation function that returns the [agregationMethod] of multiple sub-daily estimates of [ParentName].
+    /// Firstly hourly estimates of Xvalues are calculated using 
+    /// [Document InterpolationMethod]
+    /// The hourly Xvalues are then passed into the following <i>Response</i> function to give hourly responses using
+    /// [Document Response]
+    /// Finally the [agregationMethod] of the hourly response values is returned to represent daily [ParentName]:
     /// </summary>
 
     [Serializable]
     [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class HourlyInterpolation : Model, IFunction, ICustomDocumentation
+    public class HourlyInterpolation : Model, IFunction
     {
 
         /// <summary>The met data</summary>
@@ -85,24 +89,6 @@ namespace Models.Functions
             }
 
         }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
-        }
-
     }
 
     /// <summary>
@@ -166,13 +152,11 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// calculating the hourly temperature based on Tmax, Tmin and daylength
-    /// At sunrise (th = 12 − d/2), the air temperature equals Tmin. The maximum temperature 
-    /// is reached when th equals 12 + p h solar time.The default value for p is 1.5 h.
-    /// The sinusoidal curve is followed until sunset.Then a transition takes place to an
-    /// exponential decrease, proceeding to the minimum temperature of the next day.To
-    /// plot this curve correctly, we first need the starting point, the temperature at sunset
-    /// (Tsset).
+    /// the interpolation method of [Goudriaan1994] method based on Tmax, Tmin and daylength (d).  
+    /// During sunlight hours Ta is calculated each hour using a sinusoidal curve fitted to Tmin and Tmax . 
+    /// After sunset Ta is calculated as an exponential decline from Ta at sunset to the Tmin at sunrise the next day.
+    /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and the air temperature is assumed 
+    /// to equal Tmin at this time.  Tmax is reached when Th equals 13.5. 
     /// </summary>
     [Serializable]
     [Description("calculating the hourly temperature based on Tmax, Tmin and daylength")]

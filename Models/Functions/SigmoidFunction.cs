@@ -15,7 +15,7 @@ namespace Models.Functions
     ///  [Document Xo]
     ///  b is calculated as 
     ///  [Document b]
-    ///  and Xvalue is 
+    ///  and Xvalue is calculated as
     ///  [Document XValue]
     /// </summary>
     [Serializable]

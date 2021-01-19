@@ -10,7 +10,7 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// Linear interpolation function
+    /// linear interpolation function
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
