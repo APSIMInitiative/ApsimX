@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,27 +62,30 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if (FoodStoreName == null || FoodStoreName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (FoodStoreName == null || FoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FoodStoreName + "</span>");
+                }
+                htmlWriter.Write(" will be purchased to provide ");
+                if (TargetProportion == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>: ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + (TargetProportion).ToString("0.0%") + "</span>");
+                }
+                htmlWriter.Write(" of remaining intake needed to meet current targets");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FoodStoreName + "</span>";
-            }
-            html += " will be purchased to provide ";
-            if (TargetProportion == 0)
-            {
-                html += "<span class=\"errorlink\">NOT SET</span>: ";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + (TargetProportion).ToString("0.0%") + "</span>";
-            }
-            html += " of remaining intake needed to meet current targets";
-            html += "</div>";
-            return html;
         } 
         #endregion
 

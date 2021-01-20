@@ -13,7 +13,26 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if individual is breeding sire
         /// </summary>
-        public bool IsSire { get; set; }
+        public bool Sire { get; set; }
+
+        /// <summary>
+        /// Indicates if individual is breeding sire
+        /// </summary>
+        public bool IsSire 
+        {
+            get
+            {
+                if(ReplacementBreeder)
+                {
+                    if(Age >= BreedParams.MinimumAge1stMating)
+                    {
+                        Sire = true;
+                        ReplacementBreeder = false;
+                    }
+                }
+                return Sire;
+            }
+        }
 
         /// <summary>
         /// Indicates if individual is castrated
@@ -31,7 +50,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
         {
-            IsSire = false;
+            Sire = false;
             IsDraught = false;
             IsCastrated = false;
         }
