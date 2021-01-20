@@ -70,7 +70,7 @@ namespace Models.CLEM
         /// <summary>
         /// Excess heifer sold
         /// </summary>
-        ExcessHeiferSale,
+        ExcessPreBreederSale,
         /// <summary>
         /// Excess sire sold
         /// </summary>
@@ -527,6 +527,21 @@ namespace Models.CLEM
         /// Reserve proportion
         /// </summary>
         ReserveProportion
+    }
+
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum TagApplicationStyle
+    {
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Remove tag
+        /// </summary>
+        Remove
     }
 
 }

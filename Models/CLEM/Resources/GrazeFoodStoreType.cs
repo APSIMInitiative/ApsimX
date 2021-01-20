@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -753,48 +754,51 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "This pasture has an initial green nitrogen content of ";
-            if (this.GreenNitrogen == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Not set</span>%";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
-            }
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("This pasture has an initial green nitrogen content of ");
+                if (this.GreenNitrogen == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>");
+                }
 
-            if (DecayNitrogen > 0)
-            {
-                html += " and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>";
-            }
-            html += "\n</div>";
-            if (DecayDMD > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>";
-                html += "\n</div>";
-            }
-            if (DetachRate > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month";
-                if (CarryoverDetachRate > 0)
+                if (DecayNitrogen > 0)
                 {
-                    html += " and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months";
+                    htmlWriter.Write(" and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>");
                 }
-                html += "\n</div>";
-            }
-            else
-            {
-                if (CarryoverDetachRate > 0)
+                htmlWriter.Write("\n</div>");
+                if (DecayDMD > 0)
                 {
-                    html += "\n<div class=\"activityentry\">";
-                    html += "Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months";
-                    html += "\n</div>";
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
+                    htmlWriter.Write("\n</div>");
                 }
+                if (DetachRate > 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month");
+                    if (CarryoverDetachRate > 0)
+                    {
+                        htmlWriter.Write(" and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                    }
+                    htmlWriter.Write("\n</div>");
+                }
+                else
+                {
+                    if (CarryoverDetachRate > 0)
+                    {
+                        htmlWriter.Write("\n<div class=\"activityentry\">");
+                        htmlWriter.Write("Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                        htmlWriter.Write("\n</div>");
+                    }
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>

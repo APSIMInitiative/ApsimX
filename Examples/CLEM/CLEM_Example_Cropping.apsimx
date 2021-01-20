@@ -70,10 +70,12 @@
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
+              "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "ModelSummaryStyle": 7,
               "Name": "CLEM",
               "Children": [
                 {
@@ -721,6 +723,11 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                      "CreateHTML": false,
+                      "RotateReport": false,
+                      "AutoCreateHTML": false,
+                      "SelectedTab": null,
+                      "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
                       "GroupByVariableName": null,
@@ -1435,10 +1442,12 @@
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
+              "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
               "Slope": 0.0,
               "AspectAngle": 0.0,
               "Altitude": 50.0,
+              "ModelSummaryStyle": 7,
               "Name": "CLEM",
               "Children": [
                 {
@@ -2302,6 +2311,11 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                      "CreateHTML": false,
+                      "RotateReport": false,
+                      "AutoCreateHTML": false,
+                      "SelectedTab": null,
+                      "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
                       "GroupByVariableName": null,

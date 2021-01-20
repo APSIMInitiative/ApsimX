@@ -134,7 +134,6 @@
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
         /// <summary>The nitrogen root calc switch</summary>
@@ -290,7 +289,6 @@
 
         /// <summary>Gets the live biomass.</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
         public Biomass Live
         {
             get
@@ -302,7 +300,6 @@
 
         /// <summary>Gets the dead biomass.</summary>
         [JsonIgnore]
-        [Units("g/m^2")]
         public Biomass Dead
         {
             get
@@ -341,21 +338,22 @@
 
         /// <summary>Root depth.</summary>
         [JsonIgnore]
+        [Units("mm")]
         public double Depth { get { return PlantZone.Depth; } }
 
         /// <summary>Root length.</summary>
         [JsonIgnore]
         public double Length { get { return PlantZone.RootLength; } }
 
-        /// <summary>Root area.</summary>
+        /// <summary>Root Area</summary>
         [JsonIgnore]
         public double Area { get { return PlantZone.RootArea; } }
 
-        /// <summary>Layer live</summary>
+        /// <summary>Live Biomass in each soil layer</summary>
         [JsonIgnore]
         public Biomass[] LayerLive { get { return PlantZone.LayerLive; } }
 
-        /// <summary>Layer dead.</summary>
+        /// <summary>Dead Biomass in each soil layer</summary>
         [JsonIgnore]
         public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
@@ -372,7 +370,7 @@
             }
         }
 
-        /// <summary>Gets or sets the water uptake.</summary>
+        /// <summary>Gets or sets the N uptake.</summary>
         [Units("kg/ha")]
         public double NUptake
         {
@@ -387,10 +385,12 @@
 
         /// <summary>Gets or sets the mid points of each layer</summary>
         [JsonIgnore]
+        [Units("mm")]
         public double[] LayerMidPointDepth { get; private set; }
 
-        /// <summary>Gets or sets root water content</summary>
+        /// <summary>Gets or sets relative water content for a soil layer (ie fraction between LL15 and DUL)</summary>
         [JsonIgnore]
+        [Units("0-1")]
         public double[] RWC { get; private set; }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
@@ -454,9 +454,11 @@
         }
 
         /// <summary>Gets or sets the minimum nconc.</summary>
+        [Units("g/g")]
         public double MinNconc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the critical nconc.</summary>
+        [Units("g/g")]
         public double CritNconc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total biomass</summary>
@@ -472,6 +474,7 @@
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double Nconc { get{ return MathUtilities.Divide(N,Wt,0.0);}}
         
         /// <summary>Gets or sets the n fixation cost.</summary>
