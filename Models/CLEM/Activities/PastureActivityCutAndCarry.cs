@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -418,48 +419,50 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Cut ";
-            switch (CutStyle)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#,##0.##") + "</span> kg ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">live weight</span> ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">potential intake</span> ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">remaining intake required</span> ";
-                    break;
-                default:
-                    break;
-            }
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("Cut ");
+                switch (CutStyle)
+                {
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#,##0.##") + "</span> kg ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfWeight:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">live weight</span> ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">potential intake</span> ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">remaining intake required</span> ");
+                        break;
+                    default:
+                        break;
+                }
 
-            html += "from ";
-            if (PaddockName == null || PaddockName == "")
-            {
-                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + PaddockName + "</span>";
-            }
-            html += " and carry to ";
-            if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
-            {
-                html += "<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("from ");
+                if (PaddockName == null || PaddockName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
+                }
+                htmlWriter.Write(" and carry to ");
+                if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 

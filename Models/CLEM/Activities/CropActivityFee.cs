@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -221,31 +222,33 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ";
-            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">This activity uses a category label ";
-            if (Category != null && Category != "")
-            {
-                html += "<span class=\"setvalue\">" + Category + "</span> ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span> ";
-            }
-            html += " for all transactions</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
+                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\n<div class=\"activityentry\">This activity uses a category label ");
+                if (Category != null && Category != "")
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
+                }
+                htmlWriter.Write(" for all transactions</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 

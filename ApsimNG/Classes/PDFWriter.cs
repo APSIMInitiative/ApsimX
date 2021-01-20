@@ -734,6 +734,10 @@
                     }
                 }
 
+                // Increase maxSize by a 'padding' value to allow for padding between the table cell
+                // contents and the table borders.
+                maxSize += 20;
+
                 // maxWidth is the maximum allowed width of the column. E.g. if tableObj.ColumnWidth
                 // is 50, then maxWidth is the amount of space taken up by 50 characters.
                 // maxSize, on the other hand, is the length of the longest string in the column.

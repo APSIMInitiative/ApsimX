@@ -199,6 +199,8 @@
     <Compile Include="Classes\Intellisense\OverrideCompletionData.cs" />
     <Compile Include="Classes\Intellisense\ScriptProvider.cs" />
     <Compile Include="Classes\Intellisense\VariableCompletionData.cs" />
+    <Compile Include="Classes\SubSuperscriptExtension.cs" />
+    <Compile Include="Classes\SubSuperscriptParser.cs" />
     <Compile Include="Cloud\Azure\AzureCredentialsSetup.cs" />
     <Compile Include="Cloud\Azure\AzureExtensions.cs" />
     <Compile Include="Cloud\Azure\AzureSettings.Designer.cs">
@@ -211,6 +213,8 @@
     <Compile Include="Cloud\Azure\Licence.cs" />
     <Compile Include="Cloud\DownloadOptions.cs" />
     <Compile Include="EventArguments\CustomDataEventArgs.cs" />
+    <Compile Include="Interfaces\CLEM\ICLEMPresenter.cs" />
+    <Compile Include="Interfaces\CLEM\IRefreshPresenter.cs" />
     <Compile Include="Presenters\DownloadPresenter.cs" />
     <Compile Include="Presenters\DocumentationPresenter.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -278,7 +282,6 @@
     <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
-    <Compile Include="Presenters\CLEM\ReportActivityLedgerPresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
     <Compile Include="Presenters\GraphPanelPresenter.cs" />
     <Compile Include="Presenters\ProfileGridPresenter.cs" />
@@ -303,7 +306,6 @@
     <Compile Include="Views\CLEM\ModelDetailsWrapperView.cs" />
     <Compile Include="Views\CLEM\PivotTableView.cs" />
     <Compile Include="Views\CLEM\PropertyTreeView.cs" />
-    <Compile Include="Views\CLEM\ReportActivityLedgerView.cs" />
     <Compile Include="Views\DualGridView.cs" />
     <Compile Include="Views\FactorView.cs" />
     <Compile Include="Views\GraphPanelView.cs" />
@@ -515,6 +517,9 @@
     <EmbeddedResource Include="Resources\PresenterPictures\RectangularZone.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\RuminantActivityTag.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\UnspecifiedTreeItem.png" />
+    <EmbeddedResource Include="Resources\TreeViewImages\CLEM\PastureTreeItem.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ActivityTimerSequence.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\FileResource.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\CLEM\ResourceActivityManageExternal.png" />
@@ -856,7 +861,6 @@
     <EmbeddedResource Include="Resources\TreeViewImages\AGPLucerne.png" />
     <EmbeddedResource Include="Resources\Sounds\Fail.wav" />
     <EmbeddedResource Include="Resources\TreeViewImages\SimpleGrazing.png" />
-    <EmbeddedResource Include="Presenters\CLEM\Chart.min.js" />
     <EmbeddedResource Include="Resources\TreeViewImages\AccumulateCohortExpression.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Genotype.png" />
     <EmbeddedResource Include="Resources\TreeViewImages\Animals.png" />
@@ -1290,6 +1294,9 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="WindowsBase" />
+    <Reference Include="Markdig">
+      <HintPath>..\packages\Markdig.0.22.1\lib\netstandard2.0\Markdig.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <WebReferences Include="Web References\" />

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -80,32 +81,36 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if (Metric is null || Metric == "")
-            {
-                html += "<span class=\"errorlink\">METRIC NOT SET</span>: ";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + Metric + "</span>: ";
-            }
-            if (TargetValue > 0)
-            {
-                html += "<span class=\"setvalue\">";
-                html += TargetValue.ToString("#,##0.##");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">VALUE NOT SET";
-            }
-            html += "</span> units per AE per day</div>";
 
-            if (OtherSourcesValue > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (Metric is null || Metric == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">METRIC NOT SET</span>: ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Metric + "</span>: ");
+                }
+                if (TargetValue > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(TargetValue.ToString("#,##0.##"));
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+                }
+                htmlWriter.Write("</span> units per AE per day</div>");
+
+                if (OtherSourcesValue > 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
 

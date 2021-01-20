@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,39 +61,41 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">1 ";
-            if ((Parent as IResourceType).Units != null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " " + (Parent as IResourceType).Units + " ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[UNITS NOT SET]</span>";
-            }
+                htmlWriter.Write("\n<div class=\"activityentry\">1 ");
+                if ((Parent as IResourceType).Units != null)
+                {
+                    htmlWriter.Write(" " + (Parent as IResourceType).Units + " ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
+                }
 
-            html += "<span class=\"resourcelink\">" + this.Parent.Name + "</span> ";
-            html += "= ";
+                htmlWriter.Write("<span class=\"resourcelink\">" + this.Parent.Name + "</span> ");
+                htmlWriter.Write("= ");
 
-            if (this.Factor != 0)
-            {
-                html += " <span class=\"setvalue\">" + this.Factor.ToString("#,##0.##") + "</span> ";
+                if (this.Factor != 0)
+                {
+                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Factor.ToString("#,##0.##") + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[FACTOR NOT SET]</span>");
+                }
+                htmlWriter.Write(" ");
+                if (this.Units != null)
+                {
+                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Units + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">[FACTOR NOT SET]</span>";
-            }
-            html += " ";
-            if (this.Units != null)
-            {
-                html += " <span class=\"setvalue\">" + this.Units + "</span> ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[UNITS NOT SET]</span>";
-            }
-            html += "</div>";
-            return html;
         }
 
         #endregion

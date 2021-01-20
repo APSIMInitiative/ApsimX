@@ -830,22 +830,24 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
+                {
+                    htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                }
+                else
+                {
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                }
+                htmlWriter.Write("\n</div>");
+                return htmlWriter.ToString(); 
             }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-            }
-            html += "\n</div>";
-            return html;
         } 
         #endregion
     }

@@ -128,8 +128,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            string html = "\n<div class=\"activityentry\">This activity uses a category label ";
             if (Category != null && Category != "")
             {
                 html += "<span class=\"setvalue\">" + Category + "</span> ";

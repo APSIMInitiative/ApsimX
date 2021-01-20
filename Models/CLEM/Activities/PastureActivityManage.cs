@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -612,53 +613,55 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FeedTypeName == null || FeedTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[PASTURE TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += " occupies ";
-            Land parentLand = null;
-            if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-            {
-                parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
-            }
-
-            if (UseAreaAvailable)
-            {
-                html += "the unallocated portion of ";
-            }
-            else
-            {
-                if (parentLand == null)
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (FeedTypeName == null || FeedTypeName == "")
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ";
+                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE TYPE NOT SET]</span>");
                 }
                 else
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ";
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
                 }
-            }
-            if (LandTypeNameToUse == null || LandTypeNameToUse == "")
-            {
-                html += "<span class=\"errorlink\">[LAND NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + LandTypeNameToUse + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write(" occupies ");
+                Land parentLand = null;
+                if (LandTypeNameToUse != null && LandTypeNameToUse != "")
+                {
+                    parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
+                }
 
-            html += "\n<div class=\"activityentry\">";
-            html += "The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha";
-            html += "</div>";
+                if (UseAreaAvailable)
+                {
+                    htmlWriter.Write("the unallocated portion of ");
+                }
+                else
+                {
+                    if (parentLand == null)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
+                    }
+                }
+                if (LandTypeNameToUse == null || LandTypeNameToUse == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + LandTypeNameToUse + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha");
+                htmlWriter.Write("</div>");
+
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
     }

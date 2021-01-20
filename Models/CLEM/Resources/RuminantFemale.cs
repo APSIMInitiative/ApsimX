@@ -115,6 +115,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Indicates if this female is a weaned but less than age at first mating 
+        /// </summary>
+        public bool IsPreBreeder
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating);
+            }
+        }
+
+
+        /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates
         /// </summary>
         /// <returns></returns>
@@ -230,6 +245,7 @@ namespace Models.CLEM.Resources
             // use normalised weight for age if offset provided for pre simulation allocation
             WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
             NumberOfConceptions++;
+            ReplacementBreeder = false;
         }
 
         /// <summary>

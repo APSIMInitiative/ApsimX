@@ -6,7 +6,6 @@
     using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
-    using APSIM.Shared.Utilities;
     using Models.Core;
     using Views;
 
@@ -23,7 +22,7 @@
         /// <summary>
         /// The view to use
         /// </summary>
-        private IHTMLView genericView;
+        private IMarkdownView genericView;
 
         /// <summary>
         /// The explorer
@@ -39,7 +38,7 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.genericView = view as IHTMLView;
+            this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
 
             // Just how much documentation do we want to generate?
@@ -53,54 +52,19 @@
             StringBuilder contents = new StringBuilder();
             foreach (AutoDocumentation.ITag tag in tags)
             {
-                if (tag is AutoDocumentation.Heading)
+                if (tag is AutoDocumentation.Heading heading)
                 {
-                    contents.Append("\r\n### ");
-                    contents.Append((tag as AutoDocumentation.Heading).text);
+                    contents.AppendLine();
+                    contents.Append($"### {heading.text}");
                 }
-                else if (tag is AutoDocumentation.Paragraph)
+                else if (tag is AutoDocumentation.Paragraph paragraph)
                 {
-                    contents.Append("\r\n");
-                    contents.Append((tag as AutoDocumentation.Paragraph).text);
-                    FindImagesInParagraph(tag as AutoDocumentation.Paragraph);
-                }
-            }
-
-            MarkdownDeep.Markdown markDown = new MarkdownDeep.Markdown();
-            markDown.ExtraMode = true;
-            markDown.DocumentLocation = Path.GetTempPath();
-            markDown.UrlBaseLocation = markDown.DocumentLocation;
-
-            string html = markDown.Transform(contents.ToString());
-            this.genericView.SetContents(html, false, false);
-        }
-
-        /// <summary>
-        /// For each image markdown tag in a paragraph, locate image from resource and save to temp folder.
-        /// </summary>
-        /// <param name="paragraph">The paragraph to scan.</param>
-        private void FindImagesInParagraph(AutoDocumentation.Paragraph paragraph)
-        {
-            var regEx = new Regex(@"!\[(.+)\]\((.+)\)");
-            foreach (Match match in regEx.Matches(paragraph.text))
-            {
-                var fileName = match.Groups[2].ToString();
-                var tempFileName = Path.Combine(Path.GetTempPath(), fileName);
-                bool createImage = true;
-                if (File.Exists(tempFileName))
-                {
-                    var timeSinceLastAccess = DateTime.Now - File.GetLastAccessTime(tempFileName);
-                    createImage = timeSinceLastAccess.Hours > 1;
-                }
-                if (createImage)
-                {
-                    using (FileStream file = new FileStream(tempFileName, FileMode.Create, FileAccess.Write))
-                    {
-                        var imageStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{fileName}");
-                        imageStream?.CopyTo(file);
-                    }
+                    contents.AppendLine();
+                    contents.Append(paragraph.text);
                 }
             }
+
+            this.genericView.Text = contents.ToString();
         }
 
         /// <summary>
