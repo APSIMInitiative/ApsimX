@@ -12,6 +12,7 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Phen
 {
     /// <summary>
+    /// # [Name]
     /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
     /// </summary>
     [Serializable]
@@ -481,13 +482,10 @@ namespace Models.PMF.Phen
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
                 // write description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write children.
+                // write memos.
                 foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
 
@@ -516,17 +514,16 @@ namespace Models.PMF.Phen
                 }
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
                 tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
-
-
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
-                foreach (IModel child in this.FindAllChildren<IPhase>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
+                
+                // Document thermal time function
+                tags.Add(new AutoDocumentation.Heading("ThermalTime", headingLevel+1));
+                IModel tt = thermalTime as IModel;
+                AutoDocumentation.DocumentModelSummary(tt, tags, headingLevel + 1, indent, false);
 
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IModel>())
-                    if (child.GetType() != typeof(Memo) && !typeof(IPhase).IsAssignableFrom(child.GetType()))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime")
+                        AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
             }
         }
     }

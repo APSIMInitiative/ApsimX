@@ -10,13 +10,11 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] is calculated using an interpolation fuction that returns 
-    /// the [agregationMethod] of sub-daily values of the following <i>Response</i>:
-    /// [Document Response]
-    /// Sub-daily estimates of Xvalues are calculated using 
+    /// [Name] is the [agregationMethod] sub-daily values from a [Response.GetType()].
     /// [Document InterpolationMethod]
-    /// Each of these sub-daily Xvalues are then passed into the above <i>Response</i> function to 
-    /// give hourly values and the [agregationMethod] these is returned to represent daily [Name]
+    /// Each of the interpolated [InterpolationMethod.OutputValueType]s are pased into 
+    /// the following Response and the [agregationMethod] returned to give daily [Name]
+    /// [Document Response]
     /// </summary>
 
     [Serializable]
@@ -37,7 +35,7 @@ namespace Models.Functions
         /// <summary>The temperature response function applied to each sub daily temperature and averaged to give daily mean</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IIndexedFunction Response = null;
-
+        
         /// <summary>Method used to agreagate sub daily values</summary>
         [Description("Method used to agregate sub daily temperature function")]
         public AgregationMethod agregationMethod { get; set; }
@@ -93,7 +91,9 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// A value is calculated from the mean of 3-hourly estimates of air temperature based on daily max and min temperatures.  
+    /// Firstly 3-hourly estimates of air temperature (Ta) are interpolated 
+    /// usig the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature. 
+    /// pattern between Tmax and Tmin.  
     /// </summary>
     [Serializable]
     [Description("A value is calculated at 3-hourly estimates using air temperature based on daily max and min temperatures\n\n" +
@@ -108,6 +108,10 @@ namespace Models.Functions
 
         /// <summary>Factors used to multiply daily range to give diurnal pattern of temperatures between Tmax and Tmin</summary>
         public List<double> TempRangeFactors = null;
+
+        /// <summary>The type of variable for sub-daily values</summary>
+        [JsonIgnore]
+        public string OutputValueType { get; set; } = "air temperature";
 
         /// <summary>
         /// Calculate temperatures at 3 hourly intervals from min and max using sin curve
@@ -153,10 +157,13 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// the interpolation method of [Goudriaan1994] based on Tmax, Tmin and daylength (d).  
-    /// During sunlight hours Ta is calculated each hour using a sinusoidal curve fitted to Tmin and Tmax . 
-    /// After sunset Ta is calculated as an exponential decline from Ta at sunset to the Tmin at sunrise the next day.
-    /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and the air temperature is assumed 
+    /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d) 
+    /// usig the method of [Goudriaan1994].  
+    /// During sunlight hours Ta is calculated each hour using a 
+    /// sinusoidal curve fitted to Tmin and Tmax . 
+    /// After sunset Ta is calculated as an exponential decline from Ta at sunset 
+    /// to the Tmin at sunrise the next day.
+    /// The hour (Th) of sunrise is calculated as Th = 12 − d/2 and Ta is assumed 
     /// to equal Tmin at this time.  Tmax is reached when Th equals 13.5. 
     /// </summary>
     [Serializable]
@@ -172,6 +179,10 @@ namespace Models.Functions
         private const double P = 1.5;
 
         private const double TC = 4.0;
+
+        /// <summary>The type of variable for sub-daily values</summary>
+        [JsonIgnore]
+        public string OutputValueType { get; set; } = "air temperature";
 
         /// <summary>
         /// Temperature at the most recent sunset
@@ -252,7 +263,7 @@ namespace Models.Functions
     }
 
     /// <summary>
-    /// Calculates the ground solar incident radiation per hour
+    /// Firstly hourly estimates of solar radiation are interpolated from solar daily radiation
     /// </summary>
     [Serializable]
     [Description("Calculates the ground solar incident radiation per hour")]
@@ -271,6 +282,9 @@ namespace Models.Functions
         [Link]
         protected Clock clock = null;
 
+        /// <summary>The type of variable for sub-daily values</summary>
+        [JsonIgnore]
+        public string OutputValueType { get; set; } = "solar radiation";
 
         // Calculates the ground solar incident radiation per hour and scales it to the actual radiation
         // Developed by Greg McLean and adapted/modified by Behnam (Ben) Ababaei.
@@ -337,6 +351,8 @@ namespace Models.Functions
     {
         /// <summary>Calculate temperature at specified periods during the day.</summary>
         List<double> SubDailyValues();
+        /// <summary>The type of variable for sub-daily values</summary>
+        string OutputValueType { get; set; }
     }
 
 }
