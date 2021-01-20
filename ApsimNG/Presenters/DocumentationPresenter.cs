@@ -40,7 +40,7 @@ namespace UserInterface.Presenters
 
         private void PopulateView()
         {
-            view.Text = DocumentModel(model);
+            view.Text = DocumentModel(model).Replace("<", @"\<");
         }
 
         private string DocumentModel(IModel model)

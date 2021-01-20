@@ -95,9 +95,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\n</div>";
         }
 
         /// <summary>

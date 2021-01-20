@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -276,36 +277,38 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Buy ";
-            if (Units <= 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[VALUE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>";
-            }
-            html += " packages of ";
-            if (ResourceTypeName == null || ResourceTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            }
-            if (AccountName == null || AccountName == "")
-            {
-                html += " using <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += " using <span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\">Buy ");
+                if (Units <= 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[VALUE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>");
+                }
+                htmlWriter.Write(" packages of ");
+                if (ResourceTypeName == null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
+                }
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write(" using <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" using <span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 
