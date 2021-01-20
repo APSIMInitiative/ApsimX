@@ -688,9 +688,7 @@
             }
             else if (outtype == OutputType.Markdown)
             {
-                writer.WriteLine("```");
                 writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
-                writer.WriteLine("```");
                 writer.WriteLine();
             }
             else

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -164,24 +165,26 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            if (IsOverhead)
-            {
-                html += "\n<div class=\"activityentry\">This is an overhead</div>";
-            }
+                htmlWriter.Write("\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (IsOverhead)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">This is an overhead</div>");
+                }
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 
