@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 namespace Models.PMF.Phen
 {
     /// <summary>
+    /// #[Name]
     /// When [Start] is reached phenology is rewound to [PhaseNameToGoTo]
     /// </summary>
     [Serializable]

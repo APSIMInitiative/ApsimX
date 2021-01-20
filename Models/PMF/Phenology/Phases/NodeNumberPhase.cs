@@ -9,7 +9,11 @@ using System.IO;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Leaf appearance phenological phase
+    /// # [Name] Phase
+    /// The [Name] phase goes from [Start] stage to [End] stage and extends from the end 
+    /// of the previous phase until the CompletionNodeNumber is achieved.  
+    /// The duration of this phase is determined by leaf appearance rate and 
+    /// the CompletionNodeNumber target
     /// </summary>
     [Serializable]
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
@@ -100,31 +104,6 @@ namespace Models.PMF.Phen
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)  { ResetPhase(); }
-        
-        
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // Describe the start and end stages
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // get description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
     }
 }
 

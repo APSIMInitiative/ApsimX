@@ -11,7 +11,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// # [Name] Phase
-    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End]</i> 
+    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End] stage</i> 
     /// which occurs when all leaves have fully senesced. 
     /// </summary>
     [Serializable]
