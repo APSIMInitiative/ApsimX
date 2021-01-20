@@ -69,8 +69,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            return html;
+            return "";
         }
 
         /// <summary>

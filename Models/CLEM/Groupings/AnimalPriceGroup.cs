@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Groupings
 {
@@ -74,38 +75,40 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (!formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                switch (PurchaseOrSale)
+                if (!formatForParentControl)
                 {
-                    case PurchaseOrSalePricingStyleType.Both:
-                        html += "Buy and sell for ";
-                        break;
-                    case PurchaseOrSalePricingStyleType.Purchase:
-                        html += "Buy for ";
-                        break;
-                    case PurchaseOrSalePricingStyleType.Sale:
-                        html += "Sell for ";
-                        break;
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    switch (PurchaseOrSale)
+                    {
+                        case PurchaseOrSalePricingStyleType.Both:
+                            htmlWriter.Write("Buy and sell for ");
+                            break;
+                        case PurchaseOrSalePricingStyleType.Purchase:
+                            htmlWriter.Write("Buy for ");
+                            break;
+                        case PurchaseOrSalePricingStyleType.Sale:
+                            htmlWriter.Write("Sell for ");
+                            break;
+                    }
+                    if (Value.ToString() == "0")
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(Value.ToString("#,0.##"));
+                    }
+                    htmlWriter.Write("</span> ");
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(PricingStyle.ToString());
+                    htmlWriter.Write("</span>");
+                    htmlWriter.Write("</div>");
                 }
-                if (Value.ToString() == "0")
-                {
-                    html += "<span class=\"errorlink\">NOT SET";
-                }
-                else
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += Value.ToString("#,0.##");
-                }
-                html += "</span> ";
-                html += "<span class=\"setvalue\">";
-                html += PricingStyle.ToString();
-                html += "</span>";
-                html += "</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -114,41 +117,43 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                if (Value.ToString() == "0")
+                if (formatForParentControl)
                 {
-                    html += "</td><td><span class=\"errorlink\">NOT SET";
+                    if (Value.ToString() == "0")
+                    {
+                        htmlWriter.Write("</td><td><span class=\"errorlink\">NOT SET");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("</td><td><span class=\"setvalue\">");
+                        htmlWriter.Write(this.Value.ToString("#,0.##"));
+                    }
+                    htmlWriter.Write("</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></td>");
+                    string buySellString = "";
+                    switch (PurchaseOrSale)
+                    {
+                        case PurchaseOrSalePricingStyleType.Both:
+                            buySellString = "Buy and sell";
+                            break;
+                        case PurchaseOrSalePricingStyleType.Purchase:
+                            buySellString = "Buy";
+                            break;
+                        case PurchaseOrSalePricingStyleType.Sale:
+                            buySellString = "Sell";
+                            break;
+                    }
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + buySellString + "</span></td>");
+                    htmlWriter.Write("</tr>");
                 }
                 else
                 {
-                    html += "</td><td><span class=\"setvalue\">";
-                    html += this.Value.ToString("#,0.##");
+                    htmlWriter.Write("\n</div>");
                 }
-                html += "</span></td>";
-                html += "<td><span class=\"setvalue\">" + this.PricingStyle.ToString() + "</span></td>";
-                string buySellString = "";
-                switch (PurchaseOrSale)
-                {
-                    case PurchaseOrSalePricingStyleType.Both:
-                        buySellString = "Buy and sell";
-                        break;
-                    case PurchaseOrSalePricingStyleType.Purchase:
-                        buySellString = "Buy";
-                        break;
-                    case PurchaseOrSalePricingStyleType.Sale:
-                        buySellString = "Sell";
-                        break;
-                }
-                html += "<td><span class=\"setvalue\">" + buySellString + "</span></td>";
-                html += "</tr>";
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "\n</div>";
-            }
-            return html;
         }
 
         /// <summary>
@@ -157,24 +162,26 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                if (formatForParentControl)
                 {
-                    html += "<div class=\"filter\">All individuals</div>";
+                    htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
+                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    {
+                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+                    }
                 }
-            }
-            else
-            {
-                html += "\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                else
                 {
-                    html += "<div class=\"filter\">All individuals</div>";
+                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    {
+                        htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+                    }
                 }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>

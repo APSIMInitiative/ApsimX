@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -132,34 +133,36 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            html += "Perform between ";
-            if (StartMonth == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">NOT SET</span>";
+                htmlWriter.Write("\n<div class=\"filter\">");
+                htmlWriter.Write("Perform between ");
+                if (StartMonth == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(StartMonth.ToString() + "</span>");
+                }
+                htmlWriter.Write(" and <span class=\"setvalueextra\">");
+                if (EndMonth == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(EndMonth.ToString() + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += StartMonth.ToString() + "</span>";
-            }
-            html += " and <span class=\"setvalueextra\">";
-            if (EndMonth == 0)
-            {
-                html += "<span class=\"errorlink\">NOT SET</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += EndMonth.ToString() + "</span>";
-            }
-            html += "</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
         /// <summary>
@@ -177,15 +180,17 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
     }

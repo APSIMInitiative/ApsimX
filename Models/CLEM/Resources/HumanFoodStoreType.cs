@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -294,55 +295,58 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if ((Units ?? "").ToUpper() != "KG")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Each unit of this resource is equivalent to ";
-                if (ConvertToKg == 0)
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if ((Units ?? "").ToUpper() != "KG")
                 {
-                    html += "<span class=\"errorlink\">NOT SET";
+                    htmlWriter.Write("Each unit of this resource is equivalent to ");
+                    if (ConvertToKg == 0)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + this.ConvertToKg.ToString("0.###"));
+                    }
+                    htmlWriter.Write("</span> kg");
                 }
                 else
                 {
-                    html += "<span class=\"setvalue\">" + this.ConvertToKg.ToString("0.###");
+                    if (ConvertToKg != 1)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
+                    }
                 }
-                html += "</span> kg";
-            }
-            else
-            {
-                if (ConvertToKg != 1)
+                htmlWriter.Write("\n</div>");
+                if (StartingAmount > 0)
                 {
-                    html += "<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg";
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("0.###") + "</span>");
+                    if (StartingAge > 0)
+                    {
+                        htmlWriter.Write(" with an age of <span class=\"setvalue\">" + this.StartingAge.ToString("###") + "%</span> months");
+                    }
+                    htmlWriter.Write("\n</div>");
                 }
-            }
-            html += "\n</div>";
-            if (StartingAmount > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "The simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("0.###") + "</span>";
-                if (StartingAge > 0)
+
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (UseByAge == 0)
                 {
-                    html += " with an age of <span class=\"setvalue\">" + this.StartingAge.ToString("###") + "%</span> months";
+                    htmlWriter.Write("This food does not spoil");
                 }
-                html += "\n</div>";
-            }
+                else
+                {
+                    htmlWriter.Write("This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old");
+                }
+                htmlWriter.Write("\n</div>");
 
-            html += "\n<div class=\"activityentry\">";
-            if (UseByAge == 0)
-            {
-                html += "This food does not spoil";
-            }
-            else
-            {
-                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old";
-            }
-            html += "\n</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"setvalue\">");
+                htmlWriter.Write(((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible");
+                htmlWriter.Write("\n</div>");
 
-            html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
-            html += ((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible";
-            html += "\n</div>";
-
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
     }

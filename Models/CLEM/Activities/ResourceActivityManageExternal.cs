@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -424,33 +425,35 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Resources added or removed are provided by ";
-            if (ResourceDataReader == null || ResourceDataReader == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">DataReader not set</span>";
-            }
-            else
-            {
-                html += "<span class=\"filelink\">" + ResourceDataReader + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\">Resources added or removed are provided by ");
+                if (ResourceDataReader == null || ResourceDataReader == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">DataReader not set</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"filelink\">" + ResourceDataReader + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            html += "\n<div class=\"activityentry\">";
-            if (AccountName == null || AccountName == "")
-            {
-                html += "Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>";
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write("Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>");
+                }
+                else if (AccountName == "No financial implications")
+                {
+                    htmlWriter.Write("No financial constraints relating to pricing and packet sizes associated with each resource will be included.");
+                }
+                else
+                {
+                    htmlWriter.Write("Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else if (AccountName == "No financial implications")
-            {
-                html += "No financial constraints relating to pricing and packet sizes associated with each resource will be included.";
-            }
-            else
-            {
-                html += "Pricing and packet sizes associated with each resource will be used with <span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            return html;
         } 
         #endregion
 

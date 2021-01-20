@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -307,19 +308,21 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Feed people ";
-            if (FeedTypeName == null || FeedTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[Feed TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\n<div class=\"activityentry\">Feed people ");
+                if (FeedTypeName == null || FeedTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
     }
