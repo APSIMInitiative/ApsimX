@@ -769,7 +769,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "Veraison",
                   "Name": "MainStemPrimordiaInitiationRate",
@@ -791,7 +790,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "Veraison",
                   "Name": "Phyllochron",
@@ -2217,7 +2215,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "Flowering",
                           "Name": "Vegetative",
@@ -2239,7 +2236,6 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "Flowering",
                           "End": "LeafFall",
                           "Name": "Reproductive",
@@ -2800,7 +2796,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -3523,7 +3518,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -3952,7 +3946,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -3983,7 +3976,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4155,7 +4147,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4368,7 +4359,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -4758,7 +4748,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4789,7 +4778,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4987,7 +4975,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5147,7 +5134,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5178,7 +5164,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5386,7 +5371,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5601,7 +5585,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -8288,7 +8271,6 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "LeafFall",
                       "Name": "AfterFlowering",
@@ -8378,7 +8360,6 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "LookupValue": null,
                           "Start": "Flowering",
                           "End": "LeafFall",
                           "Name": "AfterFruitSet",
@@ -8556,7 +8537,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
@@ -8578,7 +8558,6 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "LookupValue": null,
                       "Start": "Veraison",
                       "End": "LeafFall",
                       "Name": "AfterVeraison",
@@ -8722,7 +8701,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
@@ -8744,7 +8722,6 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "LookupValue": null,
                       "Start": "Veraison",
                       "End": "LeafFall",
                       "Name": "AfterVeraison",
@@ -9292,7 +9269,6 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",

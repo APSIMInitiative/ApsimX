@@ -7,7 +7,8 @@ namespace Models.PMF.Struct
 {
     /// <summary> 
     /// # [Name]
-    /// Each time [SetStage] occurs bud number on each main-stem is set to 
+    /// Each time [SetStage] occurs bud number on each main-stem is set to
+    /// 
     /// *[FractionOfBudBurst.Name]* * *SowingData.BudNumber* (from manager at establishment)
     /// </summary>
     [Serializable]
