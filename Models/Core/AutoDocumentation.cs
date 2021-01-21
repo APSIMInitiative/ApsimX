@@ -377,6 +377,10 @@
 
                         if (value != null)
                         {
+                            if (value is Array)
+                            {
+                                value = StringUtilities.Build(value as Array, Environment.NewLine);
+                            }
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());
                         }
