@@ -1054,15 +1054,6 @@
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "\r\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
-                  "Name": "Description",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
                   "Name": "Photosynthesis",
                   "Children": [
