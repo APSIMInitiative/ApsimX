@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 323,
   "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -47,9 +47,9 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 3.961847,
-                      "OptTemp": 29.046383,
-                      "MaxTemp": 37.934329,
+                      "MinTemp": 3.9,
+                      "OptTemp": 29.0,
+                      "MaxTemp": 37.9,
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
                       "Name": "Response",
@@ -83,7 +83,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 52.64,
+                          "FixedValue": 52.6,
                           "Units": "hours",
                           "Name": "BaseTarget",
                           "Children": [],
@@ -315,7 +315,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1011.25,
+                      "FixedValue": 1011.0,
                       "Units": "thermaltime",
                       "Name": "Target",
                       "Children": [],
@@ -442,7 +442,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 21.105,
+                      "FixedValue": 21.1,
                       "Units": "oCd",
                       "Name": "Target",
                       "Children": [],
@@ -510,62 +510,11 @@
                   "Name": "BerryDevelopment",
                   "Children": [
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 23.0,
+                      "Units": null,
                       "Name": "Target",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 23.063,
-                          "Units": null,
-                          "Name": "Base",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "LAIAdjustment",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                1.0,
-                                2.0,
-                                3.0,
-                                4.0,
-                                5.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Grapevine].Leaf.LAI",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -609,7 +558,7 @@
                   "Start": "LeafFall",
                   "End": "Unused",
                   "PhaseNameToGoto": "EndoDormancy",
-                  "Name": "EnterDormancy",
+                  "Name": "Dormancy",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -785,7 +734,7 @@
                   "$type": "Models.PMF.Phen.Age, Models",
                   "Name": "Age",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -810,38 +759,17 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.HourlyInterpolation, Models",
-                  "agregationMethod": 0,
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.WangEngelTempFunction, Models",
-                      "MinTemp": 3.961847,
-                      "OptTemp": 29.046383,
-                      "MaxTemp": 37.934329,
-                      "RefTemp": 25.0,
-                      "MaximumTemperatureWeighting": 0.5,
-                      "Name": "Response",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.HourlySinPpAdjusted, Models",
-                      "Name": "InterpolationMethod",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "Veraison",
                   "Name": "MainStemPrimordiaInitiationRate",
@@ -849,33 +777,34 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 1.99,
-                      "Units": "thermal day",
-                      "Name": "Constant",
+                      "Units": "oCd",
+                      "Name": "MainStemPrimordiaInitiationRate",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "Veraison",
                   "Name": "Phyllochron",
                   "Children": [
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "MultiplyFunction",
+                      "Name": "Phyllochron",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.823,
-                          "Units": null,
-                          "Name": "Constant",
+                          "Units": "oCd",
+                          "Name": "MaximumPhyllochron",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -883,7 +812,7 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "LinearInterpolationFunction",
+                          "Name": "LeafStageFactor",
                           "Children": [
                             {
                               "$type": "Models.Functions.XYPairs, Models",
@@ -932,7 +861,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 25.0,
-                  "Units": "number",
+                  "Units": "Main-stem leaves",
                   "Name": "FinalLeafNumber",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -942,7 +871,7 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "%",
                   "Name": "BranchMortality",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -952,10 +881,10 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": null,
+                  "Units": "%",
                   "Name": "DroughtInducedBranchMortality",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -965,7 +894,7 @@
                   "Units": null,
                   "Name": "StemSenescenceAge",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -994,7 +923,7 @@
                             {
                               "$type": "Models.Functions.Constant, Models",
                               "FixedValue": 1.4,
-                              "Units": null,
+                              "Units": "Buds",
                               "Name": "Ymax",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1098,7 +1027,7 @@
                     },
                     {
                       "$type": "Models.Functions.MinimumFunction, Models",
-                      "Name": "MinimumFunction",
+                      "Name": "ShootHeight",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -1106,7 +1035,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "Height",
+                              "Name": "SeasonalPattern",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.XYPairs, Models",
@@ -1315,7 +1244,7 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "LinearInterpolationFunction",
+                      "Name": "CanopySizeEffect",
                       "Children": [
                         {
                           "$type": "Models.Functions.XYPairs, Models",
@@ -2288,6 +2217,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "Flowering",
                           "Name": "Vegetative",
@@ -2309,6 +2239,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "Flowering",
                           "End": "LeafFall",
                           "Name": "Reproductive",
@@ -2514,20 +2445,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.6,
+                  "Units": null,
                   "Name": "ExtinctionCoeff",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.6,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2878,6 +2800,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -3600,6 +3523,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -4028,6 +3952,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4058,6 +3983,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4229,6 +4155,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4441,6 +4368,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -4830,6 +4758,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -4860,6 +4789,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5057,6 +4987,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5216,6 +5147,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5246,6 +5178,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5453,6 +5386,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "BudBurst",
                           "End": "LeafFall",
                           "Name": "GrowingSeason",
@@ -5667,6 +5601,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",
@@ -8353,6 +8288,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "LeafFall",
                       "Name": "AfterFlowering",
@@ -8442,6 +8378,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "LookupValue": null,
                           "Start": "Flowering",
                           "End": "LeafFall",
                           "Name": "AfterFruitSet",
@@ -8619,6 +8556,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
@@ -8640,6 +8578,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "LookupValue": null,
                       "Start": "Veraison",
                       "End": "LeafFall",
                       "Name": "AfterVeraison",
@@ -8783,6 +8722,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "LookupValue": null,
                       "Start": "Flowering",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
@@ -8804,6 +8744,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "LookupValue": null,
                       "Start": "Veraison",
                       "End": "LeafFall",
                       "Name": "AfterVeraison",
@@ -9351,6 +9292,7 @@
                 },
                 {
                   "$type": "Models.Functions.PhaseLookupValue, Models",
+                  "LookupValue": null,
                   "Start": "BudBurst",
                   "End": "LeafFall",
                   "Name": "NitrogenDemandSwitch",

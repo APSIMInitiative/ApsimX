@@ -10,10 +10,10 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] is the [agregationMethod] sub-daily values from a [Response.GetType()].
+    /// [Name] is the [agregationMethod] of sub-daily values from a [Response.GetType()].
     /// [Document InterpolationMethod]
-    /// Each of the interpolated [InterpolationMethod.OutputValueType]s are pased into 
-    /// the following Response and the [agregationMethod] returned to give daily [Name]
+    /// Each of the interpolated [InterpolationMethod.OutputValueType]s are then passed into 
+    /// the following Response and the [agregationMethod] taken to give daily [Name]
     /// [Document Response]
     /// </summary>
 

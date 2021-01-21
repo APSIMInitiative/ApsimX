@@ -13,7 +13,8 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// # [Name]
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// [plant.Name]s phenological development is simulated as the progression through a 
+    /// series of developmental phases, each bound by distinct growth <i>stages</i>. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]

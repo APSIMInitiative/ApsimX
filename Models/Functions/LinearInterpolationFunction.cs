@@ -106,7 +106,7 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                //tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
                 foreach (IModel memo in this.FindAllChildren<Memo>())
