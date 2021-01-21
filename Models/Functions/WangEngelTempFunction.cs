@@ -8,7 +8,7 @@ namespace Models.Functions
     /// <summary>
     /// [Name] is calculated using a Wang and Engel beta function which has a value of zero
     /// below [MinTemp] increasing to a maximum value at [OptTemp] and decreasing to zero again
-    /// at [MaxTemp].
+    /// at [MaxTemp] [WangEngel1998].
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]
