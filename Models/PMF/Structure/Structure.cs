@@ -19,7 +19,7 @@ namespace Models.PMF.Struct
     /// The *Plant.Population* is set at sowing with information sent from a manager script 
     /// in the Sow method.    
     /// The *PrimaryBudNumber* is also sent with the Sow method and the main-stem 
-    /// population (*MainStemPopn*) for [plant.Name] is calculated as:
+    /// population (*MainStemPopn*) for [Parent.Name] is calculated as:
     /// 
     /// *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
     /// 

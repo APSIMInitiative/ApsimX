@@ -7,8 +7,8 @@ namespace Models.Functions
 {
     /// <summary>
     /// [Name] is calculated using a Wang and Engel beta function which has a value of zero
-    /// below [MinTemp] increasing to a maximum value at [OptTemp] and decreasing to zero again
-    /// at [MaxTemp] [WangEngel1998].
+    /// below [MinTemp] [Units] increasing to a maximum value at [OptTemp] [Units] and 
+    /// and decreasing to zero again at [MaxTemp] [Units] [WangEngel1998].
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]
@@ -47,6 +47,10 @@ namespace Models.Functions
             double Tav = MaximumTemperatureWeighting * MetData.MaxT + (1 - MaximumTemperatureWeighting) * MetData.MinT;
             return ValueIndexed(Tav);
         }
+
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the constant")]
+        public string Units { get; set; }
 
         /// <summary>
         /// returns result of Wang Eagle beta function for given temperature

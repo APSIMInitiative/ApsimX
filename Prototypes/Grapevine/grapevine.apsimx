@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 323,
+  "ExplorerWidth": 281,
   "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -52,6 +52,7 @@
                       "MaxTemp": 37.9,
                       "RefTemp": 25.0,
                       "MaximumTemperatureWeighting": 0.5,
+                      "Units": "oC",
                       "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,

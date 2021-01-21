@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
 {
     /// <summary>
     /// # [Name]
-    /// [plant.Name]s phenological development is simulated as the progression through a 
+    /// [Parent.Name]'s phenological development is simulated as the progression through a 
     /// series of developmental phases, each bound by distinct growth <i>stages</i>. 
     /// </summary>
     [Serializable]
@@ -523,7 +523,7 @@ namespace Models.PMF.Phen
 
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IModel>())
-                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime")
+                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime" && child.IncludeInDocumentation)
                         AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
             }
         }

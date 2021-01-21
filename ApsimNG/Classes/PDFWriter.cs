@@ -564,7 +564,12 @@
             graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(Models.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
+
+            var units = AutoDocumentation.GetUnits(graphAndTable.xyPairs, graphAndTable.yName);
+            var yaxisTitle = graphAndTable.yName;
+            if (!string.IsNullOrEmpty(units))
+                yaxisTitle += " (" + units + ")";
+            graph.FormatAxis(Models.Axis.AxisType.Left, yaxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             graph.FontSize = 10;
             graph.Refresh();
 
