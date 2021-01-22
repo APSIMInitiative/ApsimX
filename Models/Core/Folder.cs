@@ -64,13 +64,9 @@
                         foreach (IModel child in FindAllChildren<Experiment>())
                         {
                             IModel Factors = child.FindChild<Factors>();
-                            string Design = "";
-                            foreach (Factor factor in Factors.FindAllChildren<Factor>())
-                            {
-                                if (Design != "")
-                                    Design += " x ";
-                                Design += factor.Name;
-                            }
+                            string Design = GetTreatmentDescription(Factors);
+                            foreach (Permutation permutation in Factors.FindAllChildren<Permutation>())
+                                Design += GetTreatmentDescription(permutation);
 
                             var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
                             Design += " (" + simulationNames.ToArray().Length + ")";
@@ -112,5 +108,16 @@
             }
         }
 
+        private string GetTreatmentDescription(IModel factors)
+        {
+            string design = "";
+            foreach (Factor factor in factors.FindAllChildren<Factor>())
+            {
+                if (design != "")
+                    design += " x ";
+                design += factor.Name;
+            }
+            return design;
+        }
     }
 }
