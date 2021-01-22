@@ -1,22 +1,19 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
-
-using System.Collections;
-using Models.Core;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// linear interpolation function
+    /// [DocumentType Memo]
+    /// <i>[Name]</i> is calculated using linear interpolation.
+    /// [DocumentChart XYPairs, ,[XValue.Name],[Name]]
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
-    public class LinearInterpolationFunction : Model, IFunction, ICustomDocumentation
+    public class LinearInterpolationFunction : Model, IFunction
     {
         /// <summary>The ys are all the same</summary>
         private bool YsAreAllTheSame = false;
@@ -96,54 +93,5 @@ namespace Models.Functions
         {
             return XYPairs.ValueIndexed(XValue);
         }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                //tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
-
-                // add graph and table.
-                if (XYPairs != null)
-                {
-                    IModel xValue = (IModel)this.FindByPath("XValue")?.Value;
-                    string xName = xValue.Name;
-                    
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated using linear interpolation", indent));
-
-                    tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
-
-                    AutoDocumentation.DocumentModel(xValue, tags, headingLevel + 1, indent);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Return the y axis title.
-        /// </summary>
-        /// <returns></returns>
-        public static string LookForYAxisTitle(IModel model)
-        {
-            IModel modelContainingLinkField = model.Parent;
-            FieldInfo linkField = modelContainingLinkField.GetType().GetField(model.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (linkField != null)
-            {
-                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
-                if (units != null)
-                    return model.Name + " (" + units.ToString() + ")";
-            }
-            return model.Name;
-        }
-
     }
-
 }
