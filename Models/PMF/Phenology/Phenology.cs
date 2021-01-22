@@ -489,6 +489,12 @@ namespace Models.PMF.Phen
                 // write memos.
                 foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                // Document thermal time function
+                tags.Add(new AutoDocumentation.Heading("ThermalTime", headingLevel + 1));
+                IModel tt = thermalTime as IModel;
+                AutoDocumentation.DocumentModelSummary(tt, tags, headingLevel + 1, indent, true);
+
+                tags.Add(new AutoDocumentation.Heading("Phases", headingLevel));
 
                 // Write Phase Table
                 tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
@@ -516,19 +522,14 @@ namespace Models.PMF.Phen
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
                 tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
                 
-                // Document thermal time function
-                tags.Add(new AutoDocumentation.Heading("ThermalTime", headingLevel+1));
-                IModel tt = thermalTime as IModel;
-                AutoDocumentation.DocumentModelSummary(tt, tags, headingLevel + 1, indent, false);
-
                 // Document Phases
                 foreach (IModel child in this.FindAllChildren<IPhase>())
-                    AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
+                    AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, true);
 
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IModel>())
                     if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime" && !(child is IPhase) && child.IncludeInDocumentation)
-                        AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
+                        AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, true);
             }
         }
     }
