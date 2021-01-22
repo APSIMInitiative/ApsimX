@@ -521,9 +521,14 @@ namespace Models.PMF.Phen
                 IModel tt = thermalTime as IModel;
                 AutoDocumentation.DocumentModelSummary(tt, tags, headingLevel + 1, indent, false);
 
+                // Document Phases
+                foreach (IModel child in this.FindAllChildren<IModel>())
+                    if (child.GetType() == typeof(IPhase))
+                        AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
+
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IModel>())
-                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime" && child.IncludeInDocumentation)
+                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime" && child.GetType() != typeof(IPhase) && child.IncludeInDocumentation)
                         AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, false);
             }
         }

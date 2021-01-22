@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 374,
   "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -181,7 +181,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LessThanFunction, Models",
-                      "Name": "LessThanFunction",
+                      "Name": "ChillBeforePrune",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -204,7 +204,7 @@
                         },
                         {
                           "$type": "Models.Functions.LessThanFunction, Models",
-                          "Name": "LessThanFunction",
+                          "Name": "ChillBeforeAutumn",
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
@@ -227,7 +227,7 @@
                             },
                             {
                               "$type": "Models.Functions.LessThanFunction, Models",
-                              "Name": "LessThanFunction",
+                              "Name": "ChillBelowCriticalPhotoperiod",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.PhotoperiodFunction, Models",
