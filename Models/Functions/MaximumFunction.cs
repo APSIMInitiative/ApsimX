@@ -40,18 +40,7 @@ namespace Models.Functions
         {
             get
             {
-                string listofKids = "";
-                int count = 0;
-                foreach (IModel F in this.FindAllChildren<IFunction>())
-                {
-                    count += 1;
-                    listofKids += ("*"+F.Name+"*");
-                    if (count == this.FindAllChildren<IFunction>().Count() - 1)
-                        listofKids += " and ";
-                    else if (count < this.FindAllChildren<IFunction>().Count() - 1)
-                        listofKids += ", ";
-                }
-                return listofKids;
+                return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
             }
         }
     }

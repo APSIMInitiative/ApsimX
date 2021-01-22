@@ -34,7 +34,7 @@
                 if (unitsAttribute != null)
                     return unitsAttribute.ToString();
             }
-            
+
             PropertyInfo property = model.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (property != null)
             {
@@ -83,7 +83,7 @@
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled) )
+            if (force || (model.IncludeInDocumentation && model.Enabled))
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
@@ -252,7 +252,7 @@
         /// <param name="indent">The current indent level</param>
         /// <param name="doNotTrim">If true, don't trim the lines</param>
         /// <param name="documentAllChildren">Ensure all children are documented?</param>
-        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim=false)
+        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim = false)
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
@@ -377,7 +377,7 @@
                         {
                             if (value is Array)
                                 value = StringUtilities.Build(value as Array, Environment.NewLine);
-                            
+
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());
                         }
@@ -434,7 +434,7 @@
 
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar.Trim() != string.Empty) 
+            if (paragraphSoFar.Trim() != string.Empty)
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }
@@ -491,7 +491,7 @@
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation && 
+                if (child.IncludeInDocumentation &&
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
         }
@@ -747,5 +747,21 @@
             }
         }
 
+        /// <summary> creates a list of child function names </summary>
+        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
+        {
+            string listofKids = "";
+            int count = 0;
+            foreach (IModel F in ChildFunctions)
+            {
+                count += 1;
+                listofKids += ("*" + F.Name + "*");
+                if (count == ChildFunctions.Count() - 1)
+                    listofKids += " and ";
+                else if (count < ChildFunctions.Count() - 1)
+                    listofKids += ", ";
+            }
+            return listofKids;
+        }
     }
 }
