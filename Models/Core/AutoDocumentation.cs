@@ -332,7 +332,22 @@
                 }
                 else if (line == "[DocumentView]")
                     tags.Add(new ModelView(model));
-
+                else if (line.StartsWith("[DocumentChart "))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    var words = line.Replace("[DocumentChart ", "").Replace("]", "").Split(',');
+                    if (words.Length == 4)
+                    {
+                        var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
+                        if (xypairs != null)
+                        {
+                            childrenDocumented.Add(xypairs);
+                            var xName = words[2];
+                            var yName = words[3];
+                            tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                        }
+                    }
+                }
                 else if (line.StartsWith("[DocumentMathFunction"))
                 {
                     StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
@@ -387,7 +402,8 @@
                     }
                 }
 
-                posMacro = line.IndexOf('[', posMacro + 1);
+                if (posMacro < line.Length)
+                    posMacro = line.IndexOf('[', posMacro + 1);
             }
 
             return line;
