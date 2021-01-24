@@ -163,10 +163,13 @@
     <Compile Include="CLEM\Activities\LabourActivityPayHired.cs" />
     <Compile Include="CLEM\Activities\LabourActivityFeed.cs" />
     <Compile Include="CLEM\Activities\ResourceActivityManageExternal.cs" />
+    <Compile Include="CLEM\Activities\RuminantActivityTag.cs" />
     <Compile Include="CLEM\FileResource.cs" />
     <Compile Include="CLEM\Groupings\RuminantActivityGroup.cs" />
     <Compile Include="CLEM\ICategoryActivity.cs" />
+    <Compile Include="CLEM\ICLEMDescriptiveSummary.cs" />
     <Compile Include="CLEM\IFilterGroup.cs" />
+    <Compile Include="CLEM\Interfaces\ISpecificOutputFilename.cs" />
     <Compile Include="CLEM\Market.cs" />
     <Compile Include="CLEM\RainfallShuffler.cs" />
     <Compile Include="CLEM\RandomNumberGenerator.cs" />
@@ -976,6 +979,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\GRangeLandUnits.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\CLEM\Chart.min.js" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

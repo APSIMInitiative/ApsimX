@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -467,30 +468,32 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (AllowAging)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "Individuals age with time";
-                html += "</div>";
+                if (AllowAging)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Individuals age with time");
+                    htmlWriter.Write("</div>");
+                }
+                htmlWriter.Write("\n<div class=\"holderresourcesub\">");
+                htmlWriter.Write("\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
+                htmlWriter.Write("\n<div class=\"resourcecontentlight\">");
+                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+                {
+                    htmlWriter.Write("<tr>");
+                    htmlWriter.Write("<td>" + labourType.Name + "</td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>");
+                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                    htmlWriter.Write("</tr>");
+                }
+                htmlWriter.Write("</table>");
+                htmlWriter.Write("</div></div>");
+                return htmlWriter.ToString(); 
             }
-            html += "\n<div class=\"holderresourcesub\">";
-            html += "\n<div class=\"clearfix resourcebannerlight\">Labour types</div>";
-            html += "\n<div class=\"resourcecontentlight\">";
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>";
-            foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
-            {
-                html += "<tr>";
-                html += "<td>" + labourType.Name + "</td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>";
-                html += "<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>";
-                html += "</tr>";
-            }
-            html += "</table>";
-            html += "</div></div>";
-            return html;
         }
 
 

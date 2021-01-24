@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -551,48 +552,50 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (TreesPerHa > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>";
+                if (TreesPerHa > 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
+                }
+                if (ProportionKept == 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
+                }
+                else
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
+                }
+                if (StoreItemName == null || StoreItemName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[STORE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + StoreItemName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\n<div class=\"activityentry\">Data is retrieved from ");
+                if (ModelNameFileCrop == null || ModelNameFileCrop == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[CROP FILE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"filelink\">" + ModelNameFileCrop + "</span>");
+                }
+                htmlWriter.Write(" using crop named ");
+                if (CropName == null || CropName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[CROP NAME NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"filelink\">" + CropName + "</span>");
+                }
+                htmlWriter.Write("\n</div>");
+                return htmlWriter.ToString(); 
             }
-            if (ProportionKept == 0)
-            {
-                html += "\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ";
-            }
-            if (StoreItemName == null || StoreItemName == "")
-            {
-                html += "<span class=\"errorlink\">[STORE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + StoreItemName + "</span>";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">Data is retrieved from ";
-            if (ModelNameFileCrop == null || ModelNameFileCrop == "")
-            {
-                html += "<span class=\"errorlink\">[CROP FILE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"filelink\">" + ModelNameFileCrop + "</span>";
-            }
-            html += " using crop named ";
-            if (CropName == null || CropName == "")
-            {
-                html += "<span class=\"errorlink\">[CROP NAME NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"filelink\">" + CropName + "</span>";
-            }
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>
@@ -601,9 +604,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += base.ModelSummaryClosingTags(formatForParentControl);
-            return html;
+            return base.ModelSummaryClosingTags(formatForParentControl); 
         }
 
         /// <summary>

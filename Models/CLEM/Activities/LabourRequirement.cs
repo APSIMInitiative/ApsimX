@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -169,42 +170,44 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
-            // get amount
-            html += LabourPerUnit.ToString() + "</span> days labour is required";
-            if (UnitType != LabourUnitType.Fixed)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                if (UnitSize == 1)
+                htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"setvalue\">");
+                // get amount
+                htmlWriter.Write(LabourPerUnit.ToString() + "</span> days labour is required");
+                if (UnitType != LabourUnitType.Fixed)
                 {
-                    html += " for each ";
+                    if (UnitSize == 1)
+                    {
+                        htmlWriter.Write(" for each ");
+                    }
+                    else
+                    {
+                        htmlWriter.Write(" for every <span class=\"setvalue\">" + UnitSize.ToString("#,##0.##") + "</span>");
+                    }
+                    htmlWriter.Write("<span class=\"setvalue\">" + UnitType2HTML() + "</span>");
+                    if (WholeUnitBlocks)
+                    {
+                        htmlWriter.Write(" and will be supplied in blocks");
+                    }
                 }
-                else
-                {
-                    html += " for every <span class=\"setvalue\">" + UnitSize.ToString("#,##0.##") + "</span>";
-                }
-                html += "<span class=\"setvalue\">" + UnitType2HTML() + "</span>";
-                if (WholeUnitBlocks)
-                {
-                    html += " and will be supplied in blocks";
-                }
-            }
-            html += "</div>";
+                htmlWriter.Write("</div>");
 
-            if (MinimumPerPerson > 0)
-            {
-                html += "\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>";
-            }
-            if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
-            {
-                html += "\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>";
-            }
-            if (ApplyToAll)
-            {
-                html += "\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>";
-            }
+                if (MinimumPerPerson > 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
+                }
+                if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
+                }
+                if (ApplyToAll)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
+                }
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         }
 
         /// <summary>
@@ -213,9 +216,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\n</div>";
         }
 
         /// <summary>
@@ -224,17 +225,19 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"labourgroupsborder\">";
-            html += "<div class=\"labournote\">The required labour will be taken from each of the following groups</div>";
-
-            if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"filterborder clearfix\">";
-                html += "<div class=\"filtererror\">No filter group provided</div>";
-                html += "</div>";
+                htmlWriter.Write("\n<div class=\"labourgroupsborder\">");
+                htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
+
+                if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
+                {
+                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
 
