@@ -282,29 +282,19 @@
             try
             {
                 HideRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+                if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                    SaveAs();
 
-            if (string.IsNullOrEmpty(ApsimXFile.FileName))
-                SaveAs();
-
-            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
-            {
-                ApsimXFile.Write(ApsimXFile.FileName);
-                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                return true;
+                if (!string.IsNullOrEmpty(ApsimXFile.FileName))
+                {
+                    ApsimXFile.Write(ApsimXFile.FileName);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                    return true;
+                }
             }
-
-            try
+            finally
             {
                 ShowRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
             }
 
             return false;

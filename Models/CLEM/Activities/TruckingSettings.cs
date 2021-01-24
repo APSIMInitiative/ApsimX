@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -221,136 +222,138 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.##") + "</span> per km per truck";
-            html += "</div>";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.##") + "</span> per km per truck");
+                htmlWriter.Write("</div>");
 
-            html += "\n<div class=\"activityentry\">Each truck load can carry ";
-            if (Number450kgPerTruck == 0)
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + Number450kgPerTruck.ToString("0.###") + "</span>";
-            }
-            html += " 450 kg individuals</div>";
-
-            if (MinimumLoadBeforeSelling > 0 || MinimumTrucksBeforeSelling > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                if (MinimumTrucksBeforeSelling > 0)
+                htmlWriter.Write("\n<div class=\"activityentry\">Each truck load can carry ");
+                if (Number450kgPerTruck == 0)
                 {
-                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required";
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
                 }
-                if (MinimumLoadBeforeSelling > 0)
+                else
                 {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Number450kgPerTruck.ToString("0.###") + "</span>");
+                }
+                htmlWriter.Write(" 450 kg individuals</div>");
+
+                if (MinimumLoadBeforeSelling > 0 || MinimumTrucksBeforeSelling > 0)
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeSelling > 0)
                     {
-                        html += " and each ";
+                        htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required");
                     }
-                    else
+                    if (MinimumLoadBeforeSelling > 0)
                     {
-                        html += "Each ";
+                        if (MinimumTrucksBeforeSelling > 0)
+                        {
+                            htmlWriter.Write(" and each ");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("Each ");
 
+                        }
+                        htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full");
                     }
-                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full";
+                    htmlWriter.Write(" for sales</div>");
                 }
-                html += " for sales</div>";
-            }
 
-            if (MinimumLoadBeforeBuying > 0 || MinimumTrucksBeforeBuying > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                if (MinimumTrucksBeforeBuying > 0)
+                if (MinimumLoadBeforeBuying > 0 || MinimumTrucksBeforeBuying > 0)
                 {
-                    html += "A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required";
-                }
-                if (MinimumLoadBeforeBuying > 0)
-                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeBuying > 0)
                     {
-                        html += " and each ";
+                        htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required");
                     }
-                    else
+                    if (MinimumLoadBeforeBuying > 0)
                     {
-                        html += "Each ";
+                        if (MinimumTrucksBeforeBuying > 0)
+                        {
+                            htmlWriter.Write(" and each ");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("Each ");
 
+                        }
+                        htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full");
                     }
-                    html += "truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full";
+                    htmlWriter.Write(" for purchases</div>");
                 }
-                html += " for purchases</div>";
-            }
 
 
-            if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
-            {
-                html += "\n<div class=\"activityentry\">Each truck will emmit ";
-                if (TruckMethaneEmissions > 0)
+                if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
                 {
-                    html += "<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane";
-                }
-                if (TruckCO2Emissions > 0)
-                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">Each truck will emmit ");
                     if (TruckMethaneEmissions > 0)
                     {
-                        html += ", ";
+                        htmlWriter.Write("<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane");
                     }
-                    html += "<span class=\"setvalue\">" + TruckCO2Emissions.ToString("0.###") + "</span> kg carbon dioxide";
-                }
-                if (TruckN2OEmissions > 0)
-                {
-                    if (TruckMethaneEmissions + TruckCO2Emissions > 0)
+                    if (TruckCO2Emissions > 0)
                     {
-                        html += " and ";
+                        if (TruckMethaneEmissions > 0)
+                        {
+                            htmlWriter.Write(", ");
+                        }
+                        htmlWriter.Write("<span class=\"setvalue\">" + TruckCO2Emissions.ToString("0.###") + "</span> kg carbon dioxide");
                     }
-                    html += "<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg nitrous oxide";
-                }
-                html += " per km";
-                html += "</div>";
+                    if (TruckN2OEmissions > 0)
+                    {
+                        if (TruckMethaneEmissions + TruckCO2Emissions > 0)
+                        {
+                            htmlWriter.Write(" and ");
+                        }
+                        htmlWriter.Write("<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg nitrous oxide");
+                    }
+                    htmlWriter.Write(" per km");
+                    htmlWriter.Write("</div>");
 
-                if (TruckMethaneEmissions > 0)
-                {
-                    html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
-                    if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                    if (TruckMethaneEmissions > 0)
                     {
-                        html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+                        htmlWriter.Write("\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                        if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                        {
+                            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
+                        }
+                        else
+                        {
+                            htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+                        }
+                        htmlWriter.Write("</div>");
                     }
-                    else
+                    if (TruckCO2Emissions > 0)
                     {
-                        html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
+                        htmlWriter.Write("\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ");
+                        if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
+                        {
+                            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present");
+                        }
+                        else
+                        {
+                            htmlWriter.Write($"<span class=\"resourcelink\">{CarbonDioxideStoreName}</span>");
+                        }
+                        htmlWriter.Write("</div>");
                     }
-                    html += "</div>";
+                    if (TruckN2OEmissions > 0)
+                    {
+                        htmlWriter.Write("\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
+                        if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+                        {
+                            htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
+                        }
+                        else
+                        {
+                            htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
+                        }
+                        htmlWriter.Write("</div>");
+                    }
                 }
-                if (TruckCO2Emissions > 0)
-                {
-                    html += "\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ";
-                    if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
-                    {
-                        html += "<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present";
-                    }
-                    else
-                    {
-                        html += $"<span class=\"resourcelink\">{CarbonDioxideStoreName}</span>";
-                    }
-                    html += "</div>";
-                }
-                if (TruckN2OEmissions > 0)
-                {
-                    html += "\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ";
-                    if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                    {
-                        html += "<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present";
-                    }
-                    else
-                    {
-                        html += $"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>";
-                    }
-                    html += "</div>";
-                }
+
+                return htmlWriter.ToString(); 
             }
-
-            return html;
         } 
         #endregion
 

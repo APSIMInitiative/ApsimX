@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -26,15 +27,26 @@
         {
             if (model == null || string.IsNullOrEmpty(fieldName))
                 return string.Empty;
-            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (field != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
                 if (unitsAttribute != null)
                     return unitsAttribute.ToString();
             }
-
-            return string.Empty;
+            
+            PropertyInfo property = model.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (property != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return unitsAttribute.ToString();
+            }
+            // Didn't find untis - try parent.
+            if (model.Parent != null)
+                return GetUnits(model.Parent, model.Name);
+            else
+                return string.Empty;
         }
 
         /// <summary>Gets the description from a declaraion.</summary>
@@ -320,6 +332,29 @@
                 }
                 else if (line == "[DocumentView]")
                     tags.Add(new ModelView(model));
+                else if (line.StartsWith("[DocumentChart "))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    var words = line.Replace("[DocumentChart ", "").Replace("]", "").Split(',');
+                    if (words.Length == 4)
+                    {
+                        var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
+                        if (xypairs != null)
+                        {
+                            childrenDocumented.Add(xypairs);
+                            var xName = words[2];
+                            var yName = words[3];
+                            tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                        }
+                    }
+                }
+                else if (line.StartsWith("[DocumentMathFunction"))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    var operatorChar = line["[DocumentMathFunction".Length + 1];
+                    childrenDocumented.AddRange(DocumentMathFunction(model, operatorChar, tags, headingLevel, indent));
+                }
+
                 else
                     paragraphSoFar += line + "\r\n";
 
@@ -352,9 +387,12 @@
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = model.FindByPath(macro, true)?.Value;
+                        object value = EvaluateModelPath(model, macro);
                         if (value != null)
                         {
+                            if (value is Array)
+                                value = StringUtilities.Build(value as Array, Environment.NewLine);
+                            
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());
                         }
@@ -364,10 +402,47 @@
                     }
                 }
 
-                posMacro = line.IndexOf('[', posMacro + 1);
+                if (posMacro < line.Length)
+                    posMacro = line.IndexOf('[', posMacro + 1);
             }
 
             return line;
+        }
+
+        /// <summary>
+        /// Evaluate a path that can include child models, properties or method calls.
+        /// </summary>
+        /// <param name="model">The reference model.</param>
+        /// <param name="path">The path to locate</param>
+        private static object EvaluateModelPath(IModel model, string path)
+        {
+            object obj = model;
+            foreach (var word in path.Split('.'))
+            {
+                if (word.EndsWith("()"))
+                {
+                    // Process a method (with no arguments) call.
+                    // e.g. GetType()
+                    var methodName = word.Replace("()", "");
+                    var method = obj.GetType().GetMethod(methodName);
+                    if (method != null)
+                        obj = method.Invoke(obj, null);
+                }
+                else if (obj is IModel && word == "Units")
+                    obj = GetUnits(model, model.Name);
+                else if (obj is IModel)
+                {
+                    // Process a child or property of a model.
+                    obj = (obj as IModel).FindByPath(word, true)?.Value;
+                }
+                else
+                {
+                    // Process properties / fields of an object (not an IModel)
+                    obj = ReflectionUtilities.GetValueOfFieldOrProperty(word, obj);
+                }
+            }
+
+            return obj;
         }
 
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
@@ -432,6 +507,78 @@
                 if (child.IncludeInDocumentation && 
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
+        }
+
+        /// <summary>
+        /// Document the mathematical function.
+        /// </summary>
+        /// <param name="function">The IModel function.</param>
+        /// <param name="op">The operator</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        private static List<IModel> DocumentMathFunction(IModel function, char op,
+                                                         List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // create a string to display 'child1 - child2 - child3...'
+            string msg = string.Empty;
+            List<IModel> childrenToDocument = new List<IModel>();
+            foreach (IModel child in function.FindAllChildren<IFunction>())
+            {
+                if (msg != string.Empty)
+                    msg += " " + op + " ";
+
+                if (!AddChildToMsg(child, ref msg))
+                    childrenToDocument.Add(child);
+            }
+
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
+
+            // write children
+            if (childrenToDocument.Count > 0)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+
+                foreach (IModel child in childrenToDocument)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+            }
+
+            return childrenToDocument;
+        }
+
+        /// <summary>
+        /// Return the name of the child or it's value if the name of the child is equal to 
+        /// the written value of the child. i.e. if the value is 1 and the name is 'one' then
+        /// return the value, instead of the name.
+        /// </summary>
+        /// <param name="child">The child model.</param>
+        /// <param name="msg">The message to add to.</param>
+        /// <returns>True if child's value was added to msg.</returns>
+        private static bool AddChildToMsg(IModel child, ref string msg)
+        {
+            if (child is Constant)
+            {
+                double doubleValue = (child as Constant).FixedValue;
+                if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
+                {
+                    int intValue = Convert.ToInt32(doubleValue, CultureInfo.InvariantCulture);
+                    string writtenInteger = Integer.ToWritten(intValue);
+                    writtenInteger = writtenInteger.Replace(" ", "");  // don't want spaces.
+                    if (writtenInteger.Equals(child.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        msg += intValue.ToString();
+                        return true;
+                    }
+                }
+            }
+            else if (child is VariableReference)
+            {
+                msg += StringUtilities.RemoveTrailingString((child as VariableReference).VariableName, ".Value()");
+                return true;
+            }
+
+            msg += child.Name;
+            return false;
         }
 
         /// <summary>

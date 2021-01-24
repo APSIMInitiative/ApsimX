@@ -105,8 +105,6 @@ namespace UserInterface.Presenters
                 tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
                 if (tablesFilter != null && tablesFilter.Length > 0)
                     tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
-                if (tableDropDown.Values.Length == 1)
-                    tableDropDown.SelectedIndex = 0;
                 checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
                 if (checkpointDropDown.Values.Length > 0)
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
@@ -114,6 +112,7 @@ namespace UserInterface.Presenters
                 {
                     maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                tableDropDown.SelectedIndex = -1;
             }
 
             tableDropDown.Changed += this.OnTableSelected;

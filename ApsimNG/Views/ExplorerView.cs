@@ -20,7 +20,7 @@ namespace UserInterface.Views
     {
         private VBox rightHandView;
         private Gtk.TreeView treeviewWidget;
-        private HTMLView descriptionView;
+        private MarkdownView descriptionView;
 
         /// <summary>Default constructor for ExplorerView</summary>
         public ExplorerView(ViewBase owner) : base(owner)
@@ -92,10 +92,10 @@ namespace UserInterface.Views
             {
                 if (descriptionView == null)
                 {
-                    descriptionView = new HTMLView(this);
+                    descriptionView = new MarkdownView(this);
                     rightHandView.PackStart(descriptionView.MainWidget, false, false, 0);
                 }
-                descriptionView.SetContents(description, false);
+                descriptionView.Text = description;
             }
         }
 

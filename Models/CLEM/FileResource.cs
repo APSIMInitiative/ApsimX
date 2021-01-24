@@ -348,75 +348,76 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">FILE NOT SET</span>";
-            }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-            }
-
-            if (FileName != null && FileName.Contains(".xls"))
-            {
-                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                htmlWriter.Write("\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
                 {
-                    html += " with <span class=\"errorlink\">WORKSHEET NOT SET</span>";
+                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 }
                 else
                 {
-                    html += " with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>";
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
                 }
-            }
-            html += "</div>";
-            //            html += "\n<div class=\"activityentry\">";
-            html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ";
-            if (ResourceNameColumnName is null || ResourceNameColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ";
-            if (YearColumnName is null || YearColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + YearColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ";
-            if (MonthColumnName is null || MonthColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-            }
 
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ";
-            if (AmountColumnName is null || AmountColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
-            }
+                if (FileName != null && FileName.Contains(".xls"))
+                {
+                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                    {
+                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
+                    }
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
+                if (ResourceNameColumnName is null || ResourceNameColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                if (YearColumnName is null || YearColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                if (MonthColumnName is null || MonthColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                }
 
-            html += "\n</div>";
-            return html;
+                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
+                if (AmountColumnName is null || AmountColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
+                }
+
+                htmlWriter.Write("\n</div>");
+                return htmlWriter.ToString(); 
+            }
         }
 
         #endregion
