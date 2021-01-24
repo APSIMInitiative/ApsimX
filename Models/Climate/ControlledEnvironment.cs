@@ -213,7 +213,6 @@ namespace Models.Climate
         public ControlledEnvironment()
         {
             AirPressure = 1010;
-            DiffuseFraction = 1;
         }
 
         /// <summary>

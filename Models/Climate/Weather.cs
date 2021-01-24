@@ -556,7 +556,7 @@
             if (AirPressure == 0)
                 this.AirPressure = 1010;
             if (DiffuseFraction == 0)
-                this.DiffuseFraction = 1;
+                this.DiffuseFraction = -1;
             if (reader != null)
             {
                 reader.Close();
