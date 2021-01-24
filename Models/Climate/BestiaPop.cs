@@ -203,6 +203,7 @@ namespace Models.Climate
         /// <summary>
         /// Diffuse radiation fraction.
         /// </summary>
+        [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction
         {

@@ -168,6 +168,7 @@
         public double AirPressure { get; set; }
 
         /// <summary>Diffuse radiation fraction. If not specified in the weather file the default is 1.</summary>
+        [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction { get; set; }
 

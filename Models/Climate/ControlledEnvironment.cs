@@ -132,6 +132,7 @@ namespace Models.Climate
         /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
         /// </summary>
         [Description("Diffuse Fraction")]
+        [Units("0-1")]
         public double DiffuseFraction { get; set; }
 
         /// <summary>

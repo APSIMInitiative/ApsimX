@@ -328,6 +328,7 @@
         /// <summary>
         /// Gets or sets the DF value found in weather file or zero if not specified
         /// </summary>
+        [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction { get; set; }
 
