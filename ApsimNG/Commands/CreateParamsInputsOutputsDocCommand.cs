@@ -89,8 +89,7 @@
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
+            explorerPresenter.ApsimXFile.DocumentModel(objectToDocument.Name, tags, 1);
 
             // If there are parameters then write them to the tags.
             if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
