@@ -437,7 +437,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">All individuals of ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals of ");
                 if (RuminantTypeName == null || RuminantTypeName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[HERD NOT SET]</span>");
@@ -456,7 +456,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>");
                 }
                 htmlWriter.Write(" will graze for ");
-                htmlWriter.Write("\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
                 if (HoursGrazed <= 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");

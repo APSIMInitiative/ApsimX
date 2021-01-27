@@ -67,7 +67,7 @@ namespace Models.CLEM.Groupings
                 }
 
                 RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 switch (ft)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
@@ -143,7 +143,7 @@ namespace Models.CLEM.Groupings
 
                 if (overfeed)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Individual's intake will be limited to Potential intake x the modifer for max overfeeding");
                     if (!(this.Parent as RuminantActivityFeed).StopFeedingWhenSatisfied)
                     {
@@ -167,7 +167,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");

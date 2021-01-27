@@ -248,7 +248,7 @@ namespace Models.CLEM.Activities
                     {
                         if (previousTag == HarvestData.FirstOrDefault().HarvestType)
                         {
-                            string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\nEnsure tags are ordered first, last in sequence.";
+                            string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\r\nEnsure tags are ordered first, last in sequence.";
                             if (!Warnings.Exists(warn))
                             {
                                 Summary.WriteWarning(this, warn);
@@ -703,15 +703,15 @@ namespace Models.CLEM.Activities
             {
                 if (TreesPerHa > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
                 }
                 if (ProportionKept == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
                 }
                 if (StoreItemName == null || StoreItemName == "")
                 {
@@ -722,7 +722,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"resourcelink\">" + StoreItemName + "</span>");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">Data is retrieved from ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Data is retrieved from ");
                 if (ModelNameFileCrop == null || ModelNameFileCrop == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[CROP FILE NOT SET]</span>");
@@ -740,7 +740,7 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("<span class=\"filelink\">" + CropName + "</span>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }
@@ -767,15 +767,15 @@ namespace Models.CLEM.Activities
                 if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
                 {
                     // close off the parent item so it displays
-                    html += "\n</div>";
+                    html += "\r\n</div>";
                 }
             }
 
             bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
             if (mixed)
             {
-                html += "\n<div class=\"cropmixedlabel\">Mixed crop</div>";
-                html += "\n<div class=\"cropmixedborder\">";
+                html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
+                html += "\r\n<div class=\"cropmixedborder\">";
             }
             html += base.ModelSummaryOpeningTags(formatForParentControl);
             return html;

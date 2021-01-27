@@ -269,7 +269,7 @@ namespace Models.CLEM
                     if (this.reader.Headings == null)
                     {
                         string fileType = "Text file";
-                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
                         {
                             fileType = "Comma delimited text file (csv)";
@@ -350,7 +350,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
@@ -376,8 +376,8 @@ namespace Models.CLEM
                     }
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
                 if (ResourceNameColumnName is null || ResourceNameColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -386,7 +386,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
                 if (YearColumnName is null || YearColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -395,7 +395,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
                 if (MonthColumnName is null || MonthColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -405,7 +405,7 @@ namespace Models.CLEM
                     htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
                 }
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
                 if (AmountColumnName is null || AmountColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -415,7 +415,7 @@ namespace Models.CLEM
                     htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
                 }
 
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

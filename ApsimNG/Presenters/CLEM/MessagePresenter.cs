@@ -182,12 +182,12 @@ namespace UserInterface.Presenters
                                     {
                                         type = "warning";
                                         title = "Resource shortfalls occurred";
-                                        msgStr += "\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                        msgStr += "  \r\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
                                     }
                                 }
                             }
 
-                            markdownWriter.Write("\n###");
+                            markdownWriter.Write("  \r\n### ");
                             markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");
@@ -197,23 +197,23 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("[o=", "**");
                             msgStr = msgStr.Replace("[m=", @".market-**");
                             msgStr = msgStr.Replace("[", "**");
-                            msgStr = msgStr.Replace("\n", "  \n");
+                            msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
                             msgStr = msgStr.Replace("</b>", "**");
-                            markdownWriter.Write("\n");
+                            markdownWriter.Write("  \r\n");
                             markdownWriter.Write(msgStr);
                         }
                     }
                     if (dataRows.Count() > maxErrors)
                     {
-                        markdownWriter.Write("##Warning limit reached");
-                        markdownWriter.Write("\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
+                        markdownWriter.Write("## Warning limit reached");
+                        markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
                     }
                 }
                 else
                 {
-                    markdownWriter.Write("\n### Message");
-                    markdownWriter.Write("\nThis simulation has not been performed");
+                    markdownWriter.Write("\r\n### Message");
+                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
                 }
                 return markdownWriter.ToString(); 
             }

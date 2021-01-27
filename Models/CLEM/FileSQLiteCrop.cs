@@ -176,7 +176,7 @@ namespace Models.CLEM
                 // check table exists
                 if(!sQLiteReader.GetTableNames().Contains(TableName))
                 {
-                    string errorMsg = "The specified table named ["+TableName+ "] was not found\n. Please note these table names are case sensitive.";
+                    string errorMsg = "The specified table named ["+TableName+ "] was not found\r\n. Please note these table names are case sensitive.";
                     throw new ApsimXException(this, errorMsg);
                 }
 
@@ -197,7 +197,7 @@ namespace Models.CLEM
                     {
                         if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                         {
-                            string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
+                            string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\r\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
                             throw new ApsimXException(this, errorMsg);
                         }
                     }
@@ -205,7 +205,7 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
             if(sQLiteReader.IsOpen)
@@ -254,7 +254,7 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\n" + ex.Message;
+                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\r\n" + ex.Message;
             }
 
             // check if Npct and harvestColumn column exists in database
@@ -286,7 +286,7 @@ namespace Models.CLEM
             }
             catch(Exception ex)
             {
-                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
 
@@ -349,16 +349,16 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else if (!this.FileExists)
                 {
                     htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else
                 {
@@ -366,16 +366,16 @@ namespace Models.CLEM
 
                     if (TableName == null || TableName == "")
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>");
                     }
                     else
                     {
                         // Add table name
-                        htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
                         htmlWriter.Write("Using table <span class=\"filelink\">" + TableName + "</span>");
                         // add column links
-                        htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                        htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
                         if (SoilTypeColumnName is null || SoilTypeColumnName == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -384,7 +384,7 @@ namespace Models.CLEM
                         {
                             htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
                         }
-                        htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
                         if (CropNameColumnName is null || CropNameColumnName == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -393,7 +393,7 @@ namespace Models.CLEM
                         {
                             htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
                         }
-                        htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
                         if (YearColumnName is null || YearColumnName == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -402,7 +402,7 @@ namespace Models.CLEM
                         {
                             htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
                         }
-                        htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
                         if (MonthColumnName is null || MonthColumnName == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -412,7 +412,7 @@ namespace Models.CLEM
                             htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
                         }
 
-                        htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
                         if (AmountColumnName is null || AmountColumnName == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -423,23 +423,23 @@ namespace Models.CLEM
                         }
                         if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
                         {
-                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
                         }
                         else
                         {
-                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
                         }
                         if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
                         {
-                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
                         }
                         else
                         {
-                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
                         }
-                        htmlWriter.Write("\n</div>");
+                        htmlWriter.Write("\r\n</div>");
                     }
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }

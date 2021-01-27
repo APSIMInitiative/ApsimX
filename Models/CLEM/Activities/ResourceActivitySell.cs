@@ -298,7 +298,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Sell ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Sell ");
                 switch (SellStyle)
                 {
                     case ResourceSellStyle.SpecifiedAmount:

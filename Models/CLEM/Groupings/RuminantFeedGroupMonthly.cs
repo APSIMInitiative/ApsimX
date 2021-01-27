@@ -91,7 +91,7 @@ namespace Models.CLEM.Groupings
                 var grps = MonthlyValues.GroupBy(a => a).OrderBy(a => a.Key);
 
                 RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (grps.Count() > 1)
                 {
                     htmlWriter.Write("From ");
@@ -179,7 +179,7 @@ namespace Models.CLEM.Groupings
 
                 if (overfeed)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted");
                     htmlWriter.Write("</div>");
                 }
@@ -194,7 +194,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");

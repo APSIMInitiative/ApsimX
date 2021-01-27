@@ -132,7 +132,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filter\">");
+                htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Perform when ");
                 if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
                 {
@@ -187,7 +187,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

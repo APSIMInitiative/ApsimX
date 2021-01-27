@@ -187,12 +187,12 @@ namespace Models.CLEM.Resources
         {
             string html = base.ModelSummary(formatForParentControl);
 
-            html += "\n<div class=\"activityentry\">";
+            html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)
             {
                 html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
             }
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 

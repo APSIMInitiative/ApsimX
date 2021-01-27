@@ -291,33 +291,33 @@ namespace Models.CLEM.Activities
             {
                 if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">At harvest");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n<div class=\"filter\">At harvest");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("All <span class=\"setvalueextra\">");
                     htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest (\"first\" if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
                 else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("All <span class=\"setvalueextra\">");
                     htmlWriter.Write(OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest (\"last\" if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
                 else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("Perform <span class=\"setvalueextra\">");
                     htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before \"first\" (if using HarvestType)" : "after \"last\" (if using HarvestType)") + " harvest");
                     htmlWriter.Write("</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("Start <span class=\"setvalueextra\">");
                     htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
                     htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after \"last\" (if using HarvestType) " : "before \"first\" (if using HarvestType) ");
@@ -357,7 +357,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

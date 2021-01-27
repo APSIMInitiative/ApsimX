@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
         {
             if (Area == 0 && UseAreaAvailable)
             {
-                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
+                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
             }
         }
 
@@ -293,7 +293,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">This crop uses ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
 
                 Land parentLand = null;
                 IModel clemParent = FindAncestor<ZoneCLEM>();
@@ -343,7 +343,7 @@ namespace Models.CLEM.Activities
             {
                 if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
                 {
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }
@@ -359,7 +359,7 @@ namespace Models.CLEM.Activities
             {
                 if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
                     htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
                     htmlWriter.Write("</div>");
                 }
@@ -368,9 +368,9 @@ namespace Models.CLEM.Activities
                     bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
                     if (rotation)
                     {
-                        htmlWriter.Write("\n<div class=\"croprotationlabel\">Rotating through crops</div>");
+                        htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
                     }
-                    htmlWriter.Write("\n<div class=\"croprotationborder\">");
+                    htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
                 }
                 return htmlWriter.ToString(); 
             }

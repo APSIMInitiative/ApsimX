@@ -262,7 +262,7 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This activity uses a category label ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                     if (Category != null && Category != "")
                     {
                         htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");

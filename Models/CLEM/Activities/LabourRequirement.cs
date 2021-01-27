@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"setvalue\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
                 // get amount
                 htmlWriter.Write(LabourPerUnit.ToString() + "</span> days labour is required");
                 if (UnitType != LabourUnitType.Fixed)
@@ -195,15 +195,15 @@ namespace Models.CLEM.Activities
 
                 if (MinimumPerPerson > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
                 }
                 if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
                 }
                 if (ApplyToAll)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
                 }
 
                 return htmlWriter.ToString(); 
@@ -216,7 +216,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -227,12 +227,12 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"labourgroupsborder\">");
+                htmlWriter.Write("\r\n<div class=\"labourgroupsborder\">");
                 htmlWriter.Write("<div class=\"labournote\">The required labour will be taken from each of the following groups</div>");
 
                 if (this.FindAllChildren<LabourFilterGroup>().Count() == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                     htmlWriter.Write("<div class=\"filtererror\">No filter group provided</div>");
                     htmlWriter.Write("</div>");
                 }

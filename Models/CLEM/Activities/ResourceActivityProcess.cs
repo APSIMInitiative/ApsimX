@@ -279,7 +279,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Process ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
                 if (ResourceTypeProcessedName == null || ResourceTypeProcessedName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
@@ -309,7 +309,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (Reserve > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.");
                     htmlWriter.Write("</div>");
                 }

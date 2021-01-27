@@ -495,7 +495,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Feed ruminants ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
 
                 if (FeedTypeName == null || FeedTypeName == "")
                 {
@@ -509,7 +509,7 @@ namespace Models.CLEM.Activities
 
                 if (ProportionTramplingWastage > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
                 }
                 return htmlWriter.ToString(); 
             }

@@ -191,7 +191,7 @@ namespace Models.CLEM.Resources
             {
                 if (!formatForParentControl)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (Number <= 0)
                     {
                         htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
@@ -209,11 +209,11 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"setvalue\">" + Gender.ToString() + "</span></div>");
                     if (Suckling)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
                     }
                     if (Sire)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
                     }
 
                     RuminantType rumtype = FindAncestor<RuminantType>();
@@ -228,7 +228,7 @@ namespace Models.CLEM.Resources
 
                     if (WeightSD > 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals will be randomally assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
 
                         if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                         {
@@ -237,7 +237,7 @@ namespace Models.CLEM.Resources
                     }
                     else
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
                         if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                         {
                             htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
@@ -251,7 +251,7 @@ namespace Models.CLEM.Resources
                     if (this.Parent is CLEMActivityBase)
                     {
                         // when formatted for parent control. i.e. child fo trade 
-                        htmlWriter.Write("\n<div class=\"resourcebanneralone clearfix\">");
+                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                         htmlWriter.Write("Buy ");
                         if (Number > 0)
                         {
@@ -296,7 +296,7 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write("Normalised weight");
                             htmlWriter.Write("</span>");
                         }
-                        htmlWriter.Write("\n</div>");
+                        htmlWriter.Write("\r\n</div>");
                     }
                 }
                 return htmlWriter.ToString(); 
@@ -329,12 +329,12 @@ namespace Models.CLEM.Resources
                             (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                         }
 
-                        htmlWriter.Write("\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>");
+                        htmlWriter.Write("\r\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>");
                     }
                 }
                 else
                 {
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }

@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ");
                 if (AccountName == null || AccountName == "")
                 {
@@ -180,7 +180,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (IsOverhead)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This is an overhead</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This is an overhead</div>");
                 }
 
                 return htmlWriter.ToString(); 
