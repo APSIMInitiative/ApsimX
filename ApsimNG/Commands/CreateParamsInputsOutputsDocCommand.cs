@@ -265,10 +265,24 @@
             Type type;
             bool isList = false;
             bool isArray = false;
-            if (memberType.IsGenericType && memberType.GetInterface("IList") != null)
+            bool isEnumerable = false;
+            if (memberType.IsByRef)
+                return GetTypeName(memberType.GetElementType());
+            if (memberType.GetInterface("IList") != null)
             {
-                type = memberType.GenericTypeArguments[0];
+                if (memberType.IsGenericType)
+                    type = memberType.GenericTypeArguments[0];
+                else// if (memberType.HasElementType)
+                    type = memberType.GetElementType();
                 isList = true;
+            }
+            else if (memberType.GetInterface("IEnumerable") != null)
+            {
+                if (memberType.IsGenericType)
+                    type = memberType.GenericTypeArguments[0];
+                else// if (memberType.HasElementType)
+                    type = memberType.GetElementType();
+                isEnumerable = true;
             }
             else if (memberType.IsArray)
             {
@@ -287,9 +301,7 @@
             if (type.IsValueType && type.Namespace.StartsWith("System"))
                 typeName = typeName.ToLower();
 
-            if (isList)
-                typeName += "List<" + typeName + ">";
-            else if (isArray)
+            if (isArray)
                 typeName += "[]";
 
             if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
@@ -297,6 +309,11 @@
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
                     typesToDocument.Add(type);
                 typeName = string.Format("<a href=\"#{0}\">{1}</a>", type.Name, typeName);
+
+                if (isList)
+                    typeName = $"List&lt;{typeName}&gt;";
+                else if (isEnumerable)
+                    typeName = $"IEnumerable&lt;{typeName}&gt;";
             }
 
             return typeName;
@@ -385,7 +402,7 @@
 
             foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public |
                                                    System.Reflection.BindingFlags.Instance |
-                                                   System.Reflection.BindingFlags.FlattenHierarchy))
+                                                   System.Reflection.BindingFlags.DeclaredOnly))
             {
                 if (!method.IsSpecialName)
                 {
@@ -401,7 +418,7 @@
                     string remarks = AutoDocumentation.GetRemarks(method);
                     if (!string.IsNullOrEmpty(remarks))
                         description += Environment.NewLine + Environment.NewLine + remarks;
-
+                    string methodName = method.Name;
                     if (description != null)
                         description = "<i>" + description + "</i>"; // italics
                     var st = string.Format("<p>{0} {1}({2})</p>{3}",
