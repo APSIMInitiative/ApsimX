@@ -130,13 +130,21 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
+
+            // get amount to processed
+            double amountToProcess = resourceTypeProcessModel.Amount;
+            if (Reserve > 0)
+            {
+                amountToProcess = Math.Min(amountToProcess, Reserve);
+            }
+
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    daysNeeded = requirement.UnitSize * requirement.LabourPerUnit;
+                    daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));

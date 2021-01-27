@@ -73,6 +73,11 @@ namespace Models.CLEM
         private int nitrogenPercentIndex;
 
         /// <summary>
+        /// The character spacing index for the harvest type column
+        /// </summary>
+        private int harvestTypeIndex;
+
+        /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
         /// </summary>
         private DataTable forageFileAsTable;
@@ -145,6 +150,12 @@ namespace Models.CLEM
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
 
+        /// <summary>
+        /// Name of column holding harvest details
+        /// </summary>
+        [Summary]
+        [Description("Column name for harvest type")]
+        public string HarvestTypeColumnName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -200,6 +211,7 @@ namespace Models.CLEM
             this.monthIndex = 0;
             this.amountKgIndex = 0;
             this.nitrogenPercentIndex = 0;
+            this.harvestTypeIndex = 0;
             this.forageFileAsTable = GetAllData();
         }
 
@@ -276,7 +288,10 @@ namespace Models.CLEM
                 {
                     cropProps.Add(PercentNitrogenColumnName);
                 }
-
+                if (harvestTypeIndex != -1)
+                {
+                    cropProps.Add(HarvestTypeColumnName);
+                }
                 DataTable table = this.reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
@@ -380,6 +395,24 @@ namespace Models.CLEM
                 cropdata.Npct = double.NaN;
             }
 
+            //HarvestType column is optional 
+            //Only try to read it in if it exists in the file.
+            if (harvestTypeIndex != -1)
+            {
+                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString().ToLower()))
+                {
+                    cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
+                }
+                else
+                {
+                    cropdata.HarvestType = "";
+                }
+            }
+            else
+            {
+                cropdata.HarvestType = "";
+            }
+
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
             return cropdata;
@@ -420,6 +453,7 @@ namespace Models.CLEM
                     this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName);
                     this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName);
                     this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, PercentNitrogenColumnName);
+                    this.harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, HarvestTypeColumnName);
 
                     if (this.soilNumIndex == -1)
                     {
@@ -579,6 +613,15 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
                 }
+                if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+                }
+
                 htmlWriter.Write("\n</div>");
 
                 htmlWriter.Write("\n</div>");
@@ -630,5 +673,10 @@ namespace Models.CLEM
         /// Day is set to the 1st of the month.
         /// </summary>
         public DateTime HarvestDate;
+
+        /// <summary>
+        /// Harvest type identifier
+        /// </summary>
+        public string HarvestType;
     }
 }

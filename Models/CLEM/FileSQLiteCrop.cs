@@ -36,6 +36,7 @@ namespace Models.CLEM
     public class FileSQLiteCrop : CLEMModel, IFileCrop, IValidatableObject
     {
         private bool nitrogenColumnExists = false;
+        private bool harvestTypeColumnExists = false;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
@@ -107,6 +108,13 @@ namespace Models.CLEM
         public string PercentNitrogenColumnName { get; set; }
 
         /// <summary>
+        /// Name of column holding harvest details
+        /// </summary>
+        [Summary]
+        [Description("Column name for harvest type")]
+        public string HarvestTypeColumnName { get; set; }
+
+        /// <summary>
         /// Gets or sets the full file name (with path). 
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
@@ -168,7 +176,7 @@ namespace Models.CLEM
                 // check table exists
                 if(!sQLiteReader.GetTableNames().Contains(TableName))
                 {
-                    string errorMsg = "The specified table named ["+TableName+ "] was not found\n. Please not these table names are case sensitive.";
+                    string errorMsg = "The specified table named ["+TableName+ "] was not found\n. Please note these table names are case sensitive.";
                     throw new ApsimXException(this, errorMsg);
                 }
 
@@ -179,12 +187,13 @@ namespace Models.CLEM
                     { "soil", SoilTypeColumnName },
                     { "crop", CropNameColumnName },
                     { "amount", AmountColumnName },
-                    { "N", PercentNitrogenColumnName }
+                    { "N", PercentNitrogenColumnName },
+                    { "HarvestType", PercentNitrogenColumnName }
                 };
                 foreach (var item in columnLinks)
                 {
                     // check each column name exists
-                    if (!(item.Key == "N" & item.Value == ""))
+                    if (!(item.Key == "N" & item.Value == "" & item.Value == "HarvestType"))
                     {
                         if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                         {
@@ -248,11 +257,12 @@ namespace Models.CLEM
                 ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\n" + ex.Message;
             }
 
-            // check if Npct column exists in database
+            // check if Npct and harvestColumn column exists in database
             nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
+            harvestTypeColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(HarvestTypeColumnName);
 
             // define SQL filter to load data
-            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + SoilTypeColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + " FROM " + TableName
+            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + SoilTypeColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM " + TableName
                 + " WHERE " + SoilTypeColumnName + " = '" + soilId + "'"
                 + " AND " + CropNameColumnName + " = '" + cropName + "'";
 
@@ -318,6 +328,11 @@ namespace Models.CLEM
             {
                 cropdata.Npct = double.NaN;
             }
+            if(harvestTypeColumnExists)
+            {
+                cropdata.HarvestType = dr[HarvestTypeColumnName].ToString();
+            }
+
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
             return cropdata;
@@ -413,6 +428,14 @@ namespace Models.CLEM
                         else
                         {
                             htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+                        }
+                        if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                        {
+                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
                         }
                         htmlWriter.Write("\n</div>");
                     }
