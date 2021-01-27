@@ -178,6 +178,12 @@ namespace UserInterface.Classes
             // fixme - need to fix this unmaintainable mess brought across from the old PropertyPresenter
             DisplayAttribute attrib = metadata.GetCustomAttribute<DisplayAttribute>();
             DisplayType displayType = attrib?.Type ?? DisplayType.None;
+
+            // For compatibility with the old PropertyPresenter, assume a default of
+            // DisplayType.DropDown if the Values property is specified.
+            if (displayType == DisplayType.None && !string.IsNullOrEmpty(attrib?.Values))
+                displayType = DisplayType.DropDown;
+
             switch (displayType)
             {
                 case DisplayType.None:
