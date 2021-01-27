@@ -156,9 +156,9 @@ namespace UserInterface.Presenters
                                     case "@validation":
                                         type = "Error";
                                         title = "Validation error";
-                                        msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                        msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                        msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
+                                        msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
+                                        msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
+                                        msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
                                         msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
                                         break;
                                 }
@@ -190,12 +190,12 @@ namespace UserInterface.Presenters
                             markdownWriter.Write("\n###");
                             markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
-                            msgStr = msgStr.Replace("[r=", "(resource)**");
-                            msgStr = msgStr.Replace("[a=", "(activity)**");
-                            msgStr = msgStr.Replace("[f=", "(filter)**");
+                            msgStr = msgStr.Replace("[r=", @".resource-**");
+                            msgStr = msgStr.Replace("[a=", @".activity-**");
+                            msgStr = msgStr.Replace("[f=", @".filter-**");
                             msgStr = msgStr.Replace("[x=", "**");
                             msgStr = msgStr.Replace("[o=", "**");
-                            msgStr = msgStr.Replace("[m=", "(market)**");
+                            msgStr = msgStr.Replace("[m=", @".market-**");
                             msgStr = msgStr.Replace("[", "**");
                             msgStr = msgStr.Replace("\n", "  \n");
                             msgStr = msgStr.Replace("<b>", "**");
@@ -212,8 +212,8 @@ namespace UserInterface.Presenters
                 }
                 else
                 {
-                    markdownWriter.Write("\n Message");
-                    markdownWriter.Write("\n  This simulation has not been performed");
+                    markdownWriter.Write("\n### Message");
+                    markdownWriter.Write("\nThis simulation has not been performed");
                 }
                 return markdownWriter.ToString(); 
             }
