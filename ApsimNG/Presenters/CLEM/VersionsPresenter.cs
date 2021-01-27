@@ -48,7 +48,6 @@ namespace UserInterface.Presenters
             this.genericView.Text = CreateMarkdown();
         }
 
-
         private string CreateMarkdown()
         {
             string markdownString = "";

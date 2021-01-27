@@ -335,6 +335,10 @@ namespace Models.CLEM.Reporting
                         {
                             data = filteredData.CopyToDataTable();
                         }
+                        else
+                        {
+                            data = new DataTable();
+                        }
                     }
 
                 }
