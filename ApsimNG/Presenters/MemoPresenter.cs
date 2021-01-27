@@ -110,6 +110,8 @@
                 editButton.Text = "Hide";
                 textView.Visible = true;
                 helpButton.Visible = true;
+                if (textView.MainWidget.Parent is Gtk.Paned paned && paned.Position == 0)
+                    paned.Position = paned.Allocation.Height / 2;
             }
             else
             {

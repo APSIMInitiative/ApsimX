@@ -50,13 +50,13 @@ namespace UserInterface.Views
         /// </summary>
         public bool Visible
         {
-            get => editor.Visible;
+            get => mainWidget.Visible;
             set
             {
                 if (value)
-                    editor.ShowAll();
+                    mainWidget.ShowAll();
                 else
-                    editor.Hide();
+                    mainWidget.HideAll();
             }
         }
 
