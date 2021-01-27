@@ -1611,7 +1611,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This approach is based upon that described by [Porter2000PhD] to account for the impacts of population and row/plant spacing.",
+                      "Text": "This approach is based upon that described by [Porter2000PhD] to account for the impacts of population and row/plant spacing.  Extinction coefficient is said to decrease with decreasing inter-plant spacing within the plant row.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2127,6 +2127,36 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Maturity",
+                      "End": "HarvestRipe",
+                      "Name": "Senescent",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.1,
+                          "Units": null,
+                          "Name": "Rate",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6588,7 +6618,7 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 420",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1500",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1450",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.66",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
@@ -6672,7 +6702,10 @@
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
                     "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
-                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0"
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0",
+                    "",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.X = 5, 335",
+                    "[Leaf].ExtinctionCoefficient.XYPairs.Y = 0.2, 0.55"
                   ],
                   "Name": "VB97",
                   "Children": [],
@@ -6697,7 +6730,9 @@
                     "[Leaf].ExtinctionCoefficient.XYPairs.Y = 0.6, 0.6",
                     "",
                     "[Leaf].SpecificArea.XYPairs.X = 0, 17, 21, 35",
-                    "[Leaf].SpecificArea.XYPairs.Y = .02, .02, .02, .02"
+                    "[Leaf].SpecificArea.XYPairs.Y = .02, .02, .02, .02",
+                    "",
+                    "[Leaf].SenescenceRate.Reproductive.Rate.Modifier.FixedValue = 100"
                   ],
                   "Name": "Florunner",
                   "Children": [],
@@ -15981,24 +16016,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "SowingDate",
-                              "Value": "12/12/1989 00:00:00"
-                            },
-                            {
-                              "Key": "CultivarName",
-                              "Value": "EarlyBunch"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "600"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "EarlyBunch"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "12/12/1989 00:00:00"
                             }
                           ],
                           "Name": "SowingRule",
@@ -16873,24 +16908,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "900"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "5"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "5"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "900"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "5",
@@ -16903,24 +16938,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "900"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "10"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "10"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "900"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "10",
@@ -16933,24 +16968,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "900"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "15"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "15"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "900"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "15",
@@ -16963,24 +16998,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "450"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "20"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "20"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "450"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "20",
@@ -16993,24 +17028,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "450"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "25"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "25"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "450"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "25",
@@ -17023,24 +17058,24 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "RowSpacing",
-                              "Value": "450"
-                            },
-                            {
-                              "Key": "SowingDepth",
-                              "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "30"
+                              "Key": "SowingDate",
+                              "Value": "11/14/1996 00:00:00"
                             },
                             {
                               "Key": "CultivarName",
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingDate",
-                              "Value": "11/14/1996 00:00:00"
+                              "Key": "SowingRate",
+                              "Value": "30"
+                            },
+                            {
+                              "Key": "RowSpacing",
+                              "Value": "450"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
                             }
                           ],
                           "Name": "30",
@@ -18825,16 +18860,16 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = (1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A)*1000;\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
+                            },
+                            {
                               "Key": "SpacingRatio",
                               "Value": "1"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -19561,7 +19596,7 @@
                           "YFieldName": "Peanut.Leaf.LAI",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -23587,10 +23622,23 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                              "Parameters": [],
-                              "Name": "Harvest",
+                              "$type": "Models.Operations, Models",
+                              "Operation": [
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1990-10-10",
+                                  "Action": "[Peanut].Harvest();",
+                                  "Enabled": true
+                                },
+                                {
+                                  "$type": "Models.Operation, Models",
+                                  "Date": "1990-10-10",
+                                  "Action": "[Peanut].EndCrop();",
+                                  "Enabled": true
+                                }
+                              ],
+                              "Name": "Harvesting",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
