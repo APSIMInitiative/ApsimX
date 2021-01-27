@@ -3641,6 +3641,7 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals by group
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifierYng
         {
             get
@@ -3654,6 +3655,7 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals total
         /// </summary>
+        [Units("-")]
         public double IntakeModifierYngAll
         {
             get
@@ -3667,6 +3669,7 @@
         /// <summary>
         /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals by tag number
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifierYngTag
         {
             get

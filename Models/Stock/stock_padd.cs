@@ -156,6 +156,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the green mass of the forage
         /// </summary>
+        [Units("kg/ha")]
         public double GreenMass { get; set; }
 
         /// <summary>
@@ -174,6 +175,7 @@ namespace Models.GrazPlan
         /// Gets the total dead herbage used as input in GrazingInputs
         /// Units: the same as the forage object
         /// </summary>
+        [Units("kg/ha")]
         public double TotalDead
         {
             get
