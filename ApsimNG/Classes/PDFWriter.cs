@@ -564,7 +564,12 @@
             graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
             graph.FormatAxis(Models.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(Models.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
+
+            var units = AutoDocumentation.GetUnits(graphAndTable.xyPairs, graphAndTable.yName);
+            var yaxisTitle = graphAndTable.yName;
+            if (!string.IsNullOrEmpty(units))
+                yaxisTitle += " (" + units + ")";
+            graph.FormatAxis(Models.Axis.AxisType.Left, yaxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -733,6 +738,10 @@
                         }
                     }
                 }
+
+                // Increase maxSize by a 'padding' value to allow for padding between the table cell
+                // contents and the table borders.
+                maxSize += 20;
 
                 // maxWidth is the maximum allowed width of the column. E.g. if tableObj.ColumnWidth
                 // is 50, then maxWidth is the amount of space taken up by 50 characters.
