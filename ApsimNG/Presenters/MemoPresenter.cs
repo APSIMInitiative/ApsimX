@@ -4,9 +4,8 @@
     using Models;
     using Views;
     using System;
-    using System.Windows.Forms;
-    using Microsoft.Azure.Batch.Protocol.BatchRequests;
     using APSIM.Shared.Utilities;
+    using Commands;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -56,7 +55,6 @@
             markdownView.Text = memoModel.Text;
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
-            //this.memoViewer.SetContents(this.memoModel.Text, true);
         }
 
         private void HelpBtnClicked(object sender, EventArgs e)
@@ -92,7 +90,10 @@
             }
         }
 
-        /// <summary>User has changed the text.</summary>
+        /// <summary>
+        /// User has changed the text in the editable textview.
+        /// We need to update the live markdown preview.
+        /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
         private void OnTextHasChanged(object sender, EventArgs e)
@@ -126,19 +127,8 @@
         {
             editButton.Clicked -= OnEditButtonClick;
             helpButton.Clicked -= HelpBtnClicked;
-            memoModel.Text = textView.Text;
-            //try
-            //{
-            //    string markdown = this.memoViewer.GetMarkdown();
-            //    if (markdown != this.memoModel.Text)
-            //    {
-            //        this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "Text", markdown));
-            //    }
-            //}
-            //catch (Exception err)
-            //{
-            //    explorerPresenter.MainPresenter.ShowError(err);
-            //}
+            ICommand changeText = new ChangeProperty(memoModel, nameof(memoModel.Text), textView.Text);
+            explorerPresenter.CommandHistory.Add(changeText);
         }
 
         /// <summary>
@@ -148,10 +138,7 @@
         public void OnModelChanged(object changedModel)
         {
             if (changedModel == this.memoModel)
-            {
-                this.markdownView.Text = ((Memo)changedModel).Text;
-            }
+                this.markdownView.Text = memoModel.Text;
         }
-
     }
 }
