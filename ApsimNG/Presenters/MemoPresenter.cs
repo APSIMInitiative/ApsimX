@@ -23,7 +23,7 @@
         private MarkdownView markdownView;
 
         /// <summary>The raw text view.</summary>
-        private EditorView textView;
+        private TextInputView textView;
 
         /// <summary>The edit button.</summary>
         private ButtonView editButton;
@@ -43,14 +43,15 @@
             explorerPresenter = parentPresenter;
 
             markdownView = (view as ViewBase).GetControl<MarkdownView>("markdownView");
-            textView = (view as ViewBase).GetControl<EditorView>("textEditor");
+            textView = (view as ViewBase).GetControl<TextInputView>("textEditor");
             editButton = (view as ViewBase).GetControl<ButtonView>("editButton");
             helpButton = (view as ViewBase).GetControl<ButtonView>("helpButton");
             helpButton.Clicked += HelpBtnClicked;
-            textView.Mode = EditorType.Other;
             textView.Visible = false;
+            textView.WrapText = true;
+            textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
             textView.Text = memoModel.Text;
-            textView.TextHasChangedByUser += OnTextHasChanged;
+            textView.Changed += OnTextHasChanged;
             markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
             markdownView.Text = memoModel.Text;
             editButton.Clicked += OnEditButtonClick;
