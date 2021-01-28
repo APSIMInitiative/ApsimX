@@ -751,7 +751,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -762,19 +762,19 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"croprotationborder\">");
+                htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
                 htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
 
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
                     htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
                     htmlWriter.Write("</div>");
                 }
 
                 if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
                     htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
                     htmlWriter.Write("</div>");
                 }

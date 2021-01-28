@@ -48,7 +48,6 @@ namespace UserInterface.Presenters
             this.genericView.Text = CreateMarkdown();
         }
 
-
         private string CreateMarkdown()
         {
             string markdownString = "";
@@ -56,7 +55,7 @@ namespace UserInterface.Presenters
             foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
             {
                 markdownString += $"### v {item.ToString()}";
-                markdownString += $"  \n{(item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\n", "  \n"))}  \n  \n";
+                markdownString += $"  {Environment.NewLine} {(item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\r\n", "  \r\n  \r\n "))}  {Environment.NewLine}  {Environment.NewLine}";
             }
             return markdownString;
         }

@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
-                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
                 if (!Warnings.Exists(warn) & Summary != null)
                 {
                     Summary.WriteWarning(this, warn);
@@ -348,7 +348,7 @@ namespace Models.CLEM.Resources
                 {
                     // add warning the market does not have the resource
                     string zoneName = FindAncestor<Zone>().Name;
-                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\nAdd resource and associated components to the market to permit trading.";
+                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
@@ -626,7 +626,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>
@@ -635,7 +635,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         #endregion

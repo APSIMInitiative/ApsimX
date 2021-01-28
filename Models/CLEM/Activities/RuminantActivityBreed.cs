@@ -28,9 +28,9 @@ namespace Models.CLEM.Activities
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
     [Version(1, 0, 7, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
-    [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\nThis change requires all simulations to be performed again.")]
+    [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\r\nThis change requires all simulations to be performed again.")]
     [Version(1, 0, 4, "Implemented conception status reporting.")]
-    [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
+    [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\r\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
@@ -474,7 +474,7 @@ namespace Models.CLEM.Activities
                 // Get conception rate from conception model associated with the Ruminant Type parameters
                 if (female.BreedParams.ConceptionModel == null)
                 {
-                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\nPlease add a conception component below the [r=RuminantType]", female.BreedParams.Name));
+                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\r\nPlease add a conception component below the [r=RuminantType]", female.BreedParams.Name));
                 }
                 return female.BreedParams.ConceptionModel.ConceptionRate(female);
             }
@@ -676,25 +676,25 @@ namespace Models.CLEM.Activities
             {
                 if (UseAI)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Using Artificial insemination");
                     htmlWriter.Write("</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("This simulation uses natural (uncontrolled) mating");
                     htmlWriter.Write("</div>");
                 }
                 if (InferStartupPregnancy)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Pregnancy status of breeders from matings prior to simulation start will be predicted");
                     htmlWriter.Write("</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred");
                     htmlWriter.Write("</div>");
                 }

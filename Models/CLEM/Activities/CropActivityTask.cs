@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
             // if first step of parent rotation
             // and timer failed because of harvest data
             int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
-            if (Clock.Today.Year*100+Clock.Today.Month == start)
+            if (Clock.Today.Year * 100 + Clock.Today.Month == start)
             {
                 // check if it can only occur before this rotation started
                 ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault() as ActivityTimerCropHarvest;
@@ -81,9 +81,9 @@ namespace Models.CLEM.Activities
                     if (chtimer.ActivityPast)
                     {
                         this.Status = ActivityStatus.Warning;
-                        if(!timingIssueReported)
+                        if (!timingIssueReported)
                         {
-                            Summary.WriteWarning(this, String.Format("The harvest timer for crop task [a="+this.Name+"] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", this.Name));
+                            Summary.WriteWarning(this, String.Format("The harvest timer for crop task [a=" + this.Name + "] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", this.Name));
                             timingIssueReported = true;
                         }
                     }
@@ -98,8 +98,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            double daysNeeded;
             double numberUnits;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -159,6 +159,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
+
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, this.Category, RelatesToResourceName);
         }
 
@@ -225,10 +226,20 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.Parent.GetType() != typeof(CropActivityManageProduct))
+            IModel follow = this.Parent;
+            while(!(follow is ActivitiesHolder))
             {
-                string[] memberNames = new string[] { "Parent model" };
-                results.Add(new ValidationResult("A crop activity task must be placed immediately below a CropActivityManageProduct model component", memberNames));
+                if(follow is CropActivityManageProduct)
+                {
+                    return results;
+                }
+                if(!(follow is ActivityFolder))
+                {
+                    string[] memberNames = new string[] { "Parent model" };
+                    results.Add(new ValidationResult("A [a=CropActivityTask] must be placed immediately below, or within nested [a=ActivityFolders] below, a [a=CropActivityManageProduct] component", memberNames));
+                    return results;
+                }
+                follow = follow.Parent;
             }
             return results;
         }
@@ -251,7 +262,7 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This activity uses a category label ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                     if (Category != null && Category != "")
                     {
                         htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");

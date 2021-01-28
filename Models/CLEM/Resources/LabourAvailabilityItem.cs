@@ -75,7 +75,7 @@ namespace Models.CLEM.Resources
             {
                 if (!formatForParentControl)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (Value <= 0)
                     {
                         htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
@@ -115,7 +115,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
 
                 return htmlWriter.ToString(); 
@@ -140,7 +140,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                     if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">Any labour</div>");

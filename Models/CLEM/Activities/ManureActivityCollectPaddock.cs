@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">Collect manure from ";
+            string html = "\r\n<div class=\"activityentry\">Collect manure from ";
             if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
             {
                 html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
