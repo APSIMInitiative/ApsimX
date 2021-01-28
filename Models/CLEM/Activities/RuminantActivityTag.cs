@@ -248,7 +248,7 @@ namespace Models.CLEM.Activities
             {
                 tagstring = "<span class=\"errorlink\">[NOT SET]</span> ";
             }
-            return $"\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
+            return $"\r\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
         }
         #endregion
     }

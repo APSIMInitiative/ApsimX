@@ -308,7 +308,7 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (LandArea == 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
@@ -339,9 +339,9 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

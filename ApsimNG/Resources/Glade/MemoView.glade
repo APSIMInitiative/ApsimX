@@ -85,18 +85,17 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVBox" id="textEditor">
+          <object class="GtkScrolledWindow" id="textEditor">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <child>
-              <placeholder/>
-            </child>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
             <child>
               <placeholder/>
             </child>
           </object>
           <packing>
-            <property name="resize">False</property>
+            <property name="resize">True</property>
             <property name="shrink">True</property>
           </packing>
         </child>

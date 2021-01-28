@@ -69,7 +69,7 @@ namespace Models.CLEM.Groupings
                 }
 
                 LabourFeedActivityTypes ft = (this.Parent as LabourActivityFeed).FeedStyle;
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 switch (ft)
                 {
                     case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
@@ -121,7 +121,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 if (this.FindAllChildren<LabourFilter>().Count() == 0)
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
