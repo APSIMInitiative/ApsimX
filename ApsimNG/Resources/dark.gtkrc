@@ -1,6 +1,7 @@
 # Based on arc-theme:
 # https://github.com/horst3180/arc-theme
 
+gtk-tooltip-timeout = 60
 gtk-icon-sizes = "gtk-menu=13,13:gtk-small-toolbar=16,16:gtk-large-toolbar=24,24:gtk-dnd=32,32"
 gtk-toolbar-icon-size = small-toolbar
 
