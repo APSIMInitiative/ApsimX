@@ -63,11 +63,13 @@
         public ISolute AddUrineObj;
 
         /// <summary>The soil layer thickness</summary>
+        [Units("mm")]
         public double[] SoilLayerThickness { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock area (ha)
         /// </summary>
+        [Units("ha")]
         public double Area
         {
             get
@@ -88,6 +90,7 @@
         /// <summary>
         /// Gets or sets the total pot. intake
         /// </summary>
+        [Units("kg")]
         public double SummedPotIntake { get; set; }
 
         /// <summary>

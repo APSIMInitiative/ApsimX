@@ -314,6 +314,8 @@ namespace UserInterface.Views
                 //    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
                 else if (inline is CodeInline codeInline)
                     textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, tags.Union(GetTags(null, indent + 1)).ToArray());
+                else if (inline is LineBreakInline br)
+                    textView.Buffer.InsertWithTags(ref insertPos, br.IsHard ? "\n" : " ", tags);
                 else
                 {
                 }

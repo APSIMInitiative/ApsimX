@@ -175,6 +175,7 @@ namespace Models.GrazPlan
 
         /// <summary>Animal type</summary>
         [Description("Animal type")]
+        [Units("-")]
         public GrazType.AnimalType Animal { get; set; }
 
         /// <summary>Dairy intake peak (c-idy-0)</summary>
