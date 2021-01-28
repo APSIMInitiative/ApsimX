@@ -143,7 +143,13 @@ namespace UserInterface.Views
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
-                        propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                    {
+                        Label separatorLabel = new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true };
+                        EventBox box = new EventBox();
+                        box.Realized += OnSeparatorLabelRealized;
+                        box.Add(separatorLabel);
+                        propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
+                    }
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
@@ -170,6 +176,27 @@ namespace UserInterface.Views
             {
                 propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
                 AddPropertiesToTable(ref table, subProperties, ref startRow);
+            }
+        }
+
+        /// <summary>
+        /// Called by the separator labels (well, technically by their
+        /// parent EventBox) when they are realized. Changes the insensitive
+        /// background colour to that of the normal background colour, to
+        /// make the cells more distinct.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnSeparatorLabelRealized(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is Widget widget)
+                    widget.ModifyBg(StateType.Insensitive, widget.Style.Background(StateType.Normal));
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
