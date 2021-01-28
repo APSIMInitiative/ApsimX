@@ -850,7 +850,7 @@ namespace Models.CLEM.Activities
                             {
                                 // keep by removing any tag for sale.
                                 female.SaleFlag = HerdChangeReason.None;
-                                female.Location = GrazeFoodStoreNameBreeders;
+                                female.Location = grazeStoreBreeders;
                                 excessBreeders--;
                                 this.Status = ActivityStatus.Success;
                             }
@@ -863,7 +863,7 @@ namespace Models.CLEM.Activities
                             {
                                 female.TagRemove("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;
-                                female.Location = GrazeFoodStoreNameBreeders;
+                                female.Location = grazeStoreBreeders;
                                 excessBreeders--;
                                 this.Status = ActivityStatus.Success;
                             }
