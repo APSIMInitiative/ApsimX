@@ -371,7 +371,7 @@ namespace Models.CLEM.Resources
         {
             if(Manager == null)
             {
-                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
+                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
             }
         }
 
@@ -756,7 +756,7 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("This pasture has an initial green nitrogen content of ");
                 if (this.GreenNitrogen == 0)
                 {
@@ -771,30 +771,30 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write(" and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 if (DecayDMD > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 if (DetachRate > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month");
                     if (CarryoverDetachRate > 0)
                     {
                         htmlWriter.Write(" and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
                     }
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else
                 {
                     if (CarryoverDetachRate > 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
-                        htmlWriter.Write("\n</div>");
+                        htmlWriter.Write("\r\n</div>");
                     }
                 }
                 return htmlWriter.ToString(); 

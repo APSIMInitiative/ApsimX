@@ -192,7 +192,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public virtual string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>\n</div>";
+            return "\r\n</div>\r\n</div>";
         }
 
         /// <summary>
@@ -259,9 +259,9 @@ namespace Models.CLEM
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
-                htmlWriter.Write("\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
+                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
                 return htmlWriter.ToString(); 
             }
@@ -290,7 +290,7 @@ namespace Models.CLEM
                     string units = (this as IResourceType).Units;
                     if (units != "NA")
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">This resource is measured in  ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">This resource is measured in  ");
                         if (units == null || units == "")
                         {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
@@ -306,7 +306,7 @@ namespace Models.CLEM
                 {
                     if (this.Children.Count() == 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">Empty</div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
                     }
                 }
                 return htmlWriter.ToString(); 
@@ -370,13 +370,13 @@ namespace Models.CLEM
             // includes <!-- graphscript --> to add graphing js details if needed
             // includes <!-- CLEMZoneBody --> to add multiple components for overall summary
 
-            string htmlString = "<!DOCTYPE html>\n" +
-                "<html>\n<head>\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\n" +
-                "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\n" +
-                "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\n" +
-                "<meta http-equiv = \"Expires\" content = \"0\" />\n" +
-                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
-                "<style>\n" +
+            string htmlString = "<!DOCTYPE html>\r\n" +
+                "<html>\r\n<head>\r\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\r\n" +
+                "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\r\n" +
+                "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\r\n" +
+                "<meta http-equiv = \"Expires\" content = \"0\" />\r\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" +
+                "<style>\r\n" +
                 "body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 ".resource table,th,td {border: 1px solid #996633; }" +
@@ -449,7 +449,7 @@ namespace Models.CLEM
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".holdersub {margin: 5px 0px 5px}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
-                "\n</style>\n<!-- graphscript --></ head>\n<body>\n<!-- CLEMZoneBody -->";
+                "\r\n</style>\r\n<!-- graphscript --></ head>\r\n<body>\r\n<!-- CLEMZoneBody -->";
 
             // apply theme based settings
             if (!darkTheme)
@@ -537,10 +537,10 @@ namespace Models.CLEM
 
                     if (apsimFilename == "")
                     {
-                        htmlWriter.Write("\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
+                        htmlWriter.Write("\r\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
                     }
                 }
-                htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
 
                 string fullname = modelToSummarise.Name;
                 if (modelToSummarise is CLEMModel)
@@ -558,17 +558,17 @@ namespace Models.CLEM
                 }
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"defaultcontent\">");
+                htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
 
                 if(apsimFilename != "")
                 {
-                    htmlWriter.Write($"\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Filename: {apsimFilename}</div>");
                     Model sim = (modelToSummarise as Model).FindAncestor<Simulation>();
-                    htmlWriter.Write($"\n<div class=\"activityentry\">Simulation: {sim.Name}</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Simulation: {sim.Name}</div>");
                 }
 
-                htmlWriter.Write($"\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}</div>");
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}</div>");
+                htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
                 {
@@ -593,7 +593,7 @@ namespace Models.CLEM
 
                 if (!bodyOnly)
                 {
-                    htmlWriter.WriteLine("\n</body>\n</html>");
+                    htmlWriter.WriteLine("\r\n</body>\r\n</html>");
                 }
 
                 if (htmlWriter.ToString().Contains("<canvas"))

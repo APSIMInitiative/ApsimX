@@ -365,11 +365,17 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        // for calves
+                        // if potential intake = 0 they wave not needed to consume pasture and intake will be zero.
+                        if(ind.PotentialIntake > 0)
+                        {
+                            ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        }
 
-                        if (ind.Intake == 0)
+                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
+
+                        if (ind.MilkIntake + ind.Intake  <= 0)
                         {
                             unfedcalves++;
                         }
@@ -395,7 +401,7 @@ namespace Models.CLEM.Activities
                     string warn = $"individuals of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }
@@ -405,7 +411,7 @@ namespace Models.CLEM.Activities
                     string warn = $"calves of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }
@@ -802,7 +808,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">The gross energy content of forage is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The gross energy content of forage is ");
 
                 if (EnergyGross == 0)
                 {
@@ -815,7 +821,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write(" MJ/kg dry matter</div>");
 
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");

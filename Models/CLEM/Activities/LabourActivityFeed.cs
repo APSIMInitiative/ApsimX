@@ -310,7 +310,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Feed people ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
                 if (FeedTypeName == null || FeedTypeName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");

@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">All individuals in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in ");
                 if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");

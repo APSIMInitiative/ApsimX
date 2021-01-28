@@ -84,11 +84,11 @@ namespace Models.CLEM.Resources
                 {
                     if (MonthlyValues == null)
                     {
-                        return "\n<div class=\"activityentry\">No availability provided</div>";
+                        return "\r\n<div class=\"activityentry\">No availability provided</div>";
                     }
                     double min = MonthlyValues.Min();
                     double max = MonthlyValues.Max();
-                    htmlWriter.Write("\n<div class=\"activityentry\">Monthly availability ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Monthly availability ");
                     if (min != max)
                     {
                         htmlWriter.Write("ranges from ");
@@ -145,7 +145,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }
@@ -169,7 +169,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                     if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">Any labour</div>");

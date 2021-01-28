@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
+    [Version(1, 0, 3, "Accepts harvest tags for multiple harvests of single crop")]
     [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
@@ -44,6 +45,9 @@ namespace Models.CLEM.Activities
     
         private CropActivityManageProduct ManageProductActivity;
         private List<ActivityTimerSequence> sequenceTimerList;
+        private int lastDate = 0;
+        private bool lastStatus = false;
+        private int[] month;
 
         /// <summary>
         /// Notify CLEM that this activity was performed.
@@ -68,112 +72,158 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Method to determine whether the activity is due based on harvest details form parent.
+        /// Method to determine whether the activity is due based on harvest details from parent.
         /// </summary>
         /// <returns>Whether the activity is due in the current month</returns>
         public bool ActivityDue
         {
             get
             {
-                int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
-                int[] month = new int[2];
-
-                DateTime harvestDate;
-
-                if (ManageProductActivity.PreviousHarvest != null && OffsetMonthHarvestStop > 0)
+                if(ManageProductActivity.ActivityEnabled)
                 {
-                    // compare with previous harvest
-                    harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
-                }
-                else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart <= 0)
-                {
-                    // compare with next harvest 
-                    harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
-                }
-                else
-                {
-                    // no harvest to compare with
-                    return false;
-                }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 12 + checkDate.Month);
-                }
-
-                int today = Clock.Today.Year * 12 + Clock.Today.Month;
-                if (month[0] <= today && month[1] >= today)
-                {
-                    // report activity performed details.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                    // check and return status if already calculated
+                    if (lastDate == today)
                     {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name,
-                        }
-                    };
-                    // check if timer sequence ok
-                    if (sequenceTimerList.Count() > 0)
+                        return lastStatus;
+                    }
+                    lastDate = today;
+                    month = CalculateMonthBounds(today);
+
+                    if (month[0] <= today && month[1] >= today)
                     {
-                        // get month index in sequence
-                        int sequenceIndex = today - month[0];
-                        foreach (var sequence in sequenceTimerList)
+                        // report activity performed details.
+                        ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                         {
-                            if (!sequence.TimerOK(sequenceIndex))
+                            Activity = new BlankActivity()
                             {
-                                // report activity performed.
-                                activitye.Activity.Status = ActivityStatus.NotNeeded;
-                                activitye.Activity.SetGuID(this.UniqueID);
-                                this.OnActivityPerformed(activitye);
-                                return false;
+                                Status = ActivityStatus.Timer,
+                                Name = this.Name,
+                            }
+                        };
+                        // check if timer sequence ok
+                        if (sequenceTimerList.Count() > 0)
+                        {
+                            // get month index in sequence
+                            int sequenceIndex = today - month[0];
+                            foreach (var sequence in sequenceTimerList)
+                            {
+                                if (!sequence.TimerOK(sequenceIndex))
+                                {
+                                    // report activity performed.
+                                    activitye.Activity.Status = ActivityStatus.NotNeeded;
+                                    activitye.Activity.SetGuID(this.UniqueID);
+                                    this.OnActivityPerformed(activitye);
+                                    lastStatus = false;
+                                    return false;
+                                }
                             }
                         }
+                        activitye.Activity.SetGuID(this.UniqueID);
+                        this.OnActivityPerformed(activitye);
+                        lastStatus = true;
+                        return true;
                     }
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    this.OnActivityPerformed(activitye);
-                    return true;
+                    lastStatus = false;
                 }
                 return false;
             }
         }
 
+        private int[] CalculateMonthBounds(int todayInt)
+        {
+            int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
+            DateTime[] dates = new DateTime[2];
+            int[] month = new int[2];
+
+            // fill in the start and end dates of the harvest period
+            // uses first and last tag information or single entry if no harvest tags supplied
+
+            if (ManageProductActivity.HarvestTagsUsed)
+            {
+                // if all before and up to harvest
+                if (ManageProductActivity.StartCurrentSequenceHarvest != null && OffsetMonthHarvestStart < 0 && OffsetMonthHarvestStop <=0)
+                {
+                    dates[0] = ManageProductActivity.StartCurrentSequenceHarvest.HarvestDate;
+                    dates[1] = ManageProductActivity.StartCurrentSequenceHarvest.HarvestDate;
+                }
+                else if (ManageProductActivity.EndCurrentSequenceHarvest != null && OffsetMonthHarvestStart >= 0 && OffsetMonthHarvestStop > 0)
+                {
+                    dates[0] = ManageProductActivity.EndCurrentSequenceHarvest.HarvestDate;
+                    dates[1] = ManageProductActivity.EndCurrentSequenceHarvest.HarvestDate;
+                }
+                else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart == 0 && OffsetMonthHarvestStop == 0)
+                {
+                    dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
+                    dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
+                }
+                else
+                {
+                    if (ManageProductActivity.PreviousHarvest != null && OffsetMonthHarvestStop > 0)
+                    {
+                        // compare with previous harvest
+                        dates[0] = ManageProductActivity.PreviousHarvest.HarvestDate;
+                        dates[1] = ManageProductActivity.PreviousHarvest.HarvestDate;
+                    }
+                    else if (ManageProductActivity.NextHarvest != null && OffsetMonthHarvestStart <= 0)
+                    {
+                        // compare with next harvest 
+                        dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
+                        dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
+                    }
+                    else
+                    {
+                        return new int[] {0,0 };
+                    }
+                }
+            }
+            else
+            {
+                int check = 0;
+                if (ManageProductActivity.PreviousHarvest != null)
+                {
+                    check = ManageProductActivity.PreviousHarvest.HarvestDate.Year * 12 + ManageProductActivity.PreviousHarvest.HarvestDate.Month;
+                    check = todayInt - check;
+                }
+                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0 & check <= OffsetMonthHarvestStop)
+                {
+                    // compare with previous harvest
+                    dates[0] = ManageProductActivity.PreviousHarvest.HarvestDate;
+                    dates[1] = ManageProductActivity.PreviousHarvest.HarvestDate;
+                }
+                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
+                {
+                    // compare with next harvest 
+                    dates[0] = ManageProductActivity.NextHarvest.HarvestDate;
+                    dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
+                }
+                else
+                {
+                    return new int[] { 0, 0 };
+                }
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                DateTime checkDate = dates[i].AddMonths(range[i]);
+                month[i] = (checkDate.Year * 12 + checkDate.Month);
+            }
+            return month;
+        }
+
         /// <summary>
-        /// Method to determine whether the activity has past based on current date and harvest details form parent.
+        /// Method to determine whether the activity has past based on current date and harvest details from parent.
         /// </summary>
         /// <returns>Whether the activity is past</returns>
         public bool ActivityPast
         {
             get
             {
-                int[] range = new int[2] { OffsetMonthHarvestStart, OffsetMonthHarvestStop };
-                int[] month = new int[2];
-
-                DateTime harvestDate;
-
-                if (ManageProductActivity.PreviousHarvest != null & OffsetMonthHarvestStop > 0)
-                {
-                    // compare with previous harvest
-                    harvestDate = ManageProductActivity.PreviousHarvest.HarvestDate;
-                }
-                else if (ManageProductActivity.NextHarvest != null & OffsetMonthHarvestStart <= 0)
-                {
-                    // compare with next harvest 
-                    harvestDate = ManageProductActivity.NextHarvest.HarvestDate;
-                }
-                else
-                {
-                    // no harvest to compare with
-                    return false;
-                }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    DateTime checkDate = harvestDate.AddMonths(range[i]);
-                    month[i] = (checkDate.Year * 12 + checkDate.Month);
-                }
                 int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                if (lastDate != today)
+                {
+                    month = CalculateMonthBounds(today);
+                }
                 return (month[0] < today && month[1] < today);
             }
         }
@@ -241,39 +291,39 @@ namespace Models.CLEM.Activities
             {
                 if (OffsetMonthHarvestStart + OffsetMonthHarvestStop == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">At harvest");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n<div class=\"filter\">At harvest");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else if (OffsetMonthHarvestStop == 0 && OffsetMonthHarvestStart < 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("All <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " before harvest (\"first\" if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
                 else if (OffsetMonthHarvestStop > 0 && OffsetMonthHarvestStart == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("All <span class=\"setvalueextra\">");
-                    htmlWriter.Write(OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest");
+                    htmlWriter.Write(OffsetMonthHarvestStop.ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " after harvest (\"last\" if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
                 else if (OffsetMonthHarvestStop == OffsetMonthHarvestStart)
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("Perform <span class=\"setvalueextra\">");
-                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before" : "after") + " harvest");
+                    htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " " + ((OffsetMonthHarvestStop < 0) ? "before \"first\" (if using HarvestType)" : "after \"last\" (if using HarvestType)") + " harvest");
                     htmlWriter.Write("</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"filter\">");
+                    htmlWriter.Write("\r\n<div class=\"filter\">");
                     htmlWriter.Write("Start <span class=\"setvalueextra\">");
                     htmlWriter.Write(Math.Abs(OffsetMonthHarvestStart).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStart) == 1 ? "" : "s") + " ");
-                    htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after " : "before ");
+                    htmlWriter.Write((OffsetMonthHarvestStart > 0) ? "after \"last\" (if using HarvestType) " : "before \"first\" (if using HarvestType) ");
                     htmlWriter.Write(" harvest and stop <span class=\"setvalueextra\">");
                     htmlWriter.Write(Math.Abs(OffsetMonthHarvestStop).ToString() + "</span> month" + (Math.Abs(OffsetMonthHarvestStop) == 1 ? "" : "s") + " ");
-                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after " : "before ");
+                    htmlWriter.Write((OffsetMonthHarvestStop > 0) ? "after \"last\" (if using HarvestType)" : "before \"first\" (if using HarvestType)");
                     htmlWriter.Write("</div>");
                 }
                 if (!this.Enabled)
@@ -307,7 +357,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

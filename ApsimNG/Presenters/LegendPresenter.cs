@@ -2,8 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Commands;
     using Models;
+    using Models.Core;
     using Views;
+
+    using Orientation = Models.Graph.LegendOrientationType;
+    using Position = Models.Graph.LegendPositionType;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
@@ -11,6 +17,15 @@
     /// </summary>
     public class LegendPresenter : IPresenter
     {
+
+        private static readonly string[] positions = Enum.GetValues(typeof(Position))
+                                    .Cast<Enum>()
+                                    .Select(e => VariableProperty.GetEnumDescription(e)).ToArray();
+        private static readonly string[] orientations = Enum.GetValues(typeof(Orientation))
+                                    .Cast<Enum>()
+                                    .Select(e => VariableProperty.GetEnumDescription(e))
+                                    .ToArray();
+
         /// <summary>
         /// Graph object
         /// </summary>
@@ -53,12 +68,13 @@
             // Trap change event from the model.
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
-            // Trap events from the view.
-            this.view.OnPositionChanged += this.OnTitleChanged;
-            this.view.LegendInsideGraphChanged += this.OnLegendInsideGraphChanged;
-
             // Tell the view to populate the axis.
             this.PopulateView();
+        
+            // Trap events from the view.
+            this.view.LegendInsideGraphChanged += this.OnLegendInsideGraphChanged;
+            this.view.OrientationDropDown.Changed += OnOrientationChanged;
+            this.view.PositionDropDown.Changed += OnPositionChanged;
         }
 
         /// <summary>
@@ -70,8 +86,6 @@
             this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
             // Trap events from the view.
-            this.view.OnPositionChanged -= this.OnTitleChanged;
-
             this.view.DisabledSeriesChanged -= this.OnDisabledSeriesChanged;
             this.view.LegendInsideGraphChanged -= this.OnLegendInsideGraphChanged;
         }
@@ -79,13 +93,10 @@
         /// <summary>Populates the view.</summary>
         private void PopulateView()
         {
-            List<string> values = new List<string>();
-            foreach (Graph.LegendPositionType value in Enum.GetValues(typeof(Graph.LegendPositionType)))
-            {
-                values.Add(value.ToString());
-            }
-
-            this.view.Populate(this.graph.LegendPosition.ToString(), values.ToArray());
+            view.OrientationDropDown.Values = orientations;
+            view.PositionDropDown.Values = positions;
+            view.OrientationDropDown.SelectedValue = graph.LegendOrientation.ToString();
+            view.PositionDropDown.SelectedValue = graph.LegendPosition.ToString();
 
             List<string> seriesNames = this.GetSeriesNames();
             this.view.SetSeriesNames(seriesNames.ToArray());
@@ -111,6 +122,36 @@
             }
 
             return seriesNames;
+        }
+
+        /// <summary>
+        /// Called when the legend position is changed by the user.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnPositionChanged(object sender, EventArgs e)
+        {
+            string text = view.PositionDropDown.SelectedValue;
+            if (Enum.TryParse<Position>(text, out Position position))
+            {
+                ICommand changePosition = new ChangeProperty(graph, nameof(graph.LegendPosition), position);
+                explorerPresenter.CommandHistory.Add(changePosition);
+            }
+        }
+
+        /// <summary>
+        /// Called when the legend orientation is changed by the user.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnOrientationChanged(object sender, EventArgs args)
+        {
+            string text = view.OrientationDropDown.SelectedValue;
+            if (Enum.TryParse<Orientation>(text, out Orientation orientation))
+            {
+                ICommand changeOrientation = new ChangeProperty(graph, nameof(graph.LegendOrientation), orientation);
+                explorerPresenter.CommandHistory.Add(changeOrientation);
+            }
         }
 
         /// <summary>Called when user changes a disabled series.</summary>
@@ -144,9 +185,7 @@
         private void OnModelChanged(object model)
         {
             if (model == this.graph)
-            {
-                this.PopulateView();
-            }
+                PopulateView();
         }
 
         /// <summary>
@@ -158,25 +197,6 @@
         private void OnLegendInsideGraphChanged(object sender, EventArgs e)
         {
             explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(graph, nameof(graph.LegendOutsideGraph), !view.LegendInsideGraph));
-        }
-
-        /// <summary>
-        /// The user has changed the title field on the form. Need to tell the model this via
-        /// executing a command.
-        /// </summary>
-        /// <param name="newText">The text for the title</param>
-        private void OnTitleChanged(string newText)
-        {
-            try
-            {
-                Graph.LegendPositionType legendPosition;
-                Enum.TryParse<Graph.LegendPositionType>(newText, out legendPosition);
-                this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.graph, "LegendPosition", legendPosition));
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
         }
     }
 }

@@ -91,8 +91,8 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\nThe rainfall year starts in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThe rainfall year starts in ");
                 if (StartSeasonMonth == MonthsOfYear.NotSet)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">Not set");
@@ -103,11 +103,11 @@ namespace Models.CLEM
                     htmlWriter.Write(StartSeasonMonth.ToString());
                 }
                 htmlWriter.Write("</span>");
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

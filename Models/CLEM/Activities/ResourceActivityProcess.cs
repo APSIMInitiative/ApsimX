@@ -130,13 +130,21 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
+
+            // get amount to processed
+            double amountToProcess = resourceTypeProcessModel.Amount;
+            if (Reserve > 0)
+            {
+                amountToProcess = Math.Min(amountToProcess, Reserve);
+            }
+
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    daysNeeded = requirement.UnitSize * requirement.LabourPerUnit;
+                    daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
@@ -271,7 +279,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Process ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
                 if (ResourceTypeProcessedName == null || ResourceTypeProcessedName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
@@ -301,7 +309,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (Reserve > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.");
                     htmlWriter.Write("</div>");
                 }

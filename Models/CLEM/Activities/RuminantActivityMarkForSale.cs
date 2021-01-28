@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
+            return "\r\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
         } 
         #endregion
     }

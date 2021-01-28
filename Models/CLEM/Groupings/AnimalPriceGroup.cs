@@ -79,7 +79,7 @@ namespace Models.CLEM.Groupings
             {
                 if (!formatForParentControl)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     switch (PurchaseOrSale)
                     {
                         case PurchaseOrSalePricingStyleType.Both:
@@ -150,7 +150,7 @@ namespace Models.CLEM.Groupings
                 }
                 else
                 {
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }
@@ -174,7 +174,7 @@ namespace Models.CLEM.Groupings
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                     if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");

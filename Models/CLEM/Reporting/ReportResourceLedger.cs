@@ -82,7 +82,7 @@ namespace Models.CLEM.Reporting
             {
                 if(VariableNames.Count() > 1)
                 {
-                    Summary.WriteWarning(this, String.Format("Multiple resource groups not permitted in ReportResourceLedger [{0}]\nAdditional entries have been ignored", this.Name));
+                    Summary.WriteWarning(this, String.Format("Multiple resource groups not permitted in ReportResourceLedger [{0}]\r\nAdditional entries have been ignored", this.Name));
                 }
 
                 for (int i = 0; i < 1; i++)
@@ -95,7 +95,7 @@ namespace Models.CLEM.Reporting
                         CLEMModel model = Resources.GetResourceGroupByName(this.VariableNames[i]) as CLEMModel;
                         if (model == null)
                         {
-                            Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
+                            Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.VariableNames[i], this.Name));
                         }
                         else
                         {
@@ -270,7 +270,7 @@ namespace Models.CLEM.Reporting
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
                 {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
                 }
 
                 // Add row to our table that will be written to the db file

@@ -232,7 +232,8 @@ namespace UserInterface.Classes
                         plant = plantProperty.GetValue(model) as IPlant;
                     else
                         plant = model.FindInScope<IPlant>();
-                    DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    if (plant != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;
