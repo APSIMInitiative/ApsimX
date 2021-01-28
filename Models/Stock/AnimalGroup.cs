@@ -433,9 +433,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the stage of pregnancy
+        /// Gets or sets the stage of pregnancy. Days since conception. 
         /// </summary>
-        [Units("-")]
+        [Units("d")]
         public int Pregnancy
         {
             get { return foetalAge; }
@@ -493,6 +493,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Animal output
         /// </summary>
+        [Units("-")]
         public AnimalOutput AnimalState { get; set; } = new AnimalOutput();
 
         /// <summary>
@@ -538,6 +539,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the excretion information
         /// </summary>
+        [Units("-")]
         public ExcretionInfo Excretion
         {
             get { return this.GetExcretion(); }
@@ -546,6 +548,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the paddock occupied
         /// </summary>
+        [Units("-")]
         public PaddockInfo PaddOccupied { get; set; }
 
         /// <summary>
@@ -557,36 +560,43 @@ namespace Models.GrazPlan
         /// <summary>
         /// 0=mothers, 1=suckling young
         /// </summary>
+        [Units("-")]
         public AnimalStateInfo[] InitState = new AnimalStateInfo[2];
 
         /// <summary>
-        /// RDF factor
+        /// RDP factor
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactor = new double[2];      // [0..1] 
 
         /// <summary>
         /// Index is to forage-within-paddock
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs[] InitForageInputs;
 
         /// <summary>
         /// Forage inputs
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs[] StepForageInputs;
 
         /// <summary>
         /// Paddock grazing inputs
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs PaddockInputs;
 
         /// <summary>
         /// Pasture intake
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
 
         /// <summary>
         /// Supplement intake
         /// </summary>
+        [Units("kg/hd/d")]
         public double[] SuppIntakeRate = new double[2];
 
         // Management events .............................................
@@ -793,7 +803,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the weight change
         /// </summary>
-        [Units("-")]
+        [Units("kg/d")]
         public double WeightChange { get; private set; }
 
         /// <summary>
@@ -829,13 +839,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the milk yield
         /// </summary>
-        [Units("")]
+        [Units("kg")]
         public double MilkYield { get; private set; }
 
         /// <summary>
         /// Gets the milk volume
         /// </summary>
-        [Units("")]
+        [Units("l")]
         public double MilkVolume
         {
             get { return this.GetMilkVolume(); }
@@ -844,7 +854,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the milk yield
         /// </summary>
-        [Units("")]
+        [Units("kg")]
         public double MaxMilkYield
         {
             get { return this.GetMaxMilkYield(); }
@@ -853,7 +863,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the milk energy
         /// </summary>
-        [Units("")]
+        [Units("MJ")]
         public double MilkEnergy { get; private set; }
 
         /// <summary>
@@ -865,11 +875,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the foetal weight
         /// </summary>
+        [Units("kg")]
         public double FoetalWeight { get; private set; }
 
         /// <summary>
         /// Gets the conceptus weight
         /// </summary>
+        [Units("kg")]
         public double ConceptusWeight
         {
             get { return this.ConceptusWt(); }
@@ -878,6 +890,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the male weight
         /// </summary>
+        [Units("kg")]
         public double MaleWeight
         {
             get { return this.GetMaleWeight(); }
@@ -886,6 +899,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the female weight
         /// </summary>
+        [Units("kg")]
         public double FemaleWeight
         {
             get { return this.GetFemaleWeight(); }
@@ -894,6 +908,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the DSE
         /// </summary>
+        [Units("DSE")]
         public double DrySheepEquivs
         {
             get { return this.GetDSEs(); }
@@ -907,6 +922,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the methane weight
         /// </summary>
+        [Units("kg")]
         public double MethaneWeight
         {
             get { return this.GetMethaneWeight(); }
@@ -915,36 +931,43 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the fresh weight supplement intake
         /// </summary>
+        [Units("kg")]
         public double SupplementFreshWeightIntake { get; private set; }
 
         /// <summary>
         /// Gets the intake of supplement
         /// </summary>
+        [Units("-")]
         public FoodSupplement IntakeSupplement { get; private set; }
 
         /// <summary>
-        /// Gets or sets the water logging value
+        /// Gets or sets the waterlogging index (0-1)
         /// </summary>
+        [Units("0-1")]
         public double WaterLogging { get; set; }
 
         /// <summary>
         /// Gets the supplement ration used
         /// </summary>
+        [Units("-")]
         public SupplementRation RationFed { get; private set; }
 
         /// <summary>
         /// Gets or sets the number of animals per hectare
         /// </summary>
+        [Units("-")]
         public double AnimalsPerHa { get; set; }
 
         /// <summary>
         /// Gets or sets the distance walked
         /// </summary>
+        [Units("km")]
         public double DistanceWalked { get; set; }
 
         /// <summary>
-        /// Gets or sets the intake modifier value
+        /// Gets or sets the intake modifier scaling factor for potential intake
         /// </summary>
+        [Units("0-1")]
         public double IntakeModifier { get; set; }
 
         // ------------------ Public methods ------------------
@@ -3017,7 +3040,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the maximum milk yield
         /// </summary>
-        /// <returns></returns>
+        /// <returns>kg</returns>
         private double GetMaxMilkYield()
         {
             if (Lactation == 0)
@@ -3029,7 +3052,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the milk volume
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Litres</returns>
         private double GetMilkVolume()
         {
             if (Lactation == 0)
@@ -3041,7 +3064,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the methane energy
         /// </summary>
-        /// <returns></returns>
+        /// <returns>MJ</returns>
         private double GetMethaneEnergy()
         {
             return this.Genotype.MethC[1] * this.AnimalState.DM_Intake.Solid
@@ -3052,7 +3075,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the methane weight
         /// </summary>
-        /// <returns></returns>
+        /// <returns>kg</returns>
         private double GetMethaneWeight()
         {
             return Genotype.MethC[6] * GetMethaneEnergy();
