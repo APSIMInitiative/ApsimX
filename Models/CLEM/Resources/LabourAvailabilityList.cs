@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() == 0)
             {
-                html += "\n<div class=\"errorlink\">";
+                html += "\r\n<div class=\"errorlink\">";
                 html += "No labour availability has been defined";
                 html += "</div>";
             }

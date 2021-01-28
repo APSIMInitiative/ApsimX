@@ -156,7 +156,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
                 // draw chart
 
                 if (XValues is null || XValues.Length == 0)
@@ -256,7 +256,7 @@ namespace Models.CLEM
                         });
                 </script>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

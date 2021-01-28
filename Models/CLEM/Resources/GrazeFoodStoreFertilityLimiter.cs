@@ -127,8 +127,8 @@ namespace Models.CLEM.Resources
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\nThe nitrogen content of new pasture will be reduced by ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThe nitrogen content of new pasture will be reduced by ");
                 if (NitrogenReduction == 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">Not Set</span>");
@@ -144,7 +144,7 @@ namespace Models.CLEM.Resources
                 if (timerpresent)
                 {
                     htmlWriter.Write("</div>");
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("<b>(A)</b>");
                 }
 
@@ -168,11 +168,11 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"setvalue\">");
                     htmlWriter.Write(AnnualYieldStartMonth.ToString());
                 }
-                htmlWriter.Write("</span>\n</div>");
+                htmlWriter.Write("</span>\r\n</div>");
 
                 if (AnnualNitrogenSupply > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (parentPasture.GreenNitrogen > 0)
                     {
                         htmlWriter.Write($"This equates to <span class=\"setvalue\">{AnnualNitrogenSupply / (parentPasture.GreenNitrogen / 100)}</span> kg per hectare of pasture production given the new growth nitrogen content of <span class=\"setvalue\">{parentPasture.GreenNitrogen}%</span>.");
@@ -181,20 +181,20 @@ namespace Models.CLEM.Resources
                     {
                         htmlWriter.Write($"This equates to <span class=\"errorlink\">Undefined</span> kg per hectare of pasture production given the green growth nitrogen content of <span class=\"errorlink\">Not set</span>.");
                     }
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
 
                 if (timerpresent)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("or <b>(B)</b> the growth month falls within the specified period below");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("or <b>(B)</b> Add a ActivityMonthRangeTimer below to reduce nitrogen content in specified months");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 return htmlWriter.ToString(); 
             }

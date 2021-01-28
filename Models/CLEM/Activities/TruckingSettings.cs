@@ -224,10 +224,10 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.##") + "</span> per km per truck");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">It is <span class=\"setvalue\">" + DistanceToMarket.ToString("0.##") + "</span> km to market and costs <span class=\"setvalue\">" + CostPerKmTrucking.ToString("0.##") + "</span> per km per truck");
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Each truck load can carry ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck load can carry ");
                 if (Number450kgPerTruck == 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
 
                 if (MinimumLoadBeforeSelling > 0 || MinimumTrucksBeforeSelling > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeSelling > 0)
                     {
                         htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required");
@@ -263,7 +263,7 @@ namespace Models.CLEM.Activities
 
                 if (MinimumLoadBeforeBuying > 0 || MinimumTrucksBeforeBuying > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeBuying > 0)
                     {
                         htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required");
@@ -287,7 +287,7 @@ namespace Models.CLEM.Activities
 
                 if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">Each truck will emmit ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck will emmit ");
                     if (TruckMethaneEmissions > 0)
                     {
                         htmlWriter.Write("<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane");
@@ -313,7 +313,7 @@ namespace Models.CLEM.Activities
 
                     if (TruckMethaneEmissions > 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
                         if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                         {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
@@ -326,7 +326,7 @@ namespace Models.CLEM.Activities
                     }
                     if (TruckCO2Emissions > 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ");
                         if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
                         {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present");
@@ -339,7 +339,7 @@ namespace Models.CLEM.Activities
                     }
                     if (TruckN2OEmissions > 0)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
                         if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
                         {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");

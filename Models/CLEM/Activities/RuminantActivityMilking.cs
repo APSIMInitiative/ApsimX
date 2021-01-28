@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Milk is placed in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
 
                 if (ResourceTypeName == null || ResourceTypeName == "")
                 {

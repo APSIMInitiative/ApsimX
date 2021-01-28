@@ -18,7 +18,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [Description("This component specifies a pasture database file for native pasture used in the CLEM simulation")]
-    [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLitePasture reader for best performance.")]
+    [Version(1, 0, 2, "This component is no longer supported.\r\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
     public class FilePasture : CLEMModel, IFilePasture
@@ -832,7 +832,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
@@ -845,7 +845,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         } 

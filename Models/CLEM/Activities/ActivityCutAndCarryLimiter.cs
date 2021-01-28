@@ -77,8 +77,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
-                htmlWriter.Write("\n<div class=\"filter\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Limit cut and carry activities to ");
                 if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
                 {
@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span> dry kg/day ");
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

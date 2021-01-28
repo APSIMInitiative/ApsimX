@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filter\">");
+                htmlWriter.Write("\r\n<div class=\"filter\">");
                 if (Sequence is null || Sequence == "")
                 {
                     htmlWriter.Write($"Sequence <span class=\"errorlink\">NOT SET</span>");
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write($" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")}</span>");
                     }
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 if (!this.Enabled)
                 {
                     htmlWriter.Write(" - DISABLED!");

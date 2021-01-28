@@ -98,7 +98,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Models.CLEM.Groupings
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
 
                 if (Proportion < 1)
                 {

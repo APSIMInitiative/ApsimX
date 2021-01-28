@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"warningbanner\">This is a depreciated activity.<br />It is recommneded that you use a <span class=\"activitylink\">RuminantActivityMarkForSale</span> to perform this activity. With this activity you have more control over defining a dry-breeder which has a number of definitions.<br />For example you can specify the number of days since last birth as a measure of failed births, or look at number of successful pregnancies and the age of the breeder. More metrics can be added if required.</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (ProportionToRemove == 0)
                 {
                     htmlWriter.Write("No dry breeders will be sold");

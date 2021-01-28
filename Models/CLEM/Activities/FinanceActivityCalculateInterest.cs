@@ -138,7 +138,7 @@ namespace Models.CLEM.Activities
                                 switch (OnPartialResourcesAvailableAction)
                                 {
                                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
+                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
                                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                                         Status = ActivityStatus.Ignored;
                                         break;
@@ -190,26 +190,26 @@ namespace Models.CLEM.Activities
 
                 if (finance == null)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
                     foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                     {
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                         {
-                            htmlWriter.Write("\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         }
                         else
                         {
                             if (accnt.InterestRateCharged > 0)
                             {
-                                htmlWriter.Write("\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
                             }
                             else
                             {
-                                htmlWriter.Write("\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
                             }
                         }
                     }

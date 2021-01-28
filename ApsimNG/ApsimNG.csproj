@@ -401,6 +401,7 @@
     <Compile Include="Views\DropDownView.cs" />
     <Compile Include="Views\EditView.cs" />
     <Compile Include="Views\EditorView.cs" />
+    <Compile Include="Views\TextInputView.cs" />
     <Compile Include="Views\ErrorView.cs" />
     <Compile Include="Views\MenuView.cs" />
     <Compile Include="Views\ToolStripView.cs" />
