@@ -365,11 +365,17 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        // for calves
+                        // if potential intake = 0 they wave not needed to consume pasture and intake will be zero.
+                        if(ind.PotentialIntake > 0)
+                        {
+                            ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        }
 
-                        if (ind.Intake == 0)
+                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
+
+                        if (ind.MilkIntake + ind.Intake  <= 0)
                         {
                             unfedcalves++;
                         }
