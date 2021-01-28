@@ -46,7 +46,7 @@
 
             set
             {
-                if (value == -1)
+                if (value <= 0)
                 {
                     this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
                     this.gridView.Grid.Columns[this.ColumnIndex].Resizable = true;
