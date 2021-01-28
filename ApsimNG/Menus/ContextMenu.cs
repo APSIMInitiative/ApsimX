@@ -313,11 +313,14 @@
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
                 IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-                ICommand command = new AddModelCommand(currentNode, text);
-                explorerPresenter.CommandHistory.Add(command, true);
-                explorerPresenter.Refresh();
-                if (currentNode.Children.Count == 1)
-                    explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                if (currentNode != null)
+                {
+                    ICommand command = new AddModelCommand(currentNode, text);
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.Refresh();
+                    if (currentNode.Children.Count == 1)
+                        explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                }
             }
             catch (Exception err)
             {
