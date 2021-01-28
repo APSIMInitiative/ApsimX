@@ -210,7 +210,6 @@
             {
                 return combobox1.Visible;
             }
-
             set
             {
                 combobox1.Visible = value;
