@@ -744,7 +744,14 @@
                 readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
-                readMetData.DiffuseFraction = -1;
+            {
+                // Estimate Diffuse Fraction using the Approach of Bristow and Campbell
+                double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
+                double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
+                double B = Qmax / Q0;
+                double Tt = MathUtilities.Bound(readMetData.Radn / Q0, 0, 1);
+                readMetData.DiffuseFraction = (1 - Math.Exp(0.6 * (1 - B / Tt) / (B - 0.4)));
+            }            
             else
                 readMetData.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
