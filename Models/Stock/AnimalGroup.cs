@@ -2,6 +2,7 @@ namespace Models.GrazPlan
 {
     using APSIM.Shared.Utilities;
     using Models.Interfaces;
+    using Models.Core;
     using StdUnits;
     using System;
     using System.Collections.Generic;
@@ -308,11 +309,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// The animals genotype
         /// </summary>
+        [Units("-")]
         public Genotype Genotype { get; private set; }
 
         /// <summary>
         /// Number of animals in the group
         /// </summary>
+        [Units("-")]
         public int NoAnimals
         {
             get { return GetNoAnimals(); }
@@ -322,26 +325,31 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the number of males
         /// </summary>
+        [Units("-")]
         public int MaleNo { get; set; }
 
         /// <summary>
         /// Gets or sets the number of females
         /// </summary>
+        [Units("-")]
         public int FemaleNo { get; set; }
 
         /// <summary>
         /// Gets or sets the mean age of the group
         /// </summary>
+        [Units("d")]
         public int AgeDays { get; set; }
 
         /// <summary>
         /// Standard reference weight of the group
         /// </summary>
+        [Units("kg")]
         public double standardReferenceWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the live weight of the group
         /// </summary>
+        [Units("kg")]
         public double LiveWeight
         {
             get { return totalWeight; }
@@ -351,11 +359,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the animal base weight
         /// </summary>
+        [Units("kg")]
         public double BaseWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the fleece-free, conceptus-free weight, but including the wool stubble        
         /// </summary>
+        [Units("kg")]
         public double EmptyShornWeight
         {
             get { return BaseWeight + CoatDepth2Wool(stubble_mm); }
@@ -369,6 +379,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the cut weight of fleece
         /// </summary>
+        [Units("kg")]
         public double FleeceCutWeight
         {
             get { return GetFleeceCutWt(); }
@@ -378,6 +389,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the wool weight
         /// </summary>
+        [Units("kg")]
         public double WoolWeight
         {
             get { return woolWt; }
@@ -387,6 +399,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the depth of coat
         /// </summary>
+        [Units("cm")]
         public double CoatDepth
         {
             get { return coatDepth; }
@@ -396,6 +409,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the maximum previous weight
         /// </summary>
+        [Units("kg")]
         public double MaxPrevWeight
         {
             get { return maxPrevWeight; }
@@ -405,11 +419,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the wool fibre diameter
         /// </summary>
+        [Units("um")]
         public double FibreDiam { get; set; }
 
         /// <summary>
         /// Gets or sets the animal parameters for the animal mated to
         /// </summary>
+        [Units("-")]
         public Genotype MatedTo
         {
             get { return matedToGenotypeParameters; }
@@ -417,8 +433,9 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the stage of pregnancy
+        /// Gets or sets the stage of pregnancy. Days since conception. 
         /// </summary>
+        [Units("d")]
         public int Pregnancy
         {
             get { return foetalAge; }
@@ -428,6 +445,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the days lactating
         /// </summary>
+        [Units("d")]
         public int Lactation
         {
             get { return daysLactating; }
@@ -437,6 +455,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the number of foetuses
         /// </summary>
+        [Units("-")]
         public int NoFoetuses
         {
             get { return numberFoetuses; }
@@ -446,6 +465,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the number of offspring
         /// </summary>
+        [Units("-")]
         public int NoOffspring
         {
             get { return numberOffspring; }
@@ -455,37 +475,44 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the condition at birth
         /// </summary>
+        [Units("-")]
         public double BirthCondition { get; set; }
 
         /// <summary>
         /// Gets or sets the daily deaths
         /// </summary>
+        [Units("-")]
         public int Deaths { get; set; }
 
         /// <summary>
         /// Pointers to the young of lactating animals, or the mothers of suckling ones
         /// </summary>
+        [Units("-")]
         public AnimalGroup Young { get; set; }
 
         /// <summary>
         /// Animal output
         /// </summary>
+        [Units("-")]
         public AnimalOutput AnimalState { get; set; } = new AnimalOutput();
 
         /// <summary>
-        /// Gets or sets the steepness of the paddock
+        /// Gets or sets the steepness code (1-2) of the paddock 
         /// </summary>
+        [Units("1-2")]
         public double PaddSteep { get; set; }
 
         /// <summary>
         /// Gets or sets the herbage being eaten
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs Herbage { get; set; } = new GrazType.GrazingInputs();
 
 
         /// <summary>
         /// Organic faeces
         /// </summary>
+        [Units("-")]
         public GrazType.DM_Pool OrgFaeces
         {
             get { return this.GetOrgFaeces(); }
@@ -494,6 +521,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the inorganic faeces
         /// </summary>
+        [Units("-")]
         public GrazType.DM_Pool InOrgFaeces
         {
             get { return this.GetInOrgFaeces(); }
@@ -502,6 +530,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the urine value
         /// </summary>
+        [Units("-")]
         public GrazType.DM_Pool Urine
         {
             get { return this.GetUrine(); }
@@ -510,6 +539,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the excretion information
         /// </summary>
+        [Units("-")]
         public ExcretionInfo Excretion
         {
             get { return this.GetExcretion(); }
@@ -518,46 +548,55 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the paddock occupied
         /// </summary>
+        [Units("-")]
         public PaddockInfo PaddOccupied { get; set; }
 
         /// <summary>
         /// Gets or sets the tag number
         /// </summary>
+        [Units("-")]
         public int Tag { get; set; }
 
         /// <summary>
         /// 0=mothers, 1=suckling young
         /// </summary>
+        [Units("-")]
         public AnimalStateInfo[] InitState = new AnimalStateInfo[2];
 
         /// <summary>
-        /// RDF factor
+        /// RDP factor
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactor = new double[2];      // [0..1] 
 
         /// <summary>
         /// Index is to forage-within-paddock
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs[] InitForageInputs;
 
         /// <summary>
         /// Forage inputs
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs[] StepForageInputs;
 
         /// <summary>
         /// Paddock grazing inputs
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingInputs PaddockInputs;
 
         /// <summary>
         /// Pasture intake
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingOutputs[] PastIntakeRate = new GrazType.GrazingOutputs[2];
 
         /// <summary>
         /// Supplement intake
         /// </summary>
+        [Units("kg/hd/d")]
         public double[] SuppIntakeRate = new double[2];
 
         // Management events .............................................
@@ -719,6 +758,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the animal
         /// </summary>
+        [Units("-")]
         public GrazType.AnimalType Animal
         {
             get { return this.GetAnimal(); }
@@ -727,6 +767,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the standard reference weight
         /// </summary>
+        [Units("kg")]
         public double StdReferenceWt
         {
             get { return this.standardReferenceWeight; }
@@ -735,6 +776,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the age class of the animals
         /// </summary>
+        [Units("-")]
         public GrazType.AgeType AgeClass
         {
             get { return this.GetAgeClass(); }
@@ -743,26 +785,31 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the reproductive state
         /// </summary>
+        [Units("-")]
         public GrazType.ReproType ReproState { get; private set; }
 
         /// <summary>
-        /// Gets the relative size of the animal
+        /// Gets the relative size of the animal. Ratio of normal weight to SRW. 0-1.0
         /// </summary>
+        [Units("-")]
         public double RelativeSize { get; private set; }
 
         /// <summary>
         /// Body condition
         /// </summary>
+        [Units("-")]
         public double BodyCondition { get; private set; }
 
         /// <summary>
         /// Gets the weight change
         /// </summary>
+        [Units("kg/d")]
         public double WeightChange { get; private set; }
 
         /// <summary>
         /// Gets the clean fleece weight
         /// </summary>
+        [Units("kg")]
         public double CleanFleeceWeight
         {
             get { return this.GetCFW(); }
@@ -771,6 +818,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the clean fleece growth
         /// </summary>
+        [Units("kg/d")]
         public double CleanFleeceGrowth
         {
             get { return this.GetDeltaCFW(); }
@@ -779,21 +827,25 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the greasy fleece growth
         /// </summary>
+        [Units("kg/d")]
         public double GreasyFleeceGrowth { get; private set; }
 
         /// <summary>
         /// Gets the days fibre diameter
         /// </summary>
+        [Units("um")]
         public double DayFibreDiam { get; private set; }
 
         /// <summary>
         /// Gets the milk yield
         /// </summary>
+        [Units("kg")]
         public double MilkYield { get; private set; }
 
         /// <summary>
         /// Gets the milk volume
         /// </summary>
+        [Units("l")]
         public double MilkVolume
         {
             get { return this.GetMilkVolume(); }
@@ -802,6 +854,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the milk yield
         /// </summary>
+        [Units("kg")]
         public double MaxMilkYield
         {
             get { return this.GetMaxMilkYield(); }
@@ -810,21 +863,25 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the milk energy
         /// </summary>
+        [Units("MJ")]
         public double MilkEnergy { get; private set; }
 
         /// <summary>
         /// Gets the milk protein
         /// </summary>
+        [Units("kg/kg")]
         public double MilkProtein { get; private set; }
 
         /// <summary>
         /// Gets the foetal weight
         /// </summary>
+        [Units("kg")]
         public double FoetalWeight { get; private set; }
 
         /// <summary>
         /// Gets the conceptus weight
         /// </summary>
+        [Units("kg")]
         public double ConceptusWeight
         {
             get { return this.ConceptusWt(); }
@@ -833,6 +890,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the male weight
         /// </summary>
+        [Units("kg")]
         public double MaleWeight
         {
             get { return this.GetMaleWeight(); }
@@ -841,6 +899,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the female weight
         /// </summary>
+        [Units("kg")]
         public double FemaleWeight
         {
             get { return this.GetFemaleWeight(); }
@@ -849,6 +908,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the DSE
         /// </summary>
+        [Units("DSE")]
         public double DrySheepEquivs
         {
             get { return this.GetDSEs(); }
@@ -862,6 +922,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the methane weight
         /// </summary>
+        [Units("kg")]
         public double MethaneWeight
         {
             get { return this.GetMethaneWeight(); }
@@ -870,36 +931,43 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets the fresh weight supplement intake
         /// </summary>
+        [Units("kg")]
         public double SupplementFreshWeightIntake { get; private set; }
 
         /// <summary>
         /// Gets the intake of supplement
         /// </summary>
+        [Units("-")]
         public FoodSupplement IntakeSupplement { get; private set; }
 
         /// <summary>
-        /// Gets or sets the water logging value
+        /// Gets or sets the waterlogging index (0-1)
         /// </summary>
+        [Units("0-1")]
         public double WaterLogging { get; set; }
 
         /// <summary>
         /// Gets the supplement ration used
         /// </summary>
+        [Units("-")]
         public SupplementRation RationFed { get; private set; }
 
         /// <summary>
         /// Gets or sets the number of animals per hectare
         /// </summary>
+        [Units("-")]
         public double AnimalsPerHa { get; set; }
 
         /// <summary>
         /// Gets or sets the distance walked
         /// </summary>
+        [Units("km")]
         public double DistanceWalked { get; set; }
 
         /// <summary>
-        /// Gets or sets the intake modifier value
+        /// Gets or sets the intake modifier scaling factor for potential intake
         /// </summary>
+        [Units("0-1")]
         public double IntakeModifier { get; set; }
 
         // ------------------ Public methods ------------------
@@ -2972,7 +3040,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the maximum milk yield
         /// </summary>
-        /// <returns></returns>
+        /// <returns>kg</returns>
         private double GetMaxMilkYield()
         {
             if (Lactation == 0)
@@ -2984,7 +3052,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the milk volume
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Litres</returns>
         private double GetMilkVolume()
         {
             if (Lactation == 0)
@@ -2996,7 +3064,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the methane energy
         /// </summary>
-        /// <returns></returns>
+        /// <returns>MJ</returns>
         private double GetMethaneEnergy()
         {
             return this.Genotype.MethC[1] * this.AnimalState.DM_Intake.Solid
@@ -3007,7 +3075,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Get the methane weight
         /// </summary>
-        /// <returns></returns>
+        /// <returns>kg</returns>
         private double GetMethaneWeight()
         {
             return Genotype.MethC[6] * GetMethaneEnergy();

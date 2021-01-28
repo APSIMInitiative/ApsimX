@@ -14,44 +14,44 @@
     {
         /// <summary>
         /// Gets or sets the basal maintenance requirement       
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double MaintBase { get; set; }
 
         /// <summary>
         /// Gets or sets the E(graze) + E(move)                  
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double MaintMoveGraze { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the E(cold)         
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double MaintCold { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the ME(c)           
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double Conceptus { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the ME(l) 
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double Lactation { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the ME(w) = NE(w) / k(w)           
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double Fleece { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the ME(g)      
-        /// MJ
         /// </summary>
+        [Units("MJ")]
         public double Gain { get; set; }
     } 
 
@@ -64,11 +64,13 @@
         /// <summary>
         /// Gets or sets the paddock name
         /// </summary>
+        [Units("-")]
         public string Paddock { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the supplement eaten in kg
         /// </summary>
+        [Units("kg")]
         public double Eaten { get; set; }
     }
 
@@ -81,26 +83,31 @@
         /// <summary>
         /// Gets or sets the dry matter pool weight in kg/d
         /// </summary>
+        [Units("kg/d")]
         public double Weight { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the dry matter pool N amount kg/d
         /// </summary>
+        [Units("kg/d")]
         public double N { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the dry matter pool P amount kg/d
         /// </summary>
+        [Units("kg/d")]
         public double P { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the dry matter pool S amount mol/d
         /// </summary>
+        [Units("kg/d")]
         public double S { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the dry matter pool AshAlk amount mol/d
         /// </summary>
+        [Units("mol/d")]
         public double AshAlk { get; set; }
     }
 
@@ -113,16 +120,19 @@
         /// <summary>
         /// Gets or sets the N amount in kg/d
         /// </summary>
+        [Units("kg/d")]
         public double N { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the P amount in kg/d
         /// </summary>
+        [Units("kg/d")]
         public double P { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the S amount in mol/d
         /// </summary>
+        [Units("mol/d")]
         public double S { get; set; }
     }
     
