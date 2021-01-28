@@ -577,7 +577,7 @@ namespace Models.CLEM.Activities
                 //var check = herd.Where(a => a.Weaned && (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.Tags.Contains("GrowOut"));
                 foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.TagExists("GrowOut")))
                 {
-                    ind.Location = ((ind is RuminantFemale) ? GrazeFoodStoreNameGrowOutFemales : GrazeFoodStoreNameGrowOutMales);
+                    ind.Location = ((ind is RuminantFemale) ? grazeStoreGrowOutFemales : grazeStoreGrowOutMales);
                     ind.TagAdd("GrowOut");
                 }
 
