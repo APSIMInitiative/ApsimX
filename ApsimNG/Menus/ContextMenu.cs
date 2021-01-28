@@ -320,6 +320,7 @@
                     explorerPresenter.Refresh();
                     if (currentNode.Children.Count == 1)
                         explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                    explorerPresenter.SelectNode(currentNode, false);
                 }
             }
             catch (Exception err)
