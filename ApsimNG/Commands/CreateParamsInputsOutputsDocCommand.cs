@@ -185,7 +185,7 @@
                 var row = outputs.NewRow();
 
                 string typeName = GetTypeName(property.DataType);
-                var summary = property.Summary + property.Description;
+                var summary = property.Summary;
                 string remarks = property.Remarks;
                 if (!string.IsNullOrEmpty(remarks))
                     summary += Environment.NewLine + Environment.NewLine + remarks;
@@ -262,7 +262,7 @@
         /// <param name="memberType">The type to get a name for.</param>
         private string GetTypeName(Type memberType)
         {
-            Type type;
+            Type type = null;
             bool isList = false;
             bool isArray = false;
             bool isEnumerable = false;
@@ -272,7 +272,7 @@
             {
                 if (memberType.IsGenericType)
                     type = memberType.GenericTypeArguments[0];
-                else// if (memberType.HasElementType)
+                else
                     type = memberType.GetElementType();
                 isList = true;
             }
@@ -280,7 +280,7 @@
             {
                 if (memberType.IsGenericType)
                     type = memberType.GenericTypeArguments[0];
-                else// if (memberType.HasElementType)
+                else
                     type = memberType.GetElementType();
                 isEnumerable = true;
             }
@@ -289,7 +289,8 @@
                 type = memberType.GetElementType();
                 isArray = true;
             }
-            else
+
+            if (type == null)
                 type = memberType;
 
             // Truncate descriptions so they fit onto the page.
