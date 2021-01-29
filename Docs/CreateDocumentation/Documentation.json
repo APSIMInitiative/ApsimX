@@ -370,9 +370,15 @@
                             "FileName": "Tests/UnderReview/Stock/Stock.apsimx"
                         },
                         {
-                            "Name": "PDF",
+                            "Name": "Stock",
                             "FileName": "Tests/UnderReview/Stock/Stock.apsimx",
                             "ModelNameToDocument": "Stock"
+                        },
+                        {
+                            "Name": "Supplement",
+                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx",
+                            "ModelNameToDocument": "Supplement",
+                            "OutputFileName": "Supplement.pdf"
                         },
                         {
                             "Name": "GRAZPLAN animal biology model",
