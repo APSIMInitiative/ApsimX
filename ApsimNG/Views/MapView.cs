@@ -195,24 +195,6 @@
             layWorld.Style.Outline.Color = foreground;
             result.Layers.Add(layWorld);
 
-            // Show country names.
-            // Note this doesn't appear to work under mono for now.
-            LabelLayer countryNames = new LabelLayer("Country labels");
-			countryNames.DataSource = layWorld.DataSource;
-            //countryNames.Enabled = true;
-            countryNames.LabelColumn = "Name";
-            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
-            countryNames.Style = new LabelStyle();
-            countryNames.Style.CollisionDetection = true;
-            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
-            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
-            //^countryNames.Style.BackColor = new SolidBrush(foreground);
-            countryNames.Style.ForeColor = foreground;
-            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
-            //countryNames.MaxVisible = 90;
-            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
-            result.Layers.Add(countryNames);
-            
             return result;
         }
 

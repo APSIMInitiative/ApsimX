@@ -182,6 +182,18 @@ namespace UserInterface.Presenters
             if (newValue is string str && property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && (attrib = property.GetCustomAttribute<DisplayAttribute>()) != null && attrib.Type == DisplayType.MultiLineText)
                 newValue = string.Join(",", str.Split(Environment.NewLine.ToCharArray()));
 
+            if (property.PropertyType.IsEnum && newValue is string enumDescription)
+            {
+                foreach (Enum value in Enum.GetValues(property.PropertyType))
+                {
+                    if (VariableProperty.GetEnumDescription(value) == enumDescription)
+                    {
+                        newValue = Enum.GetName(property.PropertyType, value);
+                        break;
+                    }
+                }
+            }
+
             // In some cases, the new value passed back from the view may be
             // already of the correct type. For example a boolean property
             // is editable via a checkbutton, so the view will return a bool.

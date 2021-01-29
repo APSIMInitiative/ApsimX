@@ -300,6 +300,8 @@
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
+            if (node == null)
+                node = relativeTo.FindByPath(objectName)?.Value;
             if (node != null)
             {
                 contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
@@ -333,8 +335,13 @@
                 // object name doesn't contain square brackets.
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
-                    textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
+                    if (objectName.StartsWith("."))
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(1, textBeforeFirstDot.Length - 1);
+                    else
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
                 node = relativeTo.FindInScope(textBeforeFirstDot);
+                if (node == null)
+                    node = relativeTo.FindByPath(objectName)?.Value;
             }
             else
             {
@@ -348,7 +355,12 @@
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
                 if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                {
                     node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
+
+                    // If we still failed, try a lookup on type name.
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                }
             }
 
             // If the object name string does not contain any children/properties 

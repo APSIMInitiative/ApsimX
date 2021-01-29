@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -125,7 +126,7 @@ namespace Models.CLEM.Resources
             // Add warning if no individuals defined
             if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
-                string warningString = "No individuals have been set in any [r=LabourType]\nAdd individuals or consider removing or disabling [r=Labour]";
+                string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
                 if (!WarningsNotFound.Contains(warningString))
                 {
                     WarningsNotFound.Add(warningString);
@@ -256,7 +257,7 @@ namespace Models.CLEM.Resources
                 // if still null report error
                 if (labour.LabourAvailability == null)
                 {
-                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
+                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\r\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
                 }
             }
         }
@@ -382,7 +383,7 @@ namespace Models.CLEM.Resources
                             if (!WarningsMultipleEntry.Contains(criteria))
                             {
                                 WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
+                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
                             }
                         }
                     }
@@ -396,12 +397,12 @@ namespace Models.CLEM.Resources
                     if (matchIndividual != null)
                     {
                         // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\nThe best available pay rate [" + matchIndividual.Value.ToString("#,##0.##") + "] will be used.";
+                        warningString += "\r\nThe best available pay rate [" + matchIndividual.Value.ToString("#,##0.##") + "] will be used.";
                         price = matchIndividual.Value;
                     }
                     else
                     {
-                        Summary.WriteWarning(this, "\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
+                        Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -467,30 +468,32 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (AllowAging)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "Individuals age with time";
-                html += "</div>";
+                if (AllowAging)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Individuals age with time");
+                    htmlWriter.Write("</div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
+                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
+                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+                {
+                    htmlWriter.Write("<tr>");
+                    htmlWriter.Write("<td>" + labourType.Name + "</td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>");
+                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                    htmlWriter.Write("</tr>");
+                }
+                htmlWriter.Write("</table>");
+                htmlWriter.Write("</div></div>");
+                return htmlWriter.ToString(); 
             }
-            html += "\n<div class=\"holderresourcesub\">";
-            html += "\n<div class=\"clearfix resourcebannerlight\">Labour types</div>";
-            html += "\n<div class=\"resourcecontentlight\">";
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>";
-            foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
-            {
-                html += "<tr>";
-                html += "<td>" + labourType.Name + "</td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>";
-                html += "<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>";
-                html += "</tr>";
-            }
-            html += "</table>";
-            html += "</div></div>";
-            return html;
         }
 
 

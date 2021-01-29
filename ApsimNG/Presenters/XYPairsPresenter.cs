@@ -158,15 +158,9 @@
         private string LookForYAxisTitle()
         {
             IModel modelContainingLinkField = xYPairs.Parent.Parent;
-            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xYPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (linkField != null)
-            {
-                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
-                if (units != null)
-                {
-                    return xYPairs.Parent.Name + " (" + units.ToString() + ")";
-                }
-            }
+            var units = AutoDocumentation.GetUnits(modelContainingLinkField, xYPairs.Parent.Name);
+            if (!string.IsNullOrEmpty(units))
+                return xYPairs.Parent.Name + " (" + units.ToString() + ")";
 
             return xYPairs.Parent.Name;
         }

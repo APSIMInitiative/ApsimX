@@ -512,6 +512,8 @@
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
+                    if (storage == null)
+                        storage = model.FindInScope<IDataStore>();
                     cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
@@ -689,7 +691,8 @@
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
                         explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
-                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values, flags);
                         string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = values;

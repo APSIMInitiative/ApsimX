@@ -8,6 +8,7 @@ weight: 10
 * [Cloud Services](/usage/cloud)
 * [Debug manager script](/usage/debugmanagerscript)
 * [Edit .apsimx files from command line](/usage/editfile)
+* [Parameter Optimisation](/usage/croptimizr)
 * [Memo markdown cheatsheet](/usage/memo)
 * [Scope](/usage/scope)
 * [Path specification](/usage/pathspecification)

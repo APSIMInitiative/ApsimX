@@ -4,14 +4,16 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class VersionsPresenter : IPresenter
+    public class VersionsPresenter : IPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model
@@ -46,7 +48,6 @@ namespace UserInterface.Presenters
             this.genericView.Text = CreateMarkdown();
         }
 
-
         private string CreateMarkdown()
         {
             string markdownString = "";
@@ -54,7 +55,7 @@ namespace UserInterface.Presenters
             foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
             {
                 markdownString += $"### v {item.ToString()}";
-                markdownString += $"  \n{(item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\n", "  \n"))}  \n  \n";
+                markdownString += $"  {Environment.NewLine} {(item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\r\n", "  \r\n  \r\n "))}  {Environment.NewLine}  {Environment.NewLine}";
             }
             return markdownString;
         }
@@ -88,21 +89,23 @@ namespace UserInterface.Presenters
                 htmlString = htmlString.Replace("[FontColor]", "#E5E5E5");
                 htmlString = htmlString.Replace("[Background]", "#030028");
             }
-
-            foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlString += "\n<div class=\"holdermain\">";
-                htmlString += "\n<div class=\"messagebanner clearfix\">";
-                htmlString += "\n<div class=\"version\">V"+ item.ToString() + "</div>";
-                htmlString += "</div>";
-                htmlString += "\n<div class=\"messagecontent\">";
-                htmlString += "\n<div class=\"messageentry\">" + (item.Comments().Length == 0?((item.ToString() == "1.0.1")?"Initial release of this component":"No details provided"):item.Comments().Replace("\n", "<br />"));
-                htmlString += "\n</div>";
-                htmlString += "\n</div>";
-                htmlString += "\n</div>";
+                foreach (VersionAttribute item in ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false))
+                {
+                    htmlWriter.Write("\n<div class=\"holdermain\">");
+                    htmlWriter.Write("\n<div class=\"messagebanner clearfix\">");
+                    htmlWriter.Write("\n<div class=\"version\">V" + item.ToString() + "</div>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("\n<div class=\"messagecontent\">");
+                    htmlWriter.Write("\n<div class=\"messageentry\">" + (item.Comments().Length == 0 ? ((item.ToString() == "1.0.1") ? "Initial release of this component" : "No details provided") : item.Comments().Replace("\n", "<br />")));
+                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\n</div>");
+                }
+                htmlWriter.Write("\n</body>\n</html>");
+                return htmlWriter.ToString();
             }
-            htmlString += "\n</body>\n</html>";
-            return htmlString;
         }
 
         /// <summary>

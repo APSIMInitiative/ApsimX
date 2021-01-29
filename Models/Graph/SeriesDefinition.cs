@@ -294,7 +294,7 @@
                     foreach (var descriptor in Descriptors)
                     {
                         if (fieldsThatExist.Contains(descriptor.Name))
-                            filter = AddToFilter(filter, descriptor.Name + " = '" + descriptor.Value + "'");
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                         else
                             filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
                     }
@@ -442,6 +442,8 @@
                     return DataTableUtilities.GetColumnAsDates(data, fieldName);
                 else if (data.Columns[fieldName].DataType == typeof(string))
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
+                else if (data.Columns[fieldName].DataType == typeof(int))
+                    return DataTableUtilities.GetColumnAsIntegers(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
             }

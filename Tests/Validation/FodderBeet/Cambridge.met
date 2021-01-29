@@ -1,9 +1,9 @@
 [weather.met.weather]
 Site = ETComeHome.ETData.NIWAStation
-Latitude = -43.70
-Longitude = 170
-tav = 14.7
-amp = 17
+Latitude = -37.9
+Longitude = 175.466
+tav = 14.5	(oC)
+amp = 11.1	(oC)
 year    day     rain    maxt    mint    mean    radn    wind    vp
 ()      ()      (mm)    (oC)    (oC)    (oC)   (MJ/m2/d) (m/s) (mbar)
 2016     1     1.4     20.4     15.3     17.9     -99.0     4.2     16.5     
