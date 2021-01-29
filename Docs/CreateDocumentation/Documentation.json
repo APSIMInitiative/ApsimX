@@ -28,7 +28,7 @@
                         },			
                         {
                             "Name": "Species parameters",
-                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx",
+                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx"
                         }						
                     ]
                 },
