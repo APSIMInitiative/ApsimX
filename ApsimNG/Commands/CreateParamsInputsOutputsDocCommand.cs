@@ -124,8 +124,8 @@
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(typeToDocument), modelToDocument, tags, 1, 0, false);
+
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummaryRaw(typeToDocument), modelToDocument, tags, 1, 0, false);
 
             var outputs = GetOutputs(typeToDocument);
             if (outputs != null && outputs.Count > 0)
