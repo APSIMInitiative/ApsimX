@@ -431,7 +431,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 
