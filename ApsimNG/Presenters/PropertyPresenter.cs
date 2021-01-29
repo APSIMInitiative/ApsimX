@@ -512,6 +512,8 @@
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
+                    if (storage == null)
+                        storage = model.FindInScope<IDataStore>();
                     cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
