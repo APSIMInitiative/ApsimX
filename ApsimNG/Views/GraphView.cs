@@ -1739,7 +1739,10 @@
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
             {
-                return axis.ActualMaximum;
+                if (double.IsNaN(axis.Maximum))
+                    return axis.ActualMaximum;
+                else
+                    return axis.Maximum;
             }
             else
                 return double.NaN;
@@ -1754,7 +1757,10 @@
 
             if (axis != null)
             {
-                return axis.ActualMinimum;
+                if (double.IsNaN(axis.Minimum))
+                    return axis.ActualMinimum;
+                else
+                    return axis.Minimum;
             }
             else
                 return double.NaN;
