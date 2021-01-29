@@ -557,6 +557,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The paddock name.
         /// </value>
+        [Units("-")]
         public string Paddock { get; set; }
 
         /// <summary>
@@ -565,11 +566,13 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount of ration (kg).
         /// </value>
+        [Units("kg")]
         public double Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the flag to feed supplement before pasture. Bail feeding.
         /// </summary>
+        [Units("-")]
         public bool FeedSuppFirst { get; set; }
     }
 
@@ -584,6 +587,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The paddock name.
         /// </value>
+        [Units("-")]
         public string Paddock { get; set; }
 
         /// <summary>
@@ -592,6 +596,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount of ration eaten (kg).
         /// </value>
+        [Units("kg")]
         public double Eaten { get; set; }
     }
 
@@ -606,6 +611,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The supplement name.
         /// </value>
+        [Units("-")]
         public string Supplement { get; set; }
 
         /// <summary>
@@ -614,6 +620,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount of supplement eaten (kg).
         /// </value>
+        [Units("kg")]
         public double Amount { get; set; }
     }
 
@@ -628,6 +635,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The supplement name.
         /// </value>
+        [Units("-")]
         public string Supplement { get; set; }
 
         /// <summary>
@@ -636,6 +644,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount of supplement offered (kg).
         /// </value>
+        [Units("kg")]
         public double Amount { get; set; }
 
         /// <summary>
@@ -644,6 +653,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The paddock name.
         /// </value>
+        [Units("-")]
         public string Paddock { get; set; }
     }
 
@@ -658,6 +668,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The source supplement name.
         /// </value>
+        [Units("-")]
         public string Source { get; set; }
 
         /// <summary>
@@ -666,6 +677,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount of supplement transferred (kg).
         /// </value>
+        [Units("kg")]
         public double Amount { get; set; }
 
         /// <summary>
@@ -674,6 +686,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The destination supplement name.
         /// </value>
+        [Units("-")]
         public string Destination { get; set; }
     }
 
@@ -855,6 +868,7 @@ namespace Models.GrazPlan
         /// List of stores
         /// </value>
         [Description("Attributes and initial amount in each supplement store")]
+        [Units("-")]
         public StoreType[] Stores
         {
             get
@@ -912,6 +926,7 @@ namespace Models.GrazPlan
         /// The list of paddocks
         /// </value>
         [Description("List of paddock names")]
+        [Units("-")]
         public string[] PaddockList
         {
             get
@@ -942,6 +957,7 @@ namespace Models.GrazPlan
         /// The number of stores
         /// </value>
         [Description("Number of supplement stores")]
+        [Units("-")]
         public int NoStores
         {
             get
@@ -957,6 +973,7 @@ namespace Models.GrazPlan
         /// The number of paddocks
         /// </value>
         [Description("Number of paddocks recognised by the component instance")]
+        [Units("-")]
         public int NoPaddocks
         {
             get
@@ -972,6 +989,7 @@ namespace Models.GrazPlan
         /// The list of paddock names
         /// </value>
         [Description("Name of each paddock recognised by the component instance")]
+        [Units("-")]
         public string[] PaddNames
         {
             get
@@ -993,6 +1011,7 @@ namespace Models.GrazPlan
         /// The list of supplement amounts in each paddock
         /// </value>
         [Description("Amount of supplement currently accessible to stock in each paddock recognised by the component instance")]
+        [Units("kg")]
         public double[] PaddAmounts
         {
             get
@@ -1018,6 +1037,7 @@ namespace Models.GrazPlan
         /// The list of amount and attributes of supplementary feed present in each paddock
         /// </value>
         [Description("Amount and attributes of supplementary feed present in each paddock")]
+        [Units("-")]
         public SuppToStockType[] SuppToStock
         {
             get
