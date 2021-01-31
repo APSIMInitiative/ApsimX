@@ -175,6 +175,7 @@ namespace Models.GrazPlan
 
         /// <summary>Animal type</summary>
         [Description("Animal type")]
+        [Units("-")]
         public GrazType.AnimalType Animal { get; set; }
 
         /// <summary>Dairy intake peak (c-idy-0)</summary>
@@ -191,10 +192,12 @@ namespace Models.GrazPlan
 
         /// <summary>Fixed attribute (read in)</summary>
         [Description("Dairy breed?")]
+        [Units("-")]
         public bool bDairyBreed { get; set; }
 
         /// <summary>Background death rate, per day  [1..2]</summary>
         [Description("Background death rate, per day  [1..2] c-d-")]
+        [Units("0-1")]
         public double[] MortRate { get; set; } = new double[3];
 
         /// <summary>Mortality age c-d-</summary>
@@ -203,6 +206,7 @@ namespace Models.GrazPlan
 
         /// <summary>Rate of mortality increase for underweight animals.</summary>
         [Description("Rate of mortality increase for underweight animals c-d-")]
+        [Units("0-1")]
         public double MortIntensity { get; set; }
 
         /// <summary>Fraction of normal body weight in animals of Size=1 at which mortality starts to increase</summary>
@@ -361,21 +365,26 @@ namespace Models.GrazPlan
 
         /// <summary>Maximum young</summary>
         [Description("Maximum young")]
+        [Units("-")]
         public int MaxYoung { get; set; }
 
         /// <summary>Breed standard reference weight (kg)</summary>
         [Description("Breed standard reference weight (kg)")]
+        [Units("kg")]
         public double BreedSRW { get; set; }
 
         /// <summary>Potential fleece weight (kg)</summary>
         [Description("Potential fleece weight (kg)")]
+        [Units("kg")]
         public double PotFleeceWt { get; set; }
 
         /// <summary>Potential greasy fleece weight:SRW</summary>
+        [Units("-")]
         public double FleeceRatio { get; set; }
 
         /// <summary>Peak milk</summary>
         [Description("Peak milk")]
+        [Units("kg")]
         public double PeakMilk { get; set; }
 
         /// <summary>ConceiveSigs</summary>
@@ -385,6 +394,7 @@ namespace Models.GrazPlan
         public double FertWtDiff { get; set; }
 
         /// <summary>Fleece yield</summary>
+        [Units("0-1")]
         public double FleeceYield { get { return WoolC[3]; } }
 
         /// <summary>Conception values</summary>

@@ -72,6 +72,8 @@
             try
             {
                 storage.Writer.Empty();
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowRightHandPanel();
             }
             catch (Exception err)
             {
@@ -92,12 +94,32 @@
             {
                 Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
                 RunCommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                runner.AllSimulationsCompleted += RefreshRightHandPanel;
                 command.Do();
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Refresh the right-hand panel of the UI.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void RefreshRightHandPanel(object sender, object args)
+        {
+            if (sender is Runner runner)
+                runner.AllSimulationsCompleted -= RefreshRightHandPanel;
+
+            // This can be called on the runner thread. The UI actions
+            // need to occur on the main thread.
+            Gtk.Application.Invoke(delegate
+            {
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowRightHandPanel();
+            });
         }
 
         /// <summary>
@@ -291,9 +313,15 @@
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
                 IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-                ICommand command = new AddModelCommand(currentNode, text);
-                explorerPresenter.CommandHistory.Add(command, true);
-                explorerPresenter.Refresh();
+                if (currentNode != null)
+                {
+                    ICommand command = new AddModelCommand(currentNode, text);
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.Refresh();
+                    if (currentNode.Children.Count == 1)
+                        explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                    explorerPresenter.SelectNode(currentNode, false);
+                }
             }
             catch (Exception err)
             {
@@ -416,7 +444,7 @@
         /// <param name="multiProcessRunner">Use the multi-process runner?</param>
         private void RunAPSIMInternal(bool multiProcessRunner)
         {
-            if (this.explorerPresenter.Save())
+            if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
             {
                 Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
                 if (multiProcessRunner)

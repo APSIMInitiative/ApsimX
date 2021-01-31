@@ -33,7 +33,9 @@ namespace Models.PMF.Phen
         public double BasePhyllochron { get; set; }
         /// <summary>Intercept of the realationship between FLN and TSHS</summary>
         public double IntFLNvsTSHS { get; set; }
-}
+        /// <summary>The maximum methalation of cold Vrn 1</summary>
+        public double MaxMethColdVern1 { get; set; }
+    }
 
 /// <summary>
     /// Takes FLN and base phyllochron inputs and calculates Vrn expression rate coefficients for CAMP
@@ -272,6 +274,7 @@ namespace Models.PMF.Phen
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             Params.MaxIpVrn2 = 0;
             Params.MaxDpVrn2 = 0;
+            double BaseVrn1AtVSBP_LV = Math.Min(camp.VrnSatThreshold, (VSBP_LV + EmergBP) * Params.BaseDVrn1);
 
             //Vrn2 parameters only relevent for genotypes with nevaitve VPPS and a low BaseDVrn1.  Genotypes with a high base
             if (VPPS < 0) //and (BaseDVrn1 < 0.4): 
@@ -284,7 +287,6 @@ namespace Models.PMF.Phen
                     Params.MaxIpVrn2 = (pVrn2AtVSBP_LV) - (VSBP_LV * Params.MaxDpVrn2);
                     if (Params.MaxDpVrn2 >= (Params.BaseDVrn1 * 0.99)) //If DpVrn2 exceeds baseVrn1 we need to do some forcing so it doesn't
                     {
-                        double BaseVrn1AtVSBP_LV = (VSBP_LV + EmergBP) * Params.BaseDVrn1;
                         Params.MaxDpVrn2 = Math.Max(0, (pVrn2AtVSBP_LN - (BaseVrn1AtVSBP_LV * 1.2)) / (VSBP_LN - VSBP_LV));
                         Params.MaxIpVrn2 = (pVrn2AtVSBP_LN) - (VSBP_LN * Params.MaxDpVrn2);
                     }
@@ -304,7 +306,9 @@ namespace Models.PMF.Phen
             // Maximum rate of Vrnx Expression (MaxDVrnX)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             Params.MaxDVrnX = (camp.VrnSatThreshold - BaseVrn1AtVSBP_LN) / (VSBP_LN);
-            
+                        
+            Params.MaxMethColdVern1 = 1 - BaseVrn1AtVSBP_LV;
+
             return Params;
         }
     }

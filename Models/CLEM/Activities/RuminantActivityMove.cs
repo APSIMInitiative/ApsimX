@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -242,26 +243,28 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Move the following groups to ";
-            if (ManagedPastureName == null || ManagedPastureName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">General yards</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Move the following groups to ");
+                if (ManagedPastureName == null || ManagedPastureName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">General yards</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ManagedPastureName + "</span>");
+                }
+                if (MoveSucklings)
+                {
+                    htmlWriter.Write(" moving sucklings with mother");
+                }
+                htmlWriter.Write("</div>");
+                if (PerformAtStartOfSimulation)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ManagedPastureName + "</span>";
-            }
-            if (MoveSucklings)
-            {
-                html += " moving sucklings with mother";
-            }
-            html += "</div>";
-            if (PerformAtStartOfSimulation)
-            {
-                html += "\n<div class=\"activityentry\">These individuals will located on the specified pasture at startup</div>";
-            }
-            return html;
         } 
         #endregion
     }

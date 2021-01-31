@@ -171,7 +171,7 @@
         /// <param name="tableName">Name of the table to be deleted.</param>
         public void DeleteTable(string tableName)
         {
-            Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+            Connection.ExecuteNonQuery($"DROP TABLE \"{tableName}\"");
             lock (lockObject)
                 if (!TablesModified.Contains(tableName))
                     TablesModified.Add(tableName);

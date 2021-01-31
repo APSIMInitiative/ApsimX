@@ -228,8 +228,20 @@ namespace UserInterface.Presenters
                 columnName = crop.Name.Replace("Soil", "") + " " + property.Name;
             }
 
+            if (property.Display != null && property.Display.ShowTotal )
+            {
+                double total = property.Total;
+                if (double.IsNaN(total) && property.Name == "PAWC")
+                    if (property.Object is SoilCrop soilCrop && soilCrop.Parent is Physical physical)
+                        total = MathUtilities.Multiply((double[])property.Value, physical.Thickness).Sum();
+                if (!double.IsNaN(total))
+                    columnName += $"\n{total.ToString(property.Format)} ";
+            }
+            else if (property.Units != null)
+                columnName += "\n";
+
             if (property.Units != null)
-                columnName += $" \n({property.Units})";
+                columnName += $"({property.Units})";
 
             return columnName;
         }

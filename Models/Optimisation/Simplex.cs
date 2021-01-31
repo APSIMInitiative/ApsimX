@@ -40,7 +40,7 @@ namespace Models.Optimisation
         /// Tolerance criterion between two iterations.
         /// </summary>
         [Description("Tolerance criterion between two iterations")]
-        [Tooltip("Iterations will cease if the objective variable is changing by less than this amount.")]
+        [Tooltip("Iterations will cease if the parameters are changing by less than this amount.")]
         public double Tolerance { get; set; } = 1e-5;
 
         /// <summary>

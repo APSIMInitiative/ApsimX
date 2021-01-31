@@ -284,6 +284,7 @@ namespace UserInterface.Views
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
             textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
             textEditor.TextArea.KeyPressEvent += OnKeyPress;
+            textEditor.Text = "";
             scroller.Hadjustment.Changed += Hadjustment_Changed;
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;

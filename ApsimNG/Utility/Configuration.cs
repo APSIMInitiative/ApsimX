@@ -4,10 +4,43 @@ using System.Linq;
 using System.IO;
 using System.Drawing;
 using System.Collections.Generic;
+using Models.Core;
 
 namespace Utility
 {
-    /// <summary>Handle the reading and writing of the configuration settings file</summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    internal class InputAttribute : Attribute
+    {
+        public string Name { get; set; }
+        public InputAttribute(string name)
+        {
+            Name = name;
+        }
+    }
+
+    internal class FileInput : InputAttribute
+    {
+        /// <summary>
+        /// Recommended file extension.
+        /// </summary>
+        public string[] Extensions { get; set; }
+
+        /// <summary>
+        /// Constructor to provide recommended file extensions.
+        /// </summary>
+        /// <param name="extensions">Recommended file extensions.</param>
+        public FileInput(string name, params string[] extensions) : base(name)
+        {
+            Extensions = extensions;
+        }
+    }
+
+    internal class FontInput : InputAttribute
+    {
+        public FontInput(string name) : base(name) { }
+    }
+
+    /// <summary>Stores user settings and other information which is persistent between restarts of the GUI.</summary>
     public class Configuration
     {
         /// <summary>The instance</summary>
@@ -23,12 +56,13 @@ namespace Utility
         public Size MainFormSize { get; set; }
 
         /// <summary>The state (max, min, norm) of the form</summary>
-        public Boolean MainFormMaximized { get; set; }
+        public bool MainFormMaximized { get; set; }
 
         /// <summary>List of the most recently opened files</summary>
         public List<ApsimFileMetadata> MruList { get; set; }
 
         /// <summary>The maximum number of files allowed in the mru list</summary>
+        [Input("Number of files in history")]
         public int FilesInHistory { get; set; }
 
         /// <summary>Position of split screen divider.</summary>
@@ -48,12 +82,20 @@ namespace Utility
         public int ReportSplitterPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
+        [Input("Dark theme enabled")]
         public bool DarkTheme { get; set; }
 
+        /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
+        [Input("Autosave on run")]
+        [Tooltip("Should the file be automatically saved to disk before running simulations?")]
+        public bool AutoSave { get; set;} = true;
+
         /// <summary>Iff true, the GUI will not play a sound when simulations finish running.</summary>
+        [Input("Mute all sound effects")]
         public bool Muted { get; set; }
 
         /// <summary>Use the new property presenter?</summary>
+        [Input("Use new/beta property presenter")]
         public bool UseNewPropertyPresenter { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
@@ -97,16 +139,22 @@ namespace Utility
         public string Email { get; set; }
 
         /// <summary>The maximum number of rows to show on a report grid</summary>
+        [Input("Default max number of rows to show in datastore")]
         public int MaximumRowsOnReportGrid { get; set; }
 
         /// <summary>
         /// Store the style name used in the editor
         /// </summary>
+        /// <remarks>
+        /// This should probably be user controllable, but we would need a way of
+        /// providing a list of valid values for the drop-down box.
+        /// </remarks>
         public string EditorStyleName { get; set; } = "Visual Studio";
 
         /// <summary>
         /// Store the zoom level for editors
         /// </summary>
+        [Input("Default zoom level for text editors")]
         public double EditorZoom { get; set; } = 1.0;
 
         /// <summary>
@@ -117,21 +165,27 @@ namespace Utility
         /// <summary>
         /// Simulation complete wav file.
         /// </summary>
+        [FileInput(".wav file to play when simulation finishes", ".wav")]
+        [Tooltip("Leave empty for default sound effect")]
         public string SimulationCompleteWavFileName { get; set; }
 
         /// <summary>
         /// Simulation complete with error wav file.
         /// </summary>
+        [FileInput(".wav file to play when simulation finishes with error")]
+        [Tooltip("Leave empty for default sound effect")]
         public string SimulationCompleteWithErrorWavFileName { get; set; }
 
         /// <summary>
         /// Stores the user's preferred font.
         /// </summary>
+        [FontInput("Font")]
         public string FontName { get; set; } = "Segoe UI 11";
 
         /// <summary>
         /// Stores the user's preferred font for the manager script text editor.
         /// </summary>
+        [FontInput("Font used in manager script editor")]
         public string EditorFontName { get; set; } = "monospace 10";
 
         /// <summary>

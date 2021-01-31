@@ -122,7 +122,10 @@
             {
                 get
                 {
-                    return LastName(Authors[0]);
+                    if (Authors.Length > 0)
+                        return LastName(Authors[0]);
+                    else
+                        return "";
                 }
             }
 
@@ -180,6 +183,9 @@
                     return text;
                 }
 
+                var match = System.Text.RegularExpressions.Regex.Match(contents, $@"{keyword}\s*=\s*{{([^}}]+)}}");
+                if (match.Groups.Count == 2)
+                    return match.Groups[1].ToString();
                 return string.Empty;
             }
 

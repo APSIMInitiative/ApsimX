@@ -156,12 +156,14 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the green mass of the forage
         /// </summary>
+        [Units("kg/ha")]
         public double GreenMass { get; set; }
 
         /// <summary>
         /// Gets the total live herbage used as input in GrazingInputs
         /// Units: the same as the forage object
         /// </summary>
+        [Units("kg/ha")]
         public double TotalLive
         {
             get
@@ -174,6 +176,7 @@ namespace Models.GrazPlan
         /// Gets the total dead herbage used as input in GrazingInputs
         /// Units: the same as the forage object
         /// </summary>
+        [Units("kg/ha")]
         public double TotalDead
         {
             get
@@ -185,36 +188,43 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the full identifier for this forage e.g. Crop or pasture component full path name
         /// </summary>
+        [Units("-")]
         public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the cohortID from the incoming AvailableToAnimal forage component
         /// </summary>
+        [Units("-")]
         public string CohortID { get; set; }
 
         /// <summary>
         /// Gets or sets the forage organ
         /// </summary>
+        [Units("-")]
         public string Organ { get; set; }
 
         /// <summary>
         /// Gets or sets the forage item age class
         /// </summary>
+        [Units("-")]
         public string AgeClass { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock of this forage
         /// </summary>
+        [Units("-")]
         public PaddockInfo InPaddock { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of this forage removed (output)
         /// </summary>
+        [Units("-")]
         public GrazType.GrazingOutputs RemovalKG { get; set; }
 
         /// <summary>
         /// Gets or sets the bottom of forage
         /// </summary>
+        [Units("mm")]
         public double Bottom
         {
             get { return this.GetBottom(); }
@@ -224,6 +234,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the top of forage
         /// </summary>
+        [Units("mm")]
         public double Top
         {
             get { return this.GetTop(); }
@@ -689,38 +700,43 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the total calculated green dm for the paddock
         /// </summary>
+        [Units("kg/ha")]
         public double PastureGreenDM { get; set; }
 
         /// <summary>
         /// Gets or sets the owning paddock
         /// </summary>
+        [Units("-")]
         public PaddockInfo OwningPaddock
         {
             get { return this.owningPaddock; }
             set { this.owningPaddock = value; }
         }
-        
+
         /// <summary>
         /// Gets or sets the paddock owner name
         /// </summary>
+        [Units("-")]
         public string PaddockOwnerName
         {
             get { return this.paddockOwnerName; }
             set { this.paddockOwnerName = value; }
         }
-        
+
         /// <summary>
         /// Gets or sets the forage host name
         /// </summary>
+        [Units("-")]
         public string ForageHostName
         {
             get { return this.forageHostName; }
             set { this.forageHostName = value; }
         }
-        
+
         /// <summary>
         /// Gets or sets the component id of the host
         /// </summary>
+        [Units("-")]
         public int HostID
         {
             get { return this.hostID; }

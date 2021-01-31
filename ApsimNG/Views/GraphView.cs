@@ -521,7 +521,7 @@
         {
             if (x != null && y != null)
             {
-                ColumnXYSeries series = new ColumnXYSeries();
+                var series = new Utility.ColumnXYSeries();
                 if (showOnLegend)
                     series.Title = title;
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
@@ -529,12 +529,14 @@
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+
+                
                 // By default, clicking on a datapoint (a bar) of a bar graph
                 // will create a pop-up showing the x/y values at the beginning
                 // and end of the bar. We override this here, so that it only
                 // shows the x/y pair at the end of the bar. Perhaps we should
                 // accept the tracker string as an argument to this function?
-                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
+                series.TrackerFormatString = "{0}\n{1}: {2}\n{3}: {4}";
                 this.plot1.Model.Series.Add(series);
             }
         }

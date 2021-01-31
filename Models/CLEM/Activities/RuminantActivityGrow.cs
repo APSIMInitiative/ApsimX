@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -220,7 +221,6 @@ namespace Models.CLEM.Activities
                         // assuming average feed quality if no previous diet values
                         // This need to happen before suckling potential intake can be determined.
                         CalculateMilkProduction(femaleind);
-//                        femaleind.MilkProducedThisTimeStep = femaleind.MilkProduction * 30.4;
                         femaleind.MilkProducedThisTimeStep = femaleind.MilkCurrentlyAvailable;
                     }
                     else
@@ -228,7 +228,8 @@ namespace Models.CLEM.Activities
                         femaleind.MilkProduction = 0;
                         femaleind.MilkProductionPotential = 0;
                         femaleind.MilkCurrentlyAvailable = 0;
-                        femaleind.MilkMilkedThisTimeStep = 0;                        femaleind.MilkSuckledThisTimeStep = 0;
+                        femaleind.MilkMilkedThisTimeStep = 0;
+                        femaleind.MilkSuckledThisTimeStep = 0;
                         femaleind.MilkProducedThisTimeStep = 0;
                     }
                 }
@@ -364,11 +365,17 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
-                        ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
-                        ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        // for calves
+                        // if potential intake = 0 they wave not needed to consume pasture and intake will be zero.
+                        if(ind.PotentialIntake > 0)
+                        {
+                            ind.Intake = Math.Min(ind.Intake, ind.PotentialIntake);
+                            ind.MetabolicIntake = Math.Min(ind.MetabolicIntake, ind.Intake);
+                        }
 
-                        if (ind.Intake == 0)
+                        // no potential * 1.2 as potential has been fixed based on suckling individuals.
+
+                        if (ind.MilkIntake + ind.Intake  <= 0)
                         {
                             unfedcalves++;
                         }
@@ -394,7 +401,7 @@ namespace Models.CLEM.Activities
                     string warn = $"individuals of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }
@@ -404,7 +411,7 @@ namespace Models.CLEM.Activities
                     string warn = $"calves of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }
@@ -592,9 +599,16 @@ namespace Models.CLEM.Activities
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
             ind.PreviousWeight = ind.Weight;
-            ind.Weight += energyPredictedBodyMassChange;
-            ind.Weight = Math.Max(0.0, ind.Weight);
-            ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
+
+            double newWt = Math.Max(0.0, ind.Weight + energyPredictedBodyMassChange);
+            double mxwt = ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual;
+            newWt = Math.Min(newWt, mxwt);
+            ind.Weight = newWt;
+            
+            // sped up above using locals
+            //ind.Weight += energyPredictedBodyMassChange;
+            //ind.Weight = Math.Max(0.0, ind.Weight);
+            //ind.Weight = Math.Min(ind.Weight, ind.StandardReferenceWeight * ind.BreedParams.MaximumSizeOfIndividual);
 
             // Function to calculate approximate methane produced by animal, based on feed intake
             // Function based on Freer spreadsheet
@@ -792,31 +806,33 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">The gross energy content of forage is ";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The gross energy content of forage is ");
 
-            if (EnergyGross == 0)
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>";
-            }
-            html += " MJ/kg dry matter</div>";
+                if (EnergyGross == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
+                }
+                htmlWriter.Write(" MJ/kg dry matter</div>");
 
 
-            html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
-            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-            {
-                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");
+                }
+                else
+                {
+                    htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
-            }
-            html += "</div>";
-            return html;
         } 
         #endregion
 

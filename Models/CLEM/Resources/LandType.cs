@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -161,7 +162,7 @@ namespace Models.CLEM.Resources
                 Category = category,
                 ResourceType = this
             };
-            lastGain = amountAdded;
+            LastGain = amountAdded;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
@@ -294,12 +295,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
-
         #endregion
 
         #region descriptive summary
@@ -311,41 +306,44 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if (LandArea == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land";
-            }
-            else if (ProportionOfTotalArea == 0)
-            {
-                html += "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned";
-            }
-            else
-            {
-                html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
-                string units = (this as IResourceType).Units;
-                if (units != "NA")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (LandArea == 0)
                 {
-                    if (units == null || units == "")
+                    htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
+                }
+                else if (ProportionOfTotalArea == 0)
+                {
+                    htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
+                }
+                else
+                {
+                    htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
+                    string units = (this as IResourceType).Units;
+                    if (units != "NA")
                     {
-                        html += "";
-                    }
-                    else
-                    {
-                        html += " <span class=\"setvalue\">" + units + "</span>";
+                        if (units == null || units == "")
+                        {
+                            htmlWriter.Write("");
+                        }
+                        else
+                        {
+                            htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
+                        }
                     }
                 }
-            }
 
-            if (PortionBuildings > 0)
-            {
-                html += " of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings";
+                if (PortionBuildings > 0)
+                {
+                    htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>

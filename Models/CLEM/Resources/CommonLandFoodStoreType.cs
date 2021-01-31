@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -314,7 +315,7 @@ namespace Models.CLEM.Resources
                     RelatesToResource = relatesToResource,
                     ResourceType = this
                 };
-                lastGain = pool.Amount;
+                LastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -396,12 +397,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
-
         #endregion
 
         #region descriptive summary
@@ -413,36 +408,38 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            if (this.Parent.GetType() == typeof(AnimalFoodStore))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "This common land can be used by animal feed activities only";
+                htmlWriter.Write("<div class=\"activityentry\">");
+                if (this.Parent.GetType() == typeof(AnimalFoodStore))
+                {
+                    htmlWriter.Write("This common land can be used by animal feed activities only");
+                }
+                else
+                {
+                    htmlWriter.Write("This common land can be used by grazing and cut and carry activities");
+                }
+                htmlWriter.Write("</div>");
+                if (PastureLink != null)
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The nitrogen quality of new pasture is <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span> and can be reduced to <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.#") + "%</span>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The minimum Dry Matter Digestaibility is <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("Dry matter digestibility will be calculated from the N%");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "This common land can be used by grazing and cut and carry activities";
-            }
-            html += "</div>";
-            if (PastureLink != null)
-            {
-                html += "<div class=\"activityentry\">";
-                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent";
-                html += "</div>";
-            }
-            else
-            {
-                html += "<div class=\"activityentry\">";
-                html += "The nitrogen quality of new pasture is <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span> and can be reduced to <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.#") + "%</span>";
-                html += "</div>";
-                html += "<div class=\"activityentry\">";
-                html += "The minimum Dry Matter Digestaibility is <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>";
-                html += "</div>";
-                html += "<div class=\"activityentry\">";
-                html += "Dry matter digestibility will be calculated from the N%";
-                html += "</div>";
-            }
-            return html;
         }
 
         #endregion

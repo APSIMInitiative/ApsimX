@@ -101,6 +101,7 @@ namespace UserInterface.Views
             vbox1.PackStart(modelTypeLabel, false, true, 0);
             vbox1.PackStart(modelDescriptionLabel, false, true, 0);
             vbox1.PackStart(modelVersionLabel, false, true, 4);
+
             vbox1.Add(bottomView);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
@@ -110,7 +111,14 @@ namespace UserInterface.Views
 
         private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            modelHelpLinkImg.HeightRequest = 50;
+            try
+            {
+                modelHelpLinkImg.HeightRequest = 50;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -121,16 +129,23 @@ namespace UserInterface.Views
         /// </summary>
         private void Vbox1_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
-            modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
+            try
+            {
+                modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
+                modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
         {
             //Check internet connection and choose either local or online help files
-            if(ModelHelpURL != "")
+            try
             {
-                try
+                if(ModelHelpURL != "")
                 {
                     string helpURL = "";
                     // does offline help exist
@@ -153,27 +168,34 @@ namespace UserInterface.Views
                     }
                     System.Diagnostics.Process.Start(helpURL);
                 }
-                catch(Exception ex)
-                {
-                    throw new Exception(ex.Message); 
-                }
+            }
+            catch(Exception ex)
+            {
+                ShowError(ex);
             }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            modelHelpLinkLabel.Clicked -= ModelHelpLinkLabel_Clicked;
-            vbox1.SizeAllocated -= Vbox1_SizeAllocated;
-            if (bottomView != null)
+            try
             {
-                foreach (Widget child in bottomView.Children)
+                modelHelpLinkLabel.Clicked -= ModelHelpLinkLabel_Clicked;
+                vbox1.SizeAllocated -= Vbox1_SizeAllocated;
+                if (bottomView != null)
                 {
-                    bottomView.Remove(child);
-                    child.Cleanup();
+                    foreach (Widget child in bottomView.Children)
+                    {
+                        bottomView.Remove(child);
+                        child.Cleanup();
+                    }
                 }
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public string ModelTypeText

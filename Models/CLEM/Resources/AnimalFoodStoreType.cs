@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -124,7 +125,7 @@ namespace Models.CLEM.Resources
                 ResourceType = this
             };
             LastTransaction = details;
-            lastGain = addAmount;
+            LastGain = addAmount;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
         }
@@ -149,35 +150,40 @@ namespace Models.CLEM.Resources
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
-            this.amount -= amountRemoved;
 
-            FoodResourcePacket additionalDetails = new FoodResourcePacket
+            if (amountRemoved > 0)
             {
-                DMD = this.DMD,
-                PercentN = this.CurrentStoreNitrogen
-            };
-            request.AdditionalDetails = additionalDetails;
+                this.amount -= amountRemoved;
 
-            request.Provided = amountRemoved;
+                FoodResourcePacket additionalDetails = new FoodResourcePacket
+                {
+                    DMD = this.DMD,
+                    PercentN = this.CurrentStoreNitrogen
+                };
+                request.AdditionalDetails = additionalDetails;
 
-            // send to market if needed
-            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
-                additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
-                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                request.Provided = amountRemoved;
+
+                // send to market if needed
+                if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+                {
+                    additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                    (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, request.ResourceTypeName, "Farm sales");
+                }
+
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    ResourceType = this,
+                    Loss = amountRemoved,
+                    Activity = request.ActivityModel,
+                    RelatesToResource = request.RelatesToResource,
+                    Category = request.Category
+                };
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+
             }
-
-            ResourceTransaction details = new ResourceTransaction
-            {
-                ResourceType = this,
-                Loss = amountRemoved,
-                Activity = request.ActivityModel,
-                RelatesToResource = request.RelatesToResource,
-                Category = request.Category 
-            };
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
             return;
         }
 
@@ -210,12 +216,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        private double lastGain = 0;
-        /// <summary>
-        /// Amount of last gain transaction
-        /// </summary>
-        public double LastGain { get { return lastGain; } }
-
         #endregion
 
         #region descriptive summary
@@ -227,25 +227,27 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>";
-            if (DMD > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>";
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
+                if (DMD > 0)
+                {
+                    htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
+                }
+                htmlWriter.Write("</div>");
+                if (StartingAmount > 0)
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += " and a Dry Matter Digesibility estimated from N%";
-            }
-            html += "</div>";
-            if (StartingAmount > 0)
-            {
-                html += "<div class=\"activityentry\">";
-                html += "Simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("#,##0.##") + "</span> kg";
-                html += "</div>";
-            }
-            return html;
         }
 
         /// <summary>

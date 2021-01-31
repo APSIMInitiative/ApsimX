@@ -109,11 +109,14 @@ namespace Models
                         regresionLineName = "Regression line (" + checkpointName + ")";
 
                     // Display a single regression line for all data.
-                    SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
-                    if (regressionSeries != null)
+                    if (x.Count > 0 && y.Count == x.Count)
                     {
-                        regressionLines.Add(regressionSeries);
-                        equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                        SeriesDefinition regressionSeries = PutRegressionLineOnGraph(x, y, ColourUtilities.ChooseColour(checkpointNumber), regresionLineName);
+                        if (regressionSeries != null)
+                        {
+                            regressionLines.Add(regressionSeries);
+                            equationColours.Add(ColourUtilities.ChooseColour(checkpointNumber));
+                        }
                     }
                 }
 

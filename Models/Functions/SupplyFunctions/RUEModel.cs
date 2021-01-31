@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
@@ -21,26 +17,32 @@ namespace Models.Functions.SupplyFunctions
     {
         /// <summary>The rue</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/MJ")]
         IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FCO2 = null;
 
         /// <summary>The function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FN = null;
 
         /// <summary>The ft</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         public IFunction FT = null;
 
         /// <summary>The fw</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FW = null;
 
         /// <summary>The FVPD</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
@@ -49,15 +51,9 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The radiation interception data</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("MJ/m^2/d")]
         public IFunction RadnInt = null;
 
-        #region Class Data Members
-        //[Input]
-        //public NewMetType MetData;
-
-        #endregion
-
-        #region Associated variables
 
         /// <summary>Gets the VPD.</summary>
         /// <value>The VPD.</value>
@@ -96,6 +92,5 @@ namespace Models.Functions.SupplyFunctions
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
             return radiationInterception * RueAct;
         }
-        #endregion
     }
 }

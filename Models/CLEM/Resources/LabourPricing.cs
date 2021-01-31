@@ -44,12 +44,12 @@ namespace Models.CLEM.Resources
             if (this.FindAllChildren<LabourPriceGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\nAdd [LabourPriceGroups] to include labour pricing.", memberNames));
+                results.Add(new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [LabourPriceGroups] to include labour pricing.", memberNames));
             }
             else if (this.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\nThese will not result in price calculations and can be deleted.", memberNames));
+                results.Add(new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
             }
             return results;
         }
@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if (this.Children.OfType<LabourPriceGroup>().Count() == 0)
             {
-                html += "\n<div class=\"errorlink\">";
+                html += "\r\n<div class=\"errorlink\">";
                 html += "No labour price groups has been defined";
                 html += "</div>";
             }

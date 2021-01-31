@@ -45,7 +45,7 @@ if "%1"=="%uisyntax%" (
 )
 
 if "%1"=="%prototypesyntax%" (
-	set testdir=%apsimx%\Prototypes
+	set testdir=%apsimx%\Prototypes\*.apsimx
 	
 	rem Extract restricted grapevine dataset
 	set grapevine=%apsimx%\Prototypes\Grapevine
@@ -55,14 +55,18 @@ if "%1"=="%prototypesyntax%" (
 )
 
 if "%1"=="%examplessyntax%" (
-	set testdir=%apsimx%\Examples
+	set testdir=%apsimx%\Examples\*.apsimx
 	goto :tests
 )
 
 if "%1"=="%validationsyntax%" (
-	set testdir=%apsimx%\Tests
+	set "testdir=%apsimx%\Tests\Simulation\*.apsimx %apsimx%\Tests\UnderReview\*.apsimx %apsimx%\Tests\Validation\*.apsimx"
+	rem Extract restricted soybean dataset
 	set soybean=%apsimx%\Tests\UnderReview\Soybean
 	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
+	rem Extract restricted NPI wheat dataset
+	set wheat=%apsimx%\Tests\Validation\Wheat
+	echo %NPI_PASSWORD%| 7z x !wheat!\NPIValidation.7z -o!wheat!
 	goto :tests
 )
 
@@ -106,14 +110,9 @@ echo Successfully finished UI Tests.
 exit /b 0
 	
 :tests
-if not exist "%testdir%" (
-	echo %testdir% does not exist. Aborting...
-	exit 1
-)
-
 echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
-"%bin%\Models.exe" %testdir%\*.apsimx /MultiProcess /Recurse /RunTests /Verbose
+"%bin%\Models.exe" %testdir% /Recurse /RunTests /Verbose
 endlocal

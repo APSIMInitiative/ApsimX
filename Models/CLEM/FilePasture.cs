@@ -18,7 +18,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [Description("This component specifies a pasture database file for native pasture used in the CLEM simulation")]
-    [Version(1, 0, 2, "This component is no longer supported.\nUse the FileSQLitePasture reader for best performance.")]
+    [Version(1, 0, 2, "This component is no longer supported.\r\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
     public class FilePasture : CLEMModel, IFilePasture
@@ -830,22 +830,24 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
+                {
+                    htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                }
+                else
+                {
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                }
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-            }
-            html += "\n</div>";
-            return html;
         } 
         #endregion
     }

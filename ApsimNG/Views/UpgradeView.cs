@@ -54,13 +54,13 @@
         private Entry emailBox = null;
         private ComboBox countryBox = null;
         private Label label1 = null;
-        private Alignment htmlAlign = null;
+        private Container licenseContainer = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private IHTMLView htmlView;
+        private MarkdownView licenseView;
 
         /// <summary>
         /// Constructor
@@ -79,7 +79,7 @@
             emailBox = (Entry)builder.GetObject("emailBox");
             countryBox = (ComboBox)builder.GetObject("countryBox");
             label1 = (Label)builder.GetObject("label1");
-            htmlAlign = (Alignment)builder.GetObject("HTMLalign");
+            licenseContainer = (Container)builder.GetObject("licenseContainer");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
             alignment7 = (Alignment)builder.GetObject("alignment7");
@@ -122,9 +122,8 @@
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
-            // tbi - gtk3 htmlview or text renderer
-            htmlView = new HTMLView(new ViewBase(null));
-            htmlAlign.Add((htmlView as HTMLView).MainWidget);
+            licenseView = new MarkdownView(owner);
+            licenseContainer.Add(licenseView.MainWidget);
             tabbedExplorerView = owner as IMainView;
 
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
@@ -207,23 +206,10 @@
                 button1.Sensitive = false;
                 table2.Hide();
                 checkbutton1.Hide();
-                htmlView?.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
+                licenseView.Text = "You are currently using a custom build - **Upgrade is not available!**";
             }
             else
-            {
-                try
-                {
-                    // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                    // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                    htmlView?.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
-                }
-                catch (Exception)
-                {
-                    ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                    loadFailure = true;
-                }
-            }
-
+                licenseView.Text = ReflectionUtilities.GetResourceAsString("ApsimNG.LICENSE.md");
         }
 
         /// <summary>
