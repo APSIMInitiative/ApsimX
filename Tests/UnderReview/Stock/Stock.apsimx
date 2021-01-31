@@ -1,14 +1,32 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 102,
+  "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM STOCK Model\r\n \r\nNeville Herrmann (CSIRO)\n\nAndrew Moore (CSIRO)\n\nEric Zurcher (CSIRO)\n\nDean Holzworth (AgResearch/CSIRO)\n\nMark Lieffering (AgResearch)\n\nVal Snow (AgResearch)\n\n#Acknowledgements\n\nCSIRO, AgResearch and the APSIM Initiative (https://www.apsim.info/) for funding the implemetation of the Stock model into APSIMX",
-      "Name": "TitlePage",
+      "Text": "# The APSIM STOCK Model\r\n \r\nNeville Herrmann (CSIRO)\n\nAndrew Moore (CSIRO)\n\nEric Zurcher (CSIRO)\n\nDean Holzworth (AgResearch/CSIRO)\n\nMark Lieffering (AgResearch)\n\nVal Snow (AgResearch)\n\n# Acknowledgements\n\nCSIRO, AgResearch and the APSIM Initiative (https://www.apsim.info/) for funding the implemetation of the Stock model into APSIMX\r\n\r\n",
+      "Name": "Title Page",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Introduction\r\n\r\nThe Stock model is an implementation of the CSIRO’s Australian Feeding Standards as expressed in the Grazplan (https://grazplan.csiro.au/) model. The technical document for Grazplan is available at available at https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf. The model has been ported into APSIM NextGeneration to allow full interaction with other models within the APSIM environment. Animals in Stock show the full range of growth, reproduction and death processes (see Grazplan) and the basic management actions (mating, weaning, moving, feeding supplements, selling and buying) have been implemented. All crop/plant models in APSIM NextGeneration have a ‘damage’ interface implemented and so allow grazing as soon as the Stock are moved to the same location (zone or paddock) as the crop.  \r\n\r\nDifferent animal species, genotypes and ages can be modelled together and various management systems implemented, including, but not limited to, forage crop grazing, rotational grazing, moving stock from paddock to feedlot and back again. Management can be simulated via Operations managers as in the simulations here or scripts. The collection of simulations in the Stock example shows examples of simulating three different management regimes (forage grazing, rotational grazing and a wheat/feedlot system) using scripts.\r\n\r\nManagement of animal groups is done by user-assigned tag values that take integer values. Tag values have two purposes: \r\n\r\n* They can be used to manage distinct groups of animals in a common fashion. For example, all lactating ewes might be assigned the same tag value, and then all animals with this tag value might undergo the same supplementary feeding regime. \r\n* If tag values are assigned sequentially (starting at 1), they can be used to generate summary variables. For example, WeightTag[1] gives the average live weight of all animals in groups with a tag value of 1.  \r\n\r\nNote that animal groups with different tag values are never merged, even if they are otherwise similar. \r\n\r\n* To set the tag value of an animal group, use the Tag method. \r\n\r\n* To determine the tag value of an animal group, use the TagNo variable.\r\n\r\nAnimal groups that become sufficiently similar are automatically merged into a single group.Animals are similar if all these criteria are the same:\r\n\r\n* Occupy the same paddock\r\n* Reproduction status (Castrated, Male, Empty, Early Preg,  Late Preg)\r\n* Number of foetuses\r\n* Mating cycle (day in the mating cycle)\r\n* Days to mating (Days left in joining period)\r\n* Pregnancy (Days since conception)\r\n* Lactation status (Days since parturition (if lactating)) – within 7 days\r\n* Has (not) young\r\n* If young exist, their reproductive status must be the same\r\n* Implants (hormone implants)\r\n* Mean age (if the animals are less than one year old ) \r\n \r\nThese two simulations in this file are validations of the Stock model in APSIM Next Gen. A description of the validation dataset can found in the \"Description\" memo of the \"Validation\" node. Descriptions of the two validation simulations (\"LUDF\" and \"StockSlurp\")  can be found in the memos of the respective simulations.  \r\n\r\nThe parameters and variables that can be specified in the Stock model are in the auto-generated APSIM Next Gen documentation which can be found at https://apsimnextgeneration.netlify.app/ under the \"Model documentation\" link; the \"Stock\" model is near the bottom of the first table. \r\n\r\n",
+      "Name": "Introduction",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "# Changing Stock Parameters\r\n\r\n## Overview\n\nThe Stock model is an implementation of the CSIRO’s Australian Feeding Standards as expressed in the Grazplan (https://grazplan.csiro.au/) model.\r\n\r\nThe technical paper describing Grazplan can be found at https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf\n\nThe structure of the stock parameter strings (which can be found after adding a \"Genotype\" model to the \"Stock\" node) is not user friendly but they are needed so the code stays aligned with Grazplan.\r\n\r\nA useful resource to decipher the stock parameter strings are the Sheep and Cattle Explorer Excel spreadsheets. The Explorers are also useful to explore the effect of changing parameter values and they can be found at:\r\n\r\n* https://grazplan.csiro.au/wp-content/uploads/2007/08/SheepExplorer.xlsx for sheep and\r\n* https://grazplan.csiro.au/wp-content/uploads/2007/08/CattleExplorer.xlsx for cattle\r\n\n## Example\n\r\nAn example on how to change a parameter value is shown below. In the example, the Growth rate constant (CN1), which controls growth (and hence potential intake) will be changed from its default of 0.0115 to 0.015\r\n\r\n1. in the Cattle Explorer Excel sheet, go to the \"Pot.Intake\" worksheet and confirm that the default Growth rate constant (CN1) is 0.0115 (cell B6). Note also any other numbers listed above or below the desired parameter - this is to double check you have the right value in the Stock GUI\r\n\r\n2. in the genotype node (in the validation example \"Friesian\" under the main Stock node; this is where the animal's default parameters are defined) look for the appropriate name in the left hand column i.e. Growth\r\n3. this name is followed by notation (\"Growth C c-n-\") in which the last two characters match that in the Explorer (CN)\r\n4. ensure that the default value (0.0115) in the Cattle Explorer is found in the array in the right hand column along with the other numbers next to the default value of interest. This is just to ensure that you are dealing with the right parameter value\n5. double click the array and change the default value to the new, desired value (0.015)\n6. click away to save the changed value\r\n",
+      "Name": "Changing Stock Parameters",
       "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
@@ -43,6 +61,7 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -61,8 +80,8 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "#Validation\n\nThis vignette describes the origins and development of the Stock Model validation dataset. A high-level overview of the Stock Model itself can be found by clicking the Stock node.\n\nThe observed data set used for this validation simulation is based on publicly available data from New Zealand’s Lincoln University Dairy Farm [LUDF](http://www.siddc.org.nz/lu-dairy-farm/). The LUDF is a commercial demonstration dairy farm established in 2001 and operated by the South Island Dairying Development Centre (SIDDC) on behalf of Lincoln University to showcase sustainable and profitable dairy farming.\n\nThe LUDF is located at 1504 Shands Road, Lincoln (New Zealand; 43°38'S 172°26'E). The property is 186 ha of which 160 ha is the milking platform. The different soil types on the farm represent most of the common soil types in the surrounding Canterbury region. The farm operates in the top 2% of NZ dairy farms on profitability.  The farm’s targets and goals have varied over the years but in the 2019/20 season the target stocking rate was 3.5 cows/ha (peak milked), milk production of 1750 kg MS/ha (equivalent to 500kg MS/cow i.e. >100% liveweight in milk production), application of 160kg N/ha plus 300kg DM/cow imported supplement. Most cows are wintered off farm.\n\nAverage annual rainfall of 666 mm per annum is supplemented by an average irrigation input of 450 mm; average evapotranspiration for Lincoln is 870 mm/year. The milking platform was sown at conversion from a sheep operation (March 2001) in a mix of ryegrasses with white clovers, and a small amount of Timothy.\nThe breed of cows at the LUDF are “KiwiCross” which was established as a separate breed in 2005 and is now New Zealand's most popular breed. In the 2019/20 season peak number of cows milked was 555 with the average days in milk of 282 days. The stocking rate of 3.5 cows/ha is equivalent to 1,665 kg liveweight/ha. In terms of feeding, in 2019/20 the cows ate 4.4 t DM/cow as pasture and 0.2 t DM/cow as supplement. Off-farm grazing was 0.7 t DM/cow giving a total feed intake of 5.4 t DM/cow.\n\nWeekly farm data from the LUDF is available at [http://www.siddc.org.nz/lu-dairy-farm/weekly-data/](http://www.siddc.org.nz/lu-dairy-farm/weekly-data/) as PDF reports. The data for the years 2004 to 2017 was transcribed and collated to an Excel worksheet (“LUDFValidateData.xlsx”). There are two columns for pasture intake – that based on measured pasture disappearance i.e. the difference in pre- and post-grazing DM (column “CowPastureIntake”) as well as that which takes into account the likely wastage of pasture during grazing (“CowPastureIntakeWaste”). Estimating this wastage event is difficult. In an investigation conducted at the LUDF, [Pal2012] found that by direct measurement about 8% of the dry matter cows removed from the plants was not ingested (i.e. dropped to the ground). A similar wastage value (6%) was used in a DairyNZ feeding fact sheet for farmers (https://www.dairynz.co.nz/feed/nutrition/lactating-cows; accessed June 2020). Using 30 farmlet-years of data across ten farmlet trials, DairyNZ back-calculated stock intake from measurements of pasture energy density, changes in stock liveweight and milk production. That intake estimate was compared with pasture disappearance and they estimated that about 6% of the measured disappearance was not consumed (C. Glassey, DairyNZ, personal communication 2020). Considering that the 6-8% wastage values are under ideal grazing conditions (which do not occur all the time), the “CowPastureIntakeWaste” column was calculated as 90% of “CowPastureIntake”.\n\nNote that for these validation simulations, one stock parameter was changed from the original values in [FREER1997] to reflect modern dairy cow genetics. This, which can be accessed via the GUI in the \"Friesian\" node in the Stock model, was \"Potential intake (Intake C c-i-[2]) which was increased from 0.025 to 0.04. Also note that \"Dairy intake peak (c-idy-0)\"  was set to 1.\r\n    \n\nAcknowledgements\n\nSouth Island Dairying Development Centre (SIDDC) and Lincoln University for making the dairy farm’s production data available. Scott Rains, Samuel Dennis, Anna Taylor, Rogerio Cichota and Ronaldo Vibart for collating the LUDF data when working at AgResearch. Ron Pellow (SIDDC) for comments on the collated data set. David Pacheco and Ronaldo Vibart (AgResearch) for further discussions about the data.\n",
-          "Name": "Memo",
+          "Text": "# Validation Data Set Description\n\nThis vignette describes the origins and development of the Stock Model validation dataset. A high-level overview of the Stock Model itself can be found by clicking the Stock node.\n\nThe observed data set used for this validation simulation is based on publicly available data from New Zealand’s Lincoln University Dairy Farm [LUDF](http://www.siddc.org.nz/lu-dairy-farm/). The LUDF is a commercial demonstration dairy farm established in 2001 and operated by the South Island Dairying Development Centre (SIDDC) on behalf of Lincoln University to showcase sustainable and profitable dairy farming.\n\nThe LUDF is located at 1504 Shands Road, Lincoln (New Zealand; 43°38'S 172°26'E). The property is 186 ha of which 160 ha is the milking platform. The different soil types on the farm represent most of the common soil types in the surrounding Canterbury region. The farm operates in the top 2% of NZ dairy farms on profitability.  The farm’s targets and goals have varied over the years but in the 2019/20 season the target stocking rate was 3.5 cows/ha (peak milked), milk production of 1750 kg MS/ha (equivalent to 500kg MS/cow i.e. >100% liveweight in milk production), application of 160kg N/ha plus 300kg DM/cow imported supplement. Most cows are wintered off farm.\n\nAverage annual rainfall of 666 mm per annum is supplemented by an average irrigation input of 450 mm; average evapotranspiration for Lincoln is 870 mm/year. The milking platform was sown at conversion from a sheep operation (March 2001) in a mix of ryegrasses with white clovers, and a small amount of Timothy.\nThe breed of cows at the LUDF are “KiwiCross” which was established as a separate breed in 2005 and is now New Zealand's most popular breed. In the 2019/20 season peak number of cows milked was 555 with the average days in milk of 282 days. The stocking rate of 3.5 cows/ha is equivalent to 1,665 kg liveweight/ha. In terms of feeding, in 2019/20 the cows ate 4.4 t DM/cow as pasture and 0.2 t DM/cow as supplement. Off-farm grazing was 0.7 t DM/cow giving a total feed intake of 5.4 t DM/cow.\n\nWeekly farm data from the LUDF is available at [http://www.siddc.org.nz/lu-dairy-farm/weekly-data/](http://www.siddc.org.nz/lu-dairy-farm/weekly-data/) as PDF reports. The data for the years 2004 to 2017 was transcribed and collated into an validation dataset. \n\nNote that for these validation simulations, one stock parameter was changed from the original values in [FREER1997] to reflect modern dairy cow genetics. This, which can be accessed via the GUI in the \"Friesian\" node in the Stock model, was \"Potential intake (Intake C c-i-[2]) which was increased from 0.025 to 0.04. Also note that \"Dairy intake peak (c-idy-0)\"  was set to 1.\r\n    \n\nAcknowledgements\n\nSouth Island Dairying Development Centre (SIDDC) and Lincoln University for making the dairy farm’s production data available. Scott Rains, Samuel Dennis, Anna Taylor, Rogerio Cichota and Ronaldo Vibart for collating the LUDF data when working at AgResearch. Ron Pellow (SIDDC) for comments on the collated data set. David Pacheco and Ronaldo Vibart (AgResearch) for further discussions about the data.\n",
+          "Name": "Validation Data Description",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
@@ -71,11 +90,12 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "LUDF",
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "\n#Feedlot simulation\n\nThe Feedlot simulation is a simple illustration of the Stock model by using animals entering a feedlot, being fed and milked and leaving the feedlot. In addition to the Stock model itself and the Supplement specification GUI, at its core is the ChangeLactatingCowNumber GUI, the Stock operations and the Supplement operations. Both the operation files are based on stock and pasture/supplement data from the LUDF dataset (see the Validation memo for details). In the Stock operations, data on actual LUDF weekly changes in cow number have been collated from 1/08/2004 to 30/06/2017. Positive numbers denote lactating cows have been bought and moved to the feedlot while negative numbers are when cows are dried off and removed from the feedlot. It was assumed that cows were bought at weekly intervals. For the Supplement operations, six types of supplements labelled \"silage_11me\", \"pasture_11.5me\", \"pasture_12me\", \"pasture_12.5me\", \"pasture_13me\", and \"pasture_13.5me\" are bought. An excess amount of each supplement is bought (enough to last longer than the simulation) and their characteristics must be specified in the Supplement node. The LUDF dataseet is based on weekly reports - the daily pasture and supplements supplied (and their characteristics such as ME content) listed in the Supplement operations was extrapolated from the weekly data to the intervening days. ",
+              "Text": "\n# Feedlot simulation\n\nThe Feedlot simulation is a simple illustration of the Stock model by using animals entering a feedlot, being fed and milked and leaving the feedlot. In addition to the Stock model itself and the Supplement specification GUI, at its core is the ChangeLactatingCowNumber GUI, the Stock operations and the Supplement operations. Both the operation files are based on stock and pasture/supplement data from the LUDF dataset (see the Validation memo for details). In the Stock operations, data on actual LUDF weekly changes in cow number have been collated from 1/08/2004 to 30/06/2017. Positive numbers denote lactating cows have been bought and moved to the feedlot while negative numbers are when cows are dried off and removed from the feedlot. It was assumed that cows were bought at weekly intervals. For the Supplement operations, six types of supplements labelled \"silage_11me\", \"pasture_11.5me\", \"pasture_12me\", \"pasture_12.5me\", \"pasture_13me\", and \"pasture_13.5me\" are bought. An excess amount of each supplement is bought (enough to last longer than the simulation) and their characteristics must be specified in the Supplement node. The LUDF dataseet is based on weekly reports - the daily pasture and supplements supplied (and their characteristics such as ME content) listed in the Supplement operations was extrapolated from the weekly data to the intervening days. ",
               "Name": "Feedlot memo",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -93,7 +113,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Weather, Models",
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -121,7 +142,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock stock;\r\n\t\t[Link] Supplement supplement;\r\n\t\t[Link] ISummary summary;\r\n\t\t[Link] Simulation farm;\r\n\r\n\t\tpublic enum Genotypes\r\n\t\t{\r\n\t\t\tFriesian,\r\n\t\t\tJersey,\r\n\t\t\tEternalKiwiCross\r\n\t\t}\r\n\r\n\t\t[Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n\t\t[Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n\t\tpublic Genotypes Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n\t\tpublic ReproductiveType Sex { get; set; }\r\n\r\n\t\t[Description(\"Stock: age (months):\")] \r\n\t\tpublic double Age { get; set; }\r\n\r\n\t\t[Description(\"Stock: weight (kg liveweight /head):\")] \r\n\t\tpublic double Weight { get; set; }\r\n\r\n\t\t[Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n\t\tpublic int Pregnant { get; set; }\r\n\r\n\t\t[Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n\t\tpublic int Lactating { get; set; }\r\n\r\n\t\t[Description(\"Stock: Number of young (foetuses or calves):\")]\r\n\t\tpublic int NumYoung { get; set; }\r\n\r\n\t\tpublic void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n\t\t{\r\n\t\t\tif (NumCowsToChange > 0)\r\n\t\t\t{\r\n\t\t\t\tint preg = Pregnant;\r\n\t\t\t\tint lact = Lactating;\r\n\t\t\t\tint numyoung = NumYoung;\r\n\r\n\t\t\t\tif (stock.AnimalGroups.Count == 2)\r\n\t\t\t\t{\r\n\t\t\t\t\tpreg = stock.AnimalGroups[1].Pregnancy;\r\n\t\t\t\t\tlact = stock.AnimalGroups[1].Lactation;\r\n\t\t\t\t\tnumyoung = stock.AnimalGroups[1].NoFoetuses;\r\n\t\t\t\t}\r\n\r\n\t\t\t\tStockBuy purchase = new StockBuy();\r\n\t\t\t\tpurchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n\t\t\t\tpurchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n\t\t\t\tpurchase.Sex = Sex;\r\n\t\t\t\tpurchase.Age = Age;       // age in months\r\n\t\t\t\tpurchase.Weight = Weight;  // liveweight in kg\r\n\t\t\t\tpurchase.UseTag = 1;\r\n\t\t\t\tpurchase.MatedTo = purchase.Genotype;\r\n\t\t\t\tpurchase.Pregnant = preg;   // days pregnant\r\n\t\t\t\tpurchase.Lactating = lact;  // days lactating\r\n\t\t\t\tpurchase.NumYoung = numyoung;\t// cows can be bought lactating with no young\r\n\r\n\t\t\t\tstock.Buy(purchase);\r\n\r\n\t\t\t\tstock.Move(NewLocation);\r\n\r\n\t\t\t}\r\n\r\n\t\t\tif (NumCowsToChange < 0)\r\n\t\t\t\tstock.Sell(-NumCowsToChange);\r\n\t\t}\r\n    \r\n\t}\r\n}\r\n",
+              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        public enum Genotypes\r\n        {\r\n            Friesian,\r\n            Jersey,\r\n            EternalKiwiCross\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: Number of young (foetuses or calves):\")]\r\n        public int NumYoung { get; set; }\r\n\r\n        public void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n        {\r\n            if (NumCowsToChange > 0)\r\n            {\r\n                int preg = Pregnant;\r\n                int lact = Lactating;\r\n                int numyoung = NumYoung;\r\n\r\n                if (stock.AnimalGroups.Count == 2)\r\n                {\r\n                    preg = stock.AnimalGroups[1].Pregnancy;\r\n                    lact = stock.AnimalGroups[1].Lactation;\r\n                    numyoung = stock.AnimalGroups[1].NoFoetuses;\r\n                }\r\n\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n                purchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n                purchase.Sex = Sex;\r\n                purchase.Age = Age;       // age in months\r\n                purchase.Weight = Weight;  // liveweight in kg\r\n                purchase.UseTag = 1;\r\n                purchase.MatedTo = purchase.Genotype;\r\n                purchase.Pregnant = preg;   // days pregnant\r\n                purchase.Lactating = lact;  // days lactating\r\n                purchase.NumYoung = numyoung;    // cows can be bought lactating with no young\r\n\r\n                stock.Buy(purchase);\r\n\r\n                stock.Move(NewLocation);\r\n\r\n            }\r\n\r\n            if (NumCowsToChange < 0)\r\n                stock.Sell(-NumCowsToChange);\r\n        }\r\n    \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Genotype",
@@ -2219,37 +2240,37 @@
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"silage_11me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"silage_11me\")",
                   "Enabled": true
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"pasture_11.5me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"pasture_11.5me\")",
                   "Enabled": true
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"pasture_12me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"pasture_12me\")",
                   "Enabled": true
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"pasture_12.5me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"pasture_12.5me\")",
                   "Enabled": true
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"pasture_13me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"pasture_13me\")",
                   "Enabled": true
                 },
                 {
                   "$type": "Models.Operation, Models",
                   "Date": "2004-09-04",
-                  "Action": "[Supplement].Buy(2000000000000000000,\"pasture_13.5me\")",
+                  "Action": "[Supplement].Buy(2E+18,\"pasture_13.5me\")",
                   "Enabled": true
                 },
                 {
@@ -60658,7 +60679,17 @@
                 }
               ],
               "Name": "Supplement operations",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The Supplement operation file is based on pasture/supplement data from the LUDF dataset (see the Validation memo for details).  For the Supplement operations, there are six types of supplements labelled \"silage_11me\", \"pasture_11.5me\", \"pasture_12me\", \"pasture_12.5me\", \"pasture_13me\", and \"pasture_13.5me\" that are bought at the start of the simulation. An excess amount, expressed in kilograms, of each supplement is bought - enough to last longer than the simulation (2E+18 kg in the LUDF validation) and their characteristics must be specified in the Supplement node. The LUDF dataset is based on weekly reports - the daily pasture and supplements supplied (and their characteristics such as ME content) listed in the Supplement operations was extrapolated from the weekly data to the intervening days.\r\n\r\nTo specify the buy and feeding out in the Supplement operation file the following can be used:\r\n\r\n* to buy: \"2004-09-04 [Supplement].Buy(2E+18,\"pasture_13.5me\")\" (without enclosing quotation marks) where \"2004-09-04\" is the date of the operation, and \"[Supplement].Buy(2E+18,\"pasture_13.5me\")\" is to buy 2E+18 kg of supplement type \"pasture_13.5me\". Remember that type of supplement must be specified in the Supplement node.\r\n\r\n* to feed out: \"2004-09-04 [Supplement].Feed(\"pasture_13me\",3861,\"Feedlot\")\" (without enclosing quotation marks) where \"2004-09-04\" is the date of the operation and \"[Supplement].Feed(\"pasture_13me\",3861,\"Feedlot\")\" means to feed out 3861 kg of supplement \"pasture_13me\". Again, the fed out supplement must be specified in the Supplement node.\r\n",
+                  "Name": "Supplement operations memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -60691,7 +60722,7 @@
                   "IsRoughage": true,
                   "DMContent": 1.0,
                   "DMD": 0.8,
-                  "MEContent": 12.0,
+                  "MEContent": 11.0,
                   "CPConc": 0.16,
                   "ProtDg": 0.8,
                   "PConc": 0.0032,
@@ -61236,6 +61267,7 @@
                   "Latitude": -27.581836,
                   "Longitude": 151.320206,
                   "LocationAccuracy": " +/- 20m",
+                  "YearOfSampling": null,
                   "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
                   "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
                   "Name": "Soil",
@@ -61263,6 +61295,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -61323,6 +61357,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -61382,7 +61421,6 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -61444,6 +61482,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -61557,6 +61596,8 @@
                         36.587130828674873,
                         22.1912165985086
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -61613,6 +61654,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -61651,8 +61696,8 @@
                         300.0,
                         300.0
                       ],
-                      "NO3N": null,
-                      "NH4N": null,
+                      "NO3": null,
+                      "NH4": null,
                       "SW": [
                         "NaN",
                         "NaN",
@@ -61718,7 +61763,7 @@
                     },
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -61837,7 +61882,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -61929,11 +61974,20 @@
                   "Name": "MilkProduction",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "The LUDF dataset was selected partly because it was the only grazing trial in which we had access to intake information, and partly it was thought that dairy cows would stretch the capability of the feeding standards. It is evident from the observed versus predicted milk production data that the former tends to be higher than the latter. It is likely that to better match observed and predicted requires an update to the genetic parameters/assumptions in the underlying model and that is beyond the scope of this initiative.",
+                      "Name": "Milk production memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -62025,11 +62079,20 @@
                   "Name": "CowBodyMass",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "The LUDF dataset was selected partly because it was the only grazing trial in which we had access to intake information, and partly it was thought that dairy cows would stretch the capability of the feeding standards. It is evident from the observed versus predicted cow body mass data that the weight change profile over a milking season is markedly different; the predicted body mass rises considerably more than the observed. It is likely that to better match observed and predicted requires an update to the genetic parameters/assumptions in the underlying model and that is beyond the scope of this initiative.",
+                      "Name": "Body mass memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -62120,6 +62183,15 @@
                   "LegendOutsideGraph": false,
                   "Name": "IntakeTotal",
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "In the validation dataset there are two values for pasture intake – that based on measured pasture disappearance i.e. the difference in pre- and post-grazing DM as well as that which takes into account the likely wastage of pasture during grazing. Estimating this wastage event is difficult. In an investigation conducted at the LUDF, [Pal2012] found that by direct measurement about 8% of the dry matter cows removed from the plants was not ingested (i.e. dropped to the ground). A similar wastage value (6%) was used in a DairyNZ feeding fact sheet for farmers (https://www.dairynz.co.nz/feed/nutrition/lactating-cows; accessed June 2020). Using 30 farmlet-years of data across ten farmlet trials, DairyNZ back-calculated stock intake from measurements of pasture energy density, changes in stock liveweight and milk production. That intake estimate was compared with pasture disappearance and they estimated that about 6% of the measured disappearance was not consumed (C. Glassey, DairyNZ, personal communication 2020). Considering that the 6-8% wastage values are under ideal grazing conditions (which do not occur all the time), the pasture intake after waste (\"ObservedWastage\" in the plots) was calculated as 90% of pasture intake (\"Observed\" in the plots).\r\n\r\nIt is noted that variability in simulated intake is much less than that of the observed data. This is expected of intake data. Intake was calculated by difference from week to week, and therefore variability can be overexpressed in the data. While the calculation could done over longer periods of time and that would average out those differences but they would still be there in the underlying data. ",
+                      "Name": "Intake memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Series, Models",
                       "Type": 1,
@@ -62225,6 +62297,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "StockSlurp",
           "Children": [
             {
@@ -62247,7 +62320,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Weather, Models",
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -62321,7 +62395,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n\t[Serializable]\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock stock;\r\n\t\t[Link] Supplement supplement;\r\n\t\t[Link] ISummary summary;\r\n\t\t[Link] Simulation farm;\r\n\r\n\t\tpublic enum Genotypes\r\n\t\t{\r\n\t\t\tFriesian,\r\n\t\t\tJersey,\r\n\t\t\tEternalKiwiCross\r\n\t\t}\r\n\r\n\t\t[Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n\t\t[Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n\t\tpublic Genotypes Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n\t\tpublic ReproductiveType Sex { get; set; }\r\n\r\n\t\t[Description(\"Stock: age (months):\")] \r\n\t\tpublic double Age { get; set; }\r\n\r\n\t\t[Description(\"Stock: weight (kg liveweight /head):\")] \r\n\t\tpublic double Weight { get; set; }\r\n\r\n\t\t[Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n\t\tpublic int Pregnant { get; set; }\r\n\r\n\t\t[Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n\t\tpublic int Lactating { get; set; }\r\n\r\n\t\t[Description(\"Stock: Number of young (foetuses or calves):\")]\r\n\t\tpublic int NumYoung { get; set; }\r\n\r\n\t\tpublic void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n\t\t{\r\n\t\t\tif (NumCowsToChange > 0)\r\n\t\t\t{\r\n\t\t\t\tint preg = Pregnant;\r\n\t\t\t\tint lact = Lactating;\r\n\t\t\t\tint numyoung = NumYoung;\r\n\r\n\t\t\t\tif (stock.AnimalGroups.Count == 2)\r\n\t\t\t\t{\r\n\t\t\t\t\tpreg = stock.AnimalGroups[1].Pregnancy;\r\n\t\t\t\t\tlact = stock.AnimalGroups[1].Lactation;\r\n\t\t\t\t\tnumyoung = stock.AnimalGroups[1].NoFoetuses;\r\n\t\t\t\t}\r\n\r\n\t\t\t\tStockBuy purchase = new StockBuy();\r\n\t\t\t\tpurchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n\t\t\t\tpurchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n\t\t\t\tpurchase.Sex = Sex;\r\n\t\t\t\tpurchase.Age = Age;       // age in months\r\n\t\t\t\tpurchase.Weight = Weight;  // liveweight in kg\r\n\t\t\t\tpurchase.UseTag = 1;\r\n\t\t\t\tpurchase.MatedTo = purchase.Genotype;\r\n\t\t\t\tpurchase.Pregnant = preg;   // days pregnant\r\n\t\t\t\tpurchase.Lactating = lact;  // days lactating\r\n\t\t\t\tpurchase.NumYoung = numyoung;\t// cows can be bought lactating with no young\r\n\r\n\t\t\t\tstock.Buy(purchase);\r\n\r\n\t\t\t\tstock.Move(NewLocation);\r\n\r\n\t\t\t}\r\n\r\n\t\t\tif (NumCowsToChange < 0)\r\n\t\t\t\tstock.Sell(-NumCowsToChange);\r\n\t\t}\r\n    \r\n\t}\r\n}\r\n",
+              "Code": "using System.Diagnostics;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        public enum Genotypes\r\n        {\r\n            Friesian,\r\n            Jersey,\r\n            EternalKiwiCross\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Friesian, Jersey):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: Number of young (foetuses or calves):\")]\r\n        public int NumYoung { get; set; }\r\n\r\n        public void ChangeStockNum(int NumCowsToChange, string NewLocation)\r\n        {\r\n            if (NumCowsToChange > 0)\r\n            {\r\n                int preg = Pregnant;\r\n                int lact = Lactating;\r\n                int numyoung = NumYoung;\r\n\r\n                if (stock.AnimalGroups.Count == 2)\r\n                {\r\n                    preg = stock.AnimalGroups[1].Pregnancy;\r\n                    lact = stock.AnimalGroups[1].Lactation;\r\n                    numyoung = stock.AnimalGroups[1].NoFoetuses;\r\n                }\r\n\r\n                StockBuy purchase = new StockBuy();\r\n                purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n                purchase.Number = NumCowsToChange; //from the Operations file; positive is buy, negative is sell\r\n                purchase.Sex = Sex;\r\n                purchase.Age = Age;       // age in months\r\n                purchase.Weight = Weight;  // liveweight in kg\r\n                purchase.UseTag = 1;\r\n                purchase.MatedTo = purchase.Genotype;\r\n                purchase.Pregnant = preg;   // days pregnant\r\n                purchase.Lactating = lact;  // days lactating\r\n                purchase.NumYoung = numyoung;    // cows can be bought lactating with no young\r\n\r\n                stock.Buy(purchase);\r\n\r\n                stock.Move(NewLocation);\r\n\r\n            }\r\n\r\n            if (NumCowsToChange < 0)\r\n                stock.Sell(-NumCowsToChange);\r\n        }\r\n    \r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Genotype",
@@ -64823,7 +64897,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System.Diagnostics;\r\nusing System.IO;\r\nusing System.Data;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n    \r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Plant slurp;\r\n        [Link] Simulation simulation;\r\n        [Link] Zone paddock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] Summary summary;\r\n\r\n        [NonSerialized]\r\n        private DataView data;\r\n\r\n        [NonSerialized]\r\n        private SimpleLeaf slurpLeaf;\r\n\r\n        [Separator(\"Slurp will be automatically 'sown' at the sart of the simulation\")]\r\n\r\n        [Description(\"EXCEL file name with the resetting data (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n        public string SSheetFileName { get; set; }\r\n\r\n        [Description (\"Name of worksheet containing the data\")]\r\n        public string SSheetWorksheetName { get; set; }\r\n\r\n        public double GrazedArea { get; set; }\r\n\r\n        public double SupplementOffered { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            var fullFileName = SSheetFileName;\r\n            if (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n            if (!File.Exists(fullFileName))\r\n                throw new Exception(\"Cannot find file: \" + fullFileName);\r\n            data = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, SSheetWorksheetName, headerRow:true));\r\n\r\n            slurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n            double wt = 300;\r\n            slurpLeaf.Live.StructuralWt = wt;\r\n            slurpLeaf.Live.StorageWt = 0;\r\n            slurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n            slurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\r\n            supplement.SpoilageTime = 0.0; //days\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DM = 0.0;\r\n            double digestibility = 0.0;\r\n\r\n\r\n            // Find last area grazed \r\n            double oldGrazedArea = GrazedArea;\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and GrazedArea >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n                if (!Convert.IsDBNull(mostRecentRow[\"GrazedArea\"]))\r\n                    GrazedArea = Convert.ToDouble(mostRecentRow[\"GrazedArea\"]); \r\n                if (GrazedArea != oldGrazedArea)\r\n                {\r\n                    paddock.Area = GrazedArea;\r\n                }\r\n            }\r\n\r\n            // Find last DM value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PreGrazingCover >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PreGrazingCover\"]))\r\n                    DM = Convert.ToDouble(mostRecentRow[\"PreGrazingCover\"]) / 10; // to g/m2\r\n            }\r\n\r\n            // Find last ME value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PastureMEConc >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PastureMEConc\"]))\r\n                    digestibility = Convert.ToDouble(mostRecentRow[\"PastureDigestibility\"]);\r\n            }\r\n            if (digestibility == 0)\r\n                digestibility = 0.84;\r\n\r\n            if (DM > 0)\r\n            {\r\n                slurpLeaf.Live.StructuralWt = DM;\r\n                slurpLeaf.Live.StorageWt = 0;\r\n                slurpLeaf.Live.DMDOfStructural = digestibility;\r\n                slurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n                slurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n            }\r\n\r\n            // Handle the supplements, find last supplemenet value - This will be the most recent day.\r\n            SupplementOffered = 0.0;\r\n            //data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and SupplementOffered >0\";\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"#\";  // I want to retain the 0 values this time as they are meaningful (not just blank)\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"SupplementOffered\"]))\r\n                    SupplementOffered = Convert.ToDouble(mostRecentRow[\"SupplementOffered\"]); \r\n            }\r\n\r\n            if (SupplementOffered > 0.0)\r\n            {\r\n                // don't need to buy - set up the store with sufficient before the simulation started\r\n                //supplement.Buy(stock.NumberAll * supplementOffered, \"Silage_11ME\"); \r\n                supplement.Feed(\"Silage_11ME\", stock.NumberAll * SupplementOffered, \"Paddock\", false);  //should be true but will through an error\r\n\r\n                summary.WriteMessage(this, \"Total supp offered = \" + (stock.NumberAll * SupplementOffered).ToString());\r\n                summary.WriteMessage(this, supplement.PaddAmounts[1].ToString());\r\n            }\r\n            // Columns in spreadsheet:\r\n            // Date\r\n            // Pasture_Growth_Rate    (kgDM/ha/day)\r\n            // Pre_Cover  (kgDM/ha)\r\n            // Post_Cover (kgDM/ha)\r\n            // PastureOffered_Obs (kgDM/cow/d)\r\n            // PastureOffered_ObsMJ (MJME/cow/d)\r\n            // PastureOffered_Mlcalc (MJME/kgDM)\r\n            // Milkers offered Grass Silage (kgDM/cow/d)\r\n            // ME Silage Obs or Assumed (MJME/kgDM)\r\n            // EstmSilageIntake_Obs (MJME)\r\n            // EstmSilageIntake_Calc (MJME)\r\n            // EstmTotalIntake_Obs (MJME)\r\n            // EstmTotalIntake_Calc (MJME)\r\n            // Pasture_ME (ME/kgDM)\r\n            // Pasture_Protein (%)\r\n            // Pasture_DM (%)\r\n            // Pasture_WSC (%)\r\n            // Pasture_NDF (%)\r\n            // Digestability\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using System.Diagnostics;\r\nusing System.IO;\r\nusing System.Data;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing System;\r\n    \r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Plant slurp;\r\n        [Link] Simulation simulation;\r\n        [Link] Zone paddock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] Summary summary;\r\n\r\n        [NonSerialized]\r\n        private DataView data;\r\n\r\n        [NonSerialized]\r\n        private SimpleLeaf slurpLeaf;\r\n\r\n        [Separator(\"Slurp will be automatically 'sown' at the sart of the simulation\")]\r\n\r\n        [Description(\"EXCEL file name with the resetting data (must be .xlsx)\")]\r\n        [Display(Type=DisplayType.FileName)]\r\n        public string SSheetFileName { get; set; }\r\n\r\n        [Description (\"Name of worksheet containing the data\")]\r\n        public string SSheetWorksheetName { get; set; }\r\n\r\n        public double GrazedArea { get; set; }\r\n\r\n        public double SupplementOffered { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            var fullFileName = SSheetFileName;\r\n            if (simulation != null && simulation.FileName != null)\r\n                fullFileName = PathUtilities.GetAbsolutePath(SSheetFileName, simulation.FileName);\r\n\r\n            if (!File.Exists(fullFileName))\r\n                throw new Exception(\"Cannot find file: \" + fullFileName);\r\n            data = new DataView(ExcelUtilities.ReadExcelFileData(fullFileName, SSheetWorksheetName, headerRow:true));\r\n\r\n            slurpLeaf = slurp.FindChild<SimpleLeaf>();\r\n\r\n            double wt = 300;\r\n            slurpLeaf.Live.StructuralWt = wt;\r\n            slurpLeaf.Live.StorageWt = 0;\r\n            slurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n            slurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n\r\n            supplement.SpoilageTime = 0.0; //days\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DM = 0.0;\r\n            double digestibility = 0.0;\r\n\r\n\r\n            // Find last area grazed \r\n            double oldGrazedArea = GrazedArea;\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and GrazedArea >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n                if (!Convert.IsDBNull(mostRecentRow[\"GrazedArea\"]))\r\n                    GrazedArea = Convert.ToDouble(mostRecentRow[\"GrazedArea\"]); \r\n                if (GrazedArea != oldGrazedArea)\r\n                {\r\n                    paddock.Area = GrazedArea;\r\n                }\r\n            }\r\n\r\n            // Find last DM value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PreGrazingCover >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PreGrazingCover\"]))\r\n                    DM = Convert.ToDouble(mostRecentRow[\"PreGrazingCover\"]) / 10; // to g/m2\r\n            }\r\n\r\n            // Find last ME value - This will be the most recent day.\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and PastureMEConc >0\";\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"PastureMEConc\"]))\r\n                    digestibility = Convert.ToDouble(mostRecentRow[\"PastureDigestibility\"]);\r\n            }\r\n            if (digestibility == 0)\r\n                digestibility = 0.84;\r\n\r\n            if (DM > 0)\r\n            {\r\n                slurpLeaf.Live.StructuralWt = DM;\r\n                slurpLeaf.Live.StorageWt = 0;\r\n                slurpLeaf.Live.DMDOfStructural = digestibility;\r\n                slurpLeaf.Live.StructuralN = DM * slurpLeaf.MinNconc;\r\n                slurpLeaf.Live.StorageN = DM * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n            }\r\n\r\n            // Handle the supplements, find last supplemenet value - This will be the most recent day.\r\n            SupplementOffered = 0.0;\r\n            //data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"# and SupplementOffered >0\";\r\n            data.RowFilter = \"Date <=#\" + clock.Today.ToString(\"yyyy-MM-dd\") + \"#\";  // I want to retain the 0 values this time as they are meaningful (not just blank)\r\n            if (data.Count > 0)\r\n            {\r\n                var mostRecentRow = data[data.Count-1];\r\n\r\n                if (!Convert.IsDBNull(mostRecentRow[\"SupplementOffered\"]))\r\n                    SupplementOffered = Convert.ToDouble(mostRecentRow[\"SupplementOffered\"]); \r\n            }\r\n\r\n            if (SupplementOffered > 0.0)\r\n            {\r\n                // don't need to buy - set up the store with sufficient before the simulation started\r\n                //supplement.Buy(stock.NumberAll * supplementOffered, \"Silage_11ME\"); \r\n                supplement.Feed(\"Silage_11ME\", stock.NumberAll * SupplementOffered, \"Paddock\", false);  //should be true but will through an error\r\n\r\n                summary.WriteMessage(this, \"Total supp offered = \" + (stock.NumberAll * SupplementOffered).ToString());\r\n                summary.WriteMessage(this, supplement.PaddAmounts[1].ToString());\r\n            }\r\n            // Columns in spreadsheet:\r\n            // Date\r\n            // Pasture_Growth_Rate    (kgDM/ha/day)\r\n            // Pre_Cover  (kgDM/ha)\r\n            // Post_Cover (kgDM/ha)\r\n            // PastureOffered_Obs (kgDM/cow/d)\r\n            // PastureOffered_ObsMJ (MJME/cow/d)\r\n            // PastureOffered_Mlcalc (MJME/kgDM)\r\n            // Milkers offered Grass Silage (kgDM/cow/d)\r\n            // ME Silage Obs or Assumed (MJME/kgDM)\r\n            // EstmSilageIntake_Obs (MJME)\r\n            // EstmSilageIntake_Calc (MJME)\r\n            // EstmTotalIntake_Obs (MJME)\r\n            // EstmTotalIntake_Calc (MJME)\r\n            // Pasture_ME (ME/kgDM)\r\n            // Pasture_Protein (%)\r\n            // Pasture_DM (%)\r\n            // Pasture_WSC (%)\r\n            // Pasture_NDF (%)\r\n            // Digestability\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "SSheetFileName",
@@ -64886,6 +64960,7 @@
                   "Latitude": -27.581836,
                   "Longitude": 151.320206,
                   "LocationAccuracy": " +/- 20m",
+                  "YearOfSampling": null,
                   "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
                   "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
                   "Name": "Soil",
@@ -64913,6 +64988,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -64973,6 +65050,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -65032,7 +65114,6 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -65094,6 +65175,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -65207,6 +65289,8 @@
                         36.587130828674873,
                         22.1912165985086
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -65263,6 +65347,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -65301,8 +65389,8 @@
                         300.0,
                         300.0
                       ],
-                      "NO3N": null,
-                      "NH4N": null,
+                      "NO3": null,
+                      "NH4": null,
                       "SW": [
                         "NaN",
                         "NaN",
@@ -65368,7 +65456,7 @@
                     },
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -65454,7 +65542,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -65550,7 +65638,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -65646,7 +65734,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -65742,7 +65830,7 @@
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
-                      "ColourArgb": -16777216,
+                      "ColourArgb": -11094807,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -66149,6 +66237,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "WheatSheepFeedlot",
           "Children": [
             {
@@ -66173,7 +66262,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Weather, Models",
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "%root%\\Tests\\WeatherFiles\\Ginninderra.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -66251,7 +66341,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "/*-------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot the rest of the time.\r\n---------------------------------------------------------------------------------------\r\n\r\nIn this script animals are bought and sold within a specified date window.\r\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when a criteria is met.\r\nAnimals are moved from the wheat crop and back to feedlot when a second criteria is met.\r\n\r\nBased on Sprague SJ, Kirkegaard JA, Dove H, Graham JM, McDonald SE, Kelman WM (2015) Integrating dual-purpose wheat and canola into high-rainfall livestock systems in south-eastern Australia. 1. Crop forage and grain yield. Crop and Pasture Science 66(4), 365-376. \r\n\r\nActivities in this manager:\r\n1. Buy animals at start of year & put in feedlot\r\n2. Move animals from feedlot to crop when ready to graze\r\n3. Move animals from crop to feedlot \r\n4. Shear all animals on specified date\r\n5. Sell all animals at end of year\r\n\r\nNOTES\r\n1. When the animals are in the feedlot and an animal dies during the day, the supplement has already been fed into the feedlot\r\n   based on the number of animals in the feedlot at the start of the day. This means the remaining animals have access to slightly\r\n   more supplement and causes a spike in supp intake graph\r\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\r\n   This causes irregular amounts of supplement to be fed.\r\n--------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System.Linq;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Functions;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable]\r\n\t[Description(\r\n\t    \"<p><b>Animals grazing a crop when conditions are suitable, and in feedlot the rest of the time.</b></p>\" +\r\n\t\t\"In this script animals are bought and sold within a specified date window. \" +\r\n\t\t\"They are fed supplement in a feedlot at a set rate, but graze a wheat crop when a criteria is met. \" +\r\n\t\t\"Animals are moved from the wheat crop and back to feedlot when a second criteria is met.\")]\t\r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link] Clock clock;\r\n\t\t[Link] Stock Animals;\r\n\t\t[Link] Supplement Feed;\r\n\t\t[Link] Summary Summary;\r\n\t\t[Link] IPlant plant;\r\n\t\t[Link] Soil Soil;\r\n\t\t[Link] Zone Paddock;\r\n\t\t[Link] ScriptCompiler compiler;\r\n\r\n\t\tprivate CSharpExpressionFunction expressionMoveAnimalsToField;\r\n\t\tprivate CSharpExpressionFunction expressionMoveAnimalsToFeedlot;\r\n\r\n\t\tpublic enum SellPolicyType\r\n\t\t{\r\n\t\t\tDate,\r\n\t\t\tPercentageHerdWhenAverageWeightGreaterThan,\r\n\t\t\tPercentageHerdWhenAverageAgeGreaterThan,\r\n\t\t\tCulledForAge,\r\n\t\t\tCulledForWeight,\r\n\t\t\tSellYoung\r\n\t\t}\r\n\r\n\t\t////////////////////////////////////////////////////////\r\n\t\t[Separator(\"Buying of animals\")]\r\n\r\n\t\t[Description(\"Buy animals?\")] \r\n\t\tpublic bool Buying { get; set; }\r\n\r\n\t\t[Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n\t\t[Display(Values = \"GetGenotypes\")]\r\n\t\tpublic string Genotype { get; set; }\r\n\r\n\t\t[Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n\t\tpublic ReproductiveType Sex { get; set; }\r\n\r\n\t\t[Description(\"Date to buy animals (dd-mmm)\")] \r\n\t\t[Display(EnabledCallback = \"BuyingEnabled\")]\r\n\t\tpublic string BuyDate { get; set; }\r\n\r\n\t\t[Description(\"Age of bought animals (months): \")] \r\n\t\t[Display(EnabledCallback = \"BuyingEnabled\")]\r\n\t\tpublic double BuyAge { get; set; }\r\n\r\n\t\t[Description(\"Weight of bought animals (kg): \")] \r\n\t\t[Display(EnabledCallback = \"BuyingEnabled\")]\r\n\t\tpublic double BuyWeight { get; set; }\r\n\r\n\t\t[Description(\"Zero denotes not lactating; 1 or more denotes the time (days) since parturition:\")] \r\n\t\t[Display(EnabledCallback = \"BuyingEnabled\")]\r\n\t\tpublic int BuyLactating { get; set; }\r\n\r\n\t\t[Description(\"Number of animals to buy: \")] \r\n\t\t[Display(EnabledCallback = \"BuyingEnabled\")]\r\n\t\tpublic int NumAntoBuy { get; set; }\r\n\r\n\t\t////////////////////////////////////////////////////////\r\n\t\t[Separator(\"Selling of animals\")]\r\n\r\n\t\t[Description(\"Selling animals?\")] \r\n\t\tpublic bool Selling { get; set; }\r\n\r\n\t\t[Description(\"First date to consider selling animals (dd-mmm)\")] \r\n\t\tpublic string SaleFirstDate { get; set; }\r\n\r\n\t\t[Description(\"Last date to consider selling animals (dd-mmm)\")] \r\n\t\tpublic string SaleLastDate { get; set; }\r\n\r\n\t\t[Description(\"Selling policy \")] \r\n\t\t[Display(EnabledCallback = \"SellingEnabled\")]\r\n\t\tpublic SellPolicyType SellPolicy { get; set; }\r\n\r\n\t\t[Description(\"Age at which to sell (months): \")] \r\n\t\t[Display(EnabledCallback = \"SellingAgeEnabled\")]\r\n\t\tpublic int SaleAge { get; set; }\r\n\r\n\t\t[Description(\"Weight at which to sell (kg): \")] \r\n\t\t[Display(EnabledCallback = \"SellingWeightEnabled\")]\r\n\t\tpublic double SaleWeight { get; set; }\r\n\r\n\t\t[Description(\"Percentage of animals to sell (%)\")] \r\n\t\t[Display(EnabledCallback = \"SellingEnabled\")]\r\n\t\tpublic double SalePercentAnimals { get; set; }\r\n\r\n\t\t////////////////////////////////////////////////////////\r\n\t\t[Separator(\"Rule for moving animals into and out of paddock\")]\r\n\r\n\t\t[Description(\"Name of paddock to move animals in to:\")] \r\n\t\t[Display(Type = DisplayType.Model, ModelType = typeof(Zone))]\r\n\t\tpublic IModel PaddockToMoveAnimalsTo { get; set; }\r\n\r\n\t\t[Description(\"First date to consider moving animals:\")] \r\n\t\tpublic string GrazingWindowStartDate { get; set; }\r\n\r\n\t\t[Description(\"Last date to consider moving animals:\")] \r\n\t\tpublic string GrazingWindowEndDate { get; set; }\r\n\r\n   \t\t[Description(\"Criteria to move animals to field\")]\r\n\t\tpublic string ExpressionToMoveAnimalsToField { get; set; }\r\n\r\n   \t\t[Description(\"Criteria to move animals to feedlot\")]\r\n\t\tpublic string ExpressionToMoveAnimalsToFeedlot { get; set; }\r\n\r\n\r\n\t\t////////////////////////////////////////////////////////\r\n\t\t[Separator(\"Shearing\")]\r\n\t\t[Description(\"Date to shear animals (dd-mmm)\")] \r\n\t\tpublic string ShearDate { get; set; }\r\n\r\n\t\t[Description(\" \")] \r\n\t\tpublic string Dummy { get; set; }\r\n\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// Callback properties to control disabling of properties.\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\tpublic bool BuyingEnabled { get { return Buying; } }\r\n\r\n\t\tpublic bool SellingEnabled { get { return Selling; } }\r\n\r\n\t\tpublic bool SellingAgeEnabled\r\n\t\t{ \r\n\t\t\tget\r\n\t\t\t{ \r\n\t\t\t\treturn Selling &&\r\n\t\t\t\t(SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan || SellPolicy == SellPolicyType.CulledForAge);\r\n\t\t\t} \r\n\t\t}\r\n\r\n\t\tpublic bool SellingWeightEnabled\r\n\t\t{ \r\n\t\t\tget\r\n\t\t\t{ \r\n\t\t\t\treturn Selling &&\r\n\t\t\t\t(SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan || SellPolicy == SellPolicyType.CulledForWeight);\r\n\t\t\t} \r\n\t\t}\r\n\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// Outputs\r\n\t\t////////////////////////////////////////////////////////////////////////////\r\n\t\t// <summary>Number of animals sold.</summary>\r\n\t\tpublic int NumberSold { get; set; }\r\n\r\n\t\t// <summary>Description of something that has happened.</summary>\r\n\t\tpublic string EventName { get; set; }\r\n\r\n\t\t// <summary>Return a list of genotypes to the properties tab.</summary>\r\n\t\tpublic string[] GetGenotypes()\r\n\t\t{\r\n\t\t\tif (Animals != null)\r\n\t\t\t\treturn Animals.Genotypes.Names.ToArray();\r\n\t\t\treturn null;\r\n\t\t}\r\n\r\n\r\n\r\n\t\t// ============================================================\r\n\t\t// Called once at beginning of simulation run\r\n\t\t// ============================================================\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\t        if (string.IsNullOrEmpty(ExpressionToMoveAnimalsToField))\r\n\t\t        throw new Exception(\"You must specify a criteria for moving animals to the field\");\r\n\t        expressionMoveAnimalsToField = new CSharpExpressionFunction();\r\n\t        expressionMoveAnimalsToField.Parent = this;\r\n\t        expressionMoveAnimalsToField.Expression = \"Convert.ToDouble(\" + ExpressionToMoveAnimalsToField + \")\";\r\n\t        expressionMoveAnimalsToField.SetCompiler(compiler);\r\n\t        expressionMoveAnimalsToField.CompileExpression();\r\n\r\n\t        if (string.IsNullOrEmpty(ExpressionToMoveAnimalsToFeedlot))\r\n\t\t        throw new Exception(\"You must specify a criteria for moving animals to the feedlot\");\r\n\t        expressionMoveAnimalsToFeedlot = new CSharpExpressionFunction();\r\n\t        expressionMoveAnimalsToFeedlot.Parent = this;\r\n\t        expressionMoveAnimalsToFeedlot.Expression = \"Convert.ToDouble(\" + ExpressionToMoveAnimalsToFeedlot + \")\";\r\n\t        expressionMoveAnimalsToFeedlot.SetCompiler(compiler);\r\n\t        expressionMoveAnimalsToFeedlot.CompileExpression();\r\n        }\r\n\r\n\r\n\r\n\t\t// ============================================================\r\n\t\t// Management that happens every day.\r\n\t\t// ============================================================\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tEventName = string.Empty;\r\n\r\n\t\t\t// Buy animals\r\n\t\t\tif (Buying && DateUtilities.DatesAreEqual(BuyDate, clock.Today))\r\n\t\t\t{\r\n\t\t\t\tvar purchase = new StockBuy();\r\n\t\t\t\tpurchase.Genotype = Genotype;   // \"small merino\"\r\n\t\t\t\tpurchase.Number = NumAntoBuy;\r\n\t\t\t\tpurchase.Sex = Sex;               // \"wethers\"\r\n\t\t\t\tpurchase.Age = BuyAge;\r\n\t\t\t\tpurchase.Weight = BuyWeight;\r\n\t\t\t\tpurchase.Lactating = BuyLactating;\r\n\t\t\t\tAnimals.Buy(purchase);\r\n\t\t\t\tAnimals.Move(\"Feedlot\");\r\n\t\t\t\tEventName = NumAntoBuy + \" animals bought\";\r\n\t\t\t}\r\n\r\n\t\t\t// Sell animals\r\n\t\t\tif (SellingEnabled && DateUtilities.WithinDates(SaleFirstDate, clock.Today, SaleLastDate))\r\n\t\t\t{ \r\n\t\t\t\tif (SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan || \r\n\t\t\t\t    SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan)\r\n\t\t\t\t{\r\n\t\t\t\t\tbool doSell = false;\r\n\t\t\t\t\tif (SellPolicy == SellPolicyType.Date)\r\n\t\t\t\t\t\tdoSell = true;\r\n\t\t\t\t\telse if (SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan && Animals.WeightAll >= SaleWeight)\r\n\t\t\t\t\t\tdoSell = true;\r\n\t\t\t\t\telse if (SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan && Animals.AgeMonthsAll >= SaleAge)\r\n\t\t\t\t\t\tdoSell = true;\r\n\r\n\t\t\t\t\tif (doSell)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tNumberSold = Convert.ToInt32(Animals.NumberAll * SalePercentAnimals / 100.0);\r\n\t\t\t\t\t\tAnimals.Sell(NumberSold);\r\n\t\t\t\t\t\tEventName = NumberSold + \" animals sold\";\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\telse\r\n\t\t\t\t{\r\n\t\t\t\t\tIEnumerable<AnimalGroup> animalsToSell = null;\r\n\t\t\t\t\tif (SellPolicy == SellPolicyType.CulledForAge)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t// split older animals into a new group\r\n\t\t        \t    animalsToSell = Animals.SplitByAge(Convert.ToInt32(SaleAge * 30)); // months to days\r\n\t\t        \t}\r\n\t\t        \telse if (SellPolicy == SellPolicyType.CulledForWeight)\r\n\t\t        \t{\r\n\t\t\t\t\t\t// split heavier animals into a new group\r\n\t\t        \t    animalsToSell = Animals.SplitByWeight(SaleWeight);\r\n\t        \t    }\r\n\t\t        \telse if (SellPolicy == SellPolicyType.SellYoung)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\t// split young (offspring) into new groups\r\n\t\t        \t    animalsToSell = Animals.SplitByYoung();\r\n\t\t\t\t\t}\r\n\t\t\t\t\tif (animalsToSell != null)\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\tvar numberSellableAnimals = animalsToSell.Sum(g => g.NoAnimals);\r\n\t        \t    \tvar numberAnimalsToSell = Convert.ToInt32(numberSellableAnimals * SalePercentAnimals / 100.0);\r\n\t        \t    \tif (numberAnimalsToSell > 0)\r\n\t                    \tAnimals.Sell(numberAnimalsToSell, animalsToSell);\r\n\t                }\r\n\t\t\t\t}\r\n\t\t\t}\r\n\r\n\r\n\t\t\t// Determine whether the animals are in the feedlot.\r\n            bool animalsAreInFeedlot = Animals.AnimalGroups.FirstOrDefault(group => group.PaddOccupied.Name == \"Feedlot\") != null;\r\n            bool inGrazingWindow = DateUtilities.WithinDates(GrazingWindowStartDate, clock.Today, GrazingWindowEndDate);\r\n\r\n            if (animalsAreInFeedlot)\r\n            {\r\n           \t\t// Animals are in feedlot. Determine if they can be moved to paddock.\r\n            \tif (inGrazingWindow && expressionMoveAnimalsToField.Value() == 1)\r\n            \t{\r\n            \t\tAnimals.Move(PaddockToMoveAnimalsTo.Name);\r\n            \t\tEventName = \"Animals moved to paddock\";\r\n        \t\t}\r\n            }\r\n            else\r\n            {\r\n            \t// Animals are in paddock. Determine if they need to be moved to feedlot.\r\n            \tif (!inGrazingWindow || expressionMoveAnimalsToFeedlot.Value() == 1)\r\n            \t{\r\n                \tAnimals.Move(\"Feedlot\");\r\n                \tEventName = \"Animals moved to feedlot\";\r\n            \t}\r\n        \t}\r\n\r\n\t\t\t// Shear all animals on specified date\r\n\t\t\tif (DateUtilities.DatesEqual(ShearDate, clock.Today))\r\n\t\t\t{\r\n\t\t\t\tAnimals.Shear(shearAdults: true, shearYoung: true);\r\n\t\t\t\tEventName = \"Animals shorn\";\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n",
+              "Code": "/*-------------------------------------------------------------------------------------\r\nSheep grazing wheat when conditions are suitable, and in feedlot the rest of the time.\r\n---------------------------------------------------------------------------------------\r\n\r\nIn this script animals are bought and sold within a specified date window.\r\nThey are fed supplement in a feedlot at a set rate, but graze a wheat crop when a criteria is met.\r\nAnimals are moved from the wheat crop and back to feedlot when a second criteria is met.\r\n\r\nBased on Sprague SJ, Kirkegaard JA, Dove H, Graham JM, McDonald SE, Kelman WM (2015) Integrating dual-purpose wheat and canola into high-rainfall livestock systems in south-eastern Australia. 1. Crop forage and grain yield. Crop and Pasture Science 66(4), 365-376. \r\n\r\nActivities in this manager:\r\n1. Buy animals at start of year & put in feedlot\r\n2. Move animals from feedlot to crop when ready to graze\r\n3. Move animals from crop to feedlot \r\n4. Shear all animals on specified date\r\n5. Sell all animals at end of year\r\n\r\nNOTES\r\n1. When the animals are in the feedlot and an animal dies during the day, the supplement has already been fed into the feedlot\r\n   based on the number of animals in the feedlot at the start of the day. This means the remaining animals have access to slightly\r\n   more supplement and causes a spike in supp intake graph\r\n2. When sheep are culled for age + purchased to maintain stocking rate, several groups of sheep are created.\r\n   This causes irregular amounts of supplement to be fed.\r\n--------------------------------------------------------------------------------------*/\r\n\r\n\r\nusing System.Linq;\r\nusing System;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Functions;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Diagnostics;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [Description(\r\n        \"<p><b>Animals grazing a crop when conditions are suitable, and in feedlot the rest of the time.</b></p>\" +\r\n        \"In this script animals are bought and sold within a specified date window. \" +\r\n        \"They are fed supplement in a feedlot at a set rate, but graze a wheat crop when a criteria is met. \" +\r\n        \"Animals are moved from the wheat crop and back to feedlot when a second criteria is met.\")]    \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock Animals;\r\n        [Link] Supplement Feed;\r\n        [Link] Summary Summary;\r\n        [Link] IPlant plant;\r\n        [Link] Soil Soil;\r\n        [Link] Zone Paddock;\r\n        [Link] ScriptCompiler compiler;\r\n\r\n        private CSharpExpressionFunction expressionMoveAnimalsToField;\r\n        private CSharpExpressionFunction expressionMoveAnimalsToFeedlot;\r\n\r\n        public enum SellPolicyType\r\n        {\r\n            Date,\r\n            PercentageHerdWhenAverageWeightGreaterThan,\r\n            PercentageHerdWhenAverageAgeGreaterThan,\r\n            CulledForAge,\r\n            CulledForWeight,\r\n            SellYoung\r\n        }\r\n\r\n        ////////////////////////////////////////////////////////\r\n        [Separator(\"Buying of animals\")]\r\n\r\n        [Description(\"Buy animals?\")] \r\n        public bool Buying { get; set; }\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        [Display(Values = \"GetGenotypes\")]\r\n        public string Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Date to buy animals (dd-mmm)\")] \r\n        [Display(EnabledCallback = \"BuyingEnabled\")]\r\n        public string BuyDate { get; set; }\r\n\r\n        [Description(\"Age of bought animals (months): \")] \r\n        [Display(EnabledCallback = \"BuyingEnabled\")]\r\n        public double BuyAge { get; set; }\r\n\r\n        [Description(\"Weight of bought animals (kg): \")] \r\n        [Display(EnabledCallback = \"BuyingEnabled\")]\r\n        public double BuyWeight { get; set; }\r\n\r\n        [Description(\"Zero denotes not lactating; 1 or more denotes the time (days) since parturition:\")] \r\n        [Display(EnabledCallback = \"BuyingEnabled\")]\r\n        public int BuyLactating { get; set; }\r\n\r\n        [Description(\"Number of animals to buy: \")] \r\n        [Display(EnabledCallback = \"BuyingEnabled\")]\r\n        public int NumAntoBuy { get; set; }\r\n\r\n        ////////////////////////////////////////////////////////\r\n        [Separator(\"Selling of animals\")]\r\n\r\n        [Description(\"Selling animals?\")] \r\n        public bool Selling { get; set; }\r\n\r\n        [Description(\"First date to consider selling animals (dd-mmm)\")] \r\n        public string SaleFirstDate { get; set; }\r\n\r\n        [Description(\"Last date to consider selling animals (dd-mmm)\")] \r\n        public string SaleLastDate { get; set; }\r\n\r\n        [Description(\"Selling policy \")] \r\n        [Display(EnabledCallback = \"SellingEnabled\")]\r\n        public SellPolicyType SellPolicy { get; set; }\r\n\r\n        [Description(\"Age at which to sell (months): \")] \r\n        [Display(EnabledCallback = \"SellingAgeEnabled\")]\r\n        public int SaleAge { get; set; }\r\n\r\n        [Description(\"Weight at which to sell (kg): \")] \r\n        [Display(EnabledCallback = \"SellingWeightEnabled\")]\r\n        public double SaleWeight { get; set; }\r\n\r\n        [Description(\"Percentage of animals to sell (%)\")] \r\n        [Display(EnabledCallback = \"SellingEnabled\")]\r\n        public double SalePercentAnimals { get; set; }\r\n\r\n        ////////////////////////////////////////////////////////\r\n        [Separator(\"Rule for moving animals into and out of paddock\")]\r\n\r\n        [Description(\"Name of paddock to move animals in to:\")] \r\n        [Display(Type = DisplayType.Model, ModelType = typeof(Zone))]\r\n        public IModel PaddockToMoveAnimalsTo { get; set; }\r\n\r\n        [Description(\"First date to consider moving animals:\")] \r\n        public string GrazingWindowStartDate { get; set; }\r\n\r\n        [Description(\"Last date to consider moving animals:\")] \r\n        public string GrazingWindowEndDate { get; set; }\r\n\r\n           [Description(\"Criteria to move animals to field\")]\r\n        public string ExpressionToMoveAnimalsToField { get; set; }\r\n\r\n           [Description(\"Criteria to move animals to feedlot\")]\r\n        public string ExpressionToMoveAnimalsToFeedlot { get; set; }\r\n\r\n\r\n        ////////////////////////////////////////////////////////\r\n        [Separator(\"Shearing\")]\r\n        [Description(\"Date to shear animals (dd-mmm)\")] \r\n        public string ShearDate { get; set; }\r\n\r\n        [Description(\" \")] \r\n        public string Dummy { get; set; }\r\n\r\n        ////////////////////////////////////////////////////////////////////////////\r\n        // Callback properties to control disabling of properties.\r\n        ////////////////////////////////////////////////////////////////////////////\r\n        public bool BuyingEnabled { get { return Buying; } }\r\n\r\n        public bool SellingEnabled { get { return Selling; } }\r\n\r\n        public bool SellingAgeEnabled\r\n        { \r\n            get\r\n            { \r\n                return Selling &&\r\n                (SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan || SellPolicy == SellPolicyType.CulledForAge);\r\n            } \r\n        }\r\n\r\n        public bool SellingWeightEnabled\r\n        { \r\n            get\r\n            { \r\n                return Selling &&\r\n                (SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan || SellPolicy == SellPolicyType.CulledForWeight);\r\n            } \r\n        }\r\n\r\n        ////////////////////////////////////////////////////////////////////////////\r\n        // Outputs\r\n        ////////////////////////////////////////////////////////////////////////////\r\n        // <summary>Number of animals sold.</summary>\r\n        public int NumberSold { get; set; }\r\n\r\n        // <summary>Description of something that has happened.</summary>\r\n        public string EventName { get; set; }\r\n\r\n        // <summary>Return a list of genotypes to the properties tab.</summary>\r\n        public string[] GetGenotypes()\r\n        {\r\n            if (Animals != null)\r\n                return Animals.Genotypes.Names.ToArray();\r\n            return null;\r\n        }\r\n\r\n\r\n\r\n        // ============================================================\r\n        // Called once at beginning of simulation run\r\n        // ============================================================\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            if (string.IsNullOrEmpty(ExpressionToMoveAnimalsToField))\r\n                throw new Exception(\"You must specify a criteria for moving animals to the field\");\r\n            expressionMoveAnimalsToField = new CSharpExpressionFunction();\r\n            expressionMoveAnimalsToField.Parent = this;\r\n            expressionMoveAnimalsToField.Expression = \"Convert.ToDouble(\" + ExpressionToMoveAnimalsToField + \")\";\r\n            expressionMoveAnimalsToField.SetCompiler(compiler);\r\n            expressionMoveAnimalsToField.CompileExpression();\r\n\r\n            if (string.IsNullOrEmpty(ExpressionToMoveAnimalsToFeedlot))\r\n                throw new Exception(\"You must specify a criteria for moving animals to the feedlot\");\r\n            expressionMoveAnimalsToFeedlot = new CSharpExpressionFunction();\r\n            expressionMoveAnimalsToFeedlot.Parent = this;\r\n            expressionMoveAnimalsToFeedlot.Expression = \"Convert.ToDouble(\" + ExpressionToMoveAnimalsToFeedlot + \")\";\r\n            expressionMoveAnimalsToFeedlot.SetCompiler(compiler);\r\n            expressionMoveAnimalsToFeedlot.CompileExpression();\r\n        }\r\n\r\n\r\n\r\n        // ============================================================\r\n        // Management that happens every day.\r\n        // ============================================================\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            EventName = string.Empty;\r\n\r\n            // Buy animals\r\n            if (Buying && DateUtilities.DatesAreEqual(BuyDate, clock.Today))\r\n            {\r\n                var purchase = new StockBuy();\r\n                purchase.Genotype = Genotype;   // \"small merino\"\r\n                purchase.Number = NumAntoBuy;\r\n                purchase.Sex = Sex;               // \"wethers\"\r\n                purchase.Age = BuyAge;\r\n                purchase.Weight = BuyWeight;\r\n                purchase.Lactating = BuyLactating;\r\n                Animals.Buy(purchase);\r\n                Animals.Move(\"Feedlot\");\r\n                EventName = NumAntoBuy + \" animals bought\";\r\n            }\r\n\r\n            // Sell animals\r\n            if (SellingEnabled && DateUtilities.WithinDates(SaleFirstDate, clock.Today, SaleLastDate))\r\n            { \r\n                if (SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan || \r\n                    SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan)\r\n                {\r\n                    bool doSell = false;\r\n                    if (SellPolicy == SellPolicyType.Date)\r\n                        doSell = true;\r\n                    else if (SellPolicy == SellPolicyType.PercentageHerdWhenAverageWeightGreaterThan && Animals.WeightAll >= SaleWeight)\r\n                        doSell = true;\r\n                    else if (SellPolicy == SellPolicyType.PercentageHerdWhenAverageAgeGreaterThan && Animals.AgeMonthsAll >= SaleAge)\r\n                        doSell = true;\r\n\r\n                    if (doSell)\r\n                    {\r\n                        NumberSold = Convert.ToInt32(Animals.NumberAll * SalePercentAnimals / 100.0);\r\n                        Animals.Sell(NumberSold);\r\n                        EventName = NumberSold + \" animals sold\";\r\n                    }\r\n                }\r\n                else\r\n                {\r\n                    IEnumerable<AnimalGroup> animalsToSell = null;\r\n                    if (SellPolicy == SellPolicyType.CulledForAge)\r\n                    {\r\n                        // split older animals into a new group\r\n                        animalsToSell = Animals.SplitByAge(Convert.ToInt32(SaleAge * 30)); // months to days\r\n                    }\r\n                    else if (SellPolicy == SellPolicyType.CulledForWeight)\r\n                    {\r\n                        // split heavier animals into a new group\r\n                        animalsToSell = Animals.SplitByWeight(SaleWeight);\r\n                    }\r\n                    else if (SellPolicy == SellPolicyType.SellYoung)\r\n                    {\r\n                        // split young (offspring) into new groups\r\n                        animalsToSell = Animals.SplitByYoung();\r\n                    }\r\n                    if (animalsToSell != null)\r\n                    {\r\n                        var numberSellableAnimals = animalsToSell.Sum(g => g.NoAnimals);\r\n                        var numberAnimalsToSell = Convert.ToInt32(numberSellableAnimals * SalePercentAnimals / 100.0);\r\n                        if (numberAnimalsToSell > 0)\r\n                            Animals.Sell(numberAnimalsToSell, animalsToSell);\r\n                    }\r\n                }\r\n            }\r\n\r\n\r\n            // Determine whether the animals are in the feedlot.\r\n            bool animalsAreInFeedlot = Animals.AnimalGroups.FirstOrDefault(group => group.PaddOccupied.Name == \"Feedlot\") != null;\r\n            bool inGrazingWindow = DateUtilities.WithinDates(GrazingWindowStartDate, clock.Today, GrazingWindowEndDate);\r\n\r\n            if (animalsAreInFeedlot)\r\n            {\r\n                   // Animals are in feedlot. Determine if they can be moved to paddock.\r\n                if (inGrazingWindow && expressionMoveAnimalsToField.Value() == 1)\r\n                {\r\n                    Animals.Move(PaddockToMoveAnimalsTo.Name);\r\n                    EventName = \"Animals moved to paddock\";\r\n                }\r\n            }\r\n            else\r\n            {\r\n                // Animals are in paddock. Determine if they need to be moved to feedlot.\r\n                if (!inGrazingWindow || expressionMoveAnimalsToFeedlot.Value() == 1)\r\n                {\r\n                    Animals.Move(\"Feedlot\");\r\n                    EventName = \"Animals moved to feedlot\";\r\n                }\r\n            }\r\n\r\n            // Shear all animals on specified date\r\n            if (DateUtilities.DatesEqual(ShearDate, clock.Today))\r\n            {\r\n                Animals.Shear(shearAdults: true, shearYoung: true);\r\n                EventName = \"Animals shorn\";\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "Buying",
@@ -66357,7 +66447,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n\t[Description(\r\n\t\"<b>Supplement store management.</b>\" +\r\n\t\"<li>When animals are in feedlot, they are fed a set amount each day.</li>\" +\r\n\t\"<li>Will restock the supplement store when the store reaches a minimum level.</li>\"\r\n\t)]\r\n\t[Serializable]\r\n\tpublic class ManageSupplement : Model\r\n\t{\r\n\t    [Link] Clock clock;\r\n\t\t[Link] Stock animals;\r\n\t\t[Link] Supplement supplement;\r\n\r\n\t\t[Description(\"Name of zone representing the feedlot\")]\r\n\t\t[Display(Type=DisplayType.Model, ModelType=typeof(Zone))]\r\n\t\tpublic IModel FeedlotZone { get; set; }\r\n\r\n\t\t[Description(\"The amount of suppliment to feed each animal each day (kg)\")]\r\n\t\tpublic double SupplementAmount { get; set; }\r\n\r\n\t\t[Description(\"The type of suppliment to feed the animals\")]\r\n\t\tpublic string SupplementType { get; set; }\r\n\r\n\t\t// ============================================================\r\n\t\t// Called every day to perform management actions\r\n\t\t// ============================================================\r\n\t\t[EventSubscribe(\"DoManagement\")]\r\n\t\tprivate void OnDoManagement(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\t// Determine how many animals are in feedlot.\r\n\t\t\tvar animalGroupsInFeedlot = animals.AnimalGroups.Where(group => group.PaddOccupied.Name == FeedlotZone.Name);\r\n\t\t\tvar totalNumAnimalsInFeedlot = animalGroupsInFeedlot.Sum(group => group.NoAnimals);\r\n\r\n\t\t\t// If there are animals in feedlot then feed them.\r\n\t\t\tif (totalNumAnimalsInFeedlot > 0)\r\n\t\t\t\tsupplement.Feed(SupplementType, SupplementAmount * totalNumAnimalsInFeedlot, FeedlotZone.Name);     \r\n\r\n\t\t\t// Restock the supplement store if amount falls below 500 kg/ha\r\n\t\t\tif (supplement.Stores[1].Stored <= 500)       \r\n\t\t\t\tsupplement.Buy(5000, SupplementType);\r\n\t\t}\r\n\t}\r\n}",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Description(\r\n    \"<b>Supplement store management.</b>\" +\r\n    \"<li>When animals are in feedlot, they are fed a set amount each day.</li>\" +\r\n    \"<li>Will restock the supplement store when the store reaches a minimum level.</li>\"\r\n    )]\r\n    [Serializable]\r\n    public class ManageSupplement : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock animals;\r\n        [Link] Supplement supplement;\r\n\r\n        [Description(\"Name of zone representing the feedlot\")]\r\n        [Display(Type=DisplayType.Model, ModelType=typeof(Zone))]\r\n        public IModel FeedlotZone { get; set; }\r\n\r\n        [Description(\"The amount of suppliment to feed each animal each day (kg)\")]\r\n        public double SupplementAmount { get; set; }\r\n\r\n        [Description(\"The type of suppliment to feed the animals\")]\r\n        public string SupplementType { get; set; }\r\n\r\n        // ============================================================\r\n        // Called every day to perform management actions\r\n        // ============================================================\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Determine how many animals are in feedlot.\r\n            var animalGroupsInFeedlot = animals.AnimalGroups.Where(group => group.PaddOccupied.Name == FeedlotZone.Name);\r\n            var totalNumAnimalsInFeedlot = animalGroupsInFeedlot.Sum(group => group.NoAnimals);\r\n\r\n            // If there are animals in feedlot then feed them.\r\n            if (totalNumAnimalsInFeedlot > 0)\r\n                supplement.Feed(SupplementType, SupplementAmount * totalNumAnimalsInFeedlot, FeedlotZone.Name);     \r\n\r\n            // Restock the supplement store if amount falls below 500 kg/ha\r\n            if (supplement.Stores[1].Stored <= 500)       \r\n                supplement.Buy(5000, SupplementType);\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "FeedlotZone",
@@ -66475,6 +66565,7 @@
                   "Latitude": -35.201,
                   "Longitude": 149.082,
                   "LocationAccuracy": null,
+                  "YearOfSampling": null,
                   "DataSource": "YP. Ginnenderra Experiment Station (GES). Data provided by James Hunt, based on measurements by John Kirkegaard, characterisation done by Julianne Lilley. Ginnenderra Experiment Station",
                   "Comments": null,
                   "Name": "Soil",
@@ -66510,6 +66601,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.42,
                         1.42,
@@ -66582,6 +66675,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -66653,7 +66751,6 @@
                       "CN2Bare": 72.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -66723,6 +66820,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -66864,6 +66962,8 @@
                         52.409436016183129,
                         38.825865136441131
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -66940,6 +67040,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -66959,33 +67063,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-180"
-                      ],
-                      "Thickness": [
-                        1800.0
-                      ],
-                      "NO3N": null,
-                      "NH4N": null,
-                      "SW": null,
-                      "OC": null,
-                      "EC": null,
-                      "CL": null,
-                      "ESP": null,
-                      "PH": null,
-                      "SWUnits": 0,
-                      "OCUnits": 0,
-                      "PHUnits": 0,
-                      "Name": "InitialN",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -67037,7 +67116,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Wheat;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -67138,6 +67217,7 @@
                   "Latitude": -35.201,
                   "Longitude": 149.082,
                   "LocationAccuracy": null,
+                  "YearOfSampling": null,
                   "DataSource": "YP. Ginnenderra Experiment Station (GES). Data provided by James Hunt, based on measurements by John Kirkegaard, characterisation done by Julianne Lilley. Ginnenderra Experiment Station",
                   "Comments": null,
                   "Name": "Soil",
@@ -67173,6 +67253,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.42,
                         1.42,
@@ -67245,6 +67327,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -67316,7 +67403,6 @@
                       "CN2Bare": 72.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -67386,6 +67472,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -67527,6 +67614,8 @@
                         52.409436016183129,
                         38.825865136441131
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -67603,6 +67692,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -67622,33 +67715,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-180"
-                      ],
-                      "Thickness": [
-                        1800.0
-                      ],
-                      "NO3N": null,
-                      "NH4N": null,
-                      "SW": null,
-                      "OC": null,
-                      "EC": null,
-                      "CL": null,
-                      "ESP": null,
-                      "PH": null,
-                      "SWUnits": 0,
-                      "OCUnits": 0,
-                      "PHUnits": 0,
-                      "Name": "InitialN",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -67743,6 +67811,7 @@
                   "Latitude": -35.201,
                   "Longitude": 149.082,
                   "LocationAccuracy": null,
+                  "YearOfSampling": null,
                   "DataSource": "YP. Ginnenderra Experiment Station (GES). Data provided by James Hunt, based on measurements by John Kirkegaard, characterisation done by Julianne Lilley. Ginnenderra Experiment Station",
                   "Comments": null,
                   "Name": "Soil",
@@ -67778,6 +67847,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.42,
                         1.42,
@@ -67850,6 +67921,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -67921,7 +67997,6 @@
                       "CN2Bare": 72.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -67991,6 +68066,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -68132,6 +68208,8 @@
                         52.409436016183129,
                         38.825865136441131
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -68208,6 +68286,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -68227,33 +68309,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Sample, Models",
-                      "Depth": [
-                        "0-180"
-                      ],
-                      "Thickness": [
-                        1800.0
-                      ],
-                      "NO3N": null,
-                      "NH4N": null,
-                      "SW": null,
-                      "OC": null,
-                      "EC": null,
-                      "CL": null,
-                      "ESP": null,
-                      "PH": null,
-                      "SWUnits": 0,
-                      "OCUnits": 0,
-                      "PHUnits": 0,
-                      "Name": "InitialN",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -68305,7 +68362,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Wheat;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -68976,6 +69033,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "MassBalanceForage",
           "Children": [
             {
@@ -69009,7 +69067,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Weather, Models",
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -69237,7 +69296,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Surface;\r\nusing Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Interfaces;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n\r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,    // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n\r\n            // balance calculations\r\n            LostWt = PastureRemoved.Wt - Intake.Wt; \r\n            LostN = PastureRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance error: Forage mass removed is not equal to animal intake.\");\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Mass balance error: N balance error.\");\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n\r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,    // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n\r\n            // balance calculations\r\n            LostWt = PastureRemoved.Wt - Intake.Wt; \r\n            LostN = PastureRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance error: Forage mass removed is not equal to animal intake.\");\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Mass balance error: N balance error.\");\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartOfDayPasture",
@@ -69336,7 +69395,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System.Linq;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\n    \r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant slurp;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            var slurpLeaf = Apsim.Child(slurp, typeof(SimpleLeaf)) as SimpleLeaf;\r\n\r\n            double wt = 500; // g/m2\r\n            slurpLeaf.Live.StructuralWt = wt;\r\n            slurpLeaf.Live.StorageWt = 0;\r\n            slurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n            slurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using System.Linq;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing System.Data;\r\n    \r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant slurp;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            var slurpLeaf = slurp.FindChild<SimpleLeaf>();\r\n\r\n            double wt = 500; // g/m2\r\n            slurpLeaf.Live.StructuralWt = wt;\r\n            slurpLeaf.Live.StorageWt = 0;\r\n            slurpLeaf.Live.StructuralN = wt * slurpLeaf.MinNconc;\r\n            slurpLeaf.Live.StorageN = wt * slurpLeaf.MaxNconc - slurpLeaf.Live.StructuralN;\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [],
                   "Name": "SlurpSetup",
                   "IncludeInDocumentation": false,
@@ -69382,6 +69441,7 @@
                   "Latitude": -27.581836,
                   "Longitude": 151.320206,
                   "LocationAccuracy": " +/- 20m",
+                  "YearOfSampling": null,
                   "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
                   "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
                   "Name": "Soil",
@@ -69409,6 +69469,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -69469,6 +69531,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -69528,7 +69595,6 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -69590,6 +69656,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -69703,6 +69770,8 @@
                         36.587130828674873,
                         22.1912165985086
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -69759,6 +69828,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -69797,8 +69870,8 @@
                         300.0,
                         300.0
                       ],
-                      "NO3N": null,
-                      "NH4N": null,
+                      "NO3": null,
+                      "NH4": null,
                       "SW": [
                         "NaN",
                         "NaN",
@@ -69864,7 +69937,7 @@
                     },
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
@@ -69888,6 +69961,7 @@
         {
           "$type": "Models.Core.Simulation, Models",
           "IsRunning": false,
+          "Descriptors": null,
           "Name": "MassBalanceFeedlot",
           "Children": [
             {
@@ -69921,7 +69995,8 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Weather, Models",
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
@@ -70035,7 +70110,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Surface;\r\nusing Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Interfaces;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n       \r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n\r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,   // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n            //  do a balance calc\r\n            LostN = SupplementRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n            LostWt = SupplementRemoved.Wt - animals.IntakeAll.Weight; \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance between supplement and stock has not been maintained: \" + LostWt.ToString());\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Nitrogen mass balance between supplement and stock has not been maintained: \" + LostN.ToString());\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Zone paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] Supplement supplement;\r\n        [Link] SurfaceOrganicMatter som;\r\n        [Link(ByName=true)] ISolute urea;\r\n\r\n        public BiomassAndN StartOfDayPasture { get; set; }\r\n        public BiomassAndN EndOfDayPasture { get; set; }\r\n        public BiomassAndN StartOfDaySupplement { get; set; }\r\n        public BiomassAndN EndOfDaySupplement { get; set; }\r\n        public BiomassAndN StartOfDayAnimal { get; set; }\r\n        public BiomassAndN EndOfDayAnimal { get; set; }\r\n        public BiomassAndN PastureRemoved { get; set; }\r\n        public BiomassAndN SupplementRemoved { get; set; }\r\n        public BiomassAndN LiveWeightGain { get; set; }\r\n        public BiomassAndN Intake { get; set; }\r\n        public BiomassAndN Excreta { get; set; }\r\n       \r\n        public double LostN { get; set; } \r\n        public double LostWt { get; set; } \r\n\r\n\r\n\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\r\n        }\r\n\r\n        // Start of day\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            StartOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            StartOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            StartOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = 0,\r\n            };\r\n        }\r\n\r\n        // End of day\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            EndOfDaySupplement = new BiomassAndN() \r\n            { \r\n                Wt = supplement.Stores.Sum(supp => supp.Stored),\r\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\r\n            };\r\n            EndOfDayPasture = new BiomassAndN() \r\n            { \r\n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\r\n                N = forages.Sum(forage => forage.Live.N * 10),\r\n            };\r\n            EndOfDayAnimal = new BiomassAndN() \r\n            { \r\n                Wt = animals.WeightAll,\r\n                N = animals.RetainedNAll,   // kg/d\r\n            };\r\n\r\n            Intake = new BiomassAndN()\r\n            {\r\n                Wt = animals.IntakeAll.Weight,\r\n                N = animals.IntakeAll.N,\r\n            };\r\n            Excreta = new BiomassAndN()\r\n            {\r\n                Wt = animals.FaecesAll.Weight,\r\n                N = animals.FaecesAll.N + animals.UrineNAll,\r\n            };\r\n\r\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\r\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\r\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\r\n            //  do a balance calc\r\n            LostN = SupplementRemoved.N - (Excreta.N + LiveWeightGain.N);  \r\n            LostWt = SupplementRemoved.Wt - animals.IntakeAll.Weight; \r\n\r\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\r\n                throw new Exception(\"Mass balance between supplement and stock has not been maintained: \" + LostWt.ToString());\r\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\r\n                throw new Exception(\"Nitrogen mass balance between supplement and stock has not been maintained: \" + LostN.ToString());\r\n\r\n            if (clock.Today.DayOfYear == 1)\r\n            {\r\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\r\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\r\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\r\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\r\n            }\r\n        }\r\n    }\r\n\r\n    // Helper class for containing a mass and and N concentration.\r\n    [Serializable]\r\n    public class BiomassAndN\r\n    {\r\n        public double Wt { get; set; }\r\n        public double N { get; set; }\r\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt + b.Wt,\r\n                N = a.N + b.N,\r\n            };\r\n\r\n        }\r\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\r\n        {\r\n            return new BiomassAndN()\r\n            {\r\n                Wt = a.Wt - b.Wt,\r\n                N = a.N - b.N,\r\n            };\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartOfDayPasture",
@@ -70163,6 +70238,7 @@
                   "Latitude": -27.581836,
                   "Longitude": 151.320206,
                   "LocationAccuracy": " +/- 20m",
+                  "YearOfSampling": null,
                   "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
                   "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
                   "Name": "Soil",
@@ -70190,6 +70266,8 @@
                       "ParticleSizeClay": null,
                       "ParticleSizeSand": null,
                       "ParticleSizeSilt": null,
+                      "Rocks": null,
+                      "Texture": null,
                       "BD": [
                         1.01056473311131,
                         1.07145631083388,
@@ -70250,6 +70328,11 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [
                         {
@@ -70309,7 +70392,6 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "Slope": "NaN",
                       "DischargeWidth": "NaN",
                       "CatchmentArea": "NaN",
                       "Thickness": [
@@ -70371,6 +70453,7 @@
                         0.08,
                         0.9
                       ],
+                      "NPartitionApproach": 0,
                       "Name": "SoilNitrogen",
                       "Children": [
                         {
@@ -70484,6 +70567,8 @@
                         36.587130828674873,
                         22.1912165985086
                       ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -70540,6 +70625,10 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -70578,8 +70667,8 @@
                         300.0,
                         300.0
                       ],
-                      "NO3N": null,
-                      "NH4N": null,
+                      "NO3": null,
+                      "NH4": null,
                       "SW": [
                         "NaN",
                         "NaN",
@@ -70645,7 +70734,7 @@
                     },
                     {
                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                      "Name": "CERESSoilTemperature",
+                      "Name": "Temperature",
                       "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
