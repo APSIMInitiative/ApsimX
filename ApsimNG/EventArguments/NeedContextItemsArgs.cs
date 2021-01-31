@@ -355,7 +355,12 @@
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
                 if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                {
                     node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
+
+                    // If we still failed, try a lookup on type name.
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                }
             }
 
             // If the object name string does not contain any children/properties 

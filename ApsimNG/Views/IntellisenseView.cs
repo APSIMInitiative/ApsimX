@@ -241,7 +241,8 @@
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
-                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
+                if (completionView.WidthRequest > 0)
+                    completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 return true;
             }
             return false;
