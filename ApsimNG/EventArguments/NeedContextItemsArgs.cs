@@ -11,6 +11,7 @@
     using Intellisense;
     using System.Xml;
     using System.Drawing;
+    using Models.Factorial;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -359,7 +360,21 @@
                     node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
 
                     // If we still failed, try a lookup on type name.
-                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                    if (node == null)
+                        node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                }
+
+                if (node == null && relativeTo.FindAncestor<Factors>() != null)
+                {
+                    relativeTo = relativeTo.FindAncestor<Experiment>();
+                    if (relativeTo != null)
+                    {
+                        node = relativeTo.FindInScope(modelName);
+                        if (node == null)
+                            node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                    }
+                    if (node == null)
+                        return null;
                 }
             }
 
