@@ -67,6 +67,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0'">
@@ -82,7 +83,6 @@
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
 	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup>

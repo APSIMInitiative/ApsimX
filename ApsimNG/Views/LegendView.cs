@@ -94,8 +94,6 @@ namespace UserInterface.Views
             {
                 chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
                 listToggle.Toggled -= OnItemChecked;
-                comboModel.Dispose();
-                comboRender.Dispose();
                 listModel.Dispose();
                 listRender.Dispose();
                 listToggle.Dispose();

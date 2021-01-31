@@ -454,7 +454,7 @@ namespace UserInterface.Views
             TextIter iter = tmpView.Buffer.StartIter;
             ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
             string result = tmpView.Buffer.Text;
-            tmpView.Destroy();
+            tmpView.Cleanup();
             return result;
         }
 
@@ -465,7 +465,11 @@ namespace UserInterface.Views
         private int MeasureText(string text)
         {
             Label label = new Label();
+#if NETFRAMEWORK
             label.Layout.FontDescription = owner.MainWidget.Style.FontDescription;
+#else
+            label.Layout.FontDescription = FontDescription.FromString(Utility.Configuration.Settings.FontName);
+#endif
             label.Layout.SetText(text);
             label.Layout.GetPixelSize(out int width, out _);
             return width;

@@ -251,8 +251,12 @@ namespace UserInterface.Views
             {
                 if (sender is Widget widget)
                 {
+#if NETFRAMEWORK
                     widget.ModifyBg(StateType.Normal, widget.Style.Background(StateType.Selected));
                     widget.ModifyFg(StateType.Normal, widget.Style.Background(StateType.Selected));
+#else
+                    // tbi
+#endif
                 }
             }
             catch (Exception err)
@@ -587,6 +591,7 @@ namespace UserInterface.Views
                     // Name of the tooltip timeout property.
                     string tooltipTimeout = "gtk-tooltip-timeout";
 
+#if NETFRAMEWORK
                     // To get the default tooltip timeout, we need to call the GetProperty() method,
                     // which for some reason is a protected method in the gtk#2 API.
                     BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
@@ -602,6 +607,12 @@ namespace UserInterface.Views
 
                     // Reset the tooltip timeout to the default value.
                     mainWidget.Settings.SetLongProperty(tooltipTimeout, timeout, "XProperty");
+#else
+                    int timeout = (int)mainWidget.GetProperty(tooltipTimeout).Val;
+                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(0));
+                    widget.TriggerTooltipQuery();
+                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(timeout));
+#endif
                 }
             }
             catch (Exception err)

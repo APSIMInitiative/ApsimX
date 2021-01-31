@@ -33,7 +33,13 @@ namespace UserInterface.Views
                                                     })
         {
             propertyEditor = new PropertyView(null);
-            VBox.PackStart(propertyEditor.MainWidget, true, true, 0);
+            Box box;
+#if NETFRAMEWORK
+            box = VBox;
+#else
+            box = ContentArea;
+#endif
+            box.PackStart(propertyEditor.MainWidget, true, true, 0);
             propertyEditor.MainWidget.ShowAll();
             propertyEditor.PropertyChanged += OnPropertyChanged;
             Refresh();
