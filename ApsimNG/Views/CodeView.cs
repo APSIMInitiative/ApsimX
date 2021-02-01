@@ -14,7 +14,7 @@ namespace UserInterface.Views
     using Intellisense;
     using Interfaces;
     using GtkSource;
-    using global::UserInterface.Extensions;
+    using Extensions;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
@@ -133,10 +133,23 @@ namespace UserInterface.Views
             }
         }
 
+        private EditorType editorMode;
+
         /// <summary>
         /// Controls the syntax highlighting scheme.
         /// </summary>
-        public EditorType Mode { get; set; }
+        public EditorType Mode
+        {
+            get => editorMode;
+            set
+            {
+                editorMode = value;
+                // Initialise completion provider based on editor type.
+                if (value == EditorType.ManagerScript)
+                    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
+                // tbi: alternative syntax highlighting modes
+            }
+        }
 
         /// <summary>
         /// Gets or sets the characters that bring up the intellisense context menu.
@@ -278,8 +291,25 @@ namespace UserInterface.Views
         public EditorView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
-
             textEditor = new SourceView();
+            scroller.Add(textEditor);
+            InitialiseWidget();
+        }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            base.Initialise(ownerView, gtkControl);
+            Container parent = (Container)gtkControl;
+            mainWidget = parent;
+            scroller = new ScrolledWindow();
+            textEditor = new SourceView();
+            scroller.Add(textEditor);
+            parent.Add(scroller);
+            InitialiseWidget();
+        }
+
+        private void InitialiseWidget()
+        {
             textEditor.Monospace = true;
             textEditor.HighlightCurrentLine = true;
             textEditor.AutoIndent = true;
@@ -291,11 +321,6 @@ namespace UserInterface.Views
             // line on the second press.
             textEditor.SmartHomeEnd = SmartHomeEndType.Before;
 
-            // Intellisense initialisation.
-            // fixme - this should only happen if we're in manager script mode.
-            textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
-            
-            scroller.Add(textEditor);
             mainWidget = scroller;
             textEditor.Buffer.Changed += OnTextHasChanged;
             textEditor.FocusInEvent += OnTextBoxEnter;
