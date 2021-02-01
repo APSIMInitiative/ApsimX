@@ -12,6 +12,7 @@ namespace UserInterface.Views
     using System.Collections;
     using Models.Core;
     using System.Globalization;
+    using Extensions;
 
     /// <summary>
     /// A class for a dialog window for user settings.
@@ -65,7 +66,7 @@ namespace UserInterface.Views
                 }
             }
             while (response == ResponseType.Apply);
-            Destroy();
+            this.Cleanup();
         }
 
         private PropertyGroup GetPropertyGroup()

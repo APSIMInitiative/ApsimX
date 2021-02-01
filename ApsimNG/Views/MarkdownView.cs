@@ -1,35 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
-using Cairo;
-using ClosedXML.Excel;
 using Gdk;
 using Gtk;
 using Markdig;
-using Markdig.Extensions;
-using Markdig.Extensions.EmphasisExtras;
 using Markdig.Extensions.Tables;
-using Markdig.Helpers;
-using Markdig.Parsers;
-using Markdig.Renderers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
-using Models.Core;
 using UserInterface.Extensions;
 using Utility;
+using Pango;
+using UserInterface.Classes;
+using Table = Markdig.Extensions.Tables.Table;
 #if NETCOREAPP
 using StateType = Gtk.StateFlags;
 #endif
-using Pango;
-using UserInterface.Classes;
-using Utility;
-using Table = Markdig.Extensions.Tables.Table;
 
 namespace UserInterface.Views
 {
@@ -46,7 +34,7 @@ namespace UserInterface.Views
         bool Visible { get; set; }
     }
 
-    /// <summary>A rich text view.</summary>
+    /// <summary>A rich text view capable of rendering markdown-formatted text.</summary>
     public class MarkdownView : ViewBase, IMarkdownView
     {
         /// <summary>
@@ -212,8 +200,10 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="blocks">The blocks to process.</param>
         /// <param name="insertPos">The insert position.</param>
+        /// <param name="textView">The textview into which the markdown blocks' content will be added.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="autoNewline">Should newline characters be automatically inserted after each block?</param>
+        /// <param name="tags">Any additional tags to be applied to the content when it is added to the textview.</param>
         private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, TextView textView, int indent, bool autoNewline = true, params TextTag[] tags)
         {
             // The markdown parser will strip out all of the whitespace (linefeeds) in the
@@ -287,6 +277,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="inlines">The inlines to process.</param>
         /// <param name="insertPos">The insert position.</param>
+        /// <param name="textView">The textview into which the markdown blocks' content will be added.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="tags">Tags to use for all child inlines.</param>
         private void ProcessMarkdownInlines(IEnumerable<Inline> inlines, ref TextIter insertPos, TextView textView, int indent, params TextTag[] tags)
@@ -337,6 +328,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="insertPos"></param>
         /// <param name="table"></param>
+        /// <param name="indent"></param>
         private void DisplayTable(ref TextIter insertPos, Table table, int indent)
         {
             int spaceWidth = MeasureText(" ");
@@ -745,7 +737,6 @@ namespace UserInterface.Views
                 ShowError(err);
             }
         }
-
 
         private class LinkTag : TextTag
         {

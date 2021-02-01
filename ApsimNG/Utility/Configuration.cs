@@ -28,6 +28,7 @@ namespace Utility
         /// <summary>
         /// Constructor to provide recommended file extensions.
         /// </summary>
+        /// <param name="name">Property name.</param>
         /// <param name="extensions">Recommended file extensions.</param>
         public FileInput(string name, params string[] extensions) : base(name)
         {
