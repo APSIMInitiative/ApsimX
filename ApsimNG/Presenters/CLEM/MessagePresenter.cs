@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
-using UserInterface.Interfaces;
 
 namespace UserInterface.Presenters
 {
