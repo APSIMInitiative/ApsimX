@@ -425,6 +425,9 @@
 
                 if (posMacro < line.Length)
                     posMacro = line.IndexOf('[', posMacro + 1);
+
+                if (string.IsNullOrEmpty(line))
+                    break;
             }
 
             return line;
@@ -440,6 +443,8 @@
             object obj = model;
             foreach (var word in path.Split('.'))
             {
+                if (obj == null)
+                    return null;
                 if (word.EndsWith("()"))
                 {
                     // Process a method (with no arguments) call.
