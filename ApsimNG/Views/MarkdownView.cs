@@ -611,6 +611,9 @@ namespace UserInterface.Views
         private void SetCursorIfAppropriate(TextView textView, int x, int y)
         {
             TextIter iter = textView.GetIterAtLocation(x, y);
+            // fixme: When we remove gtk2 deps, we can eliminate this check
+            if (iter.Equals(TextIter.Zero))
+                return;
 
             var foundLink = false;
             foreach (TextTag tag in iter.Tags)
@@ -654,6 +657,9 @@ namespace UserInterface.Views
                         {
                             textView.WindowToBufferCoords(TextWindowType.Widget, (int)evt.X, (int)evt.Y, out int x, out int y);
                             TextIter iter = textView.GetIterAtLocation(x, y);
+                            // fixme: When we remove gtk2 deps, we can eliminate this check
+                            if (iter.Equals(TextIter.Zero))
+                                return;
 
                             foreach (var tag in iter.Tags)
                             {
