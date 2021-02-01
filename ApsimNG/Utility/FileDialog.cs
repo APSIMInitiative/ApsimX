@@ -8,6 +8,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using UserInterface.Extensions;
+    using UserInterface.Views;
 #if NETFRAMEWORK
     using MonoMac;
     using MonoMac.AppKit;
@@ -151,10 +152,13 @@
             else
                 throw new Exception("This file chooser dialog has specified more than one action type.");
 
-            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept)
-            {
-                SelectMultiple = selectMultiple
-            };
+#if NETFRAMEWORK
+            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept);
+#else
+            Window window = (Window)((ViewBase)ViewBase.MasterView).MainWidget;
+            FileChooserNative fileChooser = new FileChooserNative(Prompt, window, gtkActionType, buttonText, "Cancel");
+#endif
+            fileChooser.SelectMultiple = selectMultiple;
 
             if (!string.IsNullOrEmpty(FileType))
             {
@@ -178,8 +182,11 @@
             string[] fileNames = new string[0];
             if (fileChooser.Run() == (int)ResponseType.Accept)
                 fileNames = fileChooser.Filenames;
+#if NETFRAMEWORK
             fileChooser.Cleanup();
-
+#else
+            fileChooser.Dispose();
+#endif
             return fileNames;
         }
 #if NETFRAMEWORK
