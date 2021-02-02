@@ -473,7 +473,9 @@ namespace UserInterface.Views
 
             Gtk.Image image = null;
             if (File.Exists(absolutePath))
-                image = new Gtk.Image(absolutePath);
+                // Apparently the native gtk deps we ship with windows releases don't include
+                // gtk_image_new_from_file(). Therefore we avoid that particular constructor.
+                image = new Gtk.Image(new Pixbuf(absolutePath));
             else
             {
                 string imagePath = "ApsimNG.Resources." + url;
