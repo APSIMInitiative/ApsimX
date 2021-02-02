@@ -133,7 +133,7 @@ namespace UserInterface.Presenters
         /// <param name="obj">Object whose members will be retrieved.</param>
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             return obj.GetType().GetProperties(flags);
         }
 
