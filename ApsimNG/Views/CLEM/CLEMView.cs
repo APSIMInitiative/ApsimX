@@ -136,7 +136,12 @@ namespace UserInterface.Views
                 frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
                 HBox hbox = new HBox();
                 uint border = 0;
-                if (tabName != "Properties" & tabName != "Display" & tabName != "Data")
+                //if (tabName != "Properties" & tabName != "Display" & tabName != "Data")
+                if (tabName == "Properties")
+                {
+                    border = 5;
+                }
+                else if (tabName != "Display" & tabName != "Data")
                 {
                     border = 10;
                 }

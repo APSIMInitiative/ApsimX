@@ -1,10 +1,6 @@
-
-// The basics are all here, but there are still a few things to be implemented:
-// Drag and drop is pinning an object so we can pass its address around as data. Is there a better way?
-// (Probably not really, as we go through a native layer, unless we can get by with the serialized XML).
-// Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.
-// Link doesn't work, but it appears that move and link aren't working in the Windows.Forms implementation either.
-// Actually, Move "works" here but doesn't undo correctly
+// Implements a tree view of categories and sub-categories to assit filtering property grid
+// Uses Category attribute of property (Category and SubCategory values) to define list
+// A right hand panel is used to display the property presenter
 
 namespace UserInterface.Views
 {
@@ -32,6 +28,7 @@ namespace UserInterface.Views
         private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;
         private Viewport rightHandView = null;
+        //private VBox rightHandView = null;
 
         private Menu popup = new Menu();
 
@@ -50,8 +47,10 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             rightHandView = (Viewport)builder.GetObject("RightHandView");
+            //rightHandView = (VBox)builder.GetObject("vbox2"); // ("RightHandView");
             mainWidget = vbox1;
-            rightHandView.ShadowType = ShadowType.EtchedOut;
+            rightHandView.ShadowType = ShadowType.None;
+            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -170,15 +169,16 @@ namespace UserInterface.Views
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
             // Create a Bitmap and draw the panel
-            int width;
-            int height;
-            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
-            panelWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            return bitmap;
+            //int width;
+            //int height;
+            //Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
+            //panelWindow.GetSize(out width, out height);
+            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
+            //byte[] buffer = screenshot.SaveToBuffer("png");
+            //System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
+            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
+            //return bitmap;
+            return new System.Drawing.Bitmap(1,1);
         }
 
         /// <summary>Show the wait cursor</summary>

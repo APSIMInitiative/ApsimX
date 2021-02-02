@@ -82,15 +82,25 @@ namespace UserInterface.Presenters
     {
         /// <summary>The visual instance</summary>
         private IPropertyTreeView treeview;
-        private IGridView gridview;
+        private IPropertyView propertyView;
 
         /// <summary>Presenter for the component</summary>
-        private PropertyPresenter propertyPresenter;
+        private SimplePropertyPresenter propertyPresenter;
 
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
         private Model model;
+
+        /// <summary>
+        /// The category name to filter for on the Category Attribute for the properties
+        /// </summary>
+        private string SelectedCategory { get; set; }
+
+        /// <summary>
+        /// The subcategory name to filter for on the Category Attribute for the properties
+        /// </summary>
+        private string SelectedSubCategory { get; set; }
 
         /// <summary>Initializes a new instance of the <see cref="PropertyTreePresenter" /> class</summary>
         public PropertyTreePresenter()
@@ -112,7 +122,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
-        public PropertyPresenter PropertyPresenter
+        public SimplePropertyPresenter PropertyPresenter
         {
             get
             {
@@ -140,7 +150,7 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.treeview = view as IPropertyTreeView;
-            this.TreeWidth = 180; // explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.
+            this.TreeWidth = 180; 
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
@@ -148,7 +158,7 @@ namespace UserInterface.Presenters
             this.RefreshTreeView();
 
             //Initialise the Right Hand View
-            this.propertyPresenter = new PropertyPresenter();
+            this.propertyPresenter = new SimplePropertyPresenter();
             this.ShowRightHandView();
         }
 
@@ -197,8 +207,8 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.propertyPresenter.CategoryFilter = "";
-            this.propertyPresenter.SubcategoryFilter = "";
+            this.SelectedCategory = "";
+            this.SelectedSubCategory = "";
             this.treeview.AddRightHandView(null); //add an Empty right hand view
         }
 
@@ -238,23 +248,24 @@ namespace UserInterface.Presenters
                         subcategory = path[3];
                         break;
                 }
-
-                this.propertyPresenter.CategoryFilter = category;
-                this.propertyPresenter.SubcategoryFilter = subcategory;
+                this.SelectedCategory = category;
+                this.SelectedSubCategory = subcategory;
+                this.propertyPresenter.Filter = IsPropertySelected;
             }
             else
             {
                 //this will show all the properties in the model 
                 //there will be no filtering on Category and Subcategory.
-                this.propertyPresenter.CategoryFilter = "";
-                this.propertyPresenter.SubcategoryFilter = "";
+                this.propertyPresenter.Filter = null;
+                this.SelectedCategory = "";
+                this.SelectedSubCategory = "";
             }
 
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
-            this.gridview = new GridView(this.treeview as ViewBase);
-            this.treeview.AddRightHandView(this.gridview);
-            this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);            
+            this.propertyView = new PropertyView(this.treeview as ViewBase);
+            this.treeview.AddRightHandView(this.propertyView);
+            this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);            
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
@@ -301,7 +312,6 @@ namespace UserInterface.Presenters
                         {
                             //get the attribute data
                             CategoryAttribute catAtt = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
-
                             //add the category name to the list of category items
                             categories.AddCategoryToTree(catAtt.Category);
                             //add the subcategory name to the list of subcategories for the category
@@ -312,7 +322,6 @@ namespace UserInterface.Presenters
                         {
                             //If there is not [Category] attribute at all on the property in the model.
                             //Add it to the "Unspecified" Category, and "Unspecified" Subcategory
-
                             categories.AddCategoryToTree("Unspecified");
                             CategoryItem catItem = categories.FindCategoryInTree("Unspecified");
                             catItem.AddSubcategoryName("Unspecified");
@@ -369,6 +378,40 @@ namespace UserInterface.Presenters
                 root.Children.Add(description);
             }
             return root;
-        }    
+        }
+
+
+        private bool IsPropertySelected(PropertyInfo property)
+        {
+            if ((this.SelectedCategory??"") != "") // a category has been selected
+            {
+                if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
+                {
+                    CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
+                    if (catAtt.Category == this.SelectedCategory)
+                    {
+                        if ((SelectedSubCategory ?? "") != "") // a sub category has been selected
+                        {
+                            // The catAtt.Subcategory is by default given a value of 
+                            // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
+                            // so this line below will also handle "Unspecified" subcategories.
+                            return (catAtt.Subcategory == this.SelectedSubCategory);
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    // if we are filtering on "Unspecified" category then there is no Category Attribute
+                    // just a Description Attribute on the property in the model.
+                    // So we still may need to include it in this case.
+                    return (this.SelectedCategory == "Unspecified");
+                }
+            }
+            return true;
+        }
     }
 }
