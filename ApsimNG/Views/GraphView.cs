@@ -1472,8 +1472,8 @@
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
-                                                         System.Globalization.CultureInfo.InvariantCulture));
+                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
+                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else
