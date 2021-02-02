@@ -76,13 +76,11 @@ namespace UserInterface.Presenters
                     if (propPresenterName == "UserInterface.Presenters.PropertyPresenter")
                     {
                         propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
+                        viewName = "UserInterface.Views.PropertyView";
                     }
                     else if (!presenterName.ToString().Contains("Property"))
                     {
                         propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
-                    }
-                    if (!viewName.ToString().Contains(".Property") | viewName.ToString().Contains(".GridView"))
-                    {
                         viewName = "UserInterface.Views.PropertyView";
                     }
 
