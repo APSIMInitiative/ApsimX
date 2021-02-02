@@ -71,15 +71,23 @@ namespace UserInterface.Presenters
                 {
                     presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     string propPresenterName = presenterName.ToString();
-                    if (!presenterName.ToString().Contains("Property"))
-                    {
-                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
-                    }
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     string viewName = viewAttribute.ToString();
+                    if (propPresenterName == "UserInterface.Presenters.PropertyPresenter")
+                    {
+                        propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
+                    }
+                    else if (!presenterName.ToString().Contains("Property"))
+                    {
+                        propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
+                    }
                     if (!viewName.ToString().Contains(".Property") & !viewName.ToString().Contains(".GridView"))
                     {
-                        viewName = "UserInterface.Views.GridView";
+                        viewName = "UserInterface.Views.PropertyView";
+                    }
+                    else
+                    {
+                        viewName = "UserInterface.Views.PropertyView";
                     }
 
                     string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };

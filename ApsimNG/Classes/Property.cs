@@ -8,6 +8,8 @@ namespace UserInterface.Classes
     using System.Reflection;
     using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
+    using Models.CLEM;
+    using Models.CLEM.Resources;
     using Models.Core;
     using Models.LifeCycle;
     using Models.Storage;
@@ -309,6 +311,49 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.MultiLineText;
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
+                    break;
+                case DisplayType.CLEMCropFileReader:
+                case DisplayType.CLEMPastureFileReader:
+                case DisplayType.CLEMResourceFileReader:
+                    DisplayMethod = PropertyType.DropDown;
+                    List<string> readersList = new List<string>();
+                    Simulation parentSimulation = model.FindAncestor<Simulation>();
+                    if (parentSimulation != null)
+                    {
+                        switch (displayType)
+                        {
+                            case DisplayType.CLEMCropFileReader:
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
+                                break;
+                            case DisplayType.CLEMPastureFileReader:
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
+                                break;
+                            case DisplayType.CLEMResourceFileReader:
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
+                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
+                                break;
+                            default:
+                                break;
+                        } 
+                    }
+                    DropDownOptions = readersList.ToArray();
+                    break;
+                case DisplayType.CLEMResource:
+                    DisplayMethod = PropertyType.DropDown;
+                    List<string> resources = new List<string>();
+                    ResourcesHolder resourcesHolder = model.FindInScope<ResourcesHolder>();
+                    if (resourcesHolder != null)
+                    {
+                        resources.AddRange(resourcesHolder.GetCLEMResourceNames(attrib.CLEMResourceGroups));
+                    }
+                    // add any extras elements provided to the list.
+                    if (attrib.CLEMExtraEntries != null)
+                    {
+                        resources.AddRange(attrib.CLEMExtraEntries);
+                    }
+                    DropDownOptions = resources.ToArray();
                     break;
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
