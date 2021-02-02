@@ -308,7 +308,7 @@
                 }
                 catch (Exception err)
                 {
-                    explorerPresenter.MainPresenter.ShowError(err);
+                    throw new Exception($"Unable to draw graph {graph.FullPath}", err);
                 }
             }
         }
