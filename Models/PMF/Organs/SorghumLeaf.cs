@@ -110,6 +110,11 @@ namespace Models.PMF.Organs
         /// </summary>
         public const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
 
+        /// <summary>
+        /// Flag to test if Microclimate is present
+        /// </summary>
+        public bool IgnoreMicroClimate { get; set; } = false;
+
         /// <summary>The plant</summary>
         [Link]
         public Plant Plant = null; //todo change back to private
@@ -230,16 +235,26 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen { get; set; }
-
-        /// <summary>Gets the cover dead.</summary>
-        public double CoverDead { get; set; }
+        public double CoverGreen
+        {
+            get
+            {
+                if (parentPlant != null && parentPlant.IsAlive)
+                    return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI / MaxCover)), 0.999999999);
+                return 0;
+            }
+        }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
         public double CoverTotal
         {
-            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
+            get
+            {
+                if (parentPlant != null && parentPlant.IsAlive)
+                    return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
+                return 0;
+            }
         }
 
         /// <summary>Gets or sets the height.</summary>
@@ -361,6 +376,12 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
+
+        /// <summary>The maximum cover</summary>
+        [Description("Max cover")]
+        [Units("max units")]
+        public double MaxCover = 1.0;
+
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
@@ -378,17 +399,30 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
 
-        /// <summary>Gets the total radiation intercepted.</summary>
+        /// <summary>Gets the cover dead.</summary>
+        [Units("0-1")]
+        public double CoverDead { get { return 1.0 - Math.Exp(-KDead * LAIDead); } }
+
+        /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadiationIntercepted
         {
             get
             {
-                return CoverGreen * MetData.Radn;
+                if (LightProfile != null)
+                {
+                    double TotalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        if (Double.IsNaN(LightProfile[i].amount))
+                            TotalRadn += 0;
+                        else TotalRadn += LightProfile[i].amount;
+                    return TotalRadn;
+                }
+                else
+                    return CoverGreen * MetData.Radn;
             }
         }
-
         /// <summary>Stress.</summary>
         [Description("Nitrogen Photosynthesis Stress")]
         public double NitrogenPhotoStress { get; set; }
@@ -500,8 +534,8 @@ namespace Models.PMF.Organs
 
             DltSenescedLaiN = 0.0;
             SenescedLai = 0.0;
-            CoverGreen = 0.0;
-            CoverDead = 0.0;
+            //CoverGreen = 0.0;
+            //CoverDead = 0.0;
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
             culms.Initialize();
@@ -604,8 +638,8 @@ namespace Models.PMF.Organs
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             
-            CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-            CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
+            //CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
+            //CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-0.03 * LAIDead), 0.0, 0.999999999);
             //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
 
             NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
