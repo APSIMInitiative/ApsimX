@@ -121,7 +121,6 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
-
                 foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
@@ -130,14 +129,12 @@
                 // Update axis maxima and minima
                 graphView.UpdateView();
 
-                // Get a list of series annotations.
-                DrawOnView(graph.GetAnnotationsToGraph());
-
                 // Format the axes.
                 foreach (Models.Axis a in graph.Axis)
-                {
                     FormatAxis(a);
-                }
+
+                // Get a list of series annotations.
+                DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the legend.
                 graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
@@ -312,7 +309,7 @@
                 }
                 catch (Exception err)
                 {
-                    explorerPresenter.MainPresenter.ShowError(err);
+                    throw new Exception($"Unable to draw graph {graph.FullPath}", err);
                 }
             }
         }
@@ -435,7 +432,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 

@@ -1502,8 +1502,8 @@
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
-                                                         System.Globalization.CultureInfo.InvariantCulture));
+                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
+                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else
@@ -1769,7 +1769,10 @@
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
             {
-                return axis.ActualMaximum;
+                if (double.IsNaN(axis.Maximum))
+                    return axis.ActualMaximum;
+                else
+                    return axis.Maximum;
             }
             else
                 return double.NaN;
@@ -1784,7 +1787,10 @@
 
             if (axis != null)
             {
-                return axis.ActualMinimum;
+                if (double.IsNaN(axis.Minimum))
+                    return axis.ActualMinimum;
+                else
+                    return axis.Minimum;
             }
             else
                 return double.NaN;

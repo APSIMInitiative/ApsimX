@@ -28,7 +28,7 @@
                         },			
                         {
                             "Name": "Species parameters",
-                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx",
+                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx"
                         }						
                     ]
                 },
@@ -363,16 +363,22 @@
                     ]
                 },
                 {
-                    "Name": "Stock (under review)",
+                    "Name": "Stock",
                     "Documents": [
                         {
                             "Name": "Validation",
-                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx"
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx"
                         },
                         {
-                            "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx",
+                            "Name": "Stock",
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx",
                             "ModelNameToDocument": "Stock"
+                        },
+                        {
+                            "Name": "Supplement",
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx",
+                            "ModelNameToDocument": "Supplement",
+                            "OutputFileName": "Supplement.pdf"
                         },
                         {
                             "Name": "GRAZPLAN animal biology model",
