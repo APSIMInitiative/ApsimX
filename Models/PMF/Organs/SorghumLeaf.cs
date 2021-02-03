@@ -375,6 +375,7 @@ namespace Models.PMF.Organs
         #region States and variables
 
         /// <summary>Gets or sets the k dead.</summary>
+        [Description("Extinction Coefficient (Dead)")]
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
 
         /// <summary>The maximum cover</summary>
@@ -423,16 +424,13 @@ namespace Models.PMF.Organs
                     return CoverGreen * MetData.Radn;
             }
         }
-        /// <summary>Stress.</summary>
-        [Description("Nitrogen Photosynthesis Stress")]
+        /// <summary>Nitrogen Photosynthesis Stress</summary>
         public double NitrogenPhotoStress { get; set; }
 
-        /// <summary>Stress.</summary>
-        [Description("Nitrogen Phenology Stress")]
+        /// <summary>Nitrogen Phenology Stress</summary>
         public double NitrogenPhenoStress { get; set; }
 
-        /// <summary>Stress.</summary>
-        [Description("Phosphorus Stress")]
+        /// <summary>Phosphorus Stress</summary>
         public double PhosphorusStress { get; set; }
 
         /// <summary>Final Leaf Number.</summary>
@@ -1004,25 +1002,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("Mj/m^2")]
         private IFunction senRadnCrit = null;
-
-        ///// <summary>The N retranslocation factor</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("/d")]
-        //protected IFunction NRetranslocationFactor = null;
-
-        ///// <summary>The N reallocation factor</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("/d")]
-        //protected IFunction nReallocationFactor = null;
-
-        // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //private IFunction nitrogenDemandSwitch = null;
-
-        ///// <summary>The DM retranslocation factor</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("/d")]
-        //private IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
