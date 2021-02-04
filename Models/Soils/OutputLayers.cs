@@ -121,12 +121,28 @@
             get { return Layers.MapMass(nutrientBalanceModel.Urea.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
+        ///<summary>Gets the soil urea N concentration of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("ppm")]
+        public double[] Ureappm
+        {
+            get { return Layers.MapConcentration(nutrientBalanceModel.Urea.kgha, waterBalanceModel.Thickness, Thickness, double.NaN); }
+        }
+
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
         [JsonIgnore]
         [Units("kg/ha")]
         public double[] NH4
         {
             get { return Layers.MapMass(nutrientBalanceModel.NH4.kgha, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil ammonium N concentration of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("ppm")]
+        public double[] NH4ppm
+        {
+            get { return Layers.MapConcentration(nutrientBalanceModel.NH4.kgha, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -137,12 +153,118 @@
             get { return Layers.MapMass(nutrientBalanceModel.NO3.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
+        ///<summary>Gets the soil nitrate N concentration of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("ppm")]
+        public double[] NO3ppm
+        {
+            get { return Layers.MapConcentration(nutrientBalanceModel.NO3.kgha, waterBalanceModel.Thickness, Thickness, double.NaN); }
+        }
+
+        ///<summary>Gets the soil mineral N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] MineralN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.MineralN, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil organic N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] OrganicN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Organic.N, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil fresh organic matter N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] FOMN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.FOM.N, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil microbial N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] MicrobialN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Microbial.N, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil total humic N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] HumicN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Humic.N, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil inert humic N content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] InertN
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Inert.N, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil fresh organic matter C content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] FOMC
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.FOM.C, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil microbial C content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] MicrobialC
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Microbial.C, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil total humic C content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] HumicC
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Humic.C, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil inert humic C content of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("kg/ha")]
+        public double[] InertC
+        {
+            get { return Layers.MapMass(nutrientBalanceModel.Inert.C, waterBalanceModel.Thickness, Thickness); }
+        }
+
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
         [JsonIgnore]
         [Units("%")]
         public double[] OrganicC
         {
-            get { return Layers.MapConcentration(nutrientBalanceModel.Organic.C, soilPhysicalProperties.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapMass(nutrientBalanceModel.Organic.C, waterBalanceModel.Thickness, Thickness); }
+        }
+
+        ///<summary>Gets the soil organic carbon concentration of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("%")]
+        public double[] OC
+        {
+            get
+            {
+                double[] modelOC = new double[waterBalanceModel.Thickness.Length];
+                for (int layer = 0; layer < waterBalanceModel.Thickness.Length; ++layer)
+                {
+                    modelOC[layer] = (nutrientBalanceModel.Humic.C[layer] + nutrientBalanceModel.Microbial.C[layer])
+                                   / (soilPhysicalProperties.BD[layer]*waterBalanceModel.Thickness[layer]) / 100.0;
+                }
+
+                return Layers.MapConcentration(modelOC, waterBalanceModel.Thickness, Thickness, double.NaN);
+            }
         }
     }
 }
