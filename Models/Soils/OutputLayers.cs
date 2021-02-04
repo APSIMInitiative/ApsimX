@@ -9,7 +9,7 @@
 
     /// <summary>
     /// This class takes soil variables simulated at each of the modelled soil layers and maps them onto a new specified layering.
-    /// The outputs can be used for producing summaries and to facilitate comparison with observed data.
+    /// The outputs can be used for producing summaries and rearrange outputs to facilitate comparison with observed data.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Soil))]
@@ -19,12 +19,12 @@
     {
         /// <summary>Access the soil physical properties.</summary>
         [Link] 
-        private IPhysical soilPhysical = null;
+        private IPhysical soilPhysicalProperties = null;
         
-        /// <summary>Access the soil physical properties.</summary>
+        /// <summary>Access the soil water model.</summary>
         [Link]
-        private ISoilWater waterBalance = null;
-        
+        private ISoilWater waterBalanceModel = null;
+
         [Link]
         Soils.Sample initial = null;
 
@@ -49,7 +49,7 @@
         [Units("mm/mm")]
         public double[] SW
         {
-            get { return Layers.MapConcentration(waterBalance.SW, waterBalance.LayerThickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(waterBalanceModel.SW, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the current soil water amount of each mapped layer.</summary>
@@ -57,7 +57,7 @@
         [Units("mm")]
         public double[] SWmm
         {
-            get { return Layers.MapMass(waterBalance.SWmm, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(waterBalanceModel.SWmm, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
@@ -65,7 +65,7 @@
         [Units("mm/mm")]
         public double[] PAW
         {
-            get { return Layers.MapConcentration(waterBalance.PAW, waterBalance.LayerThickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(waterBalanceModel.PAW, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the plant available water amount of each mapped layer.</summary>
@@ -73,7 +73,7 @@
         [Units("mm")]
         public double[] PAWmm
         {
-            get { return Layers.MapMass(waterBalance.PAWmm, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(waterBalanceModel.PAWmm, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the lower limit of each mapped layer</summary>
@@ -81,7 +81,7 @@
         [Units("mm/mm")]
         public double[] LL15
         {
-            get { return Layers.MapConcentration(soilPhysical.LL15, waterBalance.LayerThickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(soilPhysicalProperties.LL15, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at the lower limit of each mapped layer.</summary>
@@ -89,7 +89,7 @@
         [Units("mm")]
         public double[] LL15mm
         {
-            get { return Layers.MapMass(soilPhysical.LL15mm, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(soilPhysicalProperties.LL15mm, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at the upper limit of each mapped layer</summary>
@@ -97,7 +97,7 @@
         [Units("mm/mm")]
         public double[] DUL
         {
-            get { return Layers.MapConcentration(soilPhysical.DUL, waterBalance.LayerThickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(soilPhysicalProperties.DUL, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at the upper limit of each mapped layer.</summary>
@@ -105,7 +105,7 @@
         [Units("mm")]
         public double[] DULmm
         {
-            get { return Layers.MapMass(soilPhysical.DULmm, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(soilPhysicalProperties.DULmm, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil water content at saturation of each mapped layer</summary>
@@ -113,7 +113,7 @@
         [Units("mm/mm")]
         public double[] SAT
         {
-            get { return Layers.MapConcentration(soilPhysical.SAT, waterBalance.LayerThickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(soilPhysicalProperties.SAT, waterBalanceModel.Thickness, Thickness, double.NaN); }
         }
 
         ///<summary>Gets the soil water amount at saturation of each mapped layer.</summary>
@@ -121,7 +121,7 @@
         [Units("mm")]
         public double[] SATmm
         {
-            get { return Layers.MapMass(soilPhysical.SATmm, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(soilPhysicalProperties.SATmm, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil urea N content of each mapped layer.</summary>
@@ -129,7 +129,7 @@
         [Units("kg/ha")]
         public double[] Urea
         {
-            get { return Layers.MapMass(UreaSolute.kgha, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(UreaSolute.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
@@ -137,7 +137,7 @@
         [Units("kg/ha")]
         public double[] NH4
         {
-            get { return Layers.MapMass(NH4Solute.kgha, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(NH4Solute.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -145,7 +145,7 @@
         [Units("kg/ha")]
         public double[] NO3
         {
-            get { return Layers.MapMass(NO3Solute.kgha, waterBalance.LayerThickness, Thickness); }
+            get { return Layers.MapMass(NO3Solute.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
@@ -153,7 +153,7 @@
         [Units("%")]
         public double[] OC
         {
-            get { return Layers.MapConcentration(initial.OC, soilPhysical.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(initial.OC, soilPhysicalProperties.Thickness, Thickness, double.NaN); }
         }
     }
 }
