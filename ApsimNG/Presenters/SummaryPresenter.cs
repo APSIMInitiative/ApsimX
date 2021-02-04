@@ -33,9 +33,15 @@
         [Link]
         private IDataStore dataStore = null;
 
-        // todo: caching for simulation-name based lookup
-        private IEnumerable<Message> messages;
-        private IEnumerable<InitialConditionsTable> initialConditions;
+        /// <summary>
+        /// This dictionary maps simulation names to lists of messages.
+        /// </summary>
+        private Dictionary<string, IEnumerable<Message>> messages = new Dictionary<string, IEnumerable<Message>>();
+
+        /// <summary>
+        /// This dictionary maps simulation names to lists of initial conditions tables.
+        /// </summary>
+        private Dictionary<string, IEnumerable<InitialConditionsTable>> initialConditions = new Dictionary<string, IEnumerable<InitialConditionsTable>>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
@@ -53,8 +59,10 @@
             summaryView.ShowWarnings = true;
             summaryView.ShowErrors = true;
             SetSimulationNamesInView();
-            messages = summaryModel.GetMessages(summaryView.SimulationDropDown.SelectedValue).ToArray();
-            initialConditions = summaryModel.GetInitialConditions(summaryView.SimulationDropDown.SelectedValue).ToArray();
+
+            string simulationName = summaryView.SimulationDropDown.SelectedValue;
+            messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
+            initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
             this.UpdateView();
 
@@ -127,43 +135,65 @@
         /// <summary>Populate the summary view.</summary>
         private void UpdateView()
         {
+            string simulationName = summaryView.SimulationDropDown.SelectedValue;
             StringBuilder markdown = new StringBuilder();
-            if (summaryView.ShowInitialConditions)
-                markdown.AppendLine(string.Join("", initialConditions.Select(i => i.ToMarkdown())));
 
-            IEnumerable<Message> filteredMessages = GetFilteredMessages();
-            var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
-            if (filteredMessages.Any())
+            // Show Initial Conditions.
+            if (summaryView.ShowInitialConditions)
             {
-                markdown.AppendLine($"## Simulation log");
-                markdown.AppendLine();
-                markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
-                {
-                    StringBuilder md = new StringBuilder();
-                    md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
-                    md.AppendLine();
-                    md.AppendLine("```");
-                    foreach (Message msg in m)
-                        md.AppendLine(msg.Text);
-                    md.AppendLine("```");
-                    md.AppendLine();
-                    return md.ToString();
-                })));
+                // Fetch initial conditions from the model for this simulation name.
+                if (!initialConditions.ContainsKey(simulationName))
+                    initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
+
+                markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
             }
+
+            // Show Messages.
+            if (summaryView.ShowInfo || summaryView.ShowWarnings || summaryView.ShowErrors)
+            {
+                // Fetch messages from the model for this simulation name.
+                if (!messages.ContainsKey(simulationName))
+                    messages[simulationName] = summaryModel.GetMessages(simulationName).ToArray();
+
+                IEnumerable<Message> filteredMessages = GetFilteredMessages(simulationName);
+                var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
+                if (filteredMessages.Any())
+                {
+                    markdown.AppendLine($"## Simulation log");
+                    markdown.AppendLine();
+                    markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
+                    {
+                        StringBuilder md = new StringBuilder();
+                        md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
+                        md.AppendLine();
+                        md.AppendLine("```");
+                        foreach (Message msg in m)
+                            md.AppendLine(msg.Text);
+                        md.AppendLine("```");
+                        md.AppendLine();
+                        return md.ToString();
+                    })));
+                }
+            }
+
             summaryView.SummaryDisplay.Text = markdown.ToString();
         }
 
-        private IEnumerable<Message> GetFilteredMessages()
+        private IEnumerable<Message> GetFilteredMessages(string simulationName)
         {
-            IEnumerable<Message> result = messages;
-            if (!summaryView.ShowInfo)
-                result = result.Where(m => m.Severity != ErrorLevel.Information);
-            if (!summaryView.ShowWarnings)
-                result = result.Where(m => m.Severity != ErrorLevel.Warning);
-            if (!summaryView.ShowErrors)
-                result = result.Where(m => m.Severity != ErrorLevel.Error);
+            if (messages.ContainsKey(simulationName))
+            {
+                IEnumerable<Message> result = messages[simulationName];
+                if (!summaryView.ShowInfo)
+                    result = result.Where(m => m.Severity != ErrorLevel.Information);
+                if (!summaryView.ShowWarnings)
+                    result = result.Where(m => m.Severity != ErrorLevel.Warning);
+                if (!summaryView.ShowErrors)
+                    result = result.Where(m => m.Severity != ErrorLevel.Error);
 
-            return result;
+                return result;
+            }
+            return Enumerable.Empty<Message>();
         }
 
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
