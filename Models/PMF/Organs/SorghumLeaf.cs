@@ -109,6 +109,66 @@ namespace Models.PMF.Organs
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction SenescedLeafSLN = null;
 
+            /// <summary>Input for TargetSLN</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction TargetSLN = null;
+
+            /// <summary>supply:demand ratio for onset of water senescence.</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SenThreshold = null;
+
+            /// <summary>Delay factor for water senescence.</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SenWaterTimeConst = null;
+
+            /// <summary>Radiation level for onset of light senescence.</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            [Units("Mj/m^2")]
+            public IFunction SenRadnCrit = null;
+
+            /// <summary> Light Senescence constant</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SenLightTimeConst = null;
+
+            /// <summary>The Biomass senescence rate function</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            [Units("/d")]
+            public IFunction SenescenceRate = null;
+
+            /// <summary>
+            /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+            /// </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction FrostKill = null;
+
+            /// <summary>Temperature threshold for leaf death.</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction FrostKillSevere = null;
+
+            /// <summary>Intercept for N Dilutions</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction NDilutionIntercept = null;
+
+            /// <summary>Slope for N Dilutions</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction NDilutionSlope = null;
+
+            /// <summary>/// The aX0 for this Culm </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction AX0 = null;
+
+            /// <summary>/// The aMaxSlope for this Culm </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction AMaxSlope = null;
+
+            /// <summary>/// The AMaxIntercept for this Culm </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction AMaxIntercept = null;
+
+            /// <summary> Leaf Initiation Rate </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction LeafInitRate = null;
+
         }
 
         /// <summary>The leaf cohort parameters</summary>
@@ -221,9 +281,6 @@ namespace Models.PMF.Organs
         //private IFunction TTEmergToFI = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafInitRate = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction SDRatio = null;
 
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
@@ -252,13 +309,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return leafInitRate?.Value() ?? 0;
+                return Parameters.LeafInitRate?.Value() ?? 0;
             }
         }
 
-        /// <summary>
-        /// Min Leaf Number.
-        /// </summary>
+        /// <summary>/// Min Leaf Number.</summary>
         public double MinLeafNo
         {
             get
@@ -268,9 +323,7 @@ namespace Models.PMF.Organs
 
         }
 
-        /// <summary>
-        /// Max Leaf Number.
-        /// </summary>
+        /// <summary>Max Leaf Number.</summary>
         public double MaxLeafNo
         {
             get
@@ -353,9 +406,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction Photosynthesis = null;
 
-        /// <summary>External calculation for largest leaf size.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction LargestLeafSize = null;
+        ///// <summary>External calculation for largest leaf size.</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //public IFunction LargestLeafSize = null;
 
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -373,47 +426,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction PotentialBiomassTEFunction = null;
         
-        
-        /// <summary>Input for TargetSLN</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction TargetSLN = null;
-
-        /// <summary>Intercept for N Dilutions</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction NDilutionIntercept = null;
-
-        /// <summary>Slope for N Dilutions</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction NDilutionSlope = null;
-
-        /// <summary>Slope for N Dilutions</summary>
+        /// <summary>MinPlant Weight</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction MinPlantWt = null;
-
-        /// <summary>/// The aX0 for this Culm </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction AX0 = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senLightTimeConst = null;
-
-        /// <summary>
-        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
-        /// </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction frostKill = null;
-
-        /// <summary>Temperature threshold for leaf death.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction frostKillSevere = null;
-
-        /// <summary>Delay factor for water senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senWaterTimeConst = null;
-
-        /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senThreshold = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStress = null;
@@ -703,21 +718,24 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return senRadnCrit.Value();
+                return Parameters.SenRadnCrit.Value();
             }
         }
 
         /// <summary>sen_light_time_const.</summary>
-        public double SenLightTimeConst { get { return senLightTimeConst.Value(); } }
+        public double SenLightTimeConst { get { return Parameters.SenLightTimeConst.Value(); } }
+
+        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+        public double FrostKill { get { return Parameters.FrostKill.Value(); } }
 
         /// <summary>temperature threshold for leaf death.</summary>
-        public double FrostKill { get { return frostKill.Value(); } }
+        public double FrostKillSevere { get { return Parameters.FrostKillSevere.Value(); } }
 
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        public double SenThreshold { get { return senThreshold.Value(); } }
+        public double SenThreshold { get { return Parameters.SenThreshold.Value(); } }
 
         /// <summary>Delay factor for water senescence.</summary>
-        public double SenWaterTimeConst { get { return senWaterTimeConst.Value(); } }
+        public double SenWaterTimeConst { get { return Parameters.SenWaterTimeConst.Value(); } }
 
         /// <summary>Only water stress at this stage.</summary>
         /// Diff between potentialLAI and stressedLAI
@@ -824,7 +842,7 @@ namespace Models.PMF.Organs
             if (weather.MinT > FrostKill || !Plant.IsEmerged)
                 return 0;
 
-            if (weather.MinT > frostKillSevere.Value())
+            if (weather.MinT > FrostKillSevere)
             {
                 // Temperature is warmer than frostKillSevere, but cooler than frostKill.
                 // So the plant will only die if between floral init - flowering.
@@ -906,8 +924,8 @@ namespace Models.PMF.Organs
             //avSD.push_back(plant->water->getSdRatio());
 
             double dltSlaiWater = 0.0;
-            if (SDRatio.Value() < senThreshold.Value())
-                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
+            if (SDRatio.Value() < Parameters.SenThreshold.Value())
+                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), Parameters.SenWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
             //return 0.0;
@@ -1041,16 +1059,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
-        /// <summary>The senescence rate function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        protected IFunction SenescenceRate = null;
-
-        /// <summary>Radiation level for onset of light senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("Mj/m^2")]
-        private IFunction senRadnCrit = null;
-
         /// <summary>The DM reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -1066,20 +1074,20 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
-        /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction maximumNConc = null;
+        ///// <summary>The maximum N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //protected IFunction maximumNConc = null;
 
-        /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction minimumNConc = null;
+        ///// <summary>The minimum N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //private IFunction minimumNConc = null;
 
-        /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction criticalNConc = null;
+        ///// <summary>The critical N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //private IFunction criticalNConc = null;
 
 //#pragma warning disable 414
         /// <summary>Carbon concentration</summary>
@@ -1161,15 +1169,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
-        public double MaxNconc { get { return maximumNConc.Value(); } }
+        public double MaxNconc { get { return 0; } } //maximumNConc.Value(); 
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double MinNconc { get { return minimumNConc.Value(); } }
+        public double MinNconc { get { return 0; } } //minimumNConc.Value();
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double CritNconc { get { return criticalNConc.Value(); } }
+        public double CritNconc { get { return 0; } } // criticalNConc.Value();
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -1216,7 +1224,7 @@ namespace Models.PMF.Organs
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         public double AvailableDMReallocation()
         {
-            double availableDM = StartLive.StorageWt * SenescenceRate.Value() * dmReallocationFactor.Value();
+            double availableDM = StartLive.StorageWt * Parameters.SenescenceRate.Value() * dmReallocationFactor.Value();
             if (availableDM < -BiomassToleranceValue)
                 throw new Exception("Negative DM reallocation value computed for " + Name);
 
@@ -1246,7 +1254,7 @@ namespace Models.PMF.Organs
                 throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
             // Same as metabolic demand in new apsim.
-            var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
+            var classicLeafDemand = Math.Max(0.0, calcLAI() * Parameters.TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
 
@@ -1268,7 +1276,7 @@ namespace Models.PMF.Organs
             //double nGreenToday = Live.N + BAT.TotalAllocation[leafIndex] + BAT.Retranslocation[leafIndex];
             double slnToday = calcSLN(laiToday, nGreenToday);
 
-            var dilutionN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = DltTT.Value() * (Parameters.NDilutionSlope.Value() * slnToday + Parameters.NDilutionIntercept.Value()) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if(phenology.Between("Germination", "Flowering"))
             {
@@ -1305,7 +1313,7 @@ namespace Models.PMF.Organs
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
-                var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                var maxN = DltTT.Value() * (Parameters.NDilutionSlope.Value() * slnToday + Parameters.NDilutionIntercept.Value()) * laiToday;
                 maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
@@ -1342,7 +1350,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = DltTT.Value() * (Parameters.NDilutionSlope.Value() * slnToday + Parameters.NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1372,7 +1380,7 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+                    var maxN = DltTT.Value() * (Parameters.NDilutionSlope.Value() * slnToday + Parameters.NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
                     double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0), 0.0);
@@ -1403,7 +1411,7 @@ namespace Models.PMF.Organs
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
-            var dilutionN = DltTT.Value() * ( NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
+            var dilutionN = DltTT.Value() * (Parameters.NDilutionSlope.Value() * slnToday + Parameters.NDilutionIntercept.Value()) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
