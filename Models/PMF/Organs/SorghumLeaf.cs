@@ -40,6 +40,79 @@ namespace Models.PMF.Organs
     public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage, ICanopy
     {
         //IHasWaterDemand, removing to see if it's necessary
+        /// <summary>
+        /// Collated Parameters
+        /// </summary>
+        [Serializable]
+        public class LeafParameters : Model
+        {
+            /// <summary>
+            /// Minimum Number of Leaves
+            /// </summary>
+            [Description("Minimum Number of Leaves")]
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction MinLeafNo = null;
+
+            /// <summary>
+            /// Minimum Number of Leaves
+            /// </summary>
+            [Description("Maximum Number of Leaves")]
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction MaxLeafNo = null;
+
+            /// <summary>
+            /// LeafNoDeadIntercept
+            /// </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction LeafNoDeadIntercept = null;
+
+            /// <summary>
+            /// LeafNoDeadSlope
+            /// </summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction LeafNoDeadSlope = null;
+
+            /// <summary>
+            /// Number of leaf primordia present in seed.
+            /// </summary>
+            [Link(Type = LinkType.Scoped, ByName = true)]
+            public IFunction LeafNumSeed = null;
+
+            /// <summary>The initial biomass dry matter weight</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            [Units("g/m2")]
+            public IFunction InitialLAIFunction = null;
+
+            /// <summary>The initial SLN value</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            [Units("g/m2")]
+            public IFunction InitialSLNFunction = null;
+
+            /// <summary>The initial biomass dry matter weight</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            [Units("g/m2")]
+            public IFunction InitialWtFunction = null;
+
+            /// <summary>The initial biomass dry matter weight</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SlaMin = null;
+
+            /// <summary>The initial biomass dry matter weight</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SlaMax = null;
+
+            /// <summary>Input for NewLeafSLN</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction NewLeafSLN = null;
+
+            /// <summary>Input for SenescedLeafSLN.</summary>
+            [Link(Type = LinkType.Child, ByName = true)]
+            public IFunction SenescedLeafSLN = null;
+
+        }
+
+        /// <summary>The leaf cohort parameters</summary>
+        [Link] LeafParameters Parameters = new LeafParameters();
 
         #region Canopy interface
 
@@ -138,20 +211,17 @@ namespace Models.PMF.Organs
         [Link]
         public IWeather MetData = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction minLeafNo = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction minLeafNo = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction maxLeafNo = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction maxLeafNo = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction TTEmergToFI = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction TTEmergToFI = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafInitRate = null;
-
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private IFunction LeafNumSeed = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction SDRatio = null;
@@ -171,7 +241,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return LeafNumSeed?.Value() ?? 0;
+                return Parameters.LeafNumSeed?.Value() ?? 0;
             }
         }
 
@@ -193,8 +263,9 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return minLeafNo.Value();
+                return Parameters.MinLeafNo.Value();
             }
+
         }
 
         /// <summary>
@@ -204,7 +275,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return maxLeafNo.Value();
+                return Parameters.MaxLeafNo.Value();
             }
         }
 
@@ -302,17 +373,10 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction PotentialBiomassTEFunction = null;
         
-        /// <summary>Input for NewLeafSLN</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction NewLeafSLN = null;
         
         /// <summary>Input for TargetSLN</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction TargetSLN = null;
-
-        /// <summary>Input for SenescedLeafSLN.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction SenescedLeafSLN = null;
 
         /// <summary>Intercept for N Dilutions</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -353,12 +417,6 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStress = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafNoDeadIntercept = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafNoDeadSlope = null;
 
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
@@ -464,16 +522,6 @@ namespace Models.PMF.Organs
 
         #region Events
 
-        /// <summary>
-        /// Calculates final leaf number. Doesn't update any globals.
-        /// </summary>
-        /// <returns></returns>
-        private double CalcFinalLeafNo()
-        {
-            double ttFi = TTEmergToFI.Value();
-            return MathUtilities.Bound(MathUtilities.Divide(ttFi, LeafInitRate, 0) + SeedNo, MinLeafNo, MaxLeafNo);
-        }
-
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
         private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
@@ -482,10 +530,10 @@ namespace Models.PMF.Organs
             {
                 LeafInitialised = true;
 
-                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
+                Live.StructuralWt = Parameters.InitialWtFunction.Value() * SowingDensity;
                 Live.StorageWt = 0.0;
-                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
-                SLN = initialSLNFunction.Value();
+                LAI = Parameters.InitialLAIFunction.Value() * smm2sm * SowingDensity;
+                SLN = Parameters.InitialSLNFunction.Value();
 
                 Live.StructuralN = LAI * SLN;
                 Live.StorageN = 0;
@@ -883,7 +931,7 @@ namespace Models.PMF.Organs
         private double CalcDltDeadLeaves()
         {
             double nDeadYesterday = nDeadLeaves;
-            double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * phenology.AccumulatedEmergedTT);
+            double nDeadToday = FinalLeafNo * (Parameters.LeafNoDeadIntercept.Value() + Parameters.LeafNoDeadSlope.Value() * phenology.AccumulatedEmergedTT);
             nDeadToday = MathUtilities.Bound(nDeadToday, nDeadYesterday, FinalLeafNo);
             return nDeadToday - nDeadYesterday;
         }
@@ -1017,21 +1065,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
-
-        /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2")]
-        private IFunction initialWtFunction = null;
-
-        /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2")]
-        private IFunction initialLAIFunction = null;
-
-        /// <summary>The initial SLN value</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2")]
-        private IFunction initialSLNFunction = null;
 
         /// <summary>The maximum N concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -1253,12 +1286,12 @@ namespace Models.PMF.Organs
                     // Only half of the requiredN can be accounted for by reducing DltLAI
                     // If the RequiredN is large enough, it will result in 0 new growth
                     // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
-                    double n = DltLAI * NewLeafSLN.Value();
+                    double n = DltLAI * Parameters.NewLeafSLN.Value();
                     double laiN = Math.Min(n, requiredN / 2.0);
                     // dh - we don't make this check in old apsim
                     if (MathUtilities.IsPositive(laiN))
                     {
-                        DltLAI = (n - laiN) / NewLeafSLN.Value();
+                        DltLAI = (n - laiN) / Parameters.NewLeafSLN.Value();
                         if (forLeaf)
                         {
                             // should we update the StructuralDemand?
@@ -1276,19 +1309,19 @@ namespace Models.PMF.Organs
                 maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
-                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0), 0.0);
 
                 // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+                senescenceLAI = Math.Min(senescenceLAI, Live.N * Parameters.SenescedLeafSLN.Value() - DltSenescedN);
 
-                double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                double newN = Math.Max(senescenceLAI * (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0);
                 DltRetranslocatedN -= newN;
                 nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
 
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                DltSenescedN += senescenceLAI * Parameters.SenescedLeafSLN.Value();
 
                 return nProvided;
             }
@@ -1312,19 +1345,19 @@ namespace Models.PMF.Organs
                     var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0), 0.0);
 
                     // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * Parameters.SenescedLeafSLN.Value() - DltSenescedN);
 
-                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
                     
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                    DltSenescedN += senescenceLAI * Parameters.SenescedLeafSLN.Value();
                     return nProvided;
                 }
                 else
@@ -1342,19 +1375,19 @@ namespace Models.PMF.Organs
                     var maxN = DltTT.Value() * (NDilutionSlope.Value() * slnToday + NDilutionIntercept.Value()) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN.Value()), 0.0), 0.0);
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0), 0.0);
 
                     // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN.Value() - DltSenescedN);
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * Parameters.SenescedLeafSLN.Value() - DltSenescedN);
 
-                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN.Value()), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - Parameters.SenescedLeafSLN.Value()), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
                     
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * SenescedLeafSLN.Value();
+                    DltSenescedN += senescenceLAI * Parameters.SenescedLeafSLN.Value();
                     return nProvided;
                 }
             }
@@ -1364,7 +1397,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            var availableLaiN = DltLAI * NewLeafSLN.Value();
+            var availableLaiN = DltLAI * Parameters.NewLeafSLN.Value();
 
             double laiToday = calcLAI();
             double nGreenToday = Live.N;
@@ -1587,7 +1620,7 @@ namespace Models.PMF.Organs
                 //// List the parameters, properties, and processes from this organ that need to be documented:
 
                 // document initial DM weight
-                IModel iniWt = this.FindChild("initialWtFunction");
+                IModel iniWt = this.FindChild("InitialWtFunction");
                 AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 1, indent);
 
                 // document DM demands
