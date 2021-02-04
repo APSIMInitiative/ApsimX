@@ -150,7 +150,7 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.treeview = view as IPropertyTreeView;
-            this.TreeWidth = 180; 
+            this.TreeWidth = 120; 
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
@@ -264,6 +264,7 @@ namespace UserInterface.Presenters
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
             this.propertyView = new PropertyView(this.treeview as ViewBase);
+            (this.propertyView as PropertyView).DisplayFrame = false;
             this.treeview.AddRightHandView(this.propertyView);
             this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);            
         }

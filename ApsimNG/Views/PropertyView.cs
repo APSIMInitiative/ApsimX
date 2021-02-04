@@ -50,6 +50,11 @@ namespace UserInterface.Views
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
 
         /// <summary>
+        /// Determines whether the frame and label are displayed for this group
+        /// </summary>
+        public bool DisplayFrame { get; set; } = true;
+
+        /// <summary>
         /// Used to check which entries are 'dirty' by keeping track
         /// of their original text.
         /// </summary>
@@ -100,12 +105,22 @@ namespace UserInterface.Views
                     }
                 }
             }
-            box.Label = $"{properties.Name} Properties";
+
+            if(DisplayFrame)
+            {
+                box.Label = $"{properties.Name} Properties";
+            }
+            else
+            {
+                box.ShadowType = ShadowType.None;
+                box.Label = null;
+            }
             propertyTable.Destroy();
 
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
             propertyTable = new Table((uint)properties.Count(), 3, false);
+            propertyTable.RowSpacing = 3;
 
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
