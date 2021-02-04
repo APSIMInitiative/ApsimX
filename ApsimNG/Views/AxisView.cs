@@ -60,10 +60,14 @@
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             checkbutton2 = (CheckButton)builder.GetObject("checkbutton2");
             mainWidget = table1;
-            entryTitle.Changed += TitleTextBox_TextChanged;
-            entryMin.Changed += OnMinimumChanged;
-            entryMax.Changed += OnMaximumChanged;
-            entryInterval.Changed += OnIntervalChanged;
+            entryTitle.FocusOutEvent += TitleTextBox_TextChanged;
+            entryMin.FocusOutEvent += OnMinimumChanged;
+            entryMax.FocusOutEvent += OnMaximumChanged;
+            entryInterval.FocusOutEvent += OnIntervalChanged;
+            entryTitle.Activated += TitleTextBox_TextChanged;
+            entryMin.Activated += OnMinimumChanged;
+            entryMax.Activated += OnMaximumChanged;
+            entryInterval.Activated += OnIntervalChanged;
             checkbutton1.Toggled += OnCheckedChanged;
             checkbutton2.Toggled += OnCrossesAtZeroChanged;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -276,10 +280,14 @@
         {
             try
             {
-                entryTitle.Changed -= TitleTextBox_TextChanged;
+                entryTitle.FocusOutEvent -= TitleTextBox_TextChanged;
                 entryMin.FocusOutEvent -= OnMinimumChanged;
                 entryMax.FocusOutEvent -= OnMaximumChanged;
                 entryInterval.FocusOutEvent -= OnIntervalChanged;
+                entryTitle.Activated -= TitleTextBox_TextChanged;
+                entryMin.Activated -= OnMinimumChanged;
+                entryMax.Activated -= OnMaximumChanged;
+                entryInterval.Activated -= OnIntervalChanged;
                 checkbutton1.Toggled -= OnCheckedChanged;
                 checkbutton2.Toggled -= OnCheckedChanged;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;

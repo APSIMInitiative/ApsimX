@@ -141,12 +141,21 @@
         }
 
         /// <summary>
-        /// Get the summary of a type.
+        /// Get the summary of a type removing CRLF.
         /// </summary>
         /// <param name="t">The type to get the summary for.</param>
         public static string GetSummary(Type t)
         {
             return GetSummary(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the summary of a type without removing CRLF.
+        /// </summary>
+        /// <param name="t">The type to get the summary for.</param>
+        public static string GetSummaryRaw(Type t)
+        {
+            return GetSummaryRaw(t.FullName, 'T');
         }
 
         /// <summary>
@@ -188,6 +197,22 @@
         /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
         private static string GetSummary(string path, char typeLetter)
         {
+            var rawSummary = GetSummaryRaw(path, typeLetter);
+            if (rawSummary != null)
+            {
+                // Need to fix multiline comments - remove newlines and consecutive spaces.
+                return Regex.Replace(rawSummary, @"\n\s+", " ");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the summary of a member (class, field, property)
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        private static string GetSummaryRaw(string path, char typeLetter)
+        {
             if (string.IsNullOrEmpty(path))
                 return path;
 
@@ -203,11 +228,7 @@
             string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
-            {
-                // Need to fix multiline comments - remove newlines and consecutive spaces.
-                string summary = summaryNode.InnerXml.Trim();
-                return Regex.Replace(summary, @"\n\s+", " ");
-            }
+                return summaryNode.InnerXml.Trim();
             return null;
         }
 
@@ -404,6 +425,9 @@
 
                 if (posMacro < line.Length)
                     posMacro = line.IndexOf('[', posMacro + 1);
+
+                if (string.IsNullOrEmpty(line))
+                    break;
             }
 
             return line;
@@ -419,6 +443,8 @@
             object obj = model;
             foreach (var word in path.Split('.'))
             {
+                if (obj == null)
+                    return null;
                 if (word.EndsWith("()"))
                 {
                     // Process a method (with no arguments) call.
