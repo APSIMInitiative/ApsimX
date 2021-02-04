@@ -26,19 +26,8 @@
         private ISoilWater waterBalanceModel = null;
 
         [Link]
-        Soils.Sample initial = null;
+        private INutrient nutrientBalanceModel = null;
 
-        private ISolute NO3Solute = null;
-        private ISolute NH4Solute = null;
-        private ISolute UreaSolute = null;
-
-        /// <summary>Constructor</summary>
-        public OutputLayers()
-        {
-            NO3Solute = this.FindInScope("NO3") as ISolute;
-            NH4Solute = this.FindInScope("NH4") as ISolute;
-            UreaSolute = this.FindInScope("Urea") as ISolute;
-        }
 
         /// <summary>Gets or sets the thickness of each layer.</summary>
         [Description("Depth (mm)")]
@@ -129,7 +118,7 @@
         [Units("kg/ha")]
         public double[] Urea
         {
-            get { return Layers.MapMass(UreaSolute.kgha, waterBalanceModel.Thickness, Thickness); }
+            get { return Layers.MapMass(nutrientBalanceModel.Urea.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil ammonium N content of each mapped layer.</summary>
@@ -137,7 +126,7 @@
         [Units("kg/ha")]
         public double[] NH4
         {
-            get { return Layers.MapMass(NH4Solute.kgha, waterBalanceModel.Thickness, Thickness); }
+            get { return Layers.MapMass(nutrientBalanceModel.NH4.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil nitrate N content of each mapped layer.</summary>
@@ -145,15 +134,15 @@
         [Units("kg/ha")]
         public double[] NO3
         {
-            get { return Layers.MapMass(NO3Solute.kgha, waterBalanceModel.Thickness, Thickness); }
+            get { return Layers.MapMass(nutrientBalanceModel.NO3.kgha, waterBalanceModel.Thickness, Thickness); }
         }
 
         ///<summary>Gets the soil organic carbon content of each mapped layer.</summary>
         [JsonIgnore]
         [Units("%")]
-        public double[] OC
+        public double[] OrganicC
         {
-            get { return Layers.MapConcentration(initial.OC, soilPhysicalProperties.Thickness, Thickness, double.NaN); }
+            get { return Layers.MapConcentration(nutrientBalanceModel.Organic.C, soilPhysicalProperties.Thickness, Thickness, double.NaN); }
         }
     }
 }
