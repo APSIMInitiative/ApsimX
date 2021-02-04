@@ -15,6 +15,8 @@
     using Models.Soils.Standardiser;
     using Models;
     using Storage;
+    using Logging;
+    using System.Linq;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -259,11 +261,57 @@
             {
                 foreach (string simulationName in storage.Reader.SimulationNames)
                 {
-                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme);
+                    Summary.WriteReport(storage, simulationName, report, null, outtype: Summary.OutputType.html, darkTheme : darkTheme, true, true, true, true);
                     report.WriteLine();
                     report.WriteLine();
                     report.WriteLine("############################################################################");
                 }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="simulationName"></param>
+        public IEnumerable<Message> GetMessages(string simulationName)
+        {
+            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            DataTable messages = storage.Reader.GetData("_Messages", simulationName: simulationName);
+            string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
+            foreach (DataRow row in messages.Rows)
+            {
+                DateTime date = (DateTime)row["Date"];
+                string text = row["Message"]?.ToString();
+                string relativePath = row["ComponentName"]?.ToString();
+                IModel model = FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                if (!Enum.TryParse<Simulation.ErrorLevel>(row["MessageType"]?.ToString(), out Simulation.ErrorLevel severity))
+                    severity = Simulation.ErrorLevel.Information;
+                yield return new Message(date, text, model, severity, simulationName, relativePath);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="simulationName"></param>
+        public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
+        {
+            IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            DataTable table = storage.Reader.GetData("_InitialConditions", simulationName: simulationName);
+            string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
+            foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
+            {
+                string relativePath = group.Key;
+                IModel model = FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                yield return new InitialConditionsTable(model, group.Select(r => new InitialCondition()
+                {
+                    Name = r["Name"]?.ToString(),
+                    Description = r["Description"]?.ToString(),
+                    TypeName = r["DataType"]?.ToString(),
+                    Units = r["Units"]?.ToString(),
+                    DisplayFormat = r["DisplayFormat"]?.ToString(),
+                    Value = r["Value"]?.ToString()
+                }), relativePath);
             }
         }
 
@@ -276,13 +324,21 @@
         /// <param name="apsimSummaryImageFileName">The file name for the logo. Can be null</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="darkTheme">Whether or not the dark theme should be used.</param>
+        /// <param name="showInfo"></param>
+        /// <param name="showWarnings"></param>
+        /// <param name="showErrors"></param>
+        /// <param name="showInitialConditions"></param>
         public static void WriteReport(
             IDataStore storage,
             string simulationName,
             TextWriter writer,
             string apsimSummaryImageFileName,
             OutputType outtype,
-            bool darkTheme)
+            bool darkTheme,
+            bool showInfo,
+            bool showWarnings,
+            bool showErrors,
+            bool showInitialConditions)
         {
             Document document = null;
             RtfDocumentRenderer renderer = null;
@@ -360,45 +416,48 @@
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
-            if (initialConditionsTable != null)
+            if (showInitialConditions)
             {
-                // Convert the '_InitialConditions' table in the DataStore to a series of
-                // DataTables for each model.
-                List<DataTable> tables = new List<DataTable>();
-                ConvertInitialConditionsToTables(initialConditionsTable, tables);
-
-                // Now write all tables to our report.
-                for (int i = 0; i < tables.Count; i += 2)
+                DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
+                if (initialConditionsTable != null)
                 {
-                    // Only write something to the summary file if we have something to write.
-                    if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
+                    // Convert the '_InitialConditions' table in the DataStore to a series of
+                    // DataTables for each model.
+                    List<DataTable> tables = new List<DataTable>();
+                    ConvertInitialConditionsToTables(initialConditionsTable, tables);
+
+                    // Now write all tables to our report.
+                    for (int i = 0; i < tables.Count; i += 2)
                     {
-                        string heading = tables[i].TableName;
-                        WriteHeading(writer, heading, outtype, document);
+                        // Only write something to the summary file if we have something to write.
+                        if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
+                        {
+                            string heading = tables[i].TableName;
+                            WriteHeading(writer, heading, outtype, document);
 
-                        // Write the manager script.
-                        if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
-                        {
-                            WriteScript(writer, tables[i].Rows[0], outtype, document);
-                        }
-                        else
-                        {
-                            // Write the properties table if we have any properties.
-                            if (tables[i].Rows.Count > 0)
+                            // Write the manager script.
+                            if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
                             {
-                                WriteTable(writer, tables[i], outtype, "PropertyTable", document);
+                                WriteScript(writer, tables[i].Rows[0], outtype, document);
+                            }
+                            else
+                            {
+                                // Write the properties table if we have any properties.
+                                if (tables[i].Rows.Count > 0)
+                                {
+                                    WriteTable(writer, tables[i], outtype, "PropertyTable", document);
+                                }
+
+                                // Write the general data table if we have any data.
+                                if (tables[i + 1].Rows.Count > 0)
+                                {
+                                    WriteTable(writer, tables[i + 1], outtype, "ApsimTable", document);
+                                }
                             }
 
-                            // Write the general data table if we have any data.
-                            if (tables[i + 1].Rows.Count > 0)
-                            {
-                                WriteTable(writer, tables[i + 1], outtype, "ApsimTable", document);
-                            }
+                            if (outtype == OutputType.html)
+                                writer.WriteLine("<br/>");
                         }
-
-                        if (outtype == OutputType.html)
-                            writer.WriteLine("<br/>");
                     }
                 }
             }
@@ -406,7 +465,7 @@
             // Write out all messages.
             WriteHeading(writer, "Simulation log:", outtype, document, "log");
             DataTable messageTable = GetMessageTable(storage, simulationName);
-            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
+            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document, showInfo, showWarnings, showErrors);
 
             if (outtype == OutputType.html)
             {
@@ -434,12 +493,14 @@
             {
                 messageTable.Columns.Add("Date", typeof(string));
                 messageTable.Columns.Add("Message", typeof(string));
+                messageTable.Columns.Add("MessageType", typeof(Simulation.ErrorLevel));
                 string previousCol1Text = null;
                 string previousMessage = null;
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
                     string modelName = (string)row["ComponentName"];
+                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row["MessageType"].ToString());
 
                     string col1Text;
                     if (row["Date"].GetType() == typeof(DateTime))
@@ -455,7 +516,7 @@
                     {
                         if (previousCol1Text != null)
                         {
-                            messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage });
+                            messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage, errorLevel });
                         }
 
                         previousMessage = string.Empty;
@@ -467,7 +528,6 @@
                     }
 
                     string message = (string)row["Message"];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row["MessageType"].ToString());
 
                     if (errorLevel == Simulation.ErrorLevel.Error)
                     {
@@ -486,7 +546,7 @@
                 }
                 if (previousMessage != null)
                 {
-                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage });
+                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage, Simulation.ErrorLevel.Information });
                 }
             }
 
@@ -706,10 +766,21 @@
         /// <param name="includeHeadings">Include headings in the html table produced?</param>
         /// <param name="className">The class name of the generated html table</param>
         /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
-        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document)
+        /// <param name="showInfo"></param>
+        /// <param name="showWarnings"></param>
+        /// <param name="showErrors"></param>
+        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document, bool showInfo, bool showWarnings, bool showErrors)
         {
             foreach (DataRow row in table.Rows)
             {
+                var messageType = (Simulation.ErrorLevel)row["MessageType"];
+                if (messageType == Simulation.ErrorLevel.Information && !showInfo)
+                    continue;
+                if (messageType == Simulation.ErrorLevel.Warning && !showWarnings)
+                    continue;
+                if (messageType == Simulation.ErrorLevel.Error && !showErrors)
+                    continue;
+
                 if (outtype == OutputType.html)
                 {
                     writer.WriteLine("<h3>" + row[0] + "</h3>");

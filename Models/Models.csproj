@@ -699,6 +699,9 @@
     <Compile Include="Soils\TillageType.cs" />
     <Compile Include="Soils\Physical.cs" />
     <Compile Include="Summary.cs" />
+    <Compile Include="Logging\Message.cs" />
+    <Compile Include="Logging\InitialConditionsTable.cs" />
+    <Compile Include="Logging\InitialCondition.cs" />
     <Compile Include="Surface\AddFaecesType.cs" />
     <Compile Include="Surface\OMFractionType.cs" />
     <Compile Include="Surface\SurfaceOrganicMatter.cs" />
