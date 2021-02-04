@@ -120,7 +120,6 @@ namespace UserInterface.Views
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
             propertyTable = new Table((uint)properties.Count(), 3, false);
-            propertyTable.RowSpacing = 3;
 
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
