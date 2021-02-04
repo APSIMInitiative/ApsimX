@@ -30,6 +30,29 @@
 
         private Button btnJumpToSimLog;
 
+        /// <summary>
+        /// An expander widget which holds all of the widgets
+        /// controlling summary message filtering.
+        /// </summary>
+        private Expander filterExpander;
+
+        /// <summary>
+        /// An expander widget which holds all of the widgets controlling
+        /// summary message sorting.
+        /// </summary>
+        private Expander sortExpander;
+        private CheckButton chkShowInfo;
+        private CheckButton chkShowWarnings;
+        private CheckButton chkShowErrors;
+        private CheckButton chkShowInitialConditions;
+
+        public bool ShowErrors { get => chkShowErrors.Active; set => chkShowErrors.Active = value; }
+        public bool ShowWarnings { get => chkShowWarnings.Active; set => chkShowWarnings.Active = value; }
+        public bool ShowInfo { get => chkShowInfo.Active; set => chkShowInfo.Active = value; }
+        public bool ShowInitialConditions { get => chkShowInitialConditions.Active; set => chkShowInitialConditions.Active = value; }
+
+        public event EventHandler FiltersChanged;
+
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
@@ -40,6 +63,8 @@
             WarningCheckBox.TextOfLabel = "Capture warning messages?";
             ErrorCheckBox = new CheckBoxView(this);
             ErrorCheckBox.TextOfLabel = "Capture error messages?";
+            filterExpander = CreateFilteringWidgets();
+            sortExpander = CreateSortingWidgets();
             topBox.PackStart(SummaryCheckBox.MainWidget, false, false, 10);
             topBox.PackStart(WarningCheckBox.MainWidget, false, false, 10);
             topBox.PackStart(ErrorCheckBox.MainWidget, false, false, 10);
@@ -57,6 +82,8 @@
             mainControl = new VBox();
             mainWidget = mainControl;
             mainControl.PackStart(topBox, false, false, 0);
+            mainControl.PackStart(filterExpander, false, false, 0);
+            mainControl.PackStart(sortExpander, false, false, 0);
             mainControl.PackStart(middleBox, false, false, 0);
             mainControl.PackStart(buttonContainer, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
@@ -78,6 +105,58 @@
 
             mainWidget.Destroyed += MainWidgetDestroyed;
             mainWidget.ShowAll();
+        }
+
+        private Expander CreateSortingWidgets()
+        {
+            Expander container = new Expander("Sorting");
+            
+            return container;
+        }
+
+        private Expander CreateFilteringWidgets()
+        {
+            chkShowInitialConditions = new CheckButton("Show Initial Conditions");
+            chkShowInfo = new CheckButton("Information");
+            chkShowWarnings = new CheckButton("Warnings");
+            chkShowErrors = new CheckButton("Errors");
+
+            chkShowInitialConditions.Toggled += OnFiltersChanged;
+            chkShowInfo.Toggled += OnFiltersChanged;
+            chkShowWarnings.Toggled += OnFiltersChanged;
+            chkShowErrors.Toggled += OnFiltersChanged;
+            
+            Box severityBox = new HBox();
+            severityBox.PackStart(chkShowInfo, false, false, 0);
+            severityBox.PackStart(chkShowWarnings, false, false, 0);
+            severityBox.PackStart(chkShowErrors, false, false, 0);
+
+            Box filtersBox = new VBox();
+            filtersBox.PackStart(chkShowInitialConditions, false, false, 0);
+            filtersBox.PackStart(severityBox, false, false, 0);
+
+            Expander filtersExpander = new Expander("Filtering");
+            filtersExpander.Add(filtersBox);
+            return filtersExpander;
+        }
+
+        /// <summary>
+        /// Callback invoked when any of the filtering options are changed
+        /// by the user. Fires of a FiltersChanged event to be handled
+        /// by the presenter.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnFiltersChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                FiltersChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnJumpToSimulationLog(object sender, EventArgs e)

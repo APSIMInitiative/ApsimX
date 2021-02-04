@@ -23,5 +23,26 @@ namespace UserInterface.Views
 
         /// <summary>View which displays the summary data.</summary>
         IMarkdownView SummaryDisplay { get; }
+
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        bool ShowErrors { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        bool ShowWarnings { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        bool ShowInfo { get; set; }
+
+        bool ShowInitialConditions { get; set; }
+
+        /// <summary>Called when the user changes the filtering options.</summary>
+        event EventHandler FiltersChanged;
     }
 }

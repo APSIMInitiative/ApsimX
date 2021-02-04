@@ -13,6 +13,9 @@
     using Models.Storage;
     using System.Collections.Generic;
     using Models.Core.Run;
+    using Models.Logging;
+    using ErrorLevel = Models.Core.Simulation.ErrorLevel;
+    using System.Text;
 
     /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
@@ -30,6 +33,10 @@
         [Link]
         private IDataStore dataStore = null;
 
+        // todo: caching for simulation-name based lookup
+        private IEnumerable<Message> messages;
+        private IEnumerable<InitialConditionsTable> initialConditions;
+
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model to work with</param>
         /// <param name="view">The view to attach to</param>
@@ -41,8 +48,15 @@
             summaryView = view as ISummaryView;
 
             // Populate the view.
+            summaryView.ShowInitialConditions = true;
+            summaryView.ShowInfo = true;
+            summaryView.ShowWarnings = true;
+            summaryView.ShowErrors = true;
             SetSimulationNamesInView();
-            this.SetHtmlInView();
+            messages = summaryModel.GetMessages(summaryView.SimulationDropDown.SelectedValue).ToArray();
+            initialConditions = summaryModel.GetInitialConditions(summaryView.SimulationDropDown.SelectedValue).ToArray();
+
+            this.UpdateView();
 
             summaryView.SummaryCheckBox.Checked = summaryModel.CaptureSummaryText;
             summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
@@ -50,12 +64,18 @@
             summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
             summaryView.ErrorCheckBox.Checked = summaryModel.CaptureErrors;
             summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
+            summaryView.FiltersChanged += OnFiltersChanged;
 
             // Subscribe to the simulation name changed event.
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
             // Subscribe to the view's copy event.
             //summaryView.SummaryDisplay.Copy += OnCopy;
+        }
+
+        private void OnFiltersChanged(object sender, EventArgs e)
+        {
+            UpdateView();
         }
 
         private void SetSimulationNamesInView()
@@ -105,13 +125,45 @@
         }
 
         /// <summary>Populate the summary view.</summary>
-        private void SetHtmlInView()
+        private void UpdateView()
         {
-            using (StringWriter writer = new StringWriter())
+            StringBuilder markdown = new StringBuilder();
+            if (summaryView.ShowInitialConditions)
+                markdown.AppendLine(string.Join("", initialConditions.Select(i => i.ToMarkdown())));
+
+            IEnumerable<Message> filteredMessages = GetFilteredMessages();
+            var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
+            if (filteredMessages.Any())
             {
-                Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.Markdown, darkTheme : Configuration.Settings.DarkTheme);
-                summaryView.SummaryDisplay.Text = writer.ToString();
+                markdown.AppendLine($"## Simulation log");
+                markdown.AppendLine();
+                markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
+                {
+                    StringBuilder md = new StringBuilder();
+                    md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
+                    md.AppendLine();
+                    md.AppendLine("```");
+                    foreach (Message msg in m)
+                        md.AppendLine(msg.Text);
+                    md.AppendLine("```");
+                    md.AppendLine();
+                    return md.ToString();
+                })));
             }
+            summaryView.SummaryDisplay.Text = markdown.ToString();
+        }
+
+        private IEnumerable<Message> GetFilteredMessages()
+        {
+            IEnumerable<Message> result = messages;
+            if (!summaryView.ShowInfo)
+                result = result.Where(m => m.Severity != ErrorLevel.Information);
+            if (!summaryView.ShowWarnings)
+                result = result.Where(m => m.Severity != ErrorLevel.Warning);
+            if (!summaryView.ShowErrors)
+                result = result.Where(m => m.Severity != ErrorLevel.Error);
+
+            return result;
         }
 
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
@@ -119,7 +171,7 @@
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
-            SetHtmlInView();
+            UpdateView();
         }
 
         private void OnSummaryCheckBoxChanged(object sender, EventArgs e)
