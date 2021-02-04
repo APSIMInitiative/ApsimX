@@ -33,6 +33,14 @@
         [Description("Depth (mm)")]
         public double[] Thickness { get; set; }
 
+        ///<summary>Gets the soil bulk density of each mapped layer.</summary>
+        [JsonIgnore]
+        [Units("g/cm3")]
+        public double[] BD
+        {
+            get { return Layers.MapConcentration(soilPhysicalProperties.BD, waterBalanceModel.Thickness, Thickness, double.NaN); }
+        }
+
         ///<summary>Gets the current soil water content of each mapped layer</summary>
         [JsonIgnore]
         [Units("mm/mm")]
