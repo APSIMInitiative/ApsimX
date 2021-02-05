@@ -180,8 +180,6 @@
                     btnLabel.ModifyFont(font);
             }
 #endif
-            btnLabel.LineWrap = true;
-            btnLabel.LineWrapMode = Pango.WrapMode.Word;
             btnLabel.Justify = Justification.Center;
             btnLabel.Realized += BtnLabel_Realized;
             button.LabelWidget = btnLabel;
