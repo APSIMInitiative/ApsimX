@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -66,6 +67,7 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -82,7 +84,7 @@ namespace Models.CLEM.Activities
             }
             foreach (RuminantTypeCohort item in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
             {
-                if(item.Suckling)
+                if (item.Suckling)
                 {
                     string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
                     results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
@@ -94,7 +96,8 @@ namespace Models.CLEM.Activities
                 }
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -125,7 +128,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
@@ -193,7 +196,7 @@ namespace Models.CLEM.Activities
                         {
                             case Sex.Male:
                                 RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                                ruminantMale.IsSire = false;
+                                ruminantMale.Sire = false;
                                 break;
                             case Sex.Female:
                                 RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
@@ -248,7 +251,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -298,6 +301,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -305,43 +310,46 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Trade individuals are kept for ";
-            html += "<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months";
-            if(TradeWeight > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " or until";
-                html += "<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg";
-            }
-            html += "</div>";
-
-            html += "\n<div class=\"activityentry\">";
-            html += "Purchased individuals will be placed in ";
-            if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-            {
-                html += "<span class=\"resourcelink\">General yards</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
-            }
-            html += "</div>";
-
-            Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
-            if (numberRelationship != null)
-            {
-                html += "\n<div class=\"activityentry\">";
-                if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Trade individuals are kept for ");
+                htmlWriter.Write("<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months");
+                if (TradeWeight > 0)
                 {
-                    html += "The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)";
+                    htmlWriter.Write(" or until");
+                    htmlWriter.Write("<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg");
+                }
+                htmlWriter.Write("</div>");
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Purchased individuals will be placed in ");
+                if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
                 }
                 else
                 {
-                    html += "The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)";
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
                 }
-                html += "</div>";
+                htmlWriter.Write("</div>");
+
+                Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
+                if (numberRelationship != null)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                    {
+                        htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
+                    }
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
-        }
+        } 
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 119,
+  "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -75,6 +75,7 @@
         },
         {
           "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "%root%\\Tests\\Validation\\Eucalyptus\\wwepp.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -355,7 +356,6 @@
                   "CN2Bare": 65.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "Slope": 0.0,
                   "DischargeWidth": 0.0,
                   "CatchmentArea": 0.0,
                   "Thickness": [
@@ -541,45 +541,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-40",
-                    "40-100",
-                    "100-200",
-                    "200-300",
-                    "300-400",
-                    "400-500",
-                    "500-600"
-                  ],
-                  "Thickness": [
-                    100.0,
-                    300.0,
-                    600.0,
-                    1000.0,
-                    1000.0,
-                    1000.0,
-                    1000.0,
-                    1000.0
-                  ],
-                  "NO3": null,
-                  "NH4": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial nitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
                   "Children": [],
@@ -605,6 +566,19 @@
                 },
                 {
                   "$type": "Models.Soils.LayerStructure, Models",
+                  "Depth": [
+                    "0-0.2",
+                    "0.2-0.4",
+                    "0.4-1",
+                    "1-2",
+                    "2-5",
+                    "5-10",
+                    "10-20",
+                    "20-30",
+                    "30-40",
+                    "40-50",
+                    "50-60"
+                  ],
                   "Thickness": [
                     2.0,
                     2.0,
@@ -1835,6 +1809,7 @@
             },
             {
               "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
               "FileName": "AnalyticalWeather.xlsx",
               "ExcelWorkSheetName": "Sheet1",
               "Name": "Weather",
@@ -1881,7 +1856,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "SW",

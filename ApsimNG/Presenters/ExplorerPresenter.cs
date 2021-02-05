@@ -282,29 +282,19 @@
             try
             {
                 HideRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+                if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                    SaveAs();
 
-            if (string.IsNullOrEmpty(ApsimXFile.FileName))
-                SaveAs();
-
-            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
-            {
-                ApsimXFile.Write(ApsimXFile.FileName);
-                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                return true;
+                if (!string.IsNullOrEmpty(ApsimXFile.FileName))
+                {
+                    ApsimXFile.Write(ApsimXFile.FileName);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                    return true;
+                }
             }
-
-            try
+            finally
             {
                 ShowRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -347,21 +337,29 @@
 
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Node to be selected.</param>
-        public void SelectNode(IModel node)
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(IModel node, bool refreshRightHandPanel = true)
         {
-            SelectNode(node.FullPath);
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            SelectNode(node.FullPath, refreshRightHandPanel);
+            if (refreshRightHandPanel)
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
         }
 
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
-        public void SelectNode(string nodePath)
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(string nodePath, bool refreshRightHandPanel = true)
         {
             this.view.Tree.SelectedNode = nodePath;
             while (GLib.MainContext.Iteration());
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            if (refreshRightHandPanel)
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
         }
 
         internal void CollapseChildren(string path)
@@ -369,9 +367,9 @@
             view.Tree.CollapseChildren(path);
         }
 
-        internal void ExpandChildren(string path)
+        internal void ExpandChildren(string path, bool recursive = true)
         {
-            view.Tree.ExpandChildren(path);
+            view.Tree.ExpandChildren(path, recursive);
         }
 
         /// <summary>
@@ -970,6 +968,7 @@
                             }
                         }
                     }
+                    view.Tree.ExpandChildren(toParent.FullPath, false);
                 }
             }
             catch (Exception err)

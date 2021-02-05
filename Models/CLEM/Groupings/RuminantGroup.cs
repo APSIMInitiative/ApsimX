@@ -9,6 +9,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Groupings
 {
@@ -52,6 +53,8 @@ namespace Models.CLEM.Groupings
             this.SetDefaults();
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -59,13 +62,16 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            return html;
         }
 
         /// <summary>
@@ -92,9 +98,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -103,28 +107,31 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
 
-            if (Proportion < 1)
-            {
-                html += "<div class=\"filter\">";
-                if (Proportion <= 0)
+                if (Proportion < 1)
                 {
-                    html += "<span class=\"errorlink\">[NOT SET%]</span>";
+                    htmlWriter.Write("<div class=\"filter\">");
+                    if (Proportion <= 0)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET%]</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"{Proportion.ToString("P0")} of");
+                    }
+                    htmlWriter.Write("</div>");
                 }
-                else
+                if (FindAllChildren<RuminantFilter>().Count() < 1)
                 {
-                    html += $"{Proportion.ToString("P0")} of";
+                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                 }
-                html += "</div>";
+                return htmlWriter.ToString(); 
             }
-            if (FindAllChildren<RuminantFilter>().Count() < 1)
-            {
-                html += "<div class=\"filter\">All individuals</div>";
-            }
-            return html;
-        }
+        } 
+        #endregion
 
     }
 }

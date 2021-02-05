@@ -15,5 +15,9 @@ namespace Models.PMF.Interfaces
         /// <param name="biomassToRemove">Biomass to remove</param>
         void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
 
+        /// <summary>
+        /// Maintenance respiration.
+        /// </summary>
+        double MaintenanceRespiration { get; }
     }
 }

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -135,7 +136,7 @@ namespace Models.CLEM.Activities
                         ActivityModel = this,
                         Required = total,
                         AllowTransmutation = false,
-                        Reason = "Burn",
+                        Category = "Burn",
                         ResourceTypeName = PaddockName,
                     }
                     );
@@ -145,11 +146,11 @@ namespace Models.CLEM.Activities
                     if (methaneStore != null)
                     {
                         //TODO change emissions for green material
-                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName); // * 21; // methane emissions from fire (CO2 eq)
+                        methaneStore.Add(burnkg * 1.333 * 0.0035, this, PaddockName, "Burn emissions"); // * 21; // methane emissions from fire (CO2 eq)
                     }
                     if (n2oStore != null)
                     {
-                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName); // * 21; // N20 emissions from fire (CO2 eq)
+                        n2oStore.Add(burnkg * 1.571 * 0.0076 * 0.12, this, PaddockName, "Burn emissions"); // * 21; // N20 emissions from fire (CO2 eq)
                     }
 
                     // TODO: add fertilisation to pasture for given period.
@@ -173,7 +174,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             double numberUnits;
@@ -194,7 +195,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Burn", pasture.NameWithParent);
         }
 
         /// <summary>
@@ -205,6 +206,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -212,44 +215,47 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Burn ";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Burn ");
 
-            if (PaddockName == null || PaddockName == "")
-            {
-                html += "<span class=\"errorlink\">[Pasture NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + PaddockName + "</span>";
-            }
-            html += "if less than <span class=\"setvalue\">" + (MinimumProportionGreen).ToString("0.#%") + "</span> green.</div>";
-            html += "</div>";
+                if (PaddockName == null || PaddockName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[Pasture NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
+                }
+                htmlWriter.Write("if less than <span class=\"setvalue\">" + (MinimumProportionGreen).ToString("0.#%") + "</span> green.</div>");
+                htmlWriter.Write("</div>");
 
-            html += "\n<div class=\"activityentry\">Methane emissions will be placed in ";
-            if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-            {
-                html += "<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present";
-            }
-            else
-            {
-                html += $"<span class=\"resourcelink\">{MethaneStoreName}</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
+                }
+                else
+                {
+                    htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            html += "\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ";
-            if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-            {
-                html += "<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present";
-            }
-            else
-            {
-                html += $"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
+                if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
+                }
+                else
+                {
+                    htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

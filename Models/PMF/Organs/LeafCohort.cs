@@ -452,7 +452,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>MaintenanceRespiration</summary>
-        public double MaintenanceRespiration { get; set; }
+        public double MaintenanceRespiration { get; private set; }
         #endregion
 
         #region Arbitration methods

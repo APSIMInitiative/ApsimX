@@ -269,7 +269,7 @@ namespace Models.CLEM
                     if (this.reader.Headings == null)
                     {
                         string fileType = "Text file";
-                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
                         {
                             fileType = "Comma delimited text file (csv)";
@@ -339,6 +339,8 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -346,76 +348,81 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">FILE NOT SET</span>";
-            }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-            }
-
-            if (FileName != null && FileName.Contains(".xls"))
-            {
-                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
                 {
-                    html += " with <span class=\"errorlink\">WORKSHEET NOT SET</span>";
+                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 }
                 else
                 {
-                    html += " with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>";
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
                 }
-            }
 
-            html += "\n<div class=\"activityentry\">";
-            html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ";
-            if (ResourceNameColumnName is null || ResourceNameColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ";
-            if (YearColumnName is null || YearColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + YearColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ";
-            if (MonthColumnName is null || MonthColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-            }
+                if (FileName != null && FileName.Contains(".xls"))
+                {
+                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                    {
+                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
+                    }
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Resource name</span> is ");
+                if (ResourceNameColumnName is null || ResourceNameColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                if (YearColumnName is null || YearColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                if (MonthColumnName is null || MonthColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                }
 
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ";
-            if (AmountColumnName is null || AmountColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
+                if (AmountColumnName is null || AmountColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
+                }
 
-            html += "\n</div>";
-            return html;
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
+            }
         }
+
+        #endregion
+
+        #region validation
 
         /// <summary>
         /// Validate this component
@@ -425,13 +432,14 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
+            if (FileName.ToLower().EndsWith("xlsx") && (ExcelWorkSheetName == null || ExcelWorkSheetName == ""))
             {
                 string[] memberNames = new string[] { "WorksheetName" };
                 results.Add(new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
     }
 
 }

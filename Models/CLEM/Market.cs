@@ -114,13 +114,14 @@ namespace Models.CLEM
                     // all all current errors and validation problems to error string.
                     foreach (DataRow dr in dataRows)
                     {
-                        error += "\n" + dr[6].ToString();
+                        error += "\r\n" + dr[6].ToString();
                     }
                 }
                 throw new ApsimXException(this, error);
             }
         }
 
+        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -156,8 +157,10 @@ namespace Models.CLEM
             }
 
             return results;
-        }
+        } 
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// 
         /// </summary>
@@ -168,7 +171,7 @@ namespace Models.CLEM
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             string html = "";
-            html += "\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
+            html += "\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
 
             foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
             {
@@ -177,7 +180,8 @@ namespace Models.CLEM
 
             html += "</div>";
             return html;
-        }
+        } 
+        #endregion
 
 
     }

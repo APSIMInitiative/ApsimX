@@ -1,6 +1,7 @@
 [bundaberg.met.weather]
 
 latitude =  -24.9
+longitude = 152.3510
 
  year  month_x dom_x day   radn   maxt    mint    rain    wind
   ()    ()      ()  ()   (MJ/m2) (oC)    (oC)    (mm)     ()

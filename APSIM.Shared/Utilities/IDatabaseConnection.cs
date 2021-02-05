@@ -166,6 +166,9 @@ namespace APSIM.Shared.Utilities
         /// <param name="isUnique">Is the index a primary key?</param>
         void CreateIndex(string tableName, List<string> colNames, bool isUnique);
 
+        /// <summary>Create a new table</summary>
+        void CreateTable(DataTable table);
+
         /// <summary>
         /// Drop a table from the database
         /// </summary>

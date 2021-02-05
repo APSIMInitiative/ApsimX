@@ -3,6 +3,8 @@
 !!! rain has been deleted
 
 latitude =  -26.3
+longitude = 151.8400
+
 site  year day radn   maxt  mint    rain gencode
  ()   ()   () (MJ/m2) (oC)  (oC)    (mm)  ()
 KING  1989 335 24.77 26.00  10.00   0.0  WRRM

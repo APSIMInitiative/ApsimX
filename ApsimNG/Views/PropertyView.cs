@@ -11,6 +11,7 @@ namespace UserInterface.Views
     using EventArguments;
     using APSIM.Shared.Utilities;
     using System.Globalization;
+    using System.Reflection;
 
     /// <summary>
     /// This view will display a list of properties to the user
@@ -62,7 +63,9 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view.</param>
         public PropertyView(ViewBase owner) : base(owner)
         {
-            propertyTable = new Table(0, 0, true);
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table(0, 0, false);
             box = new Frame("Properties");
             box.Add(propertyTable);
             mainWidget = box;
@@ -99,7 +102,11 @@ namespace UserInterface.Views
             }
             box.Label = $"{properties.Name} Properties";
             propertyTable.Destroy();
-            propertyTable = new Table((uint)properties.Count(), 2, false);
+
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table((uint)properties.Count(), 3, false);
+
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 
@@ -136,17 +143,31 @@ namespace UserInterface.Views
             {
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
-                        propertyTable.Attach(new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                    {
+                        Label separatorLabel = new Label($"{separator}") { Xalign = 0, UseMarkup = true };
+                        EventBox box = new EventBox();
+                        box.Realized += OnSeparatorLabelRealized;
+                        box.Add(separatorLabel);
+                        propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
+                    }
 
                 Label label = new Label(property.Name);
                 label.TooltipText = property.Tooltip;
                 label.Xalign = 0;
                 propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 
+                if (!string.IsNullOrEmpty(property.Tooltip))
+                {
+                    Button info = new Button(new Image(Stock.Info, IconSize.Button));
+                    info.TooltipText = property.Tooltip;
+                    propertyTable.Attach(info, 1, 2, startRow, startRow + 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
+                    info.Clicked += OnInfoButtonClicked;
+                }
+
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
-                propertyTable.Attach(inputWidget, 1, 2, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+                propertyTable.Attach(inputWidget, 2, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 
                 startRow++;
             }
@@ -155,6 +176,30 @@ namespace UserInterface.Views
             {
                 propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
                 AddPropertiesToTable(ref table, subProperties, ref startRow);
+            }
+        }
+
+        /// <summary>
+        /// Called by the separator labels (well, technically by their
+        /// parent EventBox) when they are realized. Changes the insensitive
+        /// background colour to that of the normal background colour, to
+        /// make the cells more distinct.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnSeparatorLabelRealized(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is Widget widget)
+                {
+                    widget.ModifyBg(StateType.Normal, widget.Style.Background(StateType.Selected));
+                    widget.ModifyFg(StateType.Normal, widget.Style.Background(StateType.Selected));
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -237,6 +282,20 @@ namespace UserInterface.Views
                     colourChooser.MainWidget.Name = property.ID.ToString();
                     component = colourChooser.MainWidget;
                     break;
+                case PropertyType.Numeric:
+                    SpinButton button = new SpinButton(double.MinValue, double.MaxValue, 1);
+                    component = button;
+                    if (property.Value == null)
+                        button.Value = 0; // ?
+                    else
+                        button.Value = Convert.ToDouble(property.Value);
+                    button.ValueChanged += OnNumberChanged;
+                    break;
+                case PropertyType.Font:
+                    FontButton btnFont = new FontButton(property.Value?.ToString());
+                    btnFont.FontSet += OnFontChanged;
+                    component = btnFont;
+                    break;
                 default:
                     throw new Exception($"Unknown display type {property.DisplayMethod}");
             }
@@ -246,6 +305,46 @@ namespace UserInterface.Views
             // the property changed event, despite the event handlers being
             // shared by multiple components.
             return component;
+        }
+
+        private void OnFontChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is FontButton btnFont)
+                {
+                    Guid id = Guid.Parse(btnFont.Name);
+                    PropertyChangedEventArgs args = new PropertyChangedEventArgs(id, btnFont.FontName);
+                    PropertyChanged?.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when a spinbutton is modified.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnNumberChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (sender is SpinButton spinner)
+                {
+                    double newValue = spinner.Value;
+                    Guid id = Guid.Parse(spinner.Name);
+                    var args = new PropertyChangedEventArgs(id, newValue);
+                    PropertyChanged?.Invoke(this, args);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -397,6 +496,54 @@ namespace UserInterface.Views
 
                     Guid id = Guid.Parse(button.Name);
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(id, file));
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Callback for a click event on the info/tooltip button.
+        /// Causes the tooltip to be displayed.
+        /// </summary>
+        /// <remarks>
+        /// Technically this could work for any event from any widget
+        /// and would trigger a tooltip query.
+        /// </remarks>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnInfoButtonClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                // When the user clicks on the button, we want to immediately show the tooltip.
+                // We can call Widget.TriggerTooltipQuery(), but the query to fail if the
+                // tooltip timeout hasn't elapsed yet. What we have here is a gnarly workaround
+                // for this problem. First, we get the current tooltip timeout duration. Then we
+                // change it to 0 (ms), then we trigger the tooltip timeout, then we reset the
+                // tooltip timeout to its original value so the user is none the wiser.
+                if (sender is Widget widget)
+                {
+                    // Name of the tooltip timeout property.
+                    string tooltipTimeout = "gtk-tooltip-timeout";
+
+                    // To get the default tooltip timeout, we need to call the GetProperty() method,
+                    // which for some reason is a protected method in the gtk#2 API.
+                    BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+                    MethodInfo method = mainWidget.Settings.GetType().GetMethod("GetProperty", flags);
+                    GLib.Value result = (GLib.Value)method.Invoke(mainWidget.Settings, new object[1] { tooltipTimeout });
+                    int timeout = (int)result.Val;
+
+                    // Now set the tooltip timeout to 0ms.
+                    mainWidget.Settings.SetLongProperty(tooltipTimeout, 0, "XProperty");
+
+                    // Trigger a tooltip query on the button.
+                    widget.TriggerTooltipQuery();
+
+                    // Reset the tooltip timeout to the default value.
+                    mainWidget.Settings.SetLongProperty(tooltipTimeout, timeout, "XProperty");
                 }
             }
             catch (Exception err)

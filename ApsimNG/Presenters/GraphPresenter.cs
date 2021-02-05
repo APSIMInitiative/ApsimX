@@ -120,7 +120,6 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
-
                 foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
@@ -129,14 +128,12 @@
                 // Update axis maxima and minima
                 graphView.UpdateView();
 
-                // Get a list of series annotations.
-                DrawOnView(graph.GetAnnotationsToGraph());
-
                 // Format the axes.
                 foreach (Models.Axis a in graph.Axis)
-                {
                     FormatAxis(a);
-                }
+
+                // Get a list of series annotations.
+                DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the legend.
                 graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
@@ -311,7 +308,7 @@
                 }
                 catch (Exception err)
                 {
-                    explorerPresenter.MainPresenter.ShowError(err);
+                    throw new Exception($"Unable to draw graph {graph.FullPath}", err);
                 }
             }
         }
@@ -386,8 +383,8 @@
             {
                 // Work out a default title by going through all series and getting the
                 // X or Y field name depending on whether 'axis' is an x axis or a y axis.
-                HashSet<string> names = new HashSet<string>();
-
+                HashSet<string> titles = new HashSet<string>();
+                HashSet<string> variableNames = new HashSet<string>();
                 foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
                     if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
@@ -396,12 +393,14 @@
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.XFieldName;
-                        if (definition.XFieldUnits != null)
+                        if (!variableNames.Contains(xName))
                         {
-                            xName = xName + " " + definition.XFieldUnits;
-                        }
+                            variableNames.Add(xName);
+                            if (definition.XFieldUnits != null)
+                                xName = xName + " (" + definition.XFieldUnits + ")";
 
-                        names.Add(xName);
+                            titles.Add(xName);
+                        }
                     }
 
                     if (definition.Y != null && definition.YAxis == axis.Type && definition.YFieldName != null)
@@ -410,17 +409,19 @@
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.YFieldName;
-                        if (definition.YFieldUnits != null)
+                        if (!variableNames.Contains(yName))
                         {
-                            yName = yName + " " + definition.YFieldUnits;
-                        }
+                            variableNames.Add(yName);
+                            if (definition.YFieldUnits != null)
+                                yName = yName + " (" + definition.YFieldUnits + ")";
 
-                        names.Add(yName);
+                            titles.Add(yName);
+                        }
                     }
                 }
 
                 // Create a default title by appending all 'names' together.
-                title = StringUtilities.BuildString(names.ToArray(), ", ");
+                title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
             graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
@@ -430,7 +431,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 

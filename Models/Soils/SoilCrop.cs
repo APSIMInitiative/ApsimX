@@ -42,7 +42,7 @@
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
         [Description("PAWC")]
-        [Display(Format = "N2")]
+        [Display(Format = "N2", ShowTotal = true)]
         [Units("mm/mm")]
         public double[] PAWC
         {

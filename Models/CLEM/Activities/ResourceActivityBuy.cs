@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -118,7 +119,7 @@ namespace Models.CLEM.Activities
                     Resource = mkt as IResourceType,
                     ResourceType = mkt.Parent.GetType(),
                     ResourceTypeName = (mkt as IModel).Name,
-                    Reason = "Purchase " + (resourceToBuy as Model).Name,
+                    Category = "Purchase " + (resourceToBuy as Model).Name,
                     ActivityModel = this
                 });
             }
@@ -130,7 +131,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -144,7 +145,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Buy", (resourceToBuy as CLEMModel).NameWithParent);
         }
 
         /// <summary>
@@ -207,7 +208,7 @@ namespace Models.CLEM.Activities
 
             if (provided > 0)
             {
-                resourceToBuy.Add(provided, this, "Purchase " + (resourceToBuy as Model).Name);
+                resourceToBuy.Add(provided, this, "", "Purchase");
                 Status = ActivityStatus.Success;
             }
 
@@ -221,7 +222,8 @@ namespace Models.CLEM.Activities
                     Required = provided / price.PacketSize * price.PricePerPacket,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = bankAccount.Name,
-                    Reason = "Purchase " + (resourceToBuy as Model).Name,
+                    Category = "Purchase",
+                    RelatesToResource = (resourceToBuy as CLEMModel).NameWithParent,
                     ActivityModel = this
                 };
                 bankAccount.Remove(payment);
@@ -266,6 +268,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -273,37 +277,40 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Buy ";
-            if (Units <= 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[VALUE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>";
-            }
-            html += " packages of ";
-            if (ResourceTypeName == null || ResourceTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            }
-            if (AccountName == null || AccountName == "")
-            {
-                html += " using <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += " using <span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Buy ");
+                if (Units <= 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[VALUE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>");
+                }
+                htmlWriter.Write(" packages of ");
+                if (ResourceTypeName == null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
+                }
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write(" using <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" using <span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

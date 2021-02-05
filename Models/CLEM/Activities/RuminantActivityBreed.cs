@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -25,10 +26,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Version(1, 0, 7, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
-    [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\nThis change requires all simulations to be performed again.")]
+    [Version(1, 0, 5, "Fixed issue defining breeders who's weight fell below critical limit.\r\nThis change requires all simulations to be performed again.")]
     [Version(1, 0, 4, "Implemented conception status reporting.")]
-    [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
+    [Version(1, 0, 3, "Removed the inter-parturition calculation and influence on uncontrolled mating\r\nIt is assumed that the individual based model will track conception timing based on the individual's body condition.")]
     [Version(1, 0, 2, "Added calculation for proportion offspring male parameter")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBreed.htm")]
@@ -413,6 +415,18 @@ namespace Models.CLEM.Activities
                     }
                 }
 
+                // report a natural mating locations for transparency via a message
+                if (this.Status == ActivityStatus.Success && !UseAI)
+                {
+                    string warning = "Natural (uncontrolled) mating ocurred in [r=" + location.Key + "]";
+                    if (!Warnings.Exists(warning))
+                    {
+                        Warnings.Add(warning);
+                        Summary.WriteMessage(this, warning);
+                    }
+                }
+
+
             }
         }
 
@@ -460,7 +474,7 @@ namespace Models.CLEM.Activities
                 // Get conception rate from conception model associated with the Ruminant Type parameters
                 if (female.BreedParams.ConceptionModel == null)
                 {
-                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\nPlease add a conception component below the [r=RuminantType]", female.BreedParams.Name));
+                    throw new ApsimXException(this, String.Format("No conception details were found for [r={0}]\r\nPlease add a conception component below the [r=RuminantType]", female.BreedParams.Name));
                 }
                 return female.BreedParams.ConceptionModel.ConceptionRate(female);
             }
@@ -520,7 +534,7 @@ namespace Models.CLEM.Activities
                     ResourceTypeName = item.BankAccountName.Split('.').Last(),
                     ActivityModel = this,
                     FilterDetails = null,
-                    Reason = item.Name
+                    Category = item.Name
                 }
                 );
             }
@@ -636,7 +650,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -649,6 +663,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -656,32 +672,35 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (UseAI)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "Using Artificial insemination";
-                html += "</div>";
+                if (UseAI)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Using Artificial insemination");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating");
+                    htmlWriter.Write("</div>");
+                }
+                if (InferStartupPregnancy)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Pregnancy status of breeders from matings prior to simulation start will be predicted");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("No pregnancy of breeders from matings prior to simulation start is inferred");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "This simulation uses natural (uncontrolled) mating";
-                html += "</div>";
-            }
-            if (InferStartupPregnancy)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Pregnancy status of breeders from matings prior to simulation start will be predicted";
-                html += "</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "No pregnancy of breeders from matings prior to simulation start is inferred";
-                html += "</div>";
-            }
-            return html;
-        }
+        } 
+        #endregion
     }
 }

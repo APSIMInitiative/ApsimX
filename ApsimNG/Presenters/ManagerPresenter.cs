@@ -74,7 +74,14 @@
                 propertyPresenter = new SimplePropertyPresenter();
             else
                 propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            try
+            {
+                propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -141,7 +148,10 @@
             if (propertyPresenter is SimplePropertyPresenter simplePresenter)
                 simplePresenter.RefreshView(scriptModel);
             else if (propertyPresenter is PropertyPresenter presenter)
+            {
+                presenter.UpdateModel(scriptModel);
                 presenter.Refresh();
+            }
         }
 
         /// <summary>

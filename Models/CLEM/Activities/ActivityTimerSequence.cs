@@ -3,6 +3,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,6 +68,19 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Determine if the month in sequence is enabled
+        /// </summary>
+        /// <param name="sequenceMonth"></param>
+        /// <returns>Whether timer is enabled</returns>
+        public bool TimerOK(int sequenceMonth)
+        {
+            int index = sequenceMonth - ((sequenceMonth / sequence.Length) * sequence.Length);
+            return sequence[index] == '1';
+        }
+
+        #region validation
+
+        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>
@@ -76,25 +90,16 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check validity of sequence
-            if(sequence.Replace("0","").Replace("1","").Trim() != "")
+            if (sequence.Replace("0", "").Replace("1", "").Trim() != "")
             {
                 string[] memberNames = new string[] { "ActivityTimerSequence" };
                 results.Add(new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
-        /// <summary>
-        /// Determine if the month in sequence is enabled
-        /// </summary>
-        /// <param name="sequenceMonth"></param>
-        /// <returns>Whether timer is enabled</returns>
-        public bool TimerOK(int sequenceMonth)
-        {
-            int index = sequenceMonth - ((sequenceMonth / sequence.Length)*sequence.Length);
-            return sequence[index] == '1';
-        }
-
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -102,27 +107,29 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            if(Sequence is null || Sequence == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += $"Sequence <span class=\"errorlink\">NOT SET</span>";
-            }
-            else
-            {
-                html += "<span style=\"float:left; margin-right:5px;\">Use sequence</span>";
-                string seqString = FormatSequence(Sequence);
-                for (int i = 0; i < seqString.Length; i++)
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                if (Sequence is null || Sequence == "")
                 {
-                    html += $" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")}</span>";
+                    htmlWriter.Write($"Sequence <span class=\"errorlink\">NOT SET</span>");
                 }
+                else
+                {
+                    htmlWriter.Write("<span style=\"float:left; margin-right:5px;\">Use sequence</span>");
+                    string seqString = FormatSequence(Sequence);
+                    for (int i = 0; i < seqString.Length; i++)
+                    {
+                        htmlWriter.Write($" <span class=\"filterset\">{(seqString[i] == '1' ? "OK" : "SKIP")}</span>");
+                    }
+                }
+                htmlWriter.Write("\r\n</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            html += "\n</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
         /// <summary>
@@ -141,6 +148,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
     }
 }

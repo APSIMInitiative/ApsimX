@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -80,6 +81,8 @@ namespace Models.CLEM
             Value = StartingValue;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -96,6 +99,10 @@ namespace Models.CLEM
             return results;
         }
 
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -103,20 +110,23 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += $"A running value starting at <span class=\"setvalue\">{StartingValue}</span>";
-            html += $" and ranging between <span class=\"setvalue\">{Minimum}</span> and ";
-            if (Maximum <= Minimum)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Invalid</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write($"A running value starting at <span class=\"setvalue\">{StartingValue}</span>");
+                htmlWriter.Write($" and ranging between <span class=\"setvalue\">{Minimum}</span> and ");
+                if (Maximum <= Minimum)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Invalid</span>");
+                }
+                else
+                {
+                    htmlWriter.Write($"<span class=\"setvalue\">{Maximum}</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += $"<span class=\"setvalue\">{Maximum}</span>";
-            }
-            html += "</div>";
-            return html;
-        }
+        } 
+        #endregion
     }
 }

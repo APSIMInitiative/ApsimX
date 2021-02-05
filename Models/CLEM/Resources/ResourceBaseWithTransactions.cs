@@ -57,5 +57,10 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Provie full name of resource StoreName.TypeName
+        /// </summary>
+        public string FullName => $"{CLEMParentName}.{Name}";
     }
 }

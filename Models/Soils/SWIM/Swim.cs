@@ -3586,6 +3586,8 @@ namespace Models.Soils
                     //RC   lines for g%th and g%csl added by RCichota, 09/02/2010
 
                     _dt = 0.5 * _dt;
+                    if (_dt == 0)
+                        throw new Exception("SWIM failed to find a solution");
 
                     // Tell user that SWIM is changing dt
                     summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt));
@@ -5880,6 +5882,9 @@ namespace Models.Soils
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [JsonIgnore]
         public double[] Thickness { get { return soilPhysical.Thickness; } }
+
+        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
+        public double[] LayerThickness { get { return soilPhysical.Thickness; } }
 
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>

@@ -24,7 +24,7 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ScopedModel]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine
     {

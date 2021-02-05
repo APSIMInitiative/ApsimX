@@ -89,8 +89,7 @@
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
+            explorerPresenter.ApsimXFile.DocumentModel(objectToDocument.Name, tags, 1);
 
             // If there are parameters then write them to the tags.
             if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
@@ -125,8 +124,8 @@
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(typeToDocument), modelToDocument, tags, 1, 0, false);
+
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummaryRaw(typeToDocument), modelToDocument, tags, 1, 0, false);
 
             var outputs = GetOutputs(typeToDocument);
             if (outputs != null && outputs.Count > 0)
@@ -186,7 +185,7 @@
                 var row = outputs.NewRow();
 
                 string typeName = GetTypeName(property.DataType);
-                var summary = property.Summary + property.Description;
+                var summary = property.Summary;
                 string remarks = property.Remarks;
                 if (!string.IsNullOrEmpty(remarks))
                     summary += Environment.NewLine + Environment.NewLine + remarks;
@@ -263,20 +262,35 @@
         /// <param name="memberType">The type to get a name for.</param>
         private string GetTypeName(Type memberType)
         {
-            Type type;
+            Type type = null;
             bool isList = false;
             bool isArray = false;
-            if (memberType.IsGenericType && memberType.GetInterface("IList") != null)
+            bool isEnumerable = false;
+            if (memberType.IsByRef)
+                return GetTypeName(memberType.GetElementType());
+            if (memberType.GetInterface("IList") != null)
             {
-                type = memberType.GenericTypeArguments[0];
+                if (memberType.IsGenericType)
+                    type = memberType.GenericTypeArguments[0];
+                else
+                    type = memberType.GetElementType();
                 isList = true;
+            }
+            else if (memberType.GetInterface("IEnumerable") != null)
+            {
+                if (memberType.IsGenericType)
+                    type = memberType.GenericTypeArguments[0];
+                else
+                    type = memberType.GetElementType();
+                isEnumerable = true;
             }
             else if (memberType.IsArray)
             {
                 type = memberType.GetElementType();
                 isArray = true;
             }
-            else
+
+            if (type == null)
                 type = memberType;
 
             // Truncate descriptions so they fit onto the page.
@@ -288,9 +302,7 @@
             if (type.IsValueType && type.Namespace.StartsWith("System"))
                 typeName = typeName.ToLower();
 
-            if (isList)
-                typeName += "List<" + typeName + ">";
-            else if (isArray)
+            if (isArray)
                 typeName += "[]";
 
             if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
@@ -298,6 +310,11 @@
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
                     typesToDocument.Add(type);
                 typeName = string.Format("<a href=\"#{0}\">{1}</a>", type.Name, typeName);
+
+                if (isList)
+                    typeName = $"List&lt;{typeName}&gt;";
+                else if (isEnumerable)
+                    typeName = $"IEnumerable&lt;{typeName}&gt;";
             }
 
             return typeName;
@@ -386,7 +403,7 @@
 
             foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public |
                                                    System.Reflection.BindingFlags.Instance |
-                                                   System.Reflection.BindingFlags.FlattenHierarchy))
+                                                   System.Reflection.BindingFlags.DeclaredOnly))
             {
                 if (!method.IsSpecialName)
                 {
@@ -402,7 +419,7 @@
                     string remarks = AutoDocumentation.GetRemarks(method);
                     if (!string.IsNullOrEmpty(remarks))
                         description += Environment.NewLine + Environment.NewLine + remarks;
-
+                    string methodName = method.Name;
                     if (description != null)
                         description = "<i>" + description + "</i>"; // italics
                     var st = string.Format("<p>{0} {1}({2})</p>{3}",

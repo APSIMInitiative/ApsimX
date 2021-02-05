@@ -7000,7 +7000,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Veraison",
-                      "ReSetEvent": "Flowering",
+                      "ReSetEvent": null,
                       "Name": "BEN_TmaxIni1",
                       "Children": [
                         {
@@ -14259,22 +14259,22 @@
             },
             {
               "$type": "Models.Axis, Models",
-              "Type": 2,
+              "Type": 0,
               "Title": null,
               "Inverted": false,
-              "Minimum": 0.5,
-              "Maximum": 1.0,
+              "Minimum": 10.0,
+              "Maximum": 50.0,
               "Interval": "NaN",
               "DateTimeAxis": false,
               "CrossesAtZero": false
             },
             {
               "$type": "Models.Axis, Models",
-              "Type": 0,
+              "Type": 2,
               "Title": null,
               "Inverted": false,
-              "Minimum": 10.0,
-              "Maximum": 50.0,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
               "Interval": "NaN",
               "DateTimeAxis": false,
               "CrossesAtZero": false

@@ -918,7 +918,7 @@ namespace Models.PMF.Organs
                     Senesced.StorageWt += storageWtSenescing;
 
                     double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max(slnToday, 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 
@@ -1104,6 +1104,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
+
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
+        [JsonIgnore]
+        public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]

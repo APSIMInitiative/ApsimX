@@ -47,6 +47,8 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -59,7 +61,9 @@ namespace Models.CLEM.Groupings
             results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantGroup]", memberNames));
             return results;
         }
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -80,7 +84,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (this.FindAllChildren<RuminantFilter>().Count() >= 1)
             {
-                html += "\n</div>";
+                html += "\r\n</div>";
             }
             return html;
         }
@@ -92,13 +96,14 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\r\n<div class=\"filterborder clearfix\">";
             if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }
