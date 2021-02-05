@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 126; } }
+        public static int LatestVersion { get { return 127; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3329,6 +3329,17 @@
                     JsonUtilities.AddModel(soil, physical);
                 }
             }
+        }
+
+        /// <summary>
+        /// Upgrade to version 127. Add ResourceName property to Fertiliser models.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion127(JObject root, string fileName)
+        {
+            foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
+                fertiliser["ResourceName"] = "Fertiliser";
         }
 
         /// <summary>

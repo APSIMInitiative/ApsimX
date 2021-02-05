@@ -279,6 +279,8 @@
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
+    <Compile Include="Fertiliser\FertiliserApplicationType.cs" />
+    <Compile Include="Fertiliser\FertiliserType.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
     <Compile Include="Functions\CalculateOnceFunction.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
@@ -611,7 +613,7 @@
     <Compile Include="Sugarcane\MathUtil.cs" />
     <Compile Include="Sugarcane\Sugarcane.cs" />
     <Compile Include="Core\Variable.cs" />
-    <Compile Include="Fertiliser.cs" />
+    <Compile Include="Fertiliser\Fertiliser.cs" />
     <Compile Include="PostSimulationTools\Input.cs" />
     <Compile Include="Irrigation\Irrigation.cs" />
     <Compile Include="Log.cs" />
@@ -923,6 +925,7 @@
     <EmbeddedResource Include="Resources\RScripts\OptimizR.r" />
     <EmbeddedResource Include="Resources\RScripts\InstallPackageGithub.R" />
     <EmbeddedResource Include="Resources\RScripts\read_croptimizr_output.r" />
+    <EmbeddedResource Include="Resources\Fertiliser.json" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
