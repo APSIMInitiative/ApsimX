@@ -279,8 +279,8 @@
     <Compile Include="Core\Run\SimulationDescription.cs" />
     <Compile Include="Core\ScriptCompiler.cs" />
     <Compile Include="Factorial\Permutation.cs" />
-    <Compile Include="Fertiliser\FertiliserApplicationType.cs" />
-    <Compile Include="Fertiliser\FertiliserType.cs" />
+    <Compile Include="Management\FertiliserApplicationType.cs" />
+    <Compile Include="Management\FertiliserType.cs" />
     <Compile Include="Functions\AccumulateResetAtStage.cs" />
     <Compile Include="Functions\CalculateOnceFunction.cs" />
     <Compile Include="Functions\RootShape\RootShapeSemiCircleSorghum.cs" />
@@ -477,7 +477,7 @@
     <Compile Include="Grazplan\Supplement.cs" />
     <Compile Include="Grazplan\GrazSupp.cs" />
     <Compile Include="IClock.cs" />
-    <Compile Include="Irrigation\IIrrigation.cs" />
+    <Compile Include="Management\IIrrigation.cs" />
     <Compile Include="Interfaces\ISoilTemperature.cs" />
     <Compile Include="Interfaces\ISurfaceOrganicMatter.cs" />
     <Compile Include="Interfaces\ICanopy.cs" />
@@ -613,13 +613,13 @@
     <Compile Include="Sugarcane\MathUtil.cs" />
     <Compile Include="Sugarcane\Sugarcane.cs" />
     <Compile Include="Core\Variable.cs" />
-    <Compile Include="Fertiliser\Fertiliser.cs" />
+    <Compile Include="Management\Fertiliser.cs" />
     <Compile Include="PostSimulationTools\Input.cs" />
-    <Compile Include="Irrigation\Irrigation.cs" />
+    <Compile Include="Management\Irrigation.cs" />
     <Compile Include="Log.cs" />
-    <Compile Include="Manager.cs" />
+    <Compile Include="Management\Manager.cs" />
     <Compile Include="MicroClimate\MicroClimate.cs" />
-    <Compile Include="Operations.cs" />
+    <Compile Include="Management\Operations.cs" />
     <Compile Include="PMF\Arbitrator\OrganArbitrator.cs" />
     <Compile Include="PMF\Biomass\ArrayBiomass.cs" />
     <Compile Include="PMF\Biomass\Biomass.cs" />
@@ -684,7 +684,7 @@
     <Compile Include="PMF\Plant.cs" />
     <Compile Include="PMF\SowingParameters.cs" />
     <Compile Include="PMF\Structure\Structure.cs" />
-    <Compile Include="Irrigation\IrrigationApplicationType.cs" />
+    <Compile Include="Management\IrrigationApplicationType.cs" />
     <Compile Include="Soils\Chemical.cs" />
     <Compile Include="Soils\InitialWater.cs" />
     <Compile Include="Soils\LayerStructure.cs" />
