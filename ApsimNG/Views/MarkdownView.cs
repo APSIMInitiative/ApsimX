@@ -184,7 +184,7 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Use<SubSuperScriptExtensions>().Build();
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
