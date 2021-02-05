@@ -225,6 +225,7 @@ namespace UserInterface.Views
                 propertyTable.Attach(inputWidget, 2, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 #else
                 propertyTable.Attach(inputWidget, 2, startRow, 1, 1);
+                inputWidget.Hexpand = true;
 #endif
 
                 startRow++;
