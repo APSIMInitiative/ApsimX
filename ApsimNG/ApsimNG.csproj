@@ -63,6 +63,7 @@
     <PackageReference Include="BruTile" Version="3.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <PackageReference Include="Markdig" Version="0.22.1" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->
