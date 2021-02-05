@@ -93,7 +93,7 @@
   </ItemGroup>
 
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
-    <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\sqlite3.dll ..\Bin\* &gt;nul" />
+    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\sqlite3.dll $(OutputPath)\* &gt;nul" />
   </Target>
 
 </Project>
