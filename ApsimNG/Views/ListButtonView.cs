@@ -292,7 +292,9 @@
                     Pango.Rectangle ink;
                     Pango.Rectangle logical;
                     layout.GetExtents(out ink, out logical);
-                    label.Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                    int xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                    if (xpad > 0)
+                        label.Xpad = xpad;
                 }
             }
             catch (Exception err)
