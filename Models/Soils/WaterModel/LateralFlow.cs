@@ -12,14 +12,14 @@
     /// Lateral Outflow is the flow that occurs as a result of the soil water going above DUL and the soil being on a slope. So if there is no slope and the water goes above DUL there is no lateral outflow. KLAT is just the lateral resistance of the soil to this flow. It is a soil water conductivity.
     ///
     /// The calculation of lateral outflow on a layer basis is now performed using the equation: 
-    /// Lateral flow for a layer = KLAT * d * s / (1 + s<sup>2</sup>)<sup>0.5</sup> * L / A * unit conversions.
+    /// Lateral flow for a layer = KLAT * d * s / (1 + s^2^)^0.5^ * L / A * unit conversions.
     /// Where: 
     ///     KLAT = lateral conductivity (mm/day)
     ///     d = depth of saturation in the layer(mm) = Thickness * (SW - DUL) / (SAT - DUL) if SW > DUL.
     ///     (Note this allows lateral flow in any "saturated" layer, not just those inside a water table.)
     ///     s = slope(m / m)
     ///     L = catchment discharge width. Basically, it's the width of the downslope boundary of the catchment. (m)
-    ///     A = catchment area. (m<sup>2</sup>)
+    ///     A = catchment area. (m^2^)
     /// 
     /// NB. with Lateral Inflow it is assumed that ALL the water goes straight into the layer. 
     /// Irrespective of the layers ability to hold it. It is like an irrigation. 

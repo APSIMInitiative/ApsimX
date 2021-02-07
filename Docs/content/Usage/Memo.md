@@ -527,3 +527,15 @@ use regular HTML `<img>` tags.
 
 
 Note that for now, all images must be added as embedded resources to the ApsimNG assembly.
+
+### Superscript
+
+Text enclosed between caret (^) characters will be rendered as superscript.
+
+`super^script^`
+
+### Subscript
+
+Text enclosed between tilde (~) characters will be rendered as subscript.
+
+`sub~script~`
