@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 127,
+  "Version": 128,
   "Name": "Simulations",
   "Children": [
     {
@@ -192,8 +192,9 @@
       "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
-    }  
+      "ReadOnly": false,
+      "ResourceName": "Fertiliser"
+    }
   ],
   "IncludeInDocumentation": true,
   "Enabled": true,
