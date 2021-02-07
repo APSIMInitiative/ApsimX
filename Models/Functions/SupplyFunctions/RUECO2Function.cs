@@ -6,11 +6,11 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on RUE using the approach of [Reyenga1999].
+    /// This model calculates the CO~2~ impact on RUE using the approach of [Reyenga1999].
     /// 
     /// For C3 plants,
     /// 
-    ///     _F<sub>CO2</sub> = (CO<sub>2</sub> - CP) x (350 + 2 x CP)/(CO<sub>2</sub> + 2 x CP) x (350 - CP)_
+    ///     _F~CO2~ = (CO~2~ - CP) x (350 + 2 x CP)/(CO~2~ + 2 x CP) x (350 - CP)_
     ///     
     /// where CP, is the compensation point calculated from daily average temperature (T) as
     /// 
@@ -18,7 +18,7 @@ namespace Models.Functions.SupplyFunctions
     /// 
     /// For C4 plants,
     /// 
-    ///     _F<sub>CO<sub>2</sub></sub> = 0.000143 * CO<sub>2</sub> + 0.95_
+    ///     _F<sub>CO~2~</sub> = 0.000143 * CO~2~ + 0.95_
     /// 
     /// </summary>
     [Serializable]

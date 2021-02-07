@@ -17,24 +17,24 @@
     /// If Y is any soil resource, such as water or N, and U is the uptake of that resource by one or more plant root systems,  
     /// then
     /// 
-    /// Y<sub>t+1</sub> = Y<sub>t</sub> - U
+    /// Y~t+1~ = Y~t~ - U
     /// 
     /// Because U will change through the time period in complex manners depending on the number and nature of demands for that resource, we use Runge-Kutta to integrate through that time period using
     /// 
-    /// Y<sub>t+1</sub>= Y<sub>t</sub> + 1/6 x (U<sub>1</sub>+ 2xU<sub>2</sub> + 2xU<sub>3</sub> + U<sub>4</sub>) 
+    /// Y~t+1~= Y~t~ + 1/6 x (U~1~+ 2xU~2~ + 2xU~3~ + U~4~) 
     /// 
-    /// Where U<sub>1</sub>,U<sub>2</sub>,U<sub>3</sub> and U<sub>4</sub> are 4 estimates of the Uptake rates calculated by the crop models given a range of soil resource conditions, as follows:
+    /// Where U~1~,U~2~,U~3~ and U~4~ are 4 estimates of the Uptake rates calculated by the crop models given a range of soil resource conditions, as follows:
     /// 
-    /// U<sub>1</sub> = f(Y<sub>t</sub>),
+    /// U~1~ = f(Y~t~),
     /// 
-    /// U<sub>2</sub> = f(Y<sub>t</sub> - 0.5xU<sub>1</sub>),
+    /// U~2~ = f(Y~t~ - 0.5xU~1~),
     /// 
-    /// U<sub>3</sub> = f(Y<sub>t</sub> - 0.5xU<sub>2</sub>),
+    /// U~3~ = f(Y~t~ - 0.5xU~2~),
     /// 
-    /// U<sub>4</sub> = f(Y<sub>t</sub> - U<sub>3</sub>).
+    /// U~4~ = f(Y~t~ - U~3~).
     /// 
-    /// So U<sub>1</sub> is the estimate based on the uptake rates at the beginning of the time interval, similar to a simple Euler method.
-    /// U<sub>2</sub> and U<sub>3</sub> are estimates based on the rates somewhere near the midpoint of the time interval.  U<sub>4</sub> is the estimate based on the rates toward the end of the time interval.
+    /// So U~1~ is the estimate based on the uptake rates at the beginning of the time interval, similar to a simple Euler method.
+    /// U~2~ and U~3~ are estimates based on the rates somewhere near the midpoint of the time interval.  U~4~ is the estimate based on the rates toward the end of the time interval.
     /// 
     /// The iterative procedure allows crops to influence the uptake of other crops via various feedback mechanisms.  For example,  crops rapidly extracting water from near the surface will dry the soil in those layers, which will force deeper rooted crops to potentially extract water from lower layers. Uptakes can notionally be of either sign, and so trees providing hydraulic lift of water from water tables could potentially make this water available for uptake by mutplie understory species within the timestep.  Crops are responsible for meeting resource demand by whatever means they prefer.  And so, leguminous crops may start by taking up mineral N at the start of the day but rely on fixation later in a time period if N becomes limiting.  This will reduce competition from others and change the balance dynamically throughout the integration period. 
     /// 

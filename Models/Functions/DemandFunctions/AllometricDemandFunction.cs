@@ -10,7 +10,7 @@ namespace Models.Functions.DemandFunctions
     /// # [Name]
     /// Calculate partitioning of daily growth based upon the allometric relationship: 
     /// 
-    /// YValue = [Const] * XValue <sup>[Power]</sup>
+    /// YValue = [Const] * XValue ^[Power]^
     /// </summary>
     [Serializable]
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
