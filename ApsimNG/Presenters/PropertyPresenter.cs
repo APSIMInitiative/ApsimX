@@ -593,9 +593,9 @@
                     fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceGroups));
 
                     // add any extras elements provided to the list.
-                    if (this.properties[i].Display.CLEMExtraEntries != null)
+                    if (this.properties[i].Display.Values != null)
                     {
-                        fieldNames.AddRange(this.properties[i].Display.CLEMExtraEntries);
+                        fieldNames.AddRange(this.properties[i].Display.Values.Split(','));
                     }
 
                     if (fieldNames.Count != 0)
