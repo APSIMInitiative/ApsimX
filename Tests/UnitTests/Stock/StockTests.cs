@@ -108,13 +108,13 @@
             var genotypeNames = genotypes.All.Where(genotype => genotype.AnimalType == "Cattle")
                                              .Select(genotype => genotype.Name);
 
-            Assert.AreEqual(genotypeNames.ToArray(), new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
+            Assert.AreEqual(genotypeNames.ToArray().OrderBy(x => x), new string[] { "Angus", "Beef Shorthorn", "Hereford", "South Devon", "Ayrshire", "Brown Swiss",
                                                                     "Dairy Shorthorn", "Friesian", "Guernsey", "Holstein",  "Jersey",
                                                                     "British x Brahman", "British x Charolais", "British x Friesian", "British x Holstein",
                                                                     "Charolais x Friesian", "Charolais x Holstein", "Charolais", "Chianina",
                                                                     "Limousin", "Simmental", "Brahman", "Ujimqin Cattle",
                                                                     "Ujimqin x Angus (1st cross)", "Ujimqin x Angus (2nd cross)",
-                                                                    "Ujimqin x Charolais (1st cross)", "Ujimqin x Charolais (2nd cross)"});
+                                                                    "Ujimqin x Charolais (1st cross)", "Ujimqin x Charolais (2nd cross)"}.OrderBy(x => x));
 
         }
 

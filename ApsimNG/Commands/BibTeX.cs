@@ -244,7 +244,7 @@
 
         /// <summary>Prefix a string if it isn't already there.</summary>
         /// <param name="st">The original string.</param>
-        /// <param name="stringToAppend">The string to prefix.</param>
+        /// <param name="stringToPrefix">The string to prefix.</param>
         /// <returns>The new string.</returns>
         private static string PrefixString(string st, string stringToPrefix)
         {

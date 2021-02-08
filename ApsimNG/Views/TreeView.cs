@@ -1,6 +1,7 @@
 namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -9,6 +10,10 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
+
+#if NETCOREAPP
+    using TreeModel = Gtk.ITreeModel;
+#endif
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -159,7 +164,7 @@ namespace UserInterface.Views
         public MenuView ContextMenu { get; set; }
 
         /// <summary>Populate the treeview.</summary>
-        /// <param name="rootNode">A description of the top level root node</param>
+        /// <param name="topLevelNode">A description of the top level root node</param>
         public void Populate(TreeViewNode topLevelNode)
         {
             rootNode = topLevelNode;
@@ -369,9 +374,8 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Return a full path for the specified node.</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
+        /// <summary>Return a string representation of the specified path.</summary>
+        /// <param name="path">The path.</param>
         private string GetFullPath(TreePath path)
         {
             string result = "";
@@ -454,7 +458,14 @@ namespace UserInterface.Views
                 {
                     Color colour = (Color)model.GetValue(iter, 4);
                     if (colour == Color.Empty)
-                        colour = Utility.Colour.FromGtk(treeview1.Style.Foreground(StateType.Normal));
+                    {
+#if NETFRAMEWORK
+                        Gdk.Color foreground = treeview1.Style.Foreground(StateType.Normal);
+#else
+                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
+#endif
+                        colour = Utility.Colour.FromGtk(foreground);
+                    }
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
 
                     // This is a bit of a hack which we use to convert a System.Drawing.Color
@@ -473,7 +484,7 @@ namespace UserInterface.Views
 
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             try
@@ -540,7 +551,8 @@ namespace UserInterface.Views
                             Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                             if (e.Event.X > rect.X + 18)
                             {
-                                timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;
                                 timer.AutoReset = false;
                                 timer.Start();
                             }
@@ -795,9 +807,9 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.Action == Gdk.DragAction.Copy)
+                        if (e.Context.GetAction() == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
-                        else if (e.Context.Action == Gdk.DragAction.Move)
+                        else if (e.Context.GetAction() == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
                         else
                             dropArgs.Linked = true;
@@ -805,7 +817,7 @@ namespace UserInterface.Views
                         success = true;
                     }
                 }
-                Gtk.Drag.Finish(e.Context, success, e.Context.Action == Gdk.DragAction.Move, e.Time);
+                Gtk.Drag.Finish(e.Context, success, e.Context.GetAction() == Gdk.DragAction.Move, e.Time);
                 e.RetVal = success;
             }
             catch (Exception err)
@@ -816,7 +828,7 @@ namespace UserInterface.Views
 
         /// <summary>User is about to start renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs> instance containing the event data.</param>
         private void OnBeforeLabelEdit(object sender, EditingStartedArgs e)
         {
             try
@@ -833,7 +845,7 @@ namespace UserInterface.Views
         
         /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
             try
@@ -898,6 +910,7 @@ namespace UserInterface.Views
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
+        /// <param name="recursive">Recursively expand children too?</param>
         public void ExpandChildren(string path, bool recursive = true)
         {
             TreePath nodePath = treemodel.GetPath(FindNode(path));

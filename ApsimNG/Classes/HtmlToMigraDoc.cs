@@ -12,6 +12,9 @@
     using System.Net;
     using System.Reflection;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class HtmlToMigraDoc
     {
         private static bool foundCode = false;
@@ -644,7 +647,8 @@
         /// <summary>
         /// Add a text frame.
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="section">Section to which the text will be added.</param>
+        /// <param name="text">Text to be added.</param>
         private static void AddCodeBlock(Section section, string text)
         {
             Table table = section.AddTable();

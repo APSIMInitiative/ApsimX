@@ -7,6 +7,7 @@
     using System.Drawing;
     using APSIM.Shared.Utilities;
     using System.Globalization;
+    using Interfaces;
     using Models;
     using SharpMap.Styles;
     using SharpMap.Layers;
@@ -18,50 +19,16 @@
     using NetTopologySuite.Geometries;
     using System.Linq;
     using System.Reflection;
-    using Interfaces;
     using Gtk;
     using Utility;
     using SharpMap.Data;
     using SharpMap.Rendering;
+    using Extensions;
 
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface IMapView
-    {
-        /// <summary>
-        /// Invoked when the zoom level or map center is changed
-        /// </summary>
-        event EventHandler ViewChanged;
-
-        /// <summary>Show the map</summary>
-        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
-
-        /// <summary>Export the map to an image.</summary>
-        System.Drawing.Image Export();
-
-        /// <summary>
-        /// Get or set the zoom factor of the map
-        /// </summary>
-        double Zoom { get; set; }
-
-        /// <summary>
-        /// Get or set the center position of the map
-        /// </summary>
-        Models.Map.Coordinate Center { get; set; }
-
-        /// <summary>
-        /// Store current position and zoom settings
-        /// </summary>
-        void StoreSettings();
-
-        /// <summary>
-        /// Hide zoom controls.
-        /// </summary>
-        void HideZoomControls();
-
-        IGridView Grid { get; }
-    }
+#if NETCOREAPP
+    using ExposeEventArgs = Gtk.DrawnArgs;
+    using StateType = Gtk.StateFlags;
+#endif
 
     public class MapView : ViewBase, IMapView
     {
@@ -139,14 +106,29 @@
         public event EventHandler ViewChanged;
 
         /// <summary>
+        /// Static constructor to perform 1-time initialisation.
+        /// </summary>
+        static MapView()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
+            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+        }
+
+        /// <summary>
         /// Constructor. Initialises the widget and will show a world
         /// map with no markers until <see cref="ShowMap" /> is called.
         /// </summary>
         /// <param name="owner">Owner view.</param>
         public MapView(ViewBase owner) : base(owner)
         {
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
-
             image = new Gtk.Image();
             var container = new Gtk.EventBox();
             container.Add(image);
@@ -163,7 +145,11 @@
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
             image.SizeAllocated += OnSizeAllocated;
+#if NETFRAMEWORK
             image.ExposeEvent += OnImageExposed;
+#else
+            image.Drawn += OnImageExposed;
+#endif
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
@@ -189,8 +175,8 @@
             layWorld.DataSource = new ShapeFile(shapeFileName, true);
             layWorld.Style = new VectorStyle();
             layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+            Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
+            Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
             result.Layers.Add(layWorld);
@@ -249,7 +235,8 @@
         /// </remarks>
         private void RefreshMap()
         {
-            image.Pixbuf = ImageToPixbuf(map.GetMap());
+            if (map != null)
+                image.Pixbuf = ImageToPixbuf(map.GetMap());
         }
 
         /// <summary>
@@ -309,7 +296,11 @@
             try
             {
                 RefreshMap();
+#if NETFRAMEWORK
                 image.ExposeEvent -= OnImageExposed;
+#else
+                image.Drawn -= OnImageExposed;
+#endif
             }
             catch (Exception err)
             {
@@ -417,12 +408,13 @@
             {
                 // Update the map size iff the allocated width and height are both > 0,
                 // and width or height have changed.
-                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
+                if (image != null && map != null &&
+                    image.Allocation.Width > 0 && image.Allocation.Height > 0
                  && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
                 {
                     image.SizeAllocated -= OnSizeAllocated;
                     map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    //RefreshMap();
+                    RefreshMap();
                     image.WidthRequest = image.Allocation.Width;
                     image.HeightRequest = image.Allocation.Height;
                     image.SizeAllocated += OnSizeAllocated;
