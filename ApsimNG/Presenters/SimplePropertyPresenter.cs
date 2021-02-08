@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using System;
 using System.Collections;
@@ -10,6 +11,7 @@ using UserInterface.Classes;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -19,6 +21,12 @@ namespace UserInterface.Presenters
         /// The model whose properties are being displayed.
         /// </summary>
         private IModel model;
+
+        /// <summary>
+        /// The list of child models whose properties are being displayed.
+        /// Used with PropertyMultiView and PropertyTreePresenter
+        /// </summary>
+        private List<object> models = new List<object>();
 
         /// <summary>
         /// The view.
@@ -63,7 +71,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentException($"The model must be an IModel instance");
             if (this.view == null)
                 throw new ArgumentException($"The view must be an IPropertyView instance");
-            
+
             RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.PropertyChanged += OnViewChanged;
@@ -76,9 +84,23 @@ namespace UserInterface.Presenters
         {
             if (model != null)
             {
+                // if multi model view specified get child models of model
+                if (view is PropertyMultiView)
+                {
+                    models.Clear();
+                    models.AddRange(this.model.FindAllChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
+                    if (models.GroupBy(a => a.GetType()).Count() > 1)
+                    {
+                        throw new ArgumentException($"The models displayed in a PropertyMultiView must all be of the same type");
+                    }
+                    if(models.Count() >= 1)
+                    {
+                        view.DisplayProperties(GetProperties(models));
+                        return;
+                    }
+                }
                 this.model = model;
-                PropertyGroup properties = GetProperties(model);
-                view.DisplayProperties(properties);
+                view.DisplayProperties(GetProperties(this.model));
             }
         }
 
@@ -125,6 +147,20 @@ namespace UserInterface.Presenters
             }
             string name = obj is IModel model ? model.Name : obj.GetType().Name;
             return new PropertyGroup(name, properties, subModelProperties);
+        }
+
+        /// <summary>
+        /// Get a list of properties from the model.
+        /// </summary>
+        /// <param name="obj">The object whose properties will be queried.</param>
+        protected virtual List<PropertyGroup> GetProperties(List<object> objs)
+        {
+            List<PropertyGroup> propertyGroupList = new List<PropertyGroup>();
+            foreach (var item in objs)
+            {
+                propertyGroupList.Add(GetProperties(item));
+            }
+            return propertyGroupList;
         }
 
         /// <summary>

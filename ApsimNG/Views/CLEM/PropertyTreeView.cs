@@ -1,7 +1,3 @@
-// Implements a tree view of categories and sub-categories to assit filtering property grid
-// Uses Category attribute of property (Category and SubCategory values) to define list
-// A right hand panel is used to display the property presenter
-
 namespace UserInterface.Views
 {
     using EventArguments;
@@ -15,10 +11,9 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// A cut down version of the ExplorerView.
-    /// Does not allow for adding, deleting or moving of nodes in the tree.
-    /// Only displays the tree and allows the user to select different nodes.
-    /// No toolbar and context menus either.
+    /// GTK# based view of the PropertyTreePresenter to display a tree view of categories and sub-categories to assit filtering properties
+    /// Uses Category attribute of property (Category and SubCategory values) to define list and modify SimplePropertyPresenter filter rule on selection
+    /// A right hand panel is used to display the property presenter
     /// </remarks>
     public class PropertyTreeView : ViewBase, IPropertyTreeView
     {
@@ -47,7 +42,6 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             rightHandView = (Viewport)builder.GetObject("RightHandView");
-            //rightHandView = (VBox)builder.GetObject("vbox2"); // ("RightHandView");
             mainWidget = vbox1;
             rightHandView.ShadowType = ShadowType.None;
             rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
@@ -169,15 +163,7 @@ namespace UserInterface.Views
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
             // Create a Bitmap and draw the panel
-            //int width;
-            //int height;
-            //Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
-            //panelWindow.GetSize(out width, out height);
-            //Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            //byte[] buffer = screenshot.SaveToBuffer("png");
-            //System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            //System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            //return bitmap;
+            // disabled for this method
             return new System.Drawing.Bitmap(1,1);
         }
 

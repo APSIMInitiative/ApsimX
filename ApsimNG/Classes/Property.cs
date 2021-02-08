@@ -349,9 +349,9 @@ namespace UserInterface.Classes
                         resources.AddRange(resourcesHolder.GetCLEMResourceNames(attrib.CLEMResourceGroups));
                     }
                     // add any extras elements provided to the list.
-                    if (attrib.CLEMExtraEntries != null)
+                    if (attrib.Values != null && attrib.Values != "")
                     {
-                        resources.AddRange(attrib.CLEMExtraEntries);
+                        resources.AddRange(attrib.Values.Split(','));
                     }
                     DropDownOptions = resources.ToArray();
                     break;

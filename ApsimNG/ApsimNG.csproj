@@ -223,9 +223,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Views\CLEM\PropertyTreeMultiView.cs" />
     <Compile Include="Views\MarkdownView.cs" />
     <Compile Include="Views\ProgressBarView.cs" />
     <Compile Include="Views\PropertyAndGridView.cs" />
+    <Compile Include="Views\PropertyMultiView.cs" />
     <Compile Include="Views\PropertyView.cs" />
     <Compile Include="Classes\ContextMenuHelper.cs" />
     <Compile Include="Classes\Property.cs" />
@@ -280,9 +282,7 @@
     <Compile Include="Presenters\CLEM\MessagePresenter.cs" />
     <Compile Include="Presenters\CLEM\ModelDetailsWrapperPresenter.cs" />
     <Compile Include="Presenters\CLEM\PivotTablePresenter.cs" />
-    <Compile Include="Presenters\CLEM\PropertyTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\PropertyTreePresenter.cs" />
-    <Compile Include="Presenters\CLEM\PropertyTreeTablePresenter.cs" />
     <Compile Include="Presenters\CLEM\VersionsPresenter.cs" />
     <Compile Include="Presenters\GraphPanelPresenter.cs" />
     <Compile Include="Presenters\ProfileGridPresenter.cs" />

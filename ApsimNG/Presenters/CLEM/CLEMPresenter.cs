@@ -6,10 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
-using UserInterface.Presenters;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -69,37 +66,44 @@ namespace UserInterface.Presenters
                 //Properties
                 try
                 {
+                    // user can set view to state it must be multiview so do not override value
+
+
+
+
                     presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     string propPresenterName = presenterName.ToString();
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     string viewName = viewAttribute.ToString();
-                    if (propPresenterName == "UserInterface.Presenters.PropertyPresenter")
+                    if (propPresenterName == "UserInterface.Presenters.PropertyPresenter" | !propPresenterName.Contains("Property"))
                     {
                         propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
-                        viewName = "UserInterface.Views.PropertyView";
-                    }
-                    else if (!presenterName.ToString().Contains("Property"))
-                    {
-                        propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
-                        viewName = "UserInterface.Views.PropertyView";
+                        if(viewName != "UserInterface.Views.PropertyMultiView")
+                            viewName = "UserInterface.Views.PropertyView";
                     }
 
-                    string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
-                    bool isTablePresenter = childDisplayInParentPresenters.Contains(propPresenterName.Split('.').Last());
-
-                    // check if it has properties
-                    if (isTablePresenter ||
-                        (model.GetType().GetProperties(
+                    var props = model.GetType().GetProperties(
                         BindingFlags.Public |
                           BindingFlags.NonPublic |
                           BindingFlags.Instance
-                          ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
+                          );
+
+                    bool categoryAttributeFound = (props.Where(prop => prop.IsDefined(typeof(CategoryAttribute), false)).Count() > 0);
+                    if (categoryAttributeFound)
+                    {
+                        propPresenterName = "UserInterface.Presenters.PropertyTreePresenter";
+                        // need to set view accordingly
+                    }
+
+                    // check if it has properties
+                    if ((viewName.Contains("PropertyMultiView") | viewName.Contains("PropertyTreeMultiView")) ||
+                        (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
-                            if (viewName == "UserInterface.Views.PropertyView")
+                            if (viewName == "UserInterface.Views.PropertyView" | viewName == "UserInterface.Views.PropertyMultiView")
                             {
                                 (newView as PropertyView).DisplayFrame = false;
                             }

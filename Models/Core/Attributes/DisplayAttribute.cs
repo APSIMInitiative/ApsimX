@@ -137,13 +137,6 @@ namespace Models.Core
         public Type[] CLEMResourceGroups { get; set; }
 
         /// <summary>
-        /// Gets or sets strings that are manually added to the Resource name editor.
-        /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
-        /// Will add these strings to the dropdown list created by CLEMResourceGroups. 
-        /// </summary>
-        public string[] CLEMExtraEntries { get; set; }
-
-        /// <summary>
         /// Gets or sets the display type. 
         /// </summary>
         public DisplayType Type { get; set; }

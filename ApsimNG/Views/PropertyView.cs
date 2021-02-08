@@ -33,7 +33,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The main widget which holds the property table.
         /// </summary>
-        private Frame box;
+        protected Frame box;
 
         /// <summary>
         /// Table which is used to layout property labels/inputs.
@@ -42,7 +42,7 @@ namespace UserInterface.Views
         /// The table is destroyed and rebuilt from scratch when
         /// <see cref="DisplayProperties()" /> is called.
         /// </remarks>
-        private Table propertyTable;
+        protected Table propertyTable;
 
         /// <summary>
         /// Called when a property is changed by the user.
@@ -81,7 +81,7 @@ namespace UserInterface.Views
         /// Display properties and their values to the user.
         /// </summary>
         /// <param name="properties">Properties to be displayed/edited.</param>
-        public void DisplayProperties(PropertyGroup properties)
+        public virtual void DisplayProperties(PropertyGroup properties)
         {
             uint row = 0;
             uint col = 0;
@@ -125,7 +125,7 @@ namespace UserInterface.Views
             box.Add(propertyTable);
 
             uint nrow = 0;
-            AddPropertiesToTable(ref propertyTable, properties, ref nrow);
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
@@ -144,12 +144,22 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Display properties and their values to the user.
+        /// </summary>
+        /// <param name="properties">Properties to be displayed/edited.</param>
+        public virtual void DisplayProperties(List<PropertyGroup> properties)
+        {
+            throw new NotImplementedException("Multiple models is not supported in PropertyView");
+        }
+
+        /// <summary>
         /// Adds a group of properties to the GtkTable, starting at the specified row.
         /// </summary>
         /// <param name="table">Table to be modified.</param>
         /// <param name="properties">Property group to be modified.</param>
         /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
-        private void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow)
+        /// <param name="columnOffset">The number of columns to offset for this propertygroup (0 = single. >0 multiply models reported as columns).</param>
+        protected void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow, uint columnOffset)
         {
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
@@ -165,10 +175,13 @@ namespace UserInterface.Views
                         propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
                     }
 
-                Label label = new Label(property.Name);
-                label.TooltipText = property.Tooltip;
-                label.Xalign = 0;
-                propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+                if (columnOffset == 0) // only perform on first or only entry
+                {
+                    Label label = new Label(property.Name);
+                    label.TooltipText = property.Tooltip;
+                    label.Xalign = 0;
+                    propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0); 
+                }
 
                 if (!string.IsNullOrEmpty(property.Tooltip))
                 {
@@ -181,7 +194,7 @@ namespace UserInterface.Views
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
-                propertyTable.Attach(inputWidget, 2, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+                propertyTable.Attach(inputWidget, 2+columnOffset, 3+columnOffset, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 
                 startRow++;
             }
@@ -189,7 +202,7 @@ namespace UserInterface.Views
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
             {
                 propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
-                AddPropertiesToTable(ref table, subProperties, ref startRow);
+                AddPropertiesToTable(ref table, subProperties, ref startRow, columnOffset);
             }
         }
 
@@ -573,7 +586,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnWidgetDestroyed(object sender, EventArgs e)
+        protected void OnWidgetDestroyed(object sender, EventArgs e)
         {
             if (sender is Widget widget)
             {
