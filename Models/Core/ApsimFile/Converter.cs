@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 126; } }
+        public static int LatestVersion { get { return 128; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3330,6 +3330,39 @@
                 }
             }
         }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// Previously, we used a custom markdown extension to implement support
+        /// for markup superscript/subscripts, but given how slow this is, we've
+        /// decided to just stick with the built-in extensions, so we need to
+        /// change the syntax in all existing files.
+        /// </remarks>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion127(JObject root, string fileName)
+        {
+            foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
+            {
+                string text = memo["Text"]?.ToString();
+                text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
+                text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
+                memo["Text"] = text;
+            }
+        }
+		
+        /// <summary>
+        /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion128(JObject root, string fileName)
+        {
+            foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
+                fertiliser["ResourceName"] = "Fertiliser";
+        }
+	
 
         /// <summary>
         /// Refactor LifeCycle model

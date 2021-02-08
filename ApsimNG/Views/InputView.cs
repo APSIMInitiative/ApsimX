@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -32,7 +33,6 @@ namespace UserInterface.Views
         private VBox vbox1 = null;
         private Button button1 = null;
         private Label label1 = null;
-        private Label label2 = null;
         private GridView grid;
 
         /// <summary>
@@ -49,13 +49,11 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
-            label2 = (Label)builder.GetObject("label2");
             mainWidget = vbox1;
 
             grid = new GridView(this);
             vbox1.PackStart(grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
-            label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
@@ -64,7 +62,7 @@ namespace UserInterface.Views
             try
             {
                 button1.Clicked -= OnBrowseButtonClick;
-                grid.MainWidget.Destroy();
+                grid.MainWidget.Cleanup();
                 grid = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
@@ -88,22 +86,6 @@ namespace UserInterface.Views
             set
             {
                 label1.Text = value;
-            }
-        }
-
-        /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        public string WarningText
-        {
-            get
-            {
-                return label2.Text;
-            }
-            set
-            {
-                label2.Text = value;
-                label2.Visible = !string.IsNullOrWhiteSpace(value);
             }
         }
 

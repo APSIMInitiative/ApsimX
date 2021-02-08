@@ -1,4 +1,5 @@
-﻿using OxyPlot;
+﻿using APSIM.Shared.Utilities;
+using OxyPlot;
 using System;
 using System.Drawing;
 
@@ -54,7 +55,7 @@ namespace Utility
         /// Translates a System.Drawing.Color to a Gdk.Color.
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
-        public static Gdk.Color ToGdk(Color colour)
+        public static Gdk.Color ToGdk(this Color colour)
         {
             return new Gdk.Color(colour.R, colour.G, colour.B);
         }
@@ -78,5 +79,38 @@ namespace Utility
         {
             return ToOxy(FromGtk(colour));
         }
+#if NETCOREAPP
+        /// <summary>
+        /// Convert a System.Drawing.Color to a Gdk.RGBA.
+        /// </summary>
+        /// <param name="colour">The colour to be converted.</param>
+        /// <returns></returns>
+        internal static Gdk.RGBA ToRGBA(this Color colour)
+        {
+            return new Gdk.RGBA()
+            {
+                Red = 1.0 * colour.R / 0xff,
+                Green = 1.0 * colour.G / 0xff,
+                Blue = 1.0 * colour.B / 0xff,
+                Alpha = 1.0 * colour.A / 0xff
+            };
+        }
+
+        /// <summary>
+        /// Convert a System.Drawing.Color to a Gdk.RGBA.
+        /// </summary>
+        /// <param name="colour">The colour to be converted.</param>
+        /// <returns></returns>
+        internal static Color ToColour(this Gdk.RGBA colour)
+        {
+            return Color.FromArgb
+            (
+                Convert.ToInt32(MathUtilities.Bound(colour.Alpha, 0, 1) * 0xff),
+                Convert.ToInt32(MathUtilities.Bound(colour.Red, 0, 1) * 0xff),
+                Convert.ToInt32(MathUtilities.Bound(colour.Green, 0, 1) * 0xff),
+                Convert.ToInt32(MathUtilities.Bound(colour.Blue, 0, 1) * 0xff)
+            );
+        }
+#endif
     }
 }

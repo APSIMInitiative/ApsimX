@@ -5,9 +5,9 @@ using Models.Interfaces;
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on stomatal conductance using the approach of [Elli2020].
+    /// This model calculates the CO~2~ impact on stomatal conductance using the approach of [Elli2020].
     /// 
-    ///     _StomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO<sub>2</sub> - CP)_
+    ///     _StomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO~2~ - CP)_
     ///     
     /// where CP, is the compensation point calculated from daily average temperature (T) as
     /// 

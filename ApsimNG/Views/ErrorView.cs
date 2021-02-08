@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -125,7 +126,7 @@ namespace UserInterface.Views
             copyButton.Clicked -= Copy;
             closeButton.Clicked -= Close;
             if (errorWindow != null)
-                errorWindow.Destroy();
+                errorWindow.Cleanup();
         }
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace UserInterface.Views
         {
             try
             {
-                errorWindow.Destroy();
+                errorWindow.Cleanup();
             }
             catch (Exception err)
             {

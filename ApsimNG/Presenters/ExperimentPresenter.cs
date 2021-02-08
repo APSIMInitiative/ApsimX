@@ -35,8 +35,8 @@
         private string[] hiddenColumns = new string[] { "Experiment", "Zone", "FolderName" };
 
         /// <summary>Attach the model to the view.</summary>
-        /// <param name="model">The model.</param>
-        /// <param name="view">The view.</param>
+        /// <param name="modelObject">The model.</param>
+        /// <param name="viewObject">The view.</param>
         /// <param name="parentPresenter">The explorer presenter.</param>
         public void Attach(object modelObject, object viewObject, ExplorerPresenter parentPresenter)
         {

@@ -5685,7 +5685,7 @@ namespace Models.Soils
 
             if (subsurfaceDrain != null)
             {
-                int drain_node = FindLayerNo(subsurfaceDrain.DrainDepth);
+                int drain_node = SoilUtilities.LayerIndexOfClosestDepth(soilPhysical.Thickness, subsurfaceDrain.DrainDepth);
 
                 double d = subsurfaceDrain.ImpermDepth - subsurfaceDrain.DrainDepth;
                 if (_psi[drain_node] > 0)
@@ -5735,21 +5735,6 @@ namespace Models.Soils
             }
 
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        }
-
-        private int FindLayerNo(double depth)
-        {
-            // Find the soil layer in which the indicated depth is located
-            // NOTE: The returned layer number is 0-based
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                depth_cum = depth_cum + soilPhysical.Thickness[i];
-                if (depth_cum >= depth)
-                    return i;
-            }
-            return soilPhysical.Thickness.Length - 1;
         }
 
         ///// <summary>
@@ -5836,26 +5821,6 @@ namespace Models.Soils
         //    }
 
         //    return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        //}
-
-        ///// <summary>
-        ///// Finds the layer no.
-        ///// </summary>
-        ///// <param name="depth">The depth.</param>
-        ///// <returns></returns>
-        //private int FindLayerNo(double depth)
-        //{
-        //    // Find the soil layer in which the indicated depth is located
-        //    // NOTE: The returned layer number is 0-based
-        //    // If the depth is not reached, the last element is used
-        //    double depth_cum = 0.0;
-        //    for (int i = 0; i < _dlayer.Length; i++)
-        //    {
-        //        depth_cum = depth_cum + _dlayer[i];
-        //        if (depth_cum >= depth)
-        //            return i;
-        //    }
-        //    return _dlayer.Length - 1;
         //}
 
         /// <summary>
