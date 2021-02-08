@@ -1,15 +1,7 @@
-using DocumentFormat.OpenXml.EMMA;
 using Gtk;
-using Models.CLEM;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UserInterface;
-using UserInterface.Interfaces;
-using UserInterface.Presenters;
-using UserInterface.Views;
 
 namespace UserInterface.Views
 {

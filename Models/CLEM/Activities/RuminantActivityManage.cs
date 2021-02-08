@@ -214,7 +214,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased sires in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
         public string GrazeFoodStoreNameSires { get; set; }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased breeders in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
         public string GrazeFoodStoreNameBreeders { get; set; }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out females in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
         public string GrazeFoodStoreNameGrowOutFemales { get; set; }
 
         /// <summary>
@@ -238,7 +238,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out males in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
         public string GrazeFoodStoreNameGrowOutMales { get; set; }
 
         private string grazeStoreSires = "";

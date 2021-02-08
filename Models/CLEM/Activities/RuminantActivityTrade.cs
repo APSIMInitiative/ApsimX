@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Pasture details")]
         [Description("GrazeFoodStore (paddock) to place purchases in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
         private string grazeStore = "";

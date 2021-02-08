@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, CLEMExtraEntries = new string[] { "Not provided" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, Values = "Not provided" )]
         public string AccountName { get; set; }
 
         /// <summary>

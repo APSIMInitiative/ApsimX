@@ -5,11 +5,11 @@ namespace UserInterface.Views
     using Gtk;
     using System.Data;
     using System;
-    using Models.Core;
     using System.Drawing;
     using System.IO;
     using System.Drawing.Imaging;
     using System.Collections.Generic;
+    using Models.Core;
 
     public interface IActivityLedgerGridView
     {

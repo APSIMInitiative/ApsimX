@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Bank account to use")]
         [System.ComponentModel.DefaultValue("No financial implications")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, CLEMExtraEntries = new string[] { "No financial implications" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, Values = "No financial implications")]
         public string AccountName { get; set; }
 
         private FileResource fileResource = null;

@@ -1,9 +1,10 @@
-﻿using Models.Core;
-using Models.CLEM;
-using Models.CLEM.Reporting;
+﻿//using Models.CLEM;
+//using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using Gtk;
+using Models.CLEM;
+using Models.CLEM.Reporting;
 using UserInterface.Views;
 
 namespace ApsimNG.Views.CLEM

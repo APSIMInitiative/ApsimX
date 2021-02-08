@@ -1,18 +1,11 @@
 
 namespace UserInterface.Views
 {
-    using EventArguments;
     using Gtk;
     using Interfaces;
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.InteropServices;
-    using APSIM.Shared.Utilities;
     using System.IO;
     using System.Net.NetworkInformation;
-    using System.Net;
     using System.Globalization;
 
     /// <summary>

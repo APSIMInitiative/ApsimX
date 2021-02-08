@@ -45,7 +45,7 @@ namespace Models.CLEM.Activities
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, Values = "Use store named Methane if present", CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
         [System.ComponentModel.DefaultValue("Use store named Methane if present")]
         public string MethaneStoreName { get; set; }
 
@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
         /// Nitrous oxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for nitrous oxide emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named N2O if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, Values = "Use store named N2O if present", CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
         [System.ComponentModel.DefaultValue("Use store named N2O if present")]
         public string NitrousOxideStoreName { get; set; }
 
