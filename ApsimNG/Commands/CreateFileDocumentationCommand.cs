@@ -28,6 +28,7 @@
         /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="destinationFolder">Destination directory.</param>
         public CreateFileDocumentationCommand(ExplorerPresenter explorerPresenter, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;

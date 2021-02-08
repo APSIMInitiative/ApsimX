@@ -4,11 +4,15 @@
     using System;
     using System.IO;
     using System.Linq;
-    using MonoMac;
     using Gtk;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using UserInterface.Extensions;
+    using UserInterface.Views;
+#if NETFRAMEWORK
+    using MonoMac;
     using MonoMac.AppKit;
+#endif
 
     /// <summary>
     /// All access to this class should be via <see cref="IFileDialog"/>.
@@ -109,21 +113,87 @@
         /// <returns>Array containing the paths of the chosen files/directories.</returns>
         private string[] GetFiles(bool selectMultiple)
         {
+#if NETCOREAPP
+            return GenericFileDialog(selectMultiple);
+#else
             if (ProcessUtilities.CurrentOS.IsWindows)
                 return WindowsFileDialog(selectMultiple);
             else if (ProcessUtilities.CurrentOS.IsMac)
                 return OSXFileDialog(selectMultiple);
             else
                 return GenericFileDialog(selectMultiple);
+#endif
         }
 
         /// <summary>
+        /// Ask the user for a file name. Used on OSs which are not Windows or MacOS.
+        /// </summary>
+        /// <param name="selectMultiple">Whether or not the user is allowed to select multiple files.</param>
+        /// <returns>Array of files selected by the user.</returns>
+        public string[] GenericFileDialog(bool selectMultiple)
+        {
+            string buttonText = string.Empty;
+            FileChooserAction gtkActionType;
+            if (Action == FileActionType.Open)
+            {
+                buttonText = "Open";
+                gtkActionType = FileChooserAction.Open;
+            }
+            else if (Action == FileActionType.Save)
+            {
+                buttonText = "Save";
+                gtkActionType = FileChooserAction.Save;
+            }
+            else if (Action == FileActionType.SelectFolder)
+            {
+                buttonText = "Select Folder";
+                gtkActionType = FileChooserAction.SelectFolder;
+            }
+            else
+                throw new Exception("This file chooser dialog has specified more than one action type.");
+
+#if NETFRAMEWORK
+            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept);
+#else
+            Window window = (Window)((ViewBase)ViewBase.MasterView).MainWidget;
+            FileChooserNative fileChooser = new FileChooserNative(Prompt, window, gtkActionType, buttonText, "Cancel");
+#endif
+            fileChooser.SelectMultiple = selectMultiple;
+
+            if (!string.IsNullOrEmpty(FileType))
+            {
+                string[] specParts = FileType.Split(new Char[] { '|' });
+                for (int i = 0; i < specParts.Length; i += 2)
+                {
+                    FileFilter fileFilter = new FileFilter();
+                    fileFilter.Name = specParts[i];
+                    fileFilter.AddPattern(specParts[i + 1]);
+                    fileChooser.AddFilter(fileFilter);
+                }
+            }
+
+            FileFilter allFilter = new FileFilter();
+            allFilter.AddPattern("*");
+            allFilter.Name = "All files";
+            fileChooser.AddFilter(allFilter);
+
+            fileChooser.SetCurrentFolder(InitialDirectory);
+
+            string[] fileNames = new string[0];
+            if (fileChooser.Run() == (int)ResponseType.Accept)
+                fileNames = fileChooser.Filenames;
+#if NETFRAMEWORK
+            fileChooser.Cleanup();
+#else
+            fileChooser.Dispose();
+#endif
+            return fileNames;
+        }
+#if NETFRAMEWORK
+        /// <summary>
         /// Ask user for a filename to open on Windows.
         /// </summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="fileSpec">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save").</param>
-        /// <param name="InitialPath">Optional Initial starting filename or directory.</param>      
+        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
         private string[] WindowsFileDialog(bool selectMultiple)
         {
             System.Windows.Forms.FileDialog dialog = null;
@@ -161,10 +231,7 @@
         /// <summary>
         /// Ask user for a filename to open on Windows.
         /// </summary>
-        /// <param name="Prompt">String to use as dialog heading</param>
-        /// <param name="FileType">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save")</param>
-        /// <param name="InitialDirectory">Optional Initial starting filename or directory</param>      
+        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
         private string[] OSXFileDialog(bool selectMultiple)
         {
             int result = 0;
@@ -222,68 +289,8 @@
             return fileNames;
         }
 
-        /// <summary>
-        /// Ask the user for a file name. Used on OSs which are not Windows or MacOS.
-        /// </summary>
-        /// <param name="selectMultiple">Whether or not the user is allowed to select multiple files.</param>
-        /// <returns>Array of files selected by the user.</returns>
-        public string[] GenericFileDialog(bool selectMultiple)
-        {
-            string buttonText = string.Empty;
-            FileChooserAction gtkActionType;
-            if (Action == FileActionType.Open)
-            {
-                buttonText = "Open";
-                gtkActionType = FileChooserAction.Open;
-            }
-            else if (Action == FileActionType.Save)
-            {
-                buttonText = "Save";
-                gtkActionType = FileChooserAction.Save;
-            }
-            else if (Action == FileActionType.SelectFolder)
-            {
-                buttonText = "Select Folder";
-                gtkActionType = FileChooserAction.SelectFolder;
-            }
-            else
-                throw new Exception("This file chooser dialog has specified more than one action type.");
-
-            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept)
-            {
-                SelectMultiple = selectMultiple
-            };
-
-            if (!string.IsNullOrEmpty(FileType))
-            {
-                string[] specParts = FileType.Split(new Char[] { '|' });
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    FileFilter fileFilter = new FileFilter();
-                    fileFilter.Name = specParts[i];
-                    fileFilter.AddPattern(specParts[i + 1]);
-                    fileChooser.AddFilter(fileFilter);
-                }
-            }
-
-            FileFilter allFilter = new FileFilter();
-            allFilter.AddPattern("*");
-            allFilter.Name = "All files";
-            fileChooser.AddFilter(allFilter);
-            
-            fileChooser.SetCurrentFolder(InitialDirectory);
-
-            string[] fileNames = new string[0];
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileNames = fileChooser.Filenames;
-            fileChooser.Destroy();
-
-            return fileNames;
-        }
-
         /// <summary>Ask user for a directory on Windows.</summary>
-        /// <param name="Prompt">String to use as dialog heading</param>        
-        /// <param name="initialPath">Optional Initial starting filename or directory</param>
+        /// <param name="selectMultiple">Allow the user to select multiple directories?</param>
         /// <returns>string containing the path to the chosen directory.</returns>
         /// <remarks>
         /// For reasons which are unclear to me, the Windows file chooser dialog cannot not be 
@@ -314,5 +321,6 @@
             dialog = null;
             return new string[] { fileName };
         }
+#endif
     }
 }

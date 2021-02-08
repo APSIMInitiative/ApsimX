@@ -368,8 +368,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Set the value of the specified property
         /// </summary>
-        /// <param name="property">The property to set the value of</param>
-        /// <param name="value">The value to set the property to</param>
+        /// <param name="changedProperty">The property which has been changed.</param>
         private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -443,6 +442,7 @@ namespace UserInterface.Presenters
         /// Clones an array. Never returns null.
         /// </summary>
         /// <param name="array"></param>
+        /// <param name="elementType">Element type of the array.</param>
         private Array Clone(Array array, Type elementType)
         {
             if (array == null)
