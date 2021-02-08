@@ -487,6 +487,7 @@
                                 presenter.Detach();
                                 view.MainWidget.Cleanup();
                                 popupWin.Cleanup();
+                                while (GLib.MainContext.Iteration());
                             }
                         }
                     }
