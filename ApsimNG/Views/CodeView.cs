@@ -37,11 +37,6 @@ namespace UserInterface.Views
         private SourceView textEditor;
 
         /// <summary>
-        /// The popup menu options on the editor
-        /// </summary>
-        private Menu popupMenu = new Menu();
-
-        /// <summary>
         /// Menu accelerator group
         /// </summary>
         private AccelGroup accel = new AccelGroup();
@@ -196,9 +191,6 @@ namespace UserInterface.Views
             }
         }
 
-        private MenuItem styleMenu;
-        private MenuItem styleSeparator;
-
         /// <summary>
         /// Gets or sets the current location of the caret (column and line) and the current scrolling position
         /// This isn't really a Rectangle, but the Rectangle class gives us a convenient
@@ -330,31 +322,8 @@ namespace UserInterface.Views
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
-            AddContextActionWithAccel("Cut", OnCut, "Ctrl+X");
-            AddContextActionWithAccel("Copy", OnCopy, "Ctrl+C");
-            AddContextActionWithAccel("Paste", OnPaste, "Ctrl+V");
-            AddContextSeparator();
-            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
-            AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
-            AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
-            AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
-            styleSeparator = AddContextSeparator();
-            styleMenu = AddMenuItem("Use style", null);
-            Menu styles = new Menu();
-
-            // find all the editor styles and add sub menu items to the popup
-            //string[] styleNames = Mono.TextEditor.Highlighting.SyntaxModeService.Styles;
-            //Array.Sort(styleNames, StringComparer.InvariantCulture);
-            //foreach (string name in styleNames)
-            //{
-            //    CheckMenuItem subItem = new CheckMenuItem(name);
-            //    if (string.Compare(name, options.ColorScheme, true) == 0)
-            //        subItem.Toggle();
-            //    subItem.Activated += OnChangeEditorStyle;
-            //    subItem.Visible = true;
-            //    styles.Append(subItem);
-            //}
-            //styleMenu.Submenu = styles;
+            // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
+            // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
 
             IntelliSenseChars = ".";
         }
@@ -385,24 +354,7 @@ namespace UserInterface.Views
                 // We can do this via reflection. Here's how it currently can be done in Gtk#.
                 // Windows.Forms would do it differently.
                 // This may break if Gtk# changes the way they implement event handlers.
-                foreach (Widget w in popupMenu)
-                {
-                    if (w is MenuItem)
-                    {
-                        PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (pi != null)
-                        {
-                            System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                            if (handlers != null && handlers.ContainsKey("activate"))
-                            {
-                                EventHandler handler = (EventHandler)handlers["activate"];
-                                (w as MenuItem).Activated -= handler;
-                            }
-                        }
-                    }
-                }
-
-                popupMenu.Cleanup();
+                textEditor.DetachAllHandlers();
                 accel.Dispose();
                 textEditor.Cleanup();
                 textEditor = null;
@@ -734,29 +686,24 @@ namespace UserInterface.Views
         #region Code related to Edit menu
 
         /// <summary>
-        /// Show the popup menu
-        /// </summary>
-        /// <param name="b">The button</param>
-        private void DoPopup(Gdk.EventButton b)
-        {
-            popupMenu.Popup();
-        }
-
-        /// <summary>
         /// Add a menu item to the menu
         /// </summary>
         /// <param name="menuItemText">Menu item caption</param>
         /// <param name="onClick">Event handler</param>
         /// <returns>The menu item that was created</returns>
-        public MenuItem AddMenuItem(string menuItemText, System.EventHandler onClick)
+        public void AddMenuItem(string menuItemText, System.EventHandler onClick)
         {
-            MenuItem item = new MenuItem(menuItemText);
-            if (onClick != null)
-                item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-
-            return item;
+            textEditor.PopulatePopup += (sender, args) =>
+            {
+                if (args.Popup is Menu menu)
+                {
+                    MenuItem item = new MenuItem(menuItemText);
+                    if (onClick != null)
+                        item.Activated += onClick;
+                    item.ShowAll();
+                    menu.Append(item);
+                }
+            };
         }
 
         /// <summary>
@@ -764,9 +711,16 @@ namespace UserInterface.Views
         /// </summary>
         public MenuItem AddContextSeparator()
         {
-            MenuItem result = new SeparatorMenuItem();
-            popupMenu.Append(result);
-            return result;
+            textEditor.PopulatePopup += (sender, args) =>
+            {
+                if (args.Popup is Menu menu)
+                {
+                    MenuItem item = new SeparatorMenuItem();
+                    item.ShowAll();
+                    menu.Append(item);
+                }
+            };
+            return null;
         }
 
         /// <summary>
@@ -777,39 +731,45 @@ namespace UserInterface.Views
         /// <param name="shortcut">The shortcut string</param>
         public MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut)
         {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
-            if (!string.IsNullOrEmpty(shortcut))
+            textEditor.PopulatePopup += (sender, args) =>
             {
-                string keyName = string.Empty;
-                Gdk.ModifierType modifier = Gdk.ModifierType.None;
-                string[] keyNames = shortcut.Split(new char[] { '+' });
-                foreach (string name in keyNames)
+                if (args.Popup is Menu menu)
                 {
-                    if (name == "Ctrl")
-                        modifier |= Gdk.ModifierType.ControlMask;
-                    else if (name == "Shift")
-                        modifier |= Gdk.ModifierType.ShiftMask;
-                    else if (name == "Alt")
-                        modifier |= Gdk.ModifierType.Mod1Mask;
-                    else if (name == "Del")
-                        keyName = "Delete";
-                    else
-                        keyName = name;
+                    ImageMenuItem item = new ImageMenuItem(menuItemText);
+                    if (!string.IsNullOrEmpty(shortcut))
+                    {
+                        string keyName = string.Empty;
+                        Gdk.ModifierType modifier = Gdk.ModifierType.None;
+                        string[] keyNames = shortcut.Split(new char[] { '+' });
+                        foreach (string name in keyNames)
+                        {
+                            if (name == "Ctrl")
+                                modifier |= Gdk.ModifierType.ControlMask;
+                            else if (name == "Shift")
+                                modifier |= Gdk.ModifierType.ShiftMask;
+                            else if (name == "Alt")
+                                modifier |= Gdk.ModifierType.Mod1Mask;
+                            else if (name == "Del")
+                                keyName = "Delete";
+                            else
+                                keyName = name;
+                        }
+                        try
+                        {
+                            Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
+                            item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    if (onClick != null)
+                        item.Activated += onClick;
+                    item.ShowAll();
+                    menu.Append(item);
                 }
-                try
-                {
-                    Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
-                    item.AddAccelerator("activate", accel, (uint)accelKey, modifier, AccelFlags.Visible);
-                }
-                catch
-                {
-                }
-            }
-            if (onClick != null)
-                item.Activated += onClick;
-            popupMenu.Append(item);
-            popupMenu.ShowAll();
-            return item;
+            };
+            return null;
         }
 
         /// <summary>
