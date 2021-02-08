@@ -431,7 +431,7 @@
                     AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
                     if (imageTag.image.Width > 700)
                         imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
-                    string pngFileName = Path.Combine(WorkingDirectory, imageTag.name);
+                    string pngFileName = Path.Combine(WorkingDirectory, $"{imageTag.name}.png");
                     imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
                     section.AddImage(pngFileName);
                     figureNumber++;
@@ -555,8 +555,10 @@
             // Setup graph.
             GraphView graph = new GraphView();
             graph.Clear();
-            graph.Width = 400;
-            graph.Height = 250;
+            int width = 400;
+            int height = 250;
+            graph.Width = width;
+            graph.Height = height;
 
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null, null,
@@ -578,7 +580,7 @@
             graph.Refresh();
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(graph.Width, graph.Height);
+            Bitmap image = new Bitmap(width, height);
             using (Graphics gfx = Graphics.FromImage(image))
             using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
             {
@@ -634,8 +636,10 @@
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
                 graphView.MarkerSize = MarkerSizeType.Normal;
-                graphView.Width = image.Width / numColumns;
-                graphView.Height = image.Height / numRows;
+                int width = image.Width / numColumns;
+                int height = image.Height / numRows;
+                graphView.Width = width;
+                graphView.Height = height;
                 graphView.LeftRightPadding = 0;
 
                 int col = 0;
@@ -645,8 +649,8 @@
                     if (graphPage.graphs[i].IncludeInDocumentation)
                     {
                         graphPresenter.Attach(graphPage.graphs[i], graphView, explorerPresenter);
-                        Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
-                                                    graphView.Width, graphView.Height);
+                        Rectangle r = new Rectangle(col * width, row * height,
+                                                    width, height);
                         graphView.Export(ref image, r, false);
                         graphPresenter.Detach();
                         col++;
