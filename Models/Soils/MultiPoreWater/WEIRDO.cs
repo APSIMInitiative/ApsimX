@@ -237,9 +237,6 @@ namespace Models.Soils
         ///<summary> this is the layer structure that parameters are entered against for this object</summary>
         public double[] Thickness { get; set; }
 
-        ///<summary> This is the layer structure that the model uses for execution</summary>
-        public double[] LayerThickness { get; set; }
-
         /// <summary>Return the soil layer cumulative thickness (mm)</summary>
         public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
 
@@ -782,19 +779,6 @@ namespace Models.Soils
         #endregion
 
         #region Water Balance Methods
-        /*internal void MapVariables(IPhysical physical, double[] targetThickness)
-        {
-            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
-            MappedSAT = Layers.MapConcentration(physical.SAT, physical.Thickness, targetThickness, physical.SAT[ physical.SAT.Length-1]);
-            MappedDUL = Layers.MapConcentration(physical.DUL, physical.Thickness, targetThickness, physical.DUL[physical.DUL.Length - 1]);
-            MappedLL15 = Layers.MapConcentration( physical.LL15, physical.Thickness, targetThickness,  physical.LL15[ physical.LL15.Length - 1]);
-            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, CflowScaled[CflowScaled.Length - 1]);
-            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
-            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
-            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
-            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness,  physical.SAT[LowerRepellentWC.Length - 1]);
-            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness,  physical.SAT[MinRepellancyFactor.Length - 1]);
-        }*/
 
         internal void SetLayerThickness(double[] targetThickness)
         {
@@ -814,10 +798,10 @@ namespace Models.Soils
             { //On days when irrigation is applied spread it out into hourly increments
                 if (IrrigationDuration > 24)
                     throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
-                int Irrighours = (int)Math.Ceiling(IrrigationDuration);
+                int irrigHours = (int)Math.Ceiling(IrrigationDuration);
                 double IrrigationRate = Math.Min(Irrigation / IrrigationDuration, Irrigation); //Constrain to Irrigation amount so doesn't multiply irrigation if duration is < 1
 
-                for (int h = 0; h < Irrighours; h++)
+                for (int h = 0; h < irrigHours; h++)
                 {
                     Hourly.Irrigation[h] = IrrigationRate;
                 }

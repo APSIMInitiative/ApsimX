@@ -5848,10 +5848,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] Thickness { get { return soilPhysical.Thickness; } }
 
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        public double[] LayerThickness { get { return soilPhysical.Thickness; } }
-
-
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }

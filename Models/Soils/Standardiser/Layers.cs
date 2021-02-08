@@ -93,7 +93,6 @@
                     soilWater.SWCON = MapConcentration(soilWater.SWCON, soilWater.Thickness, thickness, 0.0);
 
                     soilWater.Thickness = thickness;
-                    soilWater.LayerThickness = thickness;
                 }
                 if (soilWater.SWCON == null)
                     soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);
