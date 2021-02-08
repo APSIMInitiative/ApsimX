@@ -7,6 +7,7 @@
 
 namespace UserInterface.Views
 {
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -51,16 +52,15 @@ namespace UserInterface.Views
         /// Add a user control to the right hand panel. If Control is null then right hand panel will be cleared.
         /// </summary>
         /// <param name="control">The control to add.</param>
-        /// <param name="description">Descriptive text to show at top of view.</param>
         public void AddRightHandView(object control)
         {
             // Remove existing right hand view.
             foreach (var child in rightHandView.Children)
             {
-                if (child != descriptionView?.MainWidget)
+                if (child != (descriptionView as ViewBase)?.MainWidget)
                 {
                     rightHandView.Remove(child);
-                    child.Destroy();
+                    child.Cleanup();
                 }
             }
 
@@ -83,8 +83,9 @@ namespace UserInterface.Views
             {
                 if (descriptionView != null)
                 {
-                    rightHandView.Remove(descriptionView.MainWidget);
-                    descriptionView.MainWidget.Destroy();
+                    Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
+                    rightHandView.Remove(descriptionWidget);
+                    descriptionWidget.Cleanup();
                 }
                 descriptionView = null;
             }
@@ -102,6 +103,7 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
+#if NETFRAMEWORK
             // Create a Bitmap and draw the panel
             int width;
             int height;
@@ -112,6 +114,9 @@ namespace UserInterface.Views
             System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
             System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
             return bitmap;
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         /// <summary>
@@ -154,7 +159,7 @@ namespace UserInterface.Views
                     foreach (Widget child in rightHandView.Children)
                     {
                         rightHandView.Remove(child);
-                        child.Destroy();
+                        child.Cleanup();
                     }
                 }
                 ToolStrip.Destroy();

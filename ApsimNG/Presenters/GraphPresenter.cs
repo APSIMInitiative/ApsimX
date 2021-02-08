@@ -51,6 +51,7 @@
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="cache">Cached definitions to be used.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
             this.graph = model as Graph;

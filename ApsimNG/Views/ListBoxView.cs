@@ -1,4 +1,8 @@
-﻿namespace UserInterface.Views
+﻿# if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -9,6 +13,7 @@
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
+    using Extensions;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -50,11 +55,14 @@
     {
         public IkonView(TreeModel model) : base(model) { }
 
+#if NETFRAMEWORK
+        // ItemPadding is included in the GtkSharp API but not in gtk-sharp (the gtk2 wrapper).
         public int ItemPadding
         {
             get { return (int)GetProperty("item-padding"); }
             set { SetProperty("item-padding", new GLib.Value(value)); }
         }
+#endif
     }
 
     /// <summary>A list view.</summary>
@@ -85,13 +93,30 @@
         public ListBoxView(ViewBase owner) : base(owner)
         {
             Listview = new IkonView(listmodel);
-            //listview = new TreeView(listmodel);
             mainWidget = Listview;
+#if NETCOREAPP
+            // It appears that the gtkiconview has changed considerably
+            // between gtk2 and gtk3. In the gtk3 world, use of the 
+            // set_text_column API is not recommended and in fact it appears
+            // to behave differently to the way it did in gtk2 anyway.
+            // https://bugzilla.gnome.org/show_bug.cgi?id=680953
+            CellRendererPixbuf imageCell = new CellRendererPixbuf();
+            Listview.PackStart(imageCell, false);
+            Listview.AddAttribute(imageCell, "pixbuf", 1);
+            CellRenderer cell = new CellRendererText(){ WrapMode = Pango.WrapMode.Word };
+            Listview.PackStart(cell, true);
+            Listview.AddAttribute(cell, "markup", 0);
+#else
             Listview.MarkupColumn = 0;
             Listview.PixbufColumn = 1;
+#endif
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
+#if NETFRAMEWORK
             Listview.Orientation = Gtk.Orientation.Horizontal;
+#else
+            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+#endif
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;
@@ -109,7 +134,7 @@
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
                 ClearPopup();
-                popup.Destroy();
+                popup.Cleanup();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -174,6 +199,7 @@
         /// Add a list item based on a file name
         /// </summary>
         /// <param name="fileName">The filename.</param>
+        /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
             List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
@@ -402,9 +428,7 @@
                 }
                 else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                    imageItem.Image = new Image(null, description.ResourceNameForImage);
-                    item = imageItem;
+                    item = WidgetExtensions.CreateImageMenuItem(description.Name, new Image(null, description.ResourceNameForImage));
                 }
                 else
                 {
@@ -464,7 +488,7 @@
                     }
                 }
                 popup.Remove(w);
-                w.Destroy();
+                w.Cleanup();
             }
         }
     }

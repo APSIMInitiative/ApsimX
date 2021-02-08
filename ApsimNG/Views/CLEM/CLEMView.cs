@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 using UserInterface.Presenters;
 using UserInterface.Views;
@@ -128,12 +129,14 @@ namespace UserInterface.Views
             foreach (Widget child in newViewport.Children)
             {
                 newViewport.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 EventBox frame = new EventBox();
+#if NETFRAMEWORK
                 frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+#endif
                 HBox hbox = new HBox();
                 uint border = 0;
                 if (tabName != "Properties" & tabName != "Display" & tabName != "Data")

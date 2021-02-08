@@ -53,11 +53,20 @@ git pull
 
 cd APSIM.PerformanceTests.Collector
 
+rem Add hol430 remote repo if it doesn't exist, then checkout refactor/ApsimAPI branch.
+rem Note that this is a temporary measure to address API changes
+(git remote show hol430 >nul 2>&1) || git remote add hol430 https://github.com/hol430/APSIM.PerformanceTests
+git fetch hol430
+git checkout net472
+git pull
+
 echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
 nuget restore -verbosity quiet
 
 echo Compiling APSIM.PerformanceTests.Collector...
-msbuild /v:m /p:Configuration=Release /m APSIM.PerformanceTests.Collector.sln
+nuget restore
+dotnet build -v m -c Release
+
 copy /y "%apsimx%\DeploymentSupport\Windows\Bin32\sqlite3.dll" bin\Release\
 
 echo Running performance tests collector...

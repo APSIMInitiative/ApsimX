@@ -8,19 +8,32 @@
     using Interfaces;
     using Intellisense;
     using EventArguments;
-    using ICSharpCode.NRefactory.Editor;
-    using ICSharpCode.NRefactory.CSharp;
     using Models.Core;
     using System.Globalization;
     using System.Drawing;
     using System.Reflection;
     using System.Text;
-    using Classes.Intellisense;
     using System.Xml;
-    using ICSharpCode.NRefactory.TypeSystem;
     using APSIM.Shared.Utilities;
     using Models.Storage;
     using System.Threading;
+
+#if NETCOREAPP
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using Microsoft.CodeAnalysis.Completion;
+    using Microsoft.CodeAnalysis.Host.Mef;
+    using Microsoft.CodeAnalysis.Text;
+    using System.Threading.Tasks;
+    using Microsoft.CodeAnalysis.Recommendations;
+#endif
+
+#if NETFRAMEWORK
+    using ICSharpCode.NRefactory.Editor;
+    using ICSharpCode.NRefactory.CSharp;
+    using ICSharpCode.NRefactory.TypeSystem;
+#endif
 
     /// <summary>
     /// Responsible for handling intellisense operations.
@@ -45,22 +58,6 @@
         private event EventHandler<NeedContextItemsArgs> OnContextItemsNeeded;
 
         /// <summary>
-        /// Fired when an item is selected in the intellisense window.
-        /// </summary>
-        private event EventHandler<IntellisenseItemSelectedArgs> OnItemSelected;
-
-        /// <summary>
-        /// Responsible for generating the completion options.
-        /// </summary>
-        private CSharpCompletion completion = new CSharpCompletion();
-        
-        /// <summary>
-        /// List of intellisense options.
-        /// Probably doesn't need to be a class field, but I have plans to use it in the future. - DH May 2018
-        /// </summary>
-        private CodeCompletionResult completionResult;
-
-        /// <summary>
         /// The partially-finished word for which the user wants completion options. May be empty string.
         /// </summary>
         private string triggerWord = string.Empty;
@@ -71,15 +68,80 @@
         private Point recentLocation;
 
         /// <summary>
+        /// Fired when an item is selected in the intellisense window.
+        /// </summary>
+        private event EventHandler<IntellisenseItemSelectedArgs> OnItemSelected;
+#if NETFRAMEWORK
+        /// <summary>
+        /// Responsible for generating the completion options.
+        /// </summary>
+        private CSharpCompletion completion = new CSharpCompletion();
+        
+        /// <summary>
+        /// List of intellisense options.
+        /// Probably doesn't need to be a class field, but I have plans to use it in the future. - DH May 2018
+        /// </summary>
+        private CodeCompletionResult completionResult;
+#else
+        private MefHostServices host;
+        private AdhocWorkspace workspace;
+        private ProjectInfo projectInfo;
+        private Project project;
+        private Document doc;
+        private CompletionService completion;
+#endif
+
+        /// <summary>
         /// Speeds up initialisation of all future intellisense objects.
         /// Only needs to be called once, when the application starts.
         /// </summary>
         public static void Init()
         {
+#if NETFRAMEWORK
             Thread initThread = new Thread(CSharpCompletion.Init);
             initThread.Start();
+#endif
         }
 
+#if NETCOREAPP
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public IntellisensePresenter()
+        {
+            host = MefHostServices.Create(GetManagerAssemblies());
+            workspace = new AdhocWorkspace(host);
+            projectInfo = ProjectInfo.Create(ProjectId.CreateNewId(), VersionStamp.Create(), "Manager Script", "ManagerScript", LanguageNames.CSharp);
+            project = workspace.AddProject(projectInfo);
+        }
+
+        private MetadataReference[] GetReferences()
+        {
+            return GetManagerAssemblies().Select(a => MetadataReferences.CreateFromFile(a.Location)).ToArray();
+        }
+
+        private Assembly[] GetManagerAssemblies()
+        {
+            var assemblies = new List<Assembly>()
+            {
+                typeof(object).Assembly, // mscorlib
+                typeof(Uri).Assembly, // System.dll
+                typeof(System.Linq.Enumerable).Assembly, // System.Core.dll
+                typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
+                typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
+                typeof(Models.Core.IModel).Assembly, // Models.exe
+                typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
+                typeof(MathNet.Numerics.Combinatorics).Assembly, // MathNet.Numerics
+                typeof(System.Data.DataTable).Assembly, // System.Data
+                Assembly.Load("Microsoft.CodeAnalysis"),
+                Assembly.Load("Microsoft.CodeAnalysis.CSharp"),
+                Assembly.Load("Microsoft.CodeAnalysis.Features"),
+                Assembly.Load("Microsoft.CodeAnalysis.CSharp.Features")
+            };
+            assemblies.AddRange(MefHostServices.DefaultAssemblies);
+            return assemblies.Distinct().ToArray();
+        }
+#endif
         /// <summary>
         /// Constructor. Requires a reference to the view holding the text editor.
         /// </summary>
@@ -196,9 +258,16 @@
         }
 
         /// <summary>
-        /// Generates completion options for a report. This should also work for the property presenter.
+        /// Generates completion options for a report, property presenter, etc.
+        /// Essentially this is the completion provider for 'apsim' completion values,
+        /// and is not used in a manager script context.
         /// </summary>
-        /// <param name="code">Source code.</param>
+        /// <param name="cellContents">Source code.</param>
+        /// <param name="model">Completion options are generated in reference to this model.</param>
+        /// <param name="methods">Get method completion options?</param>
+        /// <param name="properties">Get property completion options?</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <param name="offset">Offset of the cursor/caret in the source code.</param>
         /// <param name="controlSpace">True iff this intellisense request was generated by the user pressing control + space.</param>
         /// <returns>True if any completion options are found. False otherwise.</returns>
@@ -236,6 +305,7 @@
             return results.Any();
         }
 
+#if NETFRAMEWORK
         /// <summary>
         /// Generates completion options for a manager script.
         /// </summary>
@@ -270,7 +340,7 @@
                 // Filter items.
                 completionResult.CompletionData = completionResult.CompletionData.Where(item => GetMatchQuality(item.CompletionText, completionResult.TriggerWord) > 0).ToList();
             }
-            List<CompletionData> completionList = completionResult.CompletionData.Select(x => x as CompletionData).Where(x => x != null).OrderBy(x => x.CompletionText).ToList();
+            List<ICompletionItem> completionList = completionResult.CompletionData.Select(x => x as CompletionData).Where(x => x != null).OrderBy(x => x.CompletionText).ToList<ICompletionItem>();
             view.Populate(completionList);
             if (controlSpace && !string.IsNullOrEmpty(completionResult.TriggerWord))
                 view.SelectItem(completionList.IndexOf(completionList.OrderByDescending(x => GetMatchQuality(x.CompletionText, completionResult.TriggerWord)).FirstOrDefault()));
@@ -278,7 +348,59 @@
             File.Delete(fileName);
             return completionList.Any();
         }
+#else
+        /// <summary>
+        /// Generates completion options for a manager script.
+        /// </summary>
+        /// <param name="code">Source code.</param>
+        /// <param name="offset">Offset of the cursor/caret in the source code.</param>
+        /// <param name="controlSpace">True iff this intellisense request was generated by the user pressing control + space.</param>
+        /// <returns>True if any completion options are found. False otherwise.</returns>
+        public async Task<List<NeedContextItemsArgs.ContextItem>> GenerateScriptCompletions(string code, int offset, bool controlSpace = false)
+        {
+            // Alternative approach using CompletionService:
+            //
+            UpdateDocument(code);
+            string contents = (await doc.GetTextAsync()).ToString();
+            CompletionList results = await completion.GetCompletionsAsync(doc, offset);
 
+            if (results == null)
+                return null;
+
+            // Can't use await in a lambda...ugh
+            List<NeedContextItemsArgs.ContextItem> result = new List<NeedContextItemsArgs.ContextItem>();
+            foreach (CompletionItem item in results.Items)
+                result.Add(await GetContextItem(item));
+            return result;
+        }
+
+        private async Task<NeedContextItemsArgs.ContextItem> GetContextItem(CompletionItem c)
+        {
+            return new NeedContextItemsArgs.ContextItem()
+            {
+                Name = c.DisplayText,
+                Descr = (await completion.GetDescriptionAsync(doc, c)).Text,
+                IsChildModel = false,
+                IsEvent = false,
+                IsMethod = true,
+
+            };
+        }
+
+        private void UpdateDocument(string code)
+        {
+            if (doc == null)
+            {
+                doc = workspace.AddDocument(project.Id, "ManagerScript.cs", SourceText.From(code));
+                completion = CompletionService.GetService(doc);
+            }
+
+            Document document = doc.WithText(SourceText.From(code));
+            if (!workspace.TryApplyChanges(document.Project.Solution))
+                throw new Exception("Unable to apply changes to solution");
+            doc = workspace.CurrentSolution.GetDocument(doc.Id);
+        }
+#endif
         /// <summary>
         /// Generates completion options for a series.
         /// </summary>
@@ -316,8 +438,10 @@
         /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
         /// <param name="code">Code for which we want to generate completion data.</param>
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        /// <param name="location">Location of the caret/cursor in the editor.</param>
         public void ShowScriptMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
+#if NETFRAMEWORK
             CSharpParser parser = new CSharpParser();
             SyntaxTree syntaxTree = parser.Parse(code);
             string fileName = Path.GetTempFileName();
@@ -383,6 +507,9 @@
                 methodCompletionView.Location = location;
                 methodCompletionView.Visible = true;
             }
+#else
+            throw new NotImplementedException();
+#endif
         }
 
         /// <summary>
@@ -391,6 +518,7 @@
         /// <param name="relativeTo">Model to be used as a reference when searching for completion data.</param>
         /// <param name="code">Code for which we want to generate completion data.</param>
         /// <param name="offset">Offset of the cursor/caret in the code.</param>
+        /// <param name="location">Location of the cursor/caret in the editor.</param>
         public void ShowMethodCompletion(IModel relativeTo, string code, int offset, Point location)
         {
             string contentsToCursor = code.Substring(0, offset).TrimEnd('.');
@@ -456,12 +584,15 @@
             if (methodCompletionView.Visible)
                 methodCompletionView.Visible = false;
             view.SmartShowAtCoordinates(x, y, lineHeight);
+#if NETFRAMEWORK
+            // TBI in netcore builds
             if (completionResult != null && completionResult.SuggestedCompletionDataItem != null)
             {
                 int index = completionResult.CompletionData.IndexOf(completionResult.SuggestedCompletionDataItem);
                 if (index >= 0)
                     view.SelectItem(index);
             }
+#endif
             recentLocation = new Point(x, y);
         }
 
