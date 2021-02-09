@@ -356,7 +356,7 @@
                 else if (line.StartsWith("[DocumentChart "))
                 {
                     StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-                    var words = line.Replace("[DocumentChart ", "").Replace("]", "").Split(',');
+                    var words = line.Replace("[DocumentChart ", "").Split(',');
                     if (words.Length == 4)
                     {
                         var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
@@ -364,7 +364,7 @@
                         {
                             childrenDocumented.Add(xypairs);
                             var xName = words[2];
-                            var yName = words[3];
+                            var yName = words[3].Replace("]", "");
                             tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
                         }
                     }
@@ -375,7 +375,13 @@
                     var operatorChar = line["[DocumentMathFunction".Length + 1];
                     childrenDocumented.AddRange(DocumentMathFunction(model, operatorChar, tags, headingLevel, indent));
                 }
-
+                else if (line.StartsWith("[DontDocument"))
+                {
+                    string childName = line.Replace("[DontDocument ", "").Replace("]", "");
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
+                    if (childName != null)
+                        childrenDocumented.Add(child);
+                }
                 else
                     paragraphSoFar += line + "\r\n";
 

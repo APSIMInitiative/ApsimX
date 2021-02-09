@@ -7,7 +7,8 @@ namespace Models.Functions
     /// <summary>
     /// [DocumentType Memo]
     /// <i>[Name]</i> is calculated using linear interpolation.
-    /// [DocumentChart XYPairs, ,[XValue.Name],[Name]]
+    /// [DocumentChart XYPairs, ,[XVariableName],[Name]]
+    /// [DontDocument XValue]
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
@@ -35,6 +36,20 @@ namespace Models.Functions
         public LinearInterpolationFunction(double[] x, double[] y) 
         {
             XYPairs = new XYPairs() { X = x, Y = y };
+        }
+
+        /// <summary>Return the name of the x variable. Used as graph x axis title.summary>
+        public string XVariableName
+        {
+            get
+            {
+                if (XValue == null)
+                    return string.Empty;
+                else if (XValue is VariableReference)
+                    return (XValue as VariableReference).VariableName;
+                else
+                    return "XValue";
+            }
         }
 
         /// <summary>Constructor</summary>
