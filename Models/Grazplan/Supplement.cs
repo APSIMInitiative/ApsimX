@@ -747,7 +747,7 @@ namespace Models.GrazPlan
     }
 
     /// <summary>
-    /// #GrazPlan Supplement
+    /// # Supplement
     /// This component represents one or more stores of supplementary feed. 
     /// 
     /// A component instance represents the stores and paddock-available amounts of several supplements. 
@@ -778,7 +778,28 @@ namespace Models.GrazPlan
     ///
     /// * Notifies the component that an amount of forage has been conserved. This forage is added to the first item in the stores array.
     /// 
-    /// ---
+    /// **Using Supplement**
+    /// 
+    /// If supplements (e.g. cut and carry forages, grain, silages, …) are to be fed to Stock then they must first be created in “Supplement”. Think of Supplement as the grain silo or silage stack – it creates a space to store the supplements and keeps track of additions and removals but does no other actions.
+    ///
+    /// Multiple supplements can be named and characterised. If, for example, silages of different quality were required they should be added with different names (e.g. “silage12” for high-quality silage with an ME of 12 and “silage10” for lower quality silage with an ME of 10).
+    /// 
+    /// *To add a new supplement:*
+    /// 
+    /// * In the Supplement UI click “Add” and double-click the closest type from the list that will appear after clicking “Add”
+    /// * That double-click will close the list and populate the quality parameters with defaults
+    /// * Edit the default quality parameters as required, particularly note the dry matter content
+    /// * At this stage the new supplement type will not appear in the list “Create a list of supplements” but just trust the process, click away and back again and your new supplement will appear
+    /// 
+    /// *To edit the properties of a supplement:*
+    /// 
+    /// * In the Supplement UI and “Create a list of supplements” click on the name of the supplement that you want to edit
+    /// * Edit the characteristics (including the name if wanted) in the box “Composition of currently selected supplement”
+    /// * Note that the case of the supplement name matters when using all commands related to it
+    /// 
+    /// Once these quality parameters are set against a named supplement they are retained and all that is needed is to buy, sell or feed the named supplement. Supplements can also be deleted or have their quality parameters reset to defaults.
+    /// 
+    /// Setting the dry matter percentage to 100: In the quality parameters, note that we set the dry matter percentage to 100. This is does not affect the feeding quality of the supplement but means that all buy, sell, feed, etc. commands are given on a dry matter rather than wet matter basis.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.SupplementView")]

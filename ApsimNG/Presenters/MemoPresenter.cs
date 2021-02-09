@@ -4,6 +4,7 @@
     using Models;
     using Views;
     using System;
+    using Interfaces;
     using APSIM.Shared.Utilities;
     using Commands;
 

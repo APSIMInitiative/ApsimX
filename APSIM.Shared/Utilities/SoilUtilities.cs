@@ -1,6 +1,7 @@
 ﻿namespace APSIM.Shared.Utilities
 {
     using System;
+    using System.Linq;
 
     /// <summary>Various soil utilities.</summary>
     public class SoilUtilities
@@ -43,6 +44,18 @@
         /// <param name="depth">The depth to search for.</param>
         /// <returns></returns>
         static public int LayerIndexOfDepth(double[] thickness, double depth)
+        {
+            if (depth > thickness.Sum())
+                throw new Exception("Depth deeper than bottom of soil profile");
+            else
+                return LayerIndexOfClosestDepth(thickness, depth);
+        }
+
+        /// <summary>Return the index of the closest layer that contains the specified depth.</summary>
+        /// <param name="thickness">The soil layer thicknesses.</param>
+        /// <param name="depth">The depth to search for.</param>
+        /// <returns></returns>
+        static public int LayerIndexOfClosestDepth(double[] thickness, double depth)
         {
             double CumDepth = 0;
             for (int i = 0; i < thickness.Length; i++)

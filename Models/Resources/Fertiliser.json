@@ -1,0 +1,202 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 128,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Fertiliser, Models",
+      "Definitions": [
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "CalciteCA",
+          "Description": "Ca as finely ground Agricultural Lime",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 1.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "CalciteFine",
+          "Description": "finely ground Agricultural Lime",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.4
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "Dolomite",
+          "Description": "finely ground dolomite",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.22
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "NO3N",
+          "Description": "N as nitrate",
+          "FractionNO3": 1.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "NH4N",
+          "Description": "N as ammonium",
+          "FractionNO3": 0.0,
+          "FractionNH4": 1.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "NH4NO3N",
+          "Description": "ammonium nitrate",
+          "FractionNO3": 0.5,
+          "FractionNH4": 0.5,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "DAP",
+          "Description": "di-ammonium phosphate",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.18,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "MAP",
+          "Description": "mono-ammonium phosphate",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.11,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "UreaN",
+          "Description": "N as urea",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 1.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "UreaNO3",
+          "Description": "N as urea",
+          "FractionNO3": 0.5,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.5,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "Urea",
+          "Description": "Urea fertiliser",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.46,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "NH4SO4N",
+          "Description": "ammonium sulphate",
+          "FractionNO3": 0.0,
+          "FractionNH4": 1.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "RockP",
+          "Description": "Rock phosphorus",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.8,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 0.2,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "BandedP",
+          "Description": "Banded phosphorus",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 1.0,
+          "FractionLabileP": 0.0,
+          "FractionCa": 0.0
+        },
+        {
+          "$type": "Models.FertiliserType, Models",
+          "Name": "BroadcastP",
+          "Description": "Broadcast phosphorus",
+          "FractionNO3": 0.0,
+          "FractionNH4": 0.0,
+          "FractionUrea": 0.0,
+          "FractionRockP": 0.0,
+          "FractionBandedP": 0.0,
+          "FractionLabileP": 1.0,
+          "FractionCa": 0.0
+        }
+      ],
+      "Name": "Fertiliser",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false,
+      "ResourceName": null
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

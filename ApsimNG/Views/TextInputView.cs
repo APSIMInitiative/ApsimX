@@ -56,7 +56,7 @@ namespace UserInterface.Views
                 if (value)
                     mainWidget.ShowAll();
                 else
-                    mainWidget.HideAll();
+                    mainWidget.Hide();
             }
         }
 

@@ -124,8 +124,8 @@
             var tags = new List<AutoDocumentation.ITag>();
 
             tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(typeToDocument), modelToDocument, tags, 1, 0, false);
+
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummaryRaw(typeToDocument), modelToDocument, tags, 1, 0, false);
 
             var outputs = GetOutputs(typeToDocument);
             if (outputs != null && outputs.Count > 0)
@@ -216,8 +216,7 @@
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
-        /// <param name="typeToDocument">The type of object to inspect.</param>
-        /// <param name="typeofProperties">The type of properties to include in the return table.</param>
+        /// <param name="objectToDocument">Object to be documented.</param>
         private List<IVariable> GetParameters(object objectToDocument)
         {
             var parameters = new List<IVariable>();

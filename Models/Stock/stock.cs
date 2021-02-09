@@ -14,7 +14,7 @@
     using System.Linq;
 
     /// <summary>
-    /// #GrazPlan Stock
+    /// # Stock
     /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER1997].
     /// 
     /// [The GrazPlan animal model technical description](https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf)

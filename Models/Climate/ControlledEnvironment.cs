@@ -129,6 +129,13 @@ namespace Models.Climate
         public double AirPressure { get; set; }
 
         /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [Description("Diffuse Fraction")]
+        [Units("0-1")]
+        public double DiffuseFraction { get; set; }
+
+        /// <summary>
         /// Gets the latitude
         /// </summary>
         [Description("Latitude")]

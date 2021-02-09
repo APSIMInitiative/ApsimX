@@ -1,7 +1,7 @@
 [weather.met.weather]
 !onsite data from Hyderabad
 !tav and amp estimated
-latitude = 17.3850  (DECIMAL DEGREES)
+latitude = -17.3850  (DECIMAL DEGREES)
 longitude = 78.4867  (DECIMAL DEGREES)
 tav =  26.45 (oC) ! annual average ambient temperature from one season data
 amp =  11.49 (oC) ! annual amplitude in mean monthly temperature estimated from one season data
