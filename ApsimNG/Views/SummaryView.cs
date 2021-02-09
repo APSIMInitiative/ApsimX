@@ -1,7 +1,9 @@
 ﻿namespace UserInterface.Views
 {
+    using Interfaces;
     using Gtk;
     using System;
+    using Extensions;
     using System.Collections.Generic;
     using System.Linq;
     using Utility;
@@ -70,7 +72,8 @@
                 // container (e.g. Box) then add the Box to the container, some of the
                 // TextView functionality (scroll_to_iter()) will not work.
                 summaryWidget = new ScrolledWindow();
-                editor.Reparent(summaryWidget);
+                container.Remove(editor);
+                container.Add(editor);
                 editor.WrapMode = WrapMode.None;
                 (SummaryDisplay as MarkdownView).SetMainWidget(summaryWidget);
             }
@@ -105,14 +108,14 @@
             try
             {
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
-                topBox.Destroy();
-                SummaryCheckBox.MainWidget.Destroy();
-                WarningCheckBox.MainWidget.Destroy();
-                ErrorCheckBox.MainWidget.Destroy();
-                middleBox.Destroy();
-                SimulationDropDown.MainWidget.Destroy();
-                mainControl.Destroy();
-                ((ViewBase)SummaryDisplay).MainWidget.Destroy();
+                topBox.Cleanup();
+                SummaryCheckBox.MainWidget.Cleanup();
+                WarningCheckBox.MainWidget.Cleanup();
+                ErrorCheckBox.MainWidget.Cleanup();
+                middleBox.Cleanup();
+                SimulationDropDown.MainWidget.Cleanup();
+                mainControl.Cleanup();
+                ((ViewBase)SummaryDisplay).MainWidget.Cleanup();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }

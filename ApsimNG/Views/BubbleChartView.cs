@@ -10,6 +10,8 @@ namespace UserInterface.Views
     using Gtk;
     using Models.Management;
     using Models;
+    using Extensions;
+    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -93,7 +95,11 @@ namespace UserInterface.Views
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
             rules.AddWithViewport((RuleList as ViewBase).MainWidget);
+#else
+            rules.Add((RuleList as ViewBase).MainWidget);
+#endif
             (RuleList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(rules, true, true, 0); rules.Show();
 
@@ -106,15 +112,23 @@ namespace UserInterface.Views
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
             actions.AddWithViewport((ActionList as ViewBase).MainWidget);
+#else
+            actions.Add((ActionList as ViewBase).MainWidget);
+#endif
             (ActionList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(actions, true, true, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
-            arcSelWdgt.HideAll();
+            arcSelWdgt.Hide();
             ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
+#if NETFRAMEWORK
             Table t1 = new Table(3, 2, false);
+#else
+            Grid t1 = new Grid();
+#endif
             Label l3 = new Label("Name");
             l3.Xalign = 0;
             t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
@@ -289,7 +303,7 @@ namespace UserInterface.Views
             ctxBox.Foreach(c => ctxBox.Remove(c)); 
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
+            Models.Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
             if (node != null)
             {
                 //ctxLabel.Text = "State";
@@ -307,7 +321,11 @@ namespace UserInterface.Views
                     descEntry.Changed += OnDescriptionChanged;
                 }
                 colourChooser.ColorSet -= OnColourChanged;
+#if NETFRAMEWORK
                 colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
+#else
+                colourChooser.Rgba = node.Colour.ToRGBA();
+#endif
                 colourChooser.ColorSet += OnColourChanged;
 
                 ctxBox.PackStart(nodeSelWdgt, true, true, 0);
@@ -475,7 +493,12 @@ namespace UserInterface.Views
             {
                 if (graphView.SelectedObject != null)
                 {
-                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colourChooser.Color);
+#if NETFRAMEWORK
+                    var colour = colourChooser.Color;
+#else
+                    var colour = colourChooser.Rgba.ToColour().ToGdk();
+#endif
+                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -636,7 +659,7 @@ namespace UserInterface.Views
             try
             {
                 // todo: set location to context menu location
-                Node node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
+                var node = new Models.Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }

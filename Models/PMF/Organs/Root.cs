@@ -23,7 +23,7 @@
     /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
     /// The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension. 
     /// 
-    ///     _Root Depth Increase = RootFrontVelocity x XF<sub>i</sub> x RootDepthStressFactor_
+    ///     _Root Depth Increase = RootFrontVelocity x XF~i~ x RootDepthStressFactor_
     /// 
     /// where i is the index of the soil layer at the rooting front.
     ///     
@@ -31,11 +31,11 @@
     /// 
     /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'. For example, the Root Activity for water is calculated as
     /// 
-    ///     _RAw<sub>i</sub> = -WaterUptake<sub>i</sub> / LiveRootWt<sub>i</sub> x LayerThickness<sub>i</sub> x ProportionThroughLayer_
+    ///     _RAw~i~ = -WaterUptake~i~ / LiveRootWt~i~ x LayerThickness~i~ x ProportionThroughLayer_
     ///     
     /// The amount of root mass partitioned to a layer is then proportional to root activity
     /// 
-    ///     _DMAllocated<sub>i</sub> = TotalDMAllocated x RAw<sub>i</sub> / TotalRAw_
+    ///     _DMAllocated~i~ = TotalDMAllocated x RAw~i~ / TotalRAw_
     /// 
     /// **Dry Matter Demands**
     /// 
@@ -53,9 +53,9 @@
     /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
     /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
     /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NO3 uptake = NO3~i~ x kNO3 x NO3~ppm, i~ x NUptakeSWFactor_
     ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
+    ///     _NH4 uptake = NH4~i~ x kNH4 x NH4~ppm, i~ x NUptakeSWFactor_
     /// 
     /// As can be seen from the above equations, the values of kNO3 and kNH4 equate to the potential fraction of each mineral N pool which can be taken up per day for wet soil when that pool has a concentration of 1 ppm.
     /// 
@@ -70,7 +70,7 @@
     /// and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and
     /// KL may be further modified by the crop via the KLModifier function.  
     /// 
-    /// _SW uptake = (SW<sub>i</sub> - LL<sub>i</sub>) x KL<sub>i</sub> x KLModifier_
+    /// _SW uptake = (SW~i~ - LL~i~) x KL~i~ x KLModifier_
     /// 
     ///</summary>
     [Serializable]

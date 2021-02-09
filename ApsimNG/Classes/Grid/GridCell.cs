@@ -85,25 +85,25 @@
                 {
                     case EditorTypeEnum.TextBox:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewTextBoxCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewTextBoxCell();
                             break;
                         }
 
                     case EditorTypeEnum.Boolean:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewCheckBoxCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewCheckBoxCell();
                             break;
                         }
 
                     case EditorTypeEnum.Colour:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new Utility.ColorPickerCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new Utility.ColorPickerCell();
                             break;
                         }
 
                     case EditorTypeEnum.DateTime:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
                             break;
                         }
                     case EditorTypeEnum.MultiFiles:
@@ -182,7 +182,8 @@
         {
             get
             {
-                return ""; /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex].ToolTipText;
+                // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex].ToolTipText;
+                return "";
             }
 
             set

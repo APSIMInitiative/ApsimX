@@ -10,6 +10,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
+    using global::UserInterface.Extensions;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -176,13 +177,13 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            if (this.treeview is Views.PropertyTreeView)
+            if (this.treeview is Views.PropertyTreeView view)
             {
-                (this.treeview as Views.PropertyTreeView).MainWidget.Destroy();
+                view.MainWidget.Cleanup();
             }
-            else if (this.treeview is Views.PropertyTreeMultiView)
+            else if (this.treeview is Views.PropertyTreeMultiView view)
             {
-                (this.treeview as Views.PropertyTreeMultiView).MainWidget.Destroy();
+                view.MainWidget.Cleanup();
             }
         }
 
@@ -363,7 +364,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A helper function for creating a node description object for the category hierarchy.
         /// </summary>
-        /// <param name="properties">List of properties </param>
+        /// <param name="categoryTree"></param>
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {

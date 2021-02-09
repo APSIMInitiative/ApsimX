@@ -5,7 +5,8 @@
     using System;
     using System.Drawing;
     using System.Collections.Generic;
-    using Classes.Intellisense;
+    using Intellisense;
+    using Extensions;
 
     /// <summary>
     /// View for a small intellisense window which displays the 
@@ -170,7 +171,7 @@
                 else
                 {
                     previousLocation = Location;
-                    mainWindow.HideAll();
+                    mainWindow.Hide();
                 }
             }
         }
@@ -304,7 +305,7 @@
 
         public void Destroy()
         {
-            mainWindow.Destroy();
+            mainWindow.Cleanup();
         }
     }
 }

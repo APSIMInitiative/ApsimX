@@ -216,8 +216,7 @@
         /// <summary>
         /// Create and return a new Output object for member
         /// </summary>
-        /// <param name="typeToDocument">The type of object to inspect.</param>
-        /// <param name="typeofProperties">The type of properties to include in the return table.</param>
+        /// <param name="objectToDocument">Object to be documented.</param>
         private List<IVariable> GetParameters(object objectToDocument)
         {
             var parameters = new List<IVariable>();

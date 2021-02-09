@@ -9,12 +9,13 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
 
     /// <summary>
     /// GTK# based view of the PropertyTreePresenter to display a tree view of categories and sub-categories to assit filtering properties
     /// Uses Category attribute of property (Category and SubCategory values) to define list and modify SimplePropertyPresenter filter rule on selection
     /// A right hand panel is used to display the property presenter
-    /// </remarks>
+    /// </summary>
     public class PropertyTreeView : ViewBase, IPropertyTreeView
     {
         /// <summary>The previously selected node path.</summary>
@@ -74,7 +75,7 @@ namespace UserInterface.Views
                 foreach (Widget child in rightHandView.Children)
                 {
                     rightHandView.Remove(child);
-                    child.Destroy();
+                    child.Cleanup();
                 }
             }
             treeview1.CursorChanged -= OnAfterSelect;
@@ -148,7 +149,7 @@ namespace UserInterface.Views
             foreach (Widget child in rightHandView.Children)
             {
                 rightHandView.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             //create new Right Hand View
             ViewBase view = control as ViewBase;
@@ -162,9 +163,11 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-            // Create a Bitmap and draw the panel
-            // disabled for this method
-            return new System.Drawing.Bitmap(1,1);
+#if NETFRAMEWORK
+            throw new NotImplementedException("This view does not support the saving of right hand to image");
+#else
+            throw new NotImplementedException("tbi - gtk3 equivalent");
+#endif
         }
 
         /// <summary>Show the wait cursor</summary>
@@ -181,7 +184,7 @@ namespace UserInterface.Views
             set { treeview1.WidthRequest = value; }
         }
 
-        #region Protected & Privates
+#region Protected & Privates
 
         /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
@@ -222,8 +225,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Return a full path for the specified node.</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
+        /// <param name="path">The node.</param>
         private string FullPath(TreePath path)
         {
             string result = "";
@@ -291,12 +293,12 @@ namespace UserInterface.Views
             return result;         
         }
 
-        #endregion
+#endregion
 
-        #region Events
+#region Events
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             if (SelectedNodeChanged != null)
@@ -363,7 +365,7 @@ namespace UserInterface.Views
                         Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                         if (e.Event.X > rect.X + 18)
                         {
-                            timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
                             timer.AutoReset = false;
                             timer.Start();
                         }
@@ -425,6 +427,6 @@ namespace UserInterface.Views
             cb.Text = text;            
         }
 
-        #endregion
+#endregion
     }
 }

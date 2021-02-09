@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 126,
+  "Version": 128,
   "Name": "Simulations",
   "Children": [
     {
@@ -394,7 +394,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 18<sup>o</sup>C.",
+                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1^o^C to zero at 0^o^C and at 18^o^C.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,

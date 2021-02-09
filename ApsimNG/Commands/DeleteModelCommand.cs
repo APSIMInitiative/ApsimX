@@ -33,6 +33,7 @@
 
         /// <summary>The constructor</summary>
         /// <param name="modelToDelete">The model to delete</param>
+        /// <param name="nodeDescription">The node description. This is used for the undo operation when we need to re-add the model.</param>
         /// <param name="explorerView">The explorer view.</param>
         public DeleteModelCommand(IModel modelToDelete, TreeViewNode nodeDescription, IExplorerView explorerView)
         {

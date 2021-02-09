@@ -153,7 +153,6 @@ namespace UnitTests.ApsimNG.Presenters
         /// Use reflection to get the TreePath of the Graphs node. This is kind of ugly...
         /// </summary>
         /// <param name="tree">Instance of a Gtk.TreeView.</param>
-        /// <param name="treeModel">Instance of a Gtk.TreeModel.</param>
         /// <param name="path">Path string - e.g. ".Simulations.ContinuousWheat.Paddock"</param>
         private Gtk.TreePath GetTreePath(TreeView tree, string path)
         {

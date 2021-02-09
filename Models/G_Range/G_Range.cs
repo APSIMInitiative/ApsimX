@@ -383,7 +383,7 @@ namespace Models
         /// <summary>
         /// Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
         /// </summary>
-        [Units("<sup>o</sup>Cd")]
+        [Units("^o^Cd")]
         [JsonIgnore]
         public double heatAccumulation { get; private set; }
 
