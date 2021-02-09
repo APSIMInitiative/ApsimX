@@ -387,6 +387,7 @@ namespace UserInterface.Views
 
             Grid.Show();
 
+            Fixedcolview.WidthRequest = 150;
             if (MasterView.MainWindow != null)
             {
                 MasterView.MainWindow.Cursor = null;
