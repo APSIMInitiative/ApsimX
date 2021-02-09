@@ -135,26 +135,25 @@ namespace UserInterface.Views
                 }
             }
 
-//            if(DisplayFrame)
-//            {
-//                box.Label = $"{properties.Name} Properties";
-//            }
-//            else
-//            {
-//                box.ShadowType = ShadowType.None;
-//                box.Label = null;
-//            }
-//            propertyTable.Destroy();
-#endif
+            if (DisplayFrame)
+            {
+                box.Label = $"{properties.Name} Properties";
+            }
+            else
+            {
+                box.ShadowType = ShadowType.None;
+                box.Label = null;
+            }
             box.Remove(propertyTable);
-            box.Label = $"{properties.Name} Properties";
-
             propertyTable.Cleanup();
+#endif
 
 #if NETFRAMEWORK
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
             propertyTable = new Table((uint)properties.Count(), 3, false);
+            // column and row spacing 
+            propertyTable.RowSpacing = 3;
 #else
             propertyTable = new Grid();
             //propertyTable.RowHomogeneous = true;
@@ -165,11 +164,10 @@ namespace UserInterface.Views
 
 #if NETFRAMEWORK
             uint nrow = 0;
-            // fix after commit to add column   AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
 #else
             int nrow = 0;
 #endif
-            AddPropertiesToTable(ref propertyTable, properties, ref nrow);
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
@@ -204,9 +202,9 @@ namespace UserInterface.Views
         /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
         /// <param name="columnOffset">The number of columns to offset for this propertygroup (0 = single. >0 multiply models reported as columns).</param>
 #if NETFRAMEWORK
-        private void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow)
+        protected void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow, uint columnOffset)
 #else
-        private void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow)
+        protected void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow, int columnOffset)
 #endif
         {
             // Using a regular for loop is not practical because we can
@@ -224,26 +222,21 @@ namespace UserInterface.Views
                         propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
 #else
                         propertyTable.Attach(box, 0, startRow, 2, 1);
-                        startRow++;
 #endif
+                        startRow++;
                     }
 
-// fix after commit
-//                if (columnOffset == 0) // only perform on first or only entry
-//                {
-//                    Label label = new Label(property.Name);
-//                    label.TooltipText = property.Tooltip;
-//                    label.Xalign = 0;
-//                    propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0); 
-//                }
-                Label label = new Label(property.Name);
-                label.TooltipText = property.Tooltip;
-                label.Xalign = 0;
+                if (columnOffset == 0) // only perform on first or only entry
+                {
+                    Label label = new Label(property.Name);
+                    label.TooltipText = property.Tooltip;
+                    label.Xalign = 0;
 #if NETFRAMEWORK
-                propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+                    propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 #else
-                propertyTable.Attach(label, 0, startRow, 1, 1);
+                    propertyTable.Attach(label, 0, startRow, 1, 1);
 #endif
+                }
 
                 if (!string.IsNullOrEmpty(property.Tooltip))
                 {
@@ -257,11 +250,10 @@ namespace UserInterface.Views
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
 
-                // to update: propertyTable.Attach(inputWidget, 2+columnOffset, 3+columnOffset, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 #if NETFRAMEWORK
-                propertyTable.Attach(inputWidget, 2, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+                propertyTable.Attach(inputWidget, 2 + columnOffset, 3 + columnOffset, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 #else
-                propertyTable.Attach(inputWidget, 2, startRow, 1, 1);
+                propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
                 inputWidget.Hexpand = true;
 #endif
 

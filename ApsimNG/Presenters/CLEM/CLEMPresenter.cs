@@ -67,10 +67,6 @@ namespace UserInterface.Presenters
                 try
                 {
                     // user can set view to state it must be multiview so do not override value
-
-
-
-
                     presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     string propPresenterName = presenterName.ToString();
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;

@@ -45,7 +45,9 @@ namespace UserInterface.Views
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             mainWidget = vbox1;
             rightHandView.ShadowType = ShadowType.None;
+#if NETFRAMEWORK
             rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+#endif
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();

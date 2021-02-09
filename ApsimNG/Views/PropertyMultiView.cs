@@ -12,10 +12,13 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
     using System.Globalization;
     using System.Reflection;
+    using Extensions;
 
     /// <summary>
     /// This class inherits the PropertyView and overrides the methods needed to display a list of models (children)
-    /// as columns in the table of the Property table. 
+    /// as columns in the Property table. 
+    /// </summary>
+    /// <remarks>
     /// An additional row header with the model names is added.
     /// </remarks>
     public class PropertyMultiView : PropertyView
@@ -28,10 +31,20 @@ namespace UserInterface.Views
         {
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
+#if NETFRAMEWORK
             propertyTable = new Table(0, 0, false);
+#else
+            propertyTable = new Grid();
+#endif
             box = new Frame("Properties");
             box.Add(propertyTable);
+#if NETFRAMEWORK
             mainWidget = box;
+#else
+            Box container = new Box(Orientation.Vertical, 0);
+            container.PackStart(box, false, false, 0);
+            mainWidget = container;
+#endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
 
@@ -50,20 +63,31 @@ namespace UserInterface.Views
         /// <param name="properties">Properties to be displayed/edited.</param>
         public override void DisplayProperties(List<PropertyGroup> properties)
         {
+#if NETFRAMEWORK
             uint row = 0;
             uint col = 0;
+#else
+            int row = 0;
+            int col = 0;
+#endif
             bool widgetIsFocused = false;
             int entryPos = -1;
             int entrySelectionStart = 0;
             int entrySelectionEnd = 0;
+#if NETFRAMEWORK
             if (propertyTable.FocusChild != null)
             {
                 object topAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "top-attach").Val;
                 object leftAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "left-attach").Val;
                 if (topAttach.GetType() == typeof(uint) && leftAttach.GetType() == typeof(uint))
                 {
+#if NETFRAMEWORK
                     row = (uint)topAttach;
                     col = (uint)leftAttach;
+#else
+                    row = (int)topAttach;
+                    col = (int)leftAttach;
+#endif
                     widgetIsFocused = true;
                     if (propertyTable.FocusChild is Entry entry)
                     {
@@ -82,33 +106,50 @@ namespace UserInterface.Views
                 box.ShadowType = ShadowType.None;
                 box.Label = null;
             }
-            propertyTable.Destroy();
+            box.Remove(propertyTable);
+            propertyTable.Cleanup();
+#endif
 
-            //// Columns should not be homogenous - otherwise we'll have the
-            //// property name column taking up half the screen.
-            propertyTable = new Table((uint)properties.Count()+1, (uint)(2 + properties.Count()), false);
-            
+#if NETFRAMEWORK
+            // Columns should not be homogenous - otherwise we'll have the
+            // property name column taking up half the screen.
+            propertyTable = new Table((uint)properties.Count() + 1, (uint)(2 + properties.Count()), false);
             // column and row spacing 
             propertyTable.RowSpacing = 3;
             propertyTable.ColumnSpacing = 3;
-
+#else
+            propertyTable = new Grid();
+            //propertyTable.RowHomogeneous = true;
+            propertyTable.RowSpacing = 5;
+#endif
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 
+#if NETFRAMEWORK
             uint nrow = 0;
+#else
+            int nrow = 0;
+#endif
+            // for each model in list to display as columns. 
             for (int i = 0; i < properties.Count; i++)
             {
                 Label label = new Label(properties[i].Name);
                 label.TooltipText = $"Multiple entry #{i+1}";
                 label.Xalign = 0;
-                propertyTable.Attach(label, 2+(uint)i, 3 + (uint)i, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+#if NETFRAMEWORK
+                propertyTable.Attach(label, 2+(uint)i, 3+(uint)i, 0, 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 0);
                 nrow = 1;
                 AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, (uint)i);
+#else
+                propertyTable.Attach(box, 0, 2+i, 0, 1);
+                AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, i);
+#endif
             }
 
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
+#if NETFRAMEWORK
             if (widgetIsFocused)
             {
                 Widget widget = propertyTable.GetChild(row, col);
@@ -121,6 +162,7 @@ namespace UserInterface.Views
                         entry.Position = entryPos;
                 }
             }
+#endif
         }
 
     }

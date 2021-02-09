@@ -11,8 +11,10 @@ namespace UserInterface.Views
     using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// GTK# based view of the PropertyTreePresenter to display a tree view of categories and sub-categories to assit filtering properties
+    /// GTK# based view of the PropertyTreePresenter to display a tree view of categories and sub-categories to assist filtering properties
     /// This class inherits the PropertyTreePresenter which will provide all child models of the same type as columns of the property table for the user to update
+    /// </summary>
+    /// <remarks>
     /// This could be used to display all soil layers models contained below another model or folder as columns and provide all properties
     /// Uses Category attribute of property (Category and SubCategory values) to define list and modify SimplePropertyPresenter filter rule on selection
     /// A right hand panel is used to display the property presenter

@@ -177,13 +177,13 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            if (this.treeview is Views.PropertyTreeView view)
+            if (treeview is Views.PropertyTreeView view)
             {
                 view.MainWidget.Cleanup();
             }
-            else if (this.treeview is Views.PropertyTreeMultiView view)
+            else if (treeview is PropertyTreeMultiView viewMulti)
             {
-                view.MainWidget.Cleanup();
+                viewMulti.MainWidget.Cleanup();
             }
         }
 
