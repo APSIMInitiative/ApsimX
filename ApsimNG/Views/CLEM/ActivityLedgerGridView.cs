@@ -59,7 +59,6 @@ namespace UserInterface.Views
         /// </summary>
         private HPaned splitter = null;
 
-
         private Gdk.Pixbuf imagePixbuf = null;
 
         private ListStore gridmodel = new ListStore(typeof(string));
@@ -356,7 +355,7 @@ namespace UserInterface.Views
                     fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
                 }
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
-                fixedColumn.Visible = false;
+                fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
             }
 

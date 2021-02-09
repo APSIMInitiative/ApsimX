@@ -137,7 +137,6 @@ namespace UserInterface.Views
 #endif
                 HBox hbox = new HBox();
                 uint border = 0;
-                //if (tabName != "Properties" & tabName != "Display" & tabName != "Data")
                 if (tabName == "Properties")
                 {
                     border = 5;
@@ -150,15 +149,7 @@ namespace UserInterface.Views
                 hbox.BorderWidth = border;
 
                 ViewBase view = (ViewBase)control;
-
-                //if (view is ActivityLedgerGridView)
-                //{
-                //    hbox.Add(view.MainWidget);
-                //}
-                //else
-                //{
-                    hbox.Add(view.MainWidget);
-                //}
+                hbox.Add(view.MainWidget);
                 frame.Add(hbox);
                 newViewport.Add(frame);
 
