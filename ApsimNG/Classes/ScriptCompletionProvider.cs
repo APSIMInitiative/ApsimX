@@ -30,7 +30,7 @@ namespace UserInterface.Intellisense
         /// The code completion service. This object handles generation
         /// of code completion/intellisense items.
         /// </summary>
-        private CodeCompletionService service = new CodeCompletionService();
+        private CodeCompletionService service = CodeCompletionService.Instance;
 
         /// <summary>
         /// A popup window which shows method signature info.

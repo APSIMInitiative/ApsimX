@@ -26,8 +26,30 @@ namespace UserInterface.Intellisense
         private ProjectInfo projectInfo;
         private Project project;
         private Document document;
+        private static CodeCompletionService instance;
 
-        public CodeCompletionService()
+        public static CodeCompletionService Instance
+        {
+            get
+            {
+                Init();
+                return instance;
+            }
+        }
+        private static object initLock = new object();
+
+        public static void Init()
+        {
+            lock (initLock)
+            {
+                if (instance == null)
+                    instance = new CodeCompletionService();
+            }
+        }
+
+        static CodeCompletionService() => Init();
+
+        private CodeCompletionService()
         {
             host = MefHostServices.Create(GetManagerAssemblies());
             workspace = new AdhocWorkspace(host);
