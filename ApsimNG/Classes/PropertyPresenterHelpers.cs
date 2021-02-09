@@ -82,7 +82,7 @@ namespace UserInterface.Classes
         }
     
         /// <summary>Get a list of phases for lifecycle.</summary>
-        /// <param name="lifecycle">The lifecycle.</param>
+        /// <param name="lifeCycle">The lifecycle.</param>
         /// <returns>A list of phases.</returns>
         public static string[] GetPhaseNames(LifeCycle lifeCycle)
         {

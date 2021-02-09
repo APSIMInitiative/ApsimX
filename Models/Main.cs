@@ -207,6 +207,9 @@
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            if (sender is Runner runner)
+                (sender as Runner).DisposeStorage();
+
             if (e.AllExceptionsThrown == null)
                 return;
 

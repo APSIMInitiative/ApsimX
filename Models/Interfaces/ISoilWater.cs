@@ -14,10 +14,6 @@
         ///<summary>Gets or sets soil thickness for each layer (mm) in the parameter grid(</summary>
         double[] Thickness { get; }
 
-
-        /// <summary>gets or sets the thickness for each layer (layer) that the water balance model computes</summary>
-        double[] LayerThickness { get; }
-
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
         double[] SW { get; set; }
 

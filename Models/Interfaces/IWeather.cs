@@ -42,6 +42,9 @@
         /// <summary>Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.</summary>
         double AirPressure { get; set; }
 
+        /// <summary> Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1. </summary>
+        double DiffuseFraction { get; set; }
+
         /// <summary>Gets the latitude</summary>
         double Latitude { get; }
 

@@ -25,7 +25,7 @@
     /// time since the end of first stage evaporation. The parameter CONA (from PERFECT) specifies the change in 
     /// cumulative second stage evaporation against the square root of time.
     /// 
-    ///    i.e. Es = CONA t<sup>1/2</sup> 
+    ///    i.e. Es = CONA t^1/2^ 
     ///
     /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry 
     /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry). 
@@ -33,10 +33,10 @@
     /// ![Alt Text](CurveNumberCover.png) 
     /// Figure: Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.
     ///
-    /// For t &lt;=  t<sub>1</sub>
+    /// For t &lt;=  t~1~
     ///    Es = Eos
-    /// For t &gt; t<sub>1</sub>
-    ///    Es = U x t + CONA x Sqrt(t-t<sub>1</sub>)
+    /// For t &gt; t~1~
+    ///    Es = U x t + CONA x Sqrt(t-t~1~)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]

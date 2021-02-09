@@ -338,7 +338,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests the <see cref="IModel.FindDescendant{T}"/> method.
+        /// Tests the <see cref="IModel.FindDescendant{T}()"/> method.
         /// </summary>
         [Test]
         public void TestFindByTypeDescendant()
@@ -1411,7 +1411,7 @@ namespace UnitTests.Core
         }
 
         /// <summary>
-        /// Tests for the <see cref="IModel.FindByPath(string)"/> method.
+        /// Tests for the <see cref="IModel.FindByPath(string, bool)"/> method.
         /// </summary>
         [Test]
         public void TestFindInPath()

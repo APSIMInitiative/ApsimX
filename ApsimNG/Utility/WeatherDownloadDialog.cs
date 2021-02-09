@@ -13,6 +13,7 @@ namespace Utility
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
+    using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
 
@@ -127,7 +128,7 @@ namespace Utility
             MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Destroy();
+            md.Cleanup();
         }
 
         /// <summary>
@@ -188,8 +189,8 @@ namespace Utility
                         explorerPresenter.CommandHistory.Add(command, true);
                         explorerPresenter.Refresh();
                     }
-                    dialog1.Destroy();
                 }
+                dialog1.Cleanup();
             }
             catch (Exception err)
             {
@@ -313,7 +314,7 @@ namespace Utility
         {
             try
             {
-                dialog1.Destroy();
+                dialog1.Cleanup();
             }
             catch (Exception err)
             {
@@ -560,8 +561,14 @@ namespace Utility
                     }
                     tree.Model = list;
                     tree.RowActivated += OnPatchPointSoilSelected;
-                    md.VBox.PackStart(tree, true, true, 5);
-                    md.VBox.ShowAll();
+#if NETFRAMEWORK
+                    Box box = md.VBox;
+#else
+                    Box box = md.ContentArea;
+#endif
+                    box.PackStart(tree, true, true, 5);
+                    box.ShowAll();
+
                     ResponseType result = (ResponseType)md.Run();
                     if (result == ResponseType.Ok)
                     {
@@ -570,7 +577,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Destroy();
+                    md.Cleanup();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -667,9 +674,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }
