@@ -1,12 +1,26 @@
 ﻿namespace ApsimNG.Classes
 {
     using APSIM.Shared.Utilities;
-    using MigraDoc.DocumentObjectModel;
-    using MigraDoc.Rendering;
     using Models;
     using Models.Core;
+#if NETFRAMEWORK
+    using MigraDoc.DocumentObjectModel;
+    using MigraDoc.DocumentObjectModel.Shapes;
+    using MigraDoc.DocumentObjectModel.Tables;
+    using MigraDoc.Rendering;
     using PdfSharp.Drawing;
     using PdfSharp.Fonts;
+    using Font = MigraDoc.DocumentObjectModel.Font;
+#else
+    using MigraDocCore.Rendering;
+    using MigraDocCore.DocumentObjectModel;
+    using MigraDocCore.DocumentObjectModel.Shapes;
+    using MigraDocCore.DocumentObjectModel.Tables;
+    using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+    using PdfSharpCore.Drawing;
+    using PdfSharpCore.Fonts;
+    using Font = MigraDocCore.DocumentObjectModel.Font;
+#endif
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -32,6 +46,17 @@
         private BibTeX bibTeX;
         private List<BibTeX.Citation> citations;
 
+#if NETCOREAPP
+        /// <summary>
+        /// Static constructor to initialise PDFSharp ImageSource.
+        /// </summary>
+        static PDFWriter()
+        {
+            if (ImageSource.ImageSourceImpl == null)
+                ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<SixLabors.ImageSharp.PixelFormats.Rgba32>();
+        }
+#endif
+
         /// <summary>Constructor.</summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="portraitOrientation">Portrait page orientation?</param>
@@ -45,9 +70,7 @@
             // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
             // See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
             // The work-around is to register our own fontresolver. We don't need to do this on Windows.
-            if (Environment.OSVersion.Platform != PlatformID.Win32NT &&
-                Environment.OSVersion.Platform != PlatformID.Win32Windows &&
-                GlobalFontSettings.FontResolver == null)
+            if (!ProcessUtilities.CurrentOS.IsWindows)
                 GlobalFontSettings.FontResolver = new MyFontResolver();
             
             // Create a temporary working directory.
@@ -91,9 +114,9 @@
             // Create a MigraDoc document.
             Document document = new Document();
             CreatePDFSyles(document);
-            document.DefaultPageSetup.LeftMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
-            document.DefaultPageSetup.TopMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
-            document.DefaultPageSetup.BottomMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
+            document.DefaultPageSetup.LeftMargin = Unit.FromCentimeter(1);
+            document.DefaultPageSetup.TopMargin = Unit.FromCentimeter(1);
+            document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
             document.DefaultPageSetup.Orientation = portrait ? Orientation.Portrait : Orientation.Landscape;
 
             // Create a MigraDoc section.
@@ -129,7 +152,7 @@
             style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
 
             Style xyStyle = document.Styles.AddStyle("GraphAndTable", "Normal");
-            xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+            xyStyle.Font = new Font("Courier New");
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
             tableStyle.Font.Size = 10;
@@ -400,7 +423,11 @@
                     graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, explorerPresenter);
                     string pngFileName = graphPresenter.ExportToPNG(WorkingDirectory);
+#if NETFRAMEWORK
                     section.AddImage(pngFileName);
+#else
+                    section.AddImage(ImageSource.FromFile(pngFileName));
+#endif
                     string caption = (tag as Graph).Caption;
                     if (caption != null)
                         section.AddParagraph(caption);
@@ -413,7 +440,7 @@
                     MapPresenter mapPresenter = new MapPresenter();
                     MapView mapView = new MapView(null);
                     mapPresenter.Attach(tag, mapView, explorerPresenter);
-                    Image map = mapView.Export();
+                    var map = mapView.Export();
                     string pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
                     if (map.Width > section.PageSetup.PageWidth)
                         map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
@@ -431,9 +458,13 @@
                     AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
                     if (imageTag.image.Width > 700)
                         imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
-                    string pngFileName = Path.Combine(WorkingDirectory, imageTag.name);
+                    string pngFileName = Path.Combine(WorkingDirectory, $"{imageTag.name}.png");
                     imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
+#if NETFRAMEWORK
                     section.AddImage(pngFileName);
+#else
+                    section.AddImage(ImageSource.FromFile(pngFileName));
+#endif
                     figureNumber++;
                 }
                 else if (tag is AutoDocumentation.ModelView)
@@ -475,7 +506,7 @@
                                 string pngFileName;
                                 if (view is MapView mapView)
                                 {
-                                    Image img = mapView.Export();
+                                    var img = mapView.Export();
                                     pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
                                     if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
                                         img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
@@ -483,10 +514,15 @@
                                 }
                                 else
                                     pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+#if NETFRAMEWORK
                                 section.AddImage(pngFileName);
+#else
+                                section.AddImage(ImageSource.FromFile(pngFileName));
+#endif
                                 presenter.Detach();
                                 view.MainWidget.Cleanup();
                                 popupWin.Cleanup();
+                                while (GLib.MainContext.Iteration());
                             }
                         }
                     }
@@ -554,8 +590,10 @@
             // Setup graph.
             GraphView graph = new GraphView();
             graph.Clear();
-            graph.Width = 400;
-            graph.Height = 250;
+            int width = 400;
+            int height = 250;
+            graph.Width = width;
+            graph.Height = height;
 
             // Create a line series.
             graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null, null,
@@ -577,7 +615,7 @@
             graph.Refresh();
 
             // Export graph to bitmap file.
-            Bitmap image = new Bitmap(graph.Width, graph.Height);
+            Bitmap image = new Bitmap(width, height);
             using (Graphics gfx = Graphics.FromImage(image))
             using (SolidBrush brush = new SolidBrush(System.Drawing.Color.White))
             {
@@ -586,7 +624,11 @@
             graph.Export(ref image, new Rectangle(0, 0, image.Width, image.Height), false);
             graph.MainWidget.Cleanup();
             image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-            MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = row.Cells[0].AddImage(pngFileName);
+#if NETFRAMEWORK
+            var sectionImage = row.Cells[0].AddImage(pngFileName);
+#else
+            var sectionImage = row.Cells[0].AddImage(ImageSource.FromFile(pngFileName));
+#endif
             sectionImage.LockAspectRatio = true;
             sectionImage.Width = "8cm";
 
@@ -633,8 +675,10 @@
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
                 graphView.MarkerSize = MarkerSizeType.Normal;
-                graphView.Width = image.Width / numColumns;
-                graphView.Height = image.Height / numRows;
+                int width = image.Width / numColumns;
+                int height = image.Height / numRows;
+                graphView.Width = width;
+                graphView.Height = height;
                 graphView.LeftRightPadding = 0;
 
                 int col = 0;
@@ -644,8 +688,8 @@
                     if (graphPage.graphs[i].IncludeInDocumentation)
                     {
                         graphPresenter.Attach(graphPage.graphs[i], graphView, explorerPresenter);
-                        Rectangle r = new Rectangle(col * graphView.Width, row * graphView.Height,
-                                                    graphView.Width, graphView.Height);
+                        Rectangle r = new Rectangle(col * width, row * height,
+                                                    width, height);
                         graphView.Export(ref image, r, false);
                         graphPresenter.Detach();
                         col++;
@@ -663,7 +707,11 @@
                 string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);
                 image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
-                MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(pngFileName);
+#if NETFRAMEWORK
+                var sectionImage = section.AddImage(pngFileName);
+#else
+                var sectionImage = section.AddImage(ImageSource.FromFile(pngFileName));
+#endif
                 sectionImage.LockAspectRatio = true;
                 sectionImage.Width = "19cm";
             }
@@ -710,7 +758,7 @@
                 for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
                 {
                     // Add a row to our table if processing first column.
-                    MigraDoc.DocumentObjectModel.Tables.Row row;
+                    Row row;
                     if (columnIndex == 0)
                         table.AddRow();
 
@@ -731,10 +779,10 @@
                             var paragraph = element as Paragraph;
                             var contents = string.Empty;
                             foreach (var paragraphElement in paragraph.Elements)
-                                if (paragraphElement is MigraDoc.DocumentObjectModel.Text)
-                                    contents += (paragraphElement as MigraDoc.DocumentObjectModel.Text).Content;
-                                else if (paragraphElement is MigraDoc.DocumentObjectModel.Hyperlink)
-                                    contents += (paragraphElement as MigraDoc.DocumentObjectModel.Hyperlink).Name;
+                                if (paragraphElement is Text)
+                                    contents += (paragraphElement as Text).Content;
+                                else if (paragraphElement is Hyperlink)
+                                    contents += (paragraphElement as Hyperlink).Name;
 
                             var size = graphics.MeasureString(contents, gdiFont);
                             maxSize = Math.Max(maxSize, size.Width);
@@ -779,6 +827,8 @@
 
     public class MyFontResolver : IFontResolver
     {
+        public string DefaultFontName => "Arial";
+
         public FontResolverInfo ResolveTypeface(string familyName, bool isBold, bool isItalic)
         {
             // Ignore case of font names.

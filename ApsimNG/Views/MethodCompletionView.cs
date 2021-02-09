@@ -193,7 +193,9 @@
                 if (Visible)
                 {
                     mainWindow.Move(value.X, value.Y);
-                    mainWindow.Resize(mainWindow.WidthRequest, mainWindow.HeightRequest);
+
+                    if (mainWindow.WidthRequest > 0 && mainWindow.HeightRequest > 0)
+                        mainWindow.Resize(mainWindow.WidthRequest, mainWindow.HeightRequest);
                 }
             }
         }
