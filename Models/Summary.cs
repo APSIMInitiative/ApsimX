@@ -7,9 +7,15 @@
     using System.IO;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+#if NETFRAMEWORK
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
-    using MigraDoc.RtfRendering;
+    using Row = MigraDoc.DocumentObjectModel.Tables.Row;
+#else
+    using MigraDocCore.DocumentObjectModel;
+    using MigraDocCore.DocumentObjectModel.Tables;
+    using Row = MigraDocCore.DocumentObjectModel.Tables.Row;
+#endif
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Standardiser;
@@ -285,7 +291,6 @@
             bool darkTheme)
         {
             Document document = null;
-            RtfDocumentRenderer renderer = null;
 
             if (outtype == OutputType.html)
             {
@@ -322,42 +327,7 @@
 
             }
             else if (outtype == OutputType.rtf)
-            {
-                document = new Document();
-                renderer = new RtfDocumentRenderer();
-
-                // Get the predefined style Normal.
-                Style style = document.Styles["Normal"];
-
-                // Because all styles are derived from Normal, the next line changes the 
-                // font of the whole document. Or, more exactly, it changes the font of
-                // all styles and paragraphs that do not redefine the font.
-                style.Font.Name = "Arial";
-
-                // Heading1 to Heading9 are predefined styles with an outline level. An outline level
-                // other than OutlineLevel.BodyText automatically creates the outline (or bookmarks) 
-                // in PDF.
-                style = document.Styles["Heading2"];
-                style.Font.Size = 14;
-                style.Font.Bold = true;
-                style.Font.Color = Colors.DarkBlue;
-                style.ParagraphFormat.PageBreakBefore = false;
-                style.ParagraphFormat.SpaceAfter = 3;
-                style.ParagraphFormat.SpaceBefore = 16;
-
-                style = document.Styles["Heading3"];
-                style.Font.Size = 12;
-                style.Font.Bold = true;
-                style.Font.Color = Colors.DarkBlue;
-                style.ParagraphFormat.SpaceBefore = 10;
-                style.ParagraphFormat.SpaceAfter = 2;
-
-                // Create a new style called Monospace based on style Normal
-                style = document.Styles.AddStyle("Monospace", "Normal");
-                System.Drawing.FontFamily monoFamily = new System.Drawing.FontFamily(System.Drawing.Text.GenericFontFamilies.Monospace);
-                style.Font.Name = monoFamily.Name;
-                Section section = document.AddSection();
-            }
+                throw new NotImplementedException();
 
             // Get the initial conditions table.            
             DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
@@ -414,10 +384,7 @@
                 writer.WriteLine("</html>");
             }
             else if (outtype == OutputType.rtf)
-            {
-                string rtf = renderer.RenderToString(document, Path.GetTempPath());
-                writer.Write(rtf);
-            }
+                throw new NotImplementedException();
         }
 
         /// <summary>
@@ -622,7 +589,7 @@
             }
             else if (outtype == OutputType.rtf)
             {
-                MigraDoc.DocumentObjectModel.Tables.Table tabl = new MigraDoc.DocumentObjectModel.Tables.Table();
+                Table tabl = new Table();
                 tabl.Borders.Width = 0.75;
 
                 foreach (DataColumn col in table.Columns)
@@ -632,7 +599,7 @@
 
                 if (showHeadings)
                 {
-                    MigraDoc.DocumentObjectModel.Tables.Row row = tabl.AddRow();
+                    Row row = tabl.AddRow();
                     row.Shading.Color = Colors.PaleGoldenrod;
                     tabl.Shading.Color = new Color(245, 245, 255);
                     for (int i = 0; i < table.Columns.Count; i++)
@@ -651,7 +618,7 @@
                 {
                     bool titleRow = Convert.IsDBNull(row[0]);
                     string st;
-                    MigraDoc.DocumentObjectModel.Tables.Row newRow = tabl.AddRow();
+                    Row newRow = tabl.AddRow();
 
                     for (int i = 0; i < table.Columns.Count; i++)
                     {

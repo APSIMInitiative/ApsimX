@@ -2,9 +2,16 @@
 {
     using APSIM.Shared.Utilities;
     using HtmlAgilityPack;
+#if NETCOREAPP
+    using MigraDocCore.DocumentObjectModel;
+    using MigraDocCore.DocumentObjectModel.Tables;
+    using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+    using PdfSharpCore.Drawing;
+#else
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
     using PdfSharp.Drawing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -65,7 +72,7 @@
         {
             XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
             var fontSize = table.Document.Styles["Table"].Font.Size.Value;
-            var gdiFont = new PdfSharp.Drawing.XFont("Arial", fontSize);
+            var gdiFont = new XFont("Arial", fontSize);
 
             for (int j = 0; j < table.Columns.Count; j++)
             {
@@ -76,10 +83,10 @@
                     {
                         string contents = string.Empty;
                         foreach (DocumentObject paragraphElement in paragraph.Elements)
-                            if (paragraphElement is MigraDoc.DocumentObjectModel.Text)
-                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Text).Content;
-                            else if (paragraphElement is MigraDoc.DocumentObjectModel.Hyperlink)
-                                contents += (paragraphElement as MigraDoc.DocumentObjectModel.Hyperlink).Name;
+                            if (paragraphElement is Text)
+                                contents += (paragraphElement as Text).Content;
+                            else if (paragraphElement is Hyperlink)
+                                contents += (paragraphElement as Hyperlink).Name;
                         XSize size = graphics.MeasureString(contents, gdiFont);
                         columnWidth = Math.Max(columnWidth, size.Width);
                     }
@@ -169,7 +176,11 @@
                 if (File.Exists(fullPath))
                 {
                     Paragraph para = section.Section.AddParagraph();
+#if NETFRAMEWORK
                     para.AddImage(fullPath);
+#else
+                    para.AddImage(ImageSource.FromFile(fullPath, 100));
+#endif
                 }
             }
             return section;
@@ -540,10 +551,10 @@
         /// Add MigraDoc styles.
         /// </summary>
         /// <param name="doc">The document to add the styles to.</param>
-        private static void AddStylesToDoc(MigraDoc.DocumentObjectModel.Document doc)
+        private static void AddStylesToDoc(Document doc)
         {
             var body = doc.Styles["Normal"];
-            body.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(10);
+            body.Font.Size = Unit.FromPoint(10);
 
             if (doc.Styles["TableText"] == null)
             {
@@ -552,46 +563,46 @@
                 tableTextStyle.ParagraphFormat.SpaceAfter = 5;
             }
 
-            body.ParagraphFormat.LineSpacingRule = MigraDoc.DocumentObjectModel.LineSpacingRule.Multiple;
+            body.ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
             body.ParagraphFormat.LineSpacing = 1.0;
             body.ParagraphFormat.SpaceAfter = 10;
 
             var footer = doc.Styles["Footer"];
-            footer.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            footer.Font.Size = Unit.FromPoint(9);
 
             var h1 = doc.Styles["Heading1"];
             h1.Font.Bold = true;
-            h1.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(15);
+            h1.Font.Size = Unit.FromPoint(15);
             h1.ParagraphFormat.SpaceBefore = 0;
 
             var h2 = doc.Styles["Heading2"];
             h2.Font.Bold = true;
-            h2.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(13);
+            h2.Font.Size = Unit.FromPoint(13);
             h2.ParagraphFormat.SpaceBefore = 0;
 
             var h3 = doc.Styles["Heading3"];
             h3.Font.Bold = true;
-            h3.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(11);
+            h3.Font.Size = Unit.FromPoint(11);
             h3.ParagraphFormat.SpaceBefore = 0;
 
             var h4 = doc.Styles["Heading4"];
             h4.Font.Bold = true;
-            h4.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(10);
+            h4.Font.Size = Unit.FromPoint(10);
             h4.ParagraphFormat.SpaceBefore = 0;
 
             var h5 = doc.Styles["Heading5"];
             h5.Font.Bold = true;
-            h5.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h5.Font.Size = Unit.FromPoint(9);
             h5.ParagraphFormat.SpaceBefore = 0;
 
             var h6 = doc.Styles["Heading6"];
             h6.Font.Bold = true;
-            h6.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h6.Font.Size = Unit.FromPoint(9);
             h6.ParagraphFormat.SpaceBefore = 0;
 
 
             var links = doc.Styles["Hyperlink"];
-            links.Font.Color = MigraDoc.DocumentObjectModel.Colors.Blue;
+            links.Font.Color = Colors.Blue;
 
             if (doc.Styles["ListEnd"] == null)
             {
@@ -602,8 +613,8 @@
             if (doc.Styles["UnorderedList"] == null)
             {
                 var unorderedlist = doc.AddStyle("UnorderedList", "Normal");
-                var listInfo = new MigraDoc.DocumentObjectModel.ListInfo();
-                listInfo.ListType = MigraDoc.DocumentObjectModel.ListType.BulletList1;
+                var listInfo = new ListInfo();
+                listInfo.ListType = ListType.BulletList1;
                 unorderedlist.ParagraphFormat.ListInfo = listInfo;
                 unorderedlist.ParagraphFormat.LeftIndent = "1cm";
                 unorderedlist.ParagraphFormat.FirstLineIndent = "-0.5cm";
@@ -613,7 +624,7 @@
             if (doc.Styles["OrderedList"] == null)
             {
                 var orderedlist = doc.AddStyle("OrderedList", "UnorderedList");
-                orderedlist.ParagraphFormat.ListInfo.ListType = MigraDoc.DocumentObjectModel.ListType.NumberList1;
+                orderedlist.ParagraphFormat.ListInfo.ListType = ListType.NumberList1;
                 orderedlist.ParagraphFormat.LeftIndent = "1cm";
                 orderedlist.ParagraphFormat.FirstLineIndent = "-0.5cm";
                 orderedlist.ParagraphFormat.SpaceAfter = 0;
@@ -628,9 +639,9 @@
             if (doc.Styles["HorizontalRule"] == null)
             { 
                 var hr = doc.AddStyle("HorizontalRule", "Normal");
-                var border = new MigraDoc.DocumentObjectModel.Border();
+                var border = new Border();
                 border.Width = "1pt";
-                border.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+                border.Color = Colors.DarkGray;
                 hr.ParagraphFormat.Borders.Bottom = border;
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
@@ -640,7 +651,7 @@
                 var style = doc.Styles.AddStyle("TableParagraph", "Normal");
                 style.Font.Size = 8;
                 style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
-                style.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+                style.Font = new Font("Courier New");
             }
         }
 
@@ -653,7 +664,7 @@
         {
             Table table = section.AddTable();
             table.Borders.Width = "0.5pt";
-            table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+            table.Borders.Color = Colors.DarkGray;
             table.LeftPadding = "5mm";
             table.Rows.LeftIndent = "0cm";
             

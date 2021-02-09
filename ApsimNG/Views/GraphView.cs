@@ -263,7 +263,7 @@
 #if NETFRAMEWORK
                 int preferredWidth = plot1.ChildRequisition.Width;
 #else
-                plot1.GetPreferredWidth(out _, out int preferredWidth);
+                plot1.GetPreferredWidth(out int minWidth, out int preferredWidth);
 #endif
                 return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
             }
@@ -280,7 +280,7 @@
 #if NETFRAMEWORK
                 int preferredHeight = plot1.ChildRequisition.Height;
 #else
-                plot1.GetPreferredHeight(out _, out int preferredHeight);
+                plot1.GetPreferredHeight(out int minHeight, out int preferredHeight);
 #endif
                 return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
             }

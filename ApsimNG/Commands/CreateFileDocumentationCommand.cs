@@ -53,9 +53,7 @@
             var pdfWriter = new PDFWriter(explorerPresenter, portraitOrientation: true);
 
             // write image files
-            Image banner;
-            banner = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
-
+            Image banner = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
             // Convert all models in file to tags.
             var tags = new List<AutoDocumentation.ITag>();
 
