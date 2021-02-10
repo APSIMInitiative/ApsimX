@@ -161,7 +161,7 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
             this.parent.CurIndex = prevSuppIdx;
@@ -238,7 +238,7 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
             if (supplementsReset)

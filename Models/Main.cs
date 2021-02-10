@@ -74,9 +74,6 @@
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
-                else if (options.EditFilePath != null)
-                    foreach (string file in files)
-                        EditFile.Do(file, options.EditFilePath);
                 else if (options.MergeDBFiles)
                 {
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
@@ -210,6 +207,9 @@
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            if (sender is Runner runner)
+                (sender as Runner).DisposeStorage();
+
             if (e.AllExceptionsThrown == null)
                 return;
 

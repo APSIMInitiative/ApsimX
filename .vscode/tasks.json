@@ -1,30 +1,46 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "nuget",
-			"type": "shell",
-			"command": "nuget",
-			"args": [
-				"restore",
-				"${workspaceRoot}/ApsimX.sln"
-			]
-		},
-		{
-			"label": "build",
-			"type": "shell",
-			"command": "msbuild",
-			"args": [
-				"/v:m",
-				//"/p:Configuration=Release",
-				"${workspaceRoot}/ApsimX.sln"
-			],
-			"problemMatcher": [],
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"dependsOn": "nuget"
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/ApsimNG/ApsimNG.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/ApsimNG/ApsimNG.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/ApsimNG/ApsimNG.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
 }

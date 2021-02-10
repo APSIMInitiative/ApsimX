@@ -2,6 +2,7 @@
 {
     using Classes;
     using EventArguments;
+    using Extensions;
     using Gtk;
     using Interfaces;
     using Models.Core;
@@ -14,6 +15,12 @@
     using System.Linq;
     using System.Reflection;
     using System.Text;
+
+#if NETCOREAPP
+    using TreeModel = Gtk.ITreeModel;
+    using CellLayout = Gtk.ICellLayout;
+    using StateType = Gtk.StateFlags;
+#endif
 
     /// <summary>
     /// A grid control that implements the grid view interface.
@@ -129,8 +136,11 @@
         /// The edit control currently in use (if any).
         /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component.
         /// </summary>
+#if NETFRAMEWORK
         private CellEditable editControl = null;
-
+#else
+        private ICellEditable editControl = null;
+#endif
         /// <summary>
         /// The tree path for the row currently being edited.
         /// </summary>
@@ -202,7 +212,10 @@
                 // Use the gtkControl argument as the parent widget and make the builders hbox a child of it.
                 var child = hboxContainer;
                 hboxContainer = gtkControl as HBox;
-                hboxContainer.PackStart(child);
+
+                // todo: test if this is correct default usage.
+                // We previously just called HBox.PackStart(Widget).
+                hboxContainer.PackStart(child, true, true, 0);
             }
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
@@ -231,7 +244,11 @@
             Grid.KeyPressEvent += GridviewKeyPressEvent;
             fixedColView.KeyPressEvent += GridviewKeyPressEvent;
             Grid.EnableSearch = false;
+#if NETFRAMEWORK
             Grid.ExposeEvent += GridviewExposed;
+#else
+            Grid.Drawn += GridviewExposed;
+#endif
             fixedColView.FocusInEvent += FocusInEvent;
             fixedColView.FocusOutEvent += FocusOutEvent;
             fixedColView.EnableSearch = false;
@@ -384,7 +401,7 @@
                 if (value != isReadOnly)
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
-                        foreach (CellRenderer render in col.CellRenderers)
+                        foreach (CellRenderer render in col.GetCells())
                             if (render is CellRendererText)
                                 (render as CellRendererText).Editable = !value;
                 }
@@ -422,7 +439,8 @@
                 if (Grid.HasFocus || !fixedColView.Visible)
                 {
                     Grid.GetCursor(out path, out col);
-                    if (path != null && col != null && col.Cells.Length > 0)
+
+                    if (path != null && col != null && col.TreeView != null && col.Cells.Length > 0)
                     {
                         int colNo, rowNo;
                         rowNo = path.Indices[0];
@@ -434,7 +452,7 @@
                 if (fixedColView.HasFocus)
                 {
                     fixedColView.GetCursor(out path, out col);
-                    if (path != null && col != null && col.Cells.Length > 0)
+                    if (path != null && col != null && col.TreeView != null && col.Cells.Length > 0)
                     {
                         int colNo, rowNo;
                         rowNo = path.Indices[0];
@@ -478,6 +496,10 @@
         /// <param name="cell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
+        /// <remarks>
+        /// In netcore builds, TreeModel is an alias for ITreeModel (see using statement at top of file).
+        /// Need to rework how colours are handled once we drop gtk2 support.
+        /// </remarks>
         public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             try
@@ -496,8 +518,10 @@
                     textRenderer.Editable = true;
                     if (IsSeparator(rowNo))
                     {
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Normal);
-                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.Style.Background(StateType.Active)) : Color.LightSteelBlue;
+                        // tbi - gtk3 equivalent
+                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Normal);
+                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Active)) : Color.LightSteelBlue;
+
                         cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                         textRenderer.Editable = false;
                     }
@@ -508,21 +532,22 @@
                     }
                     else
                     {
-                        cell.CellBackgroundGdk = Grid.Style.Base(cellState);
-                        textRenderer.ForegroundGdk = Grid.Style.Foreground(cellState);
+                        // tbi - gtk3 equivalent
+                        cell.CellBackgroundGdk = Grid.GetBackgroundColour(cellState);
+                        textRenderer.ForegroundGdk = Grid.GetForegroundColour(cellState);
                     }
 
                     if (IsRowReadonly(rowNo))
                     {
-                        textRenderer.ForegroundGdk = view.Style.Foreground(StateType.Insensitive);
+                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Insensitive);
                         textRenderer.Editable = false;
                     }
 
                     if (view == Grid)
                     {
-                        col.CellRenderers[1].Visible = false;
-                        col.CellRenderers[2].Visible = false;
-                        col.CellRenderers[3].Visible = false;
+                        col.GetCells()[1].Visible = false;
+                        col.GetCells()[2].Visible = false;
+                        col.GetCells()[3].Visible = false;
                     }
                     object dataVal = DataSource.Rows[rowNo][colNo];
                     Type dataType = dataVal.GetType();
@@ -538,14 +563,14 @@
                         // Currently not handling booleans and lists in the "fixed" column grid
                         if (dataType == typeof(bool))
                         {
-                            CellRendererToggle toggleRend = col.CellRenderers[1] as CellRendererToggle;
+                            CellRendererToggle toggleRend = col.GetCells()[1] as CellRendererToggle;
                             if (toggleRend != null)
                             {
                                 toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                                 toggleRend.Active = (bool)dataVal;
                                 toggleRend.Activatable = true;
                                 cell.Visible = false;
-                                col.CellRenderers[2].Visible = false;
+                                col.GetCells()[2].Visible = false;
                                 toggleRend.Visible = true;
                                 return;
                             }
@@ -556,7 +581,7 @@
                             ListStore store;
                             if (ComboLookup.TryGetValue(location, out store))
                             {
-                                CellRendererCombo comboRend = col.CellRenderers[2] as CellRendererCombo;
+                                CellRendererCombo comboRend = col.GetCells()[2] as CellRendererCombo;
                                 if (comboRend != null)
                                 {
                                     comboRend.Model = store;
@@ -564,7 +589,7 @@
                                     comboRend.Editable = true;
                                     comboRend.HasEntry = false;
                                     cell.Visible = false;
-                                    col.CellRenderers[1].Visible = false;
+                                    col.GetCells()[1].Visible = false;
                                     comboRend.Visible = true;
                                     comboRend.Text = AsString(dataVal);
                                     comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
@@ -573,7 +598,7 @@
                             }
                             if (ButtonList.Contains(location))
                             {
-                                CellRendererActiveButton buttonRend = col.CellRenderers[3] as CellRendererActiveButton;
+                                CellRendererActiveButton buttonRend = col.GetCells()[3] as CellRendererActiveButton;
                                 if (buttonRend != null)
                                 {
                                     buttonRend.Visible = true;
@@ -731,7 +756,11 @@
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.ForegroundColor;
             else
+#if NETFRAMEWORK
                 return Grid.Style.Foreground(StateType.Normal);
+#else
+                return Grid.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
+#endif
         }
 
         /// <summary>
@@ -766,7 +795,12 @@
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.BackgroundColor;
             else
+#if NETFRAMEWORK
                 return Grid.Style.Base(StateType.Normal);
+#else
+                // fixme
+                return Grid.GetBackgroundColour(StateType.Normal);
+#endif
         }
 
         /// <summary>
@@ -848,10 +882,11 @@
                     text = (editControl as Entry).Text;
                     path = editPath;
                 }
-                else if (editControl is ComboBox)
+                else if (editControl is ComboBox combo)
                 {
                     comboTooltipsSet = false;
-                    text = (editControl as ComboBox).ActiveText;
+                    text = combo.GetActiveText();
+
                     // text can be null if the user hasn't completed making a selection. 
                     // If this is the case, we don't want to change the existing value.
                     if (text == null) 
@@ -917,9 +952,9 @@
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
-                    splitter.Position = Math.Min(fixedColView.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(fixedColView.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
                 else
-                    splitter.Position = fixedColView.SizeRequest().Width + splitterWidth;
+                    splitter.Position = fixedColView.WidthRequest + splitterWidth;
             }
             else
             {
@@ -929,7 +964,7 @@
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
-                splitter.Child1.HideAll();
+                splitter.Child1.Hide();
             }
             numberLockedCols = number;
         }
@@ -980,9 +1015,14 @@
                 {
                     foreach (Widget child in ((Gtk.Button)widget).AllChildren)
                     {
+#if NETFRAMEWORK
                         if (child.GetType() != typeof(Gtk.HBox))
+#else
+                        if (!(child is Box))
+#endif
                             continue;
-                        foreach (Widget grandChild in ((Gtk.HBox)child).AllChildren)
+
+                        foreach (Widget grandChild in ((Box)child).AllChildren)
                         {
                             if (grandChild.GetType() != typeof(Gtk.Alignment))
                                 continue;
@@ -1023,7 +1063,11 @@
             fixedColView.KeyPressEvent -= GridviewKeyPressEvent;
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
+#if NETFRAMEWORK
             Grid.ExposeEvent -= GridviewExposed;
+#else
+            Grid.Drawn -= GridviewExposed;
+#endif
             scrollingWindow2.ScrollEvent -= OnFixedColViewScroll;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
@@ -1176,7 +1220,7 @@
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+                foreach (CellRenderer render in col.GetCells())
                 {
                     if (render is CellRendererText)
                     {
@@ -1199,7 +1243,7 @@
                     {
                         (render as CellRendererCombo).Edited -= ComboRenderEdited;
                     }
-                    render.Destroy();
+                    render.Dispose();
                 }
                 Widget w = col.Widget;
                 while (!(w is Button || w == null))
@@ -1213,7 +1257,7 @@
             while (fixedColView.Columns.Length > 0)
             {
                 TreeViewColumn col = fixedColView.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+                foreach (CellRenderer render in col.GetCells())
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
@@ -1340,8 +1384,7 @@
         /// <summary>
         /// Handles navigation in the grid.
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="keyValue"></param>
+        /// <param name="eventKey">The keypress event data.</param>
         private void HandleNavigation(Gdk.EventKey eventKey)
         {
             Gdk.Key key = eventKey.Key;
@@ -1452,7 +1495,7 @@
             column.CellGetSize(rectangle, out offsetX, out offsetY, out cellWidth, out cellHeight);
 
             // And now get padding from CellRenderer
-            CellRenderer renderer = column.CellRenderers[row];
+            CellRenderer renderer = column.GetCells()[row];
             cellHeight += (int)renderer.Ypad;
             return new Point(column.Width, cellHeight);
         }
@@ -1490,7 +1533,7 @@
         {
             int frameX, frameY, containerX, containerY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            Grid.GdkWindow.GetOrigin(out containerX, out containerY);
+            Grid.GetGdkWindow().GetOrigin(out containerX, out containerY);
             Point relCoordinates = GetCellPosition(col, row + 1);
             return new Point(relCoordinates.X + containerX, relCoordinates.Y + containerY);
         }
@@ -1605,10 +1648,13 @@
             // Therefore we need to trap the Realized event and fix the colours when it fires.
             Grid.Realized += GridRealized;
 
+#if NETFRAMEWORK
+            // tbi - gtk3 (do we even need this?)
             Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
             Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
             fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
             fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+#endif
             Grid.QueryTooltip += OnQueryTooltip;
 
             if (Grid.IsRealized)
@@ -1700,9 +1746,9 @@
             SetColumnHeaders(fixedColView);
 
             Grid.EnableSearch = false;
-            //// gridview.SearchColumn = 0;
+            // gridview.SearchColumn = 0;
             fixedColView.EnableSearch = false;
-            //// fixedcolview.SearchColumn = 0;
+            // fixedcolview.SearchColumn = 0;
 
             UpdateControls();
 
@@ -1721,8 +1767,12 @@
                 if (!colAttributes.TryGetValue(i, out _))
                 {
                     ColRenderAttributes attrib = new ColRenderAttributes();
-                    attrib.ForegroundColor = Grid.Style.Foreground(StateType.Normal);
+                    attrib.ForegroundColor = Grid.GetForegroundColour(StateType.Normal);
+#if NETFRAMEWORK
                     attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
+#else
+                    attrib.BackgroundColor = Grid.GetBackgroundColour(StateType.Normal);
+#endif
                     colAttributes.Add(i, attrib);
                 }
             }
@@ -1743,8 +1793,11 @@
                 if (Grid != null)
                     Grid.Realized -= GridRealized;
 
+#if NETFRAMEWORK
+                // tbi - gtk3
                 fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
                 fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+#endif
 
                 if (DataSource == null)
                     return;
@@ -1757,8 +1810,7 @@
             }
         }
 
-        /// Invoked when the view needs a tooltip.
-        /// </summary>
+        /// <summary>Invoked when the view needs a tooltip.</summary>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event arguments.</param>
         private void OnQueryTooltip(object o, QueryTooltipArgs args)
@@ -1929,7 +1981,12 @@
             {
                 Label newLabel = new Label();
                 view.Columns[i].Widget = newLabel;
+#if NETFRAMEWORK
+                // In gtk3, explicit newline (\n) will cause the header to wrap anyway.
+                // In fact, setting Label.Wrap to true causes problems with the height
+                // of the fixed column treeview.
                 newLabel.Wrap = true;
+#endif
                 newLabel.Justify = Justification.Center;
                 /*
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
@@ -2052,7 +2109,7 @@
         /// <param name="shortcut">The shortcut keys.</param>
         private void AddContextActionWithAccel(string menuItemText, EventHandler onClick, string shortcut)
         {
-            ImageMenuItem item = new ImageMenuItem(menuItemText);
+            MenuItem item = new MenuItem(menuItemText);
             if (!string.IsNullOrEmpty(shortcut))
             {
                 string keyName = string.Empty;
@@ -2235,8 +2292,8 @@
                 (e.Editable as ComboBox).Changed += (o, _) =>
                 {
                     IGridCell currentCell = GetCurrentCell;
-                    if (currentCell != null && (o as ComboBox).ActiveText != null)
-                        UpdateCellText(currentCell, (o as ComboBox).ActiveText);
+                    if (currentCell != null && (o as ComboBox).GetActiveText() != null)
+                        UpdateCellText(currentCell, (o as ComboBox).GetActiveText());
                     EndEdit();
                 };
             }
@@ -2549,13 +2606,19 @@
         /// </summary>
         /// <param name="row">(0-based) Row index of the cell.</param>
         /// <param name="column">(0-based) column index of the cell.</param>
+        /// <param name="startEdit">Start editing the cell as well?</param>
         private void SelectCell(int row, int column, bool startEdit)
         {
             if (ReadOnly || GetColumn(selectedCellColumnIndex).ReadOnly || IsSeparator(selectedCellRowIndex))
                 startEdit = false;
 
             Gtk.TreeView view = GetTreeView(column);
+
+#if NETFRAMEWORK
+            // In gtk3 this breaks everything. Can't remember why it's
+            // necessary in gtk2, but I'm not brave enough to remove it.
             view.GrabFocus();
+#endif
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);
@@ -2712,9 +2775,9 @@
                                     Tuple<int, int> location = new Tuple<int, int>(newlySelectedRowIndex, newlySelectedColumnIndex);
                                     if (ButtonList.Contains(location) && e.Event.Type == Gdk.EventType.ButtonPress)
                                     {
-                                        CellRendererActiveButton button = column.CellRenderers[3] as CellRendererActiveButton;
-                                        if (e.Event.X >= button.lastRect.X &&
-                                            e.Event.X <= button.lastRect.X + button.lastRect.Width)
+                                        CellRendererActiveButton button = column.GetCells()[3] as CellRendererActiveButton;
+                                        if (e.Event.X >= button.LastRect.X &&
+                                            e.Event.X <= button.LastRect.X + button.LastRect.Width)
                                         {
                                             OnChooseFile(button, null);
                                             e.RetVal = false;
@@ -2783,13 +2846,22 @@
         /// </summary>
         /// <param name="sender">Sender of the event.</param>
         /// <param name="e">Event arguments.</param>
+#if NETFRAMEWORK
         private void GridviewExposed(object sender, ExposeEventArgs e)
+#else
+        private void GridviewExposed(object sender, DrawnArgs e)
+#endif
         {
             try
             {
                 if (numberLockedCols > 0)
                     LockLeftMostColumns(numberLockedCols);
+
+#if NETFRAMEWORK
                 Grid.ExposeEvent -= GridviewExposed;
+#else
+                Grid.Drawn -= GridviewExposed;
+#endif
             }
             catch (Exception err)
             {

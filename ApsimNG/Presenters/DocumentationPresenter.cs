@@ -1,5 +1,5 @@
-﻿using APSIM.Shared.Utilities;
-using MarkdownDeep;
+﻿﻿using APSIM.Shared.Extensions;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
+using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -20,12 +22,9 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private IModel model;
 
-        private Markdown markdown = new Markdown();
 
         public DocumentationPresenter()
         {
-            markdown.ExtraMode = true;
-            markdown.SafeMode = true;
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
@@ -39,7 +38,7 @@ namespace UserInterface.Presenters
 
         private void PopulateView()
         {
-            view.Text = DocumentModel(model);
+            view.Text = DocumentModel(model).Replace("<", @"\<");
         }
 
         private string DocumentModel(IModel model)
@@ -65,48 +64,66 @@ namespace UserInterface.Presenters
             }
 
             string typeName = model.GetType().Name;
-            markdown.AppendLine($"# {model.Name} Configuration");
-            markdown.AppendLine();
-            markdown.AppendLine("## Inputs");
-            markdown.AppendLine();
-            //html.AppendLine($"<h3>Fixed Parameters</h3>");
-            //html.AppendLine("<p>todo - requires GridView</p>");
-
-            markdown.AppendLine("### Variable Parameters");
-            markdown.AppendLine();
             DataTable functionTable = GetDependencies(model, m => typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
-
-            markdown.AppendLine("### Other dependencies");
             DataTable depsTable = GetDependencies(model, m => !typeof(IFunction).IsAssignableFrom(GetMemberType(m)));
-            markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
-            markdown.AppendLine();
-
             DataTable publicMethods = GetPublicMethods(model);
-            if (publicMethods.Rows.Count > 0)
-            {
-                markdown.AppendLine("## Public Methods");
-                markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
-                markdown.AppendLine();
-            }
-
             DataTable events = GetEvents(model);
-            if (events.Rows.Count > 0)
-            {
-                markdown.AppendLine("## Events");
-                markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
-                markdown.AppendLine();
-            }
-
             DataTable outputs = GetOutputs(model);
-            if (outputs.Rows.Count > 0)
+
+            if (functionTable.Rows.Count > 0
+             || depsTable.Rows.Count > 0
+             || publicMethods.Rows.Count > 0
+             || events.Rows.Count > 0
+             || outputs.Rows.Count > 0)
             {
-                markdown.AppendLine("## Model Outputs");
+                markdown.AppendLine($"# {model.Name} Configuration");
                 markdown.AppendLine();
-                markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
-                markdown.AppendLine();
+
+                if (functionTable.Rows.Count > 0 || depsTable.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Inputs");
+                    markdown.AppendLine();
+
+                    if (functionTable.Rows.Count > 0)
+                    {
+                        markdown.AppendLine("### Variable Dependencies");
+                        markdown.AppendLine();
+                        markdown.AppendLine(DataTableUtilities.ToMarkdown(functionTable, true));
+                        markdown.AppendLine();
+                    }
+
+                    if (depsTable.Rows.Count > 0)
+                    {
+                        markdown.AppendLine("### Fixed Dependencies");
+                        markdown.AppendLine();
+                        markdown.AppendLine(DataTableUtilities.ToMarkdown(depsTable, true));
+                        markdown.AppendLine();
+                    }
+                }
+
+                if (publicMethods.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Public Methods");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(publicMethods, true));
+                    markdown.AppendLine();
+                }
+
+                if (events.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Public Events");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(events, true));
+                    markdown.AppendLine();
+                }
+
+                if (outputs.Rows.Count > 0)
+                {
+                    markdown.AppendLine("## Model Outputs");
+                    markdown.AppendLine();
+                    markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
+                    markdown.AppendLine();
+                }
             }
 
             return markdown.ToString();
@@ -128,7 +145,7 @@ namespace UserInterface.Presenters
                     DataRow row = table.NewRow();
 
                     row[0] = evnt.Name;
-                    row[1] = evnt.EventHandlerType.Name;
+                    row[1] = evnt.EventHandlerType.GetFriendlyName();
                     row[2] = AutoDocumentation.GetSummary(evnt);
                     row[3] = AutoDocumentation.GetRemarks(evnt);
 
@@ -158,7 +175,7 @@ namespace UserInterface.Presenters
 
                     row[0] = property.Name;
                     row[1] = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
-                    row[2] = property.PropertyType.Name;
+                    row[2] = property.PropertyType.GetFriendlyName();
                     row[3] = AutoDocumentation.GetSummary(property);
                     row[4] = AutoDocumentation.GetRemarks(property);
 
@@ -185,7 +202,7 @@ namespace UserInterface.Presenters
                     DataRow row = table.NewRow();
 
                     row[0] = method.Name;
-                    row[1] = method.ReturnType.Name;
+                    row[1] = method.ReturnType.GetFriendlyName();
                     row[2] = AutoDocumentation.GetSummary(method);
                     row[3] = AutoDocumentation.GetRemarks(method);
 

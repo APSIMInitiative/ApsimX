@@ -97,7 +97,7 @@
             this.PopulateGrid();
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource("WaterGraph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.WaterGraph.xml");
             graph.Name = "";
             if (this.graph == null)
                 this.view.ShowGraph(false);

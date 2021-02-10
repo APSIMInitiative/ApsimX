@@ -5,6 +5,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -703,43 +704,45 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Each Adult Equivalent is able to consume ";
-            if (DailyIntakeLimit > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"setvalue\">";
-                html += DailyIntakeLimit.ToString("#,##0.##");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">NOT SET";
-            }
-            html += "</span> kg per day";
-            if (DailyIntakeOtherSources > 0)
-            {
-                html += "with <span class=\"setvalue\">";
-                html += DailyIntakeOtherSources.ToString("#,##0.##");
-                html += "</span> provided from non-modelled sources";
-            }
-            html += "</div>";
-            html += "<div class=\"activityentry\">";
-            html += "Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included";
-            html += "</div>";
-
-            // find a market place if present
-            Simulation sim = FindAncestor<Simulation>();
-            if (sim != null)
-            {
-                Market marketPlace = sim.FindChild<Market>();
-                if (marketPlace != null)
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Each Adult Equivalent is able to consume ");
+                if (DailyIntakeLimit > 0)
                 {
-                    html += "<div class=\"activityentry\">";
-                    html += "Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>";
-                    html += "</div>";
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(DailyIntakeLimit.ToString("#,##0.##"));
                 }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                }
+                htmlWriter.Write("</span> kg per day");
+                if (DailyIntakeOtherSources > 0)
+                {
+                    htmlWriter.Write("with <span class=\"setvalue\">");
+                    htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
+                    htmlWriter.Write("</span> provided from non-modelled sources");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
+                htmlWriter.Write("</div>");
+
+                // find a market place if present
+                Simulation sim = FindAncestor<Simulation>();
+                if (sim != null)
+                {
+                    Market marketPlace = sim.FindChild<Market>();
+                    if (marketPlace != null)
+                    {
+                        htmlWriter.Write("<div class=\"activityentry\">");
+                        htmlWriter.Write("Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>");
+                        htmlWriter.Write("</div>");
+                    }
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -748,9 +751,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -759,25 +760,27 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"croprotationborder\">";
-            html += "<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>";
-
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"errorbanner clearfix\">";
-                html += "<div class=\"filtererror\">No Feed To Target component provided</div>";
-                html += "</div>";
-            }
+                htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
+                htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
 
-            if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
-            {
-                html += "\n<div class=\"errorbanner clearfix\">";
-                html += "<div class=\"filtererror\">No food items will be purchased above what is currently available</div>";
-                html += "</div>";
-            }
+                if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
+                    htmlWriter.Write("</div>");
+                }
 
-            return html;
+                if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
+                    htmlWriter.Write("</div>");
+                }
+
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
     }

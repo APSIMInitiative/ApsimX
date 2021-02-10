@@ -47,7 +47,7 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
+        /// Event handler for a job runner's <see cref="JobRunner.AllCompleted"/> event.
         /// Asserts that the job ran successfully.
         /// </summary>
         /// <param name="sender">Sender object.</param>

@@ -7,8 +7,6 @@ using Models;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using Models.Graph;
-using Models.Report;
 using Models.Storage;
 using NUnit.Framework;
 
@@ -29,7 +27,7 @@ namespace UnitTests
             Simulation sim = new Simulation()
             {
                 Name = "Base",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock()
                     {
@@ -37,7 +35,7 @@ namespace UnitTests
                         StartDate = new DateTime(2018, 1, 1),
                         EndDate = new DateTime(2018, 1, 3)
                     },
-                    new Report()
+                    new Models.Report()
                     {
                         Name = "Report",
                         VariableNames = new string[] { "[Clock].Today" },
@@ -47,10 +45,10 @@ namespace UnitTests
                     {
                         Name = "Summary"
                     },
-                    new Graph()
+                    new Models.Graph()
                     {
                         Name = "FaultyGraph",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Series()
                             {
@@ -65,13 +63,16 @@ namespace UnitTests
                 }
             };
 
+            var storage = sim.Children[4] as DataStore;
+            storage.Open();
             var runner = new Runner(sim);
-            runner.Run(Runner.RunTypeEnum.MultiThreaded);
+            List<Exception> errors = runner.Run();
+
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
 
             var faultySeries = sim.Children[3].Children[0] as Series;
-            var storage = sim.Children[4] as DataStore;
-            List<SeriesDefinition> definitions = new List<SeriesDefinition>();
-            faultySeries.GetSeriesToPutOnGraph(storage, definitions);
+            List<SeriesDefinition> definitions = faultySeries.GetSeriesDefinitions(storage.Reader).ToList();
             if (definitions == null || definitions.Count < 1)
                 throw new Exception("Unable to graph data from a report which exists directly under a simulation.");
         }

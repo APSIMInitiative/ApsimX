@@ -589,7 +589,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Purchases and sales will use ";
+            html += "\r\n<div class=\"activityentry\">Purchases and sales will use ";
             if (BankAccountName == null || BankAccountName == "")
             {
                 html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";

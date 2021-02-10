@@ -393,8 +393,9 @@ namespace Models.Utilities
                 throw new Exception("Unable to find R entry in Registry - is R installed?.");
             else
             {
-                // Ignore Microsoft R client. 
-                string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).Last();
+                // Ignore Microsoft R client.
+                // When there's multiple versions of R installed, use latest.
+                string latestVersionKeyName = rKey + @"\" + versions.Where(v => !v.Contains("Microsoft R Client")).OrderByDescending(i => i).First();
                 string installDirectory = null; 
                 using (RegistryKey latestVersionKey = Registry.LocalMachine.OpenSubKey(latestVersionKeyName))
                 {

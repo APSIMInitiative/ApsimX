@@ -512,6 +512,8 @@
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
+                    if (storage == null)
+                        storage = model.FindInScope<IDataStore>();
                     cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
@@ -689,7 +691,8 @@
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
                         explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
-                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values, flags);
                         string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = values;
@@ -908,8 +911,10 @@
         /// <summary>
         /// Fetches from the model the value which should be displayed in a given cell.
         /// </summary>
+        /// <param name="property">The row and column correspond to this property.</param>
         /// <param name="row">Row index of the cell.</param>
         /// <param name="column">Column index of the cell.</param>
+        /// <remarks>Why do we need to pass row/column and property as well??</remarks>
         protected virtual object GetCellValue(IVariable property, int row, int column)
         {
             object result = property.ValueWithArrayHandling;
@@ -929,7 +934,6 @@
         /// <summary>
         /// Gets the property in a given displayed by a given cell.
         /// </summary>
-        /// <remarks>
         /// <param name="row">Row inex.</param>
         /// <param name="column">Column index.</param>
         protected virtual IVariable GetProperty(int row, int column)
@@ -941,6 +945,7 @@
         /// Gets the new value of the cell from a string containing the
         /// cell's new contents.
         /// </summary>
+        /// <param name="property">Property to which the cell belongs.</param>
         /// <param name="cell">Cell which has been changed.</param>
         protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {

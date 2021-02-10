@@ -450,6 +450,10 @@ namespace APSIM.Shared.Utilities
                     }
                     tpStack.Push(tpResult);
                 }
+                else if (sym.m_type == ExpressionType.Comma)
+                    // Commas need to be added onto the parameter stack, otherwise
+                    // only the last argument will be passed to the function call.
+                    tpStack.Push(sym);
                 else if (sym.m_type == ExpressionType.EvalFunction)
                 {
                     fnParam.Clear();
@@ -470,10 +474,12 @@ namespace APSIM.Shared.Utilities
                         while (tpSym1.m_type == ExpressionType.Comma)
                         {
                             tpSym1 = tpStack.Pop();
-                            fnParam.Add(tpSym1);
+                            // tpStack is postfix order, however EvaluateFunction() expects the parameter
+                            // array to be in prefix order, so fnParam is prefix order.
+                            fnParam.Insert(0, tpSym1);
                             tpSym1 = tpStack.Pop();
                         }
-                        fnParam.Add(tpSym1);
+                        fnParam.Insert(0, tpSym1);
                         tpResult = EvaluateFunction(sym.m_name, fnParam.ToArray());
                         if (tpResult.m_type == ExpressionType.Error)
                         {
@@ -649,9 +655,9 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Evaluates the function.</summary>
         /// <param name="name">The name.</param>
-        /// <param name="args">The arguments.</param>
+        /// <param name="args">The arguments (in prefix order - not postfix!).</param>
         /// <returns></returns>
-        protected Symbol EvaluateFunction(string name, params Object[] args)
+        protected Symbol EvaluateFunction(string name, params Symbol[] args)
         {
             Symbol result;
             result.m_name = "";
@@ -945,11 +951,17 @@ namespace APSIM.Shared.Utilities
                                 result.m_value /= Values[i];
                         }
                         result.m_name = name;
-                        result.m_values = null;
+                    }
+                    else if (args.Length == 2 || args.Length == 3)
+                    {
+                        // Iff 3 args provided, use 3rd arg as error value.
+                        double errorValue = args.Length == 2 ? 0 : ((Symbol)args[2]).m_value;
+                        result.m_name = name;
+                        result.m_value = MathUtilities.Divide(args[0].m_value, args[1].m_value, errorValue);
                     }
                     else
                     {
-                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_name = $"Invalid number of parameters ({args.Length}) in: {name}.";
                         result.m_type = ExpressionType.Error;
                     }
                     break;

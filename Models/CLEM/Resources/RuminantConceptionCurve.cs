@@ -75,11 +75,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception rates are being calculated for all females using the same curve.";
-            html += "</div>";
-            return html;
+            return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
         }
 
         #endregion

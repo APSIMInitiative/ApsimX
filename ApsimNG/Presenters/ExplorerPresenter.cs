@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Commands;
+    using Extensions;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -153,7 +154,7 @@
         /// Called after undoing/redoing a command.
         /// Selects the model which was affected by the command.
         /// </summary>
-        /// <param name="affectedModel">The model which was affected by the command.</param>
+        /// <param name="model">The model which was affected by the command.</param>
         /// <remarks>
         /// When the user undoes/redoes something we want to select the affected
         /// model. Therefore this callback is used for both undo and redo operations.
@@ -202,7 +203,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Destroy();
+                (this.view as Views.ExplorerView).MainWidget.Cleanup();
             }
 
             this.ContextMenu = null;
@@ -282,29 +283,19 @@
             try
             {
                 HideRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+                if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                    SaveAs();
 
-            if (string.IsNullOrEmpty(ApsimXFile.FileName))
-                SaveAs();
-
-            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
-            {
-                ApsimXFile.Write(ApsimXFile.FileName);
-                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                return true;
+                if (!string.IsNullOrEmpty(ApsimXFile.FileName))
+                {
+                    ApsimXFile.Write(ApsimXFile.FileName);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                    return true;
+                }
             }
-
-            try
+            finally
             {
                 ShowRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -346,22 +337,30 @@
         }
 
         /// <summary>Select a node in the view.</summary>
-        /// <param name="nodePath">Node to be selected.</param>
-        public void SelectNode(IModel node)
+        /// <param name="node">Node to be selected.</param>
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(IModel node, bool refreshRightHandPanel = true)
         {
-            SelectNode(node.FullPath);
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            SelectNode(node.FullPath, refreshRightHandPanel);
+            if (refreshRightHandPanel)
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
         }
 
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
-        public void SelectNode(string nodePath)
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(string nodePath, bool refreshRightHandPanel = true)
         {
             this.view.Tree.SelectedNode = nodePath;
             while (GLib.MainContext.Iteration());
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            if (refreshRightHandPanel)
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
         }
 
         internal void CollapseChildren(string path)
@@ -369,9 +368,9 @@
             view.Tree.CollapseChildren(path);
         }
 
-        internal void ExpandChildren(string path)
+        internal void ExpandChildren(string path, bool recursive = true)
         {
-            view.Tree.ExpandChildren(path);
+            view.Tree.ExpandChildren(path, recursive);
         }
 
         /// <summary>
@@ -474,10 +473,9 @@
         }
 
         /// <summary>
-        /// Adds a model to a parent model.
+        /// Delete a model from the tree.
         /// </summary>
-        /// <param name="child">The string representation (JSON or XML) of a model.</param>
-        /// <param name="parentPath">Path to the parent</param>
+        /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
         public void DeleteFromTree(string pathToNodeToDelete)
         {
             view.Tree.Delete(pathToNodeToDelete);
@@ -540,7 +538,7 @@
         /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>
-        /// <returns>Clipboard text</returns>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
             return ViewBase.MasterView.GetClipboardText(clipboardName);
@@ -550,6 +548,7 @@
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
             ViewBase.MasterView.SetClipboardText(text, clipboardName);
@@ -775,8 +774,8 @@
 
         /// <summary>Show a view in the right hand panel.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="viewName">The view name.</param>
-        /// <param name="presenterName">The presenter name.</param>
+        /// <param name="gladeResourceName">Name of the glade resource file.</param>
+        /// <param name="presenter">The presenter to be used.</param>
         public void ShowInRightHandPanel(object model, string gladeResourceName, IPresenter presenter)
         {
             ShowInRightHandPanel(model,

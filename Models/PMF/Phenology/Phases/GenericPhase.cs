@@ -57,6 +57,7 @@ namespace Models.PMF.Phen
 
         /// <summary>Thermal time target to end this phase.</summary>
         [JsonIgnore]
+        [Units("oD")]
         public double Target { get { return target.Value(); } }
 
         // 3. Public methods

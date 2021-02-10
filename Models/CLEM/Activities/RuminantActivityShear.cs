@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Shear selected herd and place clip in ";
+            html += "\r\n<div class=\"activityentry\">Shear selected herd and place clip in ";
 
             if (ProductStoreName == null || ProductStoreName == "")
             {
