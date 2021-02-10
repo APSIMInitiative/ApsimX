@@ -611,7 +611,7 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    // System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }

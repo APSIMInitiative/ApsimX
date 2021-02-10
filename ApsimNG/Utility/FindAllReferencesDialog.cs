@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Gtk;
 using Models.Core;
+using UserInterface.Extensions;
 using UserInterface.Presenters;
 
 namespace Utility
@@ -50,6 +51,7 @@ namespace Utility
         /// <summary>
         /// Initialises and populates the view.
         /// </summary>
+        /// <param name="model">The reference model.</param>
         /// <param name="references">List of references to be displayed.</param>
         /// <param name="presenter">The ExplorerPresenter for this tab.</param>
         public FindAllReferencesDialog(IModel model, List<Reference> references, ExplorerPresenter presenter)
@@ -89,7 +91,7 @@ namespace Utility
         /// <summary>
         /// Get the prefix common to all paths in all references.
         /// </summary>
-        /// <param name="references"></param>
+        /// <param name="paths">The paths.</param>
         /// <returns></returns>
         private string GetCommonPathElements(string[] paths)
         {
@@ -117,7 +119,9 @@ namespace Utility
             data = new ListStore(typeof(string), typeof(string), typeof(string));
             tree.Model = data;
             tree.CanFocus = true;
+#if NETFRAMEWORK
             tree.RulesHint = true; // Allows for alternate-row colouring.
+#endif
             tree.CursorChanged += OnSelectionChanged;
             tree.KeyPressEvent += OnKeyPress;
 
@@ -191,7 +195,7 @@ namespace Utility
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             if (args.Event.Key == Gdk.Key.Escape)
-                window.Destroy();
+                window.Cleanup();
         }
 
         /// <summary>

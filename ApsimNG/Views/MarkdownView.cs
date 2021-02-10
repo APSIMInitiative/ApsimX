@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
-using System.Text.RegularExpressions;
 using APSIM.Shared.Utilities;
-using Cairo;
-using ClosedXML.Excel;
 using Gdk;
 using Gtk;
 using Markdig;
-using Markdig.Extensions;
-using Markdig.Extensions.EmphasisExtras;
 using Markdig.Extensions.Tables;
-using Markdig.Helpers;
-using Markdig.Parsers;
-using Markdig.Renderers;
 using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
-using Models.Core;
+using UserInterface.Extensions;
+using Utility;
 using Pango;
 using UserInterface.Classes;
-using Utility;
 using Table = Markdig.Extensions.Tables.Table;
+#if NETCOREAPP
+using StateType = Gtk.StateFlags;
+#endif
 
 namespace UserInterface.Views
 {
@@ -41,7 +34,7 @@ namespace UserInterface.Views
         bool Visible { get; set; }
     }
 
-    /// <summary>A rich text view.</summary>
+    /// <summary>A rich text view capable of rendering markdown-formatted text.</summary>
     public class MarkdownView : ViewBase, IMarkdownView
     {
         /// <summary>
@@ -72,7 +65,7 @@ namespace UserInterface.Views
         {
             VBox box = new VBox();
             TextView child = new TextView();
-            box.PackStart(child);
+            box.PackStart(child, true, true, 0);
             Initialise(owner, box);
         }
 
@@ -140,7 +133,12 @@ namespace UserInterface.Views
                 MenuItem option = new MenuItem("Find Text");
                 option.ShowAll();
                 option.Activated += OnFindText;
+#if NETFRAMEWORK
                 args.Menu.Append(option);
+#else
+                if (args.Popup is Menu menu)
+                    menu.Append(option);
+#endif
             }
             catch (Exception err)
             {
@@ -184,7 +182,7 @@ namespace UserInterface.Views
 
                 if (value != null)
                 {
-                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Use<SubSuperScriptExtensions>().Build();
+                    MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
@@ -202,8 +200,10 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="blocks">The blocks to process.</param>
         /// <param name="insertPos">The insert position.</param>
+        /// <param name="textView">The textview into which the markdown blocks' content will be added.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="autoNewline">Should newline characters be automatically inserted after each block?</param>
+        /// <param name="tags">Any additional tags to be applied to the content when it is added to the textview.</param>
         private TextIter ProcessMarkdownBlocks(IEnumerable<Block> blocks, ref TextIter insertPos, TextView textView, int indent, bool autoNewline = true, params TextTag[] tags)
         {
             // The markdown parser will strip out all of the whitespace (linefeeds) in the
@@ -277,6 +277,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="inlines">The inlines to process.</param>
         /// <param name="insertPos">The insert position.</param>
+        /// <param name="textView">The textview into which the markdown blocks' content will be added.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="tags">Tags to use for all child inlines.</param>
         private void ProcessMarkdownInlines(IEnumerable<Inline> inlines, ref TextIter insertPos, TextView textView, int indent, params TextTag[] tags)
@@ -327,6 +328,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="insertPos"></param>
         /// <param name="table"></param>
+        /// <param name="indent"></param>
         private void DisplayTable(ref TextIter insertPos, Table table, int indent)
         {
             int spaceWidth = MeasureText(" ");
@@ -444,7 +446,7 @@ namespace UserInterface.Views
             TextIter iter = tmpView.Buffer.StartIter;
             ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
             string result = tmpView.Buffer.Text;
-            tmpView.Destroy();
+            tmpView.Cleanup();
             return result;
         }
 
@@ -455,7 +457,11 @@ namespace UserInterface.Views
         private int MeasureText(string text)
         {
             Label label = new Label();
+#if NETFRAMEWORK
             label.Layout.FontDescription = owner.MainWidget.Style.FontDescription;
+#else
+            label.Layout.FontDescription = FontDescription.FromString(Utility.Configuration.Settings.FontName);
+#endif
             label.Layout.SetText(text);
             label.Layout.GetPixelSize(out int width, out _);
             return width;
@@ -465,6 +471,7 @@ namespace UserInterface.Views
         /// Display an image
         /// </summary>
         /// <param name="url">The url of the image.</param>
+        /// <param name="tooltip">Tooltip to be displayed on the image.</param>
         /// <param name="insertPos">The text iterator insert position.</param>
         private void DisplayImage(string url, string tooltip, ref TextIter insertPos)
         {
@@ -473,7 +480,9 @@ namespace UserInterface.Views
 
             Gtk.Image image = null;
             if (File.Exists(absolutePath))
-                image = new Gtk.Image(absolutePath);
+                // Apparently the native gtk deps we ship with windows releases don't include
+                // gtk_image_new_from_file(). Therefore we avoid that particular constructor.
+                image = new Gtk.Image(new Pixbuf(absolutePath));
             else
             {
                 string imagePath = "ApsimNG.Resources." + url;
@@ -596,6 +605,9 @@ namespace UserInterface.Views
         private void SetCursorIfAppropriate(TextView textView, int x, int y)
         {
             TextIter iter = textView.GetIterAtLocation(x, y);
+            // fixme: When we remove gtk2 deps, we can eliminate this check
+            if (iter.Equals(TextIter.Zero))
+                return;
 
             var foundLink = false;
             foreach (TextTag tag in iter.Tags)
@@ -639,6 +651,9 @@ namespace UserInterface.Views
                         {
                             textView.WindowToBufferCoords(TextWindowType.Widget, (int)evt.X, (int)evt.Y, out int x, out int y);
                             TextIter iter = textView.GetIterAtLocation(x, y);
+                            // fixme: When we remove gtk2 deps, we can eliminate this check
+                            if (iter.Equals(TextIter.Zero))
+                                return;
 
                             foreach (var tag in iter.Tags)
                             {
@@ -725,7 +740,6 @@ namespace UserInterface.Views
             }
         }
 
-
         private class LinkTag : TextTag
         {
             public string URL { get; set; }
@@ -733,7 +747,7 @@ namespace UserInterface.Views
             public LinkTag(string url) : base(url)
             {
                 URL = url;
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.Style.Background(StateType.Selected);
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.GetBackgroundColour(StateType.Selected);
                 Underline = Pango.Underline.Single;
             }
         }

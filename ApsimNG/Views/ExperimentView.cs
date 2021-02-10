@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Views
 {
-    using global::UserInterface.Interfaces;
+    using Extensions;
+    using Interfaces;
     using Gtk;
     using System;
 
@@ -59,9 +60,9 @@
         {
             try
             {
-                (List as ListView).MainWidget.Destroy();
-                (NumberSimulationsLabel as LabelView).MainWidget.Destroy();
-                (MaximumNumSimulations as EditView).MainWidget.Destroy();
+                (List as ListView).MainWidget.Cleanup();
+                (NumberSimulationsLabel as LabelView).MainWidget.Cleanup();
+                (MaximumNumSimulations as EditView).MainWidget.Cleanup();
                 (RunAPSIMAction as MenuItemView).Destroy();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
