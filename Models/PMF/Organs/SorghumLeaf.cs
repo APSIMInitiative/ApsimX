@@ -109,9 +109,9 @@ namespace Models.PMF.Organs
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction SenescedLeafSLN = null;
 
-            /// <summary>Input for TargetSLN</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            public IFunction TargetSLN = null;
+            ///// <summary>Input for TargetSLN</summary>
+            //[Link(Type = LinkType.Child, ByName = true)]
+            //public IFunction TargetSLN = null;
 
             /// <summary>supply:demand ratio for onset of water senescence.</summary>
             [Link(Type = LinkType.Child, ByName = true)]
@@ -246,7 +246,8 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Flag to test if Microclimate is present
         /// </summary>
-        public bool IgnoreMicroClimate { get; set; } = false;
+        [Description("Use MicroClimate")]
+        public bool UseMicroClimate { get; set; } = false;
 
         /// <summary>The plant</summary>
         [Link]
@@ -433,6 +434,10 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStress = null;
 
+        /// <summary>Input for TargetSLN</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction TargetSLN = null;
+
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
 
@@ -459,19 +464,15 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
-            if (WaterDemandFunction != null)
-                return WaterDemandFunction.Value();
-            else
-            {
+            if (UseMicroClimate || WaterDemandFunction == null)
                 return WaterDemand;
-            }
+            return WaterDemandFunction.Value();
         }
         /// <summary>Gets the transpiration.</summary>
         public double Transpiration { get { return WaterAllocation; } }
         
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
-
 
         /// <summary>Gets the cover dead.</summary>
         [Units("0-1")]
@@ -484,7 +485,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (LightProfile != null)
+                if (UseMicroClimate && LightProfile != null)
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
@@ -1254,7 +1255,7 @@ namespace Models.PMF.Organs
                 throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
             // Same as metabolic demand in new apsim.
-            var classicLeafDemand = Math.Max(0.0, calcLAI() * Parameters.TargetSLN.Value() - Live.N);
+            var classicLeafDemand = Math.Max(0.0, calcLAI() * TargetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
 
