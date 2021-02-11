@@ -367,7 +367,7 @@ namespace Utility
             if (!Directory.Exists(configPath))
                 Directory.CreateDirectory(configPath);
             StreamWriter filewriter = new StreamWriter(configurationFile);
-            System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
+            System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration), typeof(Configuration).GetNestedTypes());
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
         }
