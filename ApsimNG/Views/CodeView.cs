@@ -322,8 +322,14 @@ namespace UserInterface.Views
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
+            // Attempt to load a style scheme from the user settings.
+            StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
+            if (style != null)
+                textEditor.Buffer.StyleScheme = style;
+
             // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddMenuItem("Change Style", OnChangeStyle);
 
             IntelliSenseChars = ".";
         }
@@ -359,6 +365,34 @@ namespace UserInterface.Views
                 textEditor.Cleanup();
                 textEditor = null;
                 owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user wants to change the editor style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnChangeStyle(object sender, EventArgs e)
+        {
+            try
+            {
+                using (Dialog popup = new Dialog("Choose a Style", mainWidget.Toplevel as Window, DialogFlags.Modal, new object[] { "Cancel", ResponseType.Cancel, "OK", ResponseType.Ok }))
+                {
+                    StyleSchemeChooserWidget styleChooser = new StyleSchemeChooserWidget();
+                    popup.ContentArea.PackStart(styleChooser, true, true, 0);
+                    popup.ShowAll();
+                    int response = popup.Run();
+                    if (response == (int)ResponseType.Ok)
+                    {
+                        textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
+                        Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                    }
+                }
             }
             catch (Exception err)
             {
