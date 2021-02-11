@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 338,
+  "ExplorerWidth": 404,
   "Version": 128,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -10056,12 +10056,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -13373,12 +13373,12 @@
                                 0.99
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086,
                                 22.191,
                                 22.191,
@@ -22436,8 +22436,8 @@
                               ],
                               "Carbon": [
                                 1.1700000000000002,
-                                0.9359999999999999,
-                                0.5850000000000001,
+                                0.93599999999999994,
+                                0.58500000000000008,
                                 0.29250000000000004,
                                 0.17550000000000002,
                                 0.11699999999999999,
@@ -22471,12 +22471,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -22993,8 +22993,8 @@
                               ],
                               "Carbon": [
                                 1.1700000000000002,
-                                0.9359999999999999,
-                                0.5850000000000001,
+                                0.93599999999999994,
+                                0.58500000000000008,
                                 0.29250000000000004,
                                 0.17550000000000002,
                                 0.11699999999999999,
@@ -23028,12 +23028,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -26942,12 +26942,12 @@
                                 0.99
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086,
                                 22.191,
                                 22.191,
@@ -31450,12 +31450,12 @@
                                 0.99
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086,
                                 22.191,
                                 22.191,
@@ -33802,13 +33802,13 @@
                                 300.0
                               ],
                               "Carbon": [
-                                0.8800000000000001,
-                                0.7600000000000005,
-                                0.6200000000000001,
-                                0.3199999999999998,
+                                0.88000000000000012,
+                                0.76000000000000045,
+                                0.62000000000000011,
+                                0.31999999999999978,
                                 0.12,
-                                0.09999999999999998,
-                                0.05000000000000005
+                                0.099999999999999978,
+                                0.050000000000000051
                               ],
                               "SoilCNRatio": [
                                 12.0,
@@ -33838,12 +33838,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -37237,11 +37237,11 @@
         },
         {
           "$type": "Models.Map, Models",
-          "Zoom": 360.0,
+          "Zoom": 61.0,
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": -8.006570446972887,
-            "Longitude": 67.31095886195041
+            "Latitude": -27.42559463721479,
+            "Longitude": 137.03933114567326
           },
           "Name": "Map",
           "Children": [],
@@ -38635,11 +38635,11 @@
                                 219.59695635924723,
                                 179.79078145363917,
                                 120.51736490078699,
-                                80.78520558838947,
-                                54.15194272900782,
-                                36.29913274302783,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
                                 24.33203633136019,
-                                16.31025171377821
+                                16.310251713778211
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -41018,11 +41018,11 @@
                                 219.59695635924723,
                                 179.79078145363917,
                                 120.51736490078699,
-                                80.78520558838947,
-                                54.15194272900782,
-                                36.29913274302783,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
                                 24.33203633136019,
-                                16.31025171377821
+                                16.310251713778211
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -46069,11 +46069,11 @@
                                 219.59695635924723,
                                 179.79078145363917,
                                 120.51736490078699,
-                                80.78520558838947,
-                                54.15194272900782,
-                                36.29913274302783,
+                                80.785205588389474,
+                                54.151942729007821,
+                                36.299132743027833,
                                 24.33203633136019,
-                                16.31025171377821
+                                16.310251713778211
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -48377,12 +48377,12 @@
                                 0.8
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -52820,12 +52820,12 @@
                                 0.83
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -54733,12 +54733,12 @@
                                 0.83
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -57367,7 +57367,7 @@
                               "Carbon": [
                                 1.2349999999999999,
                                 0.9880000000000001,
-                                0.6174999999999999,
+                                0.61749999999999994,
                                 0.30874999999999997,
                                 0.18525,
                                 0.12350000000000001,
@@ -57401,12 +57401,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.1290323127564,
+                                347.12903231275641,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.45413288704063,
-                                60.32198083112468,
-                                36.58713082867487,
+                                99.454132887040629,
+                                60.321980831124677,
+                                36.587130828674873,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -63102,6 +63102,1215 @@
                 }
               ],
               "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Sensibility",
+      "Children": [
+        {
+          "$type": "Models.Factorial.Experiment, Models",
+          "DisabledSimNames": null,
+          "Name": "FixationResponse",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "Field studies by [Schwenke1998] showed that, for chickpea crops near Walgett/Moree in 1995, the proportion of total plan N derived from fixation decreased from about 90% when soil nitrate was very low at sowing, down to approximately 20% when soil nitrate was near 100kg/ha at sowing.  Furthermore, N fixation was unable to account for N export in grain.\r\n",
+              "Name": "memo",
+              "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.Factors, Models",
+              "Name": "Factors",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[NRate].Script.Amount = 0 to 200 step 10",
+                  "Name": "N",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
+              "Name": "FixationResponseToNitrogenBase",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
+                  "FileName": "Walgett.met",
+                  "ExcelWorkSheetName": "",
+                  "Name": "Weather",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Clock, Models",
+                  "Start": "1995-05-01T00:00:00",
+                  "End": "1995-12-31T00:00:00",
+                  "Name": "clock",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Summary, Models",
+                  "CaptureErrors": true,
+                  "CaptureWarnings": true,
+                  "CaptureSummaryText": true,
+                  "Name": "summaryfile",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 1.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "soil_albedo": 0.13,
+                  "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
+                  "NightInterceptionFraction": 0.5,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                  "Name": "Soil Arbitrator",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "Field",
+                  "Children": [
+                    {
+                      "$type": "Models.Irrigation, Models",
+                      "Name": "Irrigation",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
+                      "Name": "Fertiliser",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "InitialResidueName": "maize",
+                      "InitialResidueType": "maize",
+                      "InitialResidueMass": 500.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 65.0,
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Name": "SurfaceOrganicMatter",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1995-05-20",
+                          "Action": " [Chickpea].Sow(population:25, cultivar:\"Amethyst\", depth:50, rowSpacing:500);",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "Sowing",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (Crop != null && crop.Name.ToLower() == (Crop as IModel).Name.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "Crop",
+                          "Value": "[Chickpea]"
+                        },
+                        {
+                          "Key": "FertiliserType",
+                          "Value": "UreaN"
+                        },
+                        {
+                          "Key": "Amount",
+                          "Value": "160"
+                        }
+                      ],
+                      "Name": "NRate",
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "[Soil].SoilWater.SW",
+                        "[Soil].SoilWater.Eo",
+                        "[Soil].SoilWater.Es",
+                        "[Soil].SoilWater.Drainage",
+                        "[Soil].SoilWater.Runoff",
+                        "[Soil].SoilWater.pond",
+                        "sum([Soil].SoilWater.SWmm) as ProfileWater",
+                        "[Soil].SoilNitrogen.NO3.kgha",
+                        "[MicroClimate].net_radn",
+                        "[MicroClimate].peta",
+                        "[MicroClimate].petr",
+                        "[chickpea]."
+                      ],
+                      "EventNames": [
+                        "[Clock].DoReport"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "Report",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Soil, Models",
+                      "RecordNumber": 103,
+                      "ASCOrder": "Vertosol",
+                      "ASCSubOrder": null,
+                      "SoilType": "Clay",
+                      "LocalName": null,
+                      "Site": "Generic-Qld",
+                      "NearestTown": null,
+                      "Region": null,
+                      "State": "Generic",
+                      "Country": "Australia",
+                      "NaturalVegetation": "NA",
+                      "ApsoilNumber": "523-GENERIC",
+                      "Latitude": -27.183286,
+                      "Longitude": 151.263748,
+                      "LocationAccuracy": "Regional Soil Type",
+                      "YearOfSampling": null,
+                      "DataSource": "Generic soil. CSIRO Sustainable Ecosystems, Toowoomba",
+                      "Comments": "Generic soil developed by Allan Peake. 'Typical Vertosol' soil properties have been calculated as the average of vertosols with similar characteristics from within the Apsoil database. Groupings were made on the basis of bulk density. Measured BD, DUL and CLL for the groups were then averaged to derive the characteristics of the typical Vertosols. They can then be used in conjunction with measured soil water to simplify the selection of appropriate Vertosols, for paddocks where full soil characterisations have not yet been completed. For more information see Peake et al. 2010: ‘A rapid method for estimating the plant available water capacity of Vertosols’, 2010 Australian Agronomy Conference. Typical Vertosols are different to 'Generic' soil types elsewhere in the Apsoil database, which are representative of certain soil types and districts, but have not been calculated from large numbers of similar, characterised soils.\n\n",
+                      "Name": "Comeby",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This soil is AP's TypVert 11 \"Vertosol No11 (PAWC-136 No523-Generic)\".",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-15",
+                            "15-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.59,
+                            1.62,
+                            1.59,
+                            1.58,
+                            1.61,
+                            1.64,
+                            1.7
+                          ],
+                          "AirDry": [
+                            0.089,
+                            0.14,
+                            0.16,
+                            0.19,
+                            0.19,
+                            0.19,
+                            0.19
+                          ],
+                          "LL15": [
+                            0.16,
+                            0.17,
+                            0.189,
+                            0.195,
+                            0.206,
+                            0.215,
+                            0.23
+                          ],
+                          "DUL": [
+                            0.32,
+                            0.308,
+                            0.321,
+                            0.322,
+                            0.312,
+                            0.301,
+                            0.28
+                          ],
+                          "SAT": [
+                            0.37,
+                            0.358,
+                            0.371,
+                            0.372,
+                            0.362,
+                            0.351,
+                            0.329
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.16,
+                                0.17,
+                                0.189,
+                                0.195,
+                                0.206,
+                                0.215,
+                                0.23
+                              ],
+                              "KL": [
+                                0.045,
+                                0.045,
+                                0.045,
+                                0.033,
+                                0.025,
+                                0.02,
+                                0.01
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": [
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility"
+                              ],
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "ChickpeaSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.119911851,
+                                0.195458501,
+                                0.192305682,
+                                0.194866667,
+                                0.201156031,
+                                0.25,
+                                0.28
+                              ],
+                              "KL": [
+                                0.033,
+                                0.033,
+                                0.033,
+                                0.022,
+                                0.018,
+                                0.015,
+                                0.075
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": [
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility"
+                              ],
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "LentilSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.177,
+                                0.175,
+                                0.19,
+                                0.22,
+                                0.251,
+                                0.278,
+                                0.28
+                              ],
+                              "KL": [
+                                0.06,
+                                0.06,
+                                0.06,
+                                0.04,
+                                0.04,
+                                0.02,
+                                0.02
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": [
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility",
+                                "Field measured and checked for sensibility"
+                              ],
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "WheatSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.WaterModel.WaterBalance, Models",
+                          "SummerDate": "1-Nov",
+                          "SummerU": 2.0,
+                          "SummerCona": 4.5,
+                          "WinterDate": "1-Apr",
+                          "WinterU": 2.0,
+                          "WinterCona": 4.0,
+                          "DiffusConst": 88.0,
+                          "DiffusSlope": 35.0,
+                          "Salb": 0.14,
+                          "CN2Bare": 73.0,
+                          "CNRed": 20.0,
+                          "CNCov": 0.8,
+                          "DischargeWidth": "NaN",
+                          "CatchmentArea": "NaN",
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "SWCON": [
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3,
+                            0.3
+                          ],
+                          "KLAT": null,
+                          "ResourceName": "WaterBalance",
+                          "Name": "SoilWater",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilNitrogen, Models",
+                          "fom_types": [
+                            "default",
+                            "manure",
+                            "mucuna",
+                            "lablab",
+                            "shemp",
+                            "stable"
+                          ],
+                          "fract_carb": [
+                            0.2,
+                            0.3,
+                            0.54,
+                            0.57,
+                            0.45,
+                            0.0
+                          ],
+                          "fract_cell": [
+                            0.7,
+                            0.3,
+                            0.37,
+                            0.37,
+                            0.47,
+                            0.1
+                          ],
+                          "fract_lign": [
+                            0.1,
+                            0.4,
+                            0.09,
+                            0.06,
+                            0.08,
+                            0.9
+                          ],
+                          "NPartitionApproach": 0,
+                          "Name": "SoilNitrogen",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                              "Name": "NO3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                              "Name": "NH4",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                              "Name": "Urea",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
+                              "Name": "PlantAvailableNO3",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
+                              "Name": "PlantAvailableNH4",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Organic, Models",
+                          "Depth": [
+                            "0-15",
+                            "15-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "FOMCNRatio": 40.0,
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "Carbon": [
+                            1.1700000000000002,
+                            0.93599999999999994,
+                            0.58500000000000008,
+                            0.29250000000000004,
+                            0.17550000000000002,
+                            0.11699999999999999,
+                            0.11699999999999999
+                          ],
+                          "SoilCNRatio": [
+                            12.0,
+                            12.0,
+                            12.0,
+                            12.0,
+                            12.0,
+                            12.0,
+                            12.0
+                          ],
+                          "FBiom": [
+                            0.04,
+                            0.02,
+                            0.02,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "FInert": [
+                            0.4,
+                            0.6,
+                            0.8,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "FOM": [
+                            347.12903231275641,
+                            270.3443621919937,
+                            163.97214434990104,
+                            99.454132887040629,
+                            60.321980831124677,
+                            36.587130828674873,
+                            22.1912165985086
+                          ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
+                          "Name": "Organic",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-15",
+                            "15-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "NO3N": null,
+                          "NH4N": null,
+                          "PH": [
+                            8.1,
+                            8.7,
+                            8.9,
+                            8.0,
+                            7.0,
+                            6.4,
+                            5.8
+                          ],
+                          "CL": null,
+                          "EC": null,
+                          "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
+                          "Name": "Chemical",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-15",
+                            "15-30",
+                            "30-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "Thickness": [
+                            150.0,
+                            150.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "NO3": null,
+                          "NH4": null,
+                          "SW": [
+                            0.19875,
+                            0.281556,
+                            0.304008,
+                            0.303202,
+                            0.296562,
+                            0.297,
+                            0.297
+                          ],
+                          "OC": null,
+                          "EC": null,
+                          "CL": null,
+                          "ESP": null,
+                          "PH": null,
+                          "SWUnits": 0,
+                          "OCUnits": 0,
+                          "PHUnits": 0,
+                          "Name": "Initial conditions",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.InitialWater, Models",
+                          "PercentMethod": 0,
+                          "FractionFull": 0.52,
+                          "DepthWetSoil": "NaN",
+                          "RelativeTo": null,
+                          "Name": "Initial water",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today",
+                        "sum of [Fertiliser].NitrogenApplied from [Chickpea].Sowing to [Chickpea].Harvesting as NitrogenApplied",
+                        "[Chickpea].Grain.Wt",
+                        "[Chickpea].Grain.N",
+                        "[Chickpea].Grain.NConc",
+                        "[Chickpea].AboveGround.N",
+                        "sum of sum([Chickpea].Arbitrator.N.Fixation) from [Chickpea].Sowing to [Chickpea].Harvesting as NFixed",
+                        "(NFixed / [Chickpea].Total.N) as NFixedFraction",
+                        "([Chickpea].Grain.N/[Chickpea].Total.N) as NHI"
+                      ],
+                      "EventNames": [
+                        "[Chickpea].Harvesting"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "FixationResponseReport",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {      \r\n        [Link] private Plant Chickpea;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Chickpea].Phenology\")]\r\n        private Phenology phenology;\r\n                    \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n        }       \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n        if (phenology.CurrentPhase.Name==\"ReadyForHarvesting\")\r\n           {\r\n           Chickpea.Harvest();\r\n           Chickpea.EndCrop();\r\n           }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                      "Parameters": [],
+                      "Name": "Harvesting",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Plant, Models",
+                      "ResourceName": null,
+                      "Name": "Chickpea",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Graphs",
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": 1400.0,
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Yield",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "FixationResponseReport",
+                      "XFieldName": "NitrogenApplied",
+                      "YFieldName": "Chickpea.Grain.Wt",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Chickpea.Phenology.CurrentStageName",
+                          "SimulationName": null,
+                          "Name": "EventNamesOnGraph",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "NFixedFraction",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "FixationResponseReport",
+                      "XFieldName": "NitrogenApplied",
+                      "YFieldName": "NFixedFraction",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.EventNamesOnGraph, Models",
+                          "ColumnName": "Chickpea.Phenology.CurrentStageName",
+                          "SimulationName": null,
+                          "Name": "EventNamesOnGraph",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "N Balance",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "FixationResponseReport",
+                      "XFieldName": "NFixed",
+                      "YFieldName": "Chickpea.Grain.N",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "NHI",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "FixationResponseReport",
+                      "XFieldName": "NitrogenApplied",
+                      "YFieldName": "NHI",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "GrainNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "FixationResponseReport",
+                      "XFieldName": "NitrogenApplied",
+                      "YFieldName": "Chickpea.Grain.NConc",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": false,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
