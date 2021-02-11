@@ -135,6 +135,9 @@ namespace UserInterface.Views
                 }
             }
 
+#endif
+            box.Remove(propertyTable);
+
             if (DisplayFrame)
             {
                 box.Label = $"{properties.Name} Properties";
@@ -144,9 +147,8 @@ namespace UserInterface.Views
                 box.ShadowType = ShadowType.None;
                 box.Label = null;
             }
-            box.Remove(propertyTable);
+
             propertyTable.Cleanup();
-#endif
 
 #if NETFRAMEWORK
             // Columns should not be homogenous - otherwise we'll have the
@@ -164,10 +166,11 @@ namespace UserInterface.Views
 
 #if NETFRAMEWORK
             uint nrow = 0;
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
 #else
             int nrow = 0;
-#endif
             AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
+#endif
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
@@ -234,6 +237,7 @@ namespace UserInterface.Views
 #if NETFRAMEWORK
                     propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 #else
+                    label.MarginRight = 10;
                     propertyTable.Attach(label, 0, startRow, 1, 1);
 #endif
                 }

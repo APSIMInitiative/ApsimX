@@ -159,7 +159,6 @@ namespace UserInterface.Presenters
             isMultiView = (view is PropertyTreeMultiView);
 
             this.treeview = view as IPropertyTreeView;
-            this.TreeWidth = 120; 
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 

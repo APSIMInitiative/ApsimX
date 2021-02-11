@@ -29,23 +29,6 @@ namespace UserInterface.Views
         /// <param name="owner">The owning view.</param>
         public PropertyMultiView(ViewBase owner) : base(owner)
         {
-            // Columns should not be homogenous - otherwise we'll have the
-            // property name column taking up half the screen.
-#if NETFRAMEWORK
-            propertyTable = new Table(0, 0, false);
-#else
-            propertyTable = new Grid();
-#endif
-            box = new Frame("Properties");
-            box.Add(propertyTable);
-#if NETFRAMEWORK
-            mainWidget = box;
-#else
-            Box container = new Box(Orientation.Vertical, 0);
-            container.PackStart(box, false, false, 0);
-            mainWidget = container;
-#endif
-            mainWidget.Destroyed += OnWidgetDestroyed;
         }
 
         /// <summary>
@@ -96,6 +79,9 @@ namespace UserInterface.Views
                     }
                 }
             }
+#endif
+
+            box.Remove(propertyTable);
 
             if (DisplayFrame)
             {
@@ -106,9 +92,8 @@ namespace UserInterface.Views
                 box.ShadowType = ShadowType.None;
                 box.Label = null;
             }
-            box.Remove(propertyTable);
+
             propertyTable.Cleanup();
-#endif
 
 #if NETFRAMEWORK
             // Columns should not be homogenous - otherwise we'll have the
@@ -141,7 +126,9 @@ namespace UserInterface.Views
                 nrow = 1;
                 AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, (uint)i);
 #else
-                propertyTable.Attach(box, 0, 2+i, 0, 1);
+                label.MarginRight = 10;
+                propertyTable.Attach(label, 2+i, 0, 1, 1);
+                nrow = 1;
                 AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, i);
 #endif
             }
@@ -149,7 +136,6 @@ namespace UserInterface.Views
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
-#if NETFRAMEWORK
             if (widgetIsFocused)
             {
                 Widget widget = propertyTable.GetChild(row, col);
@@ -162,7 +148,6 @@ namespace UserInterface.Views
                         entry.Position = entryPos;
                 }
             }
-#endif
         }
 
     }
