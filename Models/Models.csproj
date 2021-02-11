@@ -71,9 +71,11 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="MigraDoc.RtfRendering.Core" Version="1.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0-1.final" />
+    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
+    <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
+    <PackageReference Include="PdfSharpCore" Version="1.2.11" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">

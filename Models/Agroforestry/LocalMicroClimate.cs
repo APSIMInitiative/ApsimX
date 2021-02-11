@@ -95,6 +95,12 @@ namespace Models.Agroforestry
         [JsonIgnore]
         public double AirPressure { get { return weather.AirPressure; } set { weather.AirPressure = value; } }
 
+        /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [JsonIgnore]
+        public double DiffuseFraction { get { return weather.DiffuseFraction; } set { weather.DiffuseFraction = value; } }
+
         /// <summary>Gets the latitude</summary>
         [JsonIgnore]
         public double Latitude { get { return weather.Latitude; } }

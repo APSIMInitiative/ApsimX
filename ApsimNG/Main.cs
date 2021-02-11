@@ -5,6 +5,7 @@
     using Presenters;
     using System;
     using System.IO;
+    using System.Threading.Tasks;
     using Utility;
     using Views;
 
@@ -17,6 +18,9 @@
         public static int Main(string[] args)
         {
             LoadTheme();
+#if NETCOREAPP
+            Task.Run(() => Intellisense.CodeCompletionService.Init());
+#endif
 
             Gtk.Application.Init();
 #if NETFRAMEWORK

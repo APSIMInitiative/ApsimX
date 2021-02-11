@@ -335,7 +335,13 @@ namespace UserInterface.Views
             {
                 expandedRows.Add(path.ToString());
             }));
+#if NETCOREAPP
+            treeview1.CursorChanged -= OnAfterSelect;
+#endif
             treemodel.Clear();
+#if NETCOREAPP
+            treeview1.CursorChanged += OnAfterSelect;
+#endif
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions);
             treeview1.ShowAll();

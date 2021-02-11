@@ -71,7 +71,8 @@
     <PackageReference Include="GtkSharp" Version="3.22.*" />
     <PackageReference Include="GtkSourceSharp" Version="3.22.*" />
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.2-netcorebeta" />
-    <PackageReference Include="MigraDoc.Rendering.Core" Version="1.0.0" />
+    <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
+    <PackageReference Include="PdfSharpCore" Version="1.2.11" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
