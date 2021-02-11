@@ -168,6 +168,14 @@ namespace UserInterface.Presenters
                         (selectedPresenter as CLEMSummaryPresenter).Refresh();
                     }
                 }
+
+                if(clemModel != null && clemModel.SelectedTab is null && presenterList.Count > 0)
+                {
+                    if (presenterList.FirstOrDefault().Value is IRefreshPresenter)
+                    {
+                        (presenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
+                    }
+                }
             }
         }
 
