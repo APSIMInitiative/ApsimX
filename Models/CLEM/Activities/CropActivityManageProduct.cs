@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
+    [Description("This activity is used within a crop management activity to obtain production values from the crop file for crop(s) grown")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
