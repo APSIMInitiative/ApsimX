@@ -8,6 +8,8 @@ namespace UserInterface.Views
     using System.Net.NetworkInformation;
     using System.Globalization;
     using Extensions;
+    using System.Runtime.InteropServices;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
@@ -30,6 +32,7 @@ namespace UserInterface.Views
         private Viewport bottomView = null;
         private string modelTypeLabelText;
         private string modelVersionLabelText;
+        private string modelTypeColour;
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
         {
@@ -42,6 +45,7 @@ namespace UserInterface.Views
                 Xpad = 3,
                 UseMarkup = true
             };
+
             modelDescriptionLabel = new Label()
             {
                 Xalign = 0.0f,
@@ -143,7 +147,7 @@ namespace UserInterface.Views
                     string helpURL = "";
                     // does offline help exist
                     var directory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-                    string offlinePath = Path.Combine(directory, "CLEM/Help");
+                    string offlinePath = Path.Combine(directory, "CLEM\\Help");
                     if (File.Exists(Path.Combine(offlinePath, "Default.htm")))
                     {
                         helpURL = "file:///" + offlinePath.Replace(@"\","/") + "/" + ModelHelpURL.TrimStart('/');
@@ -159,7 +163,7 @@ namespace UserInterface.Views
                     {
                         helpURL = "https://www.apsim.info";
                     }
-                    System.Diagnostics.Process.Start(helpURL);
+                    ProcessUtilities.ProcessStart(helpURL);
                 }
             }
             catch(Exception ex)
@@ -200,7 +204,8 @@ namespace UserInterface.Views
             set
             {
                 modelTypeLabelText = value;
-                modelTypeLabel.Markup = $"<big>{value}</big>";
+                // update markup and include colour if supplied
+                modelTypeLabel.Markup = $"<span{(((modelTypeColour??"")!="")?$" foreground=\"#{modelTypeColour}\"":"")} size=\"15000\"><b>{value}</b></span>";
             }
         }
 
@@ -219,7 +224,7 @@ namespace UserInterface.Views
             set
             {
                 modelVersionLabelText = value;
-                modelVersionLabel.Markup = $"<big>{value}</big>";
+                modelVersionLabel.Markup = value;
             }
         }
 
@@ -248,6 +253,8 @@ namespace UserInterface.Views
                     // gtk tbi
                     modelTypeLabel.ModifyFg(StateType.Normal, new Gdk.Color(r, g, b));
 #endif
+                    modelTypeColour = value;
+                    ModelTypeText = ModelTypeText;
                 }
             }
         }
