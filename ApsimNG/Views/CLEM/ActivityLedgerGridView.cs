@@ -501,12 +501,12 @@ namespace UserInterface.Views
                 }
 
                 newLabel.UseMarkup = true;
+                newLabel.Text = System.Security.SecurityElement.Escape(Grid.Columns[i].Title);
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
                 {
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 }
-
                 newLabel.Show();
             }
         }
