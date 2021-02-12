@@ -324,6 +324,15 @@ namespace UserInterface.Views
 
             // Attempt to load a style scheme from the user settings.
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
+            if (style == null)
+            {
+                // If there's no style scheme specified in user settings (or if it's an unknown
+                // scheme), then fallback to adwaita, or adwaita-dark if dark mode is active.
+                if (Configuration.Settings.DarkTheme)
+                    style = StyleSchemeManager.Default.GetScheme("Adwaita-dark");
+                else
+                    style = StyleSchemeManager.Default.GetScheme("Adwaita");
+            }
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
 
