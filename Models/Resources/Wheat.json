@@ -1,4 +1,10 @@
 {
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 0,
+  "Version": 128,
+  "Name": "Simulations",
+  "Children": [
+    {
   "$type": "Models.PMF.Plant, Models",
   "PlantType": "Wheat",
   "IsAlive": false,
@@ -9649,6 +9655,11 @@
       "Enabled": true,
       "ReadOnly": false
     }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}
   ],
   "IncludeInDocumentation": true,
   "Enabled": true,
