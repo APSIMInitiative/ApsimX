@@ -58,38 +58,38 @@ namespace Models.Functions.SupplyFunctions
         private readonly Root Root = null;
 
         /// <summary>The daily radiation intercepted by crop canopy</summary>
-        [Link]
-        private readonly IFunction RadIntTot = null;
+        [Link(Type = LinkType.Child, ByName = true)]
+        private readonly IFunction RadnInt = null;
 
         /// <summary>The transpiration efficiency coefficient for net biomass assimilate</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Description("Transpiration efficiency coefficient for net biomass assimilate")]
         [Units("kPa/gC/m^2/mm water")]
         private readonly IFunction TEC = null;
 
         /// <summary>The CO2 impact on RUE</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction FCO2 = null;
 
         /// <summary>The stress impact on PgMax</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction LUEStress = null;
 
         /// <summary>The mean temperature impact on RUE</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction FT = null;
 
         /// <summary>The N deficiency impact on RUE</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction FN = null;
 
         /// <summary>The radiation use efficiency</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         [Description("Radiation use efficiency")]
         private readonly IFunction RUE = null;
 
         /// <summary>The daily gross assimilate calculated by a another photosynthesis model</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         private readonly IFunction GrossAssimilateModel = null;
 
         //------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ namespace Models.Functions.SupplyFunctions
         [EventSubscribe("DoUpdateWaterDemand")]
         private void Calculate(object sender, EventArgs e)
         {
-            double radiationInterception = RadIntTot.Value();
+            double radiationInterception = RadnInt.Value();
             if (Double.IsNaN(radiationInterception))
                 throw new Exception("NaN daily interception value supplied to RUE model");
             if (radiationInterception < 0)
@@ -363,7 +363,7 @@ namespace Models.Functions.SupplyFunctions
 
             // scale to today's radiation
             double TotalRad = hourlyRad.Sum();
-            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadIntTot.Value();
+            for (int i = 0; i < 24; i++) hourlyRad[i] = hourlyRad[i] / TotalRad * RadnInt.Value();
         }
         //------------------------------------------------------------------------------------------------
 
@@ -397,21 +397,12 @@ namespace Models.Functions.SupplyFunctions
             // Hourly total plant "actual" radiation use efficiency corrected by reducing factors
             // (g biomass / MJ global solar radiation)
             double rueFactor;
-            double tempResponse;
+            double tempResponse = 1.0;
             hourlyRUE = new List<double>();
-
-            XYPairs tempResponseFunc = new XYPairs
-            {
-                X = new double[4] { 0, 15, 25, 35 },
-                Y = new double[4] { 0, 1, 1, 0 }
-            };
 
             for (int i = 0; i < 24; i++)
             {
-                if (FT != null)
-                    tempResponse = FT.Value();
-                else
-                    tempResponse = tempResponseFunc.ValueIndexed(hourlyTemp[i]);
+                if (FT != null) tempResponse = FT.Value();
 
                 rueFactor = tempResponse * FN.Value() * FCO2.Value();
                 hourlyRUE.Add(RUE.Value() * rueFactor);
@@ -430,10 +421,8 @@ namespace Models.Functions.SupplyFunctions
             }
             else
             {
-                hourlyPotDM = DailyGrossPhotosythesis(Plant.Leaf.LAI, Weather.Latitude,
-                                                      Clock.Today.DayOfYear, Weather.Radn,
-                                                      Weather.MaxT, Weather.MinT,
-                                                      Weather.CO2, -1, 1.0);
+                hourlyPotDM = DailyGrossPhotosythesis(Plant.Leaf.LAI, Weather.Latitude, Clock.Today.DayOfYear,
+                    Weather.Radn, Weather.CO2, Weather.DiffuseFraction, 1.0);
             }
         }
         //------------------------------------------------------------------------------------------------
@@ -618,8 +607,7 @@ namespace Models.Functions.SupplyFunctions
         }
         //------------------------------------------------------------------------------------------------
 
-        private List<double> DailyGrossPhotosythesis(double LAI, double Latitude, int Day, double Radn, double Tmax,
-            double Tmin, double CO2, double DifFr, double Fact)
+        private List<double> DailyGrossPhotosythesis(double LAI, double Latitude, int Day, double Radn, double CO2, double DifFr, double Fact)
         {
             List<double> HourlyGrossB = new List<double>(24);
             double GrossPs, Temp, PAR, PARDIF, PARDIR;
@@ -937,13 +925,15 @@ namespace Models.Functions.SupplyFunctions
             if ((Temp > MinTemp) && (Temp < MaxTemp))
             {
                 p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
-                RelEff = (2 * Math.Pow(Temp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(Temp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
+                RelEff = (2 * Math.Pow(Temp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) -
+                    Math.Pow(Temp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
 
             if ((RefTemp > MinTemp) && (RefTemp < MaxTemp))
             {
                 p = Math.Log(2.0) / Math.Log((MaxTemp - MinTemp) / (OptTemp - MinTemp));
-                RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) - Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
+                RelEffRefTemp = (2 * Math.Pow(RefTemp - MinTemp, p) * Math.Pow(OptTemp - MinTemp, p) -
+                    Math.Pow(RefTemp - MinTemp, 2 * p)) / Math.Pow(OptTemp - MinTemp, 2 * p);
             }
             return RelEff / RelEffRefTemp;
         }
@@ -982,29 +972,5 @@ namespace Models.Functions.SupplyFunctions
             return weights;
         }
         //------------------------------------------------------------------------------------------------
-
-        //private double CalcSolarDeclination(int doy)
-        //{
-        //    return (23.45 * (Math.PI / 180)) * Math.Sin(2 * Math.PI * (284.0 + doy) / 365.0);
-        //}
-        //------------------------------------------------------------------------------------------------
-
-        //private double CalcSolarRadn(double ratio, double dayLR, double latR, double solarDec)
-        //{
-        //    return (24.0 * 3600.0 * 1360.0 * (dayLR * Math.Sin(latR) * Math.Sin(solarDec) +
-        //             Math.Cos(latR) * Math.Cos(solarDec) * Math.Sin(dayLR)) / (Math.PI * 1000000.0)) * ratio;
-        //}
-        //------------------------------------------------------------------------------------------------
-
-        //private double HourluGlobalRadiation(double oTime, double latitude, double solarDec, double dayLH, double solar)
-        //{
-        //    double Alpha = Math.Asin(Math.Sin(latitude) * Math.Sin(solarDec) +
-        //          Math.Cos(latitude) * Math.Cos(solarDec) * Math.Cos((Math.PI / 12.0) * dayLH * (oTime - 0.5)));
-        //    double ITot = solar * (1.0 + Math.Sin(2.0 * Math.PI * oTime + 1.5 * Math.PI)) / (dayLH * 60.0 * 60.0);
-        //    double IDiff = 0.17 * 1360.0 * Math.Sin(Alpha) / 1000000.0;
-        //    if (IDiff > ITot) IDiff = ITot;
-        //    return ITot - IDiff;
-        //}
-        //------------------------------------------------------------------------------------------------  
     }
 }
