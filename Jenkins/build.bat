@@ -39,7 +39,9 @@ call :getVersion
 
 rem Build
 dotnet build %flags% "%solution_file%"
-dotnet build %flags% Updater
+pushd "%apsimx%\Updater"
+msbuild /v:m /p:Configuration=Release
+popd
 endlocal
 exit /b %errorlevel%
 
