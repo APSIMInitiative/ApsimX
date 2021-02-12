@@ -27,6 +27,9 @@
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+#if NETCOREAPP
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
             ReplaceObsoleteArguments(ref args);
             new Parser(config =>
             {
