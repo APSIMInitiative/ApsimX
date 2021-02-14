@@ -133,6 +133,14 @@
 
                 return propertyName;
             }
+            else if (xYPairs.Parent is LinearInterpolationFunction)
+            {
+                var xValue = xYPairs.Parent.FindChild("XValue");
+                if (xValue is VariableReference)
+                    return (xValue as VariableReference).VariableName;
+                else
+                    return "XValue";
+            }
             else if (xYPairs.Parent is HourlyInterpolation)
             {
                 return "Air temperature (oC)";

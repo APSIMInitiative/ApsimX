@@ -1,6 +1,7 @@
 [CPRL.met.WEATHER]
 
 Latitude = -27.31
+Longitude = 152.34
 
 tav =  19.57 (oC) ! annual average ambient temperature
 amp =  12.30 (oC) ! annual amplitude in mean monthly temperature
