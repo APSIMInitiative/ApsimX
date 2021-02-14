@@ -49,7 +49,9 @@
             Widget table = (Widget)builder.GetObject("table1");
             vbox1.Remove(table);
             table1 = new Grid();
-            vbox1.PackStart(table1, true, true, 0);
+            // Set expand to false on this grid, to ensure that any extra space
+            // is allocated to the graph (aka plotview).
+            vbox1.PackStart(table1, false, true, 0);
             vbox1.ReorderChild(table1, 0);
 #endif
             label4 = (Label)builder.GetObject("label4");
