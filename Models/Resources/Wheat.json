@@ -4855,6 +4855,36 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.WeightedTemperatureFunction, Models",
+              "MaximumTemperatureWeighting": 0.75,
+              "Name": "FT",
+              "Children": [
+                {
+                  "$type": "Models.Functions.XYPairs, Models",
+                  "X": [
+                    0.0,
+                    15.0,
+                    25.0,
+                    35.0
+                  ],
+                  "Y": [
+                    0.0,
+                    1.0,
+                    1.0,
+                    0.0
+                  ],
+                  "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
