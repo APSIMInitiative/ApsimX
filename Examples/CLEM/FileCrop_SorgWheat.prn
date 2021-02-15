@@ -1,0 +1,8 @@
+SoilNum CropName  Year    Month   AmtKg   HarvestTag
+()      ()         ()       ()      ()      ()
+  1    Wheat       1904      11    2267	   None
+  1    Sorghum     1905       4    5708    First
+  1    Sorghum     1905       8    1200    None
+  1    Wheat       1905      11    3342    None
+  1    Sorghum     1906       3    6941    Last
+  1    Wheat       1906      10    2271    None

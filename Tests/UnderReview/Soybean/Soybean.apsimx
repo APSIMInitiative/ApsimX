@@ -2,7 +2,7 @@
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
   "Version": 126,
-  "ApsimVersion": "0.0.0.0",
+  "ApsimVersion": "2021.2.3.6120",
   "Name": "Simulations",
   "Children": [
     {
@@ -230,8 +230,17 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system \n\n",
+                  "Text": "In the new model we simplified phenology by taking out stages that are not measurable (e.g. end of juvenile stage) and by adding new stages that are measurable (e.g. start pod). \nThe new phenology follows the V/R staging system.\n\n![Alt Text](Diagrams_soy_phenology_comparison.png)\n\n**Figure [FigureNumber]:** Comparison of soybean phenological stages for APSIM Classic and APSIM Next Generation.",
                   "Name": "Introduction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "The key differences for cultivars are mostly phenological parameters (e.g., Vegetative.Target, ReproductivePhotoperiodModifier). In some cases, some additional parameters have been changed, see parameter values in the cultivar section. ",
+                  "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -348,6 +357,15 @@
                       "$type": "Models.Functions.ThreeHourSin, Models",
                       "TempRangeFactors": null,
                       "Name": "InterpolationMethod",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Cardinal temperatures for vegetative and reproductive thermal time are the same except the range of 0-15° C. A base temperature of 10° C is used for vegetative phase, which temperature has been used to calibrate 56 soybean cultivars in the USA ([ARCHONTOULIS2014465]) and 72 soybean cultivars in China ([WU2019125940]). The small changes in cardinal temperatures for reproductive thermal time was important for solving issues related to photoperiod response for some Australian cultivars. Such a differentiation in base temperature between V and R stages is supported by [BootChapter1998], DSSAT-CROPGRO soybean model, who showed that cardinal temperatures may differ for vegetative and reproductive development for soybean. This is something to further explore as new data from other environments are added to the APSIM NG database.\n\n",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -916,7 +934,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nA function is used to provide maturity date as days after sowing(DAS).",
+                      "Text": "\r\nA function is used to provide emergence date as days after sowing(DAS).",
                       "Name": "memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1054,15 +1072,6 @@
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "\r\nStover represents any part of the crop that is not removed at harvest (i.e not part of the product).",
-                  "Name": "Description",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SupplyFunctions.RUEModel, Models",
                   "Name": "Photosynthesis",
                   "Children": [
@@ -1071,7 +1080,17 @@
                       "FixedValue": 1.2,
                       "Units": null,
                       "Name": "RUE",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "This value has been fitted to available data. In contrast to Classic, the RUE value in NG refers to the whole plant (above and below ground) and the calibrated value is 1.2 g/MJ. There are no literature references for whole plant RUE in soybean. To come up with this value we considered: RUE for above ground biomass ([SINCLAIR198929]; [VANROEKEL20141189]), biomass and root data from Iowa FACTS experiments and model fitting to available data.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1096,6 +1115,15 @@
                             0.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The function for temperature effect on RUE comes from APSIM classic, which seems to work well across diverse environments. We did not find any comments/suggestions in the published papers suggesting alternative ones, so for now we used the same function. As more data from different environments are added to APSIM database, it will be possible to further test the photosynthetic temperature response in the future. ",
+                          "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1516,15 +1544,6 @@
                       "Name": "Reproductive",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.DivideFunction, Models",
                           "Name": "Rate",
                           "Children": [
@@ -1565,6 +1584,24 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Leaf senescence rate is calculated to ensure that all leaves are senesced by crop maturity.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "There is no data on detachment rates and so a simple value was chosen to ensure that leaves were not retained in the canopy. In the future, with more data available a thermal time basis leaf detachment rate will be explored. ",
+                          "Name": "Memo1",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1652,6 +1689,15 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].Stage",
                       "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "These values have been fitted to the available data. The fitted values are within the observed maximum and minimum values obtained in the FACTS soybean experiments ([ARCHONTOULIS2020721]). \n\n",
+                      "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1755,30 +1801,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1807,7 +1829,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -1863,8 +1885,17 @@
                         },
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "Growth in leaf area is used to calculate the leaf dry matter demand.  Note that leaf biomass is assumed to consist of entirely structural dry matter.",
+                          "Text": "Growth in leaf area is used to calculate the leaf dry matter demand. The same was assumed in the original crop models in APSIM. Further model development can be taken once new experimental data for metabolic, structural and storage forms are provided.",
                           "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
+                          "Name": "Memo1",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2099,6 +2130,15 @@
                   "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DeltaLAI",
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
                       "Start": "Emergence",
@@ -2587,30 +2627,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -3037,6 +3053,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "The current model version considers only NO3 uptake but NH4 option can be activated by the user (e.g. [Root].KNH4.XYPairs.Y=0.01,0.01). We do not expect activation of NH4 to change total plant N uptake because the nitrification rate (conversion of NH4 to NO3) is very fast in the model. In the future we will re-valuate this. ",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -3047,6 +3072,15 @@
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
                   "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Default values for biomass removals for Root are only estimates with no data behind them.\r\nThey are just to consider potential root senescence in response to damage.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
                     {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
@@ -3066,30 +3100,6 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3645,6 +3655,15 @@
                   "Name": "BiomassRemovalDefaults",
                   "Children": [
                     {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Default values for biomass removals for Root are only estimates with no data behind them.\r\nThey are just to consider potential root senescence in response to damage.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
                       "$type": "Models.PMF.OrganBiomassRemovalType, Models",
                       "FractionLiveToRemove": 0.0,
                       "FractionDeadToRemove": 0.0,
@@ -3663,30 +3682,6 @@
                       "FractionLiveToResidue": 0.2,
                       "FractionDeadToResidue": 0.0,
                       "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3887,7 +3882,7 @@
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.6,
-                          "Units": null,
+                          "Units": "g/g",
                           "Name": "MaximumFixationRate",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4370,30 +4365,6 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -4688,6 +4659,15 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Shell harvest index is used to calculate shell biomass demand, which follows the same approach than grain harvest index. It represents the fraction of shell biomass in relation to total aboveground biomass.",
+                          "Name": "Memo",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5029,7 +5009,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "",
+                      "Text": "There is no evidence of stem N storage during grain filling. Also, there is no stem structural growth during this time.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5074,30 +5054,6 @@
                       "FractionLiveToResidue": 1.0,
                       "FractionDeadToResidue": 1.0,
                       "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5755,967 +5711,976 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "Australia",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
-                    "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Buchanan",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 380",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Djakal",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 480",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
-                    "[Grain].MaximumNConc.FixedValue = 0.067",
-                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.012"
-                  ],
-                  "Name": "Davis",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 380",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Hooper_MG40",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 360",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Stephens_MG40",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 285",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.75, 18"
-                  ],
-                  "Name": "FiskebyV",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Early-maturing, photoperiod-insensitive cultivar developed in Sweden for high latitude environments",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 314",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 485",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12, 18",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "F148_7",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Indeterminate breeding selection from the national soybean breeding program combining phytophthora resistance, earliness,\nculinary quality, and yield",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 377",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 15.5",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5"
-                  ],
-                  "Name": "Bowyer",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Brown hilum cultivar, adapted to southern New South Wales, released by K McWhirter in 1982",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 550",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 10.9, 15.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Bunya",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Culinary cultivar released in 2006 by CSIRO with broad adaptation from northern New South Wales to northern Queensland",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 390",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 16",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 16",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Cowrie",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Light hilum cultivar released by theNewSouth Wales Department of Agriculture for the coastal Northern Rivers District inNewSouth Wales",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 430",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Soya791",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 440",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Manark",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 490",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Warrigal",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 806",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Leichhardt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 332",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 80",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.009"
-                  ],
-                  "Name": "Djakal1",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "USA",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 268",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 76",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 432",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.43, 21.19",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.43, 21.19"
-                  ],
-                  "Name": "Trial_MG00",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 294",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 81",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 442",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.29, 20.14",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.29, 20.14"
-                  ],
-                  "Name": "Lambert_MG0",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 336",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 118",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 518",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.37, 19.30",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.37, 19.30"
-                  ],
-                  "Name": "IA1006_MG10",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 329",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 150",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.92, 17.93",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.92, 17.93"
-                  ],
-                  "Name": "IA2008_MG20",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 328",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 106",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.3",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
-                  ],
-                  "Name": "PioneerP22T61_MG22",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 328",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 106",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.35",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
-                  ],
-                  "Name": "PioneerP22T69R_MG22",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 271",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.125",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 529",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.77, 17.57",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.77, 17.57"
-                  ],
-                  "Name": "Pioneer92MGI_MG26",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 328",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 106",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.14",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
-                  ],
-                  "Name": "PioneerP92Y75_MG27",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 367",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 163",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.175",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 607",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.05, 17.56",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.05, 17.56"
-                  ],
-                  "Name": "Macon_MG30",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 250",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 110",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 457",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
-                    "[Grain].MaximumNConc.FixedValue = 0.065",
-                    "[Shell].PotentialHarvestIndex.FixedValue = 0.5",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.013"
-                  ],
-                  "Name": "PioneerP93M11_MG31",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 272",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 117",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.20",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 522",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.45, 18.0",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.45, 18.0"
-                  ],
-                  "Name": "Becks321NRR_MG32",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 328",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 106",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
-                  ],
-                  "Name": "PioneerP932T16R_MG32",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 267",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 112",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.26",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 506",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.27, 17.2",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.27, 17.2"
-                  ],
-                  "Name": "Becks367NRR_MG37",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 292",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 123",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
-                  ],
-                  "Name": "AsgrowAG4403_MG40",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 292",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 123",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
-                  ],
-                  "Name": "HornbeckHBK4891_MG40",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 322",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 143",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 567",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.05, 16.46",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.05, 16.46"
-                  ],
-                  "Name": "Pioneer94B01_MG40",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 404",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 112",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
-                  ],
-                  "Name": "PioneerP9504_MG50",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 404",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 131",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 549",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
-                  ],
-                  "Name": "AsgrowAG5701_MG50",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 438",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 112",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.88",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.88"
-                  ],
-                  "Name": "Hutcheson_MG50",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 436",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 93",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61"
-                  ],
-                  "Name": "NK622_MG60",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "Generic",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 310",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.475",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 590",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.6, 22.35",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.6, 22.35"
-                  ],
-                  "Name": "Generic_MG000",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 320",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 100",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.467",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 600",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.35, 21.11",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.35, 21.11"
-                  ],
-                  "Name": "Generic_MG00",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 336",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.422",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 616",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.1, 19.95",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.1, 19.95"
-                  ],
-                  "Name": "Generic_MG0",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 340",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.411",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 632",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.84, 18.77",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.84, 18.77"
-                  ],
-                  "Name": "Generic_MG1",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 348",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.386",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 648",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.61",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.61"
-                  ],
-                  "Name": "Generic_MG2",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 380",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.361",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.4, 16.91",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.4, 16.91"
-                  ],
-                  "Name": "Generic_MG3",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 388",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 140",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.324",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.1, 16.49"
-                  ],
-                  "Name": "Generic_MG4",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 396",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.072",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 696",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
-                  ],
-                  "Name": "Generic_MG5",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 404",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 180",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.056",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 712",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.8",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.8"
-                  ],
-                  "Name": "Generic_MG6",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 416",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.055",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 728",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.33, 15.46",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.33, 15.46"
-                  ],
-                  "Name": "Generic_MG7",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 430",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.054",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 744",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.07, 15.1",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.07, 15.1"
-                  ],
-                  "Name": "Generic_MG8",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 460",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.053",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 748",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 11.88, 14.82",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.88, 14.82"
-                  ],
-                  "Name": "Generic_MG9",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 470",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.053",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 748",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 11.78, 14.65",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.78, 14.65"
-                  ],
-                  "Name": "Generic_MG10",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.PMF.CultivarFolder, Models",
-              "Name": "China",
-              "Children": [
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 500",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue = 180",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.013",
-                    "[Grain].PotentialHarvestIndex.FixedValue=0.35"
-                  ],
-                  "Name": "Nandou12",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 500",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue = 170",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 460",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.013",
-                    "[Grain].PotentialHarvestIndex.FixedValue=0.35"
-                  ],
-                  "Name": "Texuan13",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 540",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 140",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue = 140",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 420",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.94, 15.44",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.94, 15.44",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.013",
-                    "[Grain].PotentialHarvestIndex.FixedValue=0.25"
-                  ],
-                  "Name": "Jiuyuehuang",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Cultivar, Models",
-                  "Command": [
-                    "[Phenology].Vegetative.Target.FixedValue = 370",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 120",
-                    "[Phenology].EarlyPodDevelopment.Target.FixedValue = 180",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.361",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 600",
-                    "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.57, 16.07",
-                    "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.57, 16.07",
-                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
-                    "[Leaf].AreaLargestLeaf.FixedValue=0.02",
-                    "[Leaf].Phyllochron.FixedValue=45"
-                  ],
-                  "Name": "Hedou19",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
               "Units": null,
               "Name": "MortalityRate",
               "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.CultivarFolder, Models",
+              "Name": "Cultivars",
+              "Children": [
+                {
+                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "Name": "Australia",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 480",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
+                        "[Grain].MaximumNConc.FixedValue = 0.067",
+                        "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Buchanan",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 380",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Djakal",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 480",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.015",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.33",
+                        "[Grain].MaximumNConc.FixedValue = 0.067",
+                        "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.012"
+                      ],
+                      "Name": "Davis",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 380",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Hooper_MG40",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 360",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Stephens_MG40",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 285",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.75, 18"
+                      ],
+                      "Name": "FiskebyV",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Early-maturing, photoperiod-insensitive cultivar developed in Sweden for high latitude environments",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 314",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 485",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 17",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12, 18",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "F148_7",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Indeterminate breeding selection from the national soybean breeding program combining phytophthora resistance, earliness,\nculinary quality, and yield",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 377",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 15.5",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.9, 15.5"
+                      ],
+                      "Name": "Bowyer",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Brown hilum cultivar, adapted to southern New South Wales, released by K McWhirter in 1982",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 550",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 405",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.75, 18",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 10.9, 15.5",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Bunya",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Culinary cultivar released in 2006 by CSIRO with broad adaptation from northern New South Wales to northern Queensland",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 390",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 16",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 16",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Cowrie",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Light hilum cultivar released by theNewSouth Wales Department of Agriculture for the coastal Northern Rivers District inNewSouth Wales",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 430",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15.3",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Soya791",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 440",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Manark",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 490",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 15",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Warrigal",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 806",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 425",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.75, 14.7",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Leichhardt",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 332",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 80",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.26, 16.67",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.009"
+                      ],
+                      "Name": "Djakal1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "Name": "USA",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 268",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 76",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 432",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.43, 21.19",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.43, 21.19"
+                      ],
+                      "Name": "Trial_MG00",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 294",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 81",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 442",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.29, 20.14",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.29, 20.14"
+                      ],
+                      "Name": "Lambert_MG0",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 336",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 118",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 518",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.37, 19.30",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.37, 19.30"
+                      ],
+                      "Name": "IA1006_MG10",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 329",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 150",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.05",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.92, 17.93",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.92, 17.93"
+                      ],
+                      "Name": "IA2008_MG20",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 328",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 106",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.3",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                      ],
+                      "Name": "PioneerP22T61_MG22",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 328",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 106",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.35",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 580",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                      ],
+                      "Name": "PioneerP22T69R_MG22",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 271",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.125",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 529",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.77, 17.57",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.77, 17.57"
+                      ],
+                      "Name": "Pioneer92MGI_MG26",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 328",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 106",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.14",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                      ],
+                      "Name": "PioneerP92Y75_MG27",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 367",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 163",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.175",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 607",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.05, 17.56",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.05, 17.56"
+                      ],
+                      "Name": "Macon_MG30",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 250",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 110",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 457",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.4, 16.0",
+                        "[Grain].MaximumNConc.FixedValue = 0.065",
+                        "[Shell].PotentialHarvestIndex.FixedValue = 0.5",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.013"
+                      ],
+                      "Name": "PioneerP93M11_MG31",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 272",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 117",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.20",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 522",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.45, 18.0",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.45, 18.0"
+                      ],
+                      "Name": "Becks321NRR_MG32",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 328",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 106",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 499",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.6",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.6"
+                      ],
+                      "Name": "PioneerP932T16R_MG32",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 267",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 112",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.26",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 506",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.27, 17.2",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.27, 17.2"
+                      ],
+                      "Name": "Becks367NRR_MG37",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 292",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 123",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
+                      ],
+                      "Name": "AsgrowAG4403_MG40",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 292",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 123",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 535",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.09, 16.49",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.09, 16.49"
+                      ],
+                      "Name": "HornbeckHBK4891_MG40",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 322",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 143",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 567",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.05, 16.46",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.05, 16.46"
+                      ],
+                      "Name": "Pioneer94B01_MG40",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 404",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 112",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
+                      ],
+                      "Name": "PioneerP9504_MG50",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 404",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 131",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 549",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
+                      ],
+                      "Name": "AsgrowAG5701_MG50",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 438",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 112",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 505",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.88",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.88"
+                      ],
+                      "Name": "Hutcheson_MG50",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 436",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 93",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.30",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 467",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.39, 15.61",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.39, 15.61"
+                      ],
+                      "Name": "NK622_MG60",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "Name": "China",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 500",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyPodDevelopment.Target.FixedValue = 180",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 440",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.013",
+                        "[Grain].PotentialHarvestIndex.FixedValue=0.35"
+                      ],
+                      "Name": "Nandou12",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 500",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                        "[Phenology].EarlyPodDevelopment.Target.FixedValue = 170",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 460",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.63, 15.13",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.013",
+                        "[Grain].PotentialHarvestIndex.FixedValue=0.35"
+                      ],
+                      "Name": "Texuan13",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 540",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 140",
+                        "[Phenology].EarlyPodDevelopment.Target.FixedValue = 140",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.2",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 420",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.94, 15.44",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.94, 15.44",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.013",
+                        "[Grain].PotentialHarvestIndex.FixedValue=0.25"
+                      ],
+                      "Name": "Jiuyuehuang",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 370",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyPodDevelopment.Target.FixedValue = 180",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.361",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 600",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.57, 16.07",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.57, 16.07",
+                        "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.45",
+                        "[Leaf].AreaLargestLeaf.FixedValue=0.02",
+                        "[Leaf].Phyllochron.FixedValue=45"
+                      ],
+                      "Name": "Hedou19",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.CultivarFolder, Models",
+                  "Name": "Generic",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 310",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.475",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 590",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.6, 22.35",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.6, 22.35"
+                      ],
+                      "Name": "Generic_MG000",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 320",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 100",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.467",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 600",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.35, 21.11",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.35, 21.11"
+                      ],
+                      "Name": "Generic_MG00",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 336",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.422",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 616",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 14.1, 19.95",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 14.1, 19.95"
+                      ],
+                      "Name": "Generic_MG0",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 340",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.411",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 632",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.84, 18.77",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.84, 18.77"
+                      ],
+                      "Name": "Generic_MG1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 348",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.386",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 648",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.59, 17.61",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.59, 17.61"
+                      ],
+                      "Name": "Generic_MG2",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 380",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 120",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.361",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.4, 16.91",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.4, 16.91"
+                      ],
+                      "Name": "Generic_MG3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 388",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 140",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.324",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 664",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 13.1, 16.49",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 13.1, 16.49"
+                      ],
+                      "Name": "Generic_MG4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 396",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 160",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.072",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 696",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.83, 16.13",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.83, 16.13"
+                      ],
+                      "Name": "Generic_MG5",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 404",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 180",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.056",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 712",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.58, 15.8",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.58, 15.8"
+                      ],
+                      "Name": "Generic_MG6",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 416",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.055",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 728",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.33, 15.46",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.33, 15.46"
+                      ],
+                      "Name": "Generic_MG7",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 430",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.054",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 744",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 12.07, 15.1",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 12.07, 15.1"
+                      ],
+                      "Name": "Generic_MG8",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 460",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.053",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 748",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 11.88, 14.82",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.88, 14.82"
+                      ],
+                      "Name": "Generic_MG9",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Cultivar, Models",
+                      "Command": [
+                        "[Phenology].Vegetative.Target.FixedValue = 470",
+                        "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                        "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.053",
+                        "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 748",
+                        "[Phenology].VegetativePhotoperiodModifier.XYPairs.X = 11.78, 14.65",
+                        "[Phenology].ReproductivePhotoperiodModifier.XYPairs.X = 11.78, 14.65"
+                      ],
+                      "Name": "Generic_MG10",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -6856,7 +6821,7 @@
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -6993,7 +6958,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "The soybean model has been tested across a range of planting and agronomic conditions.  These include datasets from Australia and USA covering a wide range of weather conditions (See graphs that follow) and agronomic factors (irrigation, fertiliser, sowing dates).",
+          "Text": "The soybean model has been tested across a range of planting and agronomic conditions.  These include datasets from Australia, USA and China covering a wide range of weather conditions (See graphs that follow) and agronomic factors (irrigation, fertiliser, sowing dates).",
           "Name": "Memo",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -26760,7 +26725,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial ([EdwardsAndPurcell_2005]) was conducted on a silt loam soil in Fayetteville Arkansas, USA, in years 2001, 2002 and 2003. The factor studied were seven soybean maturity groups (from mg 00 to mg 6) and in some year multiple varieties within a maturity group. Crops were irrigated. No N fertilization was applied. This region has no shallow water tables. Phenology data were collected at different growth stages and were used in this work. Weather and soil data for the site were estimated from public sources. \n\n",
+                  "Text": "This trial ([EdwardsAndPurcell_2005]) was conducted on a silt loam soil in Fayetteville Arkansas, USA, in years 2001, 2002 and 2003. The factor studied were seven soybean maturity groups (from mg 00 to mg 6) and in some year multiple varieties within a maturity group. Crops were irrigated. No N fertilization was applied. This region has no shallow water tables. Phenology data were collected at different growth stages and were used in this work. Weather and soil data for the site were estimated from public sources. For additional information about this trial, see [ARCHONTOULIS2014465].\n\n",
                   "Name": "Arkansas data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -29182,7 +29147,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial ([Robinsonetal_2009]) conducted in West Lafayette Indiana, USA, in years 2006 and 2007. The factors studied were six planting dates x three varieties (from mg 2.6 to mg 3.7). No irrigation or fertilization applied. Phenology, gravimetric soil moisture at three depth (manual soil cores), pod numbers, seed size, grain yield, protein and oil data were collected. Weather and soil data for the site were estimated from public sources. ",
+                  "Text": "This trial ([Robinsonetal_2009]) conducted in West Lafayette Indiana, USA, in years 2006 and 2007. The factors studied were six planting dates x three varieties (from mg 2.6 to mg 3.7). No irrigation or fertilization applied. Phenology, gravimetric soil moisture at three depth (manual soil cores), pod numbers, seed size, grain yield, protein and oil data were collected. Weather and soil data for the site were estimated from public sources. For additional information about this trial, see [ARCHONTOULIS2014465].",
                   "Name": "Indiana data description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -31816,7 +31781,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "This trial ([Zhangetal_2004]) was conducted in Stoneville Mississippi USA, in years 1998 to 2002. The factors studied were planting dates (ranged from early March to early July) and varieties (from mg 3.4 to mg 5.6). Crops were irrigated. Phenological measurements were obtained in the field following the V/R staging system. \n",
+                  "Text": "This trial ([Zhangetal_2004]) was conducted in Stoneville Mississippi USA, in years 1998 to 2002. The factors studied were planting dates (ranged from early March to early July) and varieties (from mg 3.4 to mg 5.6). Crops were irrigated. Phenological measurements were obtained in the field following the V/R staging system. For additional information about this trial, see [ARCHONTOULIS2014465].\n",
                   "Name": "Mississippi data description",
                   "Children": [],
                   "IncludeInDocumentation": true,

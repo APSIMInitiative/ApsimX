@@ -12,6 +12,7 @@ namespace UserInterface.Views
     using System.Collections;
     using Models.Core;
     using System.Globalization;
+    using Extensions;
 
     /// <summary>
     /// A class for a dialog window for user settings.
@@ -33,7 +34,13 @@ namespace UserInterface.Views
                                                     })
         {
             propertyEditor = new PropertyView(null);
-            VBox.PackStart(propertyEditor.MainWidget, true, true, 0);
+            Box box;
+#if NETFRAMEWORK
+            box = VBox;
+#else
+            box = ContentArea;
+#endif
+            box.PackStart(propertyEditor.MainWidget, true, true, 0);
             propertyEditor.MainWidget.ShowAll();
             propertyEditor.PropertyChanged += OnPropertyChanged;
             Refresh();
@@ -53,13 +60,16 @@ namespace UserInterface.Views
                 if (response == ResponseType.Ok || response == ResponseType.Apply)
                 {
                     foreach (KeyValuePair<PropertyInfo, object> change in pendingChanges)
+                    {
                         ApplyChange(change.Key, change.Value);
+                        CallOnChanged(change.Key);
+                    }
                     Configuration.Settings.Save();
                     pendingChanges.Clear();
                 }
             }
             while (response == ResponseType.Apply);
-            Destroy();
+            this.Cleanup();
         }
 
         private PropertyGroup GetPropertyGroup()
@@ -115,6 +125,18 @@ namespace UserInterface.Views
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             pendingChanges.Add(new KeyValuePair<PropertyInfo, object>(properties[args.ID], args.NewValue));
+        }
+
+        private void CallOnChanged(PropertyInfo property)
+        {
+            InputAttribute attrib = property.GetCustomAttribute<InputAttribute>();
+            if (!string.IsNullOrEmpty(attrib?.OnChanged))
+            {
+                BindingFlags flags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+                MethodInfo method = typeof(Configuration).GetMethod(attrib.OnChanged, flags);
+                if (method != null)
+                    method.Invoke(Configuration.Settings, null);
+            }
         }
 
         private void ApplyChange(PropertyInfo property, object newValue)

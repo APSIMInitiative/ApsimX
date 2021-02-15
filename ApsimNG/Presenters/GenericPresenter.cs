@@ -8,6 +8,12 @@
     using System.Text.RegularExpressions;
     using Models.Core;
     using Views;
+    using Interfaces;
+    using Markdig;
+    using Markdig.Renderers;
+    using Markdig.Syntax;
+    using Markdig.Parsers;
+    using Utility;
 
     /// <summary>
     /// Presenter of unspecified type

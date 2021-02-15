@@ -201,6 +201,17 @@ namespace Models.Climate
         }
 
         /// <summary>
+        /// Diffuse radiation fraction.
+        /// </summary>
+        [Units("0-1")]
+        [JsonIgnore]
+        public double DiffuseFraction
+        {
+            get => weather.DiffuseFraction;
+            set => weather.DiffuseFraction = value;
+        }
+
+        /// <summary>
         /// Average temperature.
         /// </summary>
         [Units("°C")]

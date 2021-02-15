@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
             if (labourRequired == null)
             {
                 string[] memberNames = new string[] { "Labour requirement" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
             }
             else
             {
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
             if (!Resources.Labour().PricingAvailable)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
             }
             return results;
         } 
@@ -183,7 +183,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Earn ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
                 htmlWriter.Write("Earnings will be paid to ");
                 if (BankAccountName == null || BankAccountName == "")
                 {

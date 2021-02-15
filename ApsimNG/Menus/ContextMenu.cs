@@ -193,6 +193,11 @@
             }
         }
 
+        /// <summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
+        /// <param name="sender">Sender of the event</param>
+        /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
@@ -201,11 +206,6 @@
                                             }
                     )
         ]
-        /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>        
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
         public void RunOnCloud(object sender, EventArgs e)
         {
             try
@@ -313,11 +313,15 @@
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
                 IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-                ICommand command = new AddModelCommand(currentNode, text);
-                explorerPresenter.CommandHistory.Add(command, true);
-                explorerPresenter.Refresh();
-                if (currentNode.Children.Count == 1)
-                    explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                if (currentNode != null)
+                {
+                    ICommand command = new AddModelCommand(currentNode, text);
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.Refresh();
+                    if (currentNode.Children.Count == 1)
+                        explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                    explorerPresenter.SelectNode(currentNode, false);
+                }
             }
             catch (Exception err)
             {
@@ -501,11 +505,12 @@
         {
             try
             {
-                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
-                explorerPresenter.HideRightHandPanel();
-                explorerPresenter.ShowInRightHandPanel(model,
-                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
-                                                       new DownloadPresenter());
+                throw new NotImplementedException();
+                // object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                // explorerPresenter.HideRightHandPanel();
+                // explorerPresenter.ShowInRightHandPanel(model,
+                //                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                //                                        new DownloadPresenter());
             }
             catch (Exception err)
             {
@@ -763,7 +768,7 @@
         public bool ShowModelStructureChecked()
         {
             IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-            if (model.Children.Count < 1)
+            if (model != null && model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
         }

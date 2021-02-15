@@ -31,7 +31,7 @@ namespace Models.CLEM
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
-    [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
+    [Version(1, 0, 2, "Added customisable column names.\r\nDelete and recreate old FileCrop components to set default values as previously used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
     public class FileCrop : CLEMModel, IFileCrop
@@ -71,6 +71,11 @@ namespace Models.CLEM
         /// The character spacing index for the Npct column
         /// </summary>
         private int nitrogenPercentIndex;
+
+        /// <summary>
+        /// The character spacing index for the harvest type column
+        /// </summary>
+        private int harvestTypeIndex;
 
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
@@ -145,6 +150,12 @@ namespace Models.CLEM
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
 
+        /// <summary>
+        /// Name of column holding harvest details
+        /// </summary>
+        [Summary]
+        [Description("Column name for harvest type")]
+        public string HarvestTypeColumnName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -200,6 +211,7 @@ namespace Models.CLEM
             this.monthIndex = 0;
             this.amountKgIndex = 0;
             this.nitrogenPercentIndex = 0;
+            this.harvestTypeIndex = 0;
             this.forageFileAsTable = GetAllData();
         }
 
@@ -276,7 +288,10 @@ namespace Models.CLEM
                 {
                     cropProps.Add(PercentNitrogenColumnName);
                 }
-
+                if (harvestTypeIndex != -1)
+                {
+                    cropProps.Add(HarvestTypeColumnName);
+                }
                 DataTable table = this.reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
@@ -326,14 +341,14 @@ namespace Models.CLEM
             {
                 if(!System.Single.TryParse(landId, out Single val))
                 {
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
                 }
             }
             if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.Single))
             {
                 if (!System.Single.TryParse(cropName, out Single val))
                 {
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
                 }
             }
 
@@ -380,6 +395,24 @@ namespace Models.CLEM
                 cropdata.Npct = double.NaN;
             }
 
+            //HarvestType column is optional 
+            //Only try to read it in if it exists in the file.
+            if (harvestTypeIndex != -1)
+            {
+                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString().ToLower()))
+                {
+                    cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
+                }
+                else
+                {
+                    cropdata.HarvestType = "";
+                }
+            }
+            else
+            {
+                cropdata.HarvestType = "";
+            }
+
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
             return cropdata;
@@ -401,7 +434,7 @@ namespace Models.CLEM
                     if (this.reader.Headings == null)
                     {
                         string fileType = "Text file";
-                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if(reader.IsCSVFile)
                         {
                             fileType = "Comma delimited text file (csv)";
@@ -420,6 +453,7 @@ namespace Models.CLEM
                     this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName);
                     this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName);
                     this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, PercentNitrogenColumnName);
+                    this.harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, HarvestTypeColumnName);
 
                     if (this.soilNumIndex == -1)
                     {
@@ -496,7 +530,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
@@ -521,11 +555,11 @@ namespace Models.CLEM
                         htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
                     }
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
                 if (SoilTypeColumnName is null || SoilTypeColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -534,7 +568,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
                 if (CropNameColumnName is null || CropNameColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -543,7 +577,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
                 if (YearColumnName is null || YearColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -552,7 +586,7 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
                 if (MonthColumnName is null || MonthColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -562,7 +596,7 @@ namespace Models.CLEM
                     htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
                 }
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
                 if (AmountColumnName is null || AmountColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -573,15 +607,24 @@ namespace Models.CLEM
                 }
                 if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\n</div>");
+                if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+                }
 
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
+
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         } 
@@ -630,5 +673,10 @@ namespace Models.CLEM
         /// Day is set to the 1st of the month.
         /// </summary>
         public DateTime HarvestDate;
+
+        /// <summary>
+        /// Harvest type identifier
+        /// </summary>
+        public string HarvestType;
     }
 }

@@ -348,5 +348,17 @@
             /// <summary>Amount of time all jobs took to run.</summary>
             public TimeSpan ElapsedTime { get; set; }
         }
+
+        /// <summary>
+        /// Dispose (close) the Datastore. Use with caution!
+        /// This is intended to be used when running from the Models.exe command line
+        /// When we're running in the GUI, we normally want to keep the Datastore open when the run completes.
+        /// </summary>
+        public void DisposeStorage()
+        {
+            foreach (var job in jobs)
+                if (job is SimulationGroup)
+                    (job as SimulationGroup).DisposeStorage();
+        }
     }
 }

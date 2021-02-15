@@ -24,9 +24,9 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents all CLEM farm resources and activities")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
-    [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\nChanges will be required to your setup")]
+    [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\r\nChanges will be required to your setup")]
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
-    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
+    [Version(1, 0, 2, "New ResourceUnitConverter functionality added that changes some reporting.\r\nThis change will cause errors for all previous custom resource ledger reports created using the APSIM Report component.\r\nTo fix errors add \".Name\" to all LastTransaction.ResourceType and LastTransaction.Activity entries in custom ledgers (i.e. LastTransaction.ResourceType.Name as Resource). The CLEM ReportResourceLedger component has been updated to automatically handle the changes")]
     [Version(1,0,1,"")]
     [ScopedModel]
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
@@ -269,7 +269,7 @@ namespace Models.CLEM
                     // all all current errors and validation problems to error string.
                     foreach (DataRow dr in dataRows)
                     {
-                        error += "\n" + dr[6].ToString();
+                        error += "\r\n" + dr[6].ToString();
                     }
                 }
                 throw new ApsimXException(this, error);
@@ -410,7 +410,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
+                htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
@@ -431,12 +431,12 @@ namespace Models.CLEM
                 RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
                 if (rnd != null)
                 {
-                    htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
+                    htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
                     htmlWriter.Write("<div class=\"namediv\">" + rnd.Name + "</div>");
                     htmlWriter.Write("<div class=\"typediv\">RandomNumberGenerator</div>");
                     htmlWriter.Write("</div>");
-                    htmlWriter.Write("\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
+                    htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
                     if (rnd.Seed == 0)
                     {
                         htmlWriter.Write("Every run of this simulation will be different.");
@@ -445,19 +445,19 @@ namespace Models.CLEM
                     {
                         htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     }
-                    htmlWriter.Write("\n</div>");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
 
                 Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
                 if (clk != null)
                 {
-                    htmlWriter.Write("\n<div class=\"clearfix defaultbanner\">");
+                    htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
                     htmlWriter.Write("<div class=\"namediv\">" + clk.Name + "</div>");
                     htmlWriter.Write("<div class=\"typediv\">Clock</div>");
                     htmlWriter.Write("</div>");
-                    htmlWriter.Write("\n<div class=\"defaultcontent\">");
-                    htmlWriter.Write("\n<div class=\"activityentry\">This simulation runs from ");
+                    htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
                     if (clk.StartDate == null)
                     {
                         htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
@@ -475,9 +475,9 @@ namespace Models.CLEM
                     {
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                     }
-                    htmlWriter.Write("\n</div>");
-                    htmlWriter.Write("\n</div>");
-                    htmlWriter.Write("\n</div>");
+                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("\r\n</div>");
+                    htmlWriter.Write("\r\n</div>");
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
@@ -497,7 +497,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("This farm is identified as region ");
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
@@ -506,7 +506,7 @@ namespace Models.CLEM
                 {
                     if(resources.FoundMarket != null)
                     {
-                        htmlWriter.Write("\n<div class=\"activityentry\">");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("This farm represents ");
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
@@ -514,7 +514,7 @@ namespace Models.CLEM
 
                 if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Ecological indicators will be calculated every ");
                     if (EcologicalIndicatorsCalculationInterval <= 0)
                     {
@@ -529,7 +529,7 @@ namespace Models.CLEM
 
                 if (AutoCreateDescriptiveSummary)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"This component will be included in the overall simulation summary decription html file</div>");
                 }
                 return htmlWriter.ToString();
@@ -543,7 +543,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>\n</div>";
+            return "\r\n</div>\r\n</div>";
         }
 
         /// <summary>
@@ -558,9 +558,9 @@ namespace Models.CLEM
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + ((!this.Enabled) ? 0.4 : 1.0).ToString() + ";\">");
-                htmlWriter.Write("\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + ((!this.Enabled) ? 0.4 : 1.0).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
+                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
                 return htmlWriter.ToString();
             }

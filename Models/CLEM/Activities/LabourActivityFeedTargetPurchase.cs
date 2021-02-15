@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FoodStoreName == null || FoodStoreName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");

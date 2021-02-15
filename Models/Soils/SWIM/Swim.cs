@@ -3586,6 +3586,8 @@ namespace Models.Soils
                     //RC   lines for g%th and g%csl added by RCichota, 09/02/2010
 
                     _dt = 0.5 * _dt;
+                    if (_dt == 0)
+                        throw new Exception("SWIM failed to find a solution");
 
                     // Tell user that SWIM is changing dt
                     summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt));
@@ -5683,7 +5685,7 @@ namespace Models.Soils
 
             if (subsurfaceDrain != null)
             {
-                int drain_node = FindLayerNo(subsurfaceDrain.DrainDepth);
+                int drain_node = SoilUtilities.LayerIndexOfClosestDepth(soilPhysical.Thickness, subsurfaceDrain.DrainDepth);
 
                 double d = subsurfaceDrain.ImpermDepth - subsurfaceDrain.DrainDepth;
                 if (_psi[drain_node] > 0)
@@ -5733,21 +5735,6 @@ namespace Models.Soils
             }
 
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        }
-
-        private int FindLayerNo(double depth)
-        {
-            // Find the soil layer in which the indicated depth is located
-            // NOTE: The returned layer number is 0-based
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                depth_cum = depth_cum + soilPhysical.Thickness[i];
-                if (depth_cum >= depth)
-                    return i;
-            }
-            return soilPhysical.Thickness.Length - 1;
         }
 
         ///// <summary>
@@ -5836,26 +5823,6 @@ namespace Models.Soils
         //    return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
         //}
 
-        ///// <summary>
-        ///// Finds the layer no.
-        ///// </summary>
-        ///// <param name="depth">The depth.</param>
-        ///// <returns></returns>
-        //private int FindLayerNo(double depth)
-        //{
-        //    // Find the soil layer in which the indicated depth is located
-        //    // NOTE: The returned layer number is 0-based
-        //    // If the depth is not reached, the last element is used
-        //    double depth_cum = 0.0;
-        //    for (int i = 0; i < _dlayer.Length; i++)
-        //    {
-        //        depth_cum = depth_cum + _dlayer[i];
-        //        if (depth_cum >= depth)
-        //            return i;
-        //    }
-        //    return _dlayer.Length - 1;
-        //}
-
         /// <summary>
         /// Issues the warning.
         /// </summary>
@@ -5880,10 +5847,6 @@ namespace Models.Soils
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [JsonIgnore]
         public double[] Thickness { get { return soilPhysical.Thickness; } }
-
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        public double[] LayerThickness { get { return soilPhysical.Thickness; } }
-
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [JsonIgnore]
