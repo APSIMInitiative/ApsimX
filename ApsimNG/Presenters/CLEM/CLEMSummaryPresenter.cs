@@ -104,8 +104,12 @@ namespace UserInterface.Presenters
                 throw new Exception(ex.Message);
             }
 
-            string markdownString = $"[View descriptive summary of current settings in browser]({targetFilePath.Replace("\\","/")} \"descriptive summary\")  \n  \n";
-            markdownString += $"View reference details for this component [{modelToSummarise.GetType().Name}]({helpURL} \"{modelToSummarise.GetType().Name} help\")  \n";
+            string markdownString = "";
+            if (File.Exists(targetFilePath))
+            {
+                markdownString = $"[View descriptive summary of current settings in browser](<{targetFilePath.Replace("\\", "/")}> \"descriptive summary\")  {Environment.NewLine}  {Environment.NewLine}";
+            }
+            markdownString += $"View reference details for this component [{modelToSummarise.GetType().Name}](<{helpURL}> \"{modelToSummarise.GetType().Name} help\")  {Environment.NewLine}";
             return markdownString;
         }
 

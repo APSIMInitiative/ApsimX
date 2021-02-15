@@ -11,17 +11,20 @@
         /// Gets or sets the genotype of the animals to enter the simulation. 
         /// Must match the name field of a member of the genotypes property.
         /// </summary>
+        [Units("-")]
         public string Genotype { get; set; }
 
         /// <summary>
         /// Gets or sets the total number of animals to enter the simulation. 
         /// The animals will be distributed across the age cohorts, taking the genotype-specific death rate into account.
         /// </summary>
+        [Units("-")]
         public int Number { get; set; }
 
         /// <summary>
         /// Gets or sets the sex of the animals. Feasible values are as for sheep:sex or cattle:sex, as appropriate.
         /// </summary>
+        [Units("-")]
         public ReproductiveType Sex { get; set; }
 
         /// <summary>
@@ -33,11 +36,13 @@
         /// <summary>
         /// Gets or sets the age in years of the youngest age cohort (their exact age will depend on the current day of year and the value of birth_day).
         /// </summary>
+        [Units("years")]
         public int MinYears { get; set; }
 
         /// <summary>
         /// Gets or sets the age in years of the oldest age cohort
         /// </summary>
+        [Units("years")]
         public int MaxYears { get; set; }
 
         /// <summary>
@@ -53,6 +58,7 @@
         /// Gets or sets the average condition score of the animals (assumed to be the same for all age cohorts). 
         /// If a value of zero is given, the default condition score for the weight and age will be used.
         /// </summary>
+        [Units("-")]
         public double CondScore { get; set; }
 
         /// <summary>
@@ -68,6 +74,7 @@
         /// <summary>
         /// Gets or sets the day of year on which the animals were last shorn. Only meaningful in sheep.
         /// </summary>
+        [Units("-")]
         public int ShearDay { get; set; }
 
         /// <summary>
@@ -75,6 +82,7 @@
         /// Only meaningful if pregnant or lactating is non-zero. 
         /// Must match the name field of a member of the genotypes property.
         /// </summary>
+        [Units("-")]
         public string MatedTo { get; set; }
 
         /// <summary>
@@ -89,6 +97,7 @@
         /// Different pregnancy rates will be computed for each age cohort, such that the weighted average number of foetuses per animal equals the specified value. 
         /// Only meaningful for females.
         /// </summary>
+        [Units("-")]
         public double Foetuses { get; set; }
 
         /// <summary>
@@ -104,6 +113,7 @@
         /// Different numbers of offspring will be computed for each age cohort, such that the weighted average number of offspring per animal equals the specified value. 
         /// Only meaningful for females.
         /// </summary>
+        [Units("-")]
         public double Offspring { get; set; }
 
         /// <summary>
@@ -115,7 +125,7 @@
         /// <summary>
         /// Gets or sets the average body condition score of any suckling lambs or calves.
         /// </summary>
-        [Units("kg")]
+        [Units("-")]
         public double YoungCondScore { get; set; }
 
         /// <summary>
@@ -127,6 +137,7 @@
         /// <summary>
         /// Gets or sets the optional tag number to use.
         /// </summary>
+        [Units("-")]
         public int UseTag { get; set; }
     }
 
@@ -147,23 +158,26 @@
         /// Gets or sets the genotype of the animals to be bought. 
         /// Must match the name field of a member of the genotypes property.
         /// </summary>
+        [Units("-")]
         public string Genotype { get; set; }
 
         /// <summary>
         /// Gets or sets the number of animals to be bought.
         /// </summary>
+        [Units("-")]
         public int Number { get; set; }
 
         /// <summary>
         /// Gets or sets the sex of the animals. 
         /// Feasible values are as for sheep:sex or cattle:sex, as appropriate,
         /// </summary>
+        [Units("-")]
         public ReproductiveType Sex { get; set; }
 
         /// <summary>
         /// Gets or sets the average age of the animals.
         /// </summary>
-        [Units("Months")]
+        [Units("months")]
         public double Age { get; set; }
 
         /// <summary>
@@ -184,6 +198,7 @@
         /// Gets or sets the average condition score of the animals. 
         /// If a value of zero is given, the default condition score for the weight and age will be used.
         /// </summary>
+        [Units("-")]
         public double CondScore { get; set; }
 
         /// <summary>
@@ -191,6 +206,7 @@
         /// Only meaningful if pregnant or lactating is non-zero. 
         /// Must match the name field of a member of the genotypes property.
         /// </summary>
+        [Units("-")]
         public string MatedTo { get; set; }
 
         /// <summary>
@@ -210,6 +226,7 @@
         /// <summary>
         /// Gets or sets the number of foetuses and/or suckling offspring.
         /// </summary>
+        [Units("-")]
         public int NumYoung { get; set; }
 
         /// <summary>
@@ -227,6 +244,7 @@
         /// <summary>
         /// Gets or sets the optional tag to use.
         /// </summary>
+        [Units("-")]
         public int UseTag { get; set; }
     }
 }

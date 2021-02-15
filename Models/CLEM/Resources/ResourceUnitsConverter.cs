@@ -63,7 +63,7 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">1 ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">1 ");
                 if ((Parent as IResourceType).Units != null)
                 {
                     htmlWriter.Write(" " + (Parent as IResourceType).Units + " ");

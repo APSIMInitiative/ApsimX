@@ -11,6 +11,9 @@ using UserInterface.Views;
 
 namespace UnitTests.ApsimNG
 {
+    /// <summary>
+    /// Utility functions used by the UI tests.
+    /// </summary>
     public static class UITestUtilities
     {
         /// <summary>
@@ -36,6 +39,9 @@ namespace UnitTests.ApsimNG
             return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
         }
 
+        /// <summary>
+        /// Opens a simple .apsimx file in the GUI.
+        /// </summary>
         public static ExplorerPresenter OpenBasicFileInGui()
         {
             Simulations sims = UnitTests.Utilities.GetRunnableSim();

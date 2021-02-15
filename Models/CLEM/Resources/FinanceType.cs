@@ -266,7 +266,7 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
                 if (this.EnforceWithdrawalLimit)
                 {
@@ -277,7 +277,7 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write(" with no withdrawal limit");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (this.InterestRateCharged + this.InterestRatePaid == 0)
                 {
                     htmlWriter.Write("No interest rates included");

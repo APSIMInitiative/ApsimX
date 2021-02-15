@@ -228,8 +228,20 @@ namespace UserInterface.Presenters
                 columnName = crop.Name.Replace("Soil", "") + " " + property.Name;
             }
 
+            if (property.Display != null && property.Display.ShowTotal )
+            {
+                double total = property.Total;
+                if (double.IsNaN(total) && property.Name == "PAWC")
+                    if (property.Object is SoilCrop soilCrop && soilCrop.Parent is Physical physical)
+                        total = MathUtilities.Multiply((double[])property.Value, physical.Thickness).Sum();
+                if (!double.IsNaN(total))
+                    columnName += $"\n{total.ToString(property.Format)} ";
+            }
+            else if (property.Units != null)
+                columnName += "\n";
+
             if (property.Units != null)
-                columnName += $" \n({property.Units})";
+                columnName += $"({property.Units})";
 
             return columnName;
         }
@@ -356,8 +368,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Set the value of the specified property
         /// </summary>
-        /// <param name="property">The property to set the value of</param>
-        /// <param name="value">The value to set the property to</param>
+        /// <param name="changedProperty">The property which has been changed.</param>
         private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -431,6 +442,7 @@ namespace UserInterface.Presenters
         /// Clones an array. Never returns null.
         /// </summary>
         /// <param name="array"></param>
+        /// <param name="elementType">Element type of the array.</param>
         private Array Clone(Array array, Type elementType)
         {
             if (array == null)

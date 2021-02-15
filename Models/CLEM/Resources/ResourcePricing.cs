@@ -80,8 +80,8 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\nThis is a <span class=\"setvalue\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis is a <span class=\"setvalue\">");
                 switch (PurchaseOrSale)
                 {
                     case PurchaseOrSalePricingStyleType.Both:
@@ -98,8 +98,8 @@ namespace Models.CLEM.Resources
                 }
                 htmlWriter.Write("</span> price</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
-                htmlWriter.Write("\nThis resource is managed ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis resource is managed ");
                 if (UseWholePackets)
                 {
                     htmlWriter.Write("only in whole ");
@@ -118,9 +118,9 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
                 }
                 htmlWriter.Write(" unit" + ((this.PacketSize == 1) ? "" : "s"));
-                htmlWriter.Write(" in size\n</div>");
+                htmlWriter.Write(" in size\r\n</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">\nEach packet is worth ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">\r\nEach packet is worth ");
                 if (PricePerPacket > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>");
@@ -129,7 +129,7 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }

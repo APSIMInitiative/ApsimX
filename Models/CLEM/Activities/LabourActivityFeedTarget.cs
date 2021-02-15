@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (Metric is null || Metric == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">METRIC NOT SET</span>: ");
@@ -106,7 +106,7 @@ namespace Models.CLEM.Activities
 
                 if (OtherSourcesValue > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>");
                 }
                 return htmlWriter.ToString(); 

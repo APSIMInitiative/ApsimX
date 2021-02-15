@@ -342,7 +342,7 @@ namespace UserInterface.Presenters
                 }
 
                 // add all rows for children
-                foreach (Model child in model.Children)
+                foreach (Model child in model.Children.Where(a => a.Enabled))
                 {
                     tblstr.WriteLine(TableRowHTML(child));
                 }
@@ -466,7 +466,7 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.Enabled && a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
                     string emph = (labourRequirement == null) ? "_" : "";
 
                     // does activity have a Labour Requirement
@@ -506,7 +506,7 @@ namespace UserInterface.Presenters
                 }
 
                 // add all rows for children
-                foreach (Model child in model.Children)
+                foreach (Model child in model.Children.Where(a => a.Enabled))
                 {
                     tblstr.Write(TableRowMarkdown(child));
                 }

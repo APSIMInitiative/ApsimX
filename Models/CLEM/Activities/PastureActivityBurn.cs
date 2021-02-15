@@ -217,7 +217,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Burn ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Burn ");
 
                 if (PaddockName == null || PaddockName == "")
                 {
@@ -230,7 +230,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("if less than <span class=\"setvalue\">" + (MinimumProportionGreen).ToString("0.#%") + "</span> green.</div>");
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Methane emissions will be placed in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
@@ -241,7 +241,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
                 if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");

@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Move the following groups to ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Move the following groups to ");
                 if (ManagedPastureName == null || ManagedPastureName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">General yards</span>");
@@ -261,7 +261,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (PerformAtStartOfSimulation)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
                 }
                 return htmlWriter.ToString(); 
             }

@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
-        /// <param name="view">Data store view to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {

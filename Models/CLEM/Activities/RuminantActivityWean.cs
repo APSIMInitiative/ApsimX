@@ -87,7 +87,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
+                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Individuals are weaned at ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months");
@@ -280,7 +280,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">Weaned individuals will be placed in ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">Not specified - general yards</span>");
