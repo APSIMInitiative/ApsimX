@@ -40,6 +40,10 @@
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.IsDateAxis = axis.DateTimeAxis;
+
+            // Tell the view to populate the axis.
+            PopulateView();
 
             // Trap events from the view.
             this.view.TitleChanged += OnTitleChanged;
@@ -48,10 +52,6 @@
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
-            this.view.IsDateAxis = axis.DateTimeAxis;
-
-            // Tell the view to populate the axis.
-            PopulateView();
         }
 
 

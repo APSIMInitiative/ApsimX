@@ -2542,26 +2542,6 @@ namespace Models
         #region Science.f90 (FortranInfrastructure)
 
         /// <summary>
-        /// Finds the layer no_ob.
-        /// </summary>
-        /// <param name="Depth">The depth.</param>
-        /// <returns></returns>
-        private int FindLayerNo_ob(double Depth)
-            {
-            // Find the soil layer in which the indicated depth is located
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < dlayer.Length; i++)
-                {
-                depth_cum = depth_cum + dlayer[i];
-                if (depth_cum >= Depth)
-                    return i + 1;    //convert to one based  
-                }
-            return dlayer.Length;   //one based
-            }
-
-
-        /// <summary>
         /// Root_proportions the specified layer_ob.
         /// </summary>
         /// <param name="Layer_ob">The layer_ob.</param>
@@ -4231,7 +4211,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_sw_avail_fac_deepest_layer_ob = crop_sw_avail_fac(c_x_sw_ratio, c_y_sw_fac_root, i_dul_dep, i_sw_dep, i_ll_dep, l_deepest_layer_ob);
 
@@ -4367,7 +4347,7 @@ namespace Models
 
 
 
-            l_current_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_current_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_current_phase = (int)i_current_stage;
 
             //! this equation allows soil water in the deepest
@@ -4643,7 +4623,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail_pot, 0.0, o_sw_avail_pot.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail_pot[layer] = i_dul_dep[layer] - i_ll_dep[layer];
@@ -4698,7 +4678,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail, 0.0, o_sw_avail.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail[layer] = i_sw_dep[layer] - i_ll_dep[layer];
@@ -4759,7 +4739,7 @@ namespace Models
 
             fill_real_array(ref o_sw_supply, 0.0, o_sw_supply.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail = (i_sw_dep[layer] - i_ll_dep[layer]);
@@ -4838,7 +4818,7 @@ namespace Models
 
             //! find total root water potential uptake as sum of all layers
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
 
             if ((l_sw_supply_sum <= 0.0) || (i_sw_demand <= 0.0))
@@ -4923,7 +4903,7 @@ namespace Models
             double l_sw_supply_sum;       //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! get potential water that can be taken up when profile is full
 
@@ -4972,7 +4952,7 @@ namespace Models
             double l_sw_supply_sum;         //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
 
             //! get potential water that can be taken up when profile is full
@@ -5027,7 +5007,7 @@ namespace Models
             double sw_avail_sum;        //! actual extractable soil water (mm)
             bool didInterpolate;
 
-            deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             sw_avail_pot_sum = SumArray(i_sw_avail_pot, deepest_layer_ob);
             sw_avail_sum = SumArray(i_sw_avail, deepest_layer_ob);
             sw_avail_ratio = MathUtilities.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
@@ -5071,7 +5051,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             //! get potential water that can be taken up when profile is full
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
@@ -5473,7 +5453,7 @@ namespace Models
 
             if (stage_is_between(i_sowing_stage, i_germ_stage, i_current_stage))
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_pesw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
 
                 //! can't germinate on same day as sowing, because miss out on day of sowing else_where
@@ -5553,7 +5533,7 @@ namespace Models
 
             if (l_current_phase == i_germ_phase)
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_fasw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
                 l_fasw_seed = bound(l_fasw_seed, 0.0, 1.0);
 
@@ -6150,7 +6130,7 @@ namespace Models
 
             //! potential (supply) by transpiration
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             return l_sw_supply_sum * i_transp_eff;
 
@@ -6291,7 +6271,7 @@ namespace Models
 
             fill_real_array(ref o_root_array, 0.0, i_dlayer.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_root_length_sum = SumArray(i_root_length, l_deepest_layer_ob);
 
@@ -7097,7 +7077,7 @@ namespace Models
                 {
                 fill_real_array(ref o_dlt_root_length, 0.0, i_max_layer);
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth + i_dlt_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth + i_dlt_root_depth) + 1;
                 l_rlv_factor_tot = 0.0;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
@@ -7948,7 +7928,7 @@ namespace Models
 
             fill_real_array(ref o_no3gsm_mflow_pot, 0.0, i_num_layer);
             //! only take the layers in which roots occur
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 //! get  NO3 concentration
@@ -8012,7 +7992,7 @@ namespace Models
             //! only take the layers in which roots occur
             fill_real_array(ref o_no3gsm_diffn_pot, 0.0, i_num_layer);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail_fract = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
@@ -8140,7 +8120,7 @@ namespace Models
             double l_total_n_uptake_pot;
             double l_scalef;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (i_current_stage >= c_n_stress_start_stage)
                 {
@@ -8465,7 +8445,7 @@ namespace Models
             //! get potential N uptake (supply) from the root profile.
             //! get totals for diffusion and mass flow.
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_NO3gsm_diffn_avail[layer] = i_no3gsm_diffn_pot[layer] - i_no3gsm_mflow_avail[layer];
@@ -8581,7 +8561,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_Ngsm_supply = SumArray(i_no3gsm_uptake_pot, l_deepest_layer_ob) + SumArray(i_nh4gsm_uptake_pot, l_deepest_layer_ob);
 
@@ -8667,7 +8647,7 @@ namespace Models
 
 
             fill_real_array(ref o_dlt_N_green, 0.0, max_part);
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! find proportion of uptake to be
             //! distributed to each plant part and distribute it.
@@ -10176,7 +10156,7 @@ namespace Models
             //c      N_conc_stover_crit = (g_N_conc_crit(leaf) + g_N_conc_crit(stem)) * 0.5
             l_N_green_demand = SumArray(i_n_demand, max_part);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (on_day_of(sowing, i_current_stage))
                 {
@@ -10293,7 +10273,7 @@ namespace Models
 
                 l_N_green_conc_percent = MathUtilities.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
@@ -10364,7 +10344,7 @@ namespace Models
             double asw_pot;
             int deepest_layer_ob;
 
-            deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
             asw_pot = 0.0;
             asw = 0.0;
             for (int layer = 0; layer < deepest_layer_ob; layer++)
@@ -11887,7 +11867,7 @@ namespace Models
             {
             get
                 {
-                int deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+                int deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
                 double l_NO3gsm_tot = SumArray(g_no3gsm, deepest_layer_ob);
                 return Math.Round(l_NO3gsm_tot,2);
                 }

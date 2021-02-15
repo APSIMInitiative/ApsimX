@@ -6,6 +6,8 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
+    using Interfaces;
+    using Extensions;
 
     class IntellisenseView : ViewBase
     {
@@ -241,7 +243,8 @@
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
-                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
+                if (completionView.WidthRequest > 0)
+                    completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 return true;
             }
             return false;
@@ -278,8 +281,17 @@
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
+            //
+            // fixme - need to rewrite this using GdkMonitor.
+            // This must have always been broken on multi-monitor setups(?).
+#if NETFRAMEWORK
             int xres = MainWindow.Screen.Width;
             int yres = MainWindow.Screen.Height;
+#else
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(MainWidget.Window).Workarea;
+            int xres = workArea.Width;
+            int yres = workArea.Height;
+#endif
 
             if ((x + completionForm.WidthRequest) > xres)            
                 // We are very close to the right-hand side of the screen
@@ -315,13 +327,13 @@
         /// Populates the completion window with data.
         /// </summary>
         /// <param name="items">List of completion data.</param>
-        public void Populate(List<CompletionData> items)
+        public void Populate(List<ICompletionItem> items)
         {
             completionModel.Clear();
 
             // Add empty first row.
             completionModel.AppendValues("", "", "", "", "", "", "");
-            foreach (CompletionData item in items)
+            foreach (ICompletionItem item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
                 string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
@@ -362,9 +374,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Destroy();
-            completionView.Dispose();
-            completionForm.Destroy();
+                completionForm.Cleanup();
+            completionView.Cleanup();
+            completionForm.Cleanup();
             completionForm = null;
         }
 
@@ -404,8 +416,8 @@
         /// (Mouse) button press event handler. If it is a left mouse double click, consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
@@ -455,7 +467,7 @@
         /// Key release event handler. If the key is enter, consumes the ItemSelected event.
         /// </summary>
         /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            

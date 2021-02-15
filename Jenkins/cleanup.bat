@@ -7,8 +7,10 @@ git fetch origin +refs/pull/*:refs/remotes/origin/pr/*
 git checkout %sha1%
 
 rem Check for merge conflicts with master branch
-git fetch origin master
-git merge --no-commit origin/master
+set "branch=%ghprbTargetBranch%"
+if "%branch%"=="" set branch=master
+git fetch origin %branch%
+git merge --no-commit origin/%branch%
 if errorlevel 1 (
 	git merge --abort
 	echo Merge conflicts with master branch detected. Aborting build...

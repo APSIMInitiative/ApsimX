@@ -105,6 +105,12 @@
                     // if model CLEMModel
                     if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market)
                     {
+                        // all CLEMModels will handle this presenter
+                        ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
+                    }
+                    else if (typeof(ICLEMPresenter).IsAssignableFrom(Assembly.GetExecutingAssembly().GetType(presenterName.ToString())))
+                    {
+                        // apply this if the presenter has ICLEMPresenter interface and is ready to create presenters
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
                     }
                     else

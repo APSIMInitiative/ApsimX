@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using ICSharpCode.NRefactory.Completion;
-using ICSharpCode.NRefactory.Editor;
+using UserInterface.Interfaces;
 
 namespace UserInterface.Intellisense
 {
     /// <summary>
     /// A class to store data such as type, units, description, etc. about a completion option.
     /// </summary>
-    public class CompletionData : ICompletionData
+    public class CompletionData : ICompletionData, ICompletionItem
     {
         /// <summary>
         /// The overloaded versions of this member.

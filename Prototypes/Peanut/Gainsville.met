@@ -1,6 +1,8 @@
 !gains90
 [weather.met.weather]
-Latitude = 29
+Latitude = 29.6516
+Longitude = -82.3248
+
      site     year      day    radn    maxt     mint      rain
       ()       ()        ()    (MJ/m2) (oC)     (oC)      (mm)
      UFGA     1990        1    12.74    20.38    5.246       11

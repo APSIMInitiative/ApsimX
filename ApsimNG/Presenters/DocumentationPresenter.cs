@@ -1,6 +1,5 @@
-﻿using APSIM.Shared.Extensions;
+﻿﻿using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
-using MarkdownDeep;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -12,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
+using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -21,12 +22,9 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private IModel model;
 
-        private Markdown markdown = new Markdown();
 
         public DocumentationPresenter()
         {
-            markdown.ExtraMode = true;
-            markdown.SafeMode = true;
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
@@ -40,7 +38,7 @@ namespace UserInterface.Presenters
 
         private void PopulateView()
         {
-            view.Text = DocumentModel(model);
+            view.Text = DocumentModel(model).Replace("<", @"\<");
         }
 
         private string DocumentModel(IModel model)

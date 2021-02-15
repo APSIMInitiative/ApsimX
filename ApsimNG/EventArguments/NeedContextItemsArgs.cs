@@ -11,6 +11,7 @@
     using Intellisense;
     using System.Xml;
     using System.Drawing;
+    using Models.Factorial;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -32,12 +33,12 @@
         /// Context item information
         /// </summary>
         public List<string> Items;
-
+#if NETFRAMEWORK
         /// <summary>
         /// Completion data.
         /// </summary>
         public List<CompletionData> CompletionData { get; set; }
-
+#endif
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.
         /// </summary>
@@ -85,7 +86,8 @@
         /// <param name="atype">Data type for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
         public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
@@ -204,7 +206,8 @@
         /// <param name="o">Fully- or partially-qualified object name for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
         private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
@@ -295,7 +298,10 @@
         /// </summary>
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
-        /// <returns></returns>
+        /// <param name="properties">Search for properties of the model?</param>
+        /// <param name="methods">Search for methods of the model?</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> contextItems = new List<ContextItem>();
@@ -355,7 +361,26 @@
                 // related nodes such as weather/soil/etc. In this scenario, we should
                 // search through all models, not just those in scope.
                 if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                {
                     node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
+
+                    // If we still failed, try a lookup on type name.
+                    if (node == null)
+                        node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                }
+
+                if (node == null && relativeTo.FindAncestor<Factors>() != null)
+                {
+                    relativeTo = relativeTo.FindAncestor<Experiment>();
+                    if (relativeTo != null)
+                    {
+                        node = relativeTo.FindInScope(modelName);
+                        if (node == null)
+                            node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                    }
+                    if (node == null)
+                        return null;
+                }
             }
 
             // If the object name string does not contain any children/properties 
