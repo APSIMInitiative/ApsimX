@@ -21,7 +21,6 @@ namespace UserInterface.Views
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-        private HBox hbox = null;
         private Gtk.TreeView treeview1 = null;
         private Viewport rightHandView = null;
 
@@ -38,18 +37,12 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public PropertyTreeView(ViewBase owner) : base(owner)
         {
-            hbox = new HBox(false, 5);
-            treeview1 = new Gtk.TreeView();
-            treeview1.HeadersVisible = false;
-            rightHandView = new Viewport();
-            hbox.PackStart(treeview1,false,false,0);
-            hbox.PackEnd(rightHandView, true, true, 0);
-            
-            mainWidget = hbox;
-            rightHandView.ShadowType = ShadowType.None;
-#if NETFRAMEWORK
-            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-#endif
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.PropertyTreeView.glade");
+            VBox vbox1 = (VBox)builder.GetObject("vbox1");
+            treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
+            rightHandView = (Viewport)builder.GetObject("RightHandView");
+            mainWidget = vbox1;
+
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();

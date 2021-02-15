@@ -84,31 +84,26 @@ namespace UserInterface.Presenters
     public class PropertyTreePresenter : IPresenter
     {
         /// <summary>The visual instance</summary>
-        private IPropertyTreeView treeview;
-        private IPropertyView propertyView;
+        protected IPropertyTreeView treeview;
+        protected IPropertyView propertyView;
 
         /// <summary>Presenter for the component</summary>
-        private SimplePropertyPresenter propertyPresenter;
+        protected IPresenter propertyPresenter;
 
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
-        private Model model;
+        protected Model model;
 
         /// <summary>
         /// The category name to filter for on the Category Attribute for the properties
         /// </summary>
-        private string selectedCategory { get; set; }
+        protected string selectedCategory { get; set; }
 
         /// <summary>
         /// The subcategory name to filter for on the Category Attribute for the properties
         /// </summary>
-        private string selectedSubCategory { get; set; }
-
-        /// <summary>Initializes a new instance of the <see cref="PropertyTreePresenter" /> class</summary>
-        public PropertyTreePresenter()
-        {
-        }
+        protected string selectedSubCategory { get; set; }
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
         /// <value>The width of the tree.</value>
@@ -121,13 +116,11 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The parent ExplorerPresenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
-        private bool isMultiView = false;
+        protected ExplorerPresenter explorerPresenter;
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
-        public SimplePropertyPresenter PropertyPresenter
+        public IPresenter PropertyPresenter
         {
             get
             {
@@ -151,14 +144,13 @@ namespace UserInterface.Presenters
         /// <param name="model">The simulation model</param>
         /// <param name="view">The view used for display</param>
         /// <param name="explorerPresenter">The presenter for this object</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-
-            // check style of view provided an set view and propertyview accordingly
-            isMultiView = (view is PropertyTreeMultiView);
-
             this.treeview = view as IPropertyTreeView;
+            if(view is null)
+                throw new ArgumentException($"The view must be an PropertyTreeView instance");
+
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
@@ -167,6 +159,9 @@ namespace UserInterface.Presenters
 
             //Initialise the Right Hand View
             this.propertyPresenter = new SimplePropertyPresenter();
+            this.propertyView = new PropertyView(this.treeview as ViewBase);
+            (this.propertyView as PropertyView).DisplayFrame = false;
+
             this.ShowRightHandView();
         }
 
@@ -176,14 +171,7 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            if (treeview is Views.PropertyTreeView view)
-            {
-                view.MainWidget.Cleanup();
-            }
-            else if (treeview is PropertyTreeMultiView viewMulti)
-            {
-                viewMulti.MainWidget.Cleanup();
-            }
+            (treeview as ViewBase).MainWidget.Cleanup();
         }
 
         /// <summary>
@@ -262,41 +250,42 @@ namespace UserInterface.Presenters
                 }
                 this.selectedCategory = category;
                 this.selectedSubCategory = subcategory;
-                this.propertyPresenter.Filter = IsPropertySelected;
+                (this.propertyPresenter as SimplePropertyPresenter).Filter = IsPropertySelected;
             }
             else
             {
                 //this will show all the properties in the model 
                 //there will be no filtering on Category and Subcategory.
-                this.propertyPresenter.Filter = null;
+                (this.propertyPresenter as SimplePropertyPresenter).Filter = null;
                 this.selectedCategory = "";
                 this.selectedSubCategory = "";
             }
 
+            CreateAndAttachRightPanel();
+        }
+
+        public virtual void CreateAndAttachRightPanel()
+        {
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
-            
-            if (isMultiView)
-            {
-                this.propertyView = new PropertyMultiView(this.treeview as ViewBase);
-                (this.propertyView as PropertyMultiView).DisplayFrame = false;
-            }
-            else
-            {
-                this.propertyView = new PropertyView(this.treeview as ViewBase);
-                (this.propertyView as PropertyView).DisplayFrame = false;
-            }
+            this.propertyView = new PropertyView(this.treeview as ViewBase);
+            (this.propertyView as PropertyView).DisplayFrame = false;
             this.treeview.AddRightHandView(this.propertyView);
-            this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);            
+            this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Node arguments</param>
-        private void OnNodeSelected(object sender, NodeSelectedArgs e)
+        protected void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
             this.HideRightHandView();
             this.ShowRightHandView();
+        }
+
+        public virtual IModel ModelForProperties()
+        {
+            return this.model;
         }
 
         /// <summary>
@@ -307,11 +296,7 @@ namespace UserInterface.Presenters
         {
             CategoryTree categories = new CategoryTree();
 
-            IModel modelToUse = this.model;
-            if(isMultiView)
-            {
-                modelToUse = this.model.FindChild<IModel>();
-            }
+            IModel modelToUse = ModelForProperties();
 
             if (modelToUse != null)
             {
@@ -409,7 +394,7 @@ namespace UserInterface.Presenters
         }
 
 
-        private bool IsPropertySelected(PropertyInfo property)
+        protected bool IsPropertySelected(PropertyInfo property)
         {
             if ((this.selectedCategory??"") != "") // a category has been selected
             {

@@ -44,7 +44,7 @@ namespace UserInterface.Views
         /// Display properties and their values to the user.
         /// </summary>
         /// <param name="properties">Properties to be displayed/edited.</param>
-        public override void DisplayProperties(List<PropertyGroup> properties)
+        public void DisplayProperties(List<PropertyGroup> properties)
         {
 #if NETFRAMEWORK
             uint row = 0;
@@ -82,16 +82,6 @@ namespace UserInterface.Views
 #endif
 
             box.Remove(propertyTable);
-
-            if (DisplayFrame)
-            {
-                box.Label = $"{properties.FirstOrDefault().Name} Properties";
-            }
-            else
-            {
-                box.ShadowType = ShadowType.None;
-                box.Label = null;
-            }
 
             propertyTable.Cleanup();
 

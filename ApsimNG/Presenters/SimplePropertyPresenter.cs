@@ -20,23 +20,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model whose properties are being displayed.
         /// </summary>
-        private IModel model;
-
-        /// <summary>
-        /// The list of child models whose properties are being displayed.
-        /// Used with PropertyMultiView and PropertyTreePresenter
-        /// </summary>
-        private List<object> models = new List<object>();
+        protected IModel model;
 
         /// <summary>
         /// The view.
         /// </summary>
-        private IPropertyView view;
+        protected IPropertyView view;
 
         /// <summary>
         /// The explorer presenter instance.
         /// </summary>
-        private ExplorerPresenter presenter;
+        protected ExplorerPresenter presenter;
 
         /// <summary>
         /// A filter function which can be used to filter which properties
@@ -56,7 +50,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">An <see cref="ExplorerPresenter" /> instance.</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
@@ -80,25 +74,10 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Refresh the view with the model's current state.
         /// </summary>
-        public void RefreshView(IModel model)
+        public virtual void RefreshView(IModel model)
         {
             if (model != null)
             {
-                // if multi model view specified get child models of model
-                if (view is PropertyMultiView)
-                {
-                    models.Clear();
-                    models.AddRange(this.model.FindAllChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
-                    if (models.GroupBy(a => a.GetType()).Count() > 1)
-                    {
-                        throw new ArgumentException($"The models displayed in a PropertyMultiView must all be of the same type");
-                    }
-                    if(models.Count() >= 1)
-                    {
-                        view.DisplayProperties(GetProperties(models));
-                        return;
-                    }
-                }
                 this.model = model;
                 view.DisplayProperties(GetProperties(this.model));
             }
@@ -150,20 +129,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Get a list of properties from the model.
-        /// </summary>
-        /// <param name="obj">The object whose properties will be queried.</param>
-        protected virtual List<PropertyGroup> GetProperties(List<object> objs)
-        {
-            List<PropertyGroup> propertyGroupList = new List<PropertyGroup>();
-            foreach (var item in objs)
-            {
-                propertyGroupList.Add(GetProperties(item));
-            }
-            return propertyGroupList;
-        }
-
-        /// <summary>
         /// Gets all public instance members of a given type.
         /// </summary>
         /// <param name="obj">Object whose members will be retrieved.</param>
@@ -196,7 +161,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnViewChanged(object sender, PropertyChangedEventArgs args)
+        protected void OnViewChanged(object sender, PropertyChangedEventArgs args)
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.

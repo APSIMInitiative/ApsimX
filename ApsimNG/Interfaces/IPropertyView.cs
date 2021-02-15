@@ -17,12 +17,6 @@ namespace UserInterface.Interfaces
         void DisplayProperties(PropertyGroup properties);
 
         /// <summary>
-        /// Display properties from a list of models to be editable by the user.
-        /// </summary>
-        /// <param name="properties">List of groups pf properties to be displayed/edited.</param>
-        void DisplayProperties(List<PropertyGroup> properties);
-
-        /// <summary>
         /// Called when a property is changed by the user.
         /// </summary>
         event EventHandler<PropertyChangedEventArgs> PropertyChanged;

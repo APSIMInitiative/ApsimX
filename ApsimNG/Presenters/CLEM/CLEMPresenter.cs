@@ -92,14 +92,14 @@ namespace UserInterface.Presenters
                     }
 
                     // check if it has properties
-                    if ((viewName.Contains("PropertyMultiView") | viewName.Contains("PropertyTreeMultiView")) ||
+                    if ((viewName.Contains("PropertyMultiView") | propPresenterName.Contains("MultiModel")) ||
                         (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
-                            if (viewName == "UserInterface.Views.PropertyView" | viewName == "UserInterface.Views.PropertyMultiView")
+                            if (viewName == "UserInterface.Views.PropertyView")
                             {
                                 (newView as PropertyView).DisplayFrame = false;
                             }

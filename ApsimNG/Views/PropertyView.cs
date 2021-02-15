@@ -188,14 +188,14 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>
-        /// Display properties and their values to the user.
-        /// </summary>
-        /// <param name="properties">Properties to be displayed/edited.</param>
-        public virtual void DisplayProperties(List<PropertyGroup> properties)
-        {
-            throw new NotImplementedException("Multiple models is not supported in PropertyView");
-        }
+        ///// <summary>
+        ///// Display properties and their values to the user.
+        ///// </summary>
+        ///// <param name="properties">Properties to be displayed/edited.</param>
+        //public virtual void DisplayProperties(List<PropertyGroup> properties)
+        //{
+        //    throw new NotImplementedException("Multiple models is not supported in PropertyView");
+        //}
 
         /// <summary>
         /// Adds a group of properties to the GtkTable, starting at the specified row.
