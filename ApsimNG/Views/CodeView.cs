@@ -83,7 +83,8 @@ namespace UserInterface.Views
 
             set
             {
-                textEditor.Buffer.Text = value;
+                if (value != null)
+                    textEditor.Buffer.Text = value;
                 //if (Mode == EditorType.ManagerScript)
                 //{
                 //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
