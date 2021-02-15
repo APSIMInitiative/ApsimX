@@ -4794,7 +4794,7 @@
 				},
 				{
 				  "$type": "Models.Functions.Constant, Models",
-				  "FixedValue": 1.5,
+				  "FixedValue": 1.45,
 				  "Units": null,
 				  "Name": "RUE",
 				  "Children": [],
@@ -4804,7 +4804,7 @@
 				},
 				{
 				  "$type": "Models.Functions.Constant, Models",
-				  "FixedValue": 1.5,
+				  "FixedValue": 1.45,
 				  "Units": null,
 				  "Name": "RueAct",
 				  "Children": [],
