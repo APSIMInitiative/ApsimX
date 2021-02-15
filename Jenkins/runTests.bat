@@ -10,12 +10,6 @@ if "%apsimx%"=="" (
 )
 set "bin=%apsimx%\Bin"
 
-rem Add bin to path.
-set "PATH=%PATH%;%bin%"
-
-rem Copy files from DeploymentSupport.
-copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
-
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
 set uisyntax=UI
@@ -120,5 +114,5 @@ echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
-models.exe %testdir% /MultiProcess /Recurse /RunTests /Verbose
+"%bin%\Models.exe" %testdir% /Recurse /RunTests /Verbose
 endlocal

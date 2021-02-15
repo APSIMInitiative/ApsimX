@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using MathNet.Numerics;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -440,6 +441,10 @@ namespace Models.CLEM.Activities
                 }
                 SetStatusSuccess();
             }
+            else
+            {
+                Status = ActivityStatus.NotNeeded;
+            }
         }
 
         /// <summary>
@@ -488,24 +493,26 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Feed ruminants ";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
 
-            if (FeedTypeName == null || FeedTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[Feed TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += "</div>";
+                if (FeedTypeName == null || FeedTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            if (ProportionTramplingWastage > 0)
-            {
-                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>";
+                if (ProportionTramplingWastage > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
     }

@@ -63,7 +63,7 @@
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
             this.xYPairs.Children.Add(this.graph);
             this.graph.Parent = this.xYPairs;
             (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
@@ -133,6 +133,14 @@
 
                 return propertyName;
             }
+            else if (xYPairs.Parent is LinearInterpolationFunction)
+            {
+                var xValue = xYPairs.Parent.FindChild("XValue");
+                if (xValue is VariableReference)
+                    return (xValue as VariableReference).VariableName;
+                else
+                    return "XValue";
+            }
             else if (xYPairs.Parent is HourlyInterpolation)
             {
                 return "Air temperature (oC)";
@@ -158,15 +166,9 @@
         private string LookForYAxisTitle()
         {
             IModel modelContainingLinkField = xYPairs.Parent.Parent;
-            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xYPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (linkField != null)
-            {
-                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
-                if (units != null)
-                {
-                    return xYPairs.Parent.Name + " (" + units.ToString() + ")";
-                }
-            }
+            var units = AutoDocumentation.GetUnits(modelContainingLinkField, xYPairs.Parent.Name);
+            if (!string.IsNullOrEmpty(units))
+                return xYPairs.Parent.Name + " (" + units.ToString() + ")";
 
             return xYPairs.Parent.Name;
         }

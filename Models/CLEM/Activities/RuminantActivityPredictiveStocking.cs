@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -142,7 +143,7 @@ namespace Models.CLEM.Activities
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
                     {
-                        throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
+                        throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\r\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
                     }
 
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
@@ -354,35 +355,37 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
-            if ((int)AssessmentMonth > 0 & (int)AssessmentMonth <= 12)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"setvalue\">";
-                html += AssessmentMonth.ToString();
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pasture will be assessed in ");
+                if ((int)AssessmentMonth > 0 & (int)AssessmentMonth <= 12)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(AssessmentMonth.ToString());
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No month set");
+                }
+                htmlWriter.Write("</span> for a dry season of ");
+                if (DrySeasonLength > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(DrySeasonLength.ToString("#0"));
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No length");
+                }
+                htmlWriter.Write("</span> months ");
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(FeedLowLimit.ToString("#,##0"));
+                htmlWriter.Write("</span> kg/ha at the end of this period");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">No month set";
-            }
-            html += "</span> for a dry season of ";
-            if (DrySeasonLength > 0)
-            {
-                html += "<span class=\"setvalue\">";
-                html += DrySeasonLength.ToString("#0");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">No length";
-            }
-            html += "</span> months ";
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";
-            html += "<span class=\"setvalue\">";
-            html += FeedLowLimit.ToString("#,##0");
-            html += "</span> kg/ha at the end of this period";
-            html += "</div>";
-            return html;
         }
 
         /// <summary>
@@ -391,9 +394,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -403,12 +404,12 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activitygroupsborder\">";
+            html += "\r\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
             if (FindAllChildren<RuminantGroup>().Count() == 0)
             {
-                html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
+                html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }
             return html;
         } 

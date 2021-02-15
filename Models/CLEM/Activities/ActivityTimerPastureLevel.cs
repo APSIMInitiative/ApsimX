@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -129,36 +130,38 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ");
+                }
+                htmlWriter.Write(" is between <span class=\"setvalueextra\">");
+                htmlWriter.Write(MinimumPastureLevel.ToString());
+                htmlWriter.Write("</span> and ");
+                if (MaximumPastureLevel <= MinimumPastureLevel)
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(MaximumPastureLevel.ToString());
+                    htmlWriter.Write("</span> ");
+                }
+                htmlWriter.Write(" kg per hectare</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ";
-            }
-            html += " is between <span class=\"setvalueextra\">";
-            html += MinimumPastureLevel.ToString();
-            html += "</span> and ";
-            if (MaximumPastureLevel <= MinimumPastureLevel)
-            {
-                html += "<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ";
-            }
-            else
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += MaximumPastureLevel.ToString();
-                html += "</span> ";
-            }
-            html += " kg per hectare</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
         /// <summary>
@@ -176,15 +179,17 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
 

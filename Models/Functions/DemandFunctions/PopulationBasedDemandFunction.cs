@@ -46,7 +46,7 @@ namespace Models.Functions.DemandFunctions
         /// <summary>The growth duration</summary>
         [Description("ThermalTime duration of organ growth ")]
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("<sup>o</sup>Cd")]
+        [Units("^o^Cd")]
         IFunction GrowthDuration = null;
 
         /// <summary>The accumulated thermal time</summary>

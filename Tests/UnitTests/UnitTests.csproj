@@ -1,416 +1,90 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props" Condition="Exists('..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{45A670BC-4A44-4944-A4B4-6FF4F198454D}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UnitTests</RootNamespace>
-    <AssemblyName>UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <TargetFramework>net472</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputPath>..\..\Bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
-    <Prefer32Bit>false</Prefer32Bit>
+	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
+	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+	<NoWarn>CS1591,CS1572,CS1573</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\Bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAnyCPU|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugAnyCPU\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugAnyCPU|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\DebugAnyCPU\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+	  <EmbeddedResource Include="**\*.xml" />
+    <EmbeddedResource Include="**\*.json" />
+	  <EmbeddedResource Include="**\*.apsim" />
+	  <EmbeddedResource Include="**\*.apsimx" />
+	  <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="**\*.Expected.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <!-- Project references -->
+    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj" />
+	  <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
+	  <ProjectReference Include="..\..\Models\Models.csproj" />
+	
+    <!-- nuget -->
+	  <PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable0956" />
+	  <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
+	  <PackageReference Include="NUnit" Version="3.12.0" />
+	  <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0"/>
+	  <PackageReference Include="Mono.Cecil" Version="0.9.6.0" />
+	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
+	
+	<!-- Other misc assemblies required for framework builds -->
+	<Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\atk-sharp.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\atk-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
+	<Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\gdk-sharp.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gdk-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\glib-sharp.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\glib-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\gtk-sharp.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gtk-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+    <Reference Include="gtkdotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\Mono.Cairo.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gtkdotnet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MathNet.Numerics.4.0.0\lib\net40\MathNet.Numerics.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+	<Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\OxyPlot.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="OxyPlot.GtkSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=245eacd6b5d2d338, processorArchitecture=MSIL">
+	<Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\Bin\OxyPlot.GtkSharp.dll</HintPath>
+      <HintPath>..\..\DeploymentSupport\Windows\Bin64\Mono.Cairo.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ApsimNG\Presenters\AddModelPresenterTests.cs" />
-    <Compile Include="ApsimNG\Presenters\ProfileGridTests.cs" />
-    <Compile Include="ApsimNG\Presenters\TablePresenterTests.cs" />
-    <Compile Include="ApsimNG\UITestsMain.cs" />
-    <Compile Include="ApsimNG\Utilities\GtkUtilities.cs" />
-    <Compile Include="ApsimNG\Utilities\UITestUtilities.cs" />
-    <Compile Include="ApsimNG\Views\GraphViewTests.cs" />
-    <Compile Include="ApsimNG\Views\GridViewTests.cs" />
-    <Compile Include="APSIMShared\JobRunning\JobManagerTests.cs" />
-    <Compile Include="APSIMShared\JobRunning\JobRunnerTests.cs" />
-    <Compile Include="APSIMShared\MockJob.cs" />
-    <Compile Include="APSIMShared\ReflectionUtilitiesTests.cs" />
-    <Compile Include="CommandLineArgsTests.cs" />
-    <Compile Include="Core\ApsimFile\EditFileTests.cs" />
-    <Compile Include="Core\ModelTests.cs" />
-    <Compile Include="Core\Run\GenerateApsimXFilesTests.cs" />
-    <Compile Include="Core\Run\RunnerTests.cs" />
-    <Compile Include="Core\Run\SimulationTests.cs" />
-    <Compile Include="Functions\HoldFunctionTests.cs" />
-    <Compile Include="Graph\MockSimulationDescriptionGenerator.cs" />
-    <Compile Include="Graph\SeriesTests.cs" />
-    <Compile Include="Core\Run\SimulationDescriptionTests.cs" />
-    <Compile Include="Factorial\ExperimentTests.cs" />
-    <Compile Include="IrrigationTests.cs" />
-    <Compile Include="MockModelValuesChangeDaily.cs" />
-    <Compile Include="MockModel.cs" />
-    <Compile Include="Resources\ResourceTests.cs" />
-    <Compile Include="Soils\MockNutrientPool.cs" />
-    <Compile Include="MockPostSimulationTool.cs" />
-    <Compile Include="MockModelThatThrows.cs" />
-    <Compile Include="Soils\MockSoilTemperature.cs" />
-    <Compile Include="Soils\SoilStandardiserTests.cs" />
-    <Compile Include="Stock\MockForage.cs" />
-    <Compile Include="Stock\StockTests.cs" />
-    <Compile Include="Storage\DataStoreReaderTests.cs" />
-    <Compile Include="Report\ReportDataTests.cs" />
-    <Compile Include="Core\ApsimFile\JsonUtilitiesTests.cs" />
-    <Compile Include="Manager\ManagerTests.cs" />
-    <Compile Include="Sensitivity\MorrisTests.cs" />
-    <Compile Include="APSIMShared\RegressionTests.cs" />
-    <Compile Include="Core\ApsimFile\StructureTests.cs" />
-    <Compile Include="ImporterTests.cs" />
-    <Compile Include="Storage\DataStoreTests.cs" />
-    <Compile Include="SummaryTests.cs" />
-    <Compile Include="TextStorageReader.cs" />
-    <Compile Include="APSIMShared\DBMergerTests.cs" />
-    <Compile Include="UtilityTests\PathUtilitiesTests.cs" />
-    <Compile Include="Weather\WeatherSamplerTests.cs" />
-    <Compile Include="Weather\WeatherTests.cs" />
-    <Compile Include="Core\ApsimFile\XMLToJSONTests.cs" />
-    <Compile Include="Core\DocumentationTests.cs" />
-    <Compile Include="Core\ApsimFile\ManagerConverterTests.cs" />
-    <Compile Include="APSIMShared\IndexedDataTableTests.cs" />
-    <Compile Include="Functions\TrackerFunctionTests.cs" />
-    <Compile Include="FertiliserTests.cs" />
-    <Compile Include="Core\MockEvents.cs" />
-    <Compile Include="Core\MockLocator.cs" />
-    <Compile Include="Storage\MockStorage.cs" />
-    <Compile Include="Core\ScopeTests.cs" />
-    <Compile Include="Soils\MockSoil.cs" />
-    <Compile Include="MockSummary.cs" />
-    <Compile Include="Surface\MockSurfaceOrganicMatter.cs" />
-    <Compile Include="MockIrrigation.cs" />
-    <Compile Include="MockClock.cs" />
-    <Compile Include="Weather\MockWeather.cs" />
-    <Compile Include="Core\ApsimFile\ConverterTests.cs" />
-    <Compile Include="Core\ApsimTests.cs" />
-    <Compile Include="..\..\Models\Properties\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Core\ApsimFile\FileFormatTests.cs" />
-    <Compile Include="Core\LinksTests.cs" />
-    <Compile Include="Storage\DataStoreWriterTests.cs" />
-    <Compile Include="Core\LocatorTests.cs" />
-    <Compile Include="Report\ReportTests.cs" />
-    <Compile Include="Soils\SoilsTests.cs" />
-    <Compile Include="APSIMShared\RegrStatsTests.cs" />
-    <Compile Include="Utilities.cs" />
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <Private>false</Private>
+    </Reference>
+    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
+	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTests.AddModelTests.json" />
-    <EmbeddedResource Include="Core\ApsimFile\OnCreatedError.apsimx" />
-    <EmbeddedResource Include="defective.apsim" />
-    <EmbeddedResource Include="ImporterTestsOldAPSIM.xml" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 after.json" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion60 after.json" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion60 before.json" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 before.json" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion63 after.json" />
-    <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\BasicSimulation.apsimx" />
-    <EmbeddedResource Include="BasicFile.apsimx" />
-    <EmbeddedResource Include="ApsimNG\Resources\SampleFiles\NullSample.apsimx" />
-    <EmbeddedResource Include="bork.apsimx" />
-    <EmbeddedResource Include="Factorial\MultiPaddockFactorOverride.apsimx" />
-    <EmbeddedResource Include="Core\Run\MultipleReplacements.apsimx" />
-    <None Include="packages.config" />
-    <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsReadFromString.json" />
-    <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json" />
-    <EmbeddedResource Include="Core\ApsimFile\FileFormatTestsWriteSingleModel.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureParentChildRelationshipConverts.json" />
-    <EmbeddedResource Include="Core\ApsimTests.xml" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureParentChildRelationshipConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureArraysConvert.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureArraysOfModelsWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureManagerWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_ChildNotOfTypeModel.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureMemoWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureTestsWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureOneLineModelConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureCultivarConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureResidueTypesConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureLeavesIsntWritten.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureListListStringWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureXSITypeConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureSupplimentConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureModelsWithSameNameConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureStockConverts.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsEnsureNameWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsEnsureChildrenWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsEnsureChildrenRecursivelyWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsEnsureTypeWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsDescendantsByType.json" />
-    <EmbeddedResource Include="Core\ApsimFile\JsonUtilitiesTestsEnsurePropertyWorks.json" />
-    <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerText.json" />
-    <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
-    <EmbeddedResource Include="Core\ApsimFile\ManagerConverterTestsReplaceManagerTextRegex.json" />
-    <EmbeddedResource Include="Sensitivity\MorrisTestsBroken.apsimx" />
-    <EmbeddedResource Include="Report\ReportOnEvents.apsimx" />
-    <EmbeddedResource Include="Resources\WheatModel.apsimx" />
-    <EmbeddedResource Include="Stock\AddAnimalCohort.json" />
-    <EmbeddedResource Include="Resources\SimpleExperiment.apsimx" />
-    <EmbeddedResource Include="**\*.Expected.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj">
-      <Project>{e243ae8d-35e3-4397-b180-ef1e8a91ae8c}</Project>
-      <Name>APSIM.Shared</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj">
-      <Project>{83f4bd8a-a0d1-4aa7-9dc7-42af7d9bacba}</Project>
-      <Name>ApsimNG</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Models\Models.csproj">
-      <Project>{A3E10705-F2BB-4182-A19C-7F63222584DF}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureArraysConvert.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureArraysOfModelsWorks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureManagerWorks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_ChildNotOfTypeModel.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\StructureTestsAPSoilSoil.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureMemoWorks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureTestsWorks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureOneLineModelConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion32 after.xml" />
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion32 before.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureCultivarConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureResidueTypesConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureLeavesIsntWritten.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureListListStringWorks.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureXSITypeConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ImporterTestsSoilImports.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureSupplimentConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureModelsWithSameNameConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\XMLToJSONTests_EnsureStockConverts.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Core\ApsimFile\ConverterTestsVersion59 before.json" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <EmbeddedResource Include="Manager\ManagerOverrides.apsimx" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit3TestAdapter.3.9.0\build\net35\NUnit3TestAdapter.props'))" />
-  </Target>
-  <PropertyGroup>
-    <RunSettingsFilePath>$(ProjectDir)\.runsettings</RunSettingsFilePath>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

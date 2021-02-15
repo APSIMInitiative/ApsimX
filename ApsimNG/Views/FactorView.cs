@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using global::UserInterface.Extensions;
     using Gtk;
     using System;
 
@@ -34,7 +35,7 @@
         {
             try
             {
-                (Specification as EditView).MainWidget.Destroy();
+                (Specification as EditView).MainWidget.Cleanup();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;

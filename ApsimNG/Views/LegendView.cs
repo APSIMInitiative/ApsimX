@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Gtk;
 
 namespace UserInterface.Views
@@ -7,44 +8,41 @@ namespace UserInterface.Views
     public delegate void PositionChangedDelegate(string NewText);
 
     /// <summary>
-    /// Describes an interface for an axis view.
+    /// Describes an interface for a legend view.
     /// </summary>
     interface ILegendView
     {
-        bool LegendInsideGraph { get; }
-        event PositionChangedDelegate OnPositionChanged;
-        void Populate(string title, string[] values);
+        bool LegendInsideGraph { get; set; }
+        IDropDownView OrientationDropDown { get; }
+        IDropDownView PositionDropDown { get; }
 
         void SetSeriesNames(string[] seriesNames);
         void SetDisabledSeriesNames(string[] seriesNames);
         string[] GetDisabledSeriesNames();
+
         event EventHandler DisabledSeriesChanged;
         event EventHandler LegendInsideGraphChanged;
     }
 
     /// <summary>
-    /// A Windows forms implementation of an AxisView
+    /// A view which allows the user to customise a graph legend.
     /// </summary>
     public class LegendView : ViewBase, ILegendView
     {
-        private string originalText;
-
-        public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
         public event EventHandler LegendInsideGraphChanged;
 
-        private ComboBox combobox1 = null; // fixme - should use IDropDownView, and make public.
         private HBox hbox1 = null;
         private Gtk.TreeView listview = null;
-
-        private ListStore comboModel = new ListStore(typeof(string));
-        private CellRendererText comboRender = new CellRendererText();
 
         private ListStore listModel = new ListStore(typeof(Boolean), typeof(string));
         private CellRendererText listRender = new CellRendererText();
         private CellRendererToggle listToggle = new CellRendererToggle();
 
         private CheckButton chkLegendInsideGraph;
+
+        public IDropDownView OrientationDropDown { get; private set; }
+        public IDropDownView PositionDropDown { get; private set; }
 
         /// <summary>
         /// Construtor
@@ -53,14 +51,13 @@ namespace UserInterface.Views
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.LegendView.glade");
             hbox1 = (HBox)builder.GetObject("hbox1");
-            combobox1 = (ComboBox)builder.GetObject("combobox1");
+            ComboBox combobox1 = (ComboBox)builder.GetObject("combobox1");
+            ComboBox orientationCombo = (ComboBox)builder.GetObject("combobox2");
             listview = (Gtk.TreeView)builder.GetObject("listview");
             mainWidget = hbox1;
-            combobox1.Model = comboModel;
-            combobox1.PackStart(comboRender, false);
-            combobox1.AddAttribute(comboRender, "text", 0);
-            combobox1.Changed += OnPositionComboChanged;
-            combobox1.Focused += OnTitleTextBoxEnter;
+
+            OrientationDropDown = new DropDownView(this, orientationCombo);
+            PositionDropDown = new DropDownView(this, combobox1);
 
             chkLegendInsideGraph = (CheckButton)builder.GetObject("chkLegendInsideGraph");
             chkLegendInsideGraph.Toggled += OnToggleLegendInsideGraph;
@@ -96,14 +93,10 @@ namespace UserInterface.Views
             try
             {
                 chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
-                combobox1.Changed -= OnPositionComboChanged;
-                combobox1.Focused -= OnTitleTextBoxEnter;
                 listToggle.Toggled -= OnItemChecked;
-                comboModel.Dispose();
-                comboRender.Destroy();
                 listModel.Dispose();
-                listRender.Destroy();
-                listToggle.Destroy();
+                listRender.Dispose();
+                listToggle.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -113,87 +106,13 @@ namespace UserInterface.Views
             }
         }
 
-        private bool settingCombo = false;
-
         /// <summary>
         /// Returns whether or not the check button to show the legend inside the graph is checked.
         /// </summary>
         public bool LegendInsideGraph
         {
-            get
-            {
-                return chkLegendInsideGraph.Active;
-            }
-        }
-
-        /// <summary>
-        /// Populate the view with the specified title.
-        /// </summary>
-        public void Populate(string title, string[] values)
-        {
-            settingCombo = true;
-            comboModel.Clear();
-            foreach (string text in values)
-                comboModel.AppendValues(text);
-            TreeIter iter;
-            if (comboModel.GetIterFirst(out iter))
-            {
-                string entry = (string)comboModel.GetValue(iter, 0);
-                while (!entry.Equals(title, StringComparison.InvariantCultureIgnoreCase) && comboModel.IterNext(ref iter)) // Should the text matchin be case-insensitive?
-                    entry = (string)comboModel.GetValue(iter, 0);
-                if (entry == title)
-                    combobox1.SetActiveIter(iter);
-                else // Could not find a matching entry
-                    combobox1.Active = 0;
-            }
-            originalText = title;
-            settingCombo = false;
-        }
-
-        /// <summary>
-        /// When the user 'enters' the position combo box, save the current text value for later.
-        /// </summary>
-        private void OnTitleTextBoxEnter(object sender, FocusedArgs e)
-        {
-            try
-            {
-                TreeIter iter;
-                if (combobox1.GetActiveIter(out iter))
-                    originalText = (string)combobox1.Model.GetValue(iter, 0);
-                else
-                    originalText = null;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// When the user changes the combo box check to see if the text has changed. 
-        /// If so then invoke the 'OnPositionChanged' event so that the presenter can pick it up.
-        /// </summary>
-        private void OnPositionComboChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                if (settingCombo) return;
-                TreeIter iter;
-                string curText = null;
-                if (combobox1.GetActiveIter(out iter))
-                    curText = (string)combobox1.Model.GetValue(iter, 0);
-                if (originalText == null)
-                    originalText = curText;
-                if (curText != originalText && OnPositionChanged != null)
-                {
-                    originalText = curText;
-                    OnPositionChanged.Invoke(curText);
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+            get => chkLegendInsideGraph.Active;
+            set => chkLegendInsideGraph.Active = value;
         }
 
         /// <summary>Sets the series names.</summary>
@@ -252,7 +171,7 @@ namespace UserInterface.Views
 
         /// <summary>Called when user checks an item.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
             try
