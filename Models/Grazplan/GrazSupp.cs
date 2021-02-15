@@ -8,6 +8,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Linq;
     using APSIM.Shared.Utilities;
+    using Models.Core;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -353,6 +354,7 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the name of the supplement
         /// </summary>
+        [Units("-")]
         public string Name { get; set; }
 
         /// <summary>
@@ -361,6 +363,7 @@ namespace Models.GrazPlan
         /// <value>
         /// <c>true</c> if this instance is roughage; otherwise, <c>false</c>.
         /// </value>
+        [Units("-")]
         public bool IsRoughage { get; set; }
 
         // The following are all on a 0-1 scale:
@@ -371,6 +374,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The d m_ propn.
         /// </value>
+        [Units("0-1.0")]
         public double DMPropn
         {
             get { return dmPropn; }
@@ -383,6 +387,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The dmDigestibility value.
         /// </value>
+        [Units("0-1.0")]
         public double DMDigestibility
         {
             get { return dmDigestibility; }
@@ -390,11 +395,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the me2dm.
+        /// Gets or sets the metabolizable energy:DM (MJ/kg).
         /// </summary>
         /// <value>
         /// The me2dm value.
         /// </value>
+        [Units("0-1.0")]
         public double ME2DM
         {
             get { return me2dm; }
@@ -402,11 +408,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the ether extract.
+        /// Gets or sets the ether extractable fraction.
         /// </summary>
         /// <value>
         /// The ether extract.
         /// </value>
+        [Units("0-1.0")]
         public double EtherExtract
         {
             get { return etherExtract; }
@@ -414,11 +421,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the crude prot.
+        /// Gets or sets the proportion that is crude protein.
         /// </summary>
         /// <value>
         /// The crude prot.
         /// </value>
+        [Units("0-1.0")]
         public double CrudeProt
         {
             get { return crudeProt; }
@@ -426,11 +434,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the degradeable prot.
+        /// Gets or sets the protein proportion that is rumen degradeable.
         /// </summary>
         /// <value>
         /// The degProt value.
         /// </value>
+        [Units("0-1.0")]
         public double DegProt
         {
             get { return degProt; }
@@ -438,7 +447,7 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the adip2cp.
+        /// Gets or sets the acid detergent insoluble protein:CP.
         /// </summary>
         /// <value>The adip2cp.</value>
         public double ADIP2CP
@@ -453,11 +462,12 @@ namespace Models.GrazPlan
         internal double phosphorus;
 
         /// <summary>
-        /// Gets or sets the phosphorus.
+        /// Gets or sets the phosphorus (P:DM).
         /// </summary>
         /// <value>
         /// The phosphorus.
         /// </value>
+        [Units("0-1.0")]
         public double Phosphorus
         {
             get { return phosphorus; }
@@ -470,11 +480,12 @@ namespace Models.GrazPlan
         internal double sulphur;
 
         /// <summary>
-        /// Gets or sets the sulphur.
+        /// Gets or sets the sulphur content (S:DM).
         /// </summary>
         /// <value>
         /// The sulphur.
         /// </value>
+        [Units("0-1.0")]
         public double Sulphur
         {
             get { return sulphur; }
@@ -487,6 +498,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The ash alkalinity.
         /// </value>
+        [Units("mol/kg")]
         public double AshAlkalinity
         {
             get { return ashAlkalinity; }
@@ -494,11 +506,12 @@ namespace Models.GrazPlan
         }
 
         /// <summary>
-        /// Gets or sets the maximum passage.
+        /// Gets or sets the maximum proportion passing through the gut (used with whole grains).
         /// </summary>
         /// <value>
         /// The maximum passage.
         /// </value>
+        [Units("")]
         public double MaxPassage
         {
             get { return maxPassage; }
@@ -1030,6 +1043,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The amount.
         /// </value>
+        [Units("kg")]
         public double Amount { get; set; }
 
         /// <summary>
@@ -1038,6 +1052,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The cost.
         /// </value>
+        [Units("-")]
         public double Cost { get; set; }
 
         /// <summary>
@@ -1108,6 +1123,7 @@ namespace Models.GrazPlan
         /// Gets the count.
         /// </summary>
         /// <value>The count</value>
+        [Units("-")]
         public int Count
         {
             get
@@ -1122,6 +1138,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The total amount.
         /// </value>
+        [Units("kg")]
         public double TotalAmount
         {
             get
