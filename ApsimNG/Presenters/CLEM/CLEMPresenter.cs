@@ -99,10 +99,6 @@ namespace UserInterface.Presenters
                         IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
-                            if (viewName == "UserInterface.Views.PropertyView")
-                            {
-                                (newView as PropertyView).DisplayFrame = false;
-                            }
                             this.view.AddTabView("Properties", newView);
                             propertyPresenter.Attach(model, newView, this.explorerPresenter);
                             presenterList.Add("Properties", propertyPresenter);

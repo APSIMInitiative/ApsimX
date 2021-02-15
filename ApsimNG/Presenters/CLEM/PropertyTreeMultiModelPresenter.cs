@@ -34,8 +34,6 @@ namespace UserInterface.Presenters
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyMultiModelPresenter();
             this.propertyView = new PropertyMultiView(this.treeview as ViewBase);
-            (this.propertyView as PropertyMultiView).DisplayFrame = false;
-
             this.ShowRightHandView();
         }
 
@@ -50,7 +48,6 @@ namespace UserInterface.Presenters
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
             this.propertyView = new PropertyMultiView(this.treeview as ViewBase);
-            (this.propertyView as PropertyMultiView).DisplayFrame = false;
             this.treeview.AddRightHandView(this.propertyView);
             this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);
         }

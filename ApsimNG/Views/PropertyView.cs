@@ -55,11 +55,6 @@ namespace UserInterface.Views
         public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
 
         /// <summary>
-        /// Determines whether the frame and label are displayed for this group
-        /// </summary>
-        public bool DisplayFrame { get; set; } = true;
-
-        /// <summary>
         /// Used to check which entries are 'dirty' by keeping track
         /// of their original text.
         /// </summary>
@@ -82,7 +77,8 @@ namespace UserInterface.Views
 #else
             propertyTable = new Grid();
 #endif
-            box = new Frame("Properties");
+            box = new Frame();
+            box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
 #if NETFRAMEWORK
             mainWidget = box;
@@ -137,16 +133,6 @@ namespace UserInterface.Views
 
 #endif
             box.Remove(propertyTable);
-
-            if (DisplayFrame)
-            {
-                box.Label = $"{properties.Name} Properties";
-            }
-            else
-            {
-                box.ShadowType = ShadowType.None;
-                box.Label = null;
-            }
 
             propertyTable.Cleanup();
 
