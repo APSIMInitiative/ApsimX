@@ -539,7 +539,7 @@
         /// <param name="paragraph">The paragraph.</param>
         private void AddFormattedParagraphToSection(Section section, AutoDocumentation.Paragraph paragraph)
         {
-            string html = Markdown.ToHtml(paragraph.text);
+            string html = Markdown.ToHtml(paragraph.text, new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build());
 
             HtmlToMigraDoc.Convert(html, section, WorkingDirectory, RelativePath);
 
