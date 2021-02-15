@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    ///  [Name] is calcualted using a sigmoid function of the form y = Xmax * 1 / 1 + e<sup>-(Xvalue - Xo) / b</sup>. \n
+    ///  [Name] is calcualted using a sigmoid function of the form y = Xmax * 1 / 1 + e^-(Xvalue - Xo) / b^. \n
     ///  Ymax is calculated as 
     ///  [Document Ymax]
     ///  Xo is calculated as 
