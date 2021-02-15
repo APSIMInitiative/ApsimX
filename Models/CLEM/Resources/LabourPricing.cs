@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// User entry of Labour prices
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyMultiView")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This component holds all Labour Price Entries that define the value of individuals.")]

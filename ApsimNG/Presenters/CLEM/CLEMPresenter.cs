@@ -74,7 +74,7 @@ namespace UserInterface.Presenters
                     if (propPresenterName == "UserInterface.Presenters.PropertyPresenter" | !propPresenterName.Contains("Property"))
                     {
                         propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
-                        if(viewName != "UserInterface.Views.PropertyMultiView")
+                        if(viewName != "UserInterface.Views.PropertyMultiModelView")
                             viewName = "UserInterface.Views.PropertyView";
                     }
 
@@ -87,12 +87,12 @@ namespace UserInterface.Presenters
                     bool categoryAttributeFound = (props.Where(prop => prop.IsDefined(typeof(CategoryAttribute), false)).Count() > 0);
                     if (categoryAttributeFound)
                     {
-                        propPresenterName = "UserInterface.Presenters.PropertyTreePresenter";
+                        propPresenterName = "UserInterface.Presenters.PropertyCategorisedPresenter";
                         // need to set view accordingly
                     }
 
                     // check if it has properties
-                    if ((viewName.Contains("PropertyMultiView") | propPresenterName.Contains("MultiModel")) ||
+                    if ((viewName.Contains("PropertyMultiModelView") | propPresenterName.Contains("MultiModel")) ||
                         (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);

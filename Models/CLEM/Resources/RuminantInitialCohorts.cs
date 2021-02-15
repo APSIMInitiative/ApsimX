@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     /// Holder for all initial ruminant cohorts
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyMultiView")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]

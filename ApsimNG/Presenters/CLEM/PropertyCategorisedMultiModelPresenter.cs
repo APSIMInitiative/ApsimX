@@ -9,7 +9,7 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class PropertyTreeMultiModelPresenter: PropertyTreePresenter
+    public class PropertyCategorisedMultiModelPresenter: PropertyCategorisedPresenter
     {
         /// <summary>
         /// Attach the view to this presenter and begin populating the view.
@@ -21,9 +21,9 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
 
-            this.treeview = view as PropertyTreeView;
+            this.treeview = view as PropertyCategorisedView;
             if(treeview is null)
-                throw new ArgumentException($"The view must be an PropertyTreeView instance");
+                throw new ArgumentException($"The view must be an PropertyCategorisedView instance");
 
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
@@ -33,7 +33,7 @@ namespace UserInterface.Presenters
 
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyMultiModelPresenter();
-            this.propertyView = new PropertyMultiView(this.treeview as ViewBase);
+            this.propertyView = new PropertyMultiModelView(this.treeview as ViewBase);
             this.ShowRightHandView();
         }
 
@@ -47,7 +47,7 @@ namespace UserInterface.Presenters
         {
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
-            this.propertyView = new PropertyMultiView(this.treeview as ViewBase);
+            this.propertyView = new PropertyMultiModelView(this.treeview as ViewBase);
             this.treeview.AddRightHandView(this.propertyView);
             this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);
         }

@@ -16,14 +16,14 @@ namespace UserInterface.Presenters
     {
         /// <summary>
         /// The list of child models whose properties are being displayed.
-        /// Used with PropertyMultiView and PropertyTreePresenter
+        /// Used with PropertyMultiModelView and PropertyCategorisedPresenter
         /// </summary>
         private List<object> models = new List<object>();
 
         /// <summary>
         /// The view.
         /// </summary>
-        protected PropertyMultiView view;
+        protected PropertyMultiModelView view;
 
         /// <summary>
         /// Attach the model to the view.
@@ -39,7 +39,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentNullException(nameof(explorerPresenter));
 
             this.model = model as IModel;
-            this.view = view as PropertyMultiView;
+            this.view = view as PropertyMultiModelView;
             this.presenter = explorerPresenter;
 
             if (this.model != null && !(this.model is IModel))
@@ -64,7 +64,7 @@ namespace UserInterface.Presenters
                 models.AddRange(this.model.FindAllChildren<IModel>().Where(a => a.GetType() != typeof(Memo)));
                 if (models.GroupBy(a => a.GetType()).Count() > 1)
                 {
-                    throw new ArgumentException($"The models displayed in a PropertyMultiView must all be of the same type");
+                    throw new ArgumentException($"The models displayed in a PropertyMultiModelView must all be of the same type");
                 }
                 if (models.Count() >= 1)
                 {

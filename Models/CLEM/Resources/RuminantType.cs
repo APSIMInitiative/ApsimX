@@ -15,8 +15,8 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a ruminant Type
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
     [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]

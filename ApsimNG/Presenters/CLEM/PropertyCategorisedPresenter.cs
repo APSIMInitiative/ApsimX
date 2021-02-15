@@ -79,12 +79,12 @@ namespace UserInterface.Presenters
     /// tree view of category and sub-category property attributes that define the filter rule used and 
     /// which properties are displayed. This was developed to hepl the user when a large number of properties are
     /// provided with a model, you you want to distinguish general and advanced properties
-    /// This presenter uses the PropertyView and PropertyMultiView views.
+    /// This presenter uses the PropertyView and PropertyMultiModelView views.
     /// </summary>
-    public class PropertyTreePresenter : IPresenter
+    public class PropertyCategorisedPresenter : IPresenter
     {
         /// <summary>The visual instance</summary>
-        protected IPropertyTreeView treeview;
+        protected IPropertyCategorisedView treeview;
         protected IPropertyView propertyView;
 
         /// <summary>Presenter for the component</summary>
@@ -147,9 +147,9 @@ namespace UserInterface.Presenters
         public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.treeview = view as IPropertyTreeView;
+            this.treeview = view as IPropertyCategorisedView;
             if(view is null)
-                throw new ArgumentException($"The view must be an PropertyTreeView instance");
+                throw new ArgumentException($"The view must be an PropertyCategorisedView instance");
 
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;

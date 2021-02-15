@@ -12,11 +12,11 @@ namespace UserInterface.Views
     using global::UserInterface.Extensions;
 
     /// <summary>
-    /// GTK# based view of the PropertyTreePresenter to display a tree view of categories and sub-categories to assit filtering properties
+    /// GTK# based view of the PropertyCategorisedPresenter to display a tree view of categories and sub-categories to assit filtering properties
     /// Uses Category attribute of property (Category and SubCategory values) to define list and modify SimplePropertyPresenter filter rule on selection
     /// A right hand panel is used to display the property presenter
     /// </summary>
-    public class PropertyTreeView : ViewBase, IPropertyTreeView
+    public class PropertyCategorisedView : ViewBase, IPropertyCategorisedView
     {
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
@@ -35,7 +35,7 @@ namespace UserInterface.Views
         System.Timers.Timer timer = new System.Timers.Timer();
 
         /// <summary>Default constructor for ExplorerView</summary>
-        public PropertyTreeView(ViewBase owner) : base(owner)
+        public PropertyCategorisedView(ViewBase owner) : base(owner)
         {
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.PropertyTreeView.glade");
             VBox vbox1 = (VBox)builder.GetObject("vbox1");

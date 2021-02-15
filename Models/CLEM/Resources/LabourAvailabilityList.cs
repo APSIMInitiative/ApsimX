@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// Holds a list of labour availability items
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyMultiView")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]

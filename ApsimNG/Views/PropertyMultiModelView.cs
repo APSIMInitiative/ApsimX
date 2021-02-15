@@ -21,13 +21,13 @@ namespace UserInterface.Views
     /// <remarks>
     /// An additional row header with the model names is added.
     /// </remarks>
-    public class PropertyMultiView : PropertyView
+    public class PropertyMultiModelView : PropertyView
     {
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="owner">The owning view.</param>
-        public PropertyMultiView(ViewBase owner) : base(owner)
+        public PropertyMultiModelView(ViewBase owner) : base(owner)
         {
         }
 
@@ -37,7 +37,7 @@ namespace UserInterface.Views
         /// <param name="properties">Properties to be displayed/edited.</param>
         public override void DisplayProperties(PropertyGroup properties)
         {
-            throw new NotImplementedException("Single models is not supported in PropertyMultiView");
+            throw new NotImplementedException("Single models is not supported in PropertyMultiModelView");
         }
 
         /// <summary>
