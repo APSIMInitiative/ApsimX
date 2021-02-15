@@ -43,8 +43,7 @@ namespace Models.PMF.Phen
         private bool Phase2complete = false;
         private bool VernalisedInPhase2 = false;
 
-        private double maxLARFactor = 1.0;
-        private double PTQhfFactor = 1.0;
+        private double HSFactor = 1.0;
         /// <summary>
         /// Name of event to swith Vernalisation Factor
         /// </summary>
@@ -70,6 +69,10 @@ namespace Models.PMF.Phen
                     {
                         VernalisedInPhase1 = true;
                     }
+                    else
+                    {
+                        HSFactor = 1.25;
+                    }
                 }
                 //Phase 2 transition
                 if ((HS > 7.0) && (Phase2complete == false))
@@ -79,33 +82,16 @@ namespace Models.PMF.Phen
                     {
                         VernalisedInPhase2 = true;
                     }
-                }
-
-                // Phase 2 each day
-                if ((HS > 3.0) && (HS < 7.0))
-                    if (VernalisedInPhase1 == false)
+                    else 
                     {
-                        maxLARFactor = 0.7;
-                        PTQhfFactor = 0.5;
-                    }
-                // Phase 3 each day
-                if (HS > 7.0)
-                {
-                    if ((VernalisedInPhase1 == true) || (VernalisedInPhase2 == true))
-                    {
-                        maxLARFactor = 0.7;
-                        PTQhfFactor = 0.5;
-                    }
-                    else
-                    {
-                        maxLARFactor = 0.55;
-                        PTQhfFactor = 0.25;
+                        HSFactor *= 1.35;
                     }
                 }
             }
+
             if (lARPTQmodel != null)
             {
-                double LAR = lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value() * maxLARFactor, minLAR.Value(), PTQhf.Value() * PTQhfFactor);
+                double LAR = 1/HSFactor * lARPTQmodel.CalculateLAR(PTQ.Value(), maxLAR.Value(), minLAR.Value(), PTQhf.Value());
                 if (LAR > 0)
                     return 1 / LAR;
                 else
@@ -125,6 +111,7 @@ namespace Models.PMF.Phen
             VernalisedInPhase1 = false;
             Phase2complete = false;
             VernalisedInPhase2 = false;
+            HSFactor = 1.0;
         }
 
         /// <summary>Called when [phase changed].</summary>
