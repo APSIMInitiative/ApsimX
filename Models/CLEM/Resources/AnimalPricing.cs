@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyMultiView")]
-    [PresenterName("UserInterface.Presenters.SimplePropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This component holds all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]

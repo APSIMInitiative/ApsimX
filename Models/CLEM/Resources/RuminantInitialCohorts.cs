@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyMultiView")]
-    [PresenterName("UserInterface.Presenters.SimplePropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
     [Version(1, 0, 1, "")]

@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyMultiView")]
-    [PresenterName("UserInterface.Presenters.SimplePropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This component holds all Labour Price Entries that define the value of individuals.")]
     [Version(1, 0, 1, "Initial release")]

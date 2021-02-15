@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyMultiView")]
-    [PresenterName("UserInterface.Presenters.SimplePropertyPresenter")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
