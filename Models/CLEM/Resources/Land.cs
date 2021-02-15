@@ -182,7 +182,7 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Reported in ");
                 if (UnitsOfArea == null || UnitsOfArea == "")
                 {

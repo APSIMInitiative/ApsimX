@@ -279,7 +279,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Buy ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Buy ");
                 if (Units <= 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[VALUE NOT SET]</span>");

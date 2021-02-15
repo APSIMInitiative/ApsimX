@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Earn ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> into ");
                 if (AccountName == null || AccountName == "")
                 {

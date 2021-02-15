@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
@@ -312,7 +312,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Trade individuals are kept for ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Trade individuals are kept for ");
                 htmlWriter.Write("<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months");
                 if (TradeWeight > 0)
                 {
@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
                 {
@@ -336,7 +336,7 @@ namespace Models.CLEM.Activities
                 Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
                 if (numberRelationship != null)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
                     {
                         htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");

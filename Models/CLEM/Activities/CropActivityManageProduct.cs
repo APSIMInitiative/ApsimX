@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
+    [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
@@ -88,13 +89,28 @@ namespace Models.CLEM.Activities
         public List<CropDataType> HarvestData { get; set; }
 
         /// <summary>
+        /// Stores the start of current crop harvest sequence
+        /// Using first harvest if HarvestType provided
+        /// </summary>
+        [JsonIgnore]
+        public CropDataType StartCurrentSequenceHarvest { get; set; }
+
+        /// <summary>
+        /// Stores the end of current crop harvest sequence
+        /// Using last harvest if HarvestType provided
+        /// </summary>
+        [JsonIgnore]
+        public CropDataType EndCurrentSequenceHarvest { get; set; }
+
+        /// <summary>
         /// Stores the next harvest details
         /// </summary>
         [JsonIgnore]
         public CropDataType NextHarvest { get; set; }
 
         /// <summary>
-        /// Stores the next harvest details
+        /// Stores the previous harvest details
+        /// Using last harvest if HarvestType provided
         /// </summary>
         [JsonIgnore]
         public CropDataType PreviousHarvest { get; set; }
@@ -132,9 +148,22 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public int FirstTimeStepOfRotation { get; set; }
 
-        private ActivityCutAndCarryLimiter limiter;
+        /// <summary>
+        /// Flag for determining if flagged harvest types have been provided
+        /// </summary>
+        [JsonIgnore]
+        public bool HarvestTagsUsed { get; set; }
 
+        /// <summary>
+        /// Flag for determining if flagged harvest types have been provided
+        /// </summary>
+        [JsonIgnore]
+        public bool InsideMultiHarvestSequence { get; set; }
+
+        private ActivityCutAndCarryLimiter limiter;
         private string addReason = "Harvest";
+        private bool performedHarvest = false;
+        private string previousTag = "";
 
         /// <summary>
         /// Constructor
@@ -150,6 +179,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            InsideMultiHarvestSequence = false;
+
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
@@ -175,8 +206,7 @@ namespace Models.CLEM.Activities
                                                                Clock.StartDate, Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
             {
-                Summary.WriteWarning(this, String.Format("Unable to locate any harvest data in [x={0}] using [x={1}] for soil type [{2}] and crop name [{3}] between the dates [{4}] and [{5}]",
-                    fileCrop.Name, fileCrop.FileName, parentManagementActivity.LinkedLandItem.SoilType, CropName, Clock.StartDate.ToShortDateString(), Clock.EndDate.ToShortDateString()));
+                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{Clock.StartDate.ToShortDateString()}] and [{Clock.EndDate.ToShortDateString()}]");
             }
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
@@ -185,6 +215,9 @@ namespace Models.CLEM.Activities
 
             // locate a cut and carry limiter associated with this event.
             limiter = LocateCutAndCarryLimiter(this);
+
+            // check if harvest type tags have been provided
+            HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
 
             // set manager of graze food store if linked
         }
@@ -197,13 +230,125 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            // get next harvest and store previous harvest
-            while(HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month > HarvestData.First().Year * 100 + HarvestData.First().Month)
+            // if harvest tags provided for this crop then they will be used to define previous, next etc
+
+            // while date month > harvest record look for previous and delete past events
+
+            if (HarvestData.Count() > 0)
             {
-                PreviousHarvest = HarvestData.FirstOrDefault();
-                HarvestData.RemoveAt(0);
+                int clockYrMth = CalculateYearMonth(Clock.Today);
+                int position; // passed -1, current 0, future 1
+                do
+                {
+                    int harvestYrMth = CalculateYearMonth(HarvestData.First().HarvestDate);
+                    position = (clockYrMth > harvestYrMth) ? -1 : ((clockYrMth == harvestYrMth) ? 0 : 1);
+
+                    // check for valid sequence
+                    if(HarvestTagsUsed && HarvestData.FirstOrDefault().HarvestType != "")
+                    {
+                        if (previousTag == HarvestData.FirstOrDefault().HarvestType)
+                        {
+                            string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\r\nEnsure tags are ordered first, last in sequence.";
+                            if (!Warnings.Exists(warn))
+                            {
+                                Summary.WriteWarning(this, warn);
+                                Warnings.Add(warn);
+                            }
+                        }
+                        previousTag = HarvestData.FirstOrDefault().HarvestType;
+                    }
+
+
+                    switch (position)
+                    {
+                        case -1:
+                            if (HarvestTagsUsed)
+                            {
+                                switch (HarvestData.FirstOrDefault().HarvestType)
+                                {
+                                    case "first":
+                                        if (!performedHarvest)
+                                        {
+                                            InsideMultiHarvestSequence = true;
+                                            StartCurrentSequenceHarvest = HarvestData.FirstOrDefault();
+                                            EndCurrentSequenceHarvest = HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault(); 
+                                        }
+                                        break;
+                                    case "last":
+                                        // hit tagged last to delete as we've passed this date so out of multi harvest sequence
+                                        InsideMultiHarvestSequence = false;
+                                        PreviousHarvest = HarvestData.FirstOrDefault();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                PreviousHarvest = HarvestData.FirstOrDefault();
+                            }
+                            HarvestData.RemoveAt(0);
+                            break;
+                        case 0:
+                            performedHarvest = true;
+                            if (HarvestTagsUsed)
+                            {
+                                switch (HarvestData.FirstOrDefault().HarvestType)
+                                {
+                                    case "first":
+                                        // hit tagged first for current time step
+                                        InsideMultiHarvestSequence = true;
+                                        StartCurrentSequenceHarvest = HarvestData.FirstOrDefault();
+                                        PreviousHarvest = null;
+                                        EndCurrentSequenceHarvest = HarvestData.Where(a => a.HarvestType == "last").FirstOrDefault();
+                                        break;
+                                    default:
+                                        NextHarvest = HarvestData.FirstOrDefault();
+                                        PreviousHarvest = null;
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                NextHarvest = HarvestData.FirstOrDefault();
+                                PreviousHarvest = null;
+                            }
+                            break;
+                        case 1:
+                            if (HarvestTagsUsed)
+                            {
+                                switch (HarvestData.FirstOrDefault().HarvestType)
+                                {
+                                    case "first":
+                                        // hit tagged first for next harvest
+                                        NextHarvest = HarvestData.FirstOrDefault();
+                                        break;
+                                    default:
+                                        NextHarvest = HarvestData.FirstOrDefault();
+                                        break;
+                                }
+
+                            }
+                            else
+                            {
+                                NextHarvest = HarvestData.FirstOrDefault();
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                } while (HarvestData.Count > 0 && position == -1);
             }
-            NextHarvest = HarvestData.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Method to calulate the year month integer for this date
+        /// </summary>
+        /// <param name="date">date to process</param>
+        /// <returns>year month integer</returns>
+        public int CalculateYearMonth(DateTime date)
+        {
+            return date.Year * 100 + date.Month;
         }
 
         /// <summary>
@@ -215,12 +360,16 @@ namespace Models.CLEM.Activities
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // rotate harvest if needed
-            if (HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
+            if ((this.ActivityEnabled & Status != ActivityStatus.Ignored) && HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
             {
-                // don't rotate activities that may have just had their enabled status changed in this timestep
-                if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
+                // don't rotate if no harvest tags or harvest type is not equal to "last"
+                if (!HarvestTagsUsed || NextHarvest.HarvestType == "last")
                 {
-                    parentManagementActivity.RotateCrop();
+                    // don't rotate activities that may have just had their enabled status changed in this timestep
+                    //if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
+                    //{
+                        parentManagementActivity.RotateCrop();
+                    //}
                 }
             }
         }
@@ -231,7 +380,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMUpdatePasture")]
         private void OnCLEMUpdatePasture(object sender, EventArgs e)
         {
-            if(LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+            if(parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
             {
                 if (this.TimingOK)
                 {
@@ -249,7 +398,7 @@ namespace Models.CLEM.Activities
         {
             // get resources needed such as labour before DoActivity
             // when not going to a GrazeFoodStore that uses CLEMUpdatePasture
-            if (LinkedResourceItem.GetType() != typeof(GrazeFoodStoreType))
+            if (parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() != typeof(GrazeFoodStoreType))
             {
                 GetResourcesRequiredForActivity();
             }
@@ -290,79 +439,81 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            int year = Clock.Today.Year;
-            int month = Clock.Today.Month;
-            double amount = 0;
-            if (NextHarvest != null)
+            double daysNeeded = 0;
+            if (this.TimingOK)
             {
-                //if this month is a harvest month for this crop
-                if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
+                int year = Clock.Today.Year;
+                int month = Clock.Today.Month;
+                double amount = 0;
+                if (NextHarvest != null)
                 {
-                    if (this.TimingOK)
+                    //if this month is a harvest month for this crop
+                    if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
                     {
-                        if (IsTreeCrop)
+                        if (this.TimingOK)
                         {
-                            amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                        }
-                        else
-                        {
-                            amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                        }
+                            if (IsTreeCrop)
+                            {
+                                amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                            }
+                            else
+                            {
+                                amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                            }
 
-                        if (limiter != null)
-                        {
-                            double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
-                            amount = Math.Max(amount, canBeCarried);
+                            if (limiter != null)
+                            {
+                                double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                                amount = Math.Max(amount, canBeCarried);
+                            }
                         }
                     }
                 }
-            }
 
-            double daysNeeded;
-            double numberUnits;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perKg:
-                    daysNeeded = amount * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnit:
-                    numberUnits = amount / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+                double numberUnits;
+                switch (requirement.UnitType)
+                {
+                    case LabourUnitType.Fixed:
+                        daysNeeded = requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perKg:
+                        daysNeeded = amount * requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perUnit:
+                        numberUnits = amount / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                        {
+                            numberUnits = Math.Ceiling(numberUnits);
+                        }
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnitOfLand:
-                    numberUnits = parentManagementActivity.Area / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHa:
-                    numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perUnitOfLand:
+                        numberUnits = parentManagementActivity.Area / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                        {
+                            numberUnits = Math.Ceiling(numberUnits);
+                        }
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perHa:
+                        numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                        {
+                            numberUnits = Math.Ceiling(numberUnits);
+                        }
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    default:
+                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                }
 
-            if(amount <= 0)
-            {
-                daysNeeded = 0;
+                if (amount <= 0)
+                {
+                    daysNeeded = 0;
+                }
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Harvest", (LinkedResourceItem as CLEMModel).NameWithParent);
- 
         }
 
         /// <summary>
@@ -375,89 +526,85 @@ namespace Models.CLEM.Activities
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
 
-            if (NextHarvest != null)
+            if (this.TimingOK && NextHarvest != null)
             {
                 //if this month is a harvest month for this crop
                 if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
                 {
-                    if (this.TimingOK)
+                    if (IsTreeCrop)
                     {
-                        if (IsTreeCrop)
+                        AmountHarvested = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                    }
+                    else
+                    {
+                        AmountHarvested = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                    }
+
+                    AmountAvailableForHarvest = AmountHarvested;
+                    // reduce amount by limiter if present.
+                    if (limiter != null)
+                    {
+                        double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                        AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
+
+                        // now modify by labour limits as this is the amount labour was calculated for.
+                        double labourLimit = this.LabourLimitProportion;
+                        AmountHarvested *= labourLimit;
+
+                        if(labourLimit < 1)
                         {
-                            AmountHarvested = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                            this.Status = ActivityStatus.Partial;
+                        }
+
+                        // now limit further by fees not paid
+                        double financeLimit = this.LimitProportion(typeof(Finance));
+
+                        limiter.AddWeightCarried(AmountHarvested);
+                    }
+
+                    if (AmountHarvested > 0)
+                    {
+                        double percentN = 0;
+                        // if no nitrogen provided form file
+                        if (double.IsNaN(NextHarvest.Npct))
+                        {
+                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                            {
+                                // grazed pasture with no N read assumes the green biomass N content
+                                percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
+                            }
                         }
                         else
                         {
-                            AmountHarvested = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                            percentN =  NextHarvest.Npct;
                         }
 
-                        AmountAvailableForHarvest = AmountHarvested;
-                        // reduce amount by limiter if present.
-                        if (limiter != null)
+                        if (percentN == 0)
                         {
-                            double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
-                            AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
-
-                            // now modify by labour limits as this is the amount labour was calculated for.
-                            double labourLimit = this.LabourLimitProportion;
-                            AmountHarvested *= labourLimit;
-
-                            if(labourLimit < 1)
-                            {
-                                this.Status = ActivityStatus.Partial;
-                            }
-
-                            // now limit further by fees not paid
-                            double financeLimit = this.LimitProportion(typeof(Finance));
-
-
-                            limiter.AddWeightCarried(AmountHarvested);
-                        }
-
-                        if (AmountHarvested > 0)
-                        {
-                            double percentN = 0;
-                            // if no nitrogen provided form file
-                            if (double.IsNaN(NextHarvest.Npct))
-                            {
-                                if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                                {
-                                    // grazed pasture with no N read assumes the green biomass N content
-                                    percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
-                                }
-                            }
-                            else
-                            {
-                                percentN =  NextHarvest.Npct;
-                            }
-
-                            if (percentN == 0)
-                            {
-                                //Add without adding any new nitrogen.
-                                //The nitrogen value for this feed item in the store remains the same.
-                                LinkedResourceItem.Add(AmountHarvested, this,"", addReason);
-                            }
-                            else
-                            {
-                                FoodResourcePacket packet = new FoodResourcePacket()
-                                {
-                                    Amount = AmountHarvested,
-                                    PercentN = percentN
-                                };
-                                if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                                {
-                                    packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                                }
-                                LinkedResourceItem.Add(packet, this,"", addReason);
-                            }
-                            SetStatusSuccess();
+                            //Add without adding any new nitrogen.
+                            //The nitrogen value for this feed item in the store remains the same.
+                            LinkedResourceItem.Add(AmountHarvested, this,"", addReason);
                         }
                         else
                         {
-                            if (Status == ActivityStatus.Success)
+                            FoodResourcePacket packet = new FoodResourcePacket()
                             {
-                                Status = ActivityStatus.NotNeeded;
+                                Amount = AmountHarvested,
+                                PercentN = percentN
+                            };
+                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                            {
+                                packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
                             }
+                            LinkedResourceItem.Add(packet, this,"", addReason);
+                        }
+                        SetStatusSuccess();
+                    }
+                    else
+                    {
+                        if (Status == ActivityStatus.Success)
+                        {
+                            Status = ActivityStatus.NotNeeded;
                         }
                     }
                 }
@@ -556,15 +703,15 @@ namespace Models.CLEM.Activities
             {
                 if (TreesPerHa > 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
                 }
                 if (ProportionKept == 0)
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
                 }
                 else
                 {
-                    htmlWriter.Write("\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
                 }
                 if (StoreItemName == null || StoreItemName == "")
                 {
@@ -575,7 +722,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"resourcelink\">" + StoreItemName + "</span>");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">Data is retrieved from ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Data is retrieved from ");
                 if (ModelNameFileCrop == null || ModelNameFileCrop == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">[CROP FILE NOT SET]</span>");
@@ -593,7 +740,7 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("<span class=\"filelink\">" + CropName + "</span>");
                 }
-                htmlWriter.Write("\n</div>");
+                htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
         }
@@ -620,15 +767,15 @@ namespace Models.CLEM.Activities
                 if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
                 {
                     // close off the parent item so it displays
-                    html += "\n</div>";
+                    html += "\r\n</div>";
                 }
             }
 
             bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;
             if (mixed)
             {
-                html += "\n<div class=\"cropmixedlabel\">Mixed crop</div>";
-                html += "\n<div class=\"cropmixedborder\">";
+                html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
+                html += "\r\n<div class=\"cropmixedborder\">";
             }
             html += base.ModelSummaryOpeningTags(formatForParentControl);
             return html;

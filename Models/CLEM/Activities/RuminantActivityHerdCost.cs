@@ -256,7 +256,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
                 htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
                 if (AccountName == null || AccountName == "")
@@ -268,7 +268,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
                 }
                 htmlWriter.Write("</div>");
-                htmlWriter.Write("\n<div class=\"activityentry\">This activity uses a category label ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                 if (Category != null && Category != "")
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");

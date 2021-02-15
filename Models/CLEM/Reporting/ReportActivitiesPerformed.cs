@@ -191,7 +191,7 @@ namespace Models.CLEM.Reporting
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
                 {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
                 }
 
                 // Add row to our table that will be written to the db file
@@ -335,6 +335,10 @@ namespace Models.CLEM.Reporting
                         {
                             data = filteredData.CopyToDataTable();
                         }
+                        else
+                        {
+                            data = new DataTable();
+                        }
                     }
 
                 }
@@ -410,7 +414,7 @@ namespace Models.CLEM.Reporting
                     tbl.Columns.Add("Activity");
                     foreach (var item in dates)
                     {
-                        tbl.Columns.Add(item.Month.ToString("00") + "\n" + item.ToString("yy"));
+                        tbl.Columns.Add(item.Month.ToString("00") + "\r\n" + item.ToString("yy"));
                     }
                     // add blank column for resize row height of pixelbuf with font size change
                     tbl.Columns.Add(" ");
@@ -427,7 +431,7 @@ namespace Models.CLEM.Reporting
                             {
                                 DateTime dte = (DateTime)activityTick["Date"];
                                 string status = activityTick["Status"].ToString();
-                                dr[dte.Month.ToString("00") + "\n" + dte.ToString("yy")] = status;
+                                dr[dte.Month.ToString("00") + "\r\n" + dte.ToString("yy")] = status;
                             }
                             dr[" "] = " ";
                             tbl.Rows.Add(dr);
@@ -444,24 +448,26 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public void CreateHTMLVersion(DataTable data, string directoryPath, bool darkTheme = false)
         {
-            string html = "<!DOCTYPE html>\n" +
-                "<html>\n<head>\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\n" +
-                "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\n" +
-                "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\n" +
-                "<meta http-equiv = \"Expires\" content = \"0\" />\n" +
-                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
-                "<style>\n" +
-                "body {color: [FontColor]; max-width:1000px; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
+            string html = "<!DOCTYPE html>\r\n" +
+                "<html>\r\n<head>\r\n<script type=\"text / javascript\" src=\"https://livejs.com/live.js\"></script>\r\n" +
+                "<meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\" />\r\n" +
+                "<meta http-equiv = \"Pragma\" content = \"no-cache\" />\r\n" +
+                "<meta http-equiv = \"Expires\" content = \"0\" />\r\n" +
+                "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\r\n" +
+                "<style>\r\n" +
+                "body {color: [FontColor]; font-size:1em; font-family: Segoe UI, Arial, sans-serif}" +
                 "table {border-collapse: collapse; font-size:0.8em; }" +
                 "table,th,td {border: 1px solid #aaaaaa; }" +
                 "table th {padding:3px; color:[HeaderFontColor]; vertical-align: bottom; text-align: center;}" +
                 "th span {-ms-writing-mode: tb-rl;-webkit-writing-mode: vertical-rl;writing-mode: vertical-rl;transform: rotate(180deg);white-space: nowrap;}" +
                 "table td {padding:3px; }" +
                 "td:nth-child(n+2) {text-align:center;}" +
+                "td:first-child {background: white; position: -webkit-sticky; /* for Safari */ position: sticky; left: 0; z-index: 9998;}" +
                 "th:nth-child(1) {text-align:left;}" +
-                "th {background-color: Black !important; }" +
-                "tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
-                "tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
+                "th:first-child {left:0; z-index: 9999; }" +
+                "th {background-color: Black !important; position:-webkit-sticky; /* for Safari */ position: sticky; top: 0;}" +
+                "tr:nth-child(2n+3) {background-color:[ResRowBack] !important;}" +
+                "tr:nth-child(2n+2) {background-color:[ResRowBack2] !important;}" +
                 "td.fill {background-color: #c1946c !important;}" +
                 ".topspacing { margin-top:10px; }" +
                 ".disabled { color:#CCC; }" +
@@ -470,13 +476,18 @@ namespace Models.CLEM.Reporting
                 ".typediv { float:right; vertical-align:middle; font-size:0.6em; }" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
-                ".holdermain {margin: 20px 0px 20px 0px}" +
-                ".holdersub {margin: 5px 0px 5px}" +
-                ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
-                ".defaultcontent {background-color:[ContDefaultBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:[ContDefaultBanner]; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
+                ".defaultbanner { background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
+                ".defaultcontent {background-color:[ContDefaultBack] !important; border-radius:0px 0px 5px 5px; border-color:[ContDefaultBanner]; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 ".rotate {/* FF3.5+ */ -moz - transform: rotate(-90.0deg); /* Opera 10.5 */ -o - transform: rotate(-90.0deg); /* Saf3.1+, Chrome */ -webkit - transform: rotate(-90.0deg); /* IE6,IE7 */ filter: progid: DXImageTransform.Microsoft.BasicImage(rotation = 0.083); /* IE8 */ -ms - filter: \"progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)\"; /* Standard */ transform: rotate(-90.0deg);} " +
-                "\n</style>\n<!-- graphscript --></ head>\n<body>";
+                ".scrollcontainer {overflow: auto; }" +
+                ".wrapper {overflow: hidden; display:grid; grid-template-rows: auto, auto, 1fr; position: absolute; width: calc(100vw - 20px); height: calc(100vh -20px); grid-gap: 15px; padding: 10px; top: 0; left: 0; }" +
+                ".r1 {grid-row: 1; }" +
+                ".r2 {grid-row: 2; }" +
+                ".r3 {grid-row: 3; }" +
+ //               "*{box-sizing: border-box; padding: 0; margin: 0;}" +
+                "html {height 100%;}" +
+                "\r\n</style>\r\n<!-- graphscript --></ head>\r\n<body>";
 
             // apply theme based settings
             if (!darkTheme)
@@ -519,17 +530,18 @@ namespace Models.CLEM.Reporting
             using (StringWriter htmlString = new StringWriter())
             {
                 htmlString.WriteLine(html);
+                htmlString.WriteLine("\r\n<div class=\"wrapper\">");
+                htmlString.WriteLine("\r\n<div class=\"r1\"><span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span></div>");
 
-                htmlString.WriteLine("\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page after each run of the simulation to see changes relating to the activities performed status</span><br /><br />");
-
-                htmlString.Write("\n<div class=\"clearfix defaultbanner\">");
+                htmlString.Write("\r\n<div class=\"r2\"><div class=\"clearfix defaultbanner\">");
                 htmlString.Write($"<div class=\"namediv\">Report activities performed</div>");
                 htmlString.Write($"<div class=\"typediv\">Details</div>");
                 htmlString.Write("</div>");
-                htmlString.Write("\n<div class=\"defaultcontent\">");
-                htmlString.Write($"\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}<br />");
-                htmlString.WriteLine("\n</div>");
-                htmlString.WriteLine("\n</div>");
+                htmlString.Write("\r\n<div class=\"defaultcontent\">");
+                htmlString.Write($"\r\n<div class=\"activityentry\">Summary last created on {DateTime.Now.ToShortDateString()} at {DateTime.Now.ToShortTimeString()}<br />");
+                htmlString.WriteLine("\r\n</div>");
+                htmlString.WriteLine("\r\n</div>");
+                htmlString.WriteLine("\r\n</div>");
 
                 if (data != null)
                 {
@@ -537,14 +549,16 @@ namespace Models.CLEM.Reporting
                     {
                         data = Transpose(data);
                     }
-
-                    htmlString.WriteLine($"<table><tr>");
+                    htmlString.WriteLine($"<div class=\"r3 scrollcontainer\"><table><tr>");
                     bool first = true;
                     foreach (DataColumn col in data.Columns)
                     {
-                        string splitter = (RotateReport) ? "\\" : "<br />";
-                        htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
-                        first = false;
+                        if (col.ColumnName != " ")
+                        {
+                            string splitter = (RotateReport) ? "\\" : "<br />";
+                            htmlString.Write($"<th>{((RotateReport & !first) ? "<span>" : "")}{col.ColumnName.Replace("\r\n", splitter)}{((RotateReport & !first) ? "</span>" : "")}</th>");
+                            first = false; 
+                        }
                     }
                     htmlString.WriteLine($"</tr>");
 
@@ -553,45 +567,51 @@ namespace Models.CLEM.Reporting
                         htmlString.WriteLine($"<tr>");
                         foreach (var item in row.ItemArray)
                         {
-                            string splitter = "\\";
-                            string image = "";
-                            switch (item.ToString())
+                            if (item.ToString() != " ")
                             {
-                                case "Success":
-                                case "NoTask":
-                                case "NotNeeded":
-                                case "Timer":
-                                case "Calculation":
-                                case "Critical":
-                                case "Partial":
-                                case "Ignore":
-                                    image = $"ActivitiesReport{item.ToString()}Web";
-                                    break;
-                                case "Ignored":
-                                    image = "ActivitiesReportBlankWeb";
-                                    break;
-                                default:
-                                    image = "";
-                                    break;
-                            }
+                                string splitter = "\\";
+                                string image = "";
+                                switch (item.ToString())
+                                {
+                                    case "Success":
+                                    case "NoTask":
+                                    case "NotNeeded":
+                                    case "Timer":
+                                    case "Calculation":
+                                    case "Critical":
+                                    case "Partial":
+                                    case "Ignore":
+                                        image = $"ActivitiesReport{item.ToString()}Web";
+                                        break;
+                                    case "Warning":
+                                        image = $"ActivitiesReportIgnoreWeb";
+                                        break;
+                                    case "Ignored":
+                                        image = "ActivitiesReportBlankWeb";
+                                        break;
+                                    default:
+                                        image = "";
+                                        break;
+                                }
 
-                            if (image == "")
-                            {
-                                htmlString.Write($"<td>{item.ToString().Replace("\n", splitter)}</td>");
-                            }
-                            else
-                            {
-                                htmlString.Write($"<td><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\"</td>");
+                                if (image == "")
+                                {
+                                    htmlString.Write($"<td>{item.ToString().Replace("\r\n", splitter)}</td>");
+                                }
+                                else
+                                {
+                                    htmlString.Write($"<td><img src=\"http:////www.apsim.info/clem/Content/Resources/Images/IconsSVG/{image}.png\"</td>");
+                                } 
                             }
                         }
                         htmlString.WriteLine($"</tr>");
                     }
-                    htmlString.WriteLine($"</table>");
+                    htmlString.WriteLine($"</table></div></div>");
                 }
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    // System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }
@@ -613,7 +633,7 @@ namespace Models.CLEM.Reporting
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (CreateHTML)
                 {
                     htmlWriter.Write($"<div>A HTML version of this report is available. See Summary tab for current link");
@@ -679,7 +699,7 @@ namespace Models.CLEM.Reporting
         /// <returns></returns>
         public string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>\n</div>";
+            return "\r\n</div>\r\n</div>";
         }
 
         /// <summary>
@@ -694,9 +714,9 @@ namespace Models.CLEM.Reporting
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
-                htmlWriter.Write("\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
-                htmlWriter.Write("\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
+                htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
                 return htmlWriter.ToString();
             }

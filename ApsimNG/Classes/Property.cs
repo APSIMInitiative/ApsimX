@@ -178,6 +178,12 @@ namespace UserInterface.Classes
             // fixme - need to fix this unmaintainable mess brought across from the old PropertyPresenter
             DisplayAttribute attrib = metadata.GetCustomAttribute<DisplayAttribute>();
             DisplayType displayType = attrib?.Type ?? DisplayType.None;
+
+            // For compatibility with the old PropertyPresenter, assume a default of
+            // DisplayType.DropDown if the Values property is specified.
+            if (displayType == DisplayType.None && !string.IsNullOrEmpty(attrib?.Values))
+                displayType = DisplayType.DropDown;
+
             switch (displayType)
             {
                 case DisplayType.None:
@@ -221,6 +227,13 @@ namespace UserInterface.Classes
                         throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
+
+                    // Attempt to resolve links - populating the dropdown may
+                    // require access to linked models.
+                    Simulations sims = model.FindAncestor<Simulations>();
+                    if (sims != null)
+                        sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
+
                     DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
@@ -232,7 +245,8 @@ namespace UserInterface.Classes
                         plant = plantProperty.GetValue(model) as IPlant;
                     else
                         plant = model.FindInScope<IPlant>();
-                    DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    if (plant != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;

@@ -967,7 +967,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Return the time elapsed in hours between the specified sun angle
-        ///  from 90<sup>o</sup> in am and pm. +ve above the horizon, -ve below the horizon.
+        ///  from 90^o^ in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
         /// \param DayOfYear The day of year
         /// \param SunAngle 

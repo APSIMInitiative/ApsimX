@@ -53,7 +53,7 @@ namespace Models.CLEM
             { 
                 if(generator is null)
                 {
-                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\nThis simulation uses stochastic processes requiring random numbers\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
                 }
                 return generator; 
             } 

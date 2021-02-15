@@ -1,11 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using Pango;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+#if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using Pango;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>An interface for a list view</summary>
     public interface IListView
@@ -290,7 +295,7 @@
         /// Invoked for every cell in grid.
         /// </summary>
         /// <param name="col">The column.</param>
-        /// <param name="cell">The cell.</param>
+        /// <param name="baseCell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
         private void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)

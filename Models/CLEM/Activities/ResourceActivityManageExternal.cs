@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
             if (fileResource == null)
             {
                 string[] memberNames = new string[] { "FileResourceReader" };
-                results.Add(new ValidationResult("Unable to locate resource input file.\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
+                results.Add(new ValidationResult("Unable to locate resource input file.\r\nAdd a [f=ResourceReader] component to the simulation tree.", memberNames));
             }
             return results;
         } 
@@ -146,7 +146,7 @@ namespace Models.CLEM.Activities
                                 case "Models.CLEM.Resources.LabourType":
                                 case "Models.CLEM.Resources.GrazeFoodStoreType":
                                 case "Models.CLEM.Resources.OtherAnimalsType":
-                                    string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\nThis resource will be ignored. Contact developers for more information";
+                                    string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
                                     if (!Warnings.Exists(warn))
                                     {
                                         Summary.WriteWarning(this, warn);
@@ -189,11 +189,11 @@ namespace Models.CLEM.Activities
                             string warn = "";
                             if (found.Count() == 0)
                             {
-                                warn = $"[a={this.Name}] could not find a resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\nExternal transactions with this resource will be ignored\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
+                                warn = $"[a={this.Name}] could not find a resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nExternal transactions with this resource will be ignored\r\nYou can either add this resource to your simulation or remove it from the input file to avoid this warning";
                             }
                             else
                             {
-                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
+                                warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
                             }
                             if (!Warnings.Exists(warn))
                             {
@@ -427,7 +427,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\n<div class=\"activityentry\">Resources added or removed are provided by ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Resources added or removed are provided by ");
                 if (ResourceDataReader == null || ResourceDataReader == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">DataReader not set</span>");
@@ -438,7 +438,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
 
-                htmlWriter.Write("\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (AccountName == null || AccountName == "")
                 {
                     htmlWriter.Write("Financial transactions will be made to <span class=\"errorlink\">FinanceType not set</span>");

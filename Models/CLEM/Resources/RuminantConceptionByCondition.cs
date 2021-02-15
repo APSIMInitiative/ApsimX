@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
-                htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will concieve if this ratio is below ");
+                htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\r\nNo breeding females will concieve if this ratio is below ");
                 if (ConditionCutOff == 0)
                 {
                     htmlWriter.Write("<span class=\"errorlink\">No set</span>");

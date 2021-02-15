@@ -323,7 +323,7 @@ namespace UserInterface.Presenters
         /// This is used when the model has been changed. For example, when a 
         /// new crop has been selecled.
         /// </summary>
-        /// <param name="model">The new model</param>
+        /// <param name="propListIndex">Index of the property list?</param>
         private void UpdateModel(int propListIndex)
         {
             IGridCell curCell = this.grid.GetCurrentCell;
@@ -598,7 +598,7 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Get a list of Phase Names for life Cycle</summary>
-        /// <param name="crop">The crop.</param>
+        /// <param name="lifeCycle">The life cycle.</param>
         /// <returns>A list of Phase Names.</returns>
         private string[] GetPhaseNames(LifeCycle lifeCycle)
         {
@@ -778,7 +778,8 @@ namespace UserInterface.Presenters
         /// Gets the new value of the cell from a string containing the
         /// cell's new contents.
         /// </summary>
-        /// <param name="cell">Cell which has been changed.</param>
+        /// <param name="property">Property to which the cell belongs.</param>
+        /// <param name="newValue">New value of the cell.</param>
         private object GetNewCellValue(IVariable property, string newValue)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
@@ -800,6 +801,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Set the value of the specified property
         /// </summary>
+        /// <param name="childmodel">The child model.</param>
         /// <param name="property">The property to set the value of</param>
         /// <param name="value">The value to set the property to</param>
         private void SetPropertyValue(Model childmodel, VariableProperty property, object value)

@@ -14,12 +14,17 @@ namespace UserInterface.Views
     using System.Net.NetworkInformation;
     using System.Net;
     using System.Globalization;
+    using Extensions;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
     /// These are taken from the namespace and Description Attribute
     /// The Explorer presenter will use this wrapper if a Description attributre is present.
     /// </summary>
+    /// <remarks>
+    /// This styling in here (fonts, backgrounds, ...) needs to be redone for gtk3.
+    /// As far as I know, this can (and should) now be done via css.
+    /// </remarks>
     public class ModelDetailsWrapperView : ViewBase, IModelDetailsWrapperView
     {
         private HBox hbox = null;
@@ -30,6 +35,8 @@ namespace UserInterface.Views
         private LinkButton modelHelpLinkImg = null;
         private Label modelVersionLabel = null;
         private Viewport bottomView = null;
+        private string modelTypeLabelText;
+        private string modelVersionLabelText;
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
         {
@@ -39,15 +46,9 @@ namespace UserInterface.Views
             modelTypeLabel = new Label
             {
                 Xalign = 0.0f,
-                Xpad = 3
+                Xpad = 3,
+                UseMarkup = true
             };
-            Pango.FontDescription font = new Pango.FontDescription
-            {
-                Size = Convert.ToInt32(16 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
-                Weight = Pango.Weight.Semibold
-            };
-            modelTypeLabel.ModifyFont(font);
-
             modelDescriptionLabel = new Label()
             {
                 Xalign = 0.0f,
@@ -55,14 +56,17 @@ namespace UserInterface.Views
             };
             modelDescriptionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelDescriptionLabel.Wrap = true;
+#if NETFRAMEWORK
             modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-
+#endif
             modelHelpLinkLabel = new LinkButton("", "")
             {
                 Xalign = 0.0f,
             };
             modelHelpLinkLabel.Clicked += ModelHelpLinkLabel_Clicked;
+#if NETFRAMEWORK
             modelHelpLinkLabel.ModifyBase(StateType.Normal, new Gdk.Color(131, 0, 131));
+#endif
             modelHelpLinkLabel.Visible = false;
 
             Gtk.CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
@@ -75,18 +79,15 @@ namespace UserInterface.Views
             modelVersionLabel = new Label()
             {
                 Xalign = 0.0f,
-                Xpad = 4
+                Xpad = 4,
+                UseMarkup = true
             };
-            font = new Pango.FontDescription
-            {
-                Size = Convert.ToInt32(8 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
-                Weight = Pango.Weight.Normal,
-            };
-            modelVersionLabel.ModifyFont(font);
+#if NETFRAMEWORK
             modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
+            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+#endif
             modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelVersionLabel.Wrap = true;
-            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
 
             bottomView = new Viewport
             {
@@ -185,7 +186,7 @@ namespace UserInterface.Views
                     foreach (Widget child in bottomView.Children)
                     {
                         bottomView.Remove(child);
-                        child.Destroy();
+                        child.Cleanup();
                     }
                 }
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -199,8 +200,15 @@ namespace UserInterface.Views
 
         public string ModelTypeText
         {
-            get { return modelTypeLabel.Text; }
-            set { modelTypeLabel.Text = value; }
+            get
+            {
+                return modelTypeLabelText;
+            }
+            set
+            {
+                modelTypeLabelText = value;
+                modelTypeLabel.Markup = $"<big>{value}</big>";
+            }
         }
 
         public string ModelDescriptionText
@@ -211,8 +219,15 @@ namespace UserInterface.Views
 
         public string ModelVersionText
         {
-            get { return modelVersionLabel.Text; }
-            set { modelVersionLabel.Markup = value; }
+            get
+            {
+                return modelVersionLabelText;
+            }
+            set
+            {
+                modelVersionLabelText = value;
+                modelVersionLabel.Markup = $"<big>{value}</big>";
+            }
         }
 
         public string ModelHelpURL
@@ -236,7 +251,10 @@ namespace UserInterface.Views
                     byte r = Convert.ToByte(value.Substring(0, 2), 16);
                     byte g = Convert.ToByte(value.Substring(2, 2), 16);
                     byte b = Convert.ToByte(value.Substring(4, 2), 16);
+#if NETFRAMEWORK
+                    // gtk tbi
                     modelTypeLabel.ModifyFg(StateType.Normal, new Gdk.Color(r, g, b));
+#endif
                 }
             }
         }
@@ -246,7 +264,7 @@ namespace UserInterface.Views
             foreach (Widget child in bottomView.Children)
             {
                 bottomView.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             ViewBase view = control as ViewBase;
             if (view != null)
