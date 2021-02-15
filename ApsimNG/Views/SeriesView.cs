@@ -49,6 +49,7 @@
             Widget table = (Widget)builder.GetObject("table1");
             vbox1.Remove(table);
             table1 = new Grid();
+            table1.ColumnSpacing = 10;
             // Set expand to false on this grid, to ensure that any extra space
             // is allocated to the graph (aka plotview).
             vbox1.PackStart(table1, false, true, 0);
@@ -96,6 +97,21 @@
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 
+#if NETCOREAPP
+            table1.Attach(new Label("Data Source:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("X:") { Xalign = 0 }, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Y:") { Xalign = 0 }, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            label4 = new Label("Y2:") { Xalign = 0 };
+            label5 = new Label("X2:") { Xalign = 0 };
+            table1.Attach(label4, 0, 1, 3, 4, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(label5, 0, 1, 4, 5, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Type:") { Xalign = 0 }, 0, 1, 5, 6, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Line type:") { Xalign = 0 }, 0, 1, 6, 7, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Marker type:") { Xalign = 0 }, 0, 1, 7, 8, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Colour:") { Xalign = 0 }, 0, 1, 8, 9, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+            table1.Attach(new Label("Filter:") { Xalign = 0 }, 0, 1, 9, 10, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
+#endif
+
             table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(xDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(yDropDown.MainWidget, 1, 2, 2, 3, AttachOptions.Fill, 0, 10, 2);
@@ -117,7 +133,9 @@
             table1.Attach(checkBoxView5.MainWidget, 2, 4, 8, 9, AttachOptions.Fill, 0, 0, 0);
             table1.Attach(checkBoxView6.MainWidget, 2, 4, 9, 10, AttachOptions.Fill, 0, 0, 0);
 
+            table1.Attach(new Label("Line thickness:") { Xalign = 0 }, 2, 3, 6, 7, AttachOptions.Fill, 0, 0, 5);
             table1.Attach(lineThicknessDropDown.MainWidget, 3, 4, 6, 7, AttachOptions.Fill, 0, 0, 5);
+            table1.Attach(new Label("Marker size:") { Xalign = 0 }, 2, 3, 7, 8, AttachOptions.Fill, 0, 0, 5);
             table1.Attach(markerSizeDropDown.MainWidget, 3, 4, 7, 8, AttachOptions.Fill, 0, 0, 5);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
