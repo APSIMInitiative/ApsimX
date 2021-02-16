@@ -561,17 +561,36 @@ namespace UserInterface.Views
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         public System.Drawing.Point GetPositionOfCursor()
         {
-            // tbi
-            return new System.Drawing.Point(0, 0);
-            //Point p = textEditor.LocationToPoint(textEditor.Caret.Location);
-            //p.Y += (int)textEditor.LineHeight;
-            //textEditor.Coord
-            //// Need to convert to screen coordinates....
-            //int x, y, frameX, frameY;
-            //MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            //textEditor.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            TextIter iter = textEditor.Buffer.GetIterAtOffset(Offset);
+            if (iter.Equals(TextIter.Zero))
+                return new System.Drawing.Point(0, 0);
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = textEditor.GetIterLocation(iter);
 
-            //return new System.Drawing.Point(x + frameX, y + frameY);
+            // Convert the buffer coordinates (line/col numbers) to actual cartesian
+            // coordinates (note that these are relative to the origin of the GtkSourceView
+            // widget's GdkWindow, not the GtkWindow itself).
+            textEditor.BufferToWindowCoords(TextWindowType.Text, location.X, location.Y, out int x, out int y);
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            textEditor.TranslateCoordinates(mainWidget.Toplevel, x, y, out int windowX, out int windowY);
+
+            // Don't forget to account for the offset of the window within the screen.
+            // (Remember that the screen is made up of multiple monitors, so this is
+            // what accounts for which particular monitor the on which the window is
+            // physically displayed.)
+            MasterView.MainWindow.GetOrigin(out int frameX, out int frameY);
+
+            // Also add on the line height of the current line. Arguably, this doesn't
+            // belong here - the method is called GetPositionOfCursor(), which doesn't
+            // really imply anything about accounting for the line height. However,
+            // all of the surrounding infrastructure really assumes that it *does* in
+            // fact account for line height, as the intellisense popup (the only thing
+            // which really uses these coods) will be displayed at this locataion.
+            textEditor.GetLineYrange(iter, out int _, out int lineHeight);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY + lineHeight);
         }
 
         /// <summary>
