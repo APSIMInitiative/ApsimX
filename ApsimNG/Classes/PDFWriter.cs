@@ -423,11 +423,7 @@
                     graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, explorerPresenter);
                     string pngFileName = graphPresenter.ExportToPNG(WorkingDirectory);
-#if NETFRAMEWORK
-                    section.AddImage(pngFileName);
-#else
-                    section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                    section.AddResizeImage(pngFileName);
                     string caption = (tag as Graph).Caption;
                     if (caption != null)
                         section.AddParagraph(caption);
@@ -446,7 +442,7 @@
                         map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
                     map.Save(pngFileName);
                     if (!String.IsNullOrEmpty(pngFileName))
-                        section.AddImage(pngFileName);
+                        section.AddResizeImage(pngFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
 #else
@@ -460,11 +456,7 @@
                         imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
                     string pngFileName = Path.Combine(WorkingDirectory, $"{imageTag.name}.png");
                     imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-#if NETFRAMEWORK
-                    section.AddImage(pngFileName);
-#else
-                    section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                    section.AddResizeImage(pngFileName);
                     figureNumber++;
                 }
                 else if (tag is AutoDocumentation.ModelView)
@@ -514,11 +506,7 @@
                                 }
                                 else
                                     pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
-#if NETFRAMEWORK
-                                section.AddImage(pngFileName);
-#else
-                                section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                                section.AddResizeImage(pngFileName);
                                 presenter.Detach();
                                 view.MainWidget.Cleanup();
                                 popupWin.Cleanup();
