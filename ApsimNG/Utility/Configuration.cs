@@ -12,6 +12,7 @@ namespace Utility
     internal class InputAttribute : Attribute
     {
         public string Name { get; set; }
+        public string OnChanged { get; set; }
         public InputAttribute(string name)
         {
             Name = name;
@@ -83,7 +84,7 @@ namespace Utility
         public int ReportSplitterPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
-        [Input("Dark theme enabled")]
+        [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
         public bool DarkTheme { get; set; }
 
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
@@ -370,6 +371,17 @@ namespace Utility
             System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration), typeof(Configuration).GetNestedTypes());
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
+        }
+    
+        /// <summary>
+        /// This will be called whenever the 'dark mode' option is toggled.
+        /// It will change the default editor style to something.
+        /// </summary>
+        private void OnDarkThemeToggled()
+        {
+#if NETCOREAPP
+            EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
+#endif
         }
     }
 }
