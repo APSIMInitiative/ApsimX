@@ -60,10 +60,14 @@
     <Compile Remove="Lifecycle\LifeStageMortality.cs" />
     <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
     <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
+    <Compile Remove="MySoluteManager.cs" />
     <Compile Remove="Plant\BiomassSummariser.cs" />
+    <Compile Remove="Plant\Organs\CorrectLeaf.cs" />
     <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
     <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
     <Compile Remove="Report\RowEnumerator.cs" />
+    <Compile Remove="Storage\FBDataStore.cs" />
+    <Compile Remove="Storage\MyDataStore.cs" />
     <Compile Remove="Resources\Scripts\*.cs" />
   </ItemGroup>
   
@@ -94,6 +98,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Plant\Organs\" />
   </ItemGroup>
 
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">

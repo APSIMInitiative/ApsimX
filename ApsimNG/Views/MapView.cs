@@ -79,17 +79,19 @@
             {
                 if (map == null)
                     return null;
-                return new Map.Coordinate(map.Center.Y, map.Center.X);
+                Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
+                return new Map.Coordinate(centerLatLon.Y, centerLatLon.X);
             }
             set
             {
+                Coordinate centerMetric = LatLonToMetres.MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
-                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
+                    (!MathUtilities.FloatsAreEqual(centerMetric.X, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, map.Center.Y)) )
                 {
-                    map.Center = new Coordinate(value.Longitude, value.Latitude);
+                    map.Center = centerMetric;
                     RefreshMap();
                 }
             }
@@ -163,11 +165,16 @@
         private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            result.MaximumZoom = 720;
+            result.MaximumZoom = 6e7;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
-            result.Zoom = result.MaximumZoom;
-            
+            ////result.Zoom = result.MaximumZoom;
+
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(), "OpenStreetMap");
+            result.BackgroundLayer.Add(baseLayer);
+            result.ZoomToBox(baseLayer.Envelope);
+
+            /*
             VectorLayer layWorld = new VectorLayer("Countries");
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
@@ -179,7 +186,9 @@
             Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
+            layWorld.CoordinateTransformation = LatLonToMetres;
             result.Layers.Add(layWorld);
+            */
 
             return result;
         }
@@ -202,6 +211,16 @@
             // Not applicable.
         }
 
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
         /// <summary>
         /// Show the given markers on the map and set the center/zoom level.
         /// </summary>
@@ -215,14 +234,17 @@
                 map.Dispose();
             map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
             markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
             markerLayer.DataSource = new GeometryProvider(locations);
+            markerLayer.CoordinateTransformation = LatLonToMetres;
+
             map.Layers.Add(markerLayer);
-            map.Zoom = zoom;
-            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            /// map.Zoom = zoom;
+            Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
+            map.Center = location;
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -274,9 +296,12 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Envelope viewport = map.Envelope;
-            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            //Envelope viewport = map.Envelope;
+            //lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
+            //lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
+            lat = coord.Y;
+            lon = coord.X;
         }
     
         /// <summary>

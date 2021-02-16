@@ -39,6 +39,10 @@
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
     <EmbeddedResource Include="Resources\**" />
+    <Compile Remove="Forms\HelpForm.cs" />
+    <Compile Remove="Utility\SoilDownloadDialogRevised.cs" />
+    <ProjectReference Include="..\..\..\3rdPartyProjects\SharpMap\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj" />
+    <ProjectReference Include="..\..\..\3rdPartyProjects\SharpMap\SharpMap\SharpMap.csproj" />
 	
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
@@ -58,9 +62,7 @@
     <PackageReference Include="Webview.Core" Version="0.0.3" />
     <PackageReference Include="ISO3166" Version="1.0.3" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
-    <PackageReference Include="SharpMap" Version="1.2.0-pre.185420022" />
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
-    <PackageReference Include="BruTile" Version="3.0.0" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
@@ -146,6 +148,9 @@
     <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Forms\" />
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
