@@ -452,8 +452,6 @@
                 else if (tag is AutoDocumentation.Image)
                 {
                     AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
-                    if (imageTag.image.Width > 700)
-                        imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
                     string pngFileName = Path.Combine(WorkingDirectory, $"{imageTag.name}.png");
                     imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
                     section.AddResizeImage(pngFileName);
