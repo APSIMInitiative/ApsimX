@@ -5,8 +5,12 @@ using Models.Functions;
 
 namespace Models.PMF.Struct
 {
-    /// <summary> # [Name]
-    /// Sets the number of buds on each mains stem to the valud of it child on the [SetStage] </summary>
+    /// <summary> 
+    /// # [Name]
+    /// Each time [SetStage] occurs bud number on each main-stem is set to
+    /// 
+    /// *[FractionOfBudBurst.Name]* * *SowingData.BudNumber* (from manager at establishment)
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

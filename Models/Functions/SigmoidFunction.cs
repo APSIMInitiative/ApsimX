@@ -8,14 +8,14 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    ///  a sigmoid function of the form y = Xmax * 1 / 1 + e^-(Xvalue - Xo) / b^.
+    ///  [Name] is calcualted using a sigmoid function of the form y = Xmax * 1 / 1 + e^-(Xvalue - Xo) / b^. \n
     ///  Ymax is calculated as 
     ///  [Document Ymax]
     ///  Xo is calculated as 
     ///  [Document Xo]
     ///  b is calculated as 
     ///  [Document b]
-    ///  and Xvalue is 
+    ///  Xvalue is calculated as 
     ///  [Document XValue]
     /// </summary>
     [Serializable]
