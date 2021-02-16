@@ -125,7 +125,8 @@ namespace UserInterface.Views
             }
             set
             {
-                Text = string.Join(Environment.NewLine, value);
+                if (value != null)
+                    Text = string.Join(Environment.NewLine, value);
             }
         }
 
