@@ -418,6 +418,8 @@
 
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -795,6 +797,8 @@
                 // Colour
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
 
                 OxyColor oxyColour = Utility.Colour.ToOxy(colour);
                 series.Fill = oxyColour;
@@ -907,6 +911,9 @@
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
 
             if (colour == Color.Empty)
+                annotation.TextColor = ForegroundColour;
+            else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                // We never want text to be the same as the background colour.
                 annotation.TextColor = ForegroundColour;
             else
                 annotation.TextColor = Utility.Colour.ToOxy(colour);
