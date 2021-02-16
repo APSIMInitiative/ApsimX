@@ -16,6 +16,7 @@ namespace UserInterface.Extensions
     /// </summary>
     public static class PdfExtensions
     {
+        private const double pointsToPixels = 96.0 / 72;
         /// <summary>
         /// Adds an image to the specified document object, resizing the
         /// image as necessary to ensure that it fits on the page.
@@ -27,28 +28,25 @@ namespace UserInterface.Extensions
             Section section = doc.Section ?? doc as Section;
             if (section == null)
                 return;
+            Paragraph paragraph = doc as Paragraph ?? section.AddParagraph();
 
             // The image could potentially be too large. Therfore we read it,
             // adjust the size to fit the page better (if necessary), and add
             // the modified image to the paragraph.
 
             // fixme - ResizeImage() expects units in pixels
-            double pageWidth = section.PageSetup.PageWidth.Point;
-            double pageHeight = section.PageSetup.PageHeight.Point;
-            if (pageWidth == 0 && pageHeight == 0)
-            {
-                pageWidth = doc.Document.DefaultPageSetup.PageWidth.Point;
-                pageHeight = doc.Document.DefaultPageSetup.PageHeight.Point;
-            }
+            GetPageSize(section, out double pageWidth, out double pageHeight);
 #if NETFRAMEWORK
             string path = Path.ChangeExtension(Path.GetTempFileName(), ".png");
             ReadAndResizeImage(fullPath, pageWidth, pageHeight).Save(path, ImageFormat.Png);
             section.AddImage(path);
 #else
-            if (section != null)
+            if (paragraph != null)
             {
-                Paragraph paragraph = section.AddParagraph();
-                paragraph.AddImage(ImageSource.FromStream("img", () =>
+                // Note: the first argument passed to the FromStream() function
+                // is the name of the image. Thist must be unique throughout the document,
+                // otherwise you will run into problems with duplicate imgages.
+                paragraph.AddImage(ImageSource.FromStream(fullPath, () =>
                 {
                     Image image = ReadAndResizeImage(fullPath, pageWidth, pageHeight);
                     Stream stream = new MemoryStream();
@@ -58,6 +56,21 @@ namespace UserInterface.Extensions
                 }));
             }
 #endif
+        }
+
+        /// <summary>
+        /// Get the page size in pixels.
+        /// </summary>
+        /// <param name="section"></param>
+        /// <param name="pageWidth"></param>
+        /// <param name="pageHeight"></param>
+        private static void GetPageSize(Section section, out double pageWidth, out double pageHeight)
+        {
+            PageSetup pageSetup = section.PageSetup;
+            if (pageSetup.PageWidth.Point == 0 || pageSetup.PageHeight.Point == 0)
+                pageSetup = section.Document.DefaultPageSetup;
+            pageWidth = (pageSetup.PageWidth.Point - pageSetup.LeftMargin.Point - pageSetup.RightMargin.Point) * pointsToPixels;
+            pageHeight = (pageSetup.PageHeight.Point - pageSetup.TopMargin.Point - pageSetup.BottomMargin.Point) * pointsToPixels;
         }
 
         /// <summary>
