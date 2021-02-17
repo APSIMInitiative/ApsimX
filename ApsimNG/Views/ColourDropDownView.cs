@@ -111,7 +111,7 @@
                         // This is the old (obsolete) way of doing things. Can't just get rid of this
                         // because changing the background of each cell is the whole point of this view.
                         // Needs to be reimplemented for gtk3, so I won't suppress this warning.
-                        color = combobox1.GetBackgroundColour(StateFlags.Normal);
+                        color = combobox1.Toplevel.GetBackgroundColour(StateFlags.Normal);
 #endif
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);

@@ -30,7 +30,7 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        private PropertyPresenter propertyPresenter;
+        private SimplePropertyPresenter propertyPresenter;
 
         /// <summary>
         /// Attach the specified Model and View.
@@ -44,8 +44,8 @@
             this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
 
-            propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, this.view.Grid, this.explorerPresenter);
+            propertyPresenter = new SimplePropertyPresenter();
+            propertyPresenter.Attach(model, this.view.PropertiesGrid, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
