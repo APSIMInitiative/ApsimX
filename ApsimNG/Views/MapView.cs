@@ -33,6 +33,7 @@
     public class MapView : ViewBase, IMapView
     {
         private const double scrollIncrement = 60;
+        private const double zoomStepFactor = 1.5;
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -47,6 +48,7 @@
         /// </summary>
         private Map.Coordinate mouseAtDragStart;
 
+
         /// <summary>
         /// Zoom level of the map.
         /// </summary>
@@ -56,15 +58,18 @@
             {
                 if (map == null)
                     return 0;
-                return map.Zoom;
+                return Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0;
             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
-                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
+                if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
-                    map.Zoom = value;
+                    double setValue = value - 1.0;
+                    if (value == 360.0) // Convert "old" world maps
+                        setValue = 0.0;
+                    map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
                     RefreshMap();
                 }
             }
@@ -165,14 +170,13 @@
         private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            result.MaximumZoom = 6e7;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
-            ////result.Zoom = result.MaximumZoom;
+            result.SRID = 3857;
 
-            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(), "OpenStreetMap");
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap), "Open Street Map");
             result.BackgroundLayer.Add(baseLayer);
-            result.ZoomToBox(baseLayer.Envelope);
+            result.MaximumZoom = baseLayer.Envelope.Width;
 
             /*
             VectorLayer layWorld = new VectorLayer("Countries");
@@ -242,7 +246,7 @@
             markerLayer.CoordinateTransformation = LatLonToMetres;
 
             map.Layers.Add(markerLayer);
-            /// map.Zoom = zoom;
+            Zoom = zoom;
             Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
             map.Center = location;
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
@@ -399,8 +403,8 @@
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
                     // Adjust zoom level on map.
-                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
-                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? 1 : -1;
+                    Zoom = MathUtilities.Bound(Zoom + sign, 1.0, 25.0);
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.
