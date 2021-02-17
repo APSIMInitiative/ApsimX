@@ -10,11 +10,11 @@ getPackage <- function(pkg, pkgpath) {
         # be just "repo"
         pkgName <- unlist(strsplit(pkgName, '/'))[2]
 	}
-    if (!pkgName %in% rownames(installed.packages(lib.loc = pkgpath))) {
+    if (!pkgName %in% rownames(installed.packages())) {
         if (!dir.exists(pkgpath)) {
             dir.create(pkgpath)
         }
-        devtools::install_github(pkg, lib = pkgpath)
+        remotes::install_github(pkg, lib = pkgpath)
 	} else {
 		print(paste('Package', pkg, 'is already installed.'))
 	}

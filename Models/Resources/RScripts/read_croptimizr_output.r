@@ -1,13 +1,13 @@
 
 objectives <- c()
-for (rep in nlo) {
+for (rep in res$nlo) {
   objectives <- c(objectives, rep$objective)
 }
 optimal_index <- which.min(objectives)
 
 df <- NULL
-for (i in 1:length(nlo)) {
-  row <- nlo[[i]]
+for (i in 1:length(res$nlo)) {
+  row <- res$nlo[[i]]
   initial <- row$x0
   solution <- row$solution
   msg <- row$message
