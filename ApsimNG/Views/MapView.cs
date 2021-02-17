@@ -1,29 +1,24 @@
 ﻿namespace UserInterface.Views
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
+    using Extensions;
+    using GeoAPI.Geometries;
+    using Gtk;
     using Interfaces;
     using Models;
-    using SharpMap.Styles;
-    using SharpMap.Layers;
-    using SharpMap.Data.Providers;
-    using System.Drawing.Imaging;
-    using GeoAPI.Geometries;
-    using GeoAPI;
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
+    using SharpMap.Data.Providers;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Gtk;
     using Utility;
-    using SharpMap.Data;
-    using SharpMap.Rendering;
-    using Extensions;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;
@@ -32,8 +27,25 @@
 
     public class MapView : ViewBase, IMapView
     {
-        private const double scrollIncrement = 60;
         private const double zoomStepFactor = 1.5;
+
+        /// <summary>
+        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+
+        /// <summary>
+        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -48,6 +60,22 @@
         /// </summary>
         private Map.Coordinate mouseAtDragStart;
 
+        /// <summary>
+        /// Static constructor to perform 1-time initialisation.
+        /// </summary>
+        static MapView()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
+            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+        }
 
         /// <summary>
         /// Zoom level of the map.
@@ -67,7 +95,7 @@
                 if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
                     double setValue = value - 1.0;
-                    if (value == 360.0) // Convert "old" world maps
+                    if (value == 360.0) // Convert "old" world maps so they are still world maps
                         setValue = 0.0;
                     map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
                     RefreshMap();
@@ -112,22 +140,6 @@
         /// </summary>
         public event EventHandler ViewChanged;
 
-        /// <summary>
-        /// Static constructor to perform 1-time initialisation.
-        /// </summary>
-        static MapView()
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
-            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
-            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
-            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-            SharpMap.Session.Instance
-            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
-            .SetCoordinateSystemServices(css)
-            .SetCoordinateSystemRepository(css);
-        }
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world
@@ -191,7 +203,7 @@
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
             layWorld.CoordinateTransformation = LatLonToMetres;
-            result.Layers.Add(layWorld);
+            result.BackgroundLayer.Add(layWorld);
             */
 
             return result;
@@ -214,16 +226,6 @@
         {
             // Not applicable.
         }
-
-        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
-                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
-                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
-
-        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
-                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
-                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
-                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
 
         /// <summary>
         /// Show the given markers on the map and set the center/zoom level.
@@ -300,9 +302,6 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            //Envelope viewport = map.Envelope;
-            //lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            //lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
             Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
             lat = coord.Y;
             lon = coord.X;
