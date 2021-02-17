@@ -39,8 +39,6 @@
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
     <EmbeddedResource Include="Resources\**" />
-    <Compile Remove="Forms\HelpForm.cs" />
-    <Compile Remove="Utility\SoilDownloadDialogRevised.cs" />
 	
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
@@ -148,9 +146,6 @@
     <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\" />
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
