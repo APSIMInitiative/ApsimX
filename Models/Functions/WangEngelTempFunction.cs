@@ -6,8 +6,9 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
-    /// A function that adds values from child functions
+    /// [Name] is calculated using a Wang and Engel beta function which has a value of zero
+    /// below [MinTemp] [Units] increasing to a maximum value at [OptTemp] [Units] and 
+    /// decreasing to zero again at [MaxTemp] [Units] [WangEngel1998].
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]
@@ -15,7 +16,7 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 
     public class 
-        WangEngelTempFunction: Model, IFunction, ICustomDocumentation, IIndexedFunction
+        WangEngelTempFunction: Model, IFunction, IIndexedFunction
         {
         
         /// <summary>Minimum Temperature.</summary>
@@ -47,6 +48,9 @@ namespace Models.Functions
             return ValueIndexed(Tav);
         }
 
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the constant")]
+        public string Units { get; set; }
 
         /// <summary>
         /// returns result of Wang Eagle beta function for given temperature
@@ -72,16 +76,6 @@ namespace Models.Functions
             }
 
             return RelEff / RelEffRefTemp;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-                SubtractFunction.DocumentMathFunction(this, '+', tags, headingLevel, indent);
         }
     }
 
