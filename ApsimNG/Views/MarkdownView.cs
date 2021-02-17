@@ -747,7 +747,11 @@ namespace UserInterface.Views
             public LinkTag(string url) : base(url)
             {
                 URL = url;
+#if NETFRAMEWORK
                 ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.GetBackgroundColour(StateType.Selected);
+#else
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateType.Link).ToGdkColor();
+#endif
                 Underline = Pango.Underline.Single;
             }
         }

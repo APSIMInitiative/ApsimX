@@ -7,12 +7,22 @@ using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through a generic phase.</summary>
+    /// <summary>
+    /// # [Name] Phase
+    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End]</i> stage. 
+    ///  
+    /// The <i>Target</i> for completion is calculated as 
+    /// [Document Target]
+    /// 
+    /// <i>Progression</i> through the <i>[Name]</i> phase is calculated daily and accumulated 
+    /// until the <i>Target</i> is reached.  
+    /// [Document Progression]
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GenericPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
+    public class GenericPhase : Model, IPhase, IPhaseWithTarget
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -96,35 +106,6 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             ResetPhase();
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This <i>phase</i> goes from " + Start + " to " + End + ". It uses a <i>Target</i> "
-                    + "to determine the duration between development <i>Stages</i>.  Daily <i>progress</i> is accumulated until the <i>Target</i> is "
-                    + "met and remaining fraction of the day is forwarded to the next phase.", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write intro to children
-                tags.Add(new AutoDocumentation.Paragraph(" The <i>Target</i> and the daily <i>Progression</i> toward " + End + " are described as follow:", indent));
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }
