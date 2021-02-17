@@ -1,29 +1,24 @@
 ﻿namespace UserInterface.Views
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
+    using Extensions;
+    using GeoAPI.Geometries;
+    using Gtk;
     using Interfaces;
     using Models;
-    using SharpMap.Styles;
-    using SharpMap.Layers;
-    using SharpMap.Data.Providers;
-    using System.Drawing.Imaging;
-    using GeoAPI.Geometries;
-    using GeoAPI;
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
+    using SharpMap.Data.Providers;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Gtk;
     using Utility;
-    using SharpMap.Data;
-    using SharpMap.Rendering;
-    using Extensions;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;
@@ -32,7 +27,25 @@
 
     public class MapView : ViewBase, IMapView
     {
-        private const double scrollIncrement = 60;
+        private const double zoomStepFactor = 1.5;
+
+        /// <summary>
+        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+
+        /// <summary>
+        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -46,64 +59,6 @@
         /// Position of the mouse when the user starts dragging.
         /// </summary>
         private Map.Coordinate mouseAtDragStart;
-
-        /// <summary>
-        /// Zoom level of the map.
-        /// </summary>
-        public double Zoom
-        {
-            get
-            {
-                if (map == null)
-                    return 0;
-                return map.Zoom;
-            }
-            set
-            {
-                // Refreshing the map is a bit slow, so only do it if
-                // the incoming value is different to the old value.
-                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
-                {
-                    map.Zoom = value;
-                    RefreshMap();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Center of the map.
-        /// </summary>
-        public Map.Coordinate Center
-        {
-            get
-            {
-                if (map == null)
-                    return null;
-                return new Map.Coordinate(map.Center.Y, map.Center.X);
-            }
-            set
-            {
-                // Refreshing the map is a bit slow, so only do it if
-                // the incoming value is different to the old value.
-                if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
-                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
-                {
-                    map.Center = new Coordinate(value.Longitude, value.Latitude);
-                    RefreshMap();
-                }
-            }
-        }
-
-        /// <summary>
-        /// GridView widget used to show properties. Could be refactored out.
-        /// </summary>
-        public IPropertyView PropertiesGrid { get; private set; }
-
-        /// <summary>
-        /// Called when the view is changed by the user.
-        /// </summary>
-        public event EventHandler ViewChanged;
 
         /// <summary>
         /// Static constructor to perform 1-time initialisation.
@@ -121,6 +76,70 @@
             .SetCoordinateSystemServices(css)
             .SetCoordinateSystemRepository(css);
         }
+
+        /// <summary>
+        /// Zoom level of the map.
+        /// </summary>
+        public double Zoom
+        {
+            get
+            {
+                if (map == null)
+                    return 0;
+                return Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0;
+            }
+            set
+            {
+                // Refreshing the map is a bit slow, so only do it if
+                // the incoming value is different to the old value.
+                if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
+                {
+                    double setValue = value - 1.0;
+                    if (value == 360.0) // Convert "old" world maps so they are still world maps
+                        setValue = 0.0;
+                    map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
+                    RefreshMap();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Center of the map.
+        /// </summary>
+        public Map.Coordinate Center
+        {
+            get
+            {
+                if (map == null)
+                    return null;
+                Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
+                return new Map.Coordinate(centerLatLon.Y, centerLatLon.X);
+            }
+            set
+            {
+                Coordinate centerMetric = LatLonToMetres.MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
+                // Refreshing the map is a bit slow, so only do it if
+                // the incoming value is different to the old value.
+                if (map != null && 
+                    (!MathUtilities.FloatsAreEqual(centerMetric.X, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, map.Center.Y)) )
+                {
+                    map.Center = centerMetric;
+                    RefreshMap();
+                }
+            }
+        }
+
+        /// <summary>
+        /// GridView widget used to show properties. Could be refactored out.
+        /// </summary>
+        public IPropertyView PropertiesGrid { get; private set; }
+
+        /// <summary>
+        /// Called when the view is changed by the user.
+        /// </summary>
+        public event EventHandler ViewChanged;
+
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world
@@ -163,11 +182,15 @@
         private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            result.MaximumZoom = 720;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
-            result.Zoom = result.MaximumZoom;
-            
+            result.SRID = 3857;
+
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap), "Open Street Map");
+            result.BackgroundLayer.Add(baseLayer);
+            result.MaximumZoom = baseLayer.Envelope.Width;
+
+            /*
             VectorLayer layWorld = new VectorLayer("Countries");
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
@@ -179,7 +202,9 @@
             Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
-            result.Layers.Add(layWorld);
+            layWorld.CoordinateTransformation = LatLonToMetres;
+            result.BackgroundLayer.Add(layWorld);
+            */
 
             return result;
         }
@@ -215,14 +240,17 @@
                 map.Dispose();
             map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
             markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
             markerLayer.DataSource = new GeometryProvider(locations);
+            markerLayer.CoordinateTransformation = LatLonToMetres;
+
             map.Layers.Add(markerLayer);
-            map.Zoom = zoom;
-            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            Zoom = zoom;
+            Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
+            map.Center = location;
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -274,9 +302,9 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Envelope viewport = map.Envelope;
-            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
+            lat = coord.Y;
+            lon = coord.X;
         }
     
         /// <summary>
@@ -374,8 +402,8 @@
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
                     // Adjust zoom level on map.
-                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
-                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? 1 : -1;
+                    Zoom = MathUtilities.Bound(Zoom + sign, 1.0, 25.0);
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.
