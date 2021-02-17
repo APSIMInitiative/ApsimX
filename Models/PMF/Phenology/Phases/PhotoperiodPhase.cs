@@ -7,7 +7,11 @@ using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through a photoperiod-determined phase.</summary>
+    /// <summary>
+    /// # [Name] Phase
+    /// The [Name] phase goes from [Start] stage to [End] stage and reaches 
+    /// [End] when [PPType] photo period passes a critical value of [CriticalPhotoperiod] 
+    ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
