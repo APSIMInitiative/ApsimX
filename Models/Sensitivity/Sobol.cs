@@ -219,8 +219,8 @@
                     // Write a script to get random numbers from R.
                     string script = string.Format
                         ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
-                        $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
-                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                        $"library('boot')" + Environment.NewLine +
+                         $"library('sensitivity')" + Environment.NewLine +
                          "n <- {0}" + Environment.NewLine +
                          "nparams <- {1}" + Environment.NewLine +
                          "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +
@@ -363,8 +363,8 @@
 
                     string script = string.Format(
                          $".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
-                         $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
-                         $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                         $"library('boot')" + Environment.NewLine +
+                         $"library('sensitivity')" + Environment.NewLine +
                          "params <- c({0})" + Environment.NewLine +
                          "n <- {1}" + Environment.NewLine +
                          "nparams <- {2}" + Environment.NewLine +
@@ -483,8 +483,8 @@
         {
             string script = string.Format
                 ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
-                 $"library('boot', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
-                 $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+                 $"library('boot')" + Environment.NewLine +
+                 $"library('sensitivity')" + Environment.NewLine +
                  "n <- {0}" + Environment.NewLine +
                  "nparams <- {1}" + Environment.NewLine +
                  "X1 <- data.frame(matrix(nr = n, nc = nparams))" + Environment.NewLine +

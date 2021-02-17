@@ -896,8 +896,7 @@
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileNameWritten);
+                    ProcessUtilities.ProcessStart(fileNameWritten);
                 }
             }
             catch (Exception err)
