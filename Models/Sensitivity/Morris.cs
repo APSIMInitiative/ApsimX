@@ -522,7 +522,7 @@
             string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = string.Format
             ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
-            $"library('sensitivity', lib.loc = '{R.PackagesDirectory}')" + Environment.NewLine +
+            $"library('sensitivity')" + Environment.NewLine +
             "params <- c({0})" + Environment.NewLine +
             "apsimMorris<-morris(model=NULL" + Environment.NewLine +
             " ,params #string vector of parameter names" + Environment.NewLine +
