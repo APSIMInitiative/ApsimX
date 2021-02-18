@@ -52,7 +52,6 @@ namespace UserInterface.Views
         private const int indentSize = 30;
 
         private TextView textView;
-        private VBox container;
         private Cursor handCursor;
 		private Cursor regularCursor;
         private MarkdownFindView findView;
@@ -63,10 +62,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            VBox box = new VBox();
-            TextView child = new TextView();
-            box.PackStart(child, true, true, 0);
-            Initialise(owner, box);
+            Initialise(owner, new TextView());
         }
 
         /// <summary>Constructor</summary>
@@ -86,8 +82,7 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            container = (VBox)gtkControl;
-            textView = (TextView)container.Children[0];
+            textView = (TextView)gtkControl;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -97,8 +92,8 @@ namespace UserInterface.Views
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = container;
-            container.ShowAll();
+            mainWidget = textView;
+            mainWidget.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
@@ -174,11 +169,7 @@ namespace UserInterface.Views
             }
             set
             {
-                // Only keep first child.
-                while (container.Children.Length > 1)
-                    container.Remove(container.Children[1]);
-                if (container.Children.Length > 0)
-                    textView = (TextView)container.Children[0];
+                textView.Buffer.Clear();
 
                 if (value != null)
                 {
@@ -187,7 +178,7 @@ namespace UserInterface.Views
                     textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
-                    container.ShowAll();
+                    mainWidget.ShowAll();
                 }
             }
         }
