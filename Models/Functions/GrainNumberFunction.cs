@@ -1,6 +1,7 @@
 using APSIM.Shared.Utilities;
 using Models;
 using Models.Core;
+using Models.PMF;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using System;
@@ -22,23 +23,31 @@ namespace Models.Functions
         private IFunction temperatureFactor = null;
 
         /// <summary>
-        /// Final grain number.
-        /// </summary>
-        /// 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction finalGrainNumber = null;
-
-        /// <summary>
         /// Number of degree days required for grain number to go from 0 (at start grain fill) to final grain number.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("degree days")]
         private IFunction rampTT = null;
+
+        /// <summary>
+        /// DM per seed.
+        /// </summary>
+        /// <remarks>todo: check units</remarks>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("?")]
+        private IFunction dmPerSeed = null;
 
         /// <summary>
         /// Link to phenology.
         /// </summary>
         [Link]
         private Phenology phenology = null;
+
+        /// <summary>
+        /// Total biomass.
+        /// </summary>
+        [Link(ByName = true)]
+        private Biomass total = null;
 
         /// <summary>
         /// Total accumulated thermal time from start grain fill to maturity.
@@ -53,6 +62,24 @@ namespace Models.Functions
         private double value = 0;
 
         /// <summary>
+        /// Final grain number.
+        /// </summary>
+        [NonSerialized]
+        private double finalGrainNumber = 0;
+
+        /// <summary>
+        /// Number of days between floral initiation and start grain fill.
+        /// </summary>
+        [NonSerialized]
+        private int daysFIToStartGrainFill = 0;
+
+        /// <summary>
+        /// Total live wt of the plant at floral initiation.
+        /// </summary>
+        [NonSerialized]
+        private double greenWtAtFloralInit = 0;
+
+        /// <summary>
         /// Get the grain number.
         /// </summary>
         /// <param name="arrayIndex">Array index (irrelevant for this function).</param>
@@ -65,6 +92,20 @@ namespace Models.Functions
         {
             accumulatedTT = 0;
             value = 0;
+            finalGrainNumber = 0;
+            daysFIToStartGrainFill = 0;
+            greenWtAtFloralInit = 0;
+        }
+
+        /// <summary>
+        /// Calculate final grain number. Is called at start grain fill.
+        /// </summary>
+        /// <returns></returns>
+        private double CalculateFinalGrainNumber()
+        {
+            double plantGrowth = Math.Max(0, total.Wt - greenWtAtFloralInit);
+            double growthRate = MathUtilities.Divide(plantGrowth, daysFIToStartGrainFill, 0);
+            return MathUtilities.Divide(growthRate, dmPerSeed.Value(), 0);
         }
 
         /// <summary>
@@ -75,10 +116,9 @@ namespace Models.Functions
         [EventSubscribe("EndOfDay")]
         private void UpdateValue(object sender, EventArgs args)
         {
-            double finalGrainNo = finalGrainNumber.Value();
             double tempFactor = temperatureFactor.Value();
             double ttRamp = rampTT.Value();
-            value = tempFactor * Math.Min(finalGrainNo, finalGrainNo * MathUtilities.Divide(accumulatedTT, ttRamp, 0));
+            value = tempFactor * Math.Min(finalGrainNumber, finalGrainNumber * MathUtilities.Divide(accumulatedTT, ttRamp, 0));
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
@@ -90,8 +130,23 @@ namespace Models.Functions
             if (phenology.Between("StartGrainFill", "Maturity"))
                 if (phenology.CurrentPhase is GenericPhase phase)
                     accumulatedTT += phase.ProgressionForTimeStep;
+
+            if (phenology.Between("FloralInitiation", "StartGrainFill"))
+                daysFIToStartGrainFill++;
         }
     
+        /// <summary>Called when phenological phase changes. Updates grain number if the phase is start grainfill.</summary>
+        /// <param name="phaseChange">The phase change.</param>
+        /// <param name="sender">Sender plant.</param>
+        [EventSubscribe("PhaseChanged")]
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
+        {
+            if (phaseChange.StageName == "StartGrainFill")
+                finalGrainNumber = CalculateFinalGrainNumber();
+            if (phaseChange.StageName == "FloralInitiation")
+                greenWtAtFloralInit = total.Wt;
+        }
+
         /// <summary>Called when the simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
