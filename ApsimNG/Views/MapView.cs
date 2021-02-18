@@ -25,10 +25,49 @@
     using StateType = Gtk.StateFlags;
 #endif
 
+    /// <remarks>
+    /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
+    /// and room for improvement. 
+    /// 
+    /// Probably the main flaw is that maps are often very slow to render, as the basemap needs
+    /// to be downloaded. SharpMap does allow map tiles to be loaded async, but when trying that approach I found
+    /// it difficult to know when to update the map, and when it had been fully loaded (which is required when 
+    /// generating auto-docs).
+    /// 
+    /// Another flaw (a problem with SharpMap) is that it doesn't know how to "wrap" the map at the antimeridion 
+    /// (International Date Line). This makes it impossible to produce a Pacific-centered map.
+    /// 
+    /// One enhancement that should be fairly easy to implement would be to allow the user to select the basemap.
+    /// Currently it's just using OpenStreetMaps, but Bing maps and several others are readily available. The user
+    /// could be presented with a drop-down list of alternative.
+    /// 
+    /// There is a little quirk I don't understand at all - the location marker simply disappears from the map
+    /// at high resolutions. For our purposes, this generally shouldn't be a problem, but it would be nice to 
+    /// know why it happens.
+    /// 
+    /// </remarks>
     public class MapView : ViewBase, IMapView
     {
+        /// <summary>
+        /// Indicates the ratio between steps when zooming.
+        /// </summary>
         private const double zoomStepFactor = 1.5;
 
+        /// <remarks>
+        /// The world of mapping and GIS is a rather specialised and complex sub-field. Our needs here
+        /// are fairly simple: we just want to be able to plot locations on a base map. But how are locations
+        /// specified? Where do we get the map? What projection do we use? These remarks are intended to 
+        /// (slightly) clarify what is going on.
+        /// 
+        /// We are using SharpMap to do the map rendering, and BruTile to fetch a suitable base map. The basemap 
+        /// tiles use a "projected" coordinate system, specifically EPSG 3857 (also known as Web Mercator); 
+        /// the units in this system are (perhaps surpisingly) metres. However, the point data we wish to plot
+        /// is expressed as latitude and longitude (using a "geographic" coordinate system, specifically EPSG 4326),
+        /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
+        /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
+        /// below handle coordinate transformation.
+        /// </remarks>
+        ///  
         /// <summary>
         /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
         /// </summary>
@@ -95,7 +134,7 @@
                 if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
                     double setValue = value - 1.0;
-                    if (value == 360.0) // Convert "old" world maps so they are still world maps
+                    if (value >= 60.0) // Convert any "old" zoom levels into whole-world maps
                         setValue = 0.0;
                     map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
                     RefreshMap();
@@ -190,7 +229,8 @@
             result.BackgroundLayer.Add(baseLayer);
             result.MaximumZoom = baseLayer.Envelope.Width;
 
-            /*
+            // This layer as a sort of backup in case the BruTile download times out. 
+            // It should normally be invisible, as it will be covered by another layer.
             VectorLayer layWorld = new VectorLayer("Countries");
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
@@ -203,8 +243,7 @@
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
             layWorld.CoordinateTransformation = LatLonToMetres;
-            result.BackgroundLayer.Add(layWorld);
-            */
+            result.BackgroundLayer.Insert(0, layWorld);
 
             return result;
         }
@@ -244,6 +283,7 @@
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
             markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
+            markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
             markerLayer.DataSource = new GeometryProvider(locations);
             markerLayer.CoordinateTransformation = LatLonToMetres;
 
