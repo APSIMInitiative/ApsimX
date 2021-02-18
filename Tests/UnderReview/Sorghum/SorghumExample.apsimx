@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 287,
-  "Version": 123,
+  "Version": 128,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -1592,7 +1592,7 @@
             },
             {
               "$type": "Models.PMF.Struct.LeafCulms, Models",
-              "DynamicTillering": false,
+              "DynamicTillering": true,
               "FinalLeafNo": 0.0,
               "NLeaves": 0.0,
               "Name": "LeafCulms",
@@ -1638,7 +1638,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].TTFromEmergToFlag",
+                  "VariableName": "[Phenology].TTEmergToFlagLeaf",
                   "Name": "ttEmergToFlag",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1657,7 +1657,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].LeafNumSeed",
+                  "VariableName": "[Leaf].Parameters.LeafNumSeed",
                   "Name": "noSeed",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1666,7 +1666,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].leafInitRate",
+                  "VariableName": "[Leaf].Parameters.LeafInitRate",
                   "Name": "initRate",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1731,7 +1731,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].slaMax",
+                  "VariableName": "[Leaf].Parameters.SlaMax",
                   "Name": "slaMax",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1740,7 +1740,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].aX0",
+                  "VariableName": "[Leaf].Parameters.aX0",
                   "Name": "aX0",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1749,7 +1749,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].aMaxSlope",
+                  "VariableName": "[Leaf].Parameters.aMaxSlope",
                   "Name": "aMaxSlope",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1758,7 +1758,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].aMaxIntercept",
+                  "VariableName": "[Leaf].Parameters.aMaxIntercept",
                   "Name": "aMaxIntercept",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4559,29 +4559,29 @@
             },
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
+              "MaxCover": 1.0,
               "StartLive": null,
-              "Albedo": 0.0,
-              "Gsmax350": 0.009,
-              "R50": 0.0,
+              "Albedo": 0.18,
+              "Gsmax350": 0.008,
+              "R50": 160.0,
               "BaseHeight": 0.0,
               "Width": 0.0,
               "PotentialEP": 0.0,
               "LightProfile": null,
+              "UseMicroClimate": false,
               "DltLAI": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
               "LAI": 0.0,
               "SLN": 0.0,
               "SLN0": 0.0,
-              "CoverGreen": 0.0,
-              "CoverDead": 0.0,
               "Height": 0.0,
               "WaterDemand": 0.0,
               "MicroClimatePresent": false,
               "BiomassRUE": 0.0,
               "BiomassTE": 0.0,
               "LeafInitialisationStage": "Emergence",
-              "KDead": 0.03,
+              "KDead": 0.0,
               "LAIDead": 0.0,
               "NitrogenPhotoStress": 0.0,
               "NitrogenPhenoStress": 0.0,
@@ -4606,73 +4606,39 @@
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 200.0,
-                  "Units": null,
-                  "Name": "InitialLAIFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.5,
-                  "Units": null,
-                  "Name": "InitialSLNFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "m^2/m^2",
-                  "Name": "LaiDeadFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "ExpansionStress",
+                  "$type": "Models.PMF.Organs.SorghumLeaf+LeafParameters, Models",
+                  "Name": "Parameters",
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WaterStressEffect",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10.0,
+                      "Units": null,
+                      "Name": "MinLeafNo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 40.0,
+                      "Units": null,
+                      "Name": "MaxLeafNo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "LeafNoDeadIntercept",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.1,
-                            1.1
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].SDRatio",
-                          "Name": "XValue",
+                          "$type": "Models.Memo, Models",
+                          "Text": "Intercept for age-based slai calculation",
+                          "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4685,9 +4651,79 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "NitrogenStressEffect",
+                      "Name": "LeafNoDeadSlope",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Slope for age-based slai calculation",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 4.0,
+                      "Units": null,
+                      "Name": "LeafNumSeed",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 200.0,
+                      "Units": null,
+                      "Name": "InitialLAIFunction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.5,
+                      "Units": null,
+                      "Name": "InitialSLNFunction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.1,
+                      "Units": "g/plant",
+                      "Name": "InitialWtFunction",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 8000.0,
+                      "Units": null,
+                      "Name": "SlaMin",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 45000.0,
+                      "Units": null,
+                      "Name": "SlaMax",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4697,8 +4733,158 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 1.0,
                       "Units": null,
-                      "Name": "PhosphorusStressEffect",
+                      "Name": "NewLeafSLN",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": null,
+                      "Name": "SenescedLeafSLN",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.25,
+                      "Units": null,
+                      "Name": "SenThreshold",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10.0,
+                      "Units": null,
+                      "Name": "SenWaterTimeConst",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.0,
+                      "Units": "Mj/m^2",
+                      "Name": "senRadnCrit",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 10.0,
+                      "Units": null,
+                      "Name": "SenLightTimeConst",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "SenescenceRate",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "FrostKill",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -3.5,
+                      "Units": null,
+                      "Name": "FrostKillSevere",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0043,
+                      "Units": null,
+                      "Name": "NDilutionSlope",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -0.0017,
+                      "Units": null,
+                      "Name": "NDilutionIntercept",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.687,
+                      "Units": null,
+                      "Name": "aX0",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 22.25,
+                      "Units": null,
+                      "Name": "aMaxSlope",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 92.45,
+                      "Units": null,
+                      "Name": "aMaxIntercept",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 21.6,
+                      "Units": "oCd",
+                      "Name": "LeafInitRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
+                          "Name": "Description",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4810,7 +4996,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].RadIntTot",
+                      "VariableName": "[Leaf].RadiationIntercepted",
                       "Name": "RadnInt",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -4900,6 +5086,175 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "ExpansionStress",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WaterStressEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            1.1
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].SDRatio",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "NitrogenStressEffect",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "PhosphorusStressEffect",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MaximumFunction, Models",
+                  "Name": "NPhotoStress",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "photoStress = (2.0/(1.0 + exp(-6.05*(SLN-0.41)))-1.0);",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Zero",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.SubtractFunction, Models",
+                      "Name": "SubtractFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 2.0,
+                              "Units": null,
+                              "Name": "Two",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ExponentialFunction, Models",
+                              "A": 1.0,
+                              "B": 1.0,
+                              "C": -6.05,
+                              "Name": "ExponentialFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "SubtractFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].SLN",
+                                      "Name": "SLN",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.41,
+                                      "Units": null,
+                                      "Name": "point41",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "One",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "FrostFraction",
                   "Children": [
@@ -4979,29 +5334,10 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime",
-                  "Name": "ThermalTime",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.1,
                   "Units": null,
                   "Name": "FTN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
-                  "Units": null,
-                  "Name": "NConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5172,56 +5508,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "MinimumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "MaximumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "SenescenceRate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DetachmentRateFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.DemandFunctions.TEWaterDemandFunction, Models",
                   "Name": "WaterDemandFunction",
                   "Children": [
@@ -5250,6 +5536,149 @@
                       "VariableName": "[Leaf].Photosynthesis",
                       "Name": "Photosynthesis",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.PhaseLookup, Models",
+                  "Name": "DltLAIFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "<pre>\n// dh - this is actually calculated in LeafCulms_Fixed::areaActual(void).\n// This version of the function is slightly different to Leaf::areaActual(void)\n// in that the end stage is flag, not maturity.\n\r\nif(stage >= endJuv && stage < flag)\r\n    dltLAI = Min(dltStressedLAI,dltDmGreen * slaMax * smm2sm);\r\nelse\n    dltLAI = dltStressedLAI;\r\n</pre>",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "EndJuvenile",
+                      "End": "FlagLeaf",
+                      "Name": "BetweenEndJuvenileAndMaturity",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MinimumFunction, Models",
+                          "Name": "MinFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].dltStressedLAI",
+                              "Name": "DltStressedLAI",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "LimitedSLN",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.AddFunction, Models",
+                                  "Name": "dltDMGreen",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].DMPotentialAllocation.Structural",
+                                      "Name": "Structural",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Leaf].DMPotentialAllocation.Metabolic",
+                                      "Name": "Metabolic",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 45000.0,
+                                  "Units": null,
+                                  "Name": "slaMax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1E-06,
+                                  "Units": null,
+                                  "Name": "smm2sm",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "Emergence",
+                      "End": "EndJuvenile",
+                      "Name": "BetweenEmergenceAndEndJuvenile",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].dltStressedLAI",
+                          "Name": "DltStressedLAI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookupValue, Models",
+                      "Start": "FlagLeaf",
+                      "End": "HarvestRipe",
+                      "Name": "AllOtherTimes",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].dltStressedLAI",
+                          "Name": "DltStressedLAI",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5498,114 +5927,8 @@
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespirationFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
-                  "Name": "BiomassRemovalDefaults",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.3,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Harvest",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.8,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.0,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Cut",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.0,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.6,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Prune",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
-                      "FractionLiveToRemove": 0.6,
-                      "FractionDeadToRemove": 0.0,
-                      "FractionLiveToResidue": 0.1,
-                      "FractionDeadToResidue": 0.0,
-                      "Name": "Graze",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "DMRetranslocationFactor",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].MinimumNConc",
-                  "Name": "CriticalNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5689,7 +6012,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].SlaMin",
+                                              "VariableName": "[Leaf].Parameters.SlaMin",
                                               "Name": "SlaMin",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -5827,7 +6150,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NewLeafSLN",
+                                  "VariableName": "[Leaf].Parameters.NewLeafSLN",
                                   "Name": "newLeafSLN",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -5974,228 +6297,52 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "NitrogenDemandSwitch",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.PhaseLookup, Models",
-                  "Name": "DltLAIFunction",
+                  "$type": "Models.PMF.Library.BiomassRemoval, Models",
+                  "Name": "BiomassRemovalDefaults",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "<pre>\n// dh - this is actually calculated in LeafCulms_Fixed::areaActual(void).\n// This version of the function is slightly different to Leaf::areaActual(void)\n// in that the end stage is flag, not maturity.\n\r\nif(stage >= endJuv && stage < flag)\r\n    dltLAI = Min(dltStressedLAI,dltDmGreen * slaMax * smm2sm);\r\nelse\n    dltLAI = dltStressedLAI;\r\n</pre>",
-                      "Name": "Memo",
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.3,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Harvest",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "EndJuvenile",
-                      "End": "FlagLeaf",
-                      "Name": "BetweenEndJuvenileAndMaturity",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MinimumFunction, Models",
-                          "Name": "MinFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].dltStressedLAI",
-                              "Name": "DltStressedLAI",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "LimitedSLN",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.AddFunction, Models",
-                                  "Name": "dltDMGreen",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].DMPotentialAllocation.Structural",
-                                      "Name": "Structural",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].DMPotentialAllocation.Metabolic",
-                                      "Name": "Metabolic",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 45000.0,
-                                  "Units": null,
-                                  "Name": "slaMax",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1E-06,
-                                  "Units": null,
-                                  "Name": "smm2sm",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Emergence",
-                      "End": "EndJuvenile",
-                      "Name": "BetweenEmergenceAndEndJuvenile",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].dltStressedLAI",
-                          "Name": "DltStressedLAI",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "FlagLeaf",
-                      "End": "HarvestRipe",
-                      "Name": "AllOtherTimes",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].dltStressedLAI",
-                          "Name": "DltStressedLAI",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 8000.0,
-                  "Units": null,
-                  "Name": "SlaMin",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "NewLeafSLN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.3,
-                  "Units": null,
-                  "Name": "SenescedLeafSLN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0043,
-                  "Units": null,
-                  "Name": "NDilutionSlope",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.0017,
-                  "Units": null,
-                  "Name": "NDilutionIntercept",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LiveOnEventFunction, Models",
-                  "SetEvent": "FlagLeaf",
-                  "ReSetEvent": "Germination",
-                  "Name": "TargetSLN",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.5,
-                      "Units": null,
-                      "Name": "PreEventValue",
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.8,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.0,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Cut",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SlnAtFlag",
-                      "Name": "PostEventValue",
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.0,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.6,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Prune",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.OrganBiomassRemovalType, Models",
+                      "FractionLiveToRemove": 0.6,
+                      "FractionDeadToRemove": 0.0,
+                      "FractionLiveToResidue": 0.1,
+                      "FractionDeadToResidue": 0.0,
+                      "Name": "Graze",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -6303,567 +6450,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "StomatalConductanceCO2Modifier1",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": null,
-                  "Name": "minLeafNo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 40.0,
-                  "Units": null,
-                  "Name": "maxLeafNo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].TTEmergToFloralInit",
-                  "Name": "TTEmergToFI",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 21.6,
-                  "Units": "oCd",
-                  "Name": "leafInitRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 4.0,
-                  "Units": null,
-                  "Name": "seedNo",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Number of leaf primordia present in seed",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "LargestLeafSize",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Largest leaf size = aMaxS * FinalLeafNo + aMaxI",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "MultiplyFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].aMaxSlope",
-                          "Name": "aMaxS",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].FinalLeafNo",
-                          "Name": "finalLeafNo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].aMaxIntercept",
-                      "Name": "aMaxI",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.687,
-                  "Units": null,
-                  "Name": "aX0",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.25,
-                  "Units": null,
-                  "Name": "aMaxSlope",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 92.45,
-                  "Units": null,
-                  "Name": "aMaxIntercept",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "FlagLeaf",
-                  "ReSetEvent": "Germination",
-                  "Name": "SlnAtFlag",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This seems like a terrible idea...",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SLN",
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SLN",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 2.0,
-                  "Units": "Mj/m^2",
-                  "Name": "senRadnCrit",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.BoundFunction, Models",
-                  "Name": "WaterSDRatio",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.DivideFunction, Models",
-                      "Name": "WaterSDRatio",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].WatSupply",
-                          "Name": "totalSupply",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "swDemand",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].BiomassRUE",
-                              "Name": "dltDMPotRue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].BiomassTE",
-                              "Name": "dltDMPotTE",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Lower",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Upper",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": null,
-                  "Name": "SenLightTimeConst",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "FrostKill",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -3.5,
-                  "Units": null,
-                  "Name": "FrostKillSevere",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
-                  "Units": null,
-                  "Name": "SenWaterTimeConst",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.25,
-                  "Units": null,
-                  "Name": "SenThreshold",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.009,
-                  "Units": null,
-                  "Name": "A0",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[0]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.2,
-                  "Units": null,
-                  "Name": "A1",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[1]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0006,
-                  "Units": null,
-                  "Name": "B0",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[2]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.43,
-                  "Units": null,
-                  "Name": "B1",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[3]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "NPhotoStress",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "photoStress = (2.0/(1.0 + exp(-6.05*(SLN-0.41)))-1.0);",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Zero",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.SubtractFunction, Models",
-                      "Name": "SubtractFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DivideFunction, Models",
-                          "Name": "DivideFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 2.0,
-                              "Units": null,
-                              "Name": "Two",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.ExponentialFunction, Models",
-                              "A": 1.0,
-                              "B": 1.0,
-                              "C": -6.05,
-                              "Name": "ExponentialFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "SubtractFunction",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Leaf].SLN",
-                                      "Name": "SLN",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.41,
-                                      "Units": null,
-                                      "Name": "point41",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "One",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "LeafNoDeadIntercept",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Intercept for age-based slai calculation",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "LeafNoDeadSlope",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Slope for age-based slai calculation",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MovingAverageFunction, Models",
                   "NumberOfDays": 5,
                   "StageToStartMovingAverage": "Germination",
@@ -6934,26 +6520,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 45000.0,
-                  "Units": null,
-                  "Name": "slaMax",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 4.0,
-                  "Units": null,
-                  "Name": "LeafNumSeed",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.DivideFunction, Models",
                   "Name": "StomatalConductanceCO2Modifier",
                   "Children": [
@@ -6985,6 +6551,74 @@
                   "Expression": "(163 - [IWeather].MeanT)/(5 - 0.1*[IWeather].MeanT)",
                   "Name": "CO2internal",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LiveOnEventFunction, Models",
+                  "SetEvent": "FlagLeaf",
+                  "ReSetEvent": "Germination",
+                  "Name": "TargetSLN",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.5,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SlnAtFlag",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "FlagLeaf",
+                  "ReSetEvent": "Germination",
+                  "Name": "SlnAtFlag",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This seems like a terrible idea...",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].SLN",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -9950,9 +9584,9 @@
                     {
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
-                        "[Leaf].aX0.FixedValue = 0.786",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13"
                       ],
                       "Name": "Buster",
                       "Children": [],
@@ -9964,9 +9598,9 @@
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 114",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "early",
                       "Children": [],
@@ -9978,9 +9612,9 @@
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 157",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "medium",
                       "Children": [],
@@ -9992,9 +9626,9 @@
                       "$type": "Models.PMF.Cultivar, Models",
                       "Command": [
                         "[Phenology].TTEndJuvToInit.FixedValue = 201",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "late",
                       "Children": [],
@@ -10007,8 +9641,8 @@
                       "Command": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
                         "[Phenology].TTEndJuvToInit.FixedValue = 202",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450"
                       ],
                       "Name": "ATX623xRTX430",
                       "Children": [],
@@ -10023,8 +9657,8 @@
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
                         "[Phenology].TTEndJuvToInit.FixedValue = 134.4",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450"
                       ],
                       "Name": "A35xQL36",
                       "Children": [],
@@ -10037,8 +9671,8 @@
                       "Command": [
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
                         "[Phenology].TTEndJuvToInit.FixedValue = 179",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450"
                       ],
                       "Name": "QL41xQL36",
                       "Children": [],
@@ -10053,9 +9687,9 @@
                         "[Phenology].PhotoModifier.XYPairs.X[2] = 14",
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
                         "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "QL39xQL36",
                       "Children": [],
@@ -10071,10 +9705,10 @@
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.001427844",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 10",
-                        "[Leaf].leafInitRate.FixedValue = 26.1",
+                        "[Leaf].Parameters.LeafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                        "[Leaf].aMaxSlope.FixedValue = 8.9",
-                        "[Leaf].aMaxIntercept.FixedValue = 245.3"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3"
                       ],
                       "Name": "M35-1",
                       "Children": [],
@@ -10091,7 +9725,7 @@
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                        "[Leaf].leafInitRate.FixedValue = 23.2"
+                        "[Leaf].Parameters.LeafInitRate.FixedValue = 23.2"
                       ],
                       "Name": "CSH13R",
                       "Children": [],
@@ -10109,9 +9743,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "dekalb_DK55",
                       "Children": [],
@@ -10129,9 +9763,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "texas_RS610",
                       "Children": [],
@@ -10149,9 +9783,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "pioneer_s34",
                       "Children": [],
@@ -10169,9 +9803,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].FloweringToGrainFilling.Target.FixedValue = 30",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 695",
-                        "[Leaf].aMaxIntercept.FixedValue = -321.13",
-                        "[Leaf].aMaxSlope.FixedValue = 46.312",
-                        "[Leaf].aX0.FixedValue = 0.786"
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -321.13",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 46.312",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.786"
                       ],
                       "Name": "texas_671",
                       "Children": [],
@@ -10187,9 +9821,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00065",
-                        "[Leaf].aX0.FixedValue = 0.83",
-                        "[Leaf].aMaxSlope.FixedValue = 2.3",
-                        "[Leaf].aMaxIntercept.FixedValue = 514",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.83",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 2.3",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 514",
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
                       ],
                       "Name": "Scorpio",
@@ -10205,9 +9839,9 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 185",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                        "[Leaf].aX0.FixedValue = 0.71",
-                        "[Leaf].aMaxSlope.FixedValue = 37",
-                        "[Leaf].aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
                       ],
                       "Name": "Apollo",
@@ -10223,9 +9857,9 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 185",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 130",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                        "[Leaf].aX0.FixedValue = 0.71",
-                        "[Leaf].aMaxSlope.FixedValue = 37",
-                        "[Leaf].aMaxIntercept.FixedValue = -101",
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101",
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.75"
                       ],
                       "Name": "Bazley",
@@ -10242,9 +9876,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00065",
-                        "[Leaf].aX0.FixedValue = 0.8",
-                        "[Leaf].aMaxSlope.FixedValue = 1",
-                        "[Leaf].aMaxIntercept.FixedValue = 451"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.8",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 1",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 451"
                       ],
                       "Name": "Taurus",
                       "Children": [],
@@ -10260,9 +9894,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
-                        "[Leaf].aX0.FixedValue = 0.86",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 542"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.86",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 542"
                       ],
                       "Name": "P85G33",
                       "Children": [],
@@ -10277,9 +9911,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
-                        "[Leaf].aX0.FixedValue = 0.81",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 578"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.81",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 578"
                       ],
                       "Name": "P84G22",
                       "Children": [],
@@ -10295,9 +9929,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0005",
-                        "[Leaf].aX0.FixedValue = 0.84",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 495"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
                       ],
                       "Name": "P84G99",
                       "Children": [],
@@ -10313,9 +9947,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0005",
-                        "[Leaf].aX0.FixedValue = 0.84",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 495"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 495"
                       ],
                       "Name": "P86G56",
                       "Children": [],
@@ -10330,9 +9964,9 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 118",
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
-                        "[Leaf].aX0.FixedValue = 0.71",
-                        "[Leaf].aMaxSlope.FixedValue = 37",
-                        "[Leaf].aMaxIntercept.FixedValue = -101"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.71",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 37",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = -101"
                       ],
                       "Name": "MR43",
                       "Children": [],
@@ -10348,9 +9982,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 140",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0007",
-                        "[Leaf].aX0.FixedValue = 0.82",
-                        "[Leaf].aMaxSlope.FixedValue = 8.5",
-                        "[Leaf].aMaxIntercept.FixedValue = 378"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.82",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
                       ],
                       "Name": "N_14NUS01",
                       "Children": [],
@@ -10366,9 +10000,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 150",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.0006",
-                        "[Leaf].aX0.FixedValue = 0.82",
-                        "[Leaf].aMaxSlope.FixedValue = 8.5",
-                        "[Leaf].aMaxIntercept.FixedValue = 378"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.82",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.5",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 378"
                       ],
                       "Name": "N_14NUS02",
                       "Children": [],
@@ -10384,9 +10018,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 100",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00045",
-                        "[Leaf].aX0.FixedValue = 0.84",
-                        "[Leaf].aMaxSlope.FixedValue = 9.3",
-                        "[Leaf].aMaxIntercept.FixedValue = 384"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.84",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 9.3",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 384"
                       ],
                       "Name": "N_14NUS03",
                       "Children": [],
@@ -10402,9 +10036,9 @@
                         "[Phenology].FlagLeafToFlowering.Target.FixedValue = 120",
                         "[Phenology].TTFlowerToMaturity.FixedValue = 810",
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.00045",
-                        "[Leaf].aX0.FixedValue = 0.81",
-                        "[Leaf].aMaxSlope.FixedValue = 0",
-                        "[Leaf].aMaxIntercept.FixedValue = 445"
+                        "[Leaf].Parameters.aX0.FixedValue = 0.81",
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 445"
                       ],
                       "Name": "N_14NUS04",
                       "Children": [],
@@ -10440,11 +10074,11 @@
                         "[Grain].FinalGrainNum.PostEventValue.DMPerSeed.FixedValue = 0.001427844",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Root].NUptakeCease.FixedValue = 10",
-                        "[Leaf].leafInitRate.FixedValue = 26.1",
+                        "[Leaf].Parameters.LeafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                         "",
-                        "[Leaf].aMaxSlope.FixedValue = 8.9",
-                        "[Leaf].aMaxIntercept.FixedValue = 245.3"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 8.9",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 245.3"
                       ],
                       "Name": "M35-1",
                       "Children": [],
@@ -10458,8 +10092,8 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 179",
                         "[Phenology].TTTargetPhotoSensitive.EmergenceToEndJuve.Add.PhotoModifier.XYPairs.Y[1] = 25",
                         "",
-                        "[Leaf].aMaxSlope.FixedValue = 0.0",
-                        "[Leaf].aMaxIntercept.FixedValue = 450"
+                        "[Leaf].Parameters.aMaxSlope.FixedValue = 0.0",
+                        "[Leaf].Parameters.aMaxIntercept.FixedValue = 450"
                       ],
                       "Name": "QL41xQL36",
                       "Children": [],
@@ -10693,8 +10327,8 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -12318,8 +11952,8 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -13304,8 +12938,8 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -14514,8 +14148,8 @@
                 },
                 {
                   "$type": "Models.Fertiliser, Models",
+                  "ResourceName": "Fertiliser",
                   "Name": "Fertiliser",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
