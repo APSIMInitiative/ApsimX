@@ -1792,17 +1792,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.05,
-                      "Units": "g/g",
-                      "Name": "MaximumNConc",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0001,
+                      "FixedValue": 0.001,
                       "Units": "g/g",
                       "Name": "MinimumNConc",
                       "Children": [],
@@ -1812,7 +1802,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.05,
+                      "FixedValue": 0.025,
                       "Units": "g/g",
                       "Name": "InitialNConc",
                       "Children": [],
@@ -1822,7 +1812,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0.7,
                       "Units": "percentage",
                       "Name": "NReallocationFactor",
                       "Children": [],
@@ -1832,7 +1822,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0.1,
                       "Units": "percentage",
                       "Name": "NRetranslocationFactor",
                       "Children": [],
@@ -1842,7 +1832,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0001,
+                      "FixedValue": 0.001,
                       "Units": "g/g",
                       "Name": "CriticalNConc",
                       "Children": [],
@@ -2192,6 +2182,50 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "MaximumNConc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            100.0,
+                            150.0,
+                            177.0,
+                            335.0,
+                            336.0,
+                            366.0
+                          ],
+                          "Y": [
+                            0.01,
+                            0.01,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "XValue",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2817,20 +2851,54 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "g/g",
-                  "Name": "MinimumNConc",
-                  "Children": [],
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "MaximumNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        100.0,
+                        150.0,
+                        177.0,
+                        335.0,
+                        336.0,
+                        366.0
+                      ],
+                      "Y": [
+                        0.01,
+                        0.01,
+                        0.035,
+                        0.015,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
-                  "Units": null,
-                  "Name": "MaximumNConc",
+                  "FixedValue": 0.002,
+                  "Units": "g/g",
+                  "Name": "MinimumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2884,6 +2952,50 @@
                       "FractionDeadToResidue": 0.0,
                       "Name": "Graze",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "MaximumNConc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            100.0,
+                            150.0,
+                            177.0,
+                            335.0,
+                            336.0,
+                            366.0
+                          ],
+                          "Y": [
+                            0.01,
+                            0.01,
+                            0.03,
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3540,19 +3652,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.0005,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
-                  "Units": null,
-                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4251,6 +4353,26 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.006,
+                  "Units": "g/g",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.006,
+                  "Units": null,
+                  "Name": "MaximumNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4350,7 +4472,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.04,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -4381,19 +4503,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.0005,
                   "Units": null,
                   "Name": "MinimumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
-                  "Units": null,
-                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5098,6 +5210,26 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.006,
+                  "Units": "g/g",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.006,
+                  "Units": null,
+                  "Name": "MaximumNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5576,7 +5708,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
+                  "FixedValue": 0.04,
                   "Units": null,
                   "Name": "NRetranslocationFactor",
                   "Children": [],
@@ -5607,7 +5739,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.0005,
                   "Units": null,
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -5617,7 +5749,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
+                  "FixedValue": 0.012,
                   "Units": null,
                   "Name": "MaximumNConc",
                   "Children": [],
@@ -5941,6 +6073,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.01,
+                  "Units": "g/g",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -8810,7 +8952,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.02,
                   "Units": "g/g",
                   "Name": "MaxNConcDailyGrowth",
                   "Children": [],
@@ -8820,29 +8962,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "NFillingRate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
+                  "FixedValue": 0.002,
+                  "Units": "g/g",
                   "Name": "MinimumNConc",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
-                  "Units": null,
-                  "Name": "MaximumNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -9007,6 +9129,183 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "MaximumNConc",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        0.0,
+                        100.0,
+                        150.0,
+                        177.0,
+                        335.0,
+                        336.0,
+                        366.0
+                      ],
+                      "Y": [
+                        0.01,
+                        0.01,
+                        0.025,
+                        0.015,
+                        0.01,
+                        0.01,
+                        0.01
+                      ],
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Weather].DaysSinceWinterSolstice",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "NFillingRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LessThanFunction, Models",
+                      "Name": "LessThanFunction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Weather].DaysSinceWinterSolstice",
+                          "Name": "DAWS",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 305.0,
+                          "Units": null,
+                          "Name": "HarvestTime",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Flowering",
+                          "End": "LeafFall",
+                          "Name": "AfterFruitSet",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MaximumFunction, Models",
+                              "Name": "MaximumFunction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.DeltaFunction, Models",
+                                  "StartStageName": null,
+                                  "Name": "DeltaFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "Integral",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].NumberFunction",
+                                          "Name": "BerryNumber",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].SingleBerryDW",
+                                          "Name": "BerryDM",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Berry].MaximumNConc",
+                                          "Name": "NConc",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": "g",
+                                  "Name": "Constant",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": "g",
+                      "Name": "Constant",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -9250,7 +9549,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.002,
                   "Units": null,
                   "Name": "DMRetranslocationFactor",
                   "Children": [],
@@ -9260,7 +9559,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "DMReallocationFactor",
                   "Children": [],
@@ -9291,7 +9590,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.001,
                   "Units": "g/g",
                   "Name": "MinimumNConc",
                   "Children": [],
@@ -9301,7 +9600,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0001,
+                  "FixedValue": 0.02,
                   "Units": "g/g",
                   "Name": "MaximumNConc",
                   "Children": [],
@@ -9462,7 +9761,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 6.0,
+                  "FixedValue": 10.0,
                   "Units": null,
                   "Name": "MaxDailyNUptake",
                   "Children": [],
@@ -9762,6 +10061,16 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.01,
+                  "Units": "g/g",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10153,7 +10462,8 @@
             "[Grapevine].StructuralRoot.Live.StructuralWt",
             "[Grapevine].StructuralRoot.Live.StorageWt",
             "[Grapevine].StructuralRoot.Live.StorageWt/[Grapevine].StructuralRoot.Live.Wt as total.NSC.concentration.root",
-            " ",
+            "[Grapevine].Root.NTakenUp",
+            "[Grapevine].StructuralRoot.N",
             "[Grapevine].Arbitrator.FDM",
             "[Grapevine].Arbitrator.DM.TotalFixationSupply",
             "",
@@ -10165,6 +10475,8 @@
             "[Grapevine].Berry.NumberFunction",
             "[Grapevine].Berry.ThermalTimeAfterFlowering",
             "[Grapevine].Berry.WaterContent",
+            "[Grapevine].Berry.N",
+            "[Grapevine].Berry.NFillingRate",
             "[Grapevine].Berry.Brix \t\t\t\tas brix",
             "[Grapevine].Berry.TitratableAcid \tas ta",
             "",
@@ -14521,7 +14833,7 @@
                       "$type": "Models.Summary, Models",
                       "CaptureErrors": true,
                       "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "CaptureSummaryText": false,
                       "Name": "SummaryFile",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -14611,6 +14923,10 @@
                           "Code": "using Models.PMF.Phen;\r\nusing Models.Zones;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Struct;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Zone zone;\r\n        [Link]\r\n        private Structure structure;\r\n        [Link]\r\n        private Phenology phenology;\r\n\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Plant Type\")]\r\n        public string CultivarName { get; set; }\r\n\r\n        [Description(\"Initialisation Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n\r\n        [Description(\"Vine distance(m)\")]\r\n        public double VineDistance { get; set; }\r\n        //number of buds lay down in cane and spur. there is a function inside to calculate the number of buds per vine based on bud burst and from cane head\r\n        [Description(\"Bud number(#)\")]\r\n        public double BudNumber { get; set; }\r\n        //cordon or spur biomass\r\n        [Description(\"Cordon number(#)\")]\r\n        public double CordonNumber { get; set; }\r\n      \r\n        [Description(\"Cordon diameter(mm)\")]\r\n        public double CordonDiameter { get; set; }\r\n\r\n        [Description(\"Cordon length(m)\")]\r\n        public double CordonLength { get; set; }\r\n        //trunk information\r\n        [Description(\"Trunk diameter(mm)\")]\r\n        public double TrunkDiameter { get; set; }\r\n\r\n        [Description(\"Trunk length(m)\")]\r\n        public double TrunkLength { get; set; }\r\n        //root dry matter\r\n        [Description(\"Fibrous root trunk ratio\")]\r\n        public double RootTrunkRatio { get; set; }\r\n             \r\n        //total nonstructural fraction in dry matter \r\n        [Description(\"Fibrous root nonstructural carbon fraction\")]\r\n        public double RootNSC { get; set; }\r\n\r\n        [Description(\"Trunk nonstructural carbon fraction\")]\r\n        public double TrunkNSC { get; set; }\r\n\r\n        [Description(\"Cordon nonstructural carbon fraction\")]\r\n        public double CordonNSC { get; set; }\r\n\r\n        [Description(\"Age of trees (in Years) at start of simulation)\")]\r\n        public int StartAge {get;set;}\r\n\r\n        private RectangularZone RowZone {get; set;}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                RowZone = this.Parent.Parent.Parent.FindInScope(\"Row\") as RectangularZone;\r\n                double pop = 1/RowZone.Width/VineDistance;  \r\n                //sowing method\r\n                Grapevine.Sow(cultivar: CultivarName,population: pop, \r\n                depth: 2000, rowSpacing: RowZone.Width, budNumber:BudNumber);\r\n                double budsPerMeterRow = BudNumber/VineDistance; \r\n                zone.Set(\"[Grapevine].Structure.BudsPerMeterRow.FixedValue\", budsPerMeterRow); \r\n                //cordon biomass\r\n                //calculate the biomass by length 1 meter time number of cordons time wood density (0.5 g/mm2/m) * pop to covert the biomass into g/m2\r\n                double woodDensity = 0.4; //g/mm2/m\r\n                double CordonNumber = BudNumber/12; //recalculating cordon number as we \r\n                double cordonBiomass = 3.1415926*(CordonDiameter/2)*(CordonDiameter/2)*CordonLength*CordonNumber *woodDensity * pop; \r\n                double cordonNSC = cordonBiomass * CordonNSC;\r\n                zone.Set(\"[Grapevine].Cordon.CordonDiameter.FixedValue\", CordonDiameter);\r\n                zone.Set(\"[Grapevine].Cordon.CordonLength.FixedValue\", CordonLength);\r\n                zone.Set(\"[Grapevine].Cordon.CordonNumber.FixedValue\", CordonNumber);\r\n\r\n                zone.Set(\"[Grapevine].Cordon.Live.StorageWt\", cordonNSC);                \r\n                zone.Set(\"[Grapevine].Cordon.Live.StructuralWt\", cordonBiomass - cordonNSC);                \r\n\r\n                //trunk biomass\r\n                double trunkDensity = 0.5; //g/mm2/m\r\n                double trunkBiomass = 3.1415926*(TrunkDiameter/2)*(TrunkDiameter/2)*TrunkLength *trunkDensity * pop; \r\n                double trunkNSC = trunkBiomass * TrunkNSC;\r\n\r\n                zone.Set(\"[Grapevine].Trunk.TrunkDiameter.FixedValue\", TrunkDiameter);\r\n                zone.Set(\"[Grapevine].Trunk.TrunkLength.FixedValue\", TrunkLength);\r\n\r\n                zone.Set(\"[Grapevine].Trunk.Live.StorageWt\", trunkNSC); \r\n                zone.Set(\"[Grapevine].Trunk.Live.StructuralWt\", trunkBiomass - trunkNSC);              \r\n                \r\n\r\n                //Fibrous Root biomass is  per plant\r\n                double rootBiomass = RootTrunkRatio * trunkBiomass; \r\n                double rootNSC = rootBiomass * RootNSC; \r\n                // zone.Set(\"[Grapevine].StructuralRoot.DMDemands.Structural.RootTrunkRatio\",  RootTrunkRatio); \r\n                \r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StorageWt\",    rootNSC ); //rootNSC*pop\r\n                 zone.Set(\"[Grapevine].StructuralRoot.Live.StructuralWt\", rootBiomass - rootNSC); \r\n\r\n                object StartAgeValue = StartAge;\r\n                zone.Set(\"[Grapevine].Phenology.Age.Years\",StartAgeValue);\r\n\r\n\r\n            }\r\n        }\r\n    }\r\n}            \r\n",
                           "Parameters": [
                             {
+                              "Key": "BudNumber",
+                              "Value": "48"
+                            },
+                            {
                               "Key": "CultivarName",
                               "Value": "SauvignonBlanc"
                             },
@@ -14621,10 +14937,6 @@
                             {
                               "Key": "VineDistance",
                               "Value": "1.8"
-                            },
-                            {
-                              "Key": "BudNumber",
-                              "Value": "48"
                             },
                             {
                               "Key": "CordonNumber",
@@ -18916,6 +19228,160 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Nitrogen",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Zone",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Berry.N",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Zone",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Berry.NFillingRate",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series1",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Zone",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.Root.NTakenUp",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series11",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16736653,
+                      "FactorToVaryColours": "Node",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Zone",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "Grapevine.StructuralRoot.N",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Series111",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
