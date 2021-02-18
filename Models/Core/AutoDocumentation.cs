@@ -1,20 +1,16 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AutoDocumentation.cs" company="APSIM Initiative">
-// Copyright APSIM Initiative.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Models.Functions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Xml;
-    using System.IO;
-    using Models.Functions;
     using System.Data;
+    using System.Globalization;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
+    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.
@@ -31,7 +27,7 @@ namespace Models.Core
         {
             if (model == null || string.IsNullOrEmpty(fieldName))
                 return string.Empty;
-            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo field = model.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (field != null)
             {
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(field, typeof(UnitsAttribute), false) as UnitsAttribute;
@@ -39,7 +35,18 @@ namespace Models.Core
                     return unitsAttribute.ToString();
             }
 
-            return string.Empty;
+            PropertyInfo property = model.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
+            if (property != null)
+            {
+                UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return unitsAttribute.ToString();
+            }
+            // Didn't find untis - try parent.
+            if (model.Parent != null)
+                return GetUnits(model.Parent, model.Name);
+            else
+                return string.Empty;
         }
 
         /// <summary>Gets the description from a declaraion.</summary>
@@ -76,7 +83,7 @@ namespace Models.Core
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled) )
+            if (force || (model.IncludeInDocumentation && model.Enabled))
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
@@ -111,6 +118,152 @@ namespace Models.Core
         }
 
         /// <summary>
+        /// Get the summary of a member (field, property)
+        /// </summary>
+        /// <param name="member">The member to get the summary for.</param>
+        public static string GetSummary(MemberInfo member)
+        {
+            var fullName = member.ReflectedType + "." + member.Name;
+            if (member is PropertyInfo)
+                return GetSummary(fullName, 'P');
+            else if (member is FieldInfo)
+                return GetSummary(fullName, 'F');
+            else if (member is EventInfo)
+                return GetSummary(fullName, 'E');
+            else if (member is MethodInfo method)
+            {
+                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+                args = args.Replace("+", ".");
+                return GetSummary($"{fullName}({args})", 'M');
+            }
+            else
+                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+        }
+
+        /// <summary>
+        /// Get the summary of a type removing CRLF.
+        /// </summary>
+        /// <param name="t">The type to get the summary for.</param>
+        public static string GetSummary(Type t)
+        {
+            return GetSummary(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the summary of a type without removing CRLF.
+        /// </summary>
+        /// <param name="t">The type to get the summary for.</param>
+        public static string GetSummaryRaw(Type t)
+        {
+            return GetSummaryRaw(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks tag of a type (if it exists).
+        /// </summary>
+        /// <param name="t">The type.</param>
+        public static string GetRemarks(Type t)
+        {
+            return GetRemarks(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (field, property) if it exists.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        public static string GetRemarks(MemberInfo member)
+        {
+            var fullName = member.ReflectedType + "." + member.Name;
+            if (member is PropertyInfo)
+                return GetRemarks(fullName, 'P');
+            else if (member is FieldInfo)
+                return GetRemarks(fullName, 'F');
+            else if (member is EventInfo)
+                return GetRemarks(fullName, 'E');
+            else if (member is MethodInfo method)
+            {
+                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
+                args = args.Replace("+", ".");
+                return GetRemarks($"{fullName}({args})", 'M');
+            }
+            else
+                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+        }
+
+        /// <summary>
+        /// Get the summary of a member (class, field, property)
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        private static string GetSummary(string path, char typeLetter)
+        {
+            var rawSummary = GetSummaryRaw(path, typeLetter);
+            if (rawSummary != null)
+            {
+                // Need to fix multiline comments - remove newlines and consecutive spaces.
+                return Regex.Replace(rawSummary, @"\n\s+", " ");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the summary of a member (class, field, property)
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        private static string GetSummaryRaw(string path, char typeLetter)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (doc == null)
+            {
+                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                doc = new XmlDocument();
+                doc.Load(fileName);
+            }
+
+            path = path.Replace("+", ".");
+
+            string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
+            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
+            if (summaryNode != null)
+                return summaryNode.InnerXml.Trim();
+            return null;
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (class, field, property).
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        /// <returns></returns>
+        private static string GetRemarks(string path, char typeLetter)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (doc == null)
+            {
+                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                doc = new XmlDocument();
+                doc.Load(fileName);
+            }
+
+            path = path.Replace("+", ".");
+
+            string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
+            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
+            if (summaryNode != null)
+            {
+                // Need to fix multiline remarks - trim newlines and consecutive spaces.
+                string remarks = summaryNode.InnerXml.Trim();
+                return Regex.Replace(remarks, @"\n\s+", " ");
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Parse a string into documentation tags
         /// </summary>
         /// <param name="stringToParse">The string to parse</param>
@@ -120,7 +273,7 @@ namespace Models.Core
         /// <param name="indent">The current indent level</param>
         /// <param name="doNotTrim">If true, don't trim the lines</param>
         /// <param name="documentAllChildren">Ensure all children are documented?</param>
-        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim=false)
+        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim = false)
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
@@ -176,7 +329,7 @@ namespace Models.Core
 
                     // Find child
                     string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = Apsim.Get(model, childName) as IModel;
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
                     if (child == null)
                         paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                     else
@@ -192,7 +345,7 @@ namespace Models.Core
                     // Find children
                     string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
                     Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in Apsim.Children(model, childType))
+                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                     {
                         DocumentModel(child, tags, targetHeadingLevel + 1, indent);
                         childrenDocumented.Add(child);
@@ -200,6 +353,35 @@ namespace Models.Core
                 }
                 else if (line == "[DocumentView]")
                     tags.Add(new ModelView(model));
+                else if (line.StartsWith("[DocumentChart "))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    var words = line.Replace("[DocumentChart ", "").Split(',');
+                    if (words.Length == 4)
+                    {
+                        var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
+                        if (xypairs != null)
+                        {
+                            childrenDocumented.Add(xypairs);
+                            var xName = words[2];
+                            var yName = words[3].Replace("]", "");
+                            tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                        }
+                    }
+                }
+                else if (line.StartsWith("[DocumentMathFunction"))
+                {
+                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                    var operatorChar = line["[DocumentMathFunction".Length + 1];
+                    childrenDocumented.AddRange(DocumentMathFunction(model, operatorChar, tags, headingLevel, indent));
+                }
+                else if (line.StartsWith("[DontDocument"))
+                {
+                    string childName = line.Replace("[DontDocument ", "").Replace("]", "");
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
+                    if (childName != null)
+                        childrenDocumented.Add(child);
+                }
                 else
                     paragraphSoFar += line + "\r\n";
 
@@ -211,7 +393,7 @@ namespace Models.Core
             if (documentAllChildren)
             {
                 // write children.
-                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
+                foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
                         DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
@@ -232,9 +414,12 @@ namespace Models.Core
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = Apsim.Get(model, macro, true);
+                        object value = EvaluateModelPath(model, macro);
                         if (value != null)
                         {
+                            if (value is Array)
+                                value = StringUtilities.Build(value as Array, Environment.NewLine);
+
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());
                         }
@@ -244,15 +429,59 @@ namespace Models.Core
                     }
                 }
 
-                posMacro = line.IndexOf('[', posMacro + 1);
+                if (line == "")
+                    posMacro = -1;
+                else if (posMacro < line.Length)
+                    posMacro = line.IndexOf('[', posMacro + 1);
+
+                if (string.IsNullOrEmpty(line))
+                    break;
             }
 
             return line;
         }
 
+        /// <summary>
+        /// Evaluate a path that can include child models, properties or method calls.
+        /// </summary>
+        /// <param name="model">The reference model.</param>
+        /// <param name="path">The path to locate</param>
+        private static object EvaluateModelPath(IModel model, string path)
+        {
+            object obj = model;
+            foreach (var word in path.Split('.'))
+            {
+                if (obj == null)
+                    return null;
+                if (word.EndsWith("()"))
+                {
+                    // Process a method (with no arguments) call.
+                    // e.g. GetType()
+                    var methodName = word.Replace("()", "");
+                    var method = obj.GetType().GetMethod(methodName);
+                    if (method != null)
+                        obj = method.Invoke(obj, null);
+                }
+                else if (obj is IModel && word == "Units")
+                    obj = GetUnits(model, model.Name);
+                else if (obj is IModel)
+                {
+                    // Process a child or property of a model.
+                    obj = (obj as IModel).FindByPath(word, true)?.Value;
+                }
+                else
+                {
+                    // Process properties / fields of an object (not an IModel)
+                    obj = ReflectionUtilities.GetValueOfFieldOrProperty(word, obj);
+                }
+            }
+
+            return obj;
+        }
+
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar.Trim() != string.Empty) 
+            if (paragraphSoFar.Trim() != string.Empty)
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }
@@ -309,9 +538,81 @@ namespace Models.Core
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation && 
+                if (child.IncludeInDocumentation &&
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
+        }
+
+        /// <summary>
+        /// Document the mathematical function.
+        /// </summary>
+        /// <param name="function">The IModel function.</param>
+        /// <param name="op">The operator</param>
+        /// <param name="tags">The tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        private static List<IModel> DocumentMathFunction(IModel function, char op,
+                                                         List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            // create a string to display 'child1 - child2 - child3...'
+            string msg = string.Empty;
+            List<IModel> childrenToDocument = new List<IModel>();
+            foreach (IModel child in function.FindAllChildren<IFunction>())
+            {
+                if (msg != string.Empty)
+                    msg += " " + op + " ";
+
+                if (!AddChildToMsg(child, ref msg))
+                    childrenToDocument.Add(child);
+            }
+
+            tags.Add(new AutoDocumentation.Paragraph("<i>" + function.Name + " = " + msg + "</i>", indent));
+
+            // write children
+            if (childrenToDocument.Count > 0)
+            {
+                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
+
+                foreach (IModel child in childrenToDocument)
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+            }
+
+            return childrenToDocument;
+        }
+
+        /// <summary>
+        /// Return the name of the child or it's value if the name of the child is equal to 
+        /// the written value of the child. i.e. if the value is 1 and the name is 'one' then
+        /// return the value, instead of the name.
+        /// </summary>
+        /// <param name="child">The child model.</param>
+        /// <param name="msg">The message to add to.</param>
+        /// <returns>True if child's value was added to msg.</returns>
+        private static bool AddChildToMsg(IModel child, ref string msg)
+        {
+            if (child is Constant)
+            {
+                double doubleValue = (child as Constant).FixedValue;
+                if (Math.IEEERemainder(doubleValue, doubleValue) == 0)
+                {
+                    int intValue = Convert.ToInt32(doubleValue, CultureInfo.InvariantCulture);
+                    string writtenInteger = Integer.ToWritten(intValue);
+                    writtenInteger = writtenInteger.Replace(" ", "");  // don't want spaces.
+                    if (writtenInteger.Equals(child.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        msg += intValue.ToString();
+                        return true;
+                    }
+                }
+            }
+            else if (child is VariableReference)
+            {
+                msg += StringUtilities.RemoveTrailingString((child as VariableReference).VariableName, ".Value()");
+                return true;
+            }
+
+            msg += child.Name;
+            return false;
         }
 
         /// <summary>
@@ -413,20 +714,45 @@ namespace Models.Core
         public class Table : ITag
         {
             /// <summary>The data to show in the table.</summary>
-            public DataTable data;
+            public DataView data;
 
             /// <summary>The indent level.</summary>
             public int indent;
+
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public int ColumnWidth { get; private set; }
+
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public string Style { get; private set; } = "Table";
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Table"/> class.
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(DataTable data, int indent)
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataTable data, int indent, int width = 50, string style = "Table")
+            {
+                this.data = new DataView(data);
+                this.indent = indent;
+                this.ColumnWidth = width;
+                Style = style;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Table"/> class.
+            /// </summary>
+            /// <param name="data">The column / row data.</param>
+            /// <param name="indent">The indentation.</param>
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataView data, int indent, int width = 50, string style = "Table")
             {
                 this.data = data;
                 this.indent = indent;
+                this.ColumnWidth = width;
+                Style = style;
             }
         }
 
@@ -443,7 +769,15 @@ namespace Models.Core
         /// <summary>Describes a new page for the tags system.</summary>
         public class NewPage : ITag
         {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
+        }
 
+        /// <summary>Page setup tag.</summary>
+        public class PageSetup : ITag
+        {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
         }
 
         /// <summary>Describes a model view for the tags system.</summary>
@@ -460,5 +794,21 @@ namespace Models.Core
             }
         }
 
+        /// <summary> creates a list of child function names </summary>
+        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
+        {
+            string listofKids = "";
+            int count = 0;
+            foreach (IModel F in ChildFunctions)
+            {
+                count += 1;
+                listofKids += ("*" + F.Name + "*");
+                if (count == ChildFunctions.Count() - 1)
+                    listofKids += " and ";
+                else if (count < ChildFunctions.Count() - 1)
+                    listofKids += ", ";
+            }
+            return listofKids;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -27,19 +27,40 @@
         /// <summary>User specified filter.</summary>
         private string userFilter;
 
+        /// <summary>The name of the checkpoint to show.</summary>
+        public string CheckpointName { get; private set; }
+
+        /// <summary>Colour brightness modifier for the series definition in range [-1, 1].</summary>
+        public double ColourModifier { get; private set; }
+
+        /// <summary>
+        /// Marker size modifier for the series definition in range [0, 1].
+        /// Larger value means smaller markers.
+        /// </summary>
+        public double MarkerModifier { get; private set; }
+
         /// <summary>Constructor</summary>
         /// <param name="series">The series instance to initialise from.</param>
+        /// <param name="checkpoint">The checkpoint name.</param>
+        /// <param name="colModifier">The brightness modifier for colour in range  [-1, 1]. Negative means darker.</param>
+        /// <param name="markerModifier">Marker size modifier in range [0, 1]. Larger value means smaller markers.</param>
         /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
         /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
-        public SeriesDefinition(Series series, 
+        public SeriesDefinition(Series series,
+                                string checkpoint,
+                                double colModifier,
+                                double markerModifier,
                                 string whereClauseForInScopeData = null,
                                 string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
             this.series = series;
+            CheckpointName = checkpoint;
+            ColourModifier = colModifier;
+            MarkerModifier = markerModifier;
             Colour = series.Colour;
             Line = series.Line;
             Marker = series.Marker;
@@ -71,8 +92,8 @@
                 Title = customTitle;
 
 
-            if (series.Checkpoint != "Current")
-                Title += " (" + series.Checkpoint + ")";
+            if (CheckpointName != "Current")
+                Title += " (" + CheckpointName + ")";
 
             scopeFilter = whereClauseForInScopeData;
             userFilter = filter;
@@ -133,8 +154,8 @@
             {
                 if (series == null) // Can be null for regression lines or 1:1 lines
                     return MarkerSizeType.Normal;
-                else
-                    return series.MarkerSize;
+
+                return series.MarkerSize;
             }
         }
 
@@ -198,8 +219,11 @@
         /// <summary>The simulation names for each point.</summary>
         public IEnumerable<string> SimulationNamesForEachPoint { get; private set; }
 
-        /// <summary>Gets the error values</summary>
-        public IEnumerable<double> Error { get; private set; }
+        /// <summary>Gets the error values for the x series</summary>
+        public IEnumerable<double> XError { get; private set; }
+
+        /// <summary>Gets the error values for the y series</summary>
+        public IEnumerable<double> YError { get; private set; }
 
         /// <summary>Add a clause to the filter.</summary>
         /// <param name="filter">The filter to add to.</param>
@@ -221,7 +245,7 @@
         /// <param name="index">The colour index into the colour palette.</param>
         public static void SetColour(SeriesDefinition definition, int index)
         {
-            definition.Colour = ColourUtilities.Colours[index];
+            definition.Colour = ColourUtilities.ChangeColorBrightness(ColourUtilities.Colours[index], definition.ColourModifier);
         }
 
         /// <summary>A static setter function for line type from an index</summary>
@@ -270,7 +294,7 @@
                     foreach (var descriptor in Descriptors)
                     {
                         if (fieldsThatExist.Contains(descriptor.Name))
-                            filter = AddToFilter(filter, descriptor.Name + " = '" + descriptor.Value + "'");
+                            filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                         else
                             filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
                     }
@@ -307,17 +331,17 @@
                 fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
 
                 // Add any fields from child graphable models.
-                foreach (IGraphable series in Apsim.Children(series, typeof(IGraphable)))
+                foreach (IGraphable series in series.FindAllChildren<IGraphable>())
                     fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
 
                 // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
                 // GetData in this situation.
-                string checkpointName = null;
-                if (reader.ColumnNames(series.TableName).Contains("CheckpointID"))
-                    checkpointName = series.Checkpoint;
+                string localCheckpointName = CheckpointName;
+                if (!reader.ColumnNames(series.TableName).Contains("CheckpointID"))
+                    localCheckpointName = null;
 
                 // Go get the data.
-                Data = reader.GetData(series.TableName, checkpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
+                Data = reader.GetData(series.TableName, localCheckpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(series.TableName, XFieldName);
@@ -330,7 +354,8 @@
                     Y = GetDataFromTable(Data, YFieldName);
                     X2 = GetDataFromTable(Data, X2FieldName);
                     Y2 = GetDataFromTable(Data, Y2FieldName);
-                    Error = GetErrorDataFromTable(Data, YFieldName);
+                    XError = GetErrorDataFromTable(Data, XFieldName);
+                    YError = GetErrorDataFromTable(Data, YFieldName);
                     if (series.Cumulative)
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
                     if (series.CumulativeX)
@@ -402,44 +427,7 @@
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            if (fieldName != null && fieldName.StartsWith("["))
-            {
-                int posCloseBracket = fieldName.IndexOf(']');
-                if (posCloseBracket == -1)
-                    throw new Exception("Invalid graph field name: " + fieldName);
-
-                string modelName = fieldName.Substring(1, posCloseBracket - 1);
-                string namePath = fieldName.Remove(0, posCloseBracket + 2);
-
-                IModel modelWithData = Apsim.Find(series, modelName) as IModel;
-                if (modelWithData == null)
-                {
-                    // Try by assuming the name is a type.
-                    Type t = ReflectionUtilities.GetTypeFromUnqualifiedName(modelName);
-                    if (t != null)
-                    {
-                        IModel parentOfGraph = series.Parent.Parent;
-                        if (t.IsAssignableFrom(parentOfGraph.GetType()))
-                            modelWithData = parentOfGraph;
-                        else
-                            modelWithData = Apsim.Find(parentOfGraph, t);
-                    }
-                }
-
-                if (modelWithData != null)
-                {
-                    // Use reflection to access a property.
-                    object obj = Apsim.Get(modelWithData, namePath);
-                    if (obj != null && obj.GetType().IsArray)
-                        return obj as Array;
-                }
-            }
-            else
-            {
-                return Apsim.Get(series, fieldName) as IEnumerable;
-            }
-
-            return null;
+            return series.FindByPath(fieldName)?.Value as IEnumerable;
         }
 
         /// <summary>Gets a column of data from a table.</summary>
@@ -454,6 +442,8 @@
                     return DataTableUtilities.GetColumnAsDates(data, fieldName);
                 else if (data.Columns[fieldName].DataType == typeof(string))
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
+                else if (data.Columns[fieldName].DataType == typeof(int))
+                    return DataTableUtilities.GetColumnAsIntegers(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
             }

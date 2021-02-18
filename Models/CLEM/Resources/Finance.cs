@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -47,7 +47,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -78,6 +78,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -86,16 +88,17 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(CurrencyName!=null && CurrencyName!="")
+            if (CurrencyName != null && CurrencyName != "")
             {
-                html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName+"</span></div>";
+                html += "<div class=\"activityentry\">Currency is <span class=\"setvalue\">" + CurrencyName + "</span></div>";
             }
             else
             {
                 html += "<div class=\"activityentry\">Currency is <span class=\"errorlink\">Not specified</span></div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

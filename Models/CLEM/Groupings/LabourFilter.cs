@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(LabourSpecificationItem))]
     [ValidParent(ParentType = typeof(LabourPriceGroup))]
+    [ValidParent(ParentType = typeof(LabourFeedGroup))]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilter.htm")]
     public class LabourFilter: CLEMModel
@@ -126,20 +127,7 @@ namespace Models.CLEM.Groupings
             return str;
         }
 
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourFilter Clone()
-        {
-            LabourFilter clone = new LabourFilter()
-            {
-                Parameter = this.Parameter,
-                Operator = this.Operator,
-                Value = this.Value
-            };
-            return clone;
-        }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -148,7 +136,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            if(this.Value == null)
+            if (this.Value == null)
             {
                 return "<div class=\"filtererror\">No value provided</div>";
             }
@@ -174,7 +162,8 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
     }
 
     /// <summary>

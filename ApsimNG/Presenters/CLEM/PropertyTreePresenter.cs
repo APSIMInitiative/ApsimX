@@ -10,7 +10,7 @@ namespace UserInterface.Presenters
     using APSIM.Shared.Utilities;
     using Commands;
     using EventArguments;
-    using Importer;
+    using global::UserInterface.Extensions;
     using Interfaces;
     using Models;
     using Models.Core;
@@ -141,7 +141,7 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.treeview = view as IPropertyTreeView;
-            this.TreeWidth = explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.
+            this.TreeWidth = 180; // explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
@@ -159,10 +159,8 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            if (this.treeview is Views.PropertyTreeView)
-            {
-                (this.treeview as Views.PropertyTreeView).MainWidget.Destroy();
-            }
+            if (treeview is ViewBase view)
+                view.MainWidget.Cleanup();
         }
 
         /// <summary>
@@ -327,7 +325,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// A helper function for creating a node description object for the category hierarchy.
         /// </summary>
-        /// <param name="properties">List of properties </param>
+        /// <param name="categoryTree"></param>
         /// <returns>The description</returns>
         private TreeViewNode GetNodeDescription(CategoryTree categoryTree)
         {
@@ -343,14 +341,29 @@ namespace UserInterface.Presenters
             {
                 TreeViewNode description = new TreeViewNode();
                 description.Name = cat.Name;
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.Folder.png";
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.ActivityFolder.png";
                 description.Children = new List<TreeViewNode>();
                 foreach (string subcat in cat.SubcategoryNames)
                 {
-                        TreeViewNode child = new TreeViewNode();
-                        child.Name = subcat;
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.Folder.png";
-                        description.Children.Add(child);
+                    TreeViewNode child = new TreeViewNode();
+                    child.Name = subcat;
+                    if (subcat.ToLower().Contains("pasture"))
+                    {
+                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.PastureTreeItem.png";
+                    }
+                    else if (subcat.ToLower().Contains("unspecif"))
+                    {
+                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
+                    }
+                    else if (model.GetType().Name.ToLower().Contains("ruminant"))
+                    {
+                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.RuminantGroup.png";
+                    }
+                    else
+                    {
+                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
+                    }
+                    description.Children.Add(child);
                 }
                 root.Children.Add(description);
             }

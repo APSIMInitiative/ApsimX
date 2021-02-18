@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string BankAccountName { get; set; }
 
@@ -50,6 +51,13 @@ namespace Models.CLEM.Activities
         [Description("Amount")]
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Category label to use in ledger
+        /// </summary>
+        [Description("Shortname of fee for reporting")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
+        public string Category { get; set; }
 
         /// <summary>
         /// Store finance type to use
@@ -73,6 +81,8 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -80,22 +90,35 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ";
-            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ";
-            html += " from ";
-            if(BankAccountName!=null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"resourcelink\">" + BankAccountName + "</span> ";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ");
+                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ");
+                htmlWriter.Write(" from ");
+                if (BankAccountName != null)
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
+                if (Category != null && Category != "")
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
+                }
+                htmlWriter.Write(" for all transactions</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ";
-            }
-            html += "</div>";
-            return html;
-        }
+        } 
+        #endregion
 
     }
 }

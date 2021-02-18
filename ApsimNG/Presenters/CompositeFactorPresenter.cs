@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Drawing;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// Connects a CompositeFactor model to a EditorView.
@@ -82,7 +83,7 @@
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)

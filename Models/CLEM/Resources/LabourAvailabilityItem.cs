@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -20,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    public class LabourAvailabilityItem : LabourSpecificationItem
+    public class LabourAvailabilityItem : LabourSpecificationItem, IFilterGroup
     {
         /// <summary>
         /// Single values 
@@ -29,6 +31,12 @@ namespace Models.CLEM.Resources
         [Description("Availability")]
         [Required, GreaterThanValue(0)]
         public double Value { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
 
         /// <summary>
         /// Provide the labour availability
@@ -41,12 +49,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourAvailabilityItem()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -55,21 +71,23 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (!formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                if (Value <= 0)
+                if (!formatForParentControl)
                 {
-                    html += "<span class=\"errorlink\">" + Value.ToString() + "</span>";
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    if (Value <= 0)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
+                    }
+                    else if (Value > 0)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
+                    }
+                    htmlWriter.Write(" days available each month</div>");
                 }
-                else if (Value > 0)
-                {
-                    html += "<span class=\"setvalue\">" + Value.ToString() + "</span> x ";
-                }
-                html += " days available each month</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -78,28 +96,30 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                string classstr = "setvalue";
-                if(Value==0)
+                if (formatForParentControl)
                 {
-                    classstr = "errorlink";
+                    string classstr = "setvalue";
+                    if (Value == 0)
+                    {
+                        classstr = "errorlink";
+                    }
+                    htmlWriter.Write("</td>");
+                    htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
+                    for (int i = 1; i < 12; i++)
+                    {
+                        htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
+                    }
+                    htmlWriter.Write("</tr>");
                 }
-                html += "</td>";
-                html += "<td><span class=\""+classstr+"\">" + this.Value.ToString() + "</span></td>";
-                for (int i = 1; i < 12; i++)
+                else
                 {
-                    html += "<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>";
+                    htmlWriter.Write("\r\n</div>");
                 }
-                html += "</tr>";
-            }
-            else
-            {
-                html += "\n</div>";
-            }
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         }
 
         /// <summary>
@@ -108,24 +128,26 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<tr><td>";
-                if ((Apsim.Children(this, typeof(LabourFilter)).Count() == 0))
+                if (formatForParentControl)
                 {
-                    html += "<div class=\"filter\">Any labour</div>";
+                    htmlWriter.Write("<tr><td>");
+                    if ((this.FindAllChildren<LabourFilter>().Count() == 0))
+                    {
+                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
+                    }
                 }
-            }
-            else
-            {
-                html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+                else
                 {
-                    html += "<div class=\"filter\">Any labour</div>";
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                    if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
+                    {
+                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
+                    }
                 }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -146,6 +168,7 @@ namespace Models.CLEM.Resources
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
         }
 
+        #endregion
 
     }
 }

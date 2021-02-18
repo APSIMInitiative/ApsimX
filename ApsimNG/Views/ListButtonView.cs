@@ -1,13 +1,9 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ListButtonView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Linq;
     using Classes;
+    using global::UserInterface.Extensions;
     using Gtk;
 
     /// <summary>An interface for a list with a button bar</summary>
@@ -86,9 +82,16 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            filterEntry.Changed -= OnFilterChanged;
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                filterEntry.Changed -= OnFilterChanged;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>The list.</summary>
@@ -166,13 +169,17 @@ namespace UserInterface.Views
             button.Homogeneous = false;
             Label btnLabel = new Label(text);
 
+#if NETFRAMEWORK
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
-            Pango.FontDescription font = Utility.Configuration.Settings.Font;
-            if (font != null && font != btnLabel.Style.FontDescription)
-                btnLabel.ModifyFont(Utility.Configuration.Settings.Font);
-            btnLabel.LineWrap = true;
-            btnLabel.LineWrapMode = Pango.WrapMode.Word;
+            // todo - check if this is necessary in gtk3
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+            {
+                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                if (font != null && font != btnLabel.Style.FontDescription)
+                    btnLabel.ModifyFont(font);
+            }
+#endif
             btnLabel.Justify = Justification.Center;
             btnLabel.Realized += BtnLabel_Realized;
             button.LabelWidget = btnLabel;
@@ -247,7 +254,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Adds a menu item button to a menu button.
         /// </summary>
-        /// <param name="menuId">ID of the sub-menu.</param>
+        /// <param name="parentButtonText">Text on the parent button.</param>
         /// <param name="text">Text on the button.</param>
         /// <param name="image">Image on the button.</param>
         /// <param name="handler">Handler to call when button is clicked.</param>
@@ -261,9 +268,7 @@ namespace UserInterface.Views
             if (toplevel.Menu as Menu == null)
                 toplevel.Menu = new Menu();
             Menu menu = toplevel.Menu as Menu;
-
-            ImageMenuItem menuItem = new ImageMenuItem(text);
-            menuItem.Image = image;
+            MenuItem menuItem = WidgetExtensions.CreateImageMenuItem(text, image);
             menuItem.Activated += handler;
             menu.Append(menuItem);
             menuItem.ShowAll();
@@ -278,12 +283,24 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void BtnLabel_Realized(object sender, EventArgs e)
         {
-            ((sender as Label).Parent as VBox).Spacing = 0;
-            Pango.Layout layout = (sender as Label).Layout;
-            Pango.Rectangle ink;
-            Pango.Rectangle logical;
-            layout.GetExtents(out ink, out logical);
-            (sender as Label).Xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+            try
+            {
+                if (sender is Label label && label.Parent is Box vbox)
+                {
+                    vbox.Spacing = 0;
+                    Pango.Layout layout = label.Layout;
+                    Pango.Rectangle ink;
+                    Pango.Rectangle logical;
+                    layout.GetExtents(out ink, out logical);
+                    int xpad = ((layout.Width - logical.Width) / (int)Pango.Scale.PangoScale) / 2;
+                    if (xpad > 0)
+                        label.Xpad = xpad;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -293,7 +310,14 @@ namespace UserInterface.Views
         /// <param name="e">Sender object.</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            FilterChanged?.Invoke(this, EventArgs.Empty);
+            try
+            {
+                FilterChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

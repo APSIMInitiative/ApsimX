@@ -6,12 +6,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
+    /// <summary>Labour (Human) feed activity</summary>
     /// <summary>This activity provides food to specified people based on a feeding style</summary>
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
@@ -23,19 +24,16 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs human feeding based upon the current labour filtering and a feeding style.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/LabourFeed.htm")]
+    [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase
     {
         private double feedRequired = 0;
-
-        //[Link]
-        //Clock Clock = null;
 
         /// <summary>
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Food to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food type required")]
         public string FeedTypeName { get; set; }
 
@@ -51,7 +49,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public HumanFoodStoreType FeedType { get; set; }
 
         /// <summary>
@@ -81,7 +79,7 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
                 double value = (child as LabourFeedGroup).Value;
 
@@ -91,10 +89,10 @@ namespace Models.CLEM.Activities
                     switch (FeedStyle)
                     {
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                            feedRequired += Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE*ind.AdultEquivalent*30.4);
+                            feedRequired += value * 30.4;
                             break;
                         case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                            feedRequired += Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                            feedRequired += value * ind.AdultEquivalent * 30.4;
                             break;
                         default:
                             throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -115,7 +113,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(HumanFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Reason = "Consumption"
+                        Category = "Consumption"
                     }
                 };
             }
@@ -130,12 +128,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = group.Filter(child).ToList();
                 head += subgroup.Count();
@@ -182,7 +180,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
         }
 
         /// <summary>
@@ -225,7 +223,7 @@ namespace Models.CLEM.Activities
                     return;
                 }
 
-                foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+                foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
                 {
                     double value = (child as LabourFeedGroup).Value;
 
@@ -234,14 +232,26 @@ namespace Models.CLEM.Activities
                         switch (FeedStyle)
                         {
                             case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                feedRequest.Provided = Math.Min(value * 30.4, FeedType.MaximumDailyIntakePerAE * ind.AdultEquivalent * 30.4);
+                                feedRequest.Provided = value * 30.4;
                                 feedRequest.Provided *= feedLimit;
-                                ind.AddIntake(feedRequest);
+                                feedRequest.Provided *= (feedRequest.Resource as HumanFoodStoreType).EdibleProportion;
+                                ind.AddIntake(new LabourDietComponent()
+                                {
+                                    AmountConsumed = feedRequest.Provided,
+                                    FoodStore = feedRequest.Resource as HumanFoodStoreType
+                                }
+                                );
                                 break;
                             case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                                feedRequest.Provided = Math.Min(value, FeedType.MaximumDailyIntakePerAE) * ind.AdultEquivalent * 30.4;
+                                feedRequest.Provided = value * ind.AdultEquivalent * 30.4;
                                 feedRequest.Provided *= feedLimit;
-                                ind.AddIntake(feedRequest);
+                                feedRequest.Provided *= (feedRequest.Resource as HumanFoodStoreType).EdibleProportion;
+                                ind.AddIntake(new LabourDietComponent()
+                                {
+                                    AmountConsumed = feedRequest.Provided,
+                                    FoodStore = feedRequest.Resource as HumanFoodStoreType
+                                }
+                                );
                                 break;
                             default:
                                 throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -250,7 +260,6 @@ namespace Models.CLEM.Activities
                 }
                 SetStatusSuccess();
             }
-
         }
 
         /// <summary>
@@ -290,6 +299,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -297,19 +308,22 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Feed people ";
-            if (FeedTypeName == null || FeedTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[Feed TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
+                if (FeedTypeName == null || FeedTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
 }

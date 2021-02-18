@@ -1,0 +1,70 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 100,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": false,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "Name": "Bork",
+      "Children": [
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "2020-01-01T00:00:00",
+          "End": "2020-01-02T00:00:00",
+          "Name": "Clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "Summary",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using System.Data;\r\nusing System.IO;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n      \r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    \tpublic string Test { get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            Test = \"Hello\";\r\n        }\r\n    }\r\n}\r\n       \r\n",
+          "Parameters": [],
+          "Name": "Manager",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\t[Serializable] \r\n\tpublic class Script : Model\r\n\t{\r\n\t\t[Link]\r\n\t\tprivate Simulation sim;\r\n\r\n\t\t[EventSubscribe(\"StartOfDay\")]\r\n\t\tprivate void OnStartOfSimulation(object sender, EventArgs e)\r\n\t\t{\r\n\t\t\tstring test = (string)Apsim.Get(sim, \"Manager.Script.Test\");\r\n\t\t\tif (test != \"Hello\")\r\n\t\t\t\tthrow new Exception(\"bork\");\r\n\t\t}\r\n\t}\r\n}",
+          "Parameters": [],
+          "Name": "Manager1",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
+}

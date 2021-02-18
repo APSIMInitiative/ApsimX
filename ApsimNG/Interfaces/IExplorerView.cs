@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     /// <summary>
     /// The interface for an explorer view.
@@ -22,6 +17,12 @@ namespace UserInterface.Interfaces
         /// Add a view to the right hand panel.
         /// </summary>
         void AddRightHandView(object control);
+
+        /// <summary>
+        /// Add a description to the right hand view.
+        /// </summary>
+        /// <param name="description">The description to show.</param>
+        void AddDescriptionToRightHandView(string description);
 
         /// <summary>Get a screen shot of the right hand panel.</summary>
         System.Drawing.Image GetScreenshotOfRightHandPanel();

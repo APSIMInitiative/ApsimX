@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -32,7 +32,7 @@ namespace Models.Functions.SupplyFunctions
         public string pathway { get; set; }
 
         /// <summary>Function to return a temperature factor for a given function </summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private WangEngelTempFunction TemperatureResponse = null;
 
         /// <param name="CO2"></param>

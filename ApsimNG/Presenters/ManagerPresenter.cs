@@ -1,25 +1,20 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ManagerPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
-    using System.Reflection;
     using APSIM.Shared.Utilities;
     using EventArguments;
     using Models;
     using Models.Core;
     using Views;
-    using System.IO;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
+    using Interfaces;
+    using Utility;
+
+#if NETFRAMEWORK
+    // Used for the "code reformat option"..
     using ICSharpCode.NRefactory.CSharp;
+#endif
 
     /// <summary>
     /// Presenter for the Manager component
@@ -29,7 +24,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private PropertyPresenter propertyPresenter = new PropertyPresenter();
+        private IPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -39,7 +34,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The compiled script model.
         /// </summary>
-        private Model scriptModel;
+        private IModel scriptModel;
 
         /// <summary>
         /// The view for the manager
@@ -71,8 +66,28 @@ namespace UserInterface.Presenters
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             scriptModel = manager.Children.FirstOrDefault();
-            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
-            managerView.Editor.ScriptMode = true;
+
+            // See if manager script has a description attribute on it's class.
+            if (scriptModel != null)
+            {
+                DescriptionAttribute descriptionName = ReflectionUtilities.GetAttribute(scriptModel.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
+                if (descriptionName != null)
+                    explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
+            }
+
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
+            try
+            {
+                propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+            managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
             managerView.Editor.LeaveEditor += OnEditorLeave;
@@ -108,10 +123,12 @@ namespace UserInterface.Presenters
         {
             try
             {
+#if NETFRAMEWORK
                 if (e.ControlShiftSpace)
                     intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+#endif
             }
             catch (Exception err)
             {
@@ -130,9 +147,17 @@ namespace UserInterface.Presenters
             if (!intellisense.Visible)
                 BuildScript();
             if (scriptModel != null)
+                RefreshProperties();
+        }
+
+        private void RefreshProperties()
+        {
+            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
+                simplePresenter.RefreshView(scriptModel);
+            else if (propertyPresenter is PropertyPresenter presenter)
             {
-                propertyPresenter.UpdateModel(scriptModel);
-                propertyPresenter.Refresh();
+                presenter.UpdateModel(scriptModel);
+                presenter.Refresh();
             }
         }
 
@@ -145,10 +170,6 @@ namespace UserInterface.Presenters
             if (changedModel == manager)
             {
                 managerView.Editor.Text = manager.Code;
-            }
-            else if (changedModel == scriptModel)
-            {
-                propertyPresenter.UpdateModel(scriptModel);
             }
         }
 
@@ -187,9 +208,7 @@ namespace UserInterface.Presenters
             try
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
-                scriptModel = Apsim.Child(manager, "Script") as Model;
-                if (scriptModel != null)
-                    propertyPresenter.Refresh();
+                scriptModel = manager.FindChild("Script") as Model;
             }
             catch (Exception err)
             {
@@ -206,7 +225,16 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoCompile(object sender, EventArgs e)
         {
-            BuildScript();
+            try
+            {
+                BuildScript();
+                if (scriptModel != null)
+                    RefreshProperties();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -216,10 +244,21 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnDoReformat(object sender, EventArgs e)
         {
-            CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-            string newText = formatter.Format(managerView.Editor.Text);
-            managerView.Editor.Text = newText;
-            explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+            try
+            {
+#if NETFRAMEWORK
+                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
+                string newText = formatter.Format(managerView.Editor.Text);
+                managerView.Editor.Text = newText;
+                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+#else
+                throw new NotImplementedException();
+#endif
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>

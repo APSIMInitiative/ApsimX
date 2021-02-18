@@ -8,7 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -35,13 +36,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Resource type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type is required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
         /// Resource to check
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IResourceType ResourceTypeModel { get; set; }
 
         /// <summary>
@@ -160,6 +161,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -167,42 +170,60 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            string str = "";
-            switch (Operator)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                case FilterOperators.Equal:
-                    str += "equals";
-                    break;
-                case FilterOperators.NotEqual:
-                    str += "does not equal";
-                    break;
-                case FilterOperators.LessThan:
-                    str += "is less than";
-                    break;
-                case FilterOperators.LessThanOrEqual:
-                    str += "is less than or equal to";
-                    break;
-                case FilterOperators.GreaterThan:
-                    str += "is greater than";
-                    break;
-                case FilterOperators.GreaterThanOrEqual:
-                    str += "is greater than or equal to";
-                    break;
-                default:
-                    break;
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                if (ResourceTypeName is null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span> ");
+                }
+                string str = "";
+                switch (Operator)
+                {
+                    case FilterOperators.Equal:
+                        str += "equals";
+                        break;
+                    case FilterOperators.NotEqual:
+                        str += "does not equal";
+                        break;
+                    case FilterOperators.LessThan:
+                        str += "is less than";
+                        break;
+                    case FilterOperators.LessThanOrEqual:
+                        str += "is less than or equal to";
+                        break;
+                    case FilterOperators.GreaterThan:
+                        str += "is greater than";
+                        break;
+                    case FilterOperators.GreaterThanOrEqual:
+                        str += "is greater than or equal to";
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write(str);
+                if (Amount == 0)
+                {
+                    htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Amount.ToString());
+                    htmlWriter.Write("</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            html += str;
-            html += " <span class=\"setvalueextra\">";
-            html += Amount.ToString();
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += "</span></div>";
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>
@@ -211,7 +232,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -220,8 +241,19 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
-        }
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

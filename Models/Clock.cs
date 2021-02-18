@@ -5,35 +5,35 @@
     using Models.Interfaces;
     using Newtonsoft.Json;
     using System;
-    using System.Xml.Serialization;
+    using System.Linq;
+    using System.Collections.Generic;
+    using System.Data;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// The clock model
+    /// The clock model is resonsible for controlling the daily timestep in APSIM. It 
+    /// keeps track of the simulation date and loops from the start date to the end
+    /// date, publishing events that other models can subscribe to.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Clock : Model, IClock
+    public class Clock : Model, IClock, ICustomDocumentation
     {
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();
 
-        // Links
         /// <summary>The summary</summary>
         [Link]
         private ISummary Summary = null;
 
-        /// <summary>Gets or sets the start date.</summary>
-        /// <value>The start date.</value>
-        /// <remarks>Settable from the GUI.</remarks>
+        /// <summary>The start date of the simulation.</summary>
         [Summary]
         [Description("The start date of the simulation")]
         public DateTime? Start { get; set; }
 
-        /// <summary>Gets or sets the end date.</summary>
-        /// <value>The end date.</value>
-        /// <remarks>Settable from the GUI.</remarks>
+        /// <summary>The end date of the simulation.</summary>
         [Summary]
         [Description("The end date of the simulation")]
         public DateTime? End { get; set; }
@@ -56,11 +56,11 @@
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
-                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+                throw new Exception($"No start date provided in clock {this.FullPath} and no weather file could be found.");
             }
             set
             {
@@ -86,11 +86,11 @@
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 
-                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+                throw new Exception($"No end date provided in {this.FullPath}: and no weather file could be found.");
             }
             set
             {
@@ -119,6 +119,8 @@
         public event EventHandler EndOfWeek;
         /// <summary>Occurs when [end of simulation].</summary>
         public event EventHandler EndOfSimulation;
+        /// <summary>Last initialisation event.</summary>
+        public event EventHandler FinalInitialise;
 
         /// <summary>Occurs when [do weather].</summary>
         public event EventHandler DoWeather;
@@ -128,6 +130,8 @@
         public event EventHandler DoInitialSummary;
         /// <summary>Occurs when [do management].</summary>
         public event EventHandler DoManagement;
+        /// <summary>Occurs when [do PestDisease damage]</summary>
+        public event EventHandler DoPestDiseaseDamage;
         /// <summary>Occurs when [do energy arbitration].</summary>
         public event EventHandler DoEnergyArbitration;                                //MicroClimate
         /// <summary>Occurs when [do soil water movement].</summary>
@@ -226,13 +230,13 @@
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
         /// <value>The today.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime Today { get; private set; }
 
         /// <summary>
         /// Returns the current fraction of the overall simulation which has been completed
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get
@@ -280,10 +284,13 @@
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
 
+            if (FinalInitialise != null)
+                FinalInitialise.Invoke(this, args);
+
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
 
-            while (Today <= EndDate && !e.CancelToken.IsCancellationRequested)
+            while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
@@ -303,11 +310,11 @@
                 if (Today.DayOfWeek == DayOfWeek.Sunday && StartOfWeek != null)
                     StartOfWeek.Invoke(this, args);
 
-                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
-                    EndOfWeek.Invoke(this, args);
-
                 if (DoManagement != null)
                     DoManagement.Invoke(this, args);
+
+                if (DoPestDiseaseDamage != null)
+                    DoPestDiseaseDamage.Invoke(this, args);
 
                 if (DoEnergyArbitration != null)
                     DoEnergyArbitration.Invoke(this, args);
@@ -351,23 +358,23 @@
                 if (DoActualPlantGrowth != null)
                     DoActualPlantGrowth.Invoke(this, args);
 
-                if (DoUpdate != null)
-                    DoUpdate.Invoke(this, args);
-
-                if (DoManagementCalculations != null)
-                    DoManagementCalculations.Invoke(this, args);
-
                 if (DoStock != null)
                     DoStock.Invoke(this, args);
 
                 if (DoLifecycle != null)
                     DoLifecycle.Invoke(this, args);
 
+                if (DoUpdate != null)
+                    DoUpdate.Invoke(this, args);
+
+                if (DoManagementCalculations != null)
+                    DoManagementCalculations.Invoke(this, args);
+
                 if (DoReportCalculations != null)
                     DoReportCalculations.Invoke(this, args);
 
-                if (Today == EndDate && EndOfSimulation != null)
-                    EndOfSimulation.Invoke(this, args);
+                if (Today.DayOfWeek == DayOfWeek.Saturday && EndOfWeek != null)
+                    EndOfWeek.Invoke(this, args);
 
                 if (Today.Day == 31 && Today.Month == 12 && EndOfYear != null)
                     EndOfYear.Invoke(this, args);
@@ -433,7 +440,109 @@
                 Today = Today.AddDays(1);
             }
             Today = EndDate;
-            Summary.WriteMessage(this, "Simulation terminated normally");
+
+            if (EndOfSimulation != null)
+                EndOfSimulation.Invoke(this, args);
+
+            Summary?.WriteMessage(this, "Simulation terminated normally");
+        }
+
+        /// <summary>
+        /// Create clock documentation.
+        /// </summary>
+        /// <param name="tags">Documentation tags.</param>
+        /// <param name="headingLevel">The heading level.</param>
+        /// <param name="indent">The indent level.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            tags.Add(new AutoDocumentation.Heading("Clock", headingLevel));
+            AutoDocumentation.DocumentModelSummary(this, tags, headingLevel+1, indent, false);
+            DocumentEventOrder(tags, headingLevel + 1, indent);
+        }
+
+        /// <summary>
+        /// Document the event order. Cannot assume the order based on the order
+        /// of the event declarations.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel">The heading level.</param>
+        /// <param name="indent">The indent level.</param>
+        private void DocumentEventOrder(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        { 
+            // The strategy here is to create an instance of clock and call it's
+            // timestep method (OnDoCommence) for two days. WE will subscribe to
+            // all the clock methods via a method (Handler) in an instance of an 
+            // EventHanderClass. This method will then sort out what is a event 
+            // from the daily time step, what is an event from before the timestep
+            // and post timestep events.
+            var clock = new Clock();
+            var methodInfo = typeof(EventHandlerClass).GetMethod("Handler", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            var preTimestepEvents = new List<string>();
+            var timestepEvents = new List<string>();
+            var postTimestepEvents = new List<string>();
+            foreach (var eventMember in clock.GetType().GetEvents())
+            {
+                var handlerInstance = new EventHandlerClass()
+                {
+                    EventName = eventMember.Name,
+                    PreTimestepEvents = preTimestepEvents,
+                    TimestepEvents = timestepEvents,
+                    PostTimestepEvents = postTimestepEvents
+                };
+                var handler =
+                     Delegate.CreateDelegate(eventMember.EventHandlerType,
+                     handlerInstance,                        
+                     methodInfo);
+                eventMember.AddEventHandler(
+                    clock,
+                    handler);
+            }
+
+            clock.Start = new DateTime(1900, 1, 1);
+            clock.End = new DateTime(1900, 1, 2);
+
+            var commenceMethod = clock.GetType().GetMethod("OnDoCommence", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            commenceMethod.Invoke(clock, new object[] { clock, new CommenceArgs() });
+
+            var table = new DataTable();
+            tags.Add(new AutoDocumentation.Heading("Pre-timestep events (in order)", headingLevel));
+            DataTableUtilities.AddColumn(table, "Events", preTimestepEvents.ToArray());
+            tags.Add(new AutoDocumentation.Table(table, indent));
+
+            var table2 = new DataTable();
+            tags.Add(new AutoDocumentation.Heading("Timestep events (in order)", headingLevel));
+            DataTableUtilities.AddColumn(table2, "Events", timestepEvents.ToArray());
+            tags.Add(new AutoDocumentation.Table(table2, indent));
+
+            var table3 = new DataTable();
+            tags.Add(new AutoDocumentation.Heading("Post-timestep events (in order)", headingLevel));
+            DataTableUtilities.AddColumn(table3, "Events", postTimestepEvents.ToArray());
+            tags.Add(new AutoDocumentation.Table(table3, indent));
+        }
+
+        /// <summary>
+        /// A helper class for determining which of the clock events are timestep
+        /// events and what come before or after the timestep.
+        /// </summary>
+        private class EventHandlerClass
+        {
+            public string EventName { get; set; }
+            public List<string> PreTimestepEvents { get; set; }
+            public List<string> TimestepEvents { get; set; }
+            public List<string> PostTimestepEvents { get; set; }
+
+            public void Handler(object sender, EventArgs e)
+            {
+                if (EventName == "EndOfSimulation")
+                    PostTimestepEvents.Add(EventName);
+                else if (PreTimestepEvents.Contains(EventName))
+                {
+                    PreTimestepEvents.Remove(EventName);
+                    TimestepEvents.Add(EventName);
+                }
+                else
+                    PreTimestepEvents.Add(EventName);
+            }
         }
     }
 }

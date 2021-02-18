@@ -3,6 +3,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(ProductStoreTypeManure))]
     [ValidParent(ParentType = typeof(WaterType))]
     [Description("This component defines the pricing of a resource type")]
+    [Version(1, 0, 2, "Includes option to specify sale and purchase pricing")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
     public class ResourcePricing : CLEMModel
@@ -52,20 +54,12 @@ namespace Models.CLEM.Resources
         public double PricePerPacket { get; set; }
 
         /// <summary>
-        /// Is the packet currently available
+        /// Determine whether this is a purchase or sale price, or both
         /// </summary>
-        public bool TimingOK
-        {
-            get
-            {
-                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
-                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                return (res==0);
-            }
-        }
+        [Description("Purchase or sale price")]
+        [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
+        [Required]
+        public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
         /// Constructor
@@ -75,6 +69,8 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -82,39 +78,62 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "\nThis resource is managed ";
-            if (UseWholePackets)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "only in whole ";
-            }
-            else
-            {
-                html += "in ";
-            }
-            html += "packages of ";
-            if (PacketSize > 0)
-            {
-                html += "<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">Not defined</span>";
-            }
-            html += "\n</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis is a <span class=\"setvalue\">");
+                switch (PurchaseOrSale)
+                {
+                    case PurchaseOrSalePricingStyleType.Both:
+                        htmlWriter.Write("purchase and sell");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        htmlWriter.Write("purchase");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        htmlWriter.Write("sell");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</span> price</div>");
 
-            html += "\n<div class=\"activityentry\">\nEach packet is worth ";
-            if (PricePerPacket > 0)
-            {
-                html += "<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis resource is managed ");
+                if (UseWholePackets)
+                {
+                    htmlWriter.Write("only in whole ");
+                }
+                else
+                {
+                    htmlWriter.Write("in ");
+                }
+                htmlWriter.Write("packets ");
+                if (PacketSize > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
+                }
+                htmlWriter.Write(" unit" + ((this.PacketSize == 1) ? "" : "s"));
+                htmlWriter.Write(" in size\r\n</div>");
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">\r\nEach packet is worth ");
+                if (PricePerPacket > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
+                }
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">Not defined</span>";
-            }
-            html += "\n</div>";
-            return html;
         }
 
+        #endregion
     }
 }

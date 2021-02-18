@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -18,6 +19,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
@@ -52,8 +54,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current value of individuals in the herd
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public AnimalPricing PriceList;
+
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -62,13 +66,14 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if(Apsim.Children(this, typeof(AnimalPricing)).Count() > 0)
+            if(this.FindAllChildren<AnimalPricing>().Count() > 0)
             {
-                PriceList = (Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing).Clone();
+                PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+                priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
             }
 
             // get conception parameters and rate calculation method
-            ConceptionModel = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+            ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
         }
 
         /// <summary>
@@ -77,8 +82,8 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private List<string> WarningsMultipleEntry = new List<string>();
-        private List<string> WarningsNotFound = new List<string>();
+        private readonly List<string> WarningsMultipleEntry = new List<string>();
+        private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Get value of a specific individual
@@ -91,21 +96,23 @@ namespace Models.CLEM.Resources
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+
+                foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1)
                     {
                         return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                 }
+
                 // no price match found.
-                string warning = "No " + purchaseStyle.ToString() + " price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight.ToString("##0.##") + "])";
-                if (!Warnings.Exists(warning))
+                string warningString = $"No [{purchaseStyle.ToString()}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.GenderAsString}] [f=weight: {ind.Weight.ToString("##0")}]";
+
+                if (!Warnings.Exists(warningString))
                 {
-                    Warnings.Add(warning);
-                    Summary.WriteWarning(this, warning);
+                    Warnings.Add(warningString);
+                    Summary.WriteWarning(this, warningString);
                 }
-//                Summary.WriteWarning(this, "No "+purchaseStyle.ToString()+" price entry was found for indiviudal [" + ind.ID + "] with details ([f=age: " + ind.Age + "] [f=herd: " + ind.HerdName + "] [f=gender: " + ind.GenderAsString + "] [f=weight: " + ind.Weight + "])");
             }
             return 0;
         }
@@ -125,7 +132,7 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in Apsim.Children(PriceList, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
                     if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
@@ -133,7 +140,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(RuminantFilter)).Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<RuminantFilter>().Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -145,7 +152,7 @@ namespace Models.CLEM.Resources
                             if (!WarningsMultipleEntry.Contains(criteria))
                             {
                                 WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
+                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
                         }
                     }
@@ -159,12 +166,12 @@ namespace Models.CLEM.Resources
                     if(matchIndividual != null)
                     {
                         // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
+                        warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
                         price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                     else
                     {
-                        warningString += "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
+                        warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -180,13 +187,55 @@ namespace Models.CLEM.Resources
             return price;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure at least one conception model is associated
+            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
+            }
+
+            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
+            }
+            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
+            {
+                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
+
+                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+                {
+                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
+                }
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region transactions
+
         /// <summary>
         /// Add resource
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -217,40 +266,7 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure at least one conception model is associated
-            int conceptionModelCount = Apsim.Children(this, typeof(Model)).Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
-            if (conceptionModelCount > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
-            }
-
-            if (Apsim.Children(this, typeof(AnimalPricing)).Count() > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
-            }
-            else if (Apsim.Children(this, typeof(AnimalPricing)).Count() == 1)
-            {
-                AnimalPricing price = Apsim.Children(this, typeof(AnimalPricing)).FirstOrDefault() as AnimalPricing;
-
-                if (Apsim.Children(price, typeof(AnimalPriceGroup)).Count()==0)
-                {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
-                }
-            }
-            return results;
-        }
+        #endregion
 
         /// <summary>
         /// Current number of individuals of this herd.
@@ -280,6 +296,27 @@ namespace Models.CLEM.Resources
                 }
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Returns the most recent conception status
+        /// </summary>
+        [JsonIgnore]
+        public ConceptionStatusChangedEventArgs LastConceptionStatus { get; set; }
+
+        /// <summary>
+        /// The conception status of a female changed for advanced reporting
+        /// </summary>
+        public event EventHandler ConceptionStatusChanged;
+
+        /// <summary>
+        /// Conception status changed 
+        /// </summary>
+        /// <param name="e"></param>
+        public void OnConceptionStatusChanged(ConceptionStatusChangedEventArgs e)
+        {
+            LastConceptionStatus = e;
+            ConceptionStatusChanged?.Invoke(this, e);
         }
 
         #region Grow Activity
@@ -445,6 +482,14 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
         /// <summary>
+        /// Potential intake modifier for maximum intake possible when overfeeding
+        /// </summary>
+        [Category("Advanced", "Diet")]
+        [Description("Potential intake modifer for max overfeeding intake")]
+        [Required, GreaterThanEqualValue(1)]
+        [System.ComponentModel.DefaultValue(1)]
+        public double OverfeedPotentialIntakeModifier { get; set; }
+        /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>
         [Category("Advanced", "Diet")]
@@ -487,20 +532,6 @@ namespace Models.CLEM.Resources
         [Description("Proportion green in pasture at zero in diet")]
         [Required, Proportion]
         public double GreenDietZero { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeTropicalQuality { get; set; }
-        /// <summary>
-        /// Coefficient to adjust intake for tropical herbage quality
-        /// </summary>
-        [Category("Advanced", "Diet")]
-        [Description("Coefficient to adjust intake for tropical herbage quality")]
-        [Required, GreaterThanValue(0)]
-        public double IntakeCoefficientQuality { get; set; }
         /// <summary>
         /// Coefficient to adjust intake for herbage biomass
         /// </summary>
@@ -662,7 +693,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Advanced conception parameters if present
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IConceptionModel ConceptionModel { get; set; }
 
         /// <summary>
@@ -811,6 +842,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary 
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -821,9 +854,7 @@ namespace Models.CLEM.Resources
             string html = "";
             return html;
         }
+
+        #endregion
     }
-
-
-
-
 }

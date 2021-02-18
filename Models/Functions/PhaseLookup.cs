@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using System.IO;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -14,14 +15,14 @@ namespace Models.Functions
     public class PhaseLookup : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             foreach (IFunction F in ChildFunctions)
             {
@@ -44,14 +45,14 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
 
-                // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IFunction)))
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel+1, indent + 1);
+                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.", indent));
 
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " has a value of zero for phases not specified above ", indent + 1));
+                // write children.
+                foreach (IModel child in this.FindAllChildren<IFunction>())
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel+1, indent + 1);
             }
         }
     }

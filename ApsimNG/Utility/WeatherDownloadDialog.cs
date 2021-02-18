@@ -4,6 +4,7 @@ namespace Utility
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Newtonsoft.Json;
@@ -12,6 +13,7 @@ namespace Utility
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
+    using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
 
@@ -38,9 +40,12 @@ namespace Utility
         private Entry entryEmail = null;
 
         private Model dest = null; // The destination. Should either be a Weather (to be replaced) or a Simulation (to which the Weather will be added)
-        private string replaceNode;
+        private IModel replaceNode;
         private ExplorerView owningView;
         private ExplorerPresenter explorerPresenter;
+        private ScrolledWindow scroller;
+        private VBox vbox1;
+        VBox dialogVBox;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -54,6 +59,10 @@ namespace Utility
         {
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
+            vbox1 = (VBox)builder.GetObject("vbox1");
+            dialogVBox = (VBox)builder.GetObject("dialog-vbox1");
+            scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
+            scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
             radioWorld = (RadioButton)builder.GetObject("radioWorld");
             entryLatitude = (Entry)builder.GetObject("entryLatitude");
@@ -81,6 +90,23 @@ namespace Utility
             btnBrowse.Clicked += BtnBrowse_Clicked;
         }
 
+        private void OnSizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            try
+            {
+                if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
+                {
+                    dialog1.DefaultHeight = vbox1.Allocation.Height + dialogVBox.Allocation.Height;
+                    dialog1.DefaultWidth = vbox1.Allocation.Width + 20;
+                    scroller.SizeAllocated -= OnSizeAllocated;
+                }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
         private void BtnBrowse_Clicked(object sender, EventArgs e)
         {
             try
@@ -99,11 +125,10 @@ namespace Utility
 
         private void ShowMessage(MessageType type, string msg, string title)
         {
-            MessageDialog md = new MessageDialog(owningView.MainWidget.Toplevel as Window, DialogFlags.Modal, type, ButtonsType.Ok,
-                               msg);
+            MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Destroy();
+            md.Cleanup();
         }
 
         /// <summary>
@@ -115,62 +140,77 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
-            if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
-                return;
-            if (String.IsNullOrWhiteSpace(entryFilePath.Text))
-            {
-                ShowMessage(MessageType.Warning, "You must provide a file name for saving the weather data", "No file path");
-                BtnBrowse_Clicked(this, null);
-                return;
-            }
-            string newWeatherPath = null;
-            WaitCursor = true;
             try
             {
-                if (radioSiloDataDrill.Active)
-                    newWeatherPath = GetDataDrill();
-                else if (radioSiloPatchPoint.Active)
-                    newWeatherPath = GetPatchPoint();
-                else if (radioNASA.Active)
-                    newWeatherPath = GetNasaChirps();
-            }
-            finally
-            {
-                WaitCursor = false;
-            }
-            if (string.IsNullOrWhiteSpace(newWeatherPath))
-            {
-                ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
-            }
-            else
-            {
-                if (dest is Weather)
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                    return;
+                if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
-                    // If there is an existing Weather model (and there usually will be), is it better to replace
-                    // the model, or modify the FullFileName of the original?
-                    IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
-                    if (currentPresenter is MetDataPresenter)
-                        (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
-                    else
-                        explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                    ShowMessage(MessageType.Warning, "You must provide a file name for saving the weather data", "No file path");
+                    BtnBrowse_Clicked(this, null);
+                    return;
                 }
-                else if (dest is Simulation)
+                string newWeatherPath = null;
+                WaitCursor = true;
+                try
                 {
-                    Weather newWeather = new Weather();
-                    newWeather.FullFileName = newWeatherPath;
-                    AddModelCommand command = new AddModelCommand(replaceNode, newWeather, owningView, explorerPresenter);
-                    explorerPresenter.CommandHistory.Add(command, true);
+                    if (radioSiloDataDrill.Active)
+                        newWeatherPath = GetDataDrill();
+                    else if (radioSiloPatchPoint.Active)
+                        newWeatherPath = GetPatchPoint();
+                    else if (radioNASA.Active)
+                        newWeatherPath = GetNasaChirps();
                 }
-                dialog1.Destroy();
+                finally
+                {
+                    WaitCursor = false;
+                }
+                if (string.IsNullOrWhiteSpace(newWeatherPath))
+                {
+                    ShowMessage(MessageType.Error, "Unable to obtain data for this site", "Error");
+                }
+                else
+                {
+                    if (dest is Weather)
+                    {
+                        // If there is an existing Weather model (and there usually will be), is it better to replace
+                        // the model, or modify the FullFileName of the original?
+                        IPresenter currentPresenter = explorerPresenter.CurrentPresenter;
+                        if (currentPresenter is MetDataPresenter)
+                            (currentPresenter as MetDataPresenter).OnBrowse(newWeatherPath);
+                        else
+                            explorerPresenter.CommandHistory.Add(new UserInterface.Commands.ChangeProperty(dest, "FullFileName", newWeatherPath));
+                    }
+                    else if (dest is Simulation)
+                    {
+                        Weather newWeather = new Weather();
+                        newWeather.FullFileName = newWeatherPath;
+                        var command = new AddModelCommand(replaceNode, newWeather);
+                        explorerPresenter.CommandHistory.Add(command, true);
+                        explorerPresenter.Refresh();
+                    }
+                }
+                dialog1.Cleanup();
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
             }
         }
 
         private void RadioAus_Clicked(object sender, EventArgs e)
         {
-            radioSiloDataDrill.Sensitive = radioAus.Active;
-            radioSiloPatchPoint.Sensitive = radioAus.Active;
-            if (!radioAus.Active)
-                radioNASA.Active = true;
+            try
+            {
+                radioSiloDataDrill.Sensitive = radioAus.Active;
+                radioSiloPatchPoint.Sensitive = radioAus.Active;
+                if (!radioAus.Active)
+                    radioNASA.Active = true;
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
+            }
         }
 
         /// <summary>
@@ -181,11 +221,12 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnGetPlacename_Clicked(object sender, EventArgs e)
         {
-            if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
-                return;
-            string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
             try
             {
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                    return;
+                string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
+
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
                 stream.Position = 0;
                 JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
@@ -216,13 +257,14 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnGetLocation_Clicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(entryPlacename.Text))
-                return;
-            // For now, name matching is restricted to Australia, since at this point we don't
-            // yet have things set up for the global soil database
-            string url = googleGeocodingApi + "components=" + (radioAus.Active ? "country:AU|" : "") + "locality:" + entryPlacename.Text;
             try
             {
+                if (string.IsNullOrWhiteSpace(entryPlacename.Text))
+                    return;
+                // For now, name matching is restricted to Australia, since at this point we don't
+                // yet have things set up for the global soil database
+                string url = googleGeocodingApi + "components=" + (radioAus.Active ? "country:AU|" : "") + "locality:" + entryPlacename.Text;
+
                 MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
                 stream.Position = 0;
                 JsonTextReader reader = new JsonTextReader(new StreamReader(stream));
@@ -270,7 +312,14 @@ namespace Utility
         /// <param name="e">Event arguments</param>
         private void BtnCancel_Clicked(object sender, EventArgs e)
         {
-            dialog1.Destroy();
+            try
+            {
+                dialog1.Cleanup();
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
+            }
         }
 
         /// <summary>
@@ -278,9 +327,9 @@ namespace Utility
         /// </summary>
         /// <param name="dest">The Weather object to be replaced, or Zone to which Weather will be added</param>
         /// <param name="view">The ExplorerView displaying the soil object in its tree</param>
-        /// <param name="nodePath">The path to the soil object within the view's tree</param>
+        /// <param name="nodePath">The soil object within the view's tree</param>
         /// <param name="explorerPresenter">The ExplorerPresenter that is managing all of this</param>
-        public void ShowFor(Model dest, ExplorerView view, string nodePath, ExplorerPresenter explorerPresenter)
+        public void ShowFor(Model dest, ExplorerView view, IModel nodePath, ExplorerPresenter explorerPresenter)
         {
             this.dest = dest;
             this.replaceNode = nodePath;
@@ -290,7 +339,7 @@ namespace Utility
             dialog1.Parent = view.MainWidget.Toplevel;
             dialog1.WindowPosition = WindowPosition.CenterOnParent;
             // Attempt to find an initial latitude and longitude from a Weather model
-            IModel weather = Apsim.Find(dest, typeof(Models.Interfaces.IWeather));
+            IModel weather = dest.FindInScope<Models.Interfaces.IWeather>() as IModel;
             double latitude, longitude;
             if (weather != null && weather is Weather)
             {
@@ -511,8 +560,15 @@ namespace Utility
                         list.AppendValues(lineInfo);
                     }
                     tree.Model = list;
-                    md.VBox.PackStart(tree, true, true, 5);
-                    md.VBox.ShowAll();
+                    tree.RowActivated += OnPatchPointSoilSelected;
+#if NETFRAMEWORK
+                    Box box = md.VBox;
+#else
+                    Box box = md.ContentArea;
+#endif
+                    box.PackStart(tree, true, true, 5);
+                    box.ShowAll();
+
                     ResponseType result = (ResponseType)md.Run();
                     if (result == ResponseType.Ok)
                     {
@@ -521,7 +577,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Destroy();
+                    md.Cleanup();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -554,6 +610,23 @@ namespace Utility
                 ShowMessage(MessageType.Error, err.Message, "Error");
             }
             return newWeatherPath;
+        }
+
+        private void OnPatchPointSoilSelected(object sender, RowActivatedArgs args)
+        {
+            try
+            {
+                if (sender is Gtk.TreeView tree)
+                {
+                    tree.RowActivated -= OnPatchPointSoilSelected;
+                    if (tree.Toplevel is Dialog dialog)
+                        dialog.Respond(ResponseType.Ok);
+                }
+            }
+            catch (Exception err)
+            {
+                ShowMessage(MessageType.Error, err.Message, "Error");
+            }
         }
 
         public string GetNasaChirps()
@@ -601,9 +674,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

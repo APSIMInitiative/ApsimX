@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="EventNamesOnGraph.cs" company="CSIRO">
-// TODO: Update copyright text.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Graph
+﻿namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -21,7 +16,7 @@ namespace Models.Graph
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
-    public class EventNamesOnGraph : Model, IGraphable
+    public class EventNamesOnGraph : Model, ICachableGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
@@ -49,11 +44,11 @@ namespace Models.Graph
         /// </summary>
         public string[] GetValidColumnNames()
         {
-            IDataStore storage = Apsim.Find(this, typeof(IDataStore)) as IDataStore;
+            IDataStore storage = this.FindInScope<IDataStore>();
             if (storage == null)
                 return null;
 
-            Series series = Apsim.Parent(this, typeof(Series)) as Series;
+            Series series = FindAncestor<Series>();
             if (series == null)
                 return null;
 
@@ -66,7 +61,7 @@ namespace Models.Graph
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return (Apsim.Parent(this, typeof(Series)) as Series)?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+            return FindAncestor<Series>()?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
         }
 
 
@@ -82,12 +77,26 @@ namespace Models.Graph
         }
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
-        /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null)
         {
-            if (definitions != null && definitions.Count > 0)
+            Series seriesAncestor = FindAncestor<Series>();
+            if (seriesAncestor == null)
+                throw new Exception("EventNamesOnGraph model must be a descendant of a series");
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationFilter);
+
+            return GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
+        }
+
+        /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
+        /// <param name="storage">Storage service (unused but required by interface).</param>
+        /// <param name="definitions">Series definitions to be used (allows for caching of data).</param>
+        /// <param name="simulationFilter">(Optional) simulation name filter.</param>
+        public IEnumerable<SeriesDefinition> GetSeriesToPutOnGraph(IStorageReader storage, IEnumerable<SeriesDefinition> definitions, List<string> simulationFilter = null)
+        {
+            data = null;
+            if (definitions != null && definitions.Count() > 0)
             {
                 // Try to find a definition that has the correct simulation name.
                 foreach (var definition in definitions)
@@ -102,15 +111,16 @@ namespace Models.Graph
 
                 if (data == null)
                     data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
-                xFieldName = definitions[0].XFieldName;
+                xFieldName = definitions.First().XFieldName;
             }
 
+            return Enumerable.Empty<SeriesDefinition>();
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        public void GetAnnotationsToPutOnGraph(List<Annotation> annotations)
+        public IEnumerable<IAnnotation> GetAnnotations()
         {
+            List<IAnnotation> annotations = new List<IAnnotation>();
             Graph parentGraph = Parent.Parent as Graph;
 
             if (data != null && ColumnName != null && xFieldName != null)
@@ -162,6 +172,7 @@ namespace Models.Graph
                     }
                 }
             }
+            return annotations;
         }
 
         /// <summary>Find and return the phenology stage column name.</summary>

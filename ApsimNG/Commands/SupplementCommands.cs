@@ -24,6 +24,12 @@ namespace UserInterface.Commands
 
         private int prevSuppIdx;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => parent;
+
         public AddSupplementCommand(Supplement parent, string suppName)
         {
             if (parent.ReadOnly)
@@ -76,6 +82,12 @@ namespace UserInterface.Commands
 
         private int prevSuppIdx;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => parent;
+
         public DeleteSupplementCommand(Supplement parent, SupplementItem supplementItem)
         {
             if (parent.ReadOnly)
@@ -121,6 +133,12 @@ namespace UserInterface.Commands
         /// <summary>The new index</summary>
         private int newSuppIdx;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => parent;
+
         /// <summary>Constructor.</summary>
         /// <param name="parent">The Supplement model.</param>
         /// <param name="oldIdx">The old index.</param>
@@ -143,7 +161,7 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
             this.parent.CurIndex = prevSuppIdx;
@@ -168,6 +186,12 @@ namespace UserInterface.Commands
 
         /// <summary>True if model was Deleted</summary>
         private bool supplementsReset = false;
+
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => parent;
 
         /// <summary>Constructor.</summary>
         /// <param name="parent">The old index.</param>
@@ -214,7 +238,7 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
+        /// <param name="commandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
             if (supplementsReset)

@@ -101,20 +101,20 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Gets the equation.</summary>
         /// <value>The equation.</value>
-        public ArrayList Equation
+        public List<Symbol> Equation
         {
             get
             {
-                return (ArrayList)m_equation.Clone();
+                return new List<Symbol>(m_equation);
             }
         }
         /// <summary>Gets the postfix.</summary>
         /// <value>The postfix.</value>
-        public ArrayList Postfix
+        public List<Symbol> Postfix
         {
             get
             {
-                return (ArrayList)m_postfix.Clone();
+                return new List<Symbol>(m_postfix);
             }
         }
 
@@ -150,11 +150,11 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Gets or sets the variables.</summary>
         /// <value>The variables.</value>
-        public ArrayList Variables
+        public List<Symbol> Variables
         {
             get
             {
-                ArrayList var = new ArrayList();
+                List<Symbol> var = new List<Symbol>();
                 foreach (Symbol sym in m_equation)
                 {
                     if ((sym.m_type == ExpressionType.Variable) && (!var.Contains(sym)))
@@ -378,7 +378,7 @@ namespace APSIM.Shared.Utilities
         public void Infix2Postfix()
         {
             Symbol tpSym;
-            Stack tpStack = new Stack();
+            Stack<Symbol> tpStack = new Stack<Symbol>();
             for (int i = 0; i < m_equation.Count; i++)
             {
                 Symbol sym = (Symbol)m_equation[i];
@@ -390,11 +390,11 @@ namespace APSIM.Shared.Utilities
                 {
                     if (tpStack.Count > 0)
                     {
-                        tpSym = (Symbol)tpStack.Pop();
+                        tpSym = tpStack.Pop();
                         while ((tpSym.m_name != "(") && (tpSym.m_name != "{"))
                         {
                             m_postfix.Add(tpSym);
-                            tpSym = (Symbol)tpStack.Pop();
+                            tpSym = tpStack.Pop();
                         }
                     }
                 }
@@ -402,11 +402,11 @@ namespace APSIM.Shared.Utilities
                 {
                     if (tpStack.Count > 0)
                     {
-                        tpSym = (Symbol)tpStack.Pop();
+                        tpSym = tpStack.Pop();
                         while ((tpStack.Count != 0) && ((tpSym.m_type == ExpressionType.Operator) || (tpSym.m_type == ExpressionType.EvalFunction) || (tpSym.m_type == ExpressionType.Comma)) && (Precedence(tpSym) >= Precedence(sym)))
                         {
                             m_postfix.Add(tpSym);
-                            tpSym = (Symbol)tpStack.Pop();
+                            tpSym = tpStack.Pop();
                         }
                         if (((tpSym.m_type == ExpressionType.Operator) || (tpSym.m_type == ExpressionType.EvalFunction) || (tpSym.m_type == ExpressionType.Comma)) && (Precedence(tpSym) >= Precedence(sym)))
                             m_postfix.Add(tpSym);
@@ -418,7 +418,7 @@ namespace APSIM.Shared.Utilities
             }
             while (tpStack.Count > 0)
             {
-                tpSym = (Symbol)tpStack.Pop();
+                tpSym = tpStack.Pop();
                 m_postfix.Add(tpSym);
             }
         }
@@ -427,8 +427,8 @@ namespace APSIM.Shared.Utilities
         public void EvaluatePostfix()
         {
             Symbol tpSym1, tpSym2, tpResult;
-            Stack tpStack = new Stack();
-            ArrayList fnParam = new ArrayList();
+            Stack<Symbol> tpStack = new Stack<Symbol>();
+            List<Symbol> fnParam = new List<Symbol>();
             m_bError = false;
             foreach (Symbol sym in m_postfix)
             {
@@ -438,7 +438,7 @@ namespace APSIM.Shared.Utilities
                 {
                     tpSym1 = (Symbol)tpStack.Pop();
                     if (tpStack.Count > 0 && sym.m_name != "--")
-                        tpSym2 = (Symbol)tpStack.Pop();
+                        tpSym2 = tpStack.Pop();
                     else
                         tpSym2 = new Symbol();
                     tpResult = Evaluate(tpSym2, sym, tpSym1);
@@ -450,10 +450,14 @@ namespace APSIM.Shared.Utilities
                     }
                     tpStack.Push(tpResult);
                 }
+                else if (sym.m_type == ExpressionType.Comma)
+                    // Commas need to be added onto the parameter stack, otherwise
+                    // only the last argument will be passed to the function call.
+                    tpStack.Push(sym);
                 else if (sym.m_type == ExpressionType.EvalFunction)
                 {
                     fnParam.Clear();
-                    tpSym1 = (Symbol)tpStack.Pop();
+                    tpSym1 = tpStack.Pop();
                     if ((tpSym1.m_type == ExpressionType.Value) || (tpSym1.m_type == ExpressionType.Variable) || (tpSym1.m_type == ExpressionType.Result))
                     {
                         tpResult = EvaluateFunction(sym.m_name, tpSym1);
@@ -469,11 +473,13 @@ namespace APSIM.Shared.Utilities
                     {
                         while (tpSym1.m_type == ExpressionType.Comma)
                         {
-                            tpSym1 = (Symbol)tpStack.Pop();
-                            fnParam.Add(tpSym1);
-                            tpSym1 = (Symbol)tpStack.Pop();
+                            tpSym1 = tpStack.Pop();
+                            // tpStack is postfix order, however EvaluateFunction() expects the parameter
+                            // array to be in prefix order, so fnParam is prefix order.
+                            fnParam.Insert(0, tpSym1);
+                            tpSym1 = tpStack.Pop();
                         }
-                        fnParam.Add(tpSym1);
+                        fnParam.Insert(0, tpSym1);
                         tpResult = EvaluateFunction(sym.m_name, fnParam.ToArray());
                         if (tpResult.m_type == ExpressionType.Error)
                         {
@@ -499,7 +505,7 @@ namespace APSIM.Shared.Utilities
             }
             if (tpStack.Count == 1)
             {
-                tpResult = (Symbol)tpStack.Pop();
+                tpResult = tpStack.Pop();
                 m_result = tpResult.m_value;
                 if (tpResult.m_values != null)
                 {
@@ -649,9 +655,9 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>Evaluates the function.</summary>
         /// <param name="name">The name.</param>
-        /// <param name="args">The arguments.</param>
+        /// <param name="args">The arguments (in prefix order - not postfix!).</param>
         /// <returns></returns>
-        protected Symbol EvaluateFunction(string name, params Object[] args)
+        protected Symbol EvaluateFunction(string name, params Symbol[] args)
         {
             Symbol result;
             result.m_name = "";
@@ -763,7 +769,7 @@ namespace APSIM.Shared.Utilities
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
-                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value, 2);
+                        result.m_value = System.Math.Log(((Symbol)args[0]).m_value);
                     }
                     else
                     {
@@ -939,15 +945,23 @@ namespace APSIM.Shared.Utilities
                         {
                             if (i == 0)
                                 result.m_value = Values[i];
+                            else if (MathUtilities.FloatsAreEqual(Values[i], 0, 1e-8))
+                                result.m_value = 0;
                             else
                                 result.m_value /= Values[i];
                         }
                         result.m_name = name;
-                        result.m_values = null;
+                    }
+                    else if (args.Length == 2 || args.Length == 3)
+                    {
+                        // Iff 3 args provided, use 3rd arg as error value.
+                        double errorValue = args.Length == 2 ? 0 : ((Symbol)args[2]).m_value;
+                        result.m_name = name;
+                        result.m_value = MathUtilities.Divide(args[0].m_value, args[1].m_value, errorValue);
                     }
                     else
                     {
-                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_name = $"Invalid number of parameters ({args.Length}) in: {name}.";
                         result.m_type = ExpressionType.Error;
                     }
                     break;
@@ -981,6 +995,333 @@ namespace APSIM.Shared.Utilities
                         result.m_type = ExpressionType.Error;
                     }
                     break;
+                case "floor":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        result.m_value = Math.Floor(((Symbol)args[0]).m_value);
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;				
+                case "stddev":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.StandardDeviation(Values);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "median":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.5);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile5":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.05);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile10":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.10);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile15":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.15);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile20":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.20);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile25":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.25);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile30":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.30);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile35":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.35);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile40":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.40);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile45":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.45);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile50":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.50);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile55":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.55);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile60":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.60);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile65":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.65);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile70":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.70);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile75":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.75);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile80":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.80);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile85":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.85);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile90":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.90);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
+                case "percentile95":
+                    if (args.Length == 1)
+                    {
+                        result.m_value = ((Symbol)args[0]).m_value;
+                        double[] Values = ((Symbol)args[0]).m_values;
+                        result.m_value = MathUtilities.Percentile(Values, 0.95);
+                        result.m_name = name;
+                        result.m_values = null;
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
                 default:
                     if (m_defaultFunctionEvaluation != null)
                         result = m_defaultFunctionEvaluation(name, args);
@@ -1003,9 +1344,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>The m_results</summary>
         protected double[] m_results = null;
         /// <summary>The m_equation</summary>
-        protected ArrayList m_equation = new ArrayList();
+        protected List<Symbol> m_equation = new List<Symbol>();
         /// <summary>The m_postfix</summary>
-        protected ArrayList m_postfix = new ArrayList();
+        protected List<Symbol> m_postfix = new List<Symbol>();
         /// <summary>The m_default function evaluation</summary>
         protected EvaluateFunctionDelegate m_defaultFunctionEvaluation;
     }

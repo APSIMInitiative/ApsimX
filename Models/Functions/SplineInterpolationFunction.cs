@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -22,7 +22,7 @@ namespace Models.Functions
     {
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The x property</summary>
@@ -48,7 +48,7 @@ namespace Models.Functions
             double XValue = 0;
             try
             {
-                object v = Apsim.Get(this, XProperty);
+                object v = this.FindByPath(XProperty)?.Value;
                 if (v == null)
                     throw new Exception("Cannot find value for " + Name + " XProperty: " + XProperty);
                 if (v is Array && arrayIndex > -1)

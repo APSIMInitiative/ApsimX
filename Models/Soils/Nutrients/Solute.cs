@@ -6,15 +6,13 @@ namespace Models.Soils.Nutrients
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
     /// [DocumentType Memo]
     /// 
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.
-    /// 
-    /// ## Mineral N Flows
-    /// [DocumentType NFlow]
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
@@ -23,16 +21,35 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        Sample initial = null;
+
+        /// <summary>Default constructor.</summary>
+        public Solute() { }
+
+        /// <summary>Default constructor.</summary>
+        public Solute(Soil soilModel, string soluteName, double[] value) 
+        {
+            soil = soilModel;
+            kgha = value;
+            Name = soluteName;
+        }
+
         /// <summary>Solute amount (kg/ha)</summary>
+        [JsonIgnore]
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();
@@ -43,9 +60,9 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
-                kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
+                kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else
                 kgha = ReflectionUtilities.Clone(initialkgha) as double[];
         }
@@ -54,7 +71,8 @@ namespace Models.Soils.Nutrients
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            kgha = value;
+            for (int i = 0; i < value.Length; i++)
+                kgha[i] = value[i];
         }
 
         /// <summary>Setter for kgha delta.</summary>

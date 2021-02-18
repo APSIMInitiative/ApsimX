@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,6 +52,8 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -58,51 +61,43 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            //html += "\n<div class=\"activityentry\">Converts <span class=\"resourcelink\">" + this.Parent.Name+"</span> by a factor of ";
-            //if (Factor <= 0)
-            //{
-            //    html += "<span class=\"errorlink\">[VALUE NOT SET]</span>";
-            //}
-            //else
-            //{
-            //    html += "<span class=\"setvalue\">" + Factor.ToString("0.#####") + "</span>";
-            //}
-            //html += "</div>";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">1 ");
+                if ((Parent as IResourceType).Units != null)
+                {
+                    htmlWriter.Write(" " + (Parent as IResourceType).Units + " ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
+                }
 
-            html += "\n<div class=\"activityentry\">1 ";
-            if ((Parent as IResourceType).Units != null)
-            {
-                html += " " + (Parent as IResourceType).Units + " ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[UNITS NOT SET]</span>";
-            }
+                htmlWriter.Write("<span class=\"resourcelink\">" + this.Parent.Name + "</span> ");
+                htmlWriter.Write("= ");
 
-            html += "<span class=\"resourcelink\">" + this.Parent.Name + "</span> ";
-            html += "= ";
-
-            if (this.Factor != 0)
-            {
-                html += " <span class=\"setvalue\">" + this.Factor.ToString("#,##0.##") + "</span> ";
+                if (this.Factor != 0)
+                {
+                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Factor.ToString("#,##0.##") + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[FACTOR NOT SET]</span>");
+                }
+                htmlWriter.Write(" ");
+                if (this.Units != null)
+                {
+                    htmlWriter.Write(" <span class=\"setvalue\">" + this.Units + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[UNITS NOT SET]</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">[FACTOR NOT SET]</span>";
-            }
-            html += " ";
-            if (this.Units != null)
-            {
-                html += " <span class=\"setvalue\">" + this.Units + "</span> ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[UNITS NOT SET]</span>";
-            }
-            html += "</div>";
-            return html;
         }
 
+        #endregion
     }
 }

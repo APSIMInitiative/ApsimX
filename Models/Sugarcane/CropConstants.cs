@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 
 
@@ -1219,7 +1219,7 @@ public class CropConstants
     /// <value>
     /// The num_plant_rld.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_plant_rld
         {
         get { return y_rel_root_rate.Length;}
@@ -1230,7 +1230,7 @@ public class CropConstants
     /// <value>
     /// The num_sla_lfno.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sla_lfno
         {
         get { return sla_lfno.Length; }
@@ -1241,7 +1241,7 @@ public class CropConstants
     /// <value>
     /// The num_stem_wt.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_stem_wt
         {
         get { return y_height.Length; }
@@ -1252,7 +1252,7 @@ public class CropConstants
     /// <value>
     /// The num_fasw_emerg.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_fasw_emerg
         {
         get { return rel_emerg_rate.Length; }
@@ -1263,7 +1263,7 @@ public class CropConstants
     /// <value>
     /// The num_node_no_app.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_node_no_app
         {
         get { return y_node_app_rate.Length; }
@@ -1274,7 +1274,7 @@ public class CropConstants
     /// <value>
     /// The num_node_no_leaf.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_node_no_leaf
         {
         get { return y_node_app_rate.Length; }
@@ -1285,7 +1285,7 @@ public class CropConstants
     /// <value>
     /// The num_frost_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_frost_temp
         {
         get { return frost_temp.Length; }
@@ -1296,7 +1296,7 @@ public class CropConstants
     /// <value>
     /// The num_ n_conc_stage.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_N_conc_stage   //! no of values in stage table
         {
         get { return y_n_conc_min_cabbage.Length; }
@@ -1307,7 +1307,7 @@ public class CropConstants
     /// <value>
     /// The num_ave_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_ave_temp       //! size_of of critical temperature table
         {
         get { return x_ave_temp.Length; }
@@ -1318,7 +1318,7 @@ public class CropConstants
     /// <value>
     /// The num_ave_temp_stalk.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_ave_temp_stalk //! size_of of critical temperature table
         {
         get { return x_ave_temp_stalk.Length; }
@@ -1329,7 +1329,7 @@ public class CropConstants
     /// <value>
     /// The num_temp.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_temp           //! size_of of table
         {
         get { return y_tt.Length; }
@@ -1340,7 +1340,7 @@ public class CropConstants
     /// <value>
     /// The num_sw_demand_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_demand_ratio
         {
         get { return y_swdef_leaf.Length; }
@@ -1351,7 +1351,7 @@ public class CropConstants
     /// <value>
     /// The num_demand_ratio_stalk.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_demand_ratio_stalk
         {
         get { return y_swdef_stalk.Length; }
@@ -1362,7 +1362,7 @@ public class CropConstants
     /// <value>
     /// The num_sw_avail_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_avail_ratio
         {
         get { return y_swdef_pheno.Length; }
@@ -1373,7 +1373,7 @@ public class CropConstants
     /// <value>
     /// The num_sw_ratio.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_sw_ratio
         {
         get { return y_sw_fac_root.Length; }
@@ -1384,7 +1384,7 @@ public class CropConstants
     /// <value>
     /// The num_oxdef_photo.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_oxdef_photo
         {
         get { return oxdef_photo.Length; }
@@ -1395,7 +1395,7 @@ public class CropConstants
     /// <value>
     /// The num_afps.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_afps
         {
         get { return y_afps_fac.Length; }
@@ -1406,7 +1406,7 @@ public class CropConstants
     /// <value>
     /// The num_cane_dmf.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_cane_dmf
         {
         get { return cane_dmf_tt.Length; }
@@ -1417,7 +1417,7 @@ public class CropConstants
     /// <value>
     /// The num_stress_lodge.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_stress_lodge
         {
         get { return death_fr_lodge.Length; }

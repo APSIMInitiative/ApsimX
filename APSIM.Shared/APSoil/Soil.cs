@@ -2,14 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
 
     /// <summary>The soil class encapsulates a soil characterisation and 0 or more soil samples.</summary>
     [Serializable]
     public class Soil
     {
         /// <summary>Gets or sets the name.</summary>
-        [XmlAttribute("name")]
+        [System.Xml.Serialization.XmlAttribute("name")]
         public string Name { get; set; }
 
         /// <summary>Gets or sets the record number.</summary>
@@ -79,7 +79,7 @@
         public Analysis Analysis { get; set; }
 
         /// <summary>Gets or sets the samples.</summary>
-        [XmlElement("Sample")]
+        [System.Xml.Serialization.XmlElement("Sample")]
         public List<Sample> Samples { get; set; }
     }
 }

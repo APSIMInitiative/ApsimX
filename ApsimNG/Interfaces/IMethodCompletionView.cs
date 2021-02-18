@@ -1,7 +1,7 @@
 ﻿namespace UserInterface.Interfaces
 {
     using System.Drawing;
-    using Classes.Intellisense;
+    using Intellisense;
     using System.Collections.Generic;
     /// <summary>
     /// Interface for a small intellisense window which displays the 
@@ -23,5 +23,7 @@
         /// Gets or sets the location (top-left corner) of the popup window.
         /// </summary>
         Point Location { get; set; }
+
+        void Destroy();
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM
 {
@@ -24,9 +24,13 @@ namespace Models.CLEM
         /// </summary>
         public CLEMModel Activity { get; set; }
         /// <summary>
-        /// Reason or cateogry
+        /// Cateogry for data analysis and summary
         /// </summary>
-        public string Reason { get; set; }
+        public string Category { get; set; }
+        /// <summary>
+        /// Resource this transaction relates to for data analysis and summary
+        /// </summary>
+        public string RelatesToResource { get; set; }
         /// <summary>
         /// Amount removed
         /// </summary>

@@ -32,11 +32,11 @@
         private IEvent events = null;
 
         /// <summary>The variable to track</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction variable = null;
 
         /// <summary>The variable to track</summary>
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction referenceVariable = null;
 
         /// <summary>The statistic to return e.g. value back 300</summary>

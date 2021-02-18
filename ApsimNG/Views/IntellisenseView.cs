@@ -6,6 +6,8 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
+    using Interfaces;
+    using Extensions;
 
     class IntellisenseView : ViewBase
     {
@@ -52,6 +54,7 @@
                 SkipPagerHint = true,
                 SkipTaskbarHint = true,
             };
+            mainWidget = completionForm;
 
             Frame completionFrame = new Frame();
             completionForm.Add(completionFrame);
@@ -237,12 +240,12 @@
             if (completionModel.IterNChildren() > 0)
             {
                 completionForm.TransientFor = MainWindow;
-                completionForm.ShowAll();
                 completionForm.Move(x, y);
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
+                completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
-                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
-                while (GLib.MainContext.Iteration()) ;
+                if (completionView.WidthRequest > 0)
+                    completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 return true;
             }
             return false;
@@ -279,12 +282,21 @@
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
+            //
+            // fixme - need to rewrite this using GdkMonitor.
+            // This must have always been broken on multi-monitor setups(?).
+#if NETFRAMEWORK
             int xres = MainWindow.Screen.Width;
             int yres = MainWindow.Screen.Height;
+#else
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+#endif
 
-            if ((x + completionForm.WidthRequest) > xres)            
+            if ((x + completionForm.WidthRequest) > xres)
                 // We are very close to the right-hand side of the screen
-                x -= completionForm.WidthRequest;            
+                x -= completionForm.WidthRequest;
             
             if ((y + completionForm.HeightRequest) > yres)
                 // We are very close to the bottom of the screen
@@ -316,16 +328,16 @@
         /// Populates the completion window with data.
         /// </summary>
         /// <param name="items">List of completion data.</param>
-        public void Populate(List<CompletionData> items)
+        public void Populate(List<ICompletionItem> items)
         {
             completionModel.Clear();
 
             // Add empty first row.
             completionModel.AppendValues("", "", "", "", "", "", "");
-            foreach (CompletionData item in items)
+            foreach (ICompletionItem item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
-                string description = descriptionLines.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines.Aggregate((x, y) => x + Environment.NewLine + y);
+                string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
                 completionModel.AppendValues(item.Image, item.DisplayText, item.Units, item.ReturnType, description, item.CompletionText, item.IsMethod);
             }
         }
@@ -363,9 +375,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Destroy();
-            completionView.Dispose();
-            completionForm.Destroy();
+                completionForm.Cleanup();
+            completionView.Cleanup();
+            completionForm.Cleanup();
             completionForm = null;
         }
 
@@ -390,21 +402,35 @@
         [GLib.ConnectBefore]
         private void OnLeaveCompletion(object sender, FocusOutEventArgs e)
         {
-            completionForm.Hide();
-            OnLoseFocus?.Invoke(this, new EventArgs());
+            try
+            {
+                completionForm.Hide();
+                OnLoseFocus?.Invoke(this, new EventArgs());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
         /// (Mouse) button press event handler. If it is a left mouse double click, consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
-            if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
-                HandleItemSelected();
+            try
+            {
+                if (e.Event.Type == Gdk.EventType.TwoButtonPress && e.Event.Button == 1)
+                    HandleItemSelected();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -442,14 +468,21 @@
         /// Key release event handler. If the key is enter, consumes the ItemSelected event.
         /// </summary>
         /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            
-            if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+            try
             {
-                HandleItemSelected();
-                e.RetVal = true;
+                if (e.Event.Key == Gdk.Key.Return && completionForm.Visible)
+                {
+                    HandleItemSelected();
+                    e.RetVal = true;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 

@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MainMenu.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Diagnostics;
@@ -36,7 +31,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Save")]
         public void OnSaveClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.Save();
+            try
+            {
+                explorerPresenter.Save();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -47,7 +49,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Save As")]
         public void OnSaveAsClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.SaveAs();
+            try
+            {
+                explorerPresenter.SaveAs();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -76,7 +85,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Redo")]
         public void OnRedoClick(object sender, EventArgs e)
         {
-            this.explorerPresenter.CommandHistory.Redo();
+            try
+            {
+                explorerPresenter.CommandHistory.Redo();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -87,7 +103,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Split screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
-            this.explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
+            try
+            {
+                explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -98,7 +121,14 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Clear Status")]
         public void ClearStatusPanel(object sender, EventArgs args)
         {
-            explorerPresenter.MainPresenter.ClearStatusPanel();
+            try
+            {
+                explorerPresenter.MainPresenter.ClearStatusPanel();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
 
         /// <summary>
@@ -109,11 +139,16 @@ namespace UserInterface.Presenters
         [MainMenu(MenuName = "Help")]
         public void OnHelp(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/";
-            process.Start();
+            try
+            {
+                Process process = new Process();
+                process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/";
+                process.Start();
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
         }
-
-
     }
 }

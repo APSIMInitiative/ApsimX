@@ -46,14 +46,20 @@
         /// Finds properties for all child models of type <see cref="OrganBiomassRemovalType"/>.
         /// </summary>
         /// <param name="model">Base model.</param>
-        protected override void FindAllProperties(IModel model)
+        protected override List<IVariable> FindAllProperties(object model)
         {
-            List<IModel> children = Apsim.Children(model, typeof(OrganBiomassRemovalType));
+            List<IVariable> result = new List<IVariable>();
+            if (!(model is IModel))
+                return result;
+
+            IEnumerable<OrganBiomassRemovalType> children = (model as IModel).FindAllChildren<OrganBiomassRemovalType>();
             if (children == null)
-                return;
+                return result;
 
             foreach (IModel child in children)
-                base.FindAllProperties(child);
+                result.AddRange(base.FindAllProperties(child));
+
+            return result;
         }
 
         /// <summary>

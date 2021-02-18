@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Commands;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Soils;
     using System;
     using System.Collections;
@@ -97,7 +97,7 @@
             this.PopulateGrid();
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource("WaterGraph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.WaterGraph.xml");
             graph.Name = "";
             if (this.graph == null)
                 this.view.ShowGraph(false);
@@ -105,18 +105,19 @@
             {
                 // The graph's series contain many variables such as [Soil].LL. We now replace
                 // these relative paths with absolute paths.
-                foreach (Series series in Apsim.Children(graph, typeof(Series)))
+                foreach (Series series in graph.FindAllChildren<Series>())
                 {
-                    series.XFieldName = series.XFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.YFieldName = series.YFieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
-                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", Apsim.FullPath(this.model.Parent));
+                    series.XFieldName = series.XFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.X2FieldName = series.X2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.YFieldName = series.YFieldName?.Replace("[Soil]", this.model.Parent.FullPath);
+                    series.Y2FieldName = series.Y2FieldName?.Replace("[Soil]", this.model.Parent.FullPath);
                 }
 
                 this.parentForGraph = this.model.Parent as IModel;
                 if (this.parentForGraph != null)
                 {
-                    this.parentForGraph.Children.Add(this.graph);
+                    // Don't add the graph as a child of the soil. This causes problems
+                    // (see bug #4622), and adding the soil as a parent is sufficient.
                     this.graph.Parent = this.parentForGraph;
                     this.view.ShowGraph(true);
                     int padding = (this.view as ProfileView).MainWidget.Allocation.Width / 2 / 2;
@@ -148,15 +149,16 @@
                             cropLLSeries.ShowInLegend = true;
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
-                            cropLLSeries.YFieldName = (parentForGraph is Soil ? Apsim.FullPath(parentForGraph) : "[Soil]") + ".DepthMidPoints";
-                            cropLLSeries.XFieldName = Apsim.FullPath((profileGrid.Properties[i].Object as IModel)) + "." + profileGrid.Properties[i].Name;
-                            //cropLLSeries.XFieldName = Apsim.FullPath(property.Object as Model) + "." + property.Name;
+                            cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
+                            cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
+                            //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
                             cropLLSeries.Parent = this.graph;
 
                             this.graph.Children.Add(cropLLSeries);
                         }
                     }
 
+                    this.graph.LegendPosition = Graph.LegendPositionType.RightTop;
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                     graphPresenter.LegendInsideGraph = false;
@@ -180,9 +182,6 @@
             profileGrid.Detach();
             if (this.graphPresenter != null)
                 this.graphPresenter.Detach();
-
-            if (this.parentForGraph != null && this.graph != null)
-                this.parentForGraph.Children.Remove(this.graph);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@
         public static void Convert(Soil soil)
         {
             // Convert all samples.
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
             {
                 // Convert sw units to volumetric.
@@ -46,7 +46,8 @@
                 // convert the numbers
                 if (sample.SWUnits == Sample.SWUnitsEnum.Gravimetric)
                 {
-                    double[] bd = Layers.BDMapped(soil, sample.Thickness);
+                    var soilPhysical = soil.FindChild<Soils.IPhysical>();
+                    double[] bd = Layers.BDMapped(soilPhysical, sample.Thickness);
                     return MathUtilities.Multiply(sample.SW, bd);
                 }
                 else

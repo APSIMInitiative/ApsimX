@@ -14,7 +14,7 @@ namespace Utility
 {
     public class ConfigurationConverter
     {
-        public const int LatestVersion = 1;
+        public const int LatestVersion = 2;
 
         public static Configuration DoConvert(string fileName)
         {
@@ -47,7 +47,7 @@ namespace Utility
 
             document["Configuration"]["Version"].InnerText = version.ToString();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
+            XmlSerializer serializer = new XmlSerializer(typeof(Configuration), typeof(Configuration).GetNestedTypes());
             using (XmlReader reader = new XmlNodeReader(document))
                 return serializer.Deserialize(reader) as Configuration;
         }
@@ -77,6 +77,28 @@ namespace Utility
                 XmlNode newChild = doc[typeof(ApsimFileMetadata).Name];
                 newChild = mruList.OwnerDocument.ImportNode(newChild, true);
                 mruList.ReplaceChild(newChild, child);
+            }
+        }
+
+        private static void UpgradeToVersion2(XmlNode rootNode)
+        {
+            XmlNode fontNode = rootNode["Font"];
+            if (fontNode != null)
+            {
+                string family = fontNode["Family"].InnerText;
+                int size = int.Parse(fontNode["Size"].InnerText) / 1024;
+                string gravity = fontNode["Gravity"].InnerText;
+                string stretch = fontNode["Stretch"].InnerText;
+                string style = fontNode["Style"].InnerText;
+                string variant = fontNode["Variant"].InnerText;
+                string weight = fontNode["Weight"].InnerText;
+
+                string fontString = $"{family} {style} {variant} {weight} {stretch} {gravity} {size}";
+
+                rootNode.RemoveChild(fontNode);
+                XmlNode newFontNode = rootNode.OwnerDocument.CreateElement("FontName");
+                newFontNode.InnerText = fontString;
+                rootNode.AppendChild(newFontNode);
             }
         }
     }

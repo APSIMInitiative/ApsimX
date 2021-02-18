@@ -177,7 +177,7 @@ namespace UserInterface.Intellisense
                 {
                     IType returnTypeValue = returnType.GetValue(entity) as IType;
                     if (returnTypeValue != null)
-                        return withNamespace ? returnTypeValue.FullName : returnTypeValue.Name;
+                        return GetTypeName(returnTypeValue, withNamespace);
                 }
             }
             catch { }
@@ -188,6 +188,17 @@ namespace UserInterface.Intellisense
                 return withNamespace ? resolvedMember?.Kind.ToString() ?? "" : resolvedMember?.Kind.ToString() ?? "";
             }
             return "Unknown";
+        }
+
+        private static string GetTypeName(IType type, bool withNamespace = false)
+        {
+            string name = withNamespace ? type.FullName : type.Name;
+            if (type.TypeParameterCount > 0)
+            {
+                string[] typeArgNames = type.TypeArguments.Select(t => GetTypeName(t)).ToArray();
+                name += $"<{string.Join(", ", typeArgNames)}>";
+            }
+            return name;
         }
 
         /// <summary>

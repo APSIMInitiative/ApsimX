@@ -70,11 +70,11 @@ namespace Models.CLEM
         /// <summary>
         /// Excess heifer sold
         /// </summary>
-        ExcessHeiferSale,
+        ExcessPreBreederSale,
         /// <summary>
-        /// Excess bull sold
+        /// Excess sire sold
         /// </summary>
-        ExcessBullSale,
+        ExcessSireSale,
         /// <summary>
         /// Individual reached maximim age and sold
         /// </summary>
@@ -110,7 +110,15 @@ namespace Models.CLEM
         /// <summary>
         /// Initial herd
         /// </summary>
-        InitialHerd
+        InitialHerd,
+        /// <summary>
+        /// Fill initial herd to management levels
+        /// </summary>
+        FillInitialHerd,
+        /// <summary>
+        /// Reduce initial herd to management levels
+        /// </summary>
+        ReduceInitialHerd
     }
 
     /// <summary>
@@ -170,15 +178,19 @@ namespace Models.CLEM
         /// <summary>
         /// Fixed price
         /// </summary>
-        Fixed,
+        Fixed = 0,
+        /// <summary>
+        /// Amount per unit of land
+        /// </summary>
+        perUnitOfLand = 3,
         /// <summary>
         /// Amount per hectare
         /// </summary>
-        perHa,
+        perHa = 1,
         /// <summary>
         /// Amount per tree
         /// </summary>
-        perTree,
+        perTree = 2,
     }
 
     /// <summary>
@@ -224,7 +236,11 @@ namespace Models.CLEM
         /// <summary>
         /// Amount per hectare
         /// </summary>
-        perHa
+        perHa,
+        /// <summary>
+        /// Amount per unit of land
+        /// </summary>
+        perUnitOfLand
     }
 
     /// <summary>
@@ -235,31 +251,35 @@ namespace Models.CLEM
         /// <summary>
         /// Fixed price
         /// </summary>
-        Fixed,
+        Fixed = 0,
+        /// <summary>
+        /// Labour per unit of land
+        /// </summary>
+        perUnitOfLand = 7,
         /// <summary>
         /// Labour per hectare
         /// </summary>
-        perHa,
+        perHa = 1,
         /// <summary>
         /// Labour per Tree
         /// </summary>
-        perTree,
+        perTree = 2,
         /// <summary>
         /// Labour per head
         /// </summary>
-        perHead,
+        perHead = 3,
         /// <summary>
         /// Labour per adult equivilant
         /// </summary>
-        perAE,
+        perAE = 4,
         /// <summary>
         /// Labour per kg
         /// </summary>
-        perKg,
+        perKg = 5,
         /// <summary>
         /// Labour per unit
         /// </summary>
-        perUnit,
+        perUnit = 6,
     }
 
     /// <summary>
@@ -268,25 +288,29 @@ namespace Models.CLEM
     public enum RuminantFeedActivityTypes
     {
         /// <summary>
-        /// Feed specified amount daily to all individuals
+        /// A specified amount daily to all individuals
         /// </summary>
         SpecifiedDailyAmount,
         /// <summary>
-        /// Feed specified amount daily to each individual
+        /// A specified amount daily to each individual
         /// </summary>
         SpecifiedDailyAmountPerIndividual,
         /// <summary>
-        /// Feed proportion of animal weight in selected months
+        /// The proportion of animal weight in selected months
         /// </summary>
         ProportionOfWeight,
         /// <summary>
-        /// Feed proportion of potential intake
+        /// The proportion of potential intake
         /// </summary>
         ProportionOfPotentialIntake,
         /// <summary>
-        /// Feed proportion of remaining amount required
+        /// The proportion of remaining amount required
         /// </summary>
-        ProportionOfRemainingIntakeRequired
+        ProportionOfRemainingIntakeRequired,
+        /// <summary>
+        /// A proportion of the feed pool available
+        /// </summary>
+        ProportionOfFeedAvailable
     }
 
     /// <summary>
@@ -384,4 +408,140 @@ namespace Models.CLEM
         /// </summary>
         FileReader
     }
+
+    /// <summary>
+    /// Style of weaning rules
+    /// </summary>
+    public enum WeaningStyle
+    {
+        /// <summary>
+        /// Age or weight achieved
+        /// </summary>
+        AgeOrWeight,
+        /// <summary>
+        /// Age achieved
+        /// </summary>
+        AgeOnly,
+        /// <summary>
+        /// Weight achieved
+        /// </summary>
+        WeightOnly
+    }
+
+    /// <summary>
+    /// Method to use in determining a value of y from a given x in relationships 
+    /// </summary>
+    public enum RelationshipCalculationMethod
+    {
+        /// <summary>
+        /// Use fixed values
+        /// </summary>
+        UseSpecifiedValues,
+        /// <summary>
+        /// Use linear interpolation
+        /// </summary>
+        Interpolation
+    }
+
+    /// <summary>
+    /// Months of the year
+    /// </summary>
+    public enum MonthsOfYear
+    {
+        /// <summary>
+        /// Not set
+        /// </summary>
+        NotSet = 0,
+        /// <summary>
+        /// Janyary
+        /// </summary>
+        January = 1,
+        /// <summary>
+        /// February
+        /// </summary>
+        February = 2,
+        /// <summary>
+        /// March
+        /// </summary>
+        March = 3,
+        /// <summary>
+        /// April
+        /// </summary>
+        April = 4,
+        /// <summary>
+        /// May
+        /// </summary>
+        May = 5,
+        /// <summary>
+        /// June
+        /// </summary>
+        June = 6,
+        /// <summary>
+        /// July
+        /// </summary>
+        July = 7,
+        /// <summary>
+        /// August
+        /// </summary>
+        August = 8,
+        /// <summary>
+        /// September
+        /// </summary>
+        September = 9,
+        /// <summary>
+        /// October
+        /// </summary>
+        October = 10,
+        /// <summary>
+        /// November
+        /// </summary>
+        November = 11,
+        /// <summary>
+        /// December
+        /// </summary>
+        December = 12
+    }
+
+    /// <summary>
+    /// Style selling resource
+    /// </summary>
+    public enum ResourceSellStyle
+    {
+        /// <summary>
+        /// Specified amount
+        /// </summary>
+        SpecifiedAmount,
+        /// <summary>
+        /// Proportion of store
+        /// </summary>
+        ProportionOfStore,
+        /// <summary>
+        /// Proportion of last gain transaction
+        /// </summary>
+        ProportionOfLastGain,
+        /// <summary>
+        /// Reserve amount
+        /// </summary>
+        ReserveAmount,
+        /// <summary>
+        /// Reserve proportion
+        /// </summary>
+        ReserveProportion
+    }
+
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum TagApplicationStyle
+    {
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Remove tag
+        /// </summary>
+        Remove
+    }
+
 }

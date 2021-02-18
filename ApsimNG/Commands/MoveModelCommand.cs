@@ -21,6 +21,12 @@
         /// <summary>The explorer presenter.</summary>
         private ExplorerPresenter presenter;
 
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => fromModel;
+
         /// <summary>Constructor.</summary>
         public MoveModelCommand(Model model, Model newParent, TreeViewNode treeNodeDescription, ExplorerPresenter explorerPresenter)
         {
@@ -42,7 +48,7 @@
             // The Move method may rename the FromModel. Go get the original name in case of
             // Undo later.
             originalName = fromModel.Name;
-            string originalPath = Apsim.FullPath(this.fromModel);
+            string originalPath = this.fromModel.FullPath;
 
             // Move model.
             try
@@ -64,7 +70,7 @@
         {
             if (modelMoved)
             {
-                presenter.Move(Apsim.FullPath(this.fromModel), fromParent, nodeDescription);
+                presenter.Move(this.fromModel.FullPath, fromParent, nodeDescription);
                 Structure.Move(fromModel, fromParent);
                 fromModel.Name = originalName;
                 nodeDescription.Name = originalName;

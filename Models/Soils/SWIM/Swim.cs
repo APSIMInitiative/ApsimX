@@ -5,11 +5,12 @@ using System.Text;
 using System.IO;
 using Models.Core;
 using Models;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using System.Linq;
 using Models.Soils.Standardiser;
+using Models.Soils.Nutrients;
 
 namespace Models.Soils
 {
@@ -29,8 +30,12 @@ namespace Models.Soils
         [Link]
         private ISummary summary = null;
 
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
         [Link]
-        private Soil soil = null;
+        private Sample initial = null;
 
         /// <summary>Link to NO3.</summary>
         [Link]
@@ -42,10 +47,19 @@ namespace Models.Soils
         [Link]
         private List<ICanopy> canopies = null;
 
+        [Link(IsOptional = true)]
+        private SwimSubsurfaceDrain subsurfaceDrain = null;
+
+        [Link(IsOptional = true)]
+        private SwimWaterTable waterTable = null;
+
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
         const double psi0 = -0.6e7;
+
+        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
+        public double PrecipitationInterception { get; set; }
 
         #region "Global" variables
         double[] _swf;
@@ -318,29 +332,6 @@ namespace Models.Soils
         double[] x;
         double[] dx;
 
-        string subsurfaceDrain;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e6, Name = "draindepth")]
-        [Units("mm")]
-        double drain_depth = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e5, Name = "drainspacing")]
-        [Units("mm")]
-        double drain_spacing = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 10000.0)]
-        [Units("mm/d")]
-        double Klat = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1000.0, Name = "drainradius")]
-        [Units("mm")]
-        double drain_radius = Double.NaN;
-
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1.0e6, Name = "impermdepth")]
-        double imperm_depth = Double.NaN;
-
-
-
         //Has the soilwat_init() been done? If so, let the fractional soil arrays (eg. sw, sat, dul etc) check the profile
         //layers when a "set" occurs. If not, save reset values so they can be applied if a reset event is sent.
         bool initDone = false;
@@ -558,12 +549,6 @@ namespace Models.Soils
         ///// </summary>
         //private double ureaseinhibitorslos = 0.61;
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private double watertabledepth = Double.NaN;
-
         // [Param]
         private bool vapour_conductivity
         {
@@ -591,12 +576,35 @@ namespace Models.Soils
         }
 
         ///<summary>Get volumetric water content (mm/mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SW { get { return th; } set { th = value; } }
 
         ///<summary>Get water content (mm)</summary>
-        [XmlIgnore]
-        public double[] SWmm { get { return MathUtilities.Multiply(th, soil.Thickness); } }
+        [JsonIgnore]
+        public double[] SWmm { get { return MathUtilities.Multiply(th, soilPhysical.Thickness); } }
+
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                                                                  soilPhysical.LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
 
         [Units("cm^3/cm^3")]
         //[Description("Soil water content of layer")]
@@ -609,7 +617,7 @@ namespace Models.Soils
         }
 
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] ESW
         {
@@ -617,7 +625,7 @@ namespace Models.Soils
             {
                 double[] value = new double[n+1];
                 for (int i = 0; i <= n; i++)
-                    value[i] = Math.Max(0.0, (th[i] - soil.LL15[i]) * soil.Thickness[i]);
+                    value[i] = Math.Max(0.0, (th[i] - soilPhysical.LL15[i]) * soilPhysical.Thickness[i]);
                 return value;
             }
         }
@@ -680,7 +688,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the amount of water runoff (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Runoff
         {
@@ -718,7 +726,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Es
         {
@@ -729,7 +737,7 @@ namespace Models.Soils
         }
 
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Eos
         {
@@ -740,7 +748,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Drainage
         {
@@ -751,7 +759,7 @@ namespace Models.Soils
         }
 
         /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double Eo { get; set; }
 
@@ -765,7 +773,7 @@ namespace Models.Soils
         }
 
         /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("kg/ha")]
         public double[] Flow
         {
@@ -971,12 +979,17 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Water table depth (mm)</summary>
         [Units("mm")]
-        private double watertable
+        public double WaterTable
         {
             get
             {
-                return WaterTable();
+                return CalculateWaterTable();
+            }
+            set
+            {
+                
             }
         }
 
@@ -997,8 +1010,9 @@ namespace Models.Soils
         }
 
 
+        /// <summary>Constant potential bottom boundary</summary>
         [Units("cm")]
-        private double bbc_potential
+        public double bbc_potential
         {
             set
             {
@@ -1011,8 +1025,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Constant potential bottom boundary</summary>
         [Units("cm")]
-        private double bbc_seepage_potential
+        public double bbc_seepage_potential
         {
             set
             {
@@ -1025,8 +1040,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Bottom boundary condition</summary>
         [Units("cm")]
-        private double bbc_gradient
+        public double bbc_gradient
         {
             set
             {
@@ -1091,9 +1107,18 @@ namespace Models.Soils
         [EventSubscribe("StartOfSimulation")]
         private void OnInitialised(object sender, EventArgs e)
         {
+            ErrorChecking();
             OnReset();
             initDone = true;
             Sum_Report();
+        }
+
+        private void ErrorChecking()
+        {
+            if (soilPhysical.KS == null
+                || !MathUtilities.ValuesInArray(soilPhysical.KS)
+                || soilPhysical.KS.All(ks => ks == 0))
+                throw new ApsimXException(this, "KS not provided. Check Soil.Physical configuration");
         }
 
         /// <summary>
@@ -1237,8 +1262,8 @@ namespace Models.Soils
             {
                 summary.WriteMessage(this, String.Format("{0,6:F1} {1,6:F1}  {2,4:F3}  {3,5:F3}  {4,5:F3}  {5,5:F3}  {6,5:F3} {7,6:F2} {8,8:F2}",
                                            x[layer] * 10.0,
-                                           soil.Thickness[layer], soil.BD[layer], th[layer],
-                                           soil.LL15[layer], soil.DUL[layer], soil.SAT[layer], soil.KS[layer],
+                                           soilPhysical.Thickness[layer], soilPhysical.BD[layer], th[layer],
+                                           soilPhysical.LL15[layer], soilPhysical.DUL[layer], soilPhysical.SAT[layer], soilPhysical.KS[layer],
                                            _psi[layer]));
 
             }
@@ -1305,16 +1330,16 @@ namespace Models.Soils
 
             summary.WriteMessage(this, "     Evaporation Source        = " + evap_source + Environment.NewLine);
 
-            if (!Double.IsNaN(drain_depth))
+            if (subsurfaceDrain != null)
             {
                 summary.WriteMessage(this, " Subsurface Drain Model");
                 summary.WriteMessage(this, " ======================" + Environment.NewLine);
 
-                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", drain_depth));
-                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", drain_spacing));
-                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", drain_radius));
-                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", imperm_depth));
-                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", Klat));
+                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", subsurfaceDrain.DrainDepth));
+                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", subsurfaceDrain.DrainSpacing));
+                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius));
+                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth));
+                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat));
             }
 
         }
@@ -1636,19 +1661,18 @@ namespace Models.Soils
             // ----------------- SET UP NODE SPECIFICATIONS -----------------------
 
             // safer to use number returned from read routine
-            int num_layers = soil.Thickness.Length;
+            int num_layers = soilPhysical.Thickness.Length;
             if (n != num_layers - 1)
                 ResizeProfileArrays(num_layers);
 
             for (int i = 0; i <= n; i++)
-                dx[i] = soil.Thickness[i] / 10.0;
+                dx[i] = soilPhysical.Thickness[i] / 10.0;
 
             x[0] = 0.0;
             x[1] = 2.0 * dx[0] + x[0];
 
-            for (int i = 2; i < n; i++)
-                //         p%x(i) = (2d0*(sum(p%dlayer(0:i-1))-p%x(i-1))+p%x(i-1))
-                x[i] = 2.0 * dx[i - 1] + x[i - 2];
+            for (int i = 1; i < n; i++)
+                x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;
 
             x[n] = MathUtilities.Sum(dx);
 
@@ -1815,13 +1839,13 @@ namespace Models.Soils
 
             if (reset_theta == null && reset_psi == null)
             {
-                th = soil.InitialWaterVolumetric.Clone() as double[]; 
+                th = initial.SWVolumetric.Clone() as double[]; 
             }
 
-            if (!Double.IsNaN(watertabledepth))
+            if (waterTable != null && !Double.IsNaN(waterTable.WaterTableDepth))
             {
                 ibbc = 1;
-                bbc_value = watertabledepth;
+                bbc_value = waterTable.WaterTableDepth;
             }
             else
             {
@@ -1869,23 +1893,19 @@ namespace Models.Soils
                     throw new Exception("No value provided for precipitation_constant");
                 _grc = precipitation_constant;
             }
-            if (!Double.IsNaN(drain_depth))
+
+            if (subsurfaceDrain != null)
             {
-                subsurfaceDrain = "on";
-                if (Double.IsNaN(drain_spacing))
+                if (Double.IsNaN(subsurfaceDrain.DrainSpacing))
                     throw new Exception("No value provided for drainspacing");
-                if (Double.IsNaN(drain_radius))
+                if (Double.IsNaN(subsurfaceDrain.DrainRadius))
                     throw new Exception("No value provided for drainradius");
-                if (Double.IsNaN(imperm_depth))
+                if (Double.IsNaN(subsurfaceDrain.ImpermDepth))
                     throw new Exception("No value provided for impermdepth");
-                if (imperm_depth < drain_depth)
+                if (subsurfaceDrain.ImpermDepth < subsurfaceDrain.DrainDepth)
                     throw new Exception("Impermdepth must exceed draindepth");
-                if (Double.IsNaN(Klat))
+                if (Double.IsNaN(subsurfaceDrain.Klat))
                     throw new Exception("No value provided for Klat");
-            }
-            else
-            {
-                subsurfaceDrain = "off";
             }
         }
 
@@ -2317,11 +2337,11 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                SwimSoluteParameters soluteParam = Apsim.Get(this, solute_names[i],true) as SwimSoluteParameters;
+                SwimSoluteParameters soluteParam = this.FindByPath(solute_names[i],true)?.Value as SwimSoluteParameters;
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
-                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness,soil.Thickness, double.NaN);
-                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soil.Thickness, double.NaN);
+                fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
+                exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 cslgw[i] = soluteParam.WaterTableConcentration;
                 d0[i] = soluteParam.D0;
             }
@@ -2341,7 +2361,7 @@ namespace Models.Soils
         }
 
         /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialInfiltration { get; set; }
 
         private void GetRainVariables()
@@ -2826,7 +2846,7 @@ namespace Models.Soils
             double cnpd = 0.0;
             for (int layer = 0; layer <= n; layer++)
             {
-                cnpd = cnpd + (th[layer] - soil.LL15[layer]) / (soil.DUL[layer] - soil.LL15[layer]) * runoff_wf[layer];
+                cnpd = cnpd + (th[layer] - soilPhysical.LL15[layer]) / (soilPhysical.DUL[layer] - soilPhysical.LL15[layer]) * runoff_wf[layer];
             }
             cnpd = MathUtilities.Bound(cnpd, 0.0, 1.0);
 
@@ -2883,7 +2903,7 @@ namespace Models.Soils
 
             // check if hydro_effective_depth applies for eroded profile.
 
-            profile_depth = MathUtilities.Sum(soil.Thickness);
+            profile_depth = MathUtilities.Sum(soilPhysical.Thickness);
 
             hydrolEffectiveDepth = Math.Min(hydrol_effective_depth, profile_depth);
 
@@ -2892,7 +2912,7 @@ namespace Models.Soils
 
             for (layer = 0; layer <= hydrolEffectiveLayer; layer++)
             {
-                cum_depth += soil.Thickness[layer];
+                cum_depth += soilPhysical.Thickness[layer];
                 cum_depth = Math.Min(cum_depth, hydrolEffectiveDepth);
 
                 // assume water content to c%hydrol_effective_depth affects runoff
@@ -2914,7 +2934,7 @@ namespace Models.Soils
             double cumDepth = 0.0;
             for (int i = 0; i <= n; i++)
             {
-                cumDepth += soil.Thickness[i];
+                cumDepth += soilPhysical.Thickness[i];
                 if (cumDepth > depth)
                     return i;
             }
@@ -3098,10 +3118,10 @@ namespace Models.Soils
             {
                 psid[layer] = PSIDul;  //- (p%x(p%n) - p%x(layer))
 
-                DELk[layer, 0] = (soil.DUL[layer] - soil.SAT[layer]) / (Math.Log10(-psid[layer]));
-                DELk[layer, 1] = (soil.LL15[layer] - soil.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                DELk[layer, 2] = -soil.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                DELk[layer, 3] = -soil.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 0] = (soilPhysical.DUL[layer] - soilPhysical.SAT[layer]) / (Math.Log10(-psid[layer]));
+                DELk[layer, 1] = (soilPhysical.LL15[layer] - soilPhysical.DUL[layer]) / (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
+                DELk[layer, 2] = -soilPhysical.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
+                DELk[layer, 3] = -soilPhysical.LL15[layer] / (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
 
                 Mk[layer, 0] = 0.0;
                 Mk[layer, 1] = (DELk[layer, 0] + DELk[layer, 1]) / 2.0;
@@ -3121,22 +3141,22 @@ namespace Models.Soils
 
                 M0[layer, 0] = 0.0;
                 M1[layer, 0] = 0.0;
-                Y0[layer, 0] = soil.SAT[layer];
-                Y1[layer, 0] = soil.SAT[layer];
+                Y0[layer, 0] = soilPhysical.SAT[layer];
+                Y1[layer, 0] = soilPhysical.SAT[layer];
 
                 M0[layer, 1] = Mk[layer, 0] * (Math.Log10(-psid[layer]) - 0.0);
                 M1[layer, 1] = Mk[layer, 1] * (Math.Log10(-psid[layer]) - 0.0);
-                Y0[layer, 1] = soil.SAT[layer];
-                Y1[layer, 1] = soil.DUL[layer];
+                Y0[layer, 1] = soilPhysical.SAT[layer];
+                Y1[layer, 1] = soilPhysical.DUL[layer];
 
                 M0[layer, 2] = Mk[layer, 1] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
                 M1[layer, 2] = Mk[layer, 2] * (Math.Log10(-psi_ll15) - Math.Log10(-psid[layer]));
-                Y0[layer, 2] = soil.DUL[layer];
-                Y1[layer, 2] = soil.LL15[layer];
+                Y0[layer, 2] = soilPhysical.DUL[layer];
+                Y1[layer, 2] = soilPhysical.LL15[layer];
 
                 M0[layer, 3] = Mk[layer, 2] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
                 M1[layer, 3] = Mk[layer, 3] * (Math.Log10(-psi0) - Math.Log10(-psi_ll15));
-                Y0[layer, 3] = soil.LL15[layer];
+                Y0[layer, 3] = soilPhysical.LL15[layer];
                 Y1[layer, 3] = 0.0;
 
                 M0[layer, 4] = 0.0;
@@ -3150,13 +3170,13 @@ namespace Models.Soils
         {
             for (int layer = 0; layer <= n; layer++)
             {
-                double b = -Math.Log(PSIDul / psi_ll15) / Math.Log(soil.DUL[layer] / soil.LL15[layer]);
+                double b = -Math.Log(PSIDul / psi_ll15) / Math.Log(soilPhysical.DUL[layer] / soilPhysical.LL15[layer]);
                 MicroP[layer] = b * 2.0 + 3.0;
-                Kdula[layer] = Math.Min(0.99 * KDul, soil.KS[layer]);
-                MicroKs[layer] = Kdula[layer] / Math.Pow(soil.DUL[layer] / soil.SAT[layer], MicroP[layer]);
+                Kdula[layer] = Math.Min(0.99 * KDul, soilPhysical.KS[layer]);
+                MicroKs[layer] = Kdula[layer] / Math.Pow(soilPhysical.DUL[layer] / soilPhysical.SAT[layer], MicroP[layer]);
 
-                double Sdul = soil.DUL[layer] / soil.SAT[layer];
-                MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (soil.KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
+                double Sdul = soilPhysical.DUL[layer] / soilPhysical.SAT[layer];
+                MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (soilPhysical.KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
             }
         }
 
@@ -3241,17 +3261,21 @@ namespace Models.Soils
                 return 0.0;
         }
 
-        private double WaterTable()
+        private double CalculateWaterTable()
         {
-            //   Purpose
-            //      Calculate depth of water table from soil surface
-            for (int i = 0; i <= n; i++)
+            if (psi != null)
             {
-                if (_psi[i] > 0)
-                    return (x[i] - _psi[i]) * 10.0;
+                //   Purpose
+                //      Calculate depth of water table from soil surface
+                for (int i = 0; i <= n; i++)
+                {
+                    if (_psi[i] > 0)
+                        return (x[i] - _psi[i]) * 10.0;
+                }
+                // set default value to bottom of soil profile.
+                return x[n] * 10.0;
             }
-            // set default value to bottom of soil profile.
-            return x[n] * 10.0;
+            return 0;
         }
 
         private double Suction(int node, double theta)
@@ -3262,7 +3286,7 @@ namespace Models.Soils
             const double tolerance = 1e-9;
             const double dpsi = 0.01;
 
-            if (theta == soil.SAT[node])
+            if (theta == soilPhysical.SAT[node])
                 return 0.0;
             else
             {
@@ -3284,7 +3308,7 @@ namespace Models.Soils
         {
             //  Purpose
             //      Calculate S for a given node for a specified suction.
-            return SimpleTheta(layer, psiValue) / soil.SAT[layer];
+            return SimpleTheta(layer, psiValue) / soilPhysical.SAT[layer];
         }
 
         private double SimpleTheta(int layer, double psiValue)
@@ -3358,11 +3382,11 @@ namespace Models.Soils
             {
                 double microK = MicroKs[layer] * Math.Pow(S, MicroP[layer]);
 
-                if (MicroKs[layer] >= soil.KS[layer])
+                if (MicroKs[layer] >= soilPhysical.KS[layer])
                     simpleK = microK;
                 else
                 {
-                    double macroK = (soil.KS[layer] - MicroKs[layer]) * Math.Pow(S, MacroP[layer]);
+                    double macroK = (soilPhysical.KS[layer] - MicroKs[layer]) * Math.Pow(S, MacroP[layer]);
                     simpleK = microK + macroK;
                 }
             }
@@ -3562,6 +3586,8 @@ namespace Models.Soils
                     //RC   lines for g%th and g%csl added by RCichota, 09/02/2010
 
                     _dt = 0.5 * _dt;
+                    if (_dt == 0)
+                        throw new Exception("SWIM failed to find a solution");
 
                     // Tell user that SWIM is changing dt
                     summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt));
@@ -4975,8 +5001,8 @@ namespace Models.Soils
                 hkp = (thk * hklgd * psip) / tpsi;
             }
 
-            double thsat = soil.SAT[ix];  // NOTE: this assumes that the wettest p%wc is
-                                          //! first in the pairs of log suction vs p%wc
+            double thsat = soilPhysical.SAT[ix];  // NOTE: this assumes that the wettest p%wc is
+                                                  //! first in the pairs of log suction vs p%wc
 
             // EJZ - this was in the fortran source, but is clearly futile
             //if (thsat == 0.0)       
@@ -5657,17 +5683,17 @@ namespace Models.Soils
             double wt_above_drain2;
             double[] qdrain2 = new double[n + 1];
 
-            if (subsurfaceDrain != null && subsurfaceDrain.Trim() == "on")
+            if (subsurfaceDrain != null)
             {
-                int drain_node = FindLayerNo(drain_depth);
+                int drain_node = SoilUtilities.LayerIndexOfClosestDepth(soilPhysical.Thickness, subsurfaceDrain.DrainDepth);
 
-                double d = imperm_depth - drain_depth;
+                double d = subsurfaceDrain.ImpermDepth - subsurfaceDrain.DrainDepth;
                 if (_psi[drain_node] > 0)
                     wt_above_drain = _psi[drain_node] * 10.0;
                 else
                     wt_above_drain = 0.0;
 
-                double q = Hooghoudt(d, wt_above_drain, drain_spacing, drain_radius, Klat);
+                double q = Hooghoudt(d, wt_above_drain, subsurfaceDrain.DrainSpacing, subsurfaceDrain.DrainRadius, subsurfaceDrain.Klat);
 
                 qdrain[drain_node] = q / 10.0 / 24.0;
 
@@ -5676,7 +5702,7 @@ namespace Models.Soils
                 else
                     wt_above_drain2 = 0.0;
 
-                double q2 = Hooghoudt(d, wt_above_drain2, drain_spacing, drain_radius, Klat);
+                double q2 = Hooghoudt(d, wt_above_drain2, subsurfaceDrain.DrainSpacing, subsurfaceDrain.DrainRadius, subsurfaceDrain.Klat);
 
                 qdrain2[drain_node] = q2 / 10.0 / 24.0;
 
@@ -5709,21 +5735,6 @@ namespace Models.Soils
             }
 
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        }
-
-        private int FindLayerNo(double depth)
-        {
-            // Find the soil layer in which the indicated depth is located
-            // NOTE: The returned layer number is 0-based
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < soil.Thickness.Length; i++)
-            {
-                depth_cum = depth_cum + soil.Thickness[i];
-                if (depth_cum >= depth)
-                    return i;
-            }
-            return soil.Thickness.Length - 1;
         }
 
         ///// <summary>
@@ -5812,26 +5823,6 @@ namespace Models.Soils
         //    return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
         //}
 
-        ///// <summary>
-        ///// Finds the layer no.
-        ///// </summary>
-        ///// <param name="depth">The depth.</param>
-        ///// <returns></returns>
-        //private int FindLayerNo(double depth)
-        //{
-        //    // Find the soil layer in which the indicated depth is located
-        //    // NOTE: The returned layer number is 0-based
-        //    // If the depth is not reached, the last element is used
-        //    double depth_cum = 0.0;
-        //    for (int i = 0; i < _dlayer.Length; i++)
-        //    {
-        //        depth_cum = depth_cum + _dlayer[i];
-        //        if (depth_cum >= depth)
-        //            return i;
-        //    }
-        //    return _dlayer.Length - 1;
-        //}
-
         /// <summary>
         /// Issues the warning.
         /// </summary>
@@ -5847,52 +5838,63 @@ namespace Models.Soils
             if (MathUtilities.Sum(dlt_sw_dep) > 0)
             {
                 // convert to volumetric
-                double[] newSW = MathUtilities.Divide(dlt_sw_dep, soil.Thickness);
+                double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
             }
         }
 
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        [XmlIgnore]
-        public double[] Thickness { get { return soil.Thickness; } }
-
+        [JsonIgnore]
+        public double[] Thickness { get { return soilPhysical.Thickness; } }
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
-        [XmlIgnore]
-        public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement an LateralOutflow property"); } }
+        [JsonIgnore]
+        public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
         /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
-        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNO3 property"); } }
+        [JsonIgnore]
+        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNO3 property"); } }
 
         /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
-        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement an LeachNH4 property"); } }
+        [JsonIgnore]
+        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNH4 property"); } }
 
         /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
-        [XmlIgnore]
-        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement an LeachUrea property"); } }
+        [JsonIgnore]
+        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement a LeachUrea property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
-        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNO3 property"); } }
+        [JsonIgnore]
+        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNO3 property"); } }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [XmlIgnore]
-        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement an FlowNH4 property"); } }
+        [JsonIgnore]
+        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNH4 property"); } }
+
+        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double[] FlowUrea { get { throw new NotImplementedException("SWIM doesn't implement a FlowUrea property"); } }
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
-        [XmlIgnore]
-        public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement an Flux property"); } }
+        [JsonIgnore]
+        public double[] Flux { get { throw new NotImplementedException("SWIM doesn't implement a Flux property"); } }
 
         /// <summary>Loss of precipitation due in interception of surface residues (mm)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResidueInterception
         {
             get { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
             set { throw new NotImplementedException("SWIM doesn't implement ResidueInterception"); }
         }
+
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        [JsonIgnore]
+        public double[] SoluteFluxEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        [JsonIgnore]
+        public double[] SoluteFlowEfficiency { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>Sets the water table.</summary>
         /// <param name="InitialDepth">The initial depth.</param>

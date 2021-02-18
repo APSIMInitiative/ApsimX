@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 
 /// <summary>
@@ -199,7 +199,7 @@ public class CultivarConstants
     /// <value>
     /// The num_leaf_size.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_leaf_size
         {
         get { return leaf_size_no.Length; }
@@ -210,7 +210,7 @@ public class CultivarConstants
     /// <value>
     /// The num_stress_factor_stalk.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_stress_factor_stalk
         {
         get { return stress_factor_stalk.Length; }
@@ -221,7 +221,7 @@ public class CultivarConstants
     /// <value>
     /// The num_tillerf_leaf_size.
     /// </value>
-    [XmlIgnore]
+    [JsonIgnore]
     public int num_tillerf_leaf_size
         {
         get { return tillerf_leaf_size_no.Length; }

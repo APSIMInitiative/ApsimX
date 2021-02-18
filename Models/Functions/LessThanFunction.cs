@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -12,13 +13,12 @@ namespace Models.Functions
     public class LessThanFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private List<IFunction> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+            ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             double TestVariable = 0.0;
             double LessThanCriteria = 0.0;
@@ -55,7 +55,7 @@ namespace Models.Functions
             if (IncludeInDocumentation)
             {
                 if (ChildFunctions == null)
-                    ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                    ChildFunctions = FindAllChildren<IFunction>().ToList();
 
                 if (ChildFunctions == null || ChildFunctions.Count < 1)
                     return;
@@ -66,18 +66,23 @@ namespace Models.Functions
                 string lhs;
                 if (ChildFunctions[0] is VariableReference)
                     lhs = (ChildFunctions[0] as VariableReference).VariableName;
+                else if (ChildFunctions[0] is IModel model)
+                    lhs = model.Name;
                 else
-                    lhs = ChildFunctions[0].Name;
+                    throw new Exception($"Unknown model type '{ChildFunctions[0].GetType().Name}'");
+
                 string rhs;
                 if (ChildFunctions[1] is VariableReference)
                     rhs = (ChildFunctions[1] as VariableReference).VariableName;
+                else if (ChildFunctions[1] is IModel model)
+                    rhs = model.Name;
                 else
-                    rhs = ChildFunctions[1].Name;
+                    throw new Exception($"Unknown model type '{ChildFunctions[1].GetType().Name}'");
 
                 tags.Add(new AutoDocumentation.Paragraph("IF " + lhs + " < " + rhs + " THEN", indent));
-                AutoDocumentation.DocumentModel(ChildFunctions[2], tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(ChildFunctions[2] as IModel, tags, headingLevel, indent + 1);
                 tags.Add(new AutoDocumentation.Paragraph("ELSE", indent));
-                AutoDocumentation.DocumentModel(ChildFunctions[3], tags, headingLevel, indent + 1);
+                AutoDocumentation.DocumentModel(ChildFunctions[3] as IModel, tags, headingLevel, indent + 1);
             }
         }
     }

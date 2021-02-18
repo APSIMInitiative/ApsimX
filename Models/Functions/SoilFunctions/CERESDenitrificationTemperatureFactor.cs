@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
-using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -18,7 +15,7 @@ namespace Models.Functions
     {
 
         [Link]
-        Soil soil = null;
+        ISoilTemperature soilTemperature = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -27,7 +24,23 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Denitrification Temperature Factor");
 
-            return MathUtilities.Bound(0.1 * Math.Exp(0.046 * soil.Temperature[arrayIndex]), 0, 1);
+            return MathUtilities.Bound(0.1 * Math.Exp(0.046 * soilTemperature.Value[arrayIndex]), 0, 1);
+        }
+
+        /// <summary>
+        /// Get the values for all soil layers.
+        /// </summary>
+        public double[] Values
+        {
+            get
+            {
+                if (soilTemperature?.Value == null)
+                    return null;
+                double[] result = new double[soilTemperature.Value.Length];
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = Value(i);
+                return result;
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

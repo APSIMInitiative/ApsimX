@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ISeriesEditorView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
     using Views;
 
@@ -12,9 +7,6 @@ namespace UserInterface.Interfaces
     /// </summary>
     public interface ISeriesView
     {
-        /// <summary>Checkpoint</summary>
-        IDropDownView Checkpoint { get; }
-
         /// <summary>Data source</summary>
         IDropDownView DataSource { get; }
 

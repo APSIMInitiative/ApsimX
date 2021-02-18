@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ImageUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
     using System.Drawing;
@@ -26,10 +21,11 @@ namespace APSIM.Shared.Utilities
             double scale = Math.Min(targetWidth / image.Width, targetHeight / image.Height);
             var scaleWidth = (int)(image.Width * scale);
             var scaleHeight = (int)(image.Height * scale);
-            var scaleRectangle = new Rectangle(((int)targetWidth - scaleWidth) / 2, ((int)targetHeight - scaleHeight) / 2, scaleWidth, scaleHeight);
+            // var scaleRectangle = new Rectangle(((int)targetWidth - scaleWidth) / 2, ((int)targetHeight - scaleHeight) / 2, scaleWidth, scaleHeight);
+            var scaleRectangle = new Rectangle(0, 0, scaleWidth, scaleHeight);
 
             // Create a scaled image.
-            Bitmap scaledImage = new Bitmap((int)targetWidth, (int)targetHeight);
+            Bitmap scaledImage = new Bitmap((int)scaleWidth, (int)scaleHeight);
             using (var graph = Graphics.FromImage(scaledImage))
             {
                 graph.DrawImage(image, scaleRectangle);

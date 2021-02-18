@@ -6,8 +6,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -37,7 +38,7 @@ namespace Models.CLEM.Activities
         /// Account to use
         /// </summary>
         [Description("Account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
@@ -86,7 +87,7 @@ namespace Models.CLEM.Activities
                     Required = this.Amount,
                     ResourceTypeName = this.AccountName,
                     ActivityModel = this,
-                    Reason = ((IsOverhead) ? "Overhead" : "Expense")
+                    Category = ((IsOverhead) ? "Overhead" : "Expense")
                 }
             };
             return resourcesNeeded;
@@ -142,7 +143,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -155,6 +156,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -162,25 +165,28 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            if(IsOverhead)
-            {
-                html += "\n<div class=\"activityentry\">This is an overhead</div>";
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (IsOverhead)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This is an overhead</div>");
+                }
 
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

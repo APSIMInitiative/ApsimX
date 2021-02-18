@@ -1,11 +1,7 @@
-// -----------------------------------------------------------------------
-// <copyright file="TreeView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -14,6 +10,10 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
+
+#if NETCOREAPP
+    using TreeModel = Gtk.ITreeModel;
+#endif
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -43,9 +43,28 @@ namespace UserInterface.Views
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
 
         /// <summary>Constructor</summary>
+        public TreeView()
+        {
+        }
+
+        /// <summary>Constructor</summary>
+        public TreeView(ViewBase owner) : base(owner)
+        {
+            Initialise(owner, new Gtk.TreeView());
+        }
+
+        /// <summary>Constructor</summary>
         public TreeView(ViewBase owner, Gtk.TreeView treeView) : base(owner)
         {
-            treeview1 = treeView;
+            Initialise(owner, treeView);
+        }
+
+        /// <summary>Gets or sets whether tree nodes can be changed.</summary>
+        public bool ReadOnly { get; set; }
+
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            treeview1 = (Gtk.TreeView) gtkControl;
             mainWidget = treeview1;
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -106,6 +125,9 @@ namespace UserInterface.Views
         /// <summary>Invoked then a node is renamed.</summary>
         public event EventHandler<NodeRenameArgs> Renamed;
 
+        /// <summary>Invoked then a node is double clicked.</summary>
+        public event EventHandler<EventArgs> DoubleClicked;
+
         /// <summary>Gets or sets the currently selected node.</summary>
         public string SelectedNode
         {
@@ -142,7 +164,7 @@ namespace UserInterface.Views
         public MenuView ContextMenu { get; set; }
 
         /// <summary>Populate the treeview.</summary>
-        /// <param name="rootNode">A description of the top level root node</param>
+        /// <param name="topLevelNode">A description of the top level root node</param>
         public void Populate(TreeViewNode topLevelNode)
         {
             rootNode = topLevelNode;
@@ -159,7 +181,7 @@ namespace UserInterface.Views
             if (path.Prev() && treemodel.GetIter(out prevnode, path))
                 treemodel.MoveBefore(node, prevnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Moves the specified node down 1 position.</summary>
@@ -173,7 +195,7 @@ namespace UserInterface.Views
             if (treemodel.GetIter(out nextnode, path))
                 treemodel.MoveAfter(node, nextnode);
 
-            treeview1.ScrollToCell(path, treeview1.Columns[0], false, 0, 0);
+            treeview1.ScrollToCell(path, null, false, 0, 0);
         }
 
         /// <summary>Renames the specified node path.</summary>
@@ -189,12 +211,15 @@ namespace UserInterface.Views
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
         public void BeginRenamingCurrentNode()
         {
-            textRender.Editable = true;
-            TreePath selPath;
-            TreeViewColumn selCol;
-            treeview1.GetCursor(out selPath, out selCol);
-            treeview1.GrabFocus();
-            treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            if (!ReadOnly)
+            {
+                textRender.Editable = true;
+                TreePath selPath;
+                TreeViewColumn selCol;
+                treeview1.GetCursor(out selPath, out selCol);
+                treeview1.GrabFocus();
+                treeview1.SetCursor(selPath, treeview1.GetColumn(0), true);
+            }
         }
 
         private TreePath CreatePath(Utility.TreeNode node)
@@ -310,7 +335,13 @@ namespace UserInterface.Views
             {
                 expandedRows.Add(path.ToString());
             }));
+#if NETCOREAPP
+            treeview1.CursorChanged -= OnAfterSelect;
+#endif
             treemodel.Clear();
+#if NETCOREAPP
+            treeview1.CursorChanged += OnAfterSelect;
+#endif
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions);
             treeview1.ShowAll();
@@ -337,9 +368,9 @@ namespace UserInterface.Views
         private void RefreshNode(TreeIter node, TreeViewNode description)
         {
             Gdk.Pixbuf pixbuf = null;
-            if (MasterView.HasResource(description.ResourceNameForImage))
+            if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
                 pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
-            string tick = description.Checked ? "✔" : "";
+            string tick = description.Checked ? "✓" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
             for (int i = 0; i < description.Children.Count; i++)
@@ -349,9 +380,8 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Return a full path for the specified node.</summary>
-        /// <param name="node">The node.</param>
-        /// <returns></returns>
+        /// <summary>Return a string representation of the specified path.</summary>
+        /// <param name="path">The path.</param>
         private string GetFullPath(TreePath path)
         {
             string result = "";
@@ -434,7 +464,14 @@ namespace UserInterface.Views
                 {
                     Color colour = (Color)model.GetValue(iter, 4);
                     if (colour == Color.Empty)
-                        colour = Utility.Colour.FromGtk(treeview1.Style.Foreground(StateType.Normal));
+                    {
+#if NETFRAMEWORK
+                        Gdk.Color foreground = treeview1.Style.Foreground(StateType.Normal);
+#else
+                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
+#endif
+                        colour = Utility.Colour.FromGtk(foreground);
+                    }
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
 
                     // This is a bit of a hack which we use to convert a System.Drawing.Color
@@ -453,7 +490,7 @@ namespace UserInterface.Views
 
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="TreeViewEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterSelect(object sender, EventArgs e)
         {
             try
@@ -470,12 +507,24 @@ namespace UserInterface.Views
                     if (selectionChangedData.NewNodePath != selectionChangedData.OldNodePath)
                         SelectedNodeChanged.Invoke(this, selectionChangedData);
                     previouslySelectedNodePath = selectionChangedData.NewNodePath;
-                    treeview1.CursorChanged += OnAfterSelect;
+                }
+                else
+                {
+                    // Presenter is ignoring the SelectedNodeChanged event.
+                    // We should scroll to the newly selected node so the user
+                    // can actually see what they've selected.
+                    treeview1.GetCursor(out TreePath path, out _);
+                    treeview1.ScrollToCell(path, null, false, 0, 1);
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
+            }
+            finally
+            {
+                if (SelectedNodeChanged != null && treeview1 != null)
+                    treeview1.CursorChanged += OnAfterSelect;
             }
         }
 
@@ -508,7 +557,8 @@ namespace UserInterface.Views
                             Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                             if (e.Event.X > rect.X + 18)
                             {
-                                timer.Interval = treeview1.Settings.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                                timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;
                                 timer.AutoReset = false;
                                 timer.Start();
                             }
@@ -531,9 +581,18 @@ namespace UserInterface.Views
         {
             try
             {
+                // Note - this will not be called on the main thread, so we
+                // need to wrap any Gtk calls inside an appropriate delegate
                 Gtk.Application.Invoke(delegate
                 {
-                    BeginRenamingCurrentNode();
+                    try
+                    {
+                        BeginRenamingCurrentNode();
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
                 });
             }
             catch (Exception err)
@@ -557,6 +616,8 @@ namespace UserInterface.Views
                 else
                     treeview1.ExpandRow(e.Path, false);
                 e.RetVal = true;
+
+                DoubleClicked?.Invoke(this, new EventArgs());
             }
             catch (Exception err)
             {
@@ -752,9 +813,9 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.Action == Gdk.DragAction.Copy)
+                        if (e.Context.GetAction() == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
-                        else if (e.Context.Action == Gdk.DragAction.Move)
+                        else if (e.Context.GetAction() == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
                         else
                             dropArgs.Linked = true;
@@ -762,7 +823,7 @@ namespace UserInterface.Views
                         success = true;
                     }
                 }
-                Gtk.Drag.Finish(e.Context, success, e.Context.Action == Gdk.DragAction.Move, e.Time);
+                Gtk.Drag.Finish(e.Context, success, e.Context.GetAction() == Gdk.DragAction.Move, e.Time);
                 e.RetVal = success;
             }
             catch (Exception err)
@@ -773,7 +834,7 @@ namespace UserInterface.Views
 
         /// <summary>User is about to start renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs> instance containing the event data.</param>
         private void OnBeforeLabelEdit(object sender, EditingStartedArgs e)
         {
             try
@@ -790,7 +851,7 @@ namespace UserInterface.Views
         
         /// <summary>User has finished renaming a node.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="NodeLabelEditEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The EventArgs instance containing the event data.</param>
         private void OnAfterLabelEdit(object sender, EditedArgs e)
         {
             try
@@ -855,10 +916,11 @@ namespace UserInterface.Views
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
-        public void ExpandChildren(string path)
+        /// <param name="recursive">Recursively expand children too?</param>
+        public void ExpandChildren(string path, bool recursive = true)
         {
             TreePath nodePath = treemodel.GetPath(FindNode(path));
-            treeview1.ExpandRow(nodePath, true);
+            treeview1.ExpandRow(nodePath, recursive);
         }
 
         /// <summary>

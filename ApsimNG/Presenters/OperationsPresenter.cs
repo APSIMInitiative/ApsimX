@@ -1,16 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="OperationsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using APSIM.Shared.Utilities;
     using EventArguments;
+    using Interfaces;
     using Models;
     using Views;
 
@@ -27,7 +22,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view object
         /// </summary>
-        private EditorView view;
+        private IEditorView view;
 
         /// <summary>
         /// The explorer presenter
@@ -48,7 +43,7 @@ namespace UserInterface.Presenters
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.operations = model as Operations;
-            this.view = view as EditorView;
+            this.view = view as IEditorView;
             this.explorerPresenter = explorerPresenter;
             this.intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
@@ -81,7 +76,9 @@ namespace UserInterface.Presenters
                 foreach (Operation operation in this.operations.Operation)
                 {
                     // st += operation.Date.ToString("yyyy-MM-dd") + " " + operation.Action + Environment.NewLine;
-                    string dateStr = DateUtilities.validateDateString(operation.Date);
+                    string dateStr = null;
+                    if (!string.IsNullOrEmpty(operation.Date))
+                        dateStr = DateUtilities.validateDateString(operation.Date);
                     string commentChar = operation.Enabled ? string.Empty : "// ";
                     st += commentChar + dateStr + " " + operation.Action + Environment.NewLine;
                 }
@@ -111,11 +108,15 @@ namespace UserInterface.Presenters
                             currentLine = currentLine.Remove(index, 2).Trim();
                     }
 
-                    int pos = currentLine.IndexOf(' ');
+                    int pos = currentLine.IndexOfAny(" \t".ToCharArray());
                     if (pos != -1)
                     {
                         Operation operation = new Operation();
-                        operation.Date = DateUtilities.validateDateString(currentLine.Substring(0, pos));
+                        string dateString = currentLine.Substring(0, pos);
+                        operation.Date = DateUtilities.validateDateString(dateString);
+                        if (operation.Date == null)
+                            explorerPresenter.MainPresenter.ShowMessage($"Warning: unable to parse date string {dateString}", Models.Core.Simulation.MessageType.Warning);
+
                         operation.Action = currentLine.Substring(pos + 1);
                         operation.Enabled = !isComment;
                         operations.Add(operation);
@@ -142,7 +143,7 @@ namespace UserInterface.Presenters
             {
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(operations, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, operations, true, true, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)

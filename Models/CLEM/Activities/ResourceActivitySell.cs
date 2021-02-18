@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -21,15 +22,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages the sale of a specified resource.")]
-    [HelpUri(@"Content/Features/activities/All resources/SellResource.htm")]
+    [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
+    [Version(1, 0, 3, "Added Proportion of last gain as selling style. Allows you to sell a proportion of the harvest")]
+    [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]
-    public class ResourceActivitySell: CLEMActivityBase
+    public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
     {
         /// <summary>
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of account to use required")]
         public string AccountName { get; set; }
 
@@ -37,29 +40,59 @@ namespace Models.CLEM.Activities
         /// Resource type to sell
         /// </summary>
         [Description("Resource to sell")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type required")]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
-        /// Amount reserved from sale
+        /// Resource sell style to use
         /// </summary>
-         [Description("Amount reserved from sale")]
+        [Description("Selling style")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Selling style required")]
+        public ResourceSellStyle SellStyle { get; set; }
+
+        /// <summary>
+        /// Value based on selling style
+        /// </summary>
+        [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
-        public double AmountReserved { get; set; }
+        public double Value { get; set; }
 
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
         private FinanceType bankAccount;
-
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
         private IResourceType resourceToSell;
-
+        private IResourceType resourceToPlace;
         private ResourcePricing price;
         private double unitsAvailable;
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity has a parent of type CropActivityManageProduct
+
+            switch (SellStyle)
+            {
+                case ResourceSellStyle.ProportionOfStore:
+                case ResourceSellStyle.ProportionOfLastGain:
+                case ResourceSellStyle.ReserveProportion:
+                    if (Value > 1)
+                    {
+                        string[] memberNames = new string[] { "Selling style" };
+                        results.Add(new ValidationResult("The specified selling style expects a value between 0 and 1", memberNames));
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return results;
+        }
+
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -71,6 +104,21 @@ namespace Models.CLEM.Activities
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
             // get resource type to sell
             resourceToSell = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            // find market if present
+            Market market = Resources.FoundMarket;
+            // find a suitable store to place resource
+            if(market != null)
+            {
+                resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
+            }
+            if(resourceToPlace != null)
+            {
+                price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
+            {
+                price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
+            }
         }
 
         /// <summary>
@@ -80,8 +128,29 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                double amountForSale = resourceToSell.Amount - AmountReserved;
-                double units = amountForSale / price.PacketSize;
+                double amount = 0;
+                switch (SellStyle)
+                {
+                    case ResourceSellStyle.SpecifiedAmount:
+                        amount = Value;
+                        break;
+                    case ResourceSellStyle.ProportionOfStore:
+                        amount = resourceToSell.Amount * Value;
+                        break;
+                    case ResourceSellStyle.ProportionOfLastGain:
+                        amount = resourceToSell.LastGain * Value;
+                        break;
+                    case ResourceSellStyle.ReserveAmount:
+                        amount = resourceToSell.Amount - Value;
+                        break;
+                    case ResourceSellStyle.ReserveProportion:
+                        amount = resourceToSell.Amount * (1 - Value);
+                        break;
+                    default:
+                        break;
+                }
+                amount = Math.Max(0, amount);
+                double units = amount / price.PacketSize;
                 if(price.UseWholePackets)
                 {
                     units = Math.Truncate(units);
@@ -96,8 +165,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            // get pricing
-            price = resourceToSell.Price;
             unitsAvailable = unitsAvailableForSale;
             return null;
         }
@@ -107,7 +174,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -121,7 +188,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Sell", (resourceToSell as CLEMModel).NameWithParent);
         }
 
         /// <summary>
@@ -130,6 +197,8 @@ namespace Models.CLEM.Activities
         public override void AdjustResourcesNeededForActivity()
         {
             // adjust resources sold based on labour shortfall
+            double labourLimit = this.LabourLimitProportion;
+            unitsAvailable *= labourLimit;
             return;
         }
 
@@ -158,13 +227,25 @@ namespace Models.CLEM.Activities
                 {
                     ActivityModel = this,
                     Required = units * price.PacketSize,
-                    AllowTransmutation = false,
-                    Reason = "Sell " + (resourceToSell as Model).Name
+                    AllowTransmutation = true,
+                    Category = "Sell",
+                    RelatesToResource = (resourceToSell as CLEMModel).NameWithParent
                 };
                 resourceToSell.Remove(purchaseRequest);
 
                 // transfer money earned
-                bankAccount.Add(units * price.PricePerPacket, this, "Sales");
+                if (bankAccount != null)
+                {
+                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, "Sales");
+                    if (bankAccount.EquivalentMarketStore != null)
+                    {
+                        purchaseRequest.Required = units * price.PricePerPacket;
+                        purchaseRequest.Category = "Sales";
+                        purchaseRequest.RelatesToResource = (resourceToSell as CLEMModel).NameWithParent;
+                        (bankAccount.EquivalentMarketStore as FinanceType).Remove(purchaseRequest);
+                    }
+                }
+
                 SetStatusSuccess();
             }
         }
@@ -206,6 +287,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary 
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -213,32 +296,53 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Sell ";
-            if (ResourceTypeName == null || ResourceTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            }
-            if(AmountReserved > 0)
-            {
-                html += " with <span class=\"resourcelink\">" + AmountReserved.ToString("#,##0") + "</span> reserved in the store";
-            }
-            if (AccountName == null || AccountName == "")
-            {
-                html += " with sales placed in <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += " with sales placed in <span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Sell ");
+                switch (SellStyle)
+                {
+                    case ResourceSellStyle.SpecifiedAmount:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> of ");
+                        break;
+                    case ResourceSellStyle.ProportionOfStore:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of ");
+                        break;
+                    case ResourceSellStyle.ProportionOfLastGain:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of the last gain transaction recorded for ");
+                        break;
+                    case ResourceSellStyle.ReserveAmount:
+                        htmlWriter.Write("all but <span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> as reserve of ");
+                        break;
+                    case ResourceSellStyle.ReserveProportion:
+                        htmlWriter.Write("all but leaving <span class=\"resourcelink\">" + Value.ToString("##0%") + "</span> percent of store as reserve of ");
+                        break;
+                    default:
+                        break;
+                }
 
-            return html;
+                if (ResourceTypeName == null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
+                }
+                htmlWriter.Write(" with sales placed in ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write(" <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" <span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+
+                return htmlWriter.ToString(); 
+            }
         }
 
+        #endregion
     }
 }

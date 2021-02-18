@@ -34,20 +34,7 @@ namespace Models.CLEM.Resources
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public AnimalPricing Clone()
-        {
-            AnimalPricing clone = new AnimalPricing();
-
-            foreach (AnimalPriceGroup item in this.Children.OfType<AnimalPriceGroup>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-            return clone;
-        }
+        #region validation
 
         /// <summary>
         /// Validate model
@@ -58,18 +45,22 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(AnimalPriceGroup)).Count() == 0)
+            if (this.FindAllChildren<AnimalPriceGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r="+this.Name+ "].\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
+                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
             }
-            else if (Apsim.Children(this, typeof(AnimalPriceGroup)).Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            else if (this.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r="+this.Name+"]\nThese will not result in price calculations and can be deleted.", memberNames));
+                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
             }
             return results;
         }
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -78,8 +69,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            return html;
+            return "";
         }
 
         /// <summary>
@@ -89,7 +79,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (Apsim.Children(this, typeof(AnimalPriceGroup)).Count() >= 1)
+            if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
             {
                 html += "</table></div>";
             }
@@ -103,7 +93,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if(Apsim.Children(this, typeof(AnimalPriceGroup)).Count() >= 1)
+            if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
             {
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
             }
@@ -112,7 +102,8 @@ namespace Models.CLEM.Resources
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

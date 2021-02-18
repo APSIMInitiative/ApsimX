@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DGNode.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace ApsimNG.Classes.DirectedGraph
+﻿namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
-    using Models.Graph;
+    using Models;
     using OxyPlot;
     using OxyPlot.GtkSharp;
     using System;
@@ -17,10 +12,26 @@ namespace ApsimNG.Classes.DirectedGraph
     /// </summary>
     public class DGNode : DGObject
     {
+        /// <summary>
+        /// Foreground colour.
+        /// </summary>
         public OxyColor ForegroundColour = OxyColors.Black;
+
+        /// <summary>
+        /// Description. Unsure if this is actually used.
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Diameter of the node (in px?).
+        /// </summary>
         public int Width { get { return 120; } }
+
+        /// <summary>
+        /// Should the node be transparent?
+        /// </summary>
         private bool transparent;
+
         /// <summary>Constructor</summary>
         public DGNode(Node directedGraphNode)
         {

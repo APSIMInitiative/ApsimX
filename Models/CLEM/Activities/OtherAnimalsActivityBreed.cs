@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
         public string AnimalType { get; set; }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Month this overhead is next due.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime NextDueDate { get; set; }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newmales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                         OtherAnimalsTypeCohort newfemales = new OtherAnimalsTypeCohort()
                         {
                             Age = 0,
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
-                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.Name);
+                        SelectedOtherAnimalsType.Add(newfemales, this, SelectedOtherAnimalsType.NameWithParent, "Births");
                     }
                 }
             }
@@ -189,12 +189,12 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
             if (breeders == 0)
             {
-                return 0;
+                return new GetDaysLabourRequiredReturnArgs(0, "Breed", SelectedOtherAnimalsType.NameWithParent);
             }
 
             double daysNeeded = 0;
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Breed", SelectedOtherAnimalsType.NameWithParent);
         }
 
         /// <summary>

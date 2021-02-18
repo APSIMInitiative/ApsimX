@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -17,7 +17,7 @@ namespace Models.Functions
         #region Class Data Members
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private XYPairs XYPairs = null;   // Temperature effect on Growth Interpolation Set
 
         /// <summary>The maximum temperature weighting</summary>
@@ -56,7 +56,7 @@ namespace Models.Functions
                     tags.Add(new AutoDocumentation.Paragraph("<i>MaximumTemperatureWeighting = " + MaximumTemperatureWeighting + "</i>", indent));
 
                     // write memos.
-                    foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                    foreach (IModel memo in this.FindAllChildren<Memo>())
                         AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));

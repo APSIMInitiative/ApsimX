@@ -1,10 +1,12 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -21,8 +23,21 @@ namespace Models.CLEM.Groupings
     [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilterGroup.htm")]
-    public class LabourFilterGroup: CLEMModel
+    public class LabourFilterGroup: CLEMModel, IFilterGroup
     {
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -60,7 +75,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -75,13 +90,14 @@ namespace Models.CLEM.Groupings
             {
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
-            html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+            html += "\r\n<div class=\"filterborder clearfix\">";
+            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

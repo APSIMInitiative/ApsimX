@@ -7,6 +7,8 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Resources;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IValidatableObject
+    public class LabourFeedGroup: CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Value to supply for each month
@@ -30,6 +32,18 @@ namespace Models.CLEM.Groupings
         public double Value { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourFeedGroup()
@@ -37,16 +51,7 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -55,59 +60,59 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-
-            if(this.Parent.GetType() != typeof(LabourActivityFeed))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<div class=\"warningbanner\">This Labour Feed Group must be placed beneath a Labour Activity Feed component</div>";
-                return html;
-            }
+                if (this.Parent.GetType() != typeof(LabourActivityFeed))
+                {
+                    htmlWriter.Write("<div class=\"warningbanner\">This Labour Feed Group must be placed beneath a Labour Activity Feed component</div>");
+                    return htmlWriter.ToString();
+                }
 
-            LabourFeedActivityTypes ft = (this.Parent as LabourActivityFeed).FeedStyle;
-            html += "\n<div class=\"activityentry\">";
-            switch (ft)
-            {
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">"+Value.ToString() + "</span>";
-                    break;
-                default:
-                    break;
-            }
+                LabourFeedActivityTypes ft = (this.Parent as LabourActivityFeed).FeedStyle;
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                switch (ft)
+                {
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                        htmlWriter.Write("<span class=\"" + ((Value <= 0) ? "errorlink" : "setvalue") + "\">" + Value.ToString() + "</span>");
+                        break;
+                    default:
+                        break;
+                }
 
+                ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
+                ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
+                HumanFoodStoreType food = resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                if (food != null)
+                {
+                    htmlWriter.Write(" " + food.Units + " ");
+                }
 
-            ZoneCLEM zoneCLEM = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
-            HumanFoodStoreType food =  resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
-            if (food != null)
-            {
-                html += " " + food.Units + " ";
-            }
+                htmlWriter.Write("<span class=\"setvalue\">");
+                switch (ft)
+                {
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                        htmlWriter.Write(" per individual per day");
+                        break;
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
+                        htmlWriter.Write(" per AE per day");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</span> ");
+                switch (ft)
+                {
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
+                    case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                        htmlWriter.Write("is fed to each individual");
+                        break;
+                }
+                htmlWriter.Write(" that matches the following conditions:");
 
-            html += "<span class=\"setvalue\">";
-            switch (ft)
-            {
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += " per individual per day";
-                    break;
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                    html += " per AE per day";
-                    break;
-                default:
-                    break;
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</span> ";
-            switch (ft)
-            {
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerAE:
-                case LabourFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += "is fed to each individual";
-                    break;
-            }
-            html += " that matches the following conditions:";
-
-            html += "</div>";
-            return html;
         }
 
         /// <summary>
@@ -116,9 +121,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -127,14 +130,17 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<div class=\"filter\">All individuals</div>";
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                if (this.FindAllChildren<LabourFilter>().Count() == 0)
+                {
+                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
+        #endregion
     }
 }

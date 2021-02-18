@@ -30,7 +30,7 @@ echo Batch Job ID: %AZ_BATCH_JOB_ID% 1>> "%APSIM_FILE%".stdout 2>&1
 rem echo Run Info: 1>> "%APSIM_FILE%".stdout 2>&1
 dir %JOB_DIR% 1>> "%APSIM_FILE%".stdout 2>&1
 dir %APSIM_DIR% 1>> "%APSIM_FILE%".stdout 2>&1
-dir %APSIM_DIR%\Model 1>> "%APSIM_FILE%".stdout 2>&1
+dir %MODEL_DIR% 1>> "%APSIM_FILE%".stdout 2>&1
 
 set APSIM_DIR_BQ=%APSIM_DIR:\=\\%
 set APSIM=%APSIM_DIR%
@@ -43,16 +43,21 @@ set 1>> "%APSIM_FILE%".stdout 2>&1
 
 for /f "delims=" %%a  in ("%APSIM_FILE%") do set "EXTN=%%~xa"
 if /i "%EXTN%"==".apsimx" (
-  echo using %APSIM_DIR%\Models.exe 1>> "%APSIM_FILE%".stdout 2>&1
-  echo Started at %date% %time% 1>> "%APSIM_FILE%".stdout 2>&1
-	%APSIM_DIR%\Models.exe "%APSIM_FILE%" 1>> "%APSIM_FILE%".stdout 2>&1
-  echo Ended at %date% %time% 1>> "%APSIM_FILE%".stdout 2>&1
+	rem new apsim
+	echo Started at %date% %time% 1>> "%APSIM_FILE%".stdout 2>&1
+	echo %APSIM_DIR%\Models.exe "%MODEL_DIR%\%APSIM_FILE%" 1>> "%APSIM_FILE%".stdout 2>&1
+	
+	%APSIM_DIR%\Models.exe "%MODEL_DIR%\%APSIM_FILE%" /Verbose 1>> "%APSIM_FILE%".stdout 2>&1
+	
+	dir "%MODEL_DIR%"
+	echo Ended at %date% %time% 1>> "%APSIM_FILE%".stdout 2>&1
 ) else (
+	rem this is for old apsim!
 	if exist %APSIM_DIR%\Model\Apsim.exe (		
-	  echo using %APSIM_DIR%\Model\Apsim.exe "%APSIM_FILE%" "Simulation=/simulations/%SIMULATION%" 1>> %SIMULATION%_Apsim.stdout 2>&1
+	  echo using %APSIM_DIR%\Model\Apsim.exe "%MODEL_DIR%\%APSIM_FILE%" "Simulation=/simulations/%SIMULATION%" 1>> %SIMULATION%_Apsim.stdout 2>&1
 	  wmic datafile where name='%APSIM_DIR_BQ%\\Model\\Apsim.exe' get version /format:list | findstr "[0-9]" 1>> %SIMULATION%_Apsim.stdout 2>&1	  	  
     echo Started at %date% %time% 1>> %SIMULATION%_Apsim.stdout 2>&1	  
-		%APSIM_DIR%\Model\Apsim.exe "%APSIM_FILE%" "Simulation=/simulations/%SIMULATION%" 1>> %SIMULATION%_Apsim.stdout 2>&1
+		%APSIM_DIR%\Model\Apsim.exe "%APSIM_FILE%" "/SimulationNameRegexPattern:%SIMULATION%" 1>> %SIMULATION%_Apsim.stdout 2>&1
     echo Ended at %date% %time% 1>> %SIMULATION%_Apsim.stdout 2>&1	  		
 	)
 	if exist %APSIM_DIR%\Apsim.exe ( 
@@ -70,3 +75,4 @@ AzCopy.exe /Y /Source:%AZ_BATCH_TASK_WORKING_DIR% /Dest:%APSIM_STORAGE_CONTAINER
 AzCopy.exe /Y /Source:%AZ_BATCH_TASK_WORKING_DIR% /Dest:%APSIM_STORAGE_CONTAINER_URL% /DestKey:%APSIM_STORAGE_KEY% /Pattern:*.sum
 AzCopy.exe /Y /Source:%AZ_BATCH_TASK_WORKING_DIR% /Dest:%APSIM_STORAGE_CONTAINER_URL% /DestKey:%APSIM_STORAGE_KEY% /Pattern:*.stdout
 AzCopy.exe /Y /Source:%AZ_BATCH_TASK_WORKING_DIR% /Dest:%APSIM_STORAGE_CONTAINER_URL% /DestKey:%APSIM_STORAGE_KEY% /Pattern:*.db
+AzCopy.exe /Y /Source:%MODEL_DIR% /Dest:%APSIM_STORAGE_CONTAINER_URL% /DestKey:%APSIM_STORAGE_KEY% /Pattern:*.db

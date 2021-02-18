@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridCell.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Classes
+﻿namespace UserInterface.Classes
 {
     using System;
     using Interfaces;
@@ -90,28 +85,29 @@ namespace UserInterface.Classes
                 {
                     case EditorTypeEnum.TextBox:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewTextBoxCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewTextBoxCell();
                             break;
                         }
 
                     case EditorTypeEnum.Boolean:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewCheckBoxCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new DataGridViewCheckBoxCell();
                             break;
                         }
 
                     case EditorTypeEnum.Colour:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new Utility.ColorPickerCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new Utility.ColorPickerCell();
                             break;
                         }
 
                     case EditorTypeEnum.DateTime:
                         {
-                            /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
+                            // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex] = new CalendarCell();
                             break;
                         }
-
+                    case EditorTypeEnum.MultiFiles:
+                    case EditorTypeEnum.DirectoryChooser:
                     case EditorTypeEnum.Button:
                         {
                             Tuple<int, int> key = new Tuple<int, int>(this.RowIndex, this.ColumnIndex);
@@ -186,7 +182,8 @@ namespace UserInterface.Classes
         {
             get
             {
-                return ""; /// TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex].ToolTipText;
+                // TBI this.gridView.Grid[this.ColumnIndex, this.RowIndex].ToolTipText;
+                return "";
             }
 
             set
@@ -211,6 +208,21 @@ namespace UserInterface.Classes
             set
             {
                 this.gridView.DataSource.Rows[this.RowIndex][this.ColumnIndex] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the cell readonly status
+        /// </summary>
+        public bool IsRowReadonly
+        {
+            get
+            {
+                return gridView.IsRowReadonly(RowIndex);
+            }
+            set
+            {
+                gridView.SetRowAsReadonly(RowIndex, value);
             }
         }
     }

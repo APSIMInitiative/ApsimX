@@ -1,9 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="ApsimTextFile.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-
 // An APSIMInputFile is either a ".met" file or a ".out" file.
 // They are both text files that share the same format. 
 // These classes are used to read/write these files and create an object instance of them.
@@ -12,7 +6,6 @@
 namespace APSIM.Shared.Utilities
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Data;
@@ -74,10 +67,10 @@ namespace APSIM.Shared.Utilities
         public StringCollection Units;
 
         /// <summary>The _ constants</summary>
-        private ArrayList _Constants = new ArrayList();
+        private List<ApsimConstant> _Constants = new List<ApsimConstant>();
 
         /// <summary>Is the file a CSV file</summary>
-        private bool IsCSVFile = false;
+        public bool IsCSVFile { get; set; } = false;
 
         /// <summary>The inStreamReader - used for text and csv files</summary>
         private StreamReaderRandomAccess inStreamReader;
@@ -153,8 +146,8 @@ namespace APSIM.Shared.Utilities
             _FileName = fileName;
             _SheetName = sheetName;
 
-            IsCSVFile = System.IO.Path.GetExtension(fileName).ToLower() == ".csv";
-            IsExcelFile = System.IO.Path.GetExtension(fileName).ToLower() == ExcelUtilities.ExcelExtension;
+            IsCSVFile = Path.GetExtension(fileName).ToLower() == ".csv";
+            IsExcelFile = ExcelUtilities.IsExcelFile(fileName);
 
             if (IsExcelFile)
             {
@@ -175,7 +168,6 @@ namespace APSIM.Shared.Utilities
         public void Open(Stream stream)
         {
             _FileName = "Memory stream";
-            IsCSVFile = false;
             inStreamReader = new StreamReaderRandomAccess(stream);
             Open();
         }
@@ -253,7 +245,7 @@ namespace APSIM.Shared.Utilities
         public DateTime LastDate { get { return _LastDate; } }
 
         /// <summary>Gets the constants.</summary>
-        public ArrayList Constants { get { return _Constants; } }
+        public List<ApsimConstant> Constants { get { return _Constants; } }
 
         /// <summary>
         /// Constants the specified constant name.
@@ -279,7 +271,10 @@ namespace APSIM.Shared.Utilities
         /// <returns>Returns a constant as double.</returns>
         public double ConstantAsDouble(string constantName)
         {
-            return Convert.ToDouble(Constant(constantName).Value, CultureInfo.InvariantCulture);
+            ApsimConstant constant = Constant(constantName);
+            if (constant == null)
+                throw new Exception($"Constant {constantName} does not exist");
+            return Convert.ToDouble(constant.Value, CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -323,7 +318,7 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                ArrayList addedConstants = new ArrayList();
+                List<ApsimConstant> addedConstants = new List<ApsimConstant>();
 
                 StringCollection words = new StringCollection();
                 bool checkHeadingsExist = true;
@@ -410,9 +405,9 @@ namespace APSIM.Shared.Utilities
         {
             string PreviousLine = "";
 
-            string Line = inData.ReadLine();
             while (!inData.EndOfStream)
             {
+                string Line = inData.ReadLine();
                 int PosEquals = Line.IndexOf('=');
                 if (PosEquals != -1)
                 {
@@ -437,7 +432,6 @@ namespace APSIM.Shared.Utilities
                     }
                 }
                 PreviousLine = Line;
-                Line = inData.ReadLine();
             }
 
         }
@@ -493,7 +487,8 @@ namespace APSIM.Shared.Utilities
                 else
                 {
                     Headings = StringUtilities.SplitStringHonouringQuotes(HeadingLines[0], " \t");
-                    Units = StringUtilities.SplitStringHonouringQuotes(HeadingLines[1], " \t");
+                    Units = new StringCollection();
+                    Units.AddRange(StringUtilities.SplitStringHonouringBrackets(HeadingLines[1], " \t", '(', ')'));
                 }
                 TitleFound = TitleFound || StringUtilities.IndexOfCaseInsensitive(Headings, "title") != -1;
                 if (Headings.Count != Units.Count)
@@ -621,7 +616,7 @@ namespace APSIM.Shared.Utilities
             if (IsCSVFile)
             {
                 words.Clear();
-                Line = Line.TrimEnd(',');
+                //Line = Line.TrimEnd(',');
                 words.AddRange(Line.Split(",".ToCharArray()));
             }
             else
@@ -636,7 +631,6 @@ namespace APSIM.Shared.Utilities
 
             return true;
         }
-
 
         /// <summary>
         /// Looks the ahead for non missing value.
@@ -944,19 +938,16 @@ namespace APSIM.Shared.Utilities
                         for (int i = 0; i < resultDt.Columns.Count; i++)
                         {
                             value = resultDt.Rows[rowCount][i].ToString();
-                            if (value.Length > 0)
-                            {
-                                //extract the measurment if it exists, else need to create blank, and add to Units collection
-                                unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
-                                if (unit.Length <= 0)
-                                    unit = "()";
-                                else
-                                    unitsFound = true;
-                                Units.Add(unit.Trim());
 
-                                //add the title(name to Units collection
-                                Headings.Add(value.Trim());
-                            }
+                            unit = StringUtilities.SplitOffBracketedValue(ref value, '(', ')');
+                            if (unit.Length <= 0)
+                                unit = "()";
+                            else
+                                unitsFound = true;
+                            Units.Add(unit.Trim());
+
+                            //add the title(name) to Headings collection
+                            Headings.Add(value.Trim());
                         }
 
                         resultDt.Rows[rowCount].Delete();
@@ -1003,7 +994,22 @@ namespace APSIM.Shared.Utilities
                 //now do the column names, need to have data loaded before we rename columns, else the above won't work.
                 for (int i = 0; i < resultDt.Columns.Count; i++)
                 {
-                    _excelData.Columns[i].ColumnName = Headings[i];
+                    // set to identifyable value if blank
+                    _excelData.Columns[i].ColumnName = (Headings[i]==""?$"_BLANKCOLUMN_{i}":Headings[i]);
+                }
+
+                // delete all columns identified as blank (no column name previously provided)
+                int w = 0;
+                while (_excelData.Columns.Count > w)
+                {
+                    if (_excelData.Columns[w].ColumnName.StartsWith("_BLANKCOLUMN_"))
+                    {
+                        _excelData.Columns.RemoveAt(w);
+                    }
+                    else
+                    {
+                        w++;
+                    }
                 }
 
                 _FirstDate = GetDateFromValues(_excelData, 0);
@@ -1015,7 +1021,7 @@ namespace APSIM.Shared.Utilities
             }
             catch (Exception e)
             {
-                throw new Exception(string.Format("The excel Sheet {0} is not in a recognised Weather file format." + e.Message.ToString(), _SheetName));
+                throw new Exception($"Problem reading Excel Sheet {_SheetName} in {_FileName}. Error: {e.Message.ToString()}");
             }
         }
 

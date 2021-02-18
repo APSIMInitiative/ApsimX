@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FolderView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using Gtk;
 
     /// <summary>
@@ -24,14 +18,23 @@ namespace UserInterface.Views
     /// </summary>
     public class FolderView : ViewBase, IFolderView
     {
+#if NETFRAMEWORK
         private Table table;
+#else
+        private Grid table = new Grid();
+#endif
         private ScrolledWindow scroller;
 
         public FolderView(ViewBase owner) : base(owner)
         {
             scroller = new ScrolledWindow();
             scroller.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
             table = new Table(1, 1, false);
+#else
+            table.RowHomogeneous = true;
+            table.ColumnHomogeneous = true;
+#endif
             Viewport vport = new Viewport();
             vport.Add(table);
             vport.ShadowType = ShadowType.None;
@@ -42,11 +45,19 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Sets the controls to show.</summary>
+        /// <remarks>This should be reworked once we ditch gtk2 support.</remarks>
         public void SetContols(List<GraphView> controls)
         {
             int numControls = controls.Count;
@@ -64,9 +75,15 @@ namespace UserInterface.Views
                     numCols = 2;
                     numRows = (uint)Math.Ceiling((double)numControls / numCols);
                 }
+#if NETFRAMEWORK
                 table.Resize(numRows, numCols);
                 uint col = 0;
                 uint row = 0;
+#else
+                // GtkGrid automatically resizes I think. Need to test this
+                int col = 0;
+                int row = 0;
+#endif
                 foreach (GraphView gview in controls)
                 {
                     if (gview != null)
@@ -74,10 +91,13 @@ namespace UserInterface.Views
                         gview.ShowControls(false);
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
-                        gview.IsLegendVisible = false;
-                        gview.MainWidget.SetSizeRequest(400, 400);
                         gview.ShowControls(false);
+#if NETFRAMEWORK
+                        gview.MainWidget.SetSizeRequest(400, 400);
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
+#else
+                        table.Attach(gview.MainWidget, col, row, 1, 1);
+#endif
                         gview.MainWidget.ShowAll();
                     }
 
@@ -96,11 +116,18 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnGraphClick(object sender, EventArgs e)
         {
-            GraphView graphView = sender as GraphView;
-            if (graphView != null)
+            try
             {
-                graphView.IsLegendVisible = !graphView.IsLegendVisible;
-                graphView.Refresh();
+                GraphView graphView = sender as GraphView;
+                if (graphView != null)
+                {
+                    graphView.IsLegendVisible = !graphView.IsLegendVisible;
+                    graphView.Refresh();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
     }

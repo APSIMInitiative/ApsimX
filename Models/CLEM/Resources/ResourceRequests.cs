@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -18,12 +18,12 @@ namespace Models.CLEM.Resources
         ///<summary>
         /// Link to resource being requested 
         ///</summary> 
-        [XmlIgnore]
+        [JsonIgnore]
         public IResourceType Resource { get; set; }
         ///<summary>
-        /// Link to resource being requested 
+        /// Type of resource being requested 
         ///</summary> 
-        [XmlIgnore]
+        [JsonIgnore]
         public Type ResourceType { get; set; }
         ///<summary>
         /// Name of resource type being requested 
@@ -39,9 +39,13 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public Guid ActivityID { get; set; }
         ///<summary>
-        /// Reason for requesting resource
+        /// Category for requesting resource
         ///</summary> 
-        public string Reason { get; set; }
+        public string Category { get; set; }
+        ///<summary>
+        /// Resource this transaction relates to (not uses)
+        ///</summary> 
+        public string RelatesToResource { get; set; }
         ///<summary>
         /// Amount required 
         ///</summary> 
@@ -75,6 +79,12 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public bool TransmutationPossible { get; set; }
         ///<summary>
+        /// Market transcation multiplier
+        /// 0 (default) = not a market transaction
+        ///</summary> 
+        public double MarketTransactionMultiplier { get; set; }
+
+        ///<summary>
         /// ResourceRequest constructor
         ///</summary> 
         public ResourceRequest()
@@ -102,6 +112,29 @@ namespace Models.CLEM.Resources
         /// Percent N of food supplied
         ///</summary> 
         public double PercentN { get; set; }
+    }
+
+    ///<summary>
+    /// Information for a food parcel eaten
+    ///</summary> 
+    public class HumanFoodParcel
+    {
+        /// <summary>
+        /// Link to the food store
+        /// </summary>
+        public HumanFoodStoreType FoodStore { get; set; }
+        /// <summary>
+        /// The pool of food
+        /// </summary>
+        public HumanFoodStorePool Pool { get; set; }
+        /// <summary>
+        /// Number of months before expires
+        /// </summary>
+        public int Expires { get; set; }
+        /// <summary>
+        /// Proportion eaten
+        /// </summary>
+        public double Proportion { get; set; }
     }
 
     /// <summary>

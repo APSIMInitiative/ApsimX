@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="NeedContextItemsArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
     using System.Collections;
@@ -17,6 +11,7 @@ namespace UserInterface.EventArguments
     using Intellisense;
     using System.Xml;
     using System.Drawing;
+    using Models.Factorial;
 
     /// <summary>
     /// The editor view asks the presenter for context items. This structure
@@ -38,12 +33,12 @@ namespace UserInterface.EventArguments
         /// Context item information
         /// </summary>
         public List<string> Items;
-
+#if NETFRAMEWORK
         /// <summary>
         /// Completion data.
         /// </summary>
         public List<CompletionData> CompletionData { get; set; }
-
+#endif
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.
         /// </summary>
@@ -91,9 +86,10 @@ namespace UserInterface.EventArguments
         /// <param name="atype">Data type for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool events)
+        public static List<ContextItem> ExamineTypeForContextItems(Type atype, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems = new List<ContextItem>();
 
@@ -111,7 +107,7 @@ namespace UserInterface.EventArguments
                             IsProperty = true,
                             IsEvent = false,
                             IsWriteable = !var.IsReadOnly,
-                            TypeName = var.DataType.Name,
+                            TypeName = GetTypeName(var.DataType),
                             Descr = GetDescription(property),
                             Units = var.Units
                         };
@@ -121,9 +117,10 @@ namespace UserInterface.EventArguments
 
                 if (methods)
                 {
-                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public))
+                    foreach (MethodInfo method in atype.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                     {
-                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_"))
+                        if (!method.Name.StartsWith("get_") && !method.Name.StartsWith("set_") &&
+                            !method.Name.StartsWith("add_") && !method.Name.StartsWith("remove_"))
                         {
                             ContextItem item = new ContextItem
                             {
@@ -147,7 +144,7 @@ namespace UserInterface.EventArguments
                                     ParameterInfo parameter = allparams[p];
                                     paramText.Append(parameter.ParameterType.Name + " " + parameter.Name);
                                     if (parameter.DefaultValue != DBNull.Value)
-                                        paramText.Append(" = " + parameter.DefaultValue.ToString());
+                                        paramText.Append(" = " + parameter.DefaultValue?.ToString() ?? "null");
                                     if (p < allparams.Count() - 1)
                                         paramText.Append(", ");
                                 }
@@ -160,7 +157,7 @@ namespace UserInterface.EventArguments
                     }
                 }
 
-                if (events)
+                if (publishedEvents)
                 {
                     foreach (EventInfo evnt in atype.GetEvents(BindingFlags.Instance | BindingFlags.Public))
                     {
@@ -176,6 +173,27 @@ namespace UserInterface.EventArguments
                         allItems.Add(item);
                     }
                 }
+
+                if (subscribedEvents)
+                {
+                    foreach (MethodInfo method in atype.GetMethods(/*BindingFlags.Instance |*/ BindingFlags.NonPublic | BindingFlags.FlattenHierarchy))
+                    {
+                        EventSubscribeAttribute subscriberAttribute = (EventSubscribeAttribute)ReflectionUtilities.GetAttribute(method, typeof(EventSubscribeAttribute), false);
+                        if (subscriberAttribute != null)
+                        {
+                            NeedContextItemsArgs.ContextItem item = new NeedContextItemsArgs.ContextItem();
+                            item.Name = subscriberAttribute.ToString();
+                            item.IsProperty = false;
+                            item.IsEvent = false;
+                            item.IsMethod = true;
+                            item.IsWriteable = false;
+                            item.TypeName = atype.Name;
+                            item.Descr = GetDescription(atype);
+                            item.Units = "";
+                            allItems.Add(item);
+                        }
+                    }
+                }
             }
 
             allItems.Sort(delegate(ContextItem c1, ContextItem c2) { return c1.Name.CompareTo(c2.Name); });
@@ -188,13 +206,14 @@ namespace UserInterface.EventArguments
         /// <param name="o">Fully- or partially-qualified object name for which we want completion options.</param>
         /// <param name="properties">If true, property suggestions will be generated.</param>
         /// <param name="methods">If true, method suggestions will be generated.</param>
-        /// <param name="events">If true, event suggestions will be generated.</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
         /// <returns>List of completion options.</returns>
-        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool events)
+        private static List<ContextItem> ExamineObjectForContextItems(object o, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> allItems;
             Type objectType = o is Type ? o as Type : o.GetType();
-            allItems = ExamineTypeForContextItems(objectType, properties, methods, events);
+            allItems = ExamineTypeForContextItems(objectType, properties, methods, publishedEvents, subscribedEvents);
             
             // add in the child models.
             if (o is IModel)
@@ -235,12 +254,12 @@ namespace UserInterface.EventArguments
                 objectName = ".";
 
             object o = null;
-            IModel replacementModel = Apsim.Get(relativeTo, ".Simulations.Replacements") as IModel;
+            IModel replacementModel = relativeTo.FindByPath(".Simulations.Replacements")?.Value as IModel;
             if (replacementModel != null)
             {
                 try
                 {
-                    o = Apsim.Get(replacementModel, objectName) as IModel;
+                    o = replacementModel.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) {  }
             }
@@ -249,7 +268,7 @@ namespace UserInterface.EventArguments
             {
                 try
                 {
-                    o = Apsim.Get(relativeTo, objectName);
+                    o = relativeTo.FindByPath(objectName)?.Value;
                 }
                 catch (Exception) { }
             }
@@ -257,17 +276,17 @@ namespace UserInterface.EventArguments
             if (o == null && relativeTo.Parent is Replacements)
             {
                 // Model 'relativeTo' could be under replacements. Look for the first simulation and try that.
-                IModel simulation = Apsim.Find(relativeTo.Parent.Parent, typeof(Simulation));
+                IModel simulation = relativeTo.Parent.Parent.FindInScope<Simulation>();
                 try
                 {
-                    o = Apsim.Get(simulation, objectName) as IModel;
+                    o = simulation.FindByPath(objectName)?.Value as IModel;
                 }
                 catch (Exception) { }
             }
 
             if (o != null)
             {
-                return ExamineObjectForContextItems(o, properties, methods, events);
+                return ExamineObjectForContextItems(o, properties, methods, events, false);
             }
 
             return new List<ContextItem>();
@@ -279,14 +298,19 @@ namespace UserInterface.EventArguments
         /// </summary>
         /// <param name="relativeTo">Model that the string is relative to.</param>
         /// <param name="objectName">Name of the model that we want context items for.</param>
-        /// <returns></returns>
-        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool events)
+        /// <param name="properties">Search for properties of the model?</param>
+        /// <param name="methods">Search for methods of the model?</param>
+        /// <param name="publishedEvents">If true, published events will be returned.</param>
+        /// <param name="subscribedEvents">If true, subscribed events will be returned.</param>
+        public static List<ContextItem> ExamineModelForContextItemsV2(Model relativeTo, string objectName, bool properties, bool methods, bool publishedEvents, bool subscribedEvents)
         {
             List<ContextItem> contextItems = new List<ContextItem>();
             object node = GetNodeFromPath(relativeTo, objectName);
+            if (node == null)
+                node = relativeTo.FindByPath(objectName)?.Value;
             if (node != null)
             {
-                contextItems = ExamineObjectForContextItems(node, properties, methods, events);
+                contextItems = ExamineObjectForContextItems(node, properties, methods, publishedEvents, subscribedEvents);
             }
             return contextItems;
         }
@@ -317,8 +341,13 @@ namespace UserInterface.EventArguments
                 // object name doesn't contain square brackets.
                 string textBeforeFirstDot = objectName;
                 if (objectName.Contains("."))
-                    textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
-                node = Apsim.Find(relativeTo, textBeforeFirstDot);
+                    if (objectName.StartsWith("."))
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(1, textBeforeFirstDot.Length - 1);
+                    else
+                        textBeforeFirstDot = textBeforeFirstDot.Substring(0, textBeforeFirstDot.IndexOf('.'));
+                node = relativeTo.FindInScope(textBeforeFirstDot);
+                if (node == null)
+                    node = relativeTo.FindByPath(objectName)?.Value;
             }
             else
             {
@@ -326,8 +355,32 @@ namespace UserInterface.EventArguments
                 string modelName = matches[0].Value.Replace("[", "").Replace("]", "");
 
                 // Get the node in the simulations tree corresponding to the model name which was surrounded by square brackets.
-                node = Apsim.ChildrenRecursively(Apsim.Parent(relativeTo, typeof(Simulations))).FirstOrDefault(child => child.Name == modelName);
+                node = relativeTo.FindInScope(modelName);
 
+                // If we're under replacements we won't be able to find some simulation-
+                // related nodes such as weather/soil/etc. In this scenario, we should
+                // search through all models, not just those in scope.
+                if (node == null && relativeTo.FindAncestor<Replacements>() != null)
+                {
+                    node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(child => child.Name == modelName);
+
+                    // If we still failed, try a lookup on type name.
+                    if (node == null)
+                        node = relativeTo.FindAncestor<Simulations>().FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                }
+
+                if (node == null && relativeTo.FindAncestor<Factors>() != null)
+                {
+                    relativeTo = relativeTo.FindAncestor<Experiment>();
+                    if (relativeTo != null)
+                    {
+                        node = relativeTo.FindInScope(modelName);
+                        if (node == null)
+                            node = relativeTo.FindAllDescendants().FirstOrDefault(x => x.GetType().Name == modelName);
+                    }
+                    if (node == null)
+                        return null;
+                }
             }
 
             // If the object name string does not contain any children/properties 
@@ -339,7 +392,7 @@ namespace UserInterface.EventArguments
 
             // Iterate over the 'child' models/properties.
             // childName is the next child we're looking for. e.g. in "[Wheat].Leaf", the first childName will be "Leaf".
-            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, '.', '[', ']');
+            string[] namePathBits = StringUtilities.SplitStringHonouringBrackets(objectName, ".", '[', ']');
             for (int i = 0; i < namePathBits.Length; i++)
             {
                 if (node == null)
@@ -375,7 +428,20 @@ namespace UserInterface.EventArguments
                             return null;
 
                         // Try to set node to the value of the property.
-                        node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        try
+                        {
+                            node = ReflectionUtilities.GetValueOfFieldOrProperty(childName, node);
+                        }
+                        catch (TargetInvocationException err)
+                        {
+                            if (err.InnerException is NullReferenceException)
+                                // Some properties depend on links being resolved which is not
+                                // always the case (ie in an intellisense context).
+                                node = null;
+                            else
+                                throw;
+                        }
+
                         if (node == null)
                         {
                             // This property has the correct name. If the property's type provides a parameterless constructor, we can use 
@@ -432,6 +498,18 @@ namespace UserInterface.EventArguments
              return node;
         }
 
+        private static string GetTypeName(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                string name = type.Name;
+                if (name.Contains("`"))
+                    name = name.Substring(0, name.IndexOf('`'));
+                return $"{name}<{string.Join(", ", type.GenericTypeArguments.Select(t => GetTypeName(t)))}>";
+            }
+            return type.Name;
+        }
+
         /// <summary>
         /// Gets the contents of a property's summary tag, or, if the summary tag doesn't exist,
         /// a <see cref="DescriptionAttribute"/>.
@@ -477,7 +555,7 @@ namespace UserInterface.EventArguments
             else if (member is EventInfo)
                 memberPrefix = "E";
 
-            string xPath = string.Format("//member[starts-with(@name, '{0}:{1}.{2}')]/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
+            string xPath = string.Format("//member[@name='{0}:{1}.{2}']/summary[1]", memberPrefix, member.DeclaringType.FullName, member.Name);
             XmlNode summaryNode = doc.SelectSingleNode(xPath);
             if (summaryNode == null || summaryNode.ChildNodes.Count < 1)
                 return string.Empty;

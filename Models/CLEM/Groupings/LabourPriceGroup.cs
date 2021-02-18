@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel
+    public class LabourPriceGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
         /// Pay rate
@@ -30,6 +31,18 @@ namespace Models.CLEM.Groupings
         public double Value { get; set; }
 
         /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         protected LabourPriceGroup()
@@ -37,24 +50,7 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
-        /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourPriceGroup Clone()
-        {
-            LabourPriceGroup clone = new LabourPriceGroup()
-            {
-                Value = this.Value
-            };
-
-            foreach (LabourFilter item in this.Children.OfType<LabourFilter>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-
-            return clone;
-        }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -66,7 +62,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!formatForParentControl)
             {
-                html += "\n<div class=\"activityentry\">";
+                html += "\r\n<div class=\"activityentry\">";
                 html += "Pay ";
                 if (Value.ToString() == "0")
                 {
@@ -106,7 +102,7 @@ namespace Models.CLEM.Groupings
             }
             else
             {
-                html += "\n</div>";
+                html += "\r\n</div>";
             }
             return html;
         }
@@ -121,15 +117,15 @@ namespace Models.CLEM.Groupings
             if (formatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }
             }
             else
             {
-                html += "\n<div class=\"filterborder clearfix\">";
-                if (!(Apsim.Children(this, typeof(LabourFilter)).Count() >= 1))
+                html += "\r\n<div class=\"filterborder clearfix\">";
+                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }
@@ -153,6 +149,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
-        }
+        } 
+        #endregion
     }
 }

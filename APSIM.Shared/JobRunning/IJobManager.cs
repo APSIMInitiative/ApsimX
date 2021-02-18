@@ -9,6 +9,12 @@ namespace APSIM.Shared.JobRunning
     /// </summary>
     public interface IJobManager
     {
+        /// <summary>
+        /// Returns total number of jobs. This includes jobs which
+        /// have not yet run, and jobs which have already run.
+        /// </summary>
+        int NumJobs { get; }
+
         /// <summary>Return an enumeration of jobs that need running.</summary>
         IEnumerable<IRunnable> GetJobs();
 

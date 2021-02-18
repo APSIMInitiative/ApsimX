@@ -9,7 +9,7 @@ namespace UnitTests.Soils
     using Models.Core;
 
     [Serializable]
-    class MockSoil : Model, ISoil
+    class MockSoil : Model
     {
         public double[] CL { get; set; }
 

@@ -2,6 +2,7 @@
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -59,6 +60,8 @@ namespace Models.CLEM.Activities
             amountUsedThisMonth = 0;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -66,15 +69,31 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            html += "\n<div class=\"filter\">";
-            html += "Limit cut and carry activities to <span class=\"setvalueextra\">";
-            html += WeightLimitPerDay.ToString();
-            html += "</span> dry kg/day ";
-            html += "</div>";
-            html += "\n</div>";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Limit cut and carry activities to ");
+                if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(WeightLimitPerDay.ToString());
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not Set");
+                }
+                htmlWriter.Write("</span> dry kg/day ");
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
+            }
         }
 
         /// <summary>
@@ -93,7 +112,8 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 }

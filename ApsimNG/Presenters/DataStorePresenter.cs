@@ -13,15 +13,16 @@ namespace UserInterface.Presenters
     using Models.Core.Run;
     using Models.Storage;
     using System.Globalization;
+    using System.Collections.Generic;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
-    public class DataStorePresenter : IPresenter
+    public class DataStorePresenter : GridPresenter, IPresenter
     {
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
 
         /// <summary>The data store view to work with.</summary>
-        private IDataStoreView view;
+        private ViewBase view;
 
         /// <summary>
         /// The intellisense.
@@ -31,56 +32,107 @@ namespace UserInterface.Presenters
         /// <summary>Parent explorer presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
+        /// <summary>Checkpoint name drop down.</summary>
+        private DropDownView checkpointDropDown;
+
+        /// <summary>Only allow these tables to be selected/displayed.</summary>
+        private string[] tablesFilter = new string[0];
+
+        /// <summary>table name drop down.</summary>
+        public DropDownView tableDropDown { get; private set; }
+
+        /// <summary>Column filter edit box.</summary>
+        private EditView columnFilterEditBox;
+
+        /// <summary>Row filter edit box.</summary>
+        private EditView rowFilterEditBox;
+
+        /// <summary>Row filter edit box.</summary>
+        private EditView maxNumRecordsEditBox;
+
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
 
         /// <summary>Gets or sets the simulation filter. When specified, will only show simulation data.</summary>
         public Simulation SimulationFilter { get; set; }
 
+        /// <summary>When specified will only show data from a given zone.</summary>
+        public Zone ZoneFilter { get; set; }
+
+        public DataStorePresenter()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor. Used to restrict which tables can be selected.
+        /// </summary>
+        /// <param name="tables">Tables which may be displayed to the user.</param>
+        public DataStorePresenter(string[] tables)
+        {
+            if (tables == null)
+                throw new ArgumentNullException(nameof(tables));
+            tablesFilter = tables;
+        }
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
-        /// <param name="view">Data store view to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
-            this.view = view as IDataStoreView;
+            view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
+
             intellisense = new IntellisensePresenter(this.view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
-            this.view.TableList.IsEditable = false;
-            this.view.Grid.ReadOnly = true;
-            this.view.Grid.NumericFormat = "N3";
+            checkpointDropDown = view.GetControl<DropDownView>("checkpointDropDown");
+            tableDropDown = view.GetControl<DropDownView>("tableDropDown");
+            columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
+            rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
+            grid = view.GetControl<GridView>("grid");
+            maxNumRecordsEditBox = view.GetControl<EditView>("maxNumRecordsEditBox");
+
+            base.Attach(model, grid, explorerPresenter);
+
+            tableDropDown.IsEditable = false;
+            grid.ReadOnly = true;
+            grid.NumericFormat = "N3";
             if (dataStore != null)
             {
-                this.view.TableList.Values = dataStore.Reader.TableNames.ToArray();
+                tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
+                if (tablesFilter != null && tablesFilter.Length > 0)
+                    tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
+                checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
+                if (checkpointDropDown.Values.Length > 0)
+                    checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
-                    this.view.MaximumNumberRecords.Value = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                    maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                tableDropDown.SelectedIndex = -1;
             }
-            this.view.FileName.Value = dataStore.FileName;
 
-            this.view.TableList.Changed += this.OnTableSelected;
-            this.view.ColumnFilter.Changed += OnColumnFilterChanged;
-            this.view.ColumnFilter.IntellisenseItemsNeeded += OnIntellisenseNeeded;
-            this.view.RowFilter.Changed += OnColumnFilterChanged;
-            this.view.MaximumNumberRecords.Changed += OnMaximumNumberRecordsChanged;
-            this.view.FileNameChanged += OnFileNameChanged;
+            tableDropDown.Changed += this.OnTableSelected;
+            columnFilterEditBox.Leave += OnColumnFilterChanged;
+            columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
+            rowFilterEditBox.Leave += OnColumnFilterChanged;
+            maxNumRecordsEditBox.Leave += OnMaximumNumberRecordsChanged;
+            checkpointDropDown.Changed += OnCheckpointDropDownChanged;
             PopulateGrid();
         }
 
         /// <summary>Detach the model from the view.</summary>
-        public void Detach()
+        public override void Detach()
         {
-            (view.MaximumNumberRecords as EditView).EndEdit();
-            (view.FileName as EditView).EndEdit();
-            view.TableList.Changed -= OnTableSelected;
-            view.ColumnFilter.Changed -= OnColumnFilterChanged;
-            view.RowFilter.Changed -= OnColumnFilterChanged;
-            view.MaximumNumberRecords.Changed -= OnMaximumNumberRecordsChanged;
-            view.FileNameChanged -= OnFileNameChanged;
+            base.Detach();
+            maxNumRecordsEditBox.EndEdit();
+            tableDropDown.Changed -= OnTableSelected;
+            columnFilterEditBox.Leave -= OnColumnFilterChanged;
+            rowFilterEditBox.Leave -= OnColumnFilterChanged;
+            maxNumRecordsEditBox.Leave -= OnMaximumNumberRecordsChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }
@@ -93,24 +145,32 @@ namespace UserInterface.Presenters
                 // Strip out unwanted columns.
                 if (data != null)
                 {
-                    int numFrozenColumns = 1;
+                    int colPos = 0;
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
                         if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
                         {
-                            numFrozenColumns = i;
+                            //numFrozenColumns = i;
                             // Make the date column the left-most column
                             data.Columns[i].SetOrdinal(0);
+                            colPos = 1;
                             break;
                         }
                     }
 
-                    int colPos = 1;
-                    // Make "Simulation Name" the second column, if present
+                    // Make order of columns "Date, Simulation Name, Zone"
                     if (data.Columns.Contains("SimulationName"))
                         data.Columns["SimulationName"].SetOrdinal(colPos++);
                     if (data.Columns.Contains("Zone"))
                         data.Columns["Zone"].SetOrdinal(colPos++);
+                    int numFrozenColumns = colPos;
+
+                    // Remove checkpoint columns.
+                    if (data.Columns.Contains("CheckpointName"))
+                        data.Columns.Remove("CheckpointName");
+
+                    if (data.Columns.Contains("CheckpointID"))
+                        data.Columns.Remove("CheckpointID");
 
                     int simulationId = 0;
          
@@ -127,8 +187,8 @@ namespace UserInterface.Presenters
                             i--;
                         }
                         else if (i >= numFrozenColumns &&
-                                 view.ColumnFilter.Value != string.Empty &&
-                                 !view.ColumnFilter.Value.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
+                                 columnFilterEditBox.Text != string.Empty &&
+                                 !columnFilterEditBox.Text.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
                         {
                             data.Columns.RemoveAt(i);
                             i--;
@@ -143,7 +203,7 @@ namespace UserInterface.Presenters
                         // Try to obtain units
                         if (dataStore != null && simulationId != 0)
                         {
-                            units = dataStore.Reader.Units(view.TableList.SelectedValue, column.ColumnName);
+                            units = dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName);
                         }
 
                         int posLastDot = column.ColumnName.LastIndexOf('.');
@@ -159,8 +219,8 @@ namespace UserInterface.Presenters
                         }
                     }
 
-                    this.view.Grid.DataSource = data;
-                    this.view.Grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
+                    grid.DataSource = data;
+                    grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
                 }
             }
         }
@@ -176,30 +236,16 @@ namespace UserInterface.Presenters
                 {
                     int start = 0;
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-                    if (ExperimentFilter != null)
-                    {
-                        var names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
-                        string filter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
-                        if (!string.IsNullOrEmpty(view.RowFilter.Value))
-                            filter += " AND " + view.RowFilter.Value;
-                        data = dataStore.Reader.GetData(tableName: view.TableList.SelectedValue, filter: filter, from: start, count: count);
-                    }
-                    else if (SimulationFilter != null)
-                    {
-                        data = dataStore.Reader.GetData(
-                                                 simulationName: SimulationFilter.Name,
-                                                 tableName: view.TableList.SelectedValue,
-                                                 from: start, 
-                                                 count: count,
-                                                 filter: view.RowFilter.Value);
-                    }
-                    else
-                    {
-                        data = dataStore.Reader.GetData(
-                                                tableName: view.TableList.SelectedValue,
-                                                count: Utility.Configuration.Settings.MaximumRowsOnReportGrid,
-                                                filter: view.RowFilter.Value);
-                    }
+
+                    // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                    string filter = GetFilter();
+
+                    data = dataStore.Reader.GetData(tableName: tableDropDown.SelectedValue,
+                                                    checkpointName: checkpointDropDown.SelectedValue,
+                                                    simulationName: SimulationFilter?.Name,
+                                                    filter: filter,
+                                                    from: start,
+                                                    count: count);
                 }
                 catch (Exception e)
                 {
@@ -212,6 +258,41 @@ namespace UserInterface.Presenters
             }
 
             return data;
+        }
+
+        private string GetFilter()
+        {
+            string filter = rowFilterEditBox.Text;
+
+            if (ExperimentFilter != null)
+            {
+                // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                IEnumerable<string> names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                string exptFilter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
+                filter = AppendToFilter(filter, exptFilter);
+            }
+
+            if (ZoneFilter != null)
+            {
+                // More assumptions about column names
+                string zoneFilter = $"T.[Zone] = '{ZoneFilter.Name}'";
+                filter = AppendToFilter(filter, zoneFilter);
+            }
+
+            return filter;
+        }
+
+        /// <summary>
+        /// Appends a clause to the filter.
+        /// </summary>
+        /// <param name="filter">Existing filter to append to.</param>
+        /// <param name="value">Value to append to the filter.</param>
+        private string AppendToFilter(string filter, string value)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+                return value;
+
+            return $"{filter} AND {value}";
         }
 
         /// <summary>The selected table has changed.</summary>
@@ -239,7 +320,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, view.TableList.SelectedValue, dataStore.Reader))
+                if (intellisense.GenerateSeriesCompletions(args.Code, args.Offset, tableDropDown.SelectedValue, dataStore.Reader))
                     intellisense.Show(args.Coordinates.X, args.Coordinates.Y);
             }
             catch (Exception err)
@@ -252,7 +333,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                view.ColumnFilter.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
+                columnFilterEditBox.InsertCompletionOption(args.ItemSelected, args.TriggerWord);
                 PopulateGrid();
             }
             catch (Exception err)
@@ -266,7 +347,7 @@ namespace UserInterface.Presenters
         /// <param name="e">Event arguments</param>
         private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
         {
-            if (view.MaximumNumberRecords.Value == string.Empty)
+            if (maxNumRecordsEditBox.Text == string.Empty)
             {
                 Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
             }
@@ -274,7 +355,7 @@ namespace UserInterface.Presenters
             {
                 try
                 {
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(view.MaximumNumberRecords.Value, CultureInfo.InvariantCulture);
+                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(maxNumRecordsEditBox.Text, CultureInfo.InvariantCulture);
                 }
                 catch (FormatException)
                 {
@@ -285,16 +366,14 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// Invoked when the user modifies the contents of the filename textbox.
+        /// Checkpoint name has changed by user.
         /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnFileNameChanged(object sender, EventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCheckpointDropDownChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(dataStore, "CustomFileName", view.FileName.Value);
-            explorerPresenter.CommandHistory.Add(command);
-            dataStore.Close();
-            dataStore.Open();
+            PopulateGrid();
         }
+
     }
 }

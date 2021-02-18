@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="MathUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -40,6 +35,8 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool FloatsAreEqual(double value1, double value2, double tolerance)
         {
+            if (tolerance == 0)
+                return value1 == value2;
             return (System.Math.Abs(value1 - value2) < tolerance);
         }
         
@@ -50,7 +47,15 @@ namespace APSIM.Shared.Utilities
         {
             return (value1 - value2) > tolerance;
         }
-        
+
+        /// <summary>
+        /// Return true if the true if value 1 is greater than or equal to value 2
+        /// </summary>
+        public static bool IsGreaterThanOrEqual(double value1, double value2)
+        {
+            return (value1 - value2) >= tolerance;
+        }
+
         /// <summary>
         /// Return true if the true if value 1 is less than value 2
         /// </summary>
@@ -191,7 +196,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Divide(double value1, double value2, double errVal)
         {
-            return (value2 == 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
         }
 
         /// <summary>
@@ -292,6 +297,22 @@ namespace APSIM.Shared.Utilities
                 foreach (var value in values)
                     result += value;
             return result;
+        }
+
+        /// <summary>
+        /// Product of an array of doubles 
+        /// </summary>
+        public static double Prod(IEnumerable Values)
+        {
+            double prod = 1.0;
+            foreach (object Value in Values)
+            {
+                if (Value != null && !double.IsNaN(Convert.ToDouble(Value, CultureInfo.InvariantCulture)))
+                {
+                    prod *= Convert.ToDouble(Value, CultureInfo.InvariantCulture);
+                }
+            }
+            return prod;
         }
 
         /// <summary>
@@ -400,7 +421,11 @@ namespace APSIM.Shared.Utilities
 
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
+            {
+                if (dXCoordinate.Length > 1 && dXCoordinate[0] > dXCoordinate[1])
+                    throw new Exception("Linear interp x-series out of order (must be in ascending order)");
                 return dYCoordinate[0];  // off the bottom
+            }
             else if (pos >= 0)
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)
@@ -685,6 +710,9 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         static public double[] StringsToDoubles(IList Values)
         {
+            if (Values == null)
+                return new double[0];
+
             double[] ReturnValues = new double[Values.Count];
 
             for (int Index = 0; Index != Values.Count; Index++)
@@ -726,7 +754,7 @@ namespace APSIM.Shared.Utilities
 
             n = sequence.Length;    //count the number of useful values
 
-            if ((n == 0) || (pctile < 0.0) || (pctile > 1.0))
+            if ((n <= 1) || (pctile < 0.0) || (pctile > 1.0))
                 return double.NaN;
             else if (pctile == 1.0)
             {
@@ -734,9 +762,11 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
+                double[] sortedSequence = (double[]) sequence.Clone();
+                Array.Sort(sortedSequence);
                 int i = Convert.ToInt32(Math.Truncate(pctile * (n - 1)), CultureInfo.InvariantCulture);       //Otherwise interpolate between the
                 double z = pctile * (n - 1) - i;                                //appropriate array elements
-                return sequence[i] * (1.0 - z) + sequence[i + 1] * z;
+                return sortedSequence[i] * (1.0 - z) + sortedSequence[i + 1] * z;
             }
         }
 
@@ -937,7 +967,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Return the time elapsed in hours between the specified sun angle
-        ///  from 90<sup>o</sup> in am and pm. +ve above the horizon, -ve below the horizon.
+        ///  from 90^o^ in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
         /// \param DayOfYear The day of year
         /// \param SunAngle 
@@ -1586,192 +1616,6 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Utility method which sums a specific field in a collection of data rows.
-        /// </summary>
-        /// <param name="rows">Rows to be summed.</param>
-        /// <param name="fieldName">Name of the field to be summed.</param>
-        /// <returns></returns>
-        private static double SumOfRows(DataRow[] rows, string fieldName)
-        {
-            double total = 0;
-            foreach (DataRow row in rows)
-            {
-                double field;
-                if (double.TryParse(row.Field<object>(fieldName)?.ToString(), out field))
-                    total += field;
-                else
-                {
-                    DateTime date = DataTableUtilities.GetDateFromRow(row);
-                    throw new Exception("Invalid data in column " + fieldName + " on date " + date.ToShortDateString() + " (day of year = " + date.DayOfYear + ")");
-                }
-            }
-            return total;
-        }
-
-        /// <summary>
-        /// Returns monthly totals for the given variable.
-        /// </summary>
-        /// <param name="table">The data table containing the data.</param>
-        /// <param name="fieldName">The field name to look at.</param>
-        /// <param name="firstDate">Only data after this date will be used.</param>
-        /// <param name="lastDate">Only data before this date will be used.</param>
-        /// <returns>Array of tuples. Each tuple contains a date (month) and the total of the field's values for that month.</returns>
-        public static Tuple<DateTime, double>[] MonthlyTotals(DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
-        {
-            if (table.Rows.Count < 1)
-                return null;
-            var result = from row in table.AsEnumerable()
-                                      where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                             DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                                      group row by new
-                                      {
-                                          Year = DataTableUtilities.GetDateFromRow(row).Year,
-                                          Month = DataTableUtilities.GetDateFromRow(row).Month,
-                                      } into grp
-                                      select new
-                                      {
-                                          Year = grp.Key.Year,
-                                          Month = grp.Key.Month,
-                                          Total = SumOfRows(grp.AsEnumerable().ToArray(), fieldName)
-                                      };
-            return result.Select(r => new Tuple<DateTime, double>(new DateTime(r.Year, r.Month, 1), r.Total)).ToArray();
-        }
-
-        /// <summary>
-        /// Return longterm average monthly totals for the given variable. 
-        /// </summary>
-        /// <remarks>
-        /// 
-        /// Assumes a a date can be derived from the data table using the 
-        /// DataTable.GetDateFromRow function.
-        /// </remarks>
-        /// <param name="table">The data table containing the data</param>
-        /// <param name="fieldName">The field name to look at</param>
-        /// <param name="firstDate">Only data after this date will be used</param>
-        /// <param name="lastDate">Only data before this date will be used</param>
-        /// <returns>An array of 12 numbers or null if no data in table.</returns>
-        public static double[] AverageMonthlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
-        {
-            if (table.Rows.Count > 0)
-            {
-                // This first query gives monthly totals for each year.
-                var result = from row in table.AsEnumerable()
-                             where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                    DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                             group row by new
-                             {
-                                 Year = DataTableUtilities.GetDateFromRow(row).Year,
-                                 Month = DataTableUtilities.GetDateFromRow(row).Month,
-                             } into grp
-                             select new
-                             {
-                                 Year = grp.Key.Year,
-                                 Month = grp.Key.Month,
-                                 Total = SumOfRows(grp.AsEnumerable().ToArray(), fieldName)
-                             };
-
-                // This second query gives average monthly totals using the first query.
-                var result2 = from row in result
-                              group row by new
-                              {
-                                  Month = row.Month,
-                              } into grp
-                              select new
-                              {
-                                  Month = grp.Key.Month,
-                                  Avg = grp.Average(row => row.Total)
-                              };
-
-
-                List<double> totals = new List<double>();
-                foreach (var row in result2)
-                    totals.Add(row.Avg);
-
-                return totals.ToArray();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Return yearly totals for the given variable. 
-        /// </summary>
-        /// <remarks>
-        /// Assumes a a date can be derived from the data table using the 
-        /// DataTable.GetDateFromRow function.
-        /// </remarks>
-        /// <param name="table">The data table containing the data</param>
-        /// <param name="fieldName">The field name to look at</param>
-        /// <param name="firstDate">Only data after this date will be used</param>
-        /// <param name="lastDate">Only data before this date will be used</param>
-        /// <returns>An array of yearly totals or null if no data in table.</returns>
-        public static double[] YearlyTotals(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
-        {
-            if (table.Rows.Count > 0)
-            {
-                var result = from row in table.AsEnumerable()
-                             where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                    DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                             group row by new
-                             {
-                                 Year = DataTableUtilities.GetDateFromRow(row).Year,
-                             } into grp
-                             select new
-                             {
-                                 Year = grp.Key.Year,
-                                 Total = SumOfRows(grp.AsEnumerable().ToArray(), fieldName)
-                             };
-
-                List<double> totals = new List<double>();
-                foreach (var row in result)
-                    totals.Add(row.Total);
-
-                return totals.ToArray();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Return average daily totals for each month for the the given variable. 
-        /// </summary>
-        /// <remarks>
-        /// Assumes a a date can be derived from the data table using the 
-        /// DataTable.GetDateFromRow function.
-        /// </remarks>
-        /// <param name="table">The data table containing the data</param>
-        /// <param name="fieldName">The field name to look at</param>
-        /// <param name="firstDate">Only data after this date will be used</param>
-        /// <param name="lastDate">Only data before this date will be used</param>
-        /// <returns>An array of monthly averages or null if no data in table.</returns>
-        public static double[] AverageDailyTotalsForEachMonth(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
-        {
-            if (table.Rows.Count > 0)
-            {
-                var result = from row in table.AsEnumerable()
-                             where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
-                                    DataTableUtilities.GetDateFromRow(row) <= lastDate)
-                             group row by new
-                             {
-                                 Month = DataTableUtilities.GetDateFromRow(row).Month,
-                                 Year = DataTableUtilities.GetDateFromRow(row).Year,
-                             } into grp
-                             select new
-                             {
-                                 Year = grp.Key.Year,
-                                 Total = Divide(SumOfRows(grp.AsEnumerable().ToArray(), fieldName), grp.AsEnumerable().Count(), 0)
-                             };
-                List<double> totals = new List<double>();
-                foreach (var row in result)
-                    totals.Add(row.Total);
-
-                return totals.ToArray();
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Calculate the population standard deviation.
         /// </summary>
         /// <param name="values">List of values.</param>
@@ -1876,6 +1720,39 @@ namespace APSIM.Shared.Utilities
                 if (FloatsAreEqual(items[i], value))
                     return i;
             return -1;
+        }
+
+        /// <summary>
+        /// Format a value to a specified number of significant figures.
+        /// </summary>
+        /// <param name="value">The value to format.</param>
+        /// <param name="digits">The number of digits to format to.</param>
+        public static string FormatSignificantDigits(double value, int digits)
+        {
+            string returnStr;
+
+            // get the number of digits before the decimal place
+            int decPos = value.ToString().IndexOf(".");
+
+            // then round the number up based on the number of decimal places we can have
+            // ie 62.3422623  should become 62.3423  if decPos = 2, then round dvalue to 4 decimal places
+            //    3642.45678  should become 3642.57  if decPos = 4, then round dvalue to 2 decimal places
+            //    3642        should become 3642.00  if decPos = 0, then round dvalue to 2 decimal places
+            if (decPos > 0)
+                returnStr = Math.Round(value, digits - decPos).ToString();
+            else
+                returnStr = Math.Round(value, digits).ToString();
+
+            if (returnStr.Length >= (digits + 1))
+            {
+                // new trucate the string to get the correct number of digits
+                returnStr = returnStr.Substring(0, digits + 1);
+            }
+            else
+                returnStr = returnStr.PadRight(7, '0');
+            
+            // add a space so that we always have something
+            return returnStr;
         }
     }
 }

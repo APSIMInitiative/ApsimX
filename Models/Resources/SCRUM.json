@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 67,
+  "Version": 128,
   "Name": "Simulations",
   "Children": [
     {
@@ -26,7 +26,7 @@
           "Name": "Phenology",
           "Children": [
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -50,7 +50,15 @@
                     30.0,
                     0.0
                   ],
-                  "Name": "XYPairs",
+                  "Name": "Response",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ThreeHourSin, Models",
+                  "Name": "InterpolationMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -59,7 +67,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "agregationMethod": "0"
             },
             {
               "$type": "Models.Memo, Models",
@@ -91,7 +100,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -139,7 +148,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -178,7 +187,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -217,7 +226,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -247,7 +256,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -276,7 +285,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -298,20 +307,114 @@
           "Name": "Arbitrator",
           "Children": [
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "NArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "DMArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                      "Name": "SendPotentialDMAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                      "Name": "NutrientConstrainedAllocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                      "Name": "DryMatterAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
             },
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "DMArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "NArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "ActualPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                      "Name": "NitrogenAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                  "Name": "AllocateUptakesMethod"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+              "Name": "WaterUptakeMethod"
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+              "Name": "NitrogenUptakeMethod"
             }
           ],
           "IncludeInDocumentation": true,
@@ -432,7 +535,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].ExpectedYield.Value()",
+                  "VariableName": "[Product].ExpectedYield",
                   "Name": "FreshYld",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -441,7 +544,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].DryMatterContent.Value()",
+                  "VariableName": "[Product].DryMatterContent",
                   "Name": "DMPercent",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -478,7 +581,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].DryMatterContent.Value()",
+                  "VariableName": "[Product].DryMatterContent",
                   "Name": "DMcontent",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -580,16 +683,6 @@
             {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.0,
-              "Units": "g/m^2",
-              "Name": "InitialWtFunction",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
               "Units": "/d",
               "Name": "DetachmentRateFunction",
               "Children": [],
@@ -659,7 +752,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Product].MinimumNConc.Value()",
+              "VariableName": "[Product].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -714,7 +807,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].RootProportion.Value()",
+                                      "VariableName": "[Root].RootProportion",
                                       "Name": "RootFraction",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -723,7 +816,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Stover].DMDemands.Structural.DMDemandFunction.PartitionFraction.YieldIncreasing.Value()",
+                                      "VariableName": "[Stover].DMDemands.Structural.DMDemandFunction.PartitionFraction.YieldIncreasing",
                                       "Name": "StoverFraction",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -762,7 +855,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].RootProportion.Value()",
+                                      "VariableName": "[Root].RootProportion",
                                       "Name": "RootFraction",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -834,7 +927,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Product].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Product].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -866,7 +959,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].minimumNconc.Value()",
+                      "VariableName": "[Product].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -897,7 +990,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Product].criticalNConc.Value()",
+                          "VariableName": "[Product].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -906,7 +999,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Product].minimumNconc.Value()",
+                          "VariableName": "[Product].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -938,7 +1031,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Product].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -947,7 +1040,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Product].maximumNconc.Value()",
+                      "VariableName": "[Product].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -971,6 +1064,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": true,
@@ -1117,7 +1236,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].Ymax.Value()",
+                          "VariableName": "[Stover].Ymax",
                           "Name": "Ymax",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1135,7 +1254,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].XoBiomass.Value()",
+                          "VariableName": "[Stover].XoBiomass",
                           "Name": "Xo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1144,7 +1263,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].bBiomass.Value()",
+                          "VariableName": "[Stover].bBiomass",
                           "Name": "b",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1163,7 +1282,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Stover].Fw",
                   "Name": "WaterStressFactor",
                   "Children": [
                     {
@@ -1185,6 +1303,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Stover].Fw",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1201,7 +1328,7 @@
               "Name": "FRGR",
               "Children": [
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "Name": "FRGRFunctionTemp",
                   "Children": [
                     {
@@ -1218,7 +1345,15 @@
                         1.0,
                         0.0
                       ],
-                      "Name": "XYPairs",
+                      "Name": "Response",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ThreeHourSin, Models",
+                      "Name": "InterpolationMethod",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1227,7 +1362,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "agregationMethod": "0"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1363,7 +1499,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].CanopyExpanding.Target.Value()",
+                                          "VariableName": "[Phenology].CanopyExpanding.Target",
                                           "Name": "CanopyExpandingTT",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1372,7 +1508,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Phenology].YieldIncreasing.Target.Value()",
+                                          "VariableName": "[Phenology].YieldIncreasing.Target",
                                           "Name": "YieldIncreasingTT",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -1391,7 +1527,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].Senescing.Target.Value()",
+                                  "VariableName": "[Phenology].Senescing.Target",
                                   "Name": "SenescentPhaseDuration",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1445,7 +1581,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Phenology].Stage",
               "Name": "Tallness",
               "Children": [
                 {
@@ -1461,6 +1596,15 @@
                     1200.0
                   ],
                   "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Phenology].Stage",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1567,7 +1711,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].DryYield.Value()",
+                  "VariableName": "[Product].DryYield",
                   "Name": "DryYield",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1590,7 +1734,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].RootProportion.Value()",
+                      "VariableName": "[Root].RootProportion",
                       "Name": "RootFraction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1604,7 +1748,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Product].HarvestIndex.Value()",
+                  "VariableName": "[Product].HarvestIndex",
                   "Name": "HarvestIndex",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1622,7 +1766,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].CanopyExpanding.Target.Value()",
+                  "VariableName": "[Phenology].CanopyExpanding.Target",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1631,7 +1775,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].Ymax.Value()",
+                  "VariableName": "[Stover].Ymax",
                   "Name": "Ymax",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1640,7 +1784,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].XoBiomass.Value()",
+                  "VariableName": "[Stover].XoBiomass",
                   "Name": "Xo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1649,7 +1793,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].bBiomass.Value()",
+                  "VariableName": "[Stover].bBiomass",
                   "Name": "b",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1671,7 +1815,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].CanopyExpanding.Target.Value()",
+                      "VariableName": "[Phenology].CanopyExpanding.Target",
                       "Name": "CanopyExpandingTT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1680,7 +1824,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].YieldIncreasing.Target.Value()",
+                      "VariableName": "[Phenology].YieldIncreasing.Target",
                       "Name": "YieldIncreasingTT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1694,7 +1838,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].Ymax.Value()",
+                  "VariableName": "[Stover].Ymax",
                   "Name": "Ymax",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1703,7 +1847,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].XoBiomass.Value()",
+                  "VariableName": "[Stover].XoBiomass",
                   "Name": "Xo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1712,7 +1856,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].bBiomass.Value()",
+                  "VariableName": "[Stover].bBiomass",
                   "Name": "b",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1734,7 +1878,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].CanopyExpanding.Target.Value()",
+                      "VariableName": "[Phenology].CanopyExpanding.Target",
                       "Name": "CanopyExpandingTT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1743,7 +1887,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].YieldIncreasing.Target.Value()",
+                      "VariableName": "[Phenology].YieldIncreasing.Target",
                       "Name": "YieldIncreasingTT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1752,7 +1896,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Senescing.Target.Value()",
+                      "VariableName": "[Phenology].Senescing.Target",
                       "Name": "SenescingTT",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1766,7 +1910,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].Ymax.Value()",
+                  "VariableName": "[Stover].Ymax",
                   "Name": "Ymax",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1775,7 +1919,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].XoBiomass.Value()",
+                  "VariableName": "[Stover].XoBiomass",
                   "Name": "Xo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1784,7 +1928,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Stover].bBiomass.Value()",
+                  "VariableName": "[Stover].bBiomass",
                   "Name": "b",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1905,7 +2049,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Stover].MinimumNConc.Value()",
+              "VariableName": "[Stover].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1969,7 +2113,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Root].RootProportion.Value()",
+                                      "VariableName": "[Root].RootProportion",
                                       "Name": "RootFraction",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
@@ -2020,7 +2164,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Root].RootProportion.Value()",
+                                                  "VariableName": "[Root].RootProportion",
                                                   "Name": "RootFraction",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2048,7 +2192,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Product].HarvestIndex.Value()",
+                                                  "VariableName": "[Product].HarvestIndex",
                                                   "Name": "HI",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2062,7 +2206,7 @@
                                             },
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Stover].TotalBiomassAtMaturity.Value()",
+                                              "VariableName": "[Stover].TotalBiomassAtMaturity",
                                               "Name": "BiomassAtMaturity",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2080,7 +2224,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Stover].TotalBiomassAtStartReproductive.Value()",
+                                              "VariableName": "[Stover].TotalBiomassAtStartReproductive",
                                               "Name": "BiomassAtStartReproductive",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -2103,7 +2247,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Root].RootProportion.Value()",
+                                                  "VariableName": "[Root].RootProportion",
                                                   "Name": "RootFraction",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -2131,7 +2275,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Stover].TotalBiomassAtStartSenescence.Value()",
+                                          "VariableName": "[Stover].TotalBiomassAtStartSenescence",
                                           "Name": "BiomassAtStartSenescence",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2140,7 +2284,7 @@
                                         },
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Stover].TotalBiomassAtStartReproductive.Value()",
+                                          "VariableName": "[Stover].TotalBiomassAtStartReproductive",
                                           "Name": "BiomassAtStartReproductive",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -2217,7 +2361,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Stover].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2249,7 +2393,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].minimumNconc.Value()",
+                      "VariableName": "[Stover].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2280,7 +2424,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].criticalNConc.Value()",
+                          "VariableName": "[Stover].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2289,7 +2433,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Stover].minimumNconc.Value()",
+                          "VariableName": "[Stover].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2321,7 +2465,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Stover].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2330,7 +2474,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Stover].maximumNconc.Value()",
+                      "VariableName": "[Stover].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2366,6 +2510,11 @@
           "Name": "Root",
           "Children": [
             {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
+            {
               "$type": "Models.Memo, Models",
               "Text": "\nThe root organ demands and is partitioned N and DM and its depth increases through time to provide a water uptake supply\n",
               "Name": "Description",
@@ -2396,7 +2545,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LayerMidPointDepth",
               "Name": "KLModifier",
               "Children": [
                 {
@@ -2473,8 +2621,17 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
+                  "Text": "\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Physical.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
                   "Name": "Description",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LayerMidPointDepth",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2536,11 +2693,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -2578,7 +2746,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].CanopyExpanding.Target.Value()",
+                          "VariableName": "[Phenology].CanopyExpanding.Target",
                           "Name": "CanopyExpandingTT",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2587,7 +2755,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].YieldIncreasing.Target.Value()",
+                          "VariableName": "[Phenology].YieldIncreasing.Target",
                           "Name": "YieldIncreasingTT",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2605,7 +2773,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].MaximumRootDepth.Value()",
+                          "VariableName": "[Root].MaximumRootDepth",
                           "Name": "MaxRootDepth",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2614,7 +2782,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].RootFrontVelocity.RootFrontVelocity.GrowthDuration.Value()",
+                          "VariableName": "[Root].RootFrontVelocity.RootFrontVelocity.GrowthDuration",
                           "Name": "GrowthDuration",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2643,7 +2811,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2734,16 +2902,6 @@
             },
             {
               "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.2,
-              "Units": "g/plant",
-              "Name": "InitialDM",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
               "FixedValue": 40.0,
               "Units": "m/g",
               "Name": "SpecificRootLength",
@@ -2754,7 +2912,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNO3",
               "Children": [
                 {
@@ -2772,6 +2929,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2780,7 +2946,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KNH4",
               "Children": [
                 {
@@ -2798,6 +2963,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2806,7 +2980,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -2820,6 +2993,15 @@
                     1.0
                   ],
                   "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].RWC",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -2870,7 +3052,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].RootProportion.Value()",
+                              "VariableName": "[Root].RootProportion",
                               "Name": "RootProportion",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2932,7 +3114,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2964,7 +3146,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].minimumNconc.Value()",
+                      "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2995,7 +3177,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].criticalNConc.Value()",
+                          "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3004,7 +3186,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3036,7 +3218,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3045,7 +3227,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].maximumNconc.Value()",
+                      "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3061,6 +3243,46 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.2,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3294,7 +3516,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Nodule].MinimumNConc.Value()",
+              "VariableName": "[Nodule].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3374,7 +3596,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Nodule].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3406,7 +3628,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nodule].minimumNconc.Value()",
+                      "VariableName": "[Nodule].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3437,7 +3659,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].criticalNConc.Value()",
+                          "VariableName": "[Nodule].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3446,7 +3668,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Nodule].minimumNconc.Value()",
+                          "VariableName": "[Nodule].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3478,7 +3700,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nodule].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Nodule].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3487,7 +3709,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Nodule].maximumNconc.Value()",
+                      "VariableName": "[Nodule].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5822,11 +6044,22 @@
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "SCRUM"
     }
   ],
   "IncludeInDocumentation": true,

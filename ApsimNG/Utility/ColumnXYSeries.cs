@@ -1,18 +1,23 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ColumnXYSeries.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace Utility
 {
     using System;
+    using System.Globalization;
     using OxyPlot;
     using OxyPlot.Axes;
     using OxyPlot.Series;
+    using UserInterface.Views;
 
     /// <summary>
     /// A column series for graphing that doesn't need a category axis.
     /// </summary>
+    /// <remarks>
+    /// Note that the meaning of the tracker format string has been changed.
+    /// 0: Series title
+    /// 1: X axis title
+    /// 2: X value of the column
+    /// 3: Y axis title
+    /// 4: Y value of the column
+    /// </remarks>
     public class ColumnXYSeries : RectangleBarSeries
     {
         /// <summary>Updates the data.</summary>
@@ -61,6 +66,43 @@ namespace APSIM.Shared.Utilities
                     double x1 = p.X + halfBarWidth;
                     this.Items.Add(new RectangleBarItem(x0, 0.0, x1, p.Y));
                 }
+            }
+        }
+
+        /// <summary>Gets the point in the dataset that is nearest the specified point.</summary>
+        /// <param name="point">The point.</param>
+        /// <param name="interpolate">Specifies whether to interpolate or not.</param>
+        public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
+        {
+            try
+            {
+                var result = base.GetNearestPoint(point, false);
+                if (result?.Item is DataPoint item)
+                {
+                    object xValue = item.X;
+                    // Try and use the label for the xvalue if it's a category axis.
+                    // Should we do this for the y axis too, if it's a category axis?
+                    if (result.XAxis is CategoryAxis category && int.TryParse(xValue?.ToString(), NumberStyles.Any, CultureInfo.CurrentCulture, out int x))
+                    {
+                        if (category.ActualLabels.Count > x)
+                            xValue = category.ActualLabels[x];
+                        else if (category.Labels.Count > x)
+                            xValue = category.Labels[x];
+                    }
+                    result.Text = string.Format(CultureInfo.CurrentCulture,
+                                                TrackerFormatString,
+                                                result.Series.Title,
+                                                result.XAxis.Title,
+                                                xValue,
+                                                result.YAxis.Title,
+                                                item.Y);
+                }
+                return result;
+            }
+            catch (Exception err)
+            {
+                ViewBase.MasterView.ShowError(err);
+                return null;
             }
         }
     }

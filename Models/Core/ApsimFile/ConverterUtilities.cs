@@ -1,20 +1,12 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ConverterUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core.ApsimFile
+﻿namespace Models.Core.ApsimFile
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml;
-    using APSIM.Shared.Utilities;
-    using System.Reflection;
     using System.IO;
+    using System.Linq;
     using System.Text.RegularExpressions;
-    using Newtonsoft.Json.Linq;
+    using System.Xml;
 
     /// <summary>
     /// TODO: Update summary.

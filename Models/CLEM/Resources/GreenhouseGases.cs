@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (IResourceWithTransactionType childModel in Apsim.Children(this, typeof(IResourceWithTransactionType)))
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -70,6 +70,20 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(e);
         }
 
+        #endregion
+
+        #region descriptive summary
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            string html = "";
+            return html;
+        } 
         #endregion
 
     }

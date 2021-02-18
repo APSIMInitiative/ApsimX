@@ -1,4 +1,4 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     /// <summary>A painter interface for setting visual elements of a simulation/zone pair</summary>
     public interface ISeriesDefinitionPainter

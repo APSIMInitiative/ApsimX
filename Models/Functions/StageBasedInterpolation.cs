@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.PMF.Phen;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 
 namespace Models.Functions

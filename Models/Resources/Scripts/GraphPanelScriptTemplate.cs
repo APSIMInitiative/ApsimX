@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Graph;
+using Models;
 using Models.Storage;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +12,19 @@ namespace Models
 	/// <summary>
 	/// This script must implement the IGraphPanelScript interface.
 	/// </summary>
-	public class Script : Model, IGraphPanelScript
+	[Serializable]
+	public class GraphPanelScriptTemplate : Model, IGraphPanelScript
 	{
 		/// <summary>
         /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.
         /// </summary>
-        /// <param name="storage">Provides access to the datastore.</param>
+        /// <param name="reader">Provides access to the datastore.</param>
         /// <param name="panel">Provides access to the graph panel and the simulations tree.</param>
 		public string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)
 		{
 			// Get a list of all descendants of the panel's parent which are runnable
 			// (simulations, experiments, etc).
-			List<ISimulationDescriptionGenerator> runnables = Apsim.ChildrenRecursively(panel.Parent, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();
+			List<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
 
 			// Remove all simulations which are children of an experiment.
 			runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);
@@ -37,7 +38,7 @@ namespace Models
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="simulationName">Simulation name for this tab.</param>
-        public void TransformGraph(Models.Graph.Graph graph, string simulationName)
+        public void TransformGraph(Models.Graph graph, string simulationName)
         {
         }
     }

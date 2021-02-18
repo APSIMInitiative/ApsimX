@@ -4,7 +4,9 @@
     using Models.Core;
     using Models.Interfaces;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.Soils.Nutrients;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -18,11 +20,15 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
     {
-        /// <summary>Link to the soil component</summary>
+        /// <summary>The water balance model</summary>
         [Link]
-        private Soil soil = null;
+        ISoilWater waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>Link to the summary component</summary>
         [Link]
@@ -43,11 +49,14 @@
         private INutrient SoilNitrogen = null;
 
         /// <summary>Gets or sets the residue types.</summary>
-        [ChildLink]
+        [Link(Type = LinkType.Child)]
         private ResidueTypes ResidueTypes = null;
 
         /// <summary>The surf om</summary>
         private List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
+
+        /// <summary>List of canopies that MicroClimate will use.</summary>
+        public List<ICanopy> Canopies { get; set; } = new List<ICanopy>();
 
         /// <summary>The number surfom</summary>
         private int numSurfom = 0;
@@ -57,6 +66,12 @@
 
         /// <summary>The cumeos</summary>
         private double cumeos;
+
+        /// <summary>The potential decomposition</summary>
+        private SurfaceOrganicMatterDecompType potentialDecomposition;
+
+        /// <summary>Has potential decomposition been calculated?</summary>
+        private bool calculatedPotentialDecomposition;
 
         /// <summary>The determinant of whether a residue type contributes to the calculation of contact factor (1 or 0)</summary>
         private int[] cf_contrib = new int[0];
@@ -115,8 +130,10 @@
         /// <summary>extinction coefficient for standing residues</summary>
         private double standingExtinctCoeff = 0.5;
 
+        //private double lyingExtinctionCoeff = 1.0;
+
         /// <summary>fraction of incoming faeces to add</summary>
-        private double fractionFaecesAdded = 0.5;
+        private double fractionFaecesAdded = 1.0;
 
         /// <summary>Actual surface organic matter decomposition. Calculated by SoilNitrogen.</summary>
         private SurfaceOrganicMatterDecompType actualSOMDecomp;
@@ -242,6 +259,67 @@
             }
         }
 
+        /// <summary>Gets the live biomass for grazing</summary>
+        public Biomass Live
+        {
+            get
+            {
+                return new Biomass();
+            }
+        }
+
+        /// <summary>Gets the dead biomass for grazing</summary>
+        public Biomass Dead
+        {
+            get
+            {
+                return new Biomass() // Should this be in live i.e. no live SOM
+                {
+                    StructuralWt = SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
+                                   SurfOM.Sum(som => som.Lying.Sum(om => om.amount)),
+                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                  SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
+                    MetabolicWt = 0.0,
+                    MetabolicN = 0.0,
+                    StorageWt = 0.0,
+                    StorageN = 0.0,
+                    DMDOfStructural = 0.4  // ???????
+                };
+            }
+        }
+
+        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        public bool IsAboveGround { get { return true; } }
+        
+        /// <summary>
+        /// Biomass removal logic for this organ.
+        /// </summary>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove</param>
+        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                double totalMassRemoved = 0;
+                foreach (var standing in SurfOM[i].Standing)
+                {
+                    double amountToRemove = standing.amount * biomassToRemove.FractionLiveToRemove;
+                    standing.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+                foreach (var lying in SurfOM[i].Lying)
+                {
+                    double amountToRemove = lying.amount * biomassToRemove.FractionLiveToRemove;
+                    lying.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+
+                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+            }
+        }
+
         /// <summary>Called when [reset].</summary>
         public void Reset()
         {
@@ -279,19 +357,27 @@
         /// <summary>Return the potential residue decomposition for today.</summary>
         public SurfaceOrganicMatterDecompType PotentialDecomposition()
         {
-            double precip = weather.Rain + irrig;
-            if (precip > 4.0)
-                cumeos = soil.SoilWater.Eos - precip;
-            else
-                cumeos = this.cumeos + soil.SoilWater.Eos - precip;
-            cumeos = Math.Max(cumeos, 0.0);
+            // This method can be called multiple times when nutrient patching is running. Each
+            // patch will call this method. Because of the cumeos accumulation below we only
+            // want to do this once per timestep, hence the flag on the line below.
+            if (!calculatedPotentialDecomposition)
+            {
+                calculatedPotentialDecomposition = true;
+                double precip = weather.Rain + irrig;
+                if (precip > 4.0)
+                    cumeos = waterBalance.Eos - precip;
+                else
+                    cumeos = this.cumeos + waterBalance.Eos - precip;
+                cumeos = Math.Max(cumeos, 0.0);
 
-            if (precip >= minRainToLeach)
-                Leach(precip);
+                if (precip >= minRainToLeach)
+                    Leach(precip);
 
-            irrig = 0.0; // reset irrigation log now that we have used that information;
+                irrig = 0.0; // reset irrigation log now that we have used that information;
 
-            return SendPotDecompEvent();
+                potentialDecomposition = SendPotDecompEvent();
+            }
+            return potentialDecomposition;
         }
 
         /// <summary>
@@ -379,9 +465,18 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            NO3Solute = Apsim.Find(this, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(this, "NH4") as ISolute;
+            NO3Solute = this.FindInScope("NO3") as ISolute;
+            NH4Solute = this.FindInScope("NH4") as ISolute;
             Reset();
+        }
+
+        /// <summary>Called at start of each day.</summary>
+        /// <param name="sender">The sender of the event</param>
+        /// <param name="e">The event data.</param>
+        [EventSubscribe("DoDailyInitialisation")]
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
+        {
+            calculatedPotentialDecomposition = false;
         }
 
         /// <summary>Get irrigation information from an Irrigated event.</summary>
@@ -431,6 +526,15 @@
             actualSOMDecomp = SoilNitrogen.CalculateActualSOMDecomp();
             if (actualSOMDecomp != null)
                 DecomposeSurfom(actualSOMDecomp);
+
+            Canopies = new List<ICanopy>();
+            foreach (SurfOrganicMatterType pool in SurfOM)
+            {
+                if (pool.CanopyLying.CoverTotal > 0)
+                    Canopies.Add(pool.CanopyLying);
+                if (pool.CanopyStanding.CoverTotal > 0)
+                    Canopies.Add(pool.CanopyStanding);
+            }
         }
 
         /// <summary>
@@ -656,7 +760,7 @@
             // If neccessary, Send the mineral N & P leached to the Soil N&P modules;
             if (no3Incorp > 0.0 || nh4Incorp > 0.0 || po4Incorp > 0.0)
             {
-                var delta = new double[soil.Thickness.Length];
+                var delta = new double[soilPhysical.Thickness.Length];
                 delta[0] = no3Incorp;
                 NO3Solute.AddKgHaDelta(SoluteSetterType.Soil, delta);
 
@@ -796,7 +900,7 @@
         private void Incorp(double fIncorp, double tillageDepth)
         {            
             int deepestLayer;
-            int nLayers = soil.Thickness.Length;
+            int nLayers = soilPhysical.Thickness.Length;
             double F_incorp_layer = 0;
             double[] residueIncorpFraction = new double[nLayers];
             double layerIncorpDepth;
@@ -811,7 +915,7 @@
 
             fIncorp = MathUtilities.Bound(fIncorp, 0.0, 1.0);
 
-            deepestLayer = soil.LayerIndexOfDepth(tillageDepth);
+            deepestLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, tillageDepth);
 
             double cumDepth = 0.0;
 
@@ -820,7 +924,7 @@
                 for (int residue = 0; residue < numSurfom; residue++)
                 {
                     double depthToGo = tillageDepth - cumDepth;
-                    layerIncorpDepth = Math.Min(depthToGo, soil.Thickness[layer]);
+                    layerIncorpDepth = Math.Min(depthToGo, soilPhysical.Thickness[layer]);
                     F_incorp_layer = MathUtilities.Divide(layerIncorpDepth, tillageDepth, 0.0);
                     for (int i = 0; i < maxFr; i++)
                     {
@@ -832,7 +936,7 @@
                     nh4[layer] += SurfOM[residue].nh4 * fIncorp * F_incorp_layer;
                     po4[layer] += SurfOM[residue].po4 * fIncorp * F_incorp_layer;
                 }
-                cumDepth = cumDepth + soil.Thickness[layer];
+                cumDepth = cumDepth + soilPhysical.Thickness[layer];
                 residueIncorpFraction[layer] = F_incorp_layer;
             }
             
@@ -842,7 +946,7 @@
             {
                 FPoolProfile.Layer[layer] = new FOMPoolLayerType()
                 {
-                    thickness = soil.Thickness[layer],
+                    thickness = soilPhysical.Thickness[layer],
                     no3 = no3[layer],
                     nh4 = nh4[layer],
                     po4 = po4[layer],
@@ -960,11 +1064,28 @@
         {
             double areaLying = 0;
             double areaStanding = 0;
+            double amountLying = 0;
+            double amountStanding = 0;
             for (int i = 0; i < maxFr; i++)
             {
                 areaLying += SurfOM[SOMindex].Lying[i].amount * specific_area[SOMindex];
+                amountLying += SurfOM[SOMindex].Lying[i].amount;
                 areaStanding += SurfOM[SOMindex].Standing[i].amount * specific_area[SOMindex];
+                amountStanding += SurfOM[SOMindex].Standing[i].amount;
             }
+
+            //Very Important Note,  #FixMe,  The following variables have been programmed to get the plumbing working so microclimate deals with 
+            //interception of radiation and precipitation from residues but have been set to 0 to reproduce existing behaviour until such time
+            //that models can be parameterised to include redisue interception accurately
+            SurfOM[SOMindex].CanopyLying.LAITotal = 0;//= areaLying;
+            SurfOM[SOMindex].CanopyStanding.LAITotal = 0;//= areaStanding;
+            SurfOM[SOMindex].CanopyLying.CoverTotal = 0;//= 1 - Math.Exp(-lyingExtinctionCoeff * areaLying);
+            SurfOM[SOMindex].CanopyStanding.CoverTotal = 0;//= 1 - Math.Exp(-standingExtinctCoeff * areaStanding);
+            SurfOM[SOMindex].CanopyLying.Height = 0;//= 50; //Assuming lying layers are 5 cm deep
+            SurfOM[SOMindex].CanopyStanding.Height = 0;//= 700; //Fixme this should come from the crops height
+            SurfOM[SOMindex].CanopyLying.Depth = 0;//= SurfOM[SOMindex].CanopyLying.Height;
+            SurfOM[SOMindex].CanopyStanding.Depth = 0;//= SurfOM[SOMindex].CanopyStanding.Height;
+
             double F_Cover = AddCover(1.0 - (double)Math.Exp(-areaLying), 1.0 - (double)Math.Exp(-(standingExtinctCoeff) * areaStanding));
             return MathUtilities.Bound(F_Cover, 0.0, 1.0);
         }
@@ -1010,5 +1131,6 @@
 
             return newArray;
         }
+
     }
 }

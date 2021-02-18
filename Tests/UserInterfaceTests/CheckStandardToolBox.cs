@@ -20,12 +20,14 @@ public class Script
 		if (presenter != null)
 		{
 			// Loop through all nodes in the standard toolbox and select each in turn.
-			while (presenter.SelectNextNode());
+			while (presenter.SelectNextNode())
+			{
+				presenter.HideRightHandPanel();
+				presenter.ShowRightHandPanel();
+			}
         }
 		
         // Close the user interface.
         mainPresenter.Close(askToSave:false);
     }
-
-
 }

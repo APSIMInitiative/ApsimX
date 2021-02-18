@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -9,7 +10,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when a browse button is clicked.
         /// </summary>
-        event EventHandler<OpenDialogArgs> BrowseButtonClicked;
+        event EventHandler BrowseButtonClicked;
 
         /// <summary>
         /// Property to provide access to the filename label.
@@ -17,27 +18,21 @@ namespace UserInterface.Views
         string FileName { get; set; }
 
         /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        string WarningText { get; set; }
-        
-        /// <summary>
         /// Property to provide access to the grid.
         /// </summary>
         IGridView GridView { get; }
     }
 
-    public class InputView : ViewBase, Views.IInputView
+    public class InputView : ViewBase, IInputView
     {
         /// <summary>
         /// Invoked when a browse button is clicked.
         /// </summary>
-        public event EventHandler<OpenDialogArgs> BrowseButtonClicked;
+        public event EventHandler BrowseButtonClicked;
 
         private VBox vbox1 = null;
         private Button button1 = null;
         private Label label1 = null;
-        private Label label2 = null;
         private GridView grid;
 
         /// <summary>
@@ -54,23 +49,28 @@ namespace UserInterface.Views
             vbox1 = (VBox)builder.GetObject("vbox1");
             button1 = (Button)builder.GetObject("button1");
             label1 = (Label)builder.GetObject("label1");
-            label2 = (Label)builder.GetObject("label2");
             mainWidget = vbox1;
 
             grid = new GridView(this);
             vbox1.PackStart(grid.MainWidget, true, true, 0);
             button1.Clicked += OnBrowseButtonClick;
-            label2.ModifyFg(StateType.Normal, new Gdk.Color(0xFF, 0x0, 0x0));
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            button1.Clicked -= OnBrowseButtonClick;
-            grid.MainWidget.Destroy();
-            grid = null;
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                button1.Clicked -= OnBrowseButtonClick;
+                grid.MainWidget.Cleanup();
+                grid = null;
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -90,22 +90,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Property to provide access to the warning text label.
-        /// </summary>
-        public string WarningText
-        {
-            get
-            {
-                return label2.Text;
-            }
-            set
-            {
-                label2.Text = value;
-                label2.Visible = !string.IsNullOrWhiteSpace(value);
-            }
-        }
-
-        /// <summary>
         /// Browse button was clicked - send event to presenter.
         /// </summary>
         private void OnBrowseButtonClick(object sender, EventArgs e)
@@ -114,13 +98,7 @@ namespace UserInterface.Views
             {
                 if (BrowseButtonClicked != null)
                 {
-                    string fileName = AskUserForFileName("Select a file to open", Utility.FileDialog.FileActionType.Open, "All Files (*.*) | *.*", FileName);
-                    if (!string.IsNullOrEmpty(fileName))
-                    {
-                        OpenDialogArgs args = new OpenDialogArgs();
-                        args.FileName = fileName;
-                        BrowseButtonClicked.Invoke(this, args);
-                    }
+                    BrowseButtonClicked.Invoke(this, EventArgs.Empty);
                 }
             }
             catch (Exception err)

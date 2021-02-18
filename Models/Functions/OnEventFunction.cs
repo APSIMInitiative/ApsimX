@@ -27,10 +27,10 @@ namespace Models.Functions
 
 
         /// <summary>The pre event value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PreEventValue = null;
         /// <summary>The post event value</summary>
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction PostEventValue = null;
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -79,7 +79,7 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, -1, indent);
 
                 if (PreEventValue != null)

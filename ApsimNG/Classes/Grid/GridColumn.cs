@@ -1,15 +1,15 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridColumn.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Classes
+﻿namespace UserInterface.Classes
 {
-    using System;
-    using System.Drawing;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
+    using System;
+    using System.Drawing;
     using Views;
+
+#if NETCOREAPP
+    using StateType = Gtk.StateFlags;
+#endif
 
     /// <summary>
     /// Represents a grid column.
@@ -52,7 +52,7 @@ namespace UserInterface.Classes
 
             set
             {
-                if (value == -1)
+                if (value <= 0)
                 {
                     this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
                     this.gridView.Grid.Columns[this.ColumnIndex].Resizable = true;
@@ -131,12 +131,13 @@ namespace UserInterface.Classes
         {
             get
             {
-                return ""; /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                return "";
             }
 
             set
             {
-                /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
             }
         }
 
@@ -215,7 +216,8 @@ namespace UserInterface.Classes
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                    Gdk.Color bg = button.Style.Backgrounds[0];
+                    Gdk.Color bg = button.GetBackgroundColour(StateType.Normal);
+
                     return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
                 }
                 else
@@ -229,7 +231,11 @@ namespace UserInterface.Classes
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                   button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+#if NETFRAMEWORK
+                    button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+#else
+                    throw new NotImplementedException("tbi - gtk3 equivalent");
+#endif
                 }
             }
         }
@@ -244,7 +250,7 @@ namespace UserInterface.Classes
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
                 {
-                    Gdk.Color fg = label.Style.Foregrounds[0];
+                    Gdk.Color fg = label.GetForegroundColour(StateType.Normal);
                     return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
                 }
                 else
@@ -256,7 +262,11 @@ namespace UserInterface.Classes
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
                 {
+#if NETFRAMEWORK
                     label.ModifyFg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+#else
+                    throw new NotImplementedException("tbi - gtk3 equivalent");
+#endif
                 }
             }
         }

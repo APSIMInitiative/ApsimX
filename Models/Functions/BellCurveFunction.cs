@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.PMF.Struct;
 
@@ -12,13 +12,13 @@ namespace Models.Functions
     public class BellCurveFunction : Model, IFunction
     {
         /// <summary>The largest leaf position</summary>
-        [Link] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
+        [Link(Type = LinkType.Child, ByName = true)] IFunction LargestLeafPosition = null; // Node position where the largest leaf occurs (e.g. 10 is the 10th leaf from bottom to top)
         /// <summary>The area maximum</summary>
-        [Link] IFunction AreaMax = null;             // Area of the largest leaf of a plant (mm2)
+        [Link(Type = LinkType.Child, ByName = true)] IFunction AreaMax = null;             // Area of the largest leaf of a plant (mm2)
         /// <summary>The breadth</summary>
-        [Link] IFunction Breadth = null;
+        [Link(Type = LinkType.Child, ByName = true)] IFunction Breadth = null;
         /// <summary>The skewness</summary>
-        [Link] IFunction Skewness = null;
+        [Link(Type = LinkType.Child, ByName = true)] IFunction Skewness = null;
         /// <summary>The structure</summary>
         [Link] Structure Structure = null;
 

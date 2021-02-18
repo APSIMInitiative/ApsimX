@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -125,7 +126,7 @@ namespace UserInterface.Views
             copyButton.Clicked -= Copy;
             closeButton.Clicked -= Close;
             if (errorWindow != null)
-                errorWindow.Destroy();
+                errorWindow.Cleanup();
         }
 
         /// <summary>
@@ -135,7 +136,14 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Close(object sender, EventArgs e)
         {
-            errorWindow.Destroy();
+            try
+            {
+                errorWindow.Cleanup();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -145,16 +153,30 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void Copy(object sender, EventArgs e)
         {
-            Gdk.Atom modelClipboard = Gdk.Atom.Intern("CLIPBOARD", false);
-            Clipboard cb = Clipboard.Get(modelClipboard);
-            cb.Text = Error;
+            try
+            {
+                Gdk.Atom modelClipboard = Gdk.Atom.Intern("CLIPBOARD", false);
+                Clipboard cb = Clipboard.Get(modelClipboard);
+                cb.Text = Error;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         [GLib.ConnectBefore]
         private void OnKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.Event.Key == Gdk.Key.Escape)
-                Destroy();
+            try
+            {
+                if (e.Event.Key == Gdk.Key.Escape)
+                    Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

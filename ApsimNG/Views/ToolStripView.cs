@@ -1,10 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ToolStripView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
+    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -14,14 +10,44 @@ namespace UserInterface.Views
     /// <summary>
     /// Encapsulates a toolstrip (button bar)
     /// </summary>
-    public class ToolStripView : IToolStripView
+    public class ToolStripView : ViewBase, IToolStripView
     {
         private Toolbar toolStrip = null;
+
+        /// <summary>Constructor.</summary>
+        public ToolStripView()
+        {
+        }
 
         /// <summary>Constructor</summary>
         public ToolStripView(Toolbar toolbar)
         {
             toolStrip = toolbar;
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            toolStrip = (Toolbar) gtkControl;
+            toolStrip.Destroyed += OnDestroyed;
+        }
+
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            try
+            {
+                toolStrip.Destroyed -= OnDestroyed;
+                Destroy();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Destroy the toolstrip</summary>
@@ -43,7 +69,7 @@ namespace UserInterface.Views
                     }
                 }
                 toolStrip.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
         }
 
@@ -54,7 +80,7 @@ namespace UserInterface.Views
             foreach (Widget child in toolStrip.Children)
             {
                 toolStrip.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
@@ -76,7 +102,6 @@ namespace UserInterface.Views
                     if (description.RightAligned)
                         toolbarlabel.Xalign = 1.0F;
                     toolbarlabel.Xpad = 10;
-                    toolbarlabel.ModifyFg(StateType.Normal, new Gdk.Color(0x99, 0x99, 0x99));
                     toolbarlabel.Text = description.Name;
                     toolbarlabel.TooltipText = description.ToolTip;
                     toolbarlabel.Visible = !String.IsNullOrEmpty(toolbarlabel.Text);

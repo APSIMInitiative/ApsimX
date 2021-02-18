@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>
-    /// The partitioning of daily growth to storage biomass attempts to bring the organ's N content to the maximum concentration.
+    /// The partitioning of daily N supply to storage N attempts to bring the organ's N content to the maximum concentration.
     /// </summary>
     [Serializable]
     [Description("This function calculates...")]
@@ -17,12 +16,12 @@ namespace Models.Functions.DemandFunctions
     {
         /// <summary>The maximum N concentration of the organ</summary>
         [Description("The maximum N concentration of the organ")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction maxNConc = null;
 
         /// <summary>Switch to modulate N demand</summary>
         [Description("Switch to modulate N demand")]
-        [Link]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nitrogenDemandSwitch = null;
 
         private IArbitration parentOrgan = null;
@@ -73,7 +72,7 @@ namespace Models.Functions.DemandFunctions
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
                 // write memos
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // find parent organ's name

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -35,73 +36,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             financesExist = ((Resources.FinanceResource() != null));
-        }
-
-        /// <summary>An event handler to allow us to make all payments when needed</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("EndOfMonth")]
-        private void OnEndOfMonth(object sender, EventArgs e)
-        {
-            // Interest is paid and earned on the last day of the month after all other acitivites have made financial transactions.
-            // Interest payment does not occur in the Activity order.
-
-            Status = ActivityStatus.NotNeeded;
-            if (financesExist)
-            {
-                // make interest payments on bank accounts
-                foreach (FinanceType accnt in Apsim.Children(Resources.FinanceResource(), typeof(FinanceType)))
-                {
-                    if (accnt.Balance > 0)
-                    {
-                        accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "Interest earned");
-                        SetStatusSuccess();
-                    }
-                    else
-                    {
-                        double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
-                        if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
-                        {
-                            ResourceRequest interestRequest = new ResourceRequest
-                            {
-                                ActivityModel = this,
-                                Required = interest,
-                                AllowTransmutation = false,
-                                Reason = "Pay interest charged"
-                            };
-                            accnt.Remove(interestRequest);
-    
-                            // report status
-                            if(interestRequest.Required > interestRequest.Provided)
-                            {
-                                interestRequest.ResourceType = typeof(Finance);
-                                interestRequest.ResourceTypeName = accnt.Name;
-                                interestRequest.Available = accnt.FundsAvailable;
-                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
-                                OnShortfallOccurred(rre);
-
-                                switch (OnPartialResourcesAvailableAction)
-                                {
-                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
-                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
-                                        Status = ActivityStatus.Ignored;
-                                        break;
-                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-                                        Status = ActivityStatus.Partial;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                Status = ActivityStatus.Success;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         /// <summary>
@@ -137,7 +71,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -164,7 +98,65 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            return;
+            Status = ActivityStatus.NotNeeded;
+            if (financesExist)
+            {
+                // make interest payments on bank accounts
+                foreach (FinanceType accnt in Resources.FinanceResource().FindAllChildren<FinanceType>())
+                {
+                    if (accnt.Balance > 0)
+                    {
+                        if (accnt.InterestRatePaid > 0)
+                        {
+                            accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
+                            SetStatusSuccess();
+                        }
+                    }
+                    else if (accnt.Balance < 0)
+                    {
+                        double interest = Math.Round(Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200, 2, MidpointRounding.ToEven);
+                        if (Math.Abs(accnt.Balance) * accnt.InterestRateCharged / 1200 != 0)
+                        {
+                            ResourceRequest interestRequest = new ResourceRequest
+                            {
+                                ActivityModel = this,
+                                Required = interest,
+                                AllowTransmutation = false,
+                                Category = "Interest"
+                            };
+                            accnt.Remove(interestRequest);
+
+                            // report status
+                            if (interestRequest.Required > interestRequest.Provided)
+                            {
+                                interestRequest.ResourceType = typeof(Finance);
+                                interestRequest.ResourceTypeName = accnt.NameWithParent;
+                                interestRequest.Available = accnt.FundsAvailable;
+                                ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
+                                OnShortfallOccurred(rre);
+
+                                switch (OnPartialResourcesAvailableAction)
+                                {
+                                    case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
+                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
+                                    case OnPartialResourcesAvailableActionTypes.SkipActivity:
+                                        Status = ActivityStatus.Ignored;
+                                        break;
+                                    case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
+                                        Status = ActivityStatus.Partial;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Status = ActivityStatus.Success;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -176,6 +168,8 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -183,44 +177,47 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            ZoneCLEM clemParent = Apsim.Parent(this, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder;
-            Finance finance = null;
-            if (clemParent != null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                resHolder = Apsim.Children(clemParent, typeof(ResourcesHolder)).FirstOrDefault() as ResourcesHolder;
-                finance = resHolder.FinanceResource();
-            }
-
-            if (finance == null)
-            {
-                html += "\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>";
-                foreach (FinanceType accnt in Apsim.Children(finance, typeof(FinanceType)))
+                ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
+                ResourcesHolder resHolder;
+                Finance finance = null;
+                if (clemParent != null)
                 {
-                    if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
+                    resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
+                    finance = resHolder.FinanceResource();
+                }
+
+                if (finance == null)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
+                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                     {
-                        html += "\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>";
-                    }
-                    else
-                    {
-                        if (accnt.InterestRateCharged > 0)
+                        if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>";
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         }
                         else
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>";
+                            if (accnt.InterestRateCharged > 0)
+                            {
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
+                            }
+                            else
+                            {
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                            }
                         }
                     }
                 }
+                return htmlWriter.ToString(); 
             }
-            return html;
-        }
+        } 
+        #endregion
 
     }
 }

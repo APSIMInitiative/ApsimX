@@ -39,15 +39,17 @@ Prototypes/SCRUM/Obs/
 Prototypes/SCRUM/.ipynb_checkpoints/ParameterListBuilder-checkpoint.ipynb
 Prototypes/SCRUM/Crop.xml
 Prototypes/SCRUM/SCRUM.apsimx.orig
-*.csv
 Prototypes/Grapevine/Observations/PhenoDataObservation - Copy.xlsx
 lib/
 .vs/
 .Rproj.user
 Docs/.Rhistory
 Documentation/errors.txt
-.vscode/
 *.db
 *.db-journal
 *.db-shm
 *.db-wal
+NetCoreBin/
+Docs/docfx/api/*.yml
+Docs/docfx/api/.manifest
+Docs/apsimx-docs/

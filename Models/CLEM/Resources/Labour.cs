@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -27,7 +28,7 @@ namespace Models.CLEM.Resources
     {
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
-        private LabourAERelationship adultEquivalentRelationship = null;
+        private Relationship adultEquivalentRelationship = null;
 
         /// <summary>
         /// Get the Clock.
@@ -38,7 +39,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Labour types currently available.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LabourType> Items { get; set; }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current pay rate value of individuals
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LabourPricing PayList;
 
         /// <summary>
@@ -69,10 +70,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate resources
-            availabilityList = Apsim.Children(this, typeof(LabourAvailabilityList)).Cast<LabourAvailabilityList>().FirstOrDefault();
-
-            // locate AE relationship
-            adultEquivalentRelationship = Apsim.Children(this, typeof(LabourAERelationship)).Cast<LabourAERelationship>().FirstOrDefault();
+            availabilityList = this.FindAllChildren<LabourAvailabilityList>().Cast<LabourAvailabilityList>().FirstOrDefault();
 
             if (Clock.Today.Day != 1)
             {
@@ -80,39 +78,41 @@ namespace Models.CLEM.Resources
             }
         }
 
-
         /// <summary>
-        /// A method to calculate the average dietary intake per day per AE
+        /// A method to calculate the total dietary intake by metric
         /// </summary>
-        /// <param name="factor"></param>
-        /// <returns></returns>
-        public double GetDietaryValue(string factor)
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten</returns>
+        public double GetDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
             double value = 0;
-            double totalAE = 0;
-            foreach (LabourType ind in Items.Where(a => a.Hired == false))
+            foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
             {
-                totalAE += ind.AdultEquivalent;
-                double doubleResult = 0;
-                if (ind.DietaryComponentList != null)
-                {
-                    foreach (ResourceRequest request in ind.DietaryComponentList)
-                    {
-                        var result = (request.Resource as CLEMResourceTypeBase).ConvertTo(factor, request.Provided);
-                        if (result != null)
-                        {
-                            Double.TryParse(result.ToString(), out doubleResult);
-                        }
-                        value += doubleResult;
-                    }
-                }
+                value += ind.GetDietDetails(metric);
             }
-            if (value > 0 && totalAE > 0)
+            if(reportPerAE)
             {
-                return value / totalAE / 30.4;
+                value /= AdultEquivalents(includeHiredLabour);
             }
-            return 0;
+            return value;
         }
+
+        /// <summary>
+        /// A method to calculate the total dietary intake by metric
+        /// </summary>
+        /// <param name="metric">Metric to use</param>
+        /// <param name="includeHiredLabour">Include hired labour in calculations</param>
+        /// <param name="reportPerAE">Report result as per Adult Equivalent</param>
+        /// <returns>Amount eaten per day</returns>
+        public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
+        {
+            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
+        }
+
+        #region validation
 
         /// <summary>
         /// Validation of this resource
@@ -122,13 +122,21 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (availabilityList == null && Apsim.Children(this, typeof(LabourType)).Count > 0)
+
+            // Add warning if no individuals defined
+            if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
-                string[] memberNames = new string[] { "Labour.AvailabilityList" };
-                results.Add(new ValidationResult("A labour availability list is required under the labour resource for this simulation.", memberNames));
+                string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
+                if (!WarningsNotFound.Contains(warningString))
+                {
+                    WarningsNotFound.Add(warningString);
+                    Summary.WriteWarning(this, warningString);
+                }
             }
             return results;
         }
+
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -136,8 +144,11 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
+            // locate AE relationship
+            adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
+
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {
                 for (int i = 0; i < labourChildModel.Individuals; i++)
                 {
@@ -151,7 +162,7 @@ namespace Models.CLEM.Resources
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1)?"_"+(i+1).ToString():""),
+                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                         Hired = labourChildModel.Hired
                     };
                     labour.TransactionOccurred += Resource_TransactionOccurred;
@@ -159,9 +170,9 @@ namespace Models.CLEM.Resources
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
-            if (Apsim.Children(this, typeof(LabourPricing)).Count() > 0)
+            if (this.FindAllChildren<LabourPricing>().Count() > 0)
             {
-                PayList = (Apsim.Children(this, typeof(LabourPricing)).FirstOrDefault() as LabourPricing).Clone();
+                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault()) as LabourPricing;
             }
         }
 
@@ -171,7 +182,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (LabourType childModel in Apsim.Children(this, typeof(LabourType)))
+            foreach (LabourType childModel in this.FindAllChildren<LabourType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -217,6 +228,11 @@ namespace Models.CLEM.Resources
 
         private void CheckAssignLabourAvailability(LabourType labour)
         {
+            if(availabilityList == null)
+            {
+
+            }
+
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
             {
@@ -241,7 +257,7 @@ namespace Models.CLEM.Resources
                 // if still null report error
                 if (labour.LabourAvailability == null)
                 {
-                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
+                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\r\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
                 }
             }
         }
@@ -276,12 +292,31 @@ namespace Models.CLEM.Resources
         {
             if (adultEquivalentRelationship != null)
             {
-                return adultEquivalentRelationship.SolveY(ageInMonths, true);
+                return adultEquivalentRelationship.SolveY(ageInMonths);
             }
             else
             {
+                // no AE relationship provided.
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Calculate the number of Adult Equivalents on the farm
+        /// </summary>
+        /// <param name="includeHired">Include hired labour in the calculation</param>
+        /// <returns></returns>
+        public double AdultEquivalents(bool includeHired)
+        {
+            double ae = 0;
+            foreach (LabourType person in Items)
+            {
+                if (!person.Hired | (includeHired))
+                {
+                    ae += CalculateAE(person.AgeInMonths)??1;
+                }
+            }
+            return ae;
         }
 
         /// <summary>
@@ -295,7 +330,7 @@ namespace Models.CLEM.Resources
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (LabourPriceGroup item in Apsim.Children(PayList, typeof(LabourPriceGroup)).Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1)
                     {
@@ -303,7 +338,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 // no price match found.
-                string warningString = "No pay entry was found for indiviudal [" + ind.Name + "] with details [f=age: " + ind.Age + "] [f=gender: " + ind.Gender.ToString() + "]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
                 if (!WarningsNotFound.Contains(warningString))
                 {
                     WarningsNotFound.Add(warningString);
@@ -328,7 +363,7 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (LabourPriceGroup item in Apsim.Children(PayList, typeof(LabourPriceGroup)).Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
@@ -336,7 +371,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (Apsim.Children(item, typeof(LabourFilter)).Cast<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<LabourFilter>().Cast<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -348,7 +383,7 @@ namespace Models.CLEM.Resources
                             if (!WarningsMultipleEntry.Contains(criteria))
                             {
                                 WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
+                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
                             }
                         }
                     }
@@ -357,17 +392,17 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = "No pay rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
 
                     if (matchIndividual != null)
                     {
                         // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\nThe best available pay rate [" + matchIndividual.Value.ToString("#,##0.##") + "] will be used.";
+                        warningString += "\r\nThe best available pay rate [" + matchIndividual.Value.ToString("#,##0.##") + "] will be used.";
                         price = matchIndividual.Value;
                     }
                     else
                     {
-                        Summary.WriteWarning(this, "\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
+                        Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -425,6 +460,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -432,32 +468,35 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if(AllowAging)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "Individuals age with time";
-                html += "</div>";
+                if (AllowAging)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Individuals age with time");
+                    htmlWriter.Write("</div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"holderresourcesub\">");
+                htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
+                htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
+                htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+                {
+                    htmlWriter.Write("<tr>");
+                    htmlWriter.Write("<td>" + labourType.Name + "</td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>");
+                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>");
+                    htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
+                    htmlWriter.Write("</tr>");
+                }
+                htmlWriter.Write("</table>");
+                htmlWriter.Write("</div></div>");
+                return htmlWriter.ToString(); 
             }
-            html += "\n<div class=\"holderresourcesub\">";
-            html += "\n<div class=\"clearfix resourcebannerlight\">Labour types</div>";
-            html += "\n<div class=\"resourcecontentlight\">";
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>";
-            foreach (LabourType labourType in Apsim.Children(this, typeof(LabourType)).Cast<LabourType>().ToList())
-            {
-                html += "<tr>";
-                html += "<td>" + labourType.Name + "</td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>";
-                html += "<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>";
-                html += "<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>";
-                html += "</tr>";
-            }
-            html += "</table>";
-            html += "</div></div>";
-            return html;
         }
 
 
+        #endregion
     }
 }

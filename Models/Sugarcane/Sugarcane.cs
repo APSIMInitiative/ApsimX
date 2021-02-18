@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
 using Models.Core;
@@ -11,7 +11,7 @@ using Models.PMF;
 using Models.Soils.Arbitrator;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-
+using Models.Soils.Nutrients;
 
 namespace Models
     {
@@ -374,7 +374,19 @@ namespace Models
         /// <summary>
         /// Gets the LAI (m^2/m^2)
         /// </summary>
-        public double LAI { get { return lai; } }
+        public double LAI 
+        { 
+            get 
+            { 
+                return lai; 
+            } 
+            set 
+            {
+                var delta = g_lai - value;
+                g_lai -= delta;
+                g_slai += delta; 
+            } 
+        }
 
         /// <summary>
         /// Gets the maximum LAI (m^2/m^2)
@@ -408,13 +420,13 @@ namespace Models
         /// <summary>
         /// Gets  FRGR.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FRGR { get { return 1; } }  //TODO: don't know how to implement FRGR in Sugarcane. So just return 1.
 
         /// <summary>
         /// Sets the potential evapotranspiration.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialEP { get; set; } //sv- just a place holder I think. This is eop not ep.
 
         /// <summary>Sets the actual water demand.</summary>
@@ -425,7 +437,7 @@ namespace Models
         /// MicroClimate calculates a layered canopy energy balance and sets
         /// this property in the crop.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; } //TODO: don't know how to implement LightProfile in Sugarcane
 
         #endregion
@@ -458,6 +470,13 @@ namespace Models
         [Link]
         private Soil Soil = null;
 
+        /// <summary>The water balance model</summary>
+        [Link]
+        ISoilWater waterBalance = null;
+
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>
         /// The summary
@@ -466,17 +485,17 @@ namespace Models
         private ISummary Summary = null;
 
         /// <summary>Link to NO3 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NO3 = null;
         
         /// <summary>Link to NH4 solute.</summary>
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         private ISolute NH4 = null;
 
         #endregion
 
-        /// <summary>Gets a value indicating how leguminous a plant is</summary>
-        public double Legumosity { get { return 0; } }
+        /// <summary>The plant type.</summary>
+        public string PlantType { get => "Sugarcane"; }
 
         /// <summary>Gets a value indicating whether the biomass is from a c4 plant or not</summary>
         public bool IsC4 { get { return true; } }
@@ -1137,7 +1156,7 @@ namespace Models
         /// <summary>
         /// The crop
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private CropConstants crop;
 
         #endregion
@@ -1158,7 +1177,7 @@ namespace Models
         /// <summary>
         /// The cult
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private CultivarConstants cult;
 
         #endregion
@@ -1205,7 +1224,7 @@ namespace Models
         /// <summary>
         /// The xf
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] xf;
             //{
             //get
@@ -1246,7 +1265,7 @@ namespace Models
         /// <summary>
         /// The kl
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double[] kl;
             //{
             //get
@@ -1346,7 +1365,7 @@ namespace Models
         /// <summary>
         /// The swim3
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double swim3 = Double.NaN;  //swim is not in ApsimX yet.
 
 
@@ -1375,7 +1394,7 @@ namespace Models
         /// <summary>
         /// The dlayer
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlayer = new double[max_layer];
 
 
@@ -1385,8 +1404,8 @@ namespace Models
         /// <value>
         /// The num_layers.
         /// </value>
-        [XmlIgnore]
-        public int num_layers { get { return Soil.Thickness.Length; } }
+        [JsonIgnore]
+        public int num_layers { get { return soilPhysical.Thickness.Length; } }
 
 
         ////[ MinVal=0.0, MaxVal=2.65]
@@ -1395,7 +1414,7 @@ namespace Models
         /// <summary>
         /// The bd
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] bd = new double[max_layer];
 
 
@@ -1406,7 +1425,7 @@ namespace Models
         /// <summary>
         /// The dul_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dul_dep = new double[max_layer];
 
 
@@ -1416,7 +1435,7 @@ namespace Models
         /// <summary>
         /// The sw_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sw_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
@@ -1425,7 +1444,7 @@ namespace Models
         /// <summary>
         /// The sat_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sat_dep = new double[max_layer];
 
         ////[MinVal=sw_dep_lb, MaxVal=sw_dep_ub]
@@ -1434,7 +1453,7 @@ namespace Models
         /// <summary>
         /// The ll15_dep
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ll15_dep = new double[max_layer];
 
 
@@ -1484,7 +1503,7 @@ namespace Models
         /// The plants.
         /// </value>
         [Units("(/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double plants
             {
             get
@@ -1513,7 +1532,7 @@ namespace Models
         /// The lodge_redn_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_photo
             {
             get
@@ -1536,7 +1555,7 @@ namespace Models
         /// The lodge_redn_sucrose.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_sucrose
             {
             get
@@ -1559,7 +1578,7 @@ namespace Models
         /// The lodge_redn_green_leaf.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lodge_redn_green_leaf
             {
             get
@@ -2521,26 +2540,6 @@ namespace Models
 
 
         #region Science.f90 (FortranInfrastructure)
-
-        /// <summary>
-        /// Finds the layer no_ob.
-        /// </summary>
-        /// <param name="Depth">The depth.</param>
-        /// <returns></returns>
-        private int FindLayerNo_ob(double Depth)
-            {
-            // Find the soil layer in which the indicated depth is located
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < dlayer.Length; i++)
-                {
-                depth_cum = depth_cum + dlayer[i];
-                if (depth_cum >= Depth)
-                    return i + 1;    //convert to one based  
-                }
-            return dlayer.Length;   //one based
-            }
-
 
         /// <summary>
         /// Root_proportions the specified layer_ob.
@@ -4212,7 +4211,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_sw_avail_fac_deepest_layer_ob = crop_sw_avail_fac(c_x_sw_ratio, c_y_sw_fac_root, i_dul_dep, i_sw_dep, i_ll_dep, l_deepest_layer_ob);
 
@@ -4348,7 +4347,7 @@ namespace Models
 
 
 
-            l_current_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_current_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_current_phase = (int)i_current_stage;
 
             //! this equation allows soil water in the deepest
@@ -4624,7 +4623,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail_pot, 0.0, o_sw_avail_pot.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail_pot[layer] = i_dul_dep[layer] - i_ll_dep[layer];
@@ -4679,7 +4678,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail, 0.0, o_sw_avail.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail[layer] = i_sw_dep[layer] - i_ll_dep[layer];
@@ -4740,7 +4739,7 @@ namespace Models
 
             fill_real_array(ref o_sw_supply, 0.0, o_sw_supply.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail = (i_sw_dep[layer] - i_ll_dep[layer]);
@@ -4819,7 +4818,7 @@ namespace Models
 
             //! find total root water potential uptake as sum of all layers
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
 
             if ((l_sw_supply_sum <= 0.0) || (i_sw_demand <= 0.0))
@@ -4904,7 +4903,7 @@ namespace Models
             double l_sw_supply_sum;       //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! get potential water that can be taken up when profile is full
 
@@ -4953,7 +4952,7 @@ namespace Models
             double l_sw_supply_sum;         //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
 
             //! get potential water that can be taken up when profile is full
@@ -5008,7 +5007,7 @@ namespace Models
             double sw_avail_sum;        //! actual extractable soil water (mm)
             bool didInterpolate;
 
-            deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             sw_avail_pot_sum = SumArray(i_sw_avail_pot, deepest_layer_ob);
             sw_avail_sum = SumArray(i_sw_avail, deepest_layer_ob);
             sw_avail_ratio = MathUtilities.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
@@ -5052,7 +5051,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             //! get potential water that can be taken up when profile is full
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
@@ -5454,7 +5453,7 @@ namespace Models
 
             if (stage_is_between(i_sowing_stage, i_germ_stage, i_current_stage))
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_pesw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
 
                 //! can't germinate on same day as sowing, because miss out on day of sowing else_where
@@ -5534,7 +5533,7 @@ namespace Models
 
             if (l_current_phase == i_germ_phase)
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_fasw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
                 l_fasw_seed = bound(l_fasw_seed, 0.0, 1.0);
 
@@ -6131,7 +6130,7 @@ namespace Models
 
             //! potential (supply) by transpiration
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             return l_sw_supply_sum * i_transp_eff;
 
@@ -6272,7 +6271,7 @@ namespace Models
 
             fill_real_array(ref o_root_array, 0.0, i_dlayer.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_root_length_sum = SumArray(i_root_length, l_deepest_layer_ob);
 
@@ -7078,7 +7077,7 @@ namespace Models
                 {
                 fill_real_array(ref o_dlt_root_length, 0.0, i_max_layer);
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth + i_dlt_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth + i_dlt_root_depth) + 1;
                 l_rlv_factor_tot = 0.0;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
@@ -7929,7 +7928,7 @@ namespace Models
 
             fill_real_array(ref o_no3gsm_mflow_pot, 0.0, i_num_layer);
             //! only take the layers in which roots occur
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 //! get  NO3 concentration
@@ -7993,7 +7992,7 @@ namespace Models
             //! only take the layers in which roots occur
             fill_real_array(ref o_no3gsm_diffn_pot, 0.0, i_num_layer);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail_fract = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
@@ -8121,7 +8120,7 @@ namespace Models
             double l_total_n_uptake_pot;
             double l_scalef;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (i_current_stage >= c_n_stress_start_stage)
                 {
@@ -8446,7 +8445,7 @@ namespace Models
             //! get potential N uptake (supply) from the root profile.
             //! get totals for diffusion and mass flow.
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_NO3gsm_diffn_avail[layer] = i_no3gsm_diffn_pot[layer] - i_no3gsm_mflow_avail[layer];
@@ -8562,7 +8561,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_Ngsm_supply = SumArray(i_no3gsm_uptake_pot, l_deepest_layer_ob) + SumArray(i_nh4gsm_uptake_pot, l_deepest_layer_ob);
 
@@ -8648,7 +8647,7 @@ namespace Models
 
 
             fill_real_array(ref o_dlt_N_green, 0.0, max_part);
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! find proportion of uptake to be
             //! distributed to each plant part and distribute it.
@@ -10157,7 +10156,7 @@ namespace Models
             //c      N_conc_stover_crit = (g_N_conc_crit(leaf) + g_N_conc_crit(stem)) * 0.5
             l_N_green_demand = SumArray(i_n_demand, max_part);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (on_day_of(sowing, i_current_stage))
                 {
@@ -10274,7 +10273,7 @@ namespace Models
 
                 l_N_green_conc_percent = MathUtilities.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
@@ -10345,7 +10344,7 @@ namespace Models
             double asw_pot;
             int deepest_layer_ob;
 
-            deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
             asw_pot = 0.0;
             asw = 0.0;
             for (int layer = 0; layer < deepest_layer_ob; layer++)
@@ -10435,7 +10434,7 @@ namespace Models
         /// The days after sowing.
         /// </value>
         [Units("(days)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int DaysAfterSowing
             {
             get
@@ -10455,7 +10454,7 @@ namespace Models
         /// The crop_status.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string crop_status
         { get { return g_crop_status; } }
 
@@ -10468,7 +10467,7 @@ namespace Models
         /// The stage.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double stage
         { get { return g_current_stage; } }
 
@@ -10481,7 +10480,7 @@ namespace Models
         /// The stage_code.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double stage_code
             {
             get
@@ -10506,7 +10505,7 @@ namespace Models
         /// The stagename.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public string stagename
             {
             get
@@ -10544,7 +10543,7 @@ namespace Models
         /// The ratoon_no.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public int ratoon_no
         { get { return g_ratoon_no; } }
 
@@ -10557,7 +10556,7 @@ namespace Models
         /// The phase_tt.
         /// </value>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] phase_tt
         { get { return g_phase_tt; } }
 
@@ -10570,7 +10569,7 @@ namespace Models
         /// The tt_tot.
         /// </value>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] tt_tot
         { get { return g_tt_tot; } }
 
@@ -10589,7 +10588,7 @@ namespace Models
         /// The leaf_no.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_no
         { get { return g_leaf_no_zb; } }
 
@@ -10602,7 +10601,7 @@ namespace Models
         /// The node_no_dead.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] node_no_dead
         { get { return g_node_no_dead_zb; } }
 
@@ -10634,7 +10633,7 @@ namespace Models
         /// The leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - g_node_no_detached_ob; } }
 
@@ -10646,7 +10645,7 @@ namespace Models
         /// The green_leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_leaves
         { get { return SumArray(g_leaf_no_zb, max_stage) - SumArray(g_node_no_dead_zb, max_stage); } }
 
@@ -10658,7 +10657,7 @@ namespace Models
         /// The dead_leaves.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dead_leaves
         { get { return leaves - green_leaves; } }
 
@@ -10673,7 +10672,7 @@ namespace Models
         /// The leaf_area.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_area
         { get { return g_leaf_area_zb; } }
 
@@ -10686,7 +10685,7 @@ namespace Models
         /// The leaf_dm.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] leaf_dm
         { get { return g_leaf_dm_zb; } }
 
@@ -10699,7 +10698,7 @@ namespace Models
         /// The height.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double height
         { get { return g_canopy_height; } }
 
@@ -10712,7 +10711,7 @@ namespace Models
         /// The root_depth.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double root_depth
         { get { return g_root_depth; } }
 
@@ -10725,7 +10724,7 @@ namespace Models
         /// The cover_green.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cover_green
             {
             get
@@ -10746,7 +10745,7 @@ namespace Models
         /// The radn_int.
         /// </value>
         [Units("(mj/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double radn_int
             {
             get
@@ -10766,7 +10765,7 @@ namespace Models
         /// The cover_tot.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cover_tot
             {
             get
@@ -10792,7 +10791,7 @@ namespace Models
         /// The lai_sum.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai_sum
             {
             get
@@ -10811,7 +10810,7 @@ namespace Models
         /// The tlai.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double tlai
         { get { return g_lai + g_slai; } }
 
@@ -10824,7 +10823,7 @@ namespace Models
         /// The tla.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double tla
             {
             get
@@ -10843,7 +10842,7 @@ namespace Models
         /// The slai.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double slai
         { get { return g_slai; } }
 
@@ -10856,7 +10855,7 @@ namespace Models
         /// The lai.
         /// </value>
         [Units("(m^2/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai
         { get { return g_lai; } }
 
@@ -10869,7 +10868,7 @@ namespace Models
         /// The RLV.
         /// </value>
         [Units("(mm/mm3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] rlv
             {
             get
@@ -10893,7 +10892,7 @@ namespace Models
         /// The rlv_tot.
         /// </value>
         [Units("(mm/mm3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] rlv_tot
             {
             get
@@ -10917,7 +10916,7 @@ namespace Models
         /// The ll_dep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ll_dep
             {
             get
@@ -10951,7 +10950,7 @@ namespace Models
         /// The lai2.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double lai2
             {
             get
@@ -10971,7 +10970,7 @@ namespace Models
         /// The leaf_wt2.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leaf_wt2
             {
             get
@@ -10998,7 +10997,7 @@ namespace Models
         /// The rootgreenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double rootgreenwt
         { get { return Math.Round(g_dm_green[root],2); } }
 
@@ -11011,7 +11010,7 @@ namespace Models
         /// The leafgreenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double leafgreenwt
         { get { return Math.Round(g_dm_green[leaf],2); } }
 
@@ -11026,7 +11025,7 @@ namespace Models
         /// The sstem_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sstem_wt
         { get { return Math.Round(g_dm_green[sstem] + g_dm_dead[sstem],2); } }  //! Add dead pool for lodged crops
 
@@ -11044,7 +11043,7 @@ namespace Models
         /// The cane_dmf.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cane_dmf
             {
             get
@@ -11069,7 +11068,7 @@ namespace Models
         /// The canefw.
         /// </value>
         [Units("(t/ha)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double canefw
             {
             get
@@ -11092,7 +11091,7 @@ namespace Models
         /// The CCS.
         /// </value>
         [Units("(%)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ccs
             {
             get
@@ -11119,7 +11118,7 @@ namespace Models
         /// The SCMSTF.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double scmstf
             {
             get
@@ -11141,7 +11140,7 @@ namespace Models
         /// The SCMST.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double scmst
             {
             get
@@ -11162,7 +11161,7 @@ namespace Models
         /// The sucrose_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sucrose_wt
         { get { return Math.Round(g_dm_green[sucrose] + g_dm_dead[sucrose],2); } }  //! Add dead pool to allow for lodged stalks
 
@@ -11175,7 +11174,7 @@ namespace Models
         /// The cabbage_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cabbage_wt
         { get { return Math.Round(g_dm_green[cabbage],2); } }
 
@@ -11189,7 +11188,7 @@ namespace Models
         /// The cane_wt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cane_wt
             {
             get
@@ -11208,7 +11207,7 @@ namespace Models
         /// The biomass.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double biomass
             {
             get
@@ -11229,7 +11228,7 @@ namespace Models
         /// The green_biomass.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_biomass
             {
             get
@@ -11249,7 +11248,7 @@ namespace Models
         /// The greenwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double greenwt
         { get { return Math.Round(SumArray(g_dm_green, max_part),2); } }
 
@@ -11262,7 +11261,7 @@ namespace Models
         /// The senescedwt.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double senescedwt
         { get { return Math.Round(SumArray(g_dm_senesced, max_part),2); } }
 
@@ -11275,7 +11274,7 @@ namespace Models
         /// The dm_dead.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dm_dead
         { get { return Math.Round(SumArray(g_dm_dead, max_part),2); } }
 
@@ -11290,7 +11289,7 @@ namespace Models
         /// The DLT_DM.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dlt_dm
         { get { return Math.Round(g_dlt_dm,2); } }
 
@@ -11305,7 +11304,7 @@ namespace Models
         /// The partition_xs.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double partition_xs
         { get { return Math.Round(g_partition_xs,2); } }
 
@@ -11320,7 +11319,7 @@ namespace Models
         /// The dlt_dm_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double dlt_dm_green
         { get { return Math.Round(SumArray(g_dlt_dm_green, max_part),2); } }
 
@@ -11341,7 +11340,7 @@ namespace Models
         /// The dlt_dm_detached.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_dm_detached
         { get { return mu.RoundArray(g_dlt_dm_detached,2); } }
 
@@ -11360,7 +11359,7 @@ namespace Models
         /// The n_critical.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_critical
         { get { return g_n_conc_crit; } }
 
@@ -11372,7 +11371,7 @@ namespace Models
         /// The n_minimum.
         /// </value>
         [Units("(g/g)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_minimum
         { get { return g_n_conc_min; } }
 
@@ -11385,7 +11384,7 @@ namespace Models
         /// The n_conc_leaf.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_leaf
             {
             get
@@ -11403,7 +11402,7 @@ namespace Models
         /// The n_conc_cab.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_cab
             {
             get
@@ -11421,7 +11420,7 @@ namespace Models
         /// The n_conc_cane.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_conc_cane
             {
             get
@@ -11441,7 +11440,7 @@ namespace Models
         /// The n_leaf_crit.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_leaf_crit
             {
             get
@@ -11459,7 +11458,7 @@ namespace Models
         /// The n_leaf_min.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_leaf_min
             {
             get
@@ -11478,7 +11477,7 @@ namespace Models
         /// The biomass_n.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double biomass_n
             {
             get
@@ -11499,7 +11498,7 @@ namespace Models
         /// The plant_n_tot.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double plant_n_tot
             {
             get
@@ -11520,7 +11519,7 @@ namespace Models
         /// The green_biomass_n.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double green_biomass_n
             {
             get
@@ -11539,7 +11538,7 @@ namespace Models
         /// The n_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] n_green
         { get { return mu.RoundArray(g_n_green,2); } }
 
@@ -11552,7 +11551,7 @@ namespace Models
         /// The greenn.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double greenn
         { get { return Math.Round(SumArray(g_n_green, max_part),2); } }
 
@@ -11565,7 +11564,7 @@ namespace Models
         /// The senescedn.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double senescedn
         { get { return Math.Round(SumArray(g_n_senesced, max_part),2); } }
 
@@ -11580,7 +11579,7 @@ namespace Models
         /// The dlt_n_green.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_n_green
         { get { return mu.RoundArray(g_dlt_n_green,2); } }
 
@@ -11599,7 +11598,7 @@ namespace Models
         /// The swdef_pheno.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_pheno
         { get { return g_swdef_pheno; } }
 
@@ -11612,7 +11611,7 @@ namespace Models
         /// The swdef_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_photo
         { get { return g_swdef_photo; } }
 
@@ -11625,7 +11624,7 @@ namespace Models
         /// The swdef_expan.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_expan
         { get { return g_swdef_expansion; } }
 
@@ -11638,7 +11637,7 @@ namespace Models
         /// The swdef_stalk.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double swdef_stalk
         { get { return g_swdef_stalk; } }
 
@@ -11651,7 +11650,7 @@ namespace Models
         /// The nfact_photo.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double nfact_photo
         { get { return g_nfact_photo; } }
 
@@ -11664,7 +11663,7 @@ namespace Models
         /// The nfact_expan.
         /// </value>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double nfact_expan
         { get { return g_nfact_expansion; } }
 
@@ -11690,7 +11689,7 @@ namespace Models
         /// The oxdef_photo.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double oxdef_photo
         { get { return g_oxdef_photo; } }
 
@@ -11708,7 +11707,7 @@ namespace Models
         /// The ep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double ep
             {
             get
@@ -11728,7 +11727,7 @@ namespace Models
         /// The cep.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double cep
         { get { return -g_transpiration_tot; } }
 
@@ -11741,7 +11740,7 @@ namespace Models
         /// The sw_uptake.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] sw_uptake
             {
             get
@@ -11765,7 +11764,7 @@ namespace Models
         /// The sw_demand.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sw_demand
         { get { return g_sw_demand; } }
 
@@ -11778,7 +11777,7 @@ namespace Models
         /// The sw_demand_te.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double sw_demand_te
         { get { return g_sw_demand_te; } }
 
@@ -11791,7 +11790,7 @@ namespace Models
         /// The fasw.
         /// </value>
         [Units("(0-1)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double fasw
             {
             get
@@ -11809,7 +11808,7 @@ namespace Models
         /// The esw_layr.
         /// </value>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] esw_layr
             {
             get
@@ -11863,12 +11862,12 @@ namespace Models
         /// The no3_tot.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double no3_tot
             {
             get
                 {
-                int deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+                int deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
                 double l_NO3gsm_tot = SumArray(g_no3gsm, deepest_layer_ob);
                 return Math.Round(l_NO3gsm_tot,2);
                 }
@@ -11883,7 +11882,7 @@ namespace Models
         /// The n_demand.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_demand
             {
             get
@@ -11902,7 +11901,7 @@ namespace Models
         /// The no3_demand.
         /// </value>
         [Units("(kg/ha)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double no3_demand
             {
             get
@@ -11921,7 +11920,7 @@ namespace Models
         /// The n_supply.
         /// </value>
         [Units("(g/m^2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double n_supply
             {
             get
@@ -11940,7 +11939,7 @@ namespace Models
         /// The no3_uptake.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] no3_uptake
             {
             get
@@ -11964,7 +11963,7 @@ namespace Models
         /// The nh4_uptake.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] nh4_uptake
             {
             get
@@ -11989,7 +11988,7 @@ namespace Models
         /// The no3_uptake_pot.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] no3_uptake_pot
             {
             get
@@ -12010,7 +12009,7 @@ namespace Models
         /// The nh4_uptake_pot.
         /// </value>
         [Units("(g/m2)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] nh4_uptake_pot
             {
             get
@@ -12039,13 +12038,13 @@ namespace Models
         /// <value>
         /// The type of the crop.
         /// </value>
-        [XmlIgnore]
+        [JsonIgnore]
         public string CropType { get { return crop_type; } }
 
         /// <summary>
         /// Is the plant alive?
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool IsAlive 
             {
             get
@@ -12067,7 +12066,7 @@ namespace Models
         /// <summary>
         /// Gets a list of cultivar names
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string[] CultivarNames 
             {
             get
@@ -12273,14 +12272,14 @@ namespace Models
             //:                                    , g%ll15_dep, numvals
             //:                                    , c%sw_dep_lb, c%sw_dep_ub)
 
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             //num_layers = dlayer.Length;
 
-            bd = Soil.BD;           //Soil.BDMapped;
-            dul_dep = Soil.DULmm;
-            sw_dep = Soil.SoilWater.SWmm;     //Soil.Water;
-            sat_dep = Soil.SATmm;
-            ll15_dep = Soil.LL15mm;
+            bd = soilPhysical.BD;           //Soil.BDMapped;
+            dul_dep = soilPhysical.DULmm;
+            sw_dep = waterBalance.SWmm;     //Soil.Water;
+            sat_dep = soilPhysical.SATmm;
+            ll15_dep = soilPhysical.LL15mm;
 
 
 
@@ -12504,7 +12503,7 @@ namespace Models
                 //SW DEMAND (Atomospheric Potential)
 
                 //sugar_water_demand(1);
-                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, (Soil.SoilWater as SoilWater).Eo);
+                g_sw_demand = sugar_water_demand(g_dlt_dm_pot_rue, g_transp_eff, g_lai, waterBalance.Eo);
  
 
 
@@ -13245,7 +13244,9 @@ namespace Models
 
             //!       sugar_sw_supply
 
-            SoilCrop Sugarcane = Soil.Crop("Sugarcane");
+            var Sugarcane = Soil.FindDescendant<SoilCrop>("SugarcaneSoil");
+            if (Sugarcane == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called SugarcaneSoil");
 
             xf = Sugarcane.XF;
             ll = Sugarcane.LL;
@@ -14141,11 +14142,6 @@ namespace Models
 
         //these Delegates are declared in Models.PMF Namespace.
 
-        /// <summary>
-        /// Occurs when [water changed].
-        /// </summary>
-        public event WaterChangedDelegate WaterChanged;
-
         //public event CropChoppedDelegate CropChopped;
         /// <summary>
         /// Occurs when [biomass removed].
@@ -14228,13 +14224,7 @@ namespace Models
                 NO3.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NO3);
                 NH4.AddKgHaDelta(SoluteSetterType.Plant, l_dlt_NH4);
 
-
-
-                WaterChangedType WaterChanges = new WaterChangedType();
-                WaterChanges.DeltaWater = i_dlt_sw_dep;
-
-                WaterChanged.Invoke(WaterChanges);      //trigger/invoke the Water Changed Event
-
+                waterBalance.RemoveWater(MathUtilities.Multiply_Value(i_dlt_sw_dep, -1));
                 }
             else if (uptake_source == "swim3")
                 {

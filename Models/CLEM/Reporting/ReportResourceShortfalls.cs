@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Models.Report;
+using Models;
 using APSIM.Shared.Utilities;
 using System.Data;
 using System.IO;
@@ -27,7 +27,7 @@ namespace Models.CLEM.Reporting
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
-    public class ReportResourceShortfalls: Models.Report.Report
+    public class ReportResourceShortfalls: Models.Report
     {
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
@@ -65,18 +65,20 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
-                "Parent.Name as Zone",
                 "[Clock].Today as Date",
                 "[Activities].LastShortfallResourceRequest.ResourceTypeName as Resource",
                 "[Activities].LastShortfallResourceRequest.ActivityModel.Name as Activity",
-                "[Activities].LastShortfallResourceRequest.Reason as Reason",
+                "[Activities].LastShortfallResourceRequest.Category as Category",
                 "[Activities].LastShortfallResourceRequest.Required as Required",
                 "[Activities].LastShortfallResourceRequest.Available as Available"
             };
 
             EventNames = new string[] { "[Activities].ResourceShortfallOccurred" };
 
-            base.VariableNames = variableNames.ToArray();
+            // Tidy up variable/event names.
+            VariableNames = variableNames.ToArray();
+            VariableNames = TidyUpVariableNames();
+            EventNames = TidyUpEventNames();
             this.FindVariableMembers();
 
             // Subscribe to events.
@@ -100,24 +102,61 @@ namespace Models.CLEM.Reporting
         public new void DoOutput()
         {
             if (dataToWriteToDb == null)
+            {
+                string folderName = null;
+                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
+                if (folderDescriptor != null)
+                {
+                    folderName = folderDescriptor.Value;
+                }
+
                 dataToWriteToDb = new ReportData()
                 {
+                    FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
                     ColumnNames = columns.Select(c => c.Name).ToList(),
                     ColumnUnits = columns.Select(c => c.Units).ToList()
                 };
-            List<object> valuesToWrite = new List<object>();
-            for (int i = 0; i < columns.Count; i++)
-                valuesToWrite.Add(columns[i].GetValue());
+            }
 
-            dataToWriteToDb.Rows.Add(valuesToWrite);
+            // Get number of groups.
+            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
 
-            if (dataToWriteToDb.Rows.Count == 100)
+            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
+            {
+                // Create a row ready for writing.
+                List<object> valuesToWrite = new List<object>();
+                List<string> invalidVariables = new List<string>();
+                for (int i = 0; i < columns.Count; i++)
+                {
+                    try
+                    {
+                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                    }
+                    catch// (Exception err)
+                    {
+                        // Should we include exception message?
+                        invalidVariables.Add(columns[i].Name);
+                    }
+                }
+                if (invalidVariables != null && invalidVariables.Count > 0)
+                {
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
+                }
+
+                // Add row to our table that will be written to the db file
+                dataToWriteToDb.Rows.Add(valuesToWrite);
+            }
+
+            // Write the table if we reach our threshold number of rows.
+            if (dataToWriteToDb.Rows.Count >= 100)
             {
                 storage.Writer.WriteTable(dataToWriteToDb);
                 dataToWriteToDb = null;
             }
+
+            DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
         /// <summary>Create a text report from tables in this data store.</summary>
@@ -175,17 +214,34 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        private void FindVariableMembers()
+        private new void FindVariableMembers()
         {
             this.columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
+            // If a group by variable was specified then all columns need to be aggregated
+            // columns. Find the first aggregated column so that we can, later, use its from and to
+            // variables to create an agregated column that doesn't have them.
+            string from = null;
+            string to = null;
+            if (!string.IsNullOrEmpty(GroupByVariableName))
+            {
+                FindFromTo(out from, out to);
+            }
+
             foreach (string fullVariableName in this.VariableNames)
             {
-                if (fullVariableName != string.Empty)
+                try
                 {
-                    this.columns.Add(ReportColumn.Create(fullVariableName, clock, storage.Writer, locator, events));
+                    if (!string.IsNullOrEmpty(fullVariableName))
+                    {
+                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
                 }
             }
         }
@@ -196,8 +252,12 @@ namespace Models.CLEM.Reporting
             if (simulation.Descriptors != null)
             {
                 foreach (var descriptor in simulation.Descriptors)
+                {
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
+                    {
                         this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                    }
+                }
             }
         }
 

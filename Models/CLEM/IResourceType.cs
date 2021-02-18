@@ -17,8 +17,9 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity requesting resource</param>
-        /// <param name="reason">Name of individual requesting resource</param>
-        void Add(object resourceAmount, CLEMModel activity, string reason);
+        /// <param name="relatesToResource">The resource the transaction relates to, not uses</param>
+        /// <param name="category">Name of individual requesting resource</param>
+        void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category);
 
         /// <summary>
         /// Remove this Amount from the existing Amount
@@ -37,9 +38,14 @@ namespace Models.CLEM
         double Amount { get; }
 
         /// <summary>
+        /// Get the amount of the last gain in this resource 
+        /// </summary>
+        double LastGain { get; set;  }
+
+        /// <summary>
         /// Get the current price of this resource.
         /// </summary>
-        ResourcePricing Price { get; }
+        ResourcePricing Price(PurchaseOrSalePricingStyleType priceType);
 
         /// <summary>
         /// Get the units of measure this resource.

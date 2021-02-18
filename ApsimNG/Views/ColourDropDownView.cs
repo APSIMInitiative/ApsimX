@@ -1,14 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ColourDropDownView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Drawing;
+    using global::UserInterface.Extensions;
     using Gtk;
-    /// using System.Windows.Forms;
+
+#if NETCOREAPP
+    using CellLayout = Gtk.ICellLayout;
+    using TreeModel = Gtk.ITreeModel;
+#endif
 
     /// <summary>An interface for a drop down</summary>
     public interface IColourDropDownView
@@ -46,18 +46,26 @@ namespace UserInterface.Views
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            combobox1.Changed -= OnChanged;
-            combobox1.SetCellDataFunc(comboRender, null);
-            comboModel.Dispose();
-            comboRender.Destroy();
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            try
+            {
+                combobox1.Changed -= OnChanged;
+                combobox1.SetCellDataFunc(comboRender, null);
+                comboModel.Dispose();
+                comboRender.Dispose();
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Invoked when the user changes the selection</summary>
         public event EventHandler Changed;
 
         /// <summary>Get or sets the list of valid values. Can be Color or string objects.</summary>
+        /// <remarks>fixme - why is this of type object[]?</remarks>
         public object[] Values
         {
             get
@@ -97,7 +105,14 @@ namespace UserInterface.Views
                     {
                         typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
+#if NETFRAMEWORK
                         color = combobox1.Style.Base(StateType.Normal);
+#else
+                        // This is the old (obsolete) way of doing things. Can't just get rid of this
+                        // because changing the background of each cell is the whole point of this view.
+                        // Needs to be reimplemented for gtk3, so I won't suppress this warning.
+                        color = combobox1.Toplevel.GetBackgroundColour(StateFlags.Normal);
+#endif
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);
                 }
@@ -164,11 +179,20 @@ namespace UserInterface.Views
         /// <summary>
         /// Handles the DrawItem combo box event to display colours.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="cell_layout">The cell layout.</param>
+        /// <param name="cell">The cell.</param>
+        /// <param name="model">The tree model.</param>
+        /// <param name="iter">The TreeIter.</param>
         private void OnDrawColourCombo(CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
         {
-            cell.CellBackgroundGdk = (Gdk.Color)model.GetValue(iter, 1);
+            try
+            {
+                cell.CellBackgroundGdk = (Gdk.Color)model.GetValue(iter, 1);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>User has changed the selected colour.</summary>
@@ -176,8 +200,15 @@ namespace UserInterface.Views
         /// <param name="e"></param>
         private void OnChanged(object sender, EventArgs e)
         {
-            if (Changed != null)
-                Changed.Invoke(this, e);
+            try
+            {
+                if (Changed != null)
+                    Changed.Invoke(this, e);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

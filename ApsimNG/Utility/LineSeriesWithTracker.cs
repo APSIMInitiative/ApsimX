@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LineSeriesWithTracker.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Utility
+﻿namespace Utility
 {
     using System;
     using OxyPlot;

@@ -32,7 +32,16 @@
             if (path == null)
                 throw new Exception("No path specified for property replacement.");
 
-            Apsim.Set(simulation, path, replacement);
+            simulation.FindByPath(path).Value = replacement;
+
+            // In a multi-paddock context, we want to attempt to
+            // change the property value in all paddocks.
+            foreach (Zone paddock in simulation.FindAllDescendants<Zone>())
+            {
+                IVariable variable = paddock.FindByPath(path);
+                if (variable != null)
+                    variable.Value = replacement;
+            }
         }
     }
 }

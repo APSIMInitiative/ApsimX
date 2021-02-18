@@ -1,5 +1,6 @@
-﻿using Models.Core;
-using Models.Graph;
+﻿using APSIM.Shared.Utilities;
+using Models.Core;
+using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -9,10 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
+using ApsimNG.EventArguments;
 
 namespace UserInterface.Presenters
 {
-    public class GraphPanelPresenter : IPresenter
+    public sealed class GraphPanelPresenter : IPresenter, IDisposable
     {
         /// <summary>
         /// The view.
@@ -63,6 +65,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentException();
 
             presenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.GraphViewCreated += ModifyGraphView;
 
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesGrid, presenter);
@@ -84,6 +87,7 @@ namespace UserInterface.Presenters
             processingThread.DoWork -= WorkerThread;
 
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
+            this.view.GraphViewCreated -= ModifyGraphView;
             ClearGraphs();
             properties.Detach();
         }
@@ -108,7 +112,7 @@ namespace UserInterface.Presenters
                 status.IsWorking = true;
 
             ClearGraphs();
-            Graph[] graphs = Apsim.Children(panel, typeof(Graph)).Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -159,7 +163,7 @@ namespace UserInterface.Presenters
                     // thread, and certain parts running on the worker thread. In such an
                     // implementation, large chunks of functionality would need to be moved
                     // into the view and the synchronisation would be a nightmare.
-                    if (panel.SameAxes)
+                    if (panel.SameXAxes || panel.SameYAxes)
                     {
                         presenter.MainPresenter.ShowWaitCursor(true);
                         StandardiseAxes();
@@ -180,7 +184,7 @@ namespace UserInterface.Presenters
             if (graphs != null)
                 foreach (GraphTab tab in graphs)
                     foreach (GraphPresenter graphPresenter in tab.Graphs.Select(g => g.Presenter))
-                        graphPresenter.Detach();
+                        graphPresenter?.Detach();
 
             graphs.Clear();
             view.RemoveGraphTabs();
@@ -192,10 +196,23 @@ namespace UserInterface.Presenters
             GraphTab tab = new GraphTab(sim, this.presenter);
             for (int i = 0; i < graphs.Length; i++)
             {
-                if (graphs[i].Enabled)
+                Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
+                graph.Parent = panel;
+                graph.ParentAllDescendants();
+
+                if (panel.LegendOutsideGraph)
+                    graph.LegendOutsideGraph = true;
+
+                if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
+                    graph.LegendOrientation = (Graph.LegendOrientationType)Enum.Parse(typeof(Graph.LegendOrientationType), panel.LegendOrientation.ToString());
+
+                if (graph != null && graph.Enabled)
                 {
                     // Apply transformation to graph.
-                    panel.Script.TransformGraph(graphs[i], sim);
+                    panel.Script.TransformGraph(graph, sim);
+
+                    if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
+                        graph.LegendPosition = (Graph.LegendPositionType)Enum.Parse(typeof(Graph.LegendPositionType), panel.LegendPosition.ToString());
 
                     // Create and fill cache entry if it doesn't exist.
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
@@ -208,13 +225,13 @@ namespace UserInterface.Presenters
                         {
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
                         }
-                        List<SeriesDefinition> definitions = graphs[i].GetDefinitionsToGraph(storage, new List<string>() { sim });
+                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim }).ToList();
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
                         panel.Cache[sim][i] = definitions;
                     }
-                    tab.AddGraph(graphs[i], panel.Cache[sim][i]);
+                    tab.AddGraph(graph, panel.Cache[sim][i]);
                 }
 
                 if (processingThread.CancellationPending)
@@ -248,9 +265,19 @@ namespace UserInterface.Presenters
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
+                Axis[] xAxes = axes.Where(a => a.Type == Axis.AxisType.Bottom || a.Type == Axis.AxisType.Top).ToArray();
+                Axis[] yAxes = axes.Where(a => a.Type == Axis.AxisType.Left|| a.Type == Axis.AxisType.Right).ToArray();
+
                 foreach (GraphTab tab in graphs)
+                {
                     if (tab.Graphs[i].View != null)
-                        FormatAxes(tab.Graphs[i].View, axes);
+                    {
+                        if (panel.SameXAxes)
+                            FormatAxes(tab.Graphs[i].View, xAxes);
+                        if (panel.SameYAxes)
+                            FormatAxes(tab.Graphs[i].View, yAxes);
+                    }
+                }
             }
         }
 
@@ -278,7 +305,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IStorageReader GetStorage()
         {
-            return (Apsim.Find(panel, typeof(IDataStore)) as IDataStore).Reader;
+            return (panel.FindInScope<IDataStore>()).Reader;
         }
 
         /// <summary>
@@ -287,10 +314,29 @@ namespace UserInterface.Presenters
         /// <param name="changedModel"></param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == panel || Apsim.ChildrenRecursively(panel).Contains(changedModel as Model))
-            {
+            if (changedModel == panel || panel.FindAllDescendants().Contains(changedModel as Model))
                 Refresh();
-            }
+        }
+
+        /// <summary>
+        /// Called whenever the view creates a graph. Allows for modifications
+        /// to the graph view to be applied.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void ModifyGraphView(object sender, CustomDataEventArgs<IGraphView> args)
+        {
+            // n.b. this will be called on the main thread.
+            if (panel.HideTitles)
+                args.Data.FormatTitle(null);
+            args.Data.FontSize = panel.FontSize;
+            args.Data.MarkerSize = panel.MarkerSize;
+        }
+
+        public void Dispose()
+        {
+            if (processingThread != null)
+                processingThread.Dispose();
         }
 
         private class WorkerStatus

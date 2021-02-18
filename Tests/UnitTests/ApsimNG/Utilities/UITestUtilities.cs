@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Models.Core;
+using Models.Soils;
+using UnitTests.ApsimNG.Utilities;
 using UserInterface.Presenters;
 using UserInterface.Views;
 
 namespace UnitTests.ApsimNG
 {
+    /// <summary>
+    /// Utility functions used by the UI tests.
+    /// </summary>
     public static class UITestUtilities
     {
         /// <summary>
@@ -30,6 +36,17 @@ namespace UnitTests.ApsimNG
             string json = GetResource(assembly, resourceName);
             string fileName = Path.GetTempFileName();
             File.WriteAllText(fileName, json);
+            return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
+        }
+
+        /// <summary>
+        /// Opens a simple .apsimx file in the GUI.
+        /// </summary>
+        public static ExplorerPresenter OpenBasicFileInGui()
+        {
+            Simulations sims = UnitTests.Utilities.GetRunnableSim();
+            string fileName = Path.ChangeExtension(Path.GetTempFileName(), ".apsimx");
+            sims.Write(fileName);
             return UITestsMain.MasterPresenter.OpenApsimXFileInTab(fileName, onLeftTabControl: true);
         }
     }

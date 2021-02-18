@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using global::UserInterface.Extensions;
     using Gtk;
     using System;
 
@@ -32,10 +33,17 @@
         /// <param name="e"></param>
         private void OnMainWidgetDestroyed(object sender, EventArgs e)
         {
-            (Specification as EditView).MainWidget.Destroy();
+            try
+            {
+                (Specification as EditView).MainWidget.Cleanup();
 
-            mainWidget.Destroyed -= OnMainWidgetDestroyed;
-            owner = null;
+                mainWidget.Destroyed -= OnMainWidgetDestroyed;
+                owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
     }
 }

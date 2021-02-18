@@ -14,7 +14,7 @@
     using System.Collections.Generic;
     using Models.Core.Run;
 
-    /// <summary>Presenter class for working with HtmlView</summary>
+    /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
     {
         /// <summary>The summary model to work with.</summary>
@@ -44,18 +44,18 @@
             SetSimulationNamesInView();
             this.SetHtmlInView();
 
-            summaryView.SummaryCheckBox.IsChecked = summaryModel.CaptureSummaryText;
+            summaryView.SummaryCheckBox.Checked = summaryModel.CaptureSummaryText;
             summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
-            summaryView.WarningCheckBox.IsChecked = summaryModel.CaptureWarnings;
+            summaryView.WarningCheckBox.Checked = summaryModel.CaptureWarnings;
             summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
-            summaryView.ErrorCheckBox.IsChecked = summaryModel.CaptureErrors;
+            summaryView.ErrorCheckBox.Checked = summaryModel.CaptureErrors;
             summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
 
             // Subscribe to the simulation name changed event.
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
             // Subscribe to the view's copy event.
-            summaryView.HtmlView.Copy += OnCopy;
+            //summaryView.SummaryDisplay.Copy += OnCopy;
         }
 
         private void SetSimulationNamesInView()
@@ -84,11 +84,12 @@
             }
             else
             {
-                List<ISimulationDescriptionGenerator> simulations = Apsim.FindAll(summaryModel, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();
+                List<ISimulationDescriptionGenerator> simulations = summaryModel.FindAllInScope<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
                 simulations.RemoveAll(s => s is Simulation && (s as IModel).Parent is Experiment);
-                string[] simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToArray();
-                summaryView.SimulationDropDown.Values = simulationNames;
-                if (simulationNames != null && simulationNames.Length > 0)
+                List<string> simulationNames = simulations.SelectMany(m => m.GenerateSimulationDescriptions()).Select(m => m.Name).ToList();
+                simulationNames.AddRange(summaryModel.FindAllInScope<Models.Optimisation.CroptimizR>().Select(x => x.Name));
+                summaryView.SimulationDropDown.Values = simulationNames.ToArray();
+                if (simulationNames != null && simulationNames.Count > 0)
                     summaryView.SimulationDropDown.SelectedValue = simulationNames[0];
             }
         }
@@ -97,7 +98,7 @@
         public void Detach()
         {
             summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
-            summaryView.HtmlView.Copy -= OnCopy;
+            //summaryView.SummaryDisplay.Copy -= OnCopy;
             summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
             summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
             summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
@@ -106,10 +107,11 @@
         /// <summary>Populate the summary view.</summary>
         private void SetHtmlInView()
         {
-            StringWriter writer = new StringWriter();
-            Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.html, darkTheme : Configuration.Settings.DarkTheme);
-            summaryView.HtmlView.SetContents(writer.ToString(), false);
-            writer.Close();
+            using (StringWriter writer = new StringWriter())
+            {
+                Summary.WriteReport(dataStore, summaryView.SimulationDropDown.SelectedValue, writer, Configuration.Settings.SummaryPngFileName, outtype: Summary.OutputType.Markdown, darkTheme : Configuration.Settings.DarkTheme);
+                summaryView.SummaryDisplay.Text = writer.ToString();
+            }
         }
 
         /// <summary>Handles the SimulationNameChanged event of the view control.</summary>
@@ -122,19 +124,19 @@
 
         private void OnSummaryCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 
         private void OnWarningCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 
         private void OnErrorCheckBoxChanged(object sender, EventArgs e)
         {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.IsChecked);
+            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.Checked);
             explorerPresenter.CommandHistory.Add(command);
         }
 

@@ -1,17 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="BibTeX.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
+    using APSIM.Shared.Utilities;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
-    using APSIM.Shared.Utilities;
     using System.Globalization;
+    using System.IO;
 
     /// <summary>
     /// Provides functionality for reading .bib (bibliography) files (http://www.bibtex.org/Format/)
@@ -129,7 +122,10 @@ namespace UserInterface.Commands
             {
                 get
                 {
-                    return LastName(Authors[0]);
+                    if (Authors.Length > 0)
+                        return LastName(Authors[0]);
+                    else
+                        return "";
                 }
             }
 
@@ -187,6 +183,9 @@ namespace UserInterface.Commands
                     return text;
                 }
 
+                var match = System.Text.RegularExpressions.Regex.Match(contents, $@"{keyword}\s*=\s*{{([^}}]+)}}");
+                if (match.Groups.Count == 2)
+                    return match.Groups[1].ToString();
                 return string.Empty;
             }
 
@@ -245,7 +244,7 @@ namespace UserInterface.Commands
 
         /// <summary>Prefix a string if it isn't already there.</summary>
         /// <param name="st">The original string.</param>
-        /// <param name="stringToAppend">The string to prefix.</param>
+        /// <param name="stringToPrefix">The string to prefix.</param>
         /// <returns>The new string.</returns>
         private static string PrefixString(string st, string stringToPrefix)
         {

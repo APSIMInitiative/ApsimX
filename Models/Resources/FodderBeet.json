@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 67,
+  "Version": 128,
   "Name": "Simulations",
   "Children": [
     {
@@ -26,20 +26,114 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.PriorityAllocation, Models",
-              "Name": "NArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "DMArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                      "Name": "SendPotentialDMAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                      "Name": "NutrientConstrainedAllocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                      "Name": "DryMatterAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.PriorityAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ]
             },
             {
-              "$type": "Models.PMF.PriorityAllocation, Models",
-              "Name": "DMArbitrator",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "NArbitration",
+              "Children": [
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "ActualPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                      "Name": "NitrogenAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.PriorityAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                  "Name": "AllocateUptakesMethod"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+              "Name": "WaterUptakeMethod"
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+              "Name": "NitrogenUptakeMethod"
             }
           ],
           "IncludeInDocumentation": true,
@@ -74,32 +168,11 @@
                       "Name": "SoilTemperature",
                       "Children": [
                         {
-                          "$type": "Models.Functions.SoilTemperatureFunction, Models",
-                          "maxt_soil_surface": 20.0,
-                          "mint_soil_surface": 10.0,
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 15.0,
+                          "Units": null,
                           "Name": "ThermalTime",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                25.0,
-                                30.0,
-                                45.0
-                              ],
-                              "Y": [
-                                0.0,
-                                25.0,
-                                25.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -125,7 +198,7 @@
                       "Name": "AirTemperature",
                       "Children": [
                         {
-                          "$type": "Models.Functions.AirTemperatureFunction, Models",
+                          "$type": "Models.Functions.HourlyInterpolation, Models",
                           "Name": "ThermalTime",
                           "Children": [
                             {
@@ -142,7 +215,15 @@
                                 25.0,
                                 0.0
                               ],
-                              "Name": "XYPairs",
+                              "Name": "Response",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.ThreeHourSin, Models",
+                              "Name": "InterpolationMethod",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -151,7 +232,8 @@
                           ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
-                          "ReadOnly": false
+                          "ReadOnly": false,
+                          "agregationMethod": "0"
                         },
                         {
                           "$type": "Models.Memo, Models",
@@ -202,7 +284,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -216,6 +297,15 @@
                                 0.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[FodderBeet].Leaf.Fw",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -262,7 +352,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -301,7 +391,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -330,7 +420,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -343,7 +433,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoPeriodResponse",
                       "Children": [
                         {
@@ -357,6 +446,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Photoperiod",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -423,7 +521,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Phenology].Photoperiod.Value()",
                   "Name": "Progression",
                   "Children": [
                     {
@@ -437,6 +534,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Photoperiod",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -460,7 +566,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "Progression",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -509,7 +615,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "ThermalTime",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -543,7 +649,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].ThermalTime.Value()",
+                  "VariableName": "[Phenology].ThermalTime",
                   "Name": "VariableReference",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -578,7 +684,7 @@
           "Children": [
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -587,7 +693,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Structure].LeafTipsAppeared",
               "Name": "HeightModel",
               "Children": [
                 {
@@ -614,6 +719,15 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Structure].LeafTipsAppeared",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -632,7 +746,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Structure].Phyllochron.Phyllochron.Value()",
+                      "VariableName": "[Structure].Phyllochron.Phyllochron",
                       "Name": "Phyllochron",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -676,7 +790,6 @@
               "Children": [
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Structure.LeafTipsAppeared",
                   "Name": "Phyllochron",
                   "Children": [
                     {
@@ -692,6 +805,15 @@
                         50.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FodderBeet].Structure.LeafTipsAppeared",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -822,11 +944,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -856,16 +989,6 @@
               "FixedValue": 1.0,
               "Units": null,
               "Name": "DMSinkCapacity",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "g/m^2",
-              "Name": "InitialWtFunction",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -955,7 +1078,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].MinimumNConc.Value()",
+                  "VariableName": "[StorageRoot].MinimumNConc",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -979,7 +1102,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[StorageRoot].MinimumNConc.Value()",
+              "VariableName": "[StorageRoot].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1030,7 +1153,6 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                                  "XProperty": "[Structure].LeafTipsAppeared",
                                   "Name": "PartitionFraction",
                                   "Children": [
                                     {
@@ -1059,6 +1181,15 @@
                                       "$type": "Models.Memo, Models",
                                       "Text": "Allocation determined by node number - partitioning coefficients have been determined using the 2014 sowing date October data ([Khaembah_etal_2017]).",
                                       "Name": "Memo",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Structure].LeafTipsAppeared",
+                                      "Name": "XValue",
                                       "Children": [],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
@@ -1140,7 +1271,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].DMDemands.Metabolic.MetabolicFraction.Value()",
+                          "VariableName": "[StorageRoot].DMDemands.Metabolic.MetabolicFraction",
                           "Name": "metabolicFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1149,7 +1280,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[StorageRoot].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1163,7 +1294,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFraction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1201,7 +1332,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[StorageRoot].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFraction",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1228,7 +1359,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].minimumNconc.Value()",
+                      "VariableName": "[StorageRoot].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1259,7 +1390,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[StorageRoot].maximumNconc.Value()",
+                          "VariableName": "[StorageRoot].maximumNconc",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1301,7 +1432,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[StorageRoot].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1310,7 +1441,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[StorageRoot].maximumNconc.Value()",
+                      "VariableName": "[StorageRoot].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1334,6 +1465,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": true,
@@ -1418,7 +1575,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Phenology].ThermalTime.Value()",
+              "VariableName": "[Phenology].ThermalTime",
               "Name": "ThermalTime",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -1461,7 +1618,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fw",
                   "Name": "FW",
                   "Children": [
                     {
@@ -1477,6 +1633,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fw",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1528,7 +1693,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].RadIntTot",
+                  "VariableName": "[Leaf].RadiationIntercepted",
                   "Name": "RadnInt",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1537,7 +1702,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].Fn",
                   "Name": "FN",
                   "Children": [
                     {
@@ -1555,11 +1719,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -1570,7 +1734,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -1586,7 +1750,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -1602,8 +1766,8 @@
                               "TableName": null,
                               "XFieldName": "[XYPairs].X",
                               "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1621,6 +1785,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Fn",
+                      "Name": "XValue",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1661,7 +1834,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Leaf.Fw",
                   "Name": "WaterStress",
                   "Children": [
                     {
@@ -1675,6 +1847,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FodderBeet].Leaf.Fw",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1707,7 +1888,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Structure].LeafTipsAppeared",
                   "Name": "MaxAreaPlateau",
                   "Children": [
                     {
@@ -1746,6 +1926,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].LeafTipsAppeared",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1768,7 +1957,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
                       "Name": "AgeFactor",
                       "Children": [
                         {
@@ -1798,6 +1986,15 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].LeafTipsAppeared",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
@@ -1820,7 +2017,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Structure].LeafTipsAppeared",
                   "Name": "GrowthDuration",
                   "Children": [
                     {
@@ -1848,11 +2044,11 @@
                       "Name": "XYPairs",
                       "Children": [
                         {
-                          "$type": "Models.Graph.Graph, Models",
+                          "$type": "Models.Graph, Models",
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 0,
                               "Title": "Y",
                               "Inverted": false,
@@ -1863,7 +2059,7 @@
                               "CrossesAtZero": false
                             },
                             {
-                              "$type": "Models.Graph.Axis, Models",
+                              "$type": "Models.Axis, Models",
                               "Type": 3,
                               "Title": "X",
                               "Inverted": false,
@@ -1879,7 +2075,7 @@
                           "Name": "Graph",
                           "Children": [
                             {
-                              "$type": "Models.Graph.Series, Models",
+                              "$type": "Models.Series, Models",
                               "Type": 1,
                               "XAxis": 3,
                               "YAxis": 0,
@@ -1895,8 +2091,8 @@
                               "TableName": null,
                               "XFieldName": ".Simulations.Replacements.FodderBeet.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
                               "YFieldName": ".Simulations.Replacements.FodderBeet.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
+                              "X2FieldName": "",
+                              "Y2FieldName": "",
                               "ShowInLegend": false,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
@@ -1926,6 +2122,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].LeafTipsAppeared",
+                      "Name": "XValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1938,7 +2143,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodMultiplier",
                       "Children": [
                         {
@@ -1956,6 +2160,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Photoperiod",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1977,7 +2190,6 @@
                     },
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Structure].LeafTipsAppeared",
                       "Name": "LagDurationBase",
                       "Children": [
                         {
@@ -1993,6 +2205,15 @@
                             300.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Structure].LeafTipsAppeared",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2014,7 +2235,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "XProperty": "[Phenology].Photoperiod.Value()",
                       "Name": "PhotoperiodMultiplier",
                       "Children": [
                         {
@@ -2032,6 +2252,15 @@
                             1.0
                           ],
                           "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Phenology].Photoperiod",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2119,7 +2348,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[FodderBeet].Leaf.Fw",
                   "Name": "ExpansionStress",
                   "Children": [
                     {
@@ -2133,6 +2361,15 @@
                         1.0
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FodderBeet].Leaf.Fw",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2235,7 +2472,6 @@
                 },
                 {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "XProperty": "[Leaf].CohortCurrentRankCoverAbove",
                   "Name": "ShadeInducedSenescenceRate",
                   "Children": [
                     {
@@ -2253,6 +2489,15 @@
                         0.1
                       ],
                       "Name": "XYPairs",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].CohortCurrentRankCoverAbove",
+                      "Name": "XValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2333,7 +2578,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -2347,6 +2591,15 @@
                                 0.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[FodderBeet].Leaf.Fw",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2397,7 +2650,6 @@
                         },
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[FodderBeet].Leaf.Fw",
                           "Name": "StressFactor",
                           "Children": [
                             {
@@ -2411,6 +2663,15 @@
                                 0.0
                               ],
                               "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[FodderBeet].Leaf.Fw",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -2492,7 +2753,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FT.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FT",
                   "Name": "RUE_FT",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2505,7 +2766,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FN.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FN",
                       "Name": "RUE_FN",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2514,7 +2775,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Photosynthesis.FVPD.Value()",
+                      "VariableName": "[Leaf].Photosynthesis.FVPD",
                       "Name": "RUE_FVPD",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2653,7 +2914,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FCO2.Value()",
+                  "VariableName": "[Leaf].Photosynthesis.FCO2",
                   "Name": "FCO2",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2662,7 +2923,7 @@
                 },
                 {
                   "$type": "Models.Functions.ExpressionFunction, Models",
-                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal.Value())/(350 - [Leaf].CO2internal.Value())",
+                  "Expression": "([IWeather].CO2 - [Leaf].CO2internal)/(350 - [Leaf].CO2internal)",
                   "Name": "RelativeCO2Gradient",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2673,6 +2934,20 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": true
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "WidthFunction",
+              "FixedValue": "0"
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].Height",
+              "Name": "DepthFunction",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -2710,11 +2985,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -2782,16 +3068,6 @@
               "FixedValue": 0.94,
               "Units": null,
               "Name": "NReallocationFactor",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "g/m^2",
-              "Name": "InitialWtFunction",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -2886,7 +3162,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Petiole].MinimumNConc.Value()",
+              "VariableName": "[Petiole].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -3017,7 +3293,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].DMDemands.Structural.DMDemandFunction.Value()",
+                      "VariableName": "[Petiole].DMDemands.Structural.DMDemandFunction",
                       "Name": "DMDemandFunction1",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3040,7 +3316,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Petiole].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3072,7 +3348,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].minimumNconc.Value()",
+                      "VariableName": "[Petiole].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3103,7 +3379,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].criticalNConc.Value()",
+                          "VariableName": "[Petiole].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3112,7 +3388,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Petiole].minimumNconc.Value()",
+                          "VariableName": "[Petiole].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3144,7 +3420,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Petiole].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3153,7 +3429,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Petiole].maximumNconc.Value()",
+                      "VariableName": "[Petiole].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3177,6 +3453,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": true,
@@ -3197,8 +3499,12 @@
           "Name": "Root",
           "Children": [
             {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
+            {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].LengthDensity",
               "Name": "KLModifier",
               "Children": [
                 {
@@ -3212,6 +3518,15 @@
                     1.0
                   ],
                   "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].LengthDensity",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3293,18 +3608,28 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "PreEmerge",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Leaf].FractionDied",
               "Name": "SenescenceRate",
               "Children": [
                 {
@@ -3318,6 +3643,15 @@
                     0.001
                   ],
                   "Name": "XYPairs",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].FractionDied",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3407,7 +3741,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].RWC",
               "Name": "NUptakeSWFactor",
               "Children": [
                 {
@@ -3425,18 +3758,17 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].RWC",
+                  "Name": "XValue",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 5.0,
-              "Units": "g/plant",
-              "Name": "InitialDM",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -3453,7 +3785,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "XProperty": "[Root].Depth",
               "Name": "MaxDailyNUptake",
               "Children": [
                 {
@@ -3478,6 +3809,15 @@
                   "$type": "Models.Memo, Models",
                   "Text": "Early growth N uptake is assumed to be 0.1 kg N/ha/day, and this increases with root growth reaching a maximumof 5.8 kg N/ha/day. The maximum N uptake per day is assumed from sugar beet data (Armstrong et al., 1986).",
                   "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Root].Depth",
+                  "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3542,7 +3882,6 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "XProperty": "[Root].Depth",
                           "Name": "PartitionFraction",
                           "Children": [
                             {
@@ -3567,6 +3906,15 @@
                               "$type": "Models.Memo, Models",
                               "Text": "The roots were assumed to account for 5% of dry matter.",
                               "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].Depth",
+                              "Name": "XValue",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3627,7 +3975,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction.Value()",
+                          "VariableName": "[Root].DMDemands.Structural.StructuralFraction",
                           "Name": "StructuralFraction",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3659,7 +4007,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].minimumNconc.Value()",
+                      "VariableName": "[Root].minimumNconc",
                       "Name": "MinNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3690,7 +4038,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].criticalNConc.Value()",
+                          "VariableName": "[Root].criticalNConc",
                           "Name": "CritNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3699,7 +4047,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc.Value()",
+                          "VariableName": "[Root].minimumNconc",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3731,7 +4079,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].nitrogenDemandSwitch.Value()",
+                      "VariableName": "[Root].nitrogenDemandSwitch",
                       "Name": "NitrogenDemandSwitch",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3740,7 +4088,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].maximumNconc.Value()",
+                      "VariableName": "[Root].maximumNconc",
                       "Name": "MaxNconc",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3756,6 +4104,46 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Root].MinimumNConc",
+              "Name": "CriticalNConc",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 5.0,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": true,
@@ -3843,7 +4231,6 @@
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
-          "XProperty": "[Leaf].CoverGreen",
           "Name": "MortalityRate",
           "Children": [
             {
@@ -3857,6 +4244,15 @@
                 1.0
               ],
               "Name": "XYPairs",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "VariableName": "[Leaf].CoverGreen",
+              "Name": "XValue",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -3948,7 +4344,8 @@
       ],
       "IncludeInDocumentation": true,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "FodderBeet"
     }
   ]
 }

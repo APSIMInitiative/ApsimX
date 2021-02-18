@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -45,7 +45,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Odometer
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Odometer { get; set; }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (StartingAmount > 0)
             {
-                Add(StartingAmount, this, "Starting value");
+                Add(StartingAmount, this, "", "Starting value");
             }
         }
 
@@ -95,7 +95,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -103,8 +103,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
@@ -119,9 +120,11 @@ namespace Models.CLEM.Resources
                 {
                     Gain = addAmount,
                     Activity = activity,
-                    Reason = reason,
+                    Category = category,
+                    RelatesToResource = relatesToResource,
                     ResourceType = this
                 };
+                LastGain = addAmount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -138,10 +141,23 @@ namespace Models.CLEM.Resources
             {
                 return;
             }
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                (EquivalentMarketStore as EquipmentType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
+            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -149,7 +165,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };

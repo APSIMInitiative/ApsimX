@@ -1,17 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PivotTableView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM;
 using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using Gtk;
 using UserInterface.Views;
-using static ApsimNG.Views.CLEM.PivotTableView;
+using UserInterface.Extensions;
 
 namespace ApsimNG.Views.CLEM
 {
@@ -205,7 +199,7 @@ namespace ApsimNG.Views.CLEM
             {
                 get
                 {
-                    return box.ActiveText;
+                    return box.GetActiveText();
                 }
             }
 
@@ -231,7 +225,7 @@ namespace ApsimNG.Views.CLEM
             /// <summary>
             /// Constructor for the ViewBox
             /// </summary>
-            /// <param name="name">The name of the viewbox</param>
+            /// <param name="gladeObject">The name of the glade resource</param>
             /// <param name="parent">The parent view</param>
             /// <param name="builder">The Gtk.Builder used to construct the ComboBox</param>
             public ViewBox(string gladeObject, PivotTableView parent, Builder builder)
@@ -250,7 +244,14 @@ namespace ApsimNG.Views.CLEM
             /// <param name="text">The text to add</param>
             public void AddText(string text)
             {
+#if NETFRAMEWORK
                 box.AppendText(text);
+#else
+                if (box.Model is ListStore model)
+                    model.AppendValues(text);
+                else
+                    throw new Exception("ComboBox does not use a ListStore. If you see this error, please file a bug report.");
+#endif
             }
 
             /// <summary>
@@ -462,7 +463,7 @@ namespace ApsimNG.Views.CLEM
         /// <summary>
         /// Add the ledger text options to a view box
         /// </summary>
-        /// <param name="combo"></param>
+        /// <param name="box">The view box to which text options will be added.</param>
         private static void AddOptions(ViewBox box)
         {
             List<string> options = new List<string>()
@@ -474,7 +475,7 @@ namespace ApsimNG.Views.CLEM
                 "Resource",
                 "Activity",
                 "ActivityType",
-                "Reason"
+                "Category"
             };
 
             foreach (string option in options)
@@ -515,7 +516,7 @@ namespace ApsimNG.Views.CLEM
         public void SetLedgers(PivotTable table)
         {
             // Find a CLEMFolder 
-            CLEMFolder folder = Apsim.Find(table, typeof(CLEMFolder)) as CLEMFolder;
+            CLEMFolder folder = table.FindInScope<CLEMFolder>();
 
             // Look for ledgers inside the CLEMFolder
             foreach (var child in folder.Children)

@@ -7,11 +7,19 @@
     using System.IO;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+#if NETFRAMEWORK
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
-    using MigraDoc.RtfRendering;
+    using Row = MigraDoc.DocumentObjectModel.Tables.Row;
+#else
+    using MigraDocCore.DocumentObjectModel;
+    using MigraDocCore.DocumentObjectModel.Tables;
+    using Row = MigraDocCore.DocumentObjectModel.Tables.Row;
+#endif
     using Models.Core;
-    using Report;
+    using Models.Soils;
+    using Models.Soils.Standardiser;
+    using Models;
     using Storage;
 
     /// <summary>
@@ -57,7 +65,12 @@
             /// <summary>
             /// RTF format
             /// </summary>
-            rtf
+            rtf,
+
+            /// <summary>
+            /// Markdown format
+            /// </summary>
+            Markdown
         }
 
         /// <summary>Capture and store error messages?</summary>
@@ -114,8 +127,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -138,8 +151,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -162,8 +175,8 @@
 
                 if (storage == null)
                     throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = Apsim.FullPath(model);
-                string relativeModelPath = modelPath.Replace(Apsim.FullPath(simulation) + ".", string.Empty);
+                string modelPath = model.FullPath;
+                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
                 newRow[0] = simulation.Name;
@@ -191,14 +204,14 @@
             initConditions.Columns.Add("Total", typeof(int));
             initConditions.Columns.Add("Value", typeof(string));
 
-            string simulationPath = Apsim.FullPath(simulation);
+            string simulationPath = simulation.FullPath;
 
             var row = initConditions.NewRow();
             row.ItemArray = new object[] { simulation.Name, simulationPath, "Simulation name", "Simulation name", "String", string.Empty, string.Empty, 0, simulation.Name };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
-            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, simulation.ApsimVersion };
+            row.ItemArray = new object[] { simulation.Name, simulationPath, "APSIM version", "APSIM version", "String", string.Empty, string.Empty, 0, Simulations.GetApsimVersion() };
             initConditions.Rows.Add(row);
 
             row = initConditions.NewRow();
@@ -206,9 +219,9 @@
             initConditions.Rows.Add(row);
 
             // Get all model properties and store in 'initialConditionsTable'
-            foreach (Model model in Apsim.FindAll(simulation))
+            foreach (Model model in simulation.FindAllInScope())
             {
-                string thisRelativeModelPath = Apsim.FullPath(model).Replace(simulationPath + ".", string.Empty);
+                string thisRelativeModelPath = model.FullPath.Replace(simulationPath + ".", string.Empty);
 
                 var properties = new List<Tuple<string, VariableProperty>>();
                 FindAllProperties(model, properties);
@@ -278,7 +291,6 @@
             bool darkTheme)
         {
             Document document = null;
-            RtfDocumentRenderer renderer = null;
 
             if (outtype == OutputType.html)
             {
@@ -315,42 +327,7 @@
 
             }
             else if (outtype == OutputType.rtf)
-            {
-                document = new Document();
-                renderer = new RtfDocumentRenderer();
-
-                // Get the predefined style Normal.
-                Style style = document.Styles["Normal"];
-
-                // Because all styles are derived from Normal, the next line changes the 
-                // font of the whole document. Or, more exactly, it changes the font of
-                // all styles and paragraphs that do not redefine the font.
-                style.Font.Name = "Arial";
-
-                // Heading1 to Heading9 are predefined styles with an outline level. An outline level
-                // other than OutlineLevel.BodyText automatically creates the outline (or bookmarks) 
-                // in PDF.
-                style = document.Styles["Heading2"];
-                style.Font.Size = 14;
-                style.Font.Bold = true;
-                style.Font.Color = Colors.DarkBlue;
-                style.ParagraphFormat.PageBreakBefore = false;
-                style.ParagraphFormat.SpaceAfter = 3;
-                style.ParagraphFormat.SpaceBefore = 16;
-
-                style = document.Styles["Heading3"];
-                style.Font.Size = 12;
-                style.Font.Bold = true;
-                style.Font.Color = Colors.DarkBlue;
-                style.ParagraphFormat.SpaceBefore = 10;
-                style.ParagraphFormat.SpaceAfter = 2;
-
-                // Create a new style called Monospace based on style Normal
-                style = document.Styles.AddStyle("Monospace", "Normal");
-                System.Drawing.FontFamily monoFamily = new System.Drawing.FontFamily(System.Drawing.Text.GenericFontFamilies.Monospace);
-                style.Font.Name = monoFamily.Name;
-                Section section = document.AddSection();
-            }
+                throw new NotImplementedException();
 
             // Get the initial conditions table.            
             DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
@@ -407,10 +384,7 @@
                 writer.WriteLine("</html>");
             }
             else if (outtype == OutputType.rtf)
-            {
-                string rtf = renderer.RenderToString(document, Path.GetTempPath());
-                writer.Write(rtf);
-            }
+                throw new NotImplementedException();
         }
 
         /// <summary>
@@ -508,6 +482,11 @@
                 Section section = document.LastSection;
                 Paragraph paragraph = section.AddParagraph(heading, "Heading2");
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine($"## {heading}");
+                writer.WriteLine();
+            }
             else
             {
                 writer.WriteLine(heading.ToUpper());
@@ -538,6 +517,13 @@
             else if (outtype == OutputType.rtf)
             {
                 Paragraph paragraph = document.LastSection.AddParagraph(st, "Monospace");
+            }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine("```");
+                writer.WriteLine(st);
+                writer.WriteLine("```");
+                writer.WriteLine();
             }
             else
             {
@@ -603,7 +589,7 @@
             }
             else if (outtype == OutputType.rtf)
             {
-                MigraDoc.DocumentObjectModel.Tables.Table tabl = new MigraDoc.DocumentObjectModel.Tables.Table();
+                Table tabl = new Table();
                 tabl.Borders.Width = 0.75;
 
                 foreach (DataColumn col in table.Columns)
@@ -613,7 +599,7 @@
 
                 if (showHeadings)
                 {
-                    MigraDoc.DocumentObjectModel.Tables.Row row = tabl.AddRow();
+                    Row row = tabl.AddRow();
                     row.Shading.Color = Colors.PaleGoldenrod;
                     tabl.Shading.Color = new Color(245, 245, 255);
                     for (int i = 0; i < table.Columns.Count; i++)
@@ -632,7 +618,7 @@
                 {
                     bool titleRow = Convert.IsDBNull(row[0]);
                     string st;
-                    MigraDoc.DocumentObjectModel.Tables.Row newRow = tabl.AddRow();
+                    Row newRow = tabl.AddRow();
 
                     for (int i = 0; i < table.Columns.Count; i++)
                     {
@@ -667,6 +653,11 @@
                 document.LastSection.Add(tabl);
                 document.LastSection.AddParagraph(); // Just to give a bit of spacing
             }
+            else if (outtype == OutputType.Markdown)
+            {
+                writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
+                writer.WriteLine();
+            }
             else
             {
                 DataTableUtilities.DataTableToText(table, 0, "  ", showHeadings, writer);
@@ -695,6 +686,8 @@
                     Section section = document.LastSection;
                     Paragraph paragraph = section.AddParagraph(row[0].ToString(), "Heading3");
                 }
+                else if (outtype == OutputType.Markdown)
+                    writer.WriteLine($"### {row[0]}");
                 else
                 {
                     writer.WriteLine();
@@ -721,6 +714,13 @@
                         paragraph.Format.Font.Color = Colors.OrangeRed;
                     else if (st.Contains("ERROR:"))
                         paragraph.Format.Font.Color = Colors.Red;
+                }
+                else if (outtype == OutputType.Markdown)
+                {
+                    writer.WriteLine("```");
+                    writer.WriteLine(st);
+                    writer.WriteLine("```");
+                    writer.WriteLine();
                 }
                 else
                 {

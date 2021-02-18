@@ -5,9 +5,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -21,13 +22,14 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer defines a date range to perfrom activities.")]
+    [Description("This activity timer defines a date range in which to perform activities")]
     [HelpUri(@"Content/Features/Timers/DateRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [XmlIgnore]
+        [JsonIgnore]
         [Link]
+        [NonSerialized]
         Clock Clock = null;
 
         /// <summary>
@@ -74,6 +76,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
+                if (Clock is null)
+                {
+                    return true;
+                }
                 bool inrange = IsMonthInRange(Clock.Today);
                 if(inrange)
                 {
@@ -124,6 +130,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -134,34 +142,47 @@ namespace Models.CLEM.Activities
             DateTime endDate = new DateTime(EndDate.Year, EndDate.Month, DateTime.DaysInMonth(EndDate.Year, EndDate.Month));
             DateTime startDate = new DateTime(StartDate.Year, StartDate.Month, 1);
 
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            html += "\n<div class=\"filter\">";
-            string invertString = "";
-            if (Invert)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                invertString = "when <b>NOT</b> ";
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                string invertString = "";
+                if (Invert)
+                {
+                    invertString = "when <b>NOT</b> ";
+                }
+                htmlWriter.Write("Perform " + invertString + "between ");
+                if (startDate.Year == 1)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(startDate.ToString("d MMM yyyy"));
+                    htmlWriter.Write("</span>");
+                }
+                htmlWriter.Write(" and ");
+                if (EndDate <= StartDate)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[must be > StartDate]");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(endDate.ToString("d MMM yyyy"));
+                }
+                htmlWriter.Write("</span>");
+                if (StartDate != startDate || EndDate != endDate)
+                {
+                    htmlWriter.Write(" (modified for monthly timestep)");
+                }
+                htmlWriter.Write("</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            html += "Perform "+invertString+"between <span class=\"setvalueextra\">";
-            html += startDate.ToString("d MMM yyyy");
-            html += "</span> and ";
-            if (EndDate <= StartDate)
-            {
-                html += "<span class=\"errorlink\">[must be > StartDate]";
-            }
-            else
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += endDate.ToString("d MMM yyyy");
-            }
-            html += "</span>";
-            if(StartDate!=startDate || EndDate != endDate)
-            {
-                html += " (modified for monthly timestep)";
-            }
-            html += "</div>";
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>
@@ -170,7 +191,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -179,8 +200,19 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
-        }
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.Soils
 {
@@ -16,22 +16,22 @@ namespace Models.Soils
         /// <summary>
         /// Irrigation applied
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Irrigation { get; set; }
         /// <summary>
         /// Rainfall occured
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Rainfall { get; set; }
         /// <summary>
         /// Drainage occured
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Drainage { get; set; }
         /// <summary>
         /// Infiltration occured
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Infiltration { get; set; }
         /// <summary>
         /// Initialise arays on construction

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
 using Models.Core;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -26,25 +27,24 @@ namespace Models.Functions
         public double Exponent { get; set; }
 
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private List<IFunction> ChildFunctions;
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         /// <exception cref="System.Exception">Power function must have only one argument</exception>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
-            if (ChildFunctions.Count == 1)
+            if (ChildFunctions.Count() == 1)
             {
-                IFunction F = ChildFunctions[0] as IFunction;
+                IFunction F = ChildFunctions[0];
                 return Math.Pow(F.Value(arrayIndex), Exponent);
             }
             else if (ChildFunctions.Count == 2)
             {
-
-                IFunction F = ChildFunctions[0] as IFunction;
-                IFunction P = ChildFunctions[1] as IFunction;
+                IFunction F = ChildFunctions[0];
+                IFunction P = ChildFunctions[1];
                 return Math.Pow(F.Value(arrayIndex), P.Value(arrayIndex));
             }
             else {

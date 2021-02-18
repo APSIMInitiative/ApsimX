@@ -7,7 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -34,13 +35,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
         /// paddock or pasture to graze
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
@@ -120,6 +121,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -127,18 +130,38 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            html += "<span class=\"resourcelink\">"+GrazeFoodStoreTypeName+"</span>";
-            html += " is between <span class=\"setvalueextra\">";
-            html += MinimumPastureLevel.ToString();
-            html += "</span> and <span class=\"setvalueextra\">";
-            html += MaximumPastureLevel.ToString();
-            html += "</span> kg per hectare</div>";
-            html += "\n</div>";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ");
+                }
+                htmlWriter.Write(" is between <span class=\"setvalueextra\">");
+                htmlWriter.Write(MinimumPastureLevel.ToString());
+                htmlWriter.Write("</span> and ");
+                if (MaximumPastureLevel <= MinimumPastureLevel)
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(MaximumPastureLevel.ToString());
+                    htmlWriter.Write("</span> ");
+                }
+                htmlWriter.Write(" kg per hectare</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
+            }
         }
 
         /// <summary>
@@ -147,7 +170,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "";
+            return "</div>";
         }
 
         /// <summary>
@@ -156,8 +179,19 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "";
-        }
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

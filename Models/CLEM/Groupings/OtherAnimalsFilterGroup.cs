@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -18,10 +19,22 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
     [Version(1, 0, 1, "")]
-    public class OtherAnimalsFilterGroup: CLEMModel
+    public class OtherAnimalsFilterGroup: CLEMModel, IFilterGroup
     {
         [Link]
         private ResourcesHolder Resources = null;
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Daily amount to supply selected individuals each month
@@ -56,8 +69,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if(SelectedOtherAnimalsType == null)
+            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().FindChild(AnimalType) as OtherAnimalsType;
+            if (SelectedOtherAnimalsType == null)
             {
                 throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
             }

@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 250,
-  "Version": 67,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
   "Name": "Simulations",
   "Children": [
     {
@@ -47,6 +48,7 @@
           "d_interception": 0.0,
           "soil_albedo": 0.23,
           "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
           "NightInterceptionFraction": 0.5,
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
@@ -59,17 +61,20 @@
           "$type": "Models.Core.Zone, Models",
           "Area": 1.0,
           "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
           "Name": "Field",
           "Children": [
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 80.0,
-              "FractionFaecesAdded": 0.5,
+              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -138,6 +143,8 @@
                     300.0
                   ],
                   "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
                   "BD": [
                     1.02,
                     1.03,
@@ -325,6 +332,7 @@
                     0.3
                   ],
                   "KLAT": null,
+                  "PrecipitationInterception": 0.0,
                   "Name": "SoilWater",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -724,22 +732,6 @@
                         "Colour": "White",
                         "OutlineColour": "White",
                         "Transparent": true
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNO3",
-                        "Location": "688, 415",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
-                      },
-                      {
-                        "$type": "Models.Graph.Node, Models",
-                        "Name": "PlantAvailableNH4",
-                        "Location": "691, 421",
-                        "Colour": "0, 158, 115",
-                        "OutlineColour": "Black",
-                        "Transparent": false
                       }
                     ],
                     "Arcs": [
@@ -879,6 +871,7 @@
             {
               "$type": "Models.Sugarcane, Models",
               "maxt_lb": 0.0,
+              "LAI": 0.0,
               "WaterDemand": 0.0,
               "crop_type": "Sugarcane",
               "tt_emerg_to_begcane_ub": 2000.0,
@@ -3244,7 +3237,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Sugarcane Sugarcane;\r\n        \r\n        [Description(\"Enter planting date (dd-mmm)\")]\r\n        public string planting_day { get; set; }\r\n        [Description(\"Duration of a plant crop (days) (30days/mth x 15mths)\")]\r\n        public int    plantlen { get; set; }\r\n        [Description(\"Stalk density of plant crop (/m2)\")]\r\n        public double plant_stalks { get; set; }\r\n        [Description(\"Planting variety\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string variety { get; set; }\r\n        [Description(\"Planting depth (mm)\")]\r\n        public double sowing_depth { get; set; }\r\n        [Description(\"Number of ratoons before EndCrop\")]  \r\n        public int    NoRatoons { get; set; }\r\n        [Description(\"Duration of a ratoon crop (days) (30days/mth x 13mths)\")]\r\n        public int    ratoonlen { get; set; }\r\n        [Description(\"Stalk density of ratoon crop (/m2)\")]\r\n        public double ratoon_stalks { get; set; }\r\n        \r\n\r\n        private int dah;\r\n        //Remove this later, I don't think they use it. Days After Harvest.\r\n        \r\n        //two below are used for rotations. Remove this. I don't think ApsimX does rotations like this.\r\n        private int nextcrop;\r\n        private int fallowin;\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            //Rotation variables. Not sure if these are still needed in ApsimX rotations\r\n            nextcrop = 0;\r\n            fallowin = 0;\r\n        }\r\n\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            //! Initialise and set a time counter for entire run\r\n            dah = 0;\r\n\r\n\r\n            if (Sugarcane.crop_status == \"alive\")\r\n            {\r\n                dah = 0;\r\n\r\n                //! Set harvest dates for each crop phase\r\n                if (((Sugarcane.DaysAfterSowing == plantlen) && (Sugarcane.ratoon_no == 0))\r\n                    || ((Sugarcane.DaysAfterSowing == ratoonlen) && (Sugarcane.ratoon_no > 0)))\r\n                {\r\n                    \r\n                    Sugarcane.HarvestCrop();\r\n                    if (Sugarcane.ratoon_no == NoRatoons + 1)\r\n                    {\r\n                        //! plough the crop out\r\n                        Sugarcane.KillCrop();\r\n                        Sugarcane.EndCrop();\r\n                    }\r\n                    else\r\n                    {\r\n                        //! Set stalk density\r\n                        Sugarcane.plants = ratoon_stalks;\r\n                    }\r\n                }\r\n                else\r\n                {\r\n                    //! We have not reached the harvest date for this ratoon.\r\n                }\r\n            }\r\n            else if (Sugarcane.crop_status == \"dead\")\r\n            {\r\n                Sugarcane.HarvestCrop();\r\n                Sugarcane.EndCrop();\r\n            }\r\n            else if ((Sugarcane.crop_status == \"out\") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))\r\n            {\r\n                Sugarcane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);\r\n                Sugarcane.plants = plant_stalks;\r\n                dah = 0;\r\n            }\r\n            else\r\n            {\r\n                dah = dah + 1;\r\n            }\r\n     \r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Sugarcane Sugarcane;\r\n        \r\n        [Description(\"Enter planting date (dd-mmm)\")]\r\n        public string planting_day { get; set; }\r\n        [Description(\"Duration of a plant crop (days) (30days/mth x 15mths)\")]\r\n        public int    plantlen { get; set; }\r\n        [Description(\"Stalk density of plant crop (/m2)\")]\r\n        public double plant_stalks { get; set; }\r\n        [Description(\"Planting variety\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"Sugarcane\")]\r\n        public string variety { get; set; }\r\n        [Description(\"Planting depth (mm)\")]\r\n        public double sowing_depth { get; set; }\r\n        [Description(\"Number of ratoons before EndCrop\")]  \r\n        public int    NoRatoons { get; set; }\r\n        [Description(\"Duration of a ratoon crop (days) (30days/mth x 13mths)\")]\r\n        public int    ratoonlen { get; set; }\r\n        [Description(\"Stalk density of ratoon crop (/m2)\")]\r\n        public double ratoon_stalks { get; set; }\r\n        \r\n\r\n        private int dah;\r\n        //Remove this later, I don't think they use it. Days After Harvest.\r\n        \r\n        //two below are used for rotations. Remove this. I don't think ApsimX does rotations like this.\r\n        private int nextcrop;\r\n        private int fallowin;\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            //Rotation variables. Not sure if these are still needed in ApsimX rotations\r\n            nextcrop = 0;\r\n            fallowin = 0;\r\n        }\r\n\r\n\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            //! Initialise and set a time counter for entire run\r\n            dah = 0;\r\n\r\n\r\n            if (Sugarcane.crop_status == \"alive\")\r\n            {\r\n                dah = 0;\r\n\r\n                //! Set harvest dates for each crop phase\r\n                if (((Sugarcane.DaysAfterSowing == plantlen) && (Sugarcane.ratoon_no == 0))\r\n                    || ((Sugarcane.DaysAfterSowing == ratoonlen) && (Sugarcane.ratoon_no > 0)))\r\n                {\r\n                    \r\n                    Sugarcane.HarvestCrop();\r\n                    if (Sugarcane.ratoon_no == NoRatoons + 1)\r\n                    {\r\n                        //! plough the crop out\r\n                        Sugarcane.KillCrop();\r\n                        Sugarcane.EndCrop();\r\n                    }\r\n                    else\r\n                    {\r\n                        //! Set stalk density\r\n                        Sugarcane.plants = ratoon_stalks;\r\n                    }\r\n                }\r\n                else\r\n                {\r\n                    //! We have not reached the harvest date for this ratoon.\r\n                }\r\n            }\r\n            else if (Sugarcane.crop_status == \"dead\")\r\n            {\r\n                Sugarcane.HarvestCrop();\r\n                Sugarcane.EndCrop();\r\n            }\r\n            else if ((Sugarcane.crop_status == \"out\") && (DateUtilities.DatesEqual(planting_day, Clock.Today)))\r\n            {\r\n                Sugarcane.SowNewPlant(PlantingDensity: 10, Depth: sowing_depth, CultivarName: variety);\r\n                Sugarcane.plants = plant_stalks;\r\n                dah = 0;\r\n            }\r\n            else\r\n            {\r\n                dah = dah + 1;\r\n            }\r\n     \r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "planting_day",
@@ -3286,7 +3279,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        private double N_topsoil;\r\n        [ScopedLinkByName]\r\n        private ISolute NO3;\r\n        [ScopedLinkByName]\r\n        private ISolute NH4;\r\n\r\n        \r\n        [Description(\"Fertilise on this date (dd-mmm)\")]\r\n        public string fert_date { get; set; }\r\n        \r\n        [Description(\"Don't add fertiliser if N in top 2 layers exceeds (kg/ha)\")]\r\n        public double fert_criteria { get; set; }\r\n        \r\n        [Description(\"Amount to apply (kg/ha)\")]\r\n        public double fert_amount { get; set; }\r\n        \r\n        [Description(\"Type of fertilser to apply\")]\r\n        public string fert_type { get; set; }\r\n    \r\n\r\n\r\n        /*\r\n         if (today = date('[fert_date]') then\r\n            N_topsoil = no3(1) + nh4(1) + no3(2) + nh4(2)\r\n            if (N_topsoil < [fert_criteria]) then\r\n               [fertmodule] apply amount = [fert_amount] (kg/ha), depth = 50 (mm), type = [fert_type] ()\r\n            endif\r\n         endif \r\n        */\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.DatesEqual(fert_date, Clock.Today))\r\n            {\r\n                N_topsoil = NO3.kgha[1] + NH4.kgha[1] + NO3.kgha[2] + NH4.kgha[2];                    \r\n                if (N_topsoil < fert_criteria)\r\n                {\r\n                    Fertiliser.Apply(Amount: fert_amount, Depth: 50, Type: Fertiliser.Types.UreaN);\r\n                }\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
+                  "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        private double N_topsoil;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n\r\n        \r\n        [Description(\"Fertilise on this date (dd-mmm)\")]\r\n        public string fert_date { get; set; }\r\n        \r\n        [Description(\"Don't add fertiliser if N in top 2 layers exceeds (kg/ha)\")]\r\n        public double fert_criteria { get; set; }\r\n        \r\n        [Description(\"Amount to apply (kg/ha)\")]\r\n        public double fert_amount { get; set; }\r\n        \r\n        [Description(\"Type of fertilser to apply\")]\r\n        public string fert_type { get; set; }\r\n    \r\n\r\n\r\n        /*\r\n         if (today = date('[fert_date]') then\r\n            N_topsoil = no3(1) + nh4(1) + no3(2) + nh4(2)\r\n            if (N_topsoil < [fert_criteria]) then\r\n               [fertmodule] apply amount = [fert_amount] (kg/ha), depth = 50 (mm), type = [fert_type] ()\r\n            endif\r\n         endif \r\n        */\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.DatesEqual(fert_date, Clock.Today))\r\n            {\r\n                N_topsoil = NO3.kgha[1] + NH4.kgha[1] + NO3.kgha[2] + NH4.kgha[2];                    \r\n                if (N_topsoil < fert_criteria)\r\n                {\r\n                    Fertiliser.Apply(Amount: fert_amount, Depth: 50, Type: Fertiliser.Types.UreaN);\r\n                }\r\n            }\r\n\r\n        }\r\n      \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "fert_date",
@@ -3378,7 +3371,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Graph",
               "Children": [
                 {
@@ -3398,8 +3393,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "cane_wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": false,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,

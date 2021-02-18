@@ -2,12 +2,13 @@
 {
     using APSIM.Shared.Utilities;
     using NUnit.Framework;
+    using System;
     using System.Collections.Generic;
 
     [TestFixture]
     class DBMergerTests
     {
-        /// <summary>Ensure two .db files, which have the same tables, can be merged.
+        /// <summary>Ensure two .db files, which have the same tables, can be merged.</summary>
         [Test]
         public void DBsThatHaveTheSameTablesMergeCorrectly()
         {
@@ -54,22 +55,22 @@
             DBMerger.Merge(database2, database1);
 
             Assert.AreEqual(Utilities.TableToString(database1, "_Simulations"),
-               "ID,Name,FolderName\r\n" +
-               " 1,Sim1,   Folder1\r\n" +
-               " 2,Sim2,   Folder2\r\n" +
-               " 3,Sim3,   Folder3\r\n" +
-               " 4,Sim4,   Folder4\r\n");
+               $"ID,Name,FolderName{Environment.NewLine}" +
+               $" 1,Sim1,   Folder1{Environment.NewLine}" +
+               $" 2,Sim2,   Folder2{Environment.NewLine}" +
+               $" 3,Sim3,   Folder3{Environment.NewLine}" +
+               $" 4,Sim4,   Folder4{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database1, "Report"),
-               "SimulationID,     A,   B\r\n" +
-               "           1,10.000,str1\r\n" +
-               "           2,11.000,str2\r\n" +
-               "           3,20.000,str3\r\n" +
-               "           4,21.000,str4\r\n");
+               $"SimulationID,     A,   B{Environment.NewLine}" +
+               $"           1,10.000,str1{Environment.NewLine}" +
+               $"           2,11.000,str2{Environment.NewLine}" +
+               $"           3,20.000,str3{Environment.NewLine}" +
+               $"           4,21.000,str4{Environment.NewLine}");
 
         }
 
-        /// <summary>Ensure two .db files, which have the same simulation names, can be merged.
+        /// <summary>Ensure two .db files, which have the same simulation names, can be merged.</summary>
         [Test]
         public void DBsThatHaveTheSameSimulationsMergeCorrectly()
         {
@@ -116,20 +117,20 @@
             DBMerger.Merge(database2, database1);
 
             Assert.AreEqual(Utilities.TableToString(database1, "_Simulations"),
-               "ID,Name,FolderName\r\n" +
-               " 1,Sim1,   Folder1\r\n" +
-               " 2,Sim2,   Folder2\r\n");
+               $"ID,Name,FolderName{Environment.NewLine}" +
+               $" 1,Sim1,   Folder1{Environment.NewLine}" +
+               $" 2,Sim2,   Folder2{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database1, "Report"),
-               "SimulationID,     A,   B\r\n" +
-               "           1,10.000,str1\r\n" +
-               "           1,20.000,str3\r\n" +
-               "           2,11.000,str2\r\n" +
-               "           2,21.000,str4\r\n");
+               $"SimulationID,     A,   B{Environment.NewLine}" +
+               $"           1,10.000,str1{Environment.NewLine}" +
+               $"           1,20.000,str3{Environment.NewLine}" +
+               $"           2,11.000,str2{Environment.NewLine}" +
+               $"           2,21.000,str4{Environment.NewLine}");
 
         }
 
-        /// <summary>Ensure two .db files, which have different tables, can be merged.
+        /// <summary>Ensure two .db files, which have different tables, can be merged.</summary>
         [Test]
         public void DBThatHaveTheDifferentTablesMergeCorrectly()
         {
@@ -176,24 +177,24 @@
             DBMerger.Merge(database2, database1);
 
             Assert.AreEqual(Utilities.TableToString(database1, "_Simulations"),
-               "ID,Name,FolderName\r\n" +
-               " 1,Sim1,   Folder1\r\n" +
-               " 2,Sim2,   Folder2\r\n" +
-               " 3,Sim3,   Folder3\r\n" +
-               " 4,Sim4,   Folder4\r\n");
+               $"ID,Name,FolderName{Environment.NewLine}" +
+               $" 1,Sim1,   Folder1{Environment.NewLine}" +
+               $" 2,Sim2,   Folder2{Environment.NewLine}" +
+               $" 3,Sim3,   Folder3{Environment.NewLine}" +
+               $" 4,Sim4,   Folder4{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database1, "Report1"),
-               "SimulationID,     A,   B\r\n" +
-               "           1,10.000,str1\r\n" +
-               "           2,11.000,str2\r\n");
+               $"SimulationID,     A,   B{Environment.NewLine}" +
+               $"           1,10.000,str1{Environment.NewLine}" +
+               $"           2,11.000,str2{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database1, "Report2"),
-               "SimulationID,     A,   B\r\n" +
-               "           3,20.000,str3\r\n" +
-               "           4,21.000,str4\r\n");
+               $"SimulationID,     A,   B{Environment.NewLine}" +
+               $"           3,20.000,str3{Environment.NewLine}" +
+               $"           4,21.000,str4{Environment.NewLine}");
         }
 
-        /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.
+        /// <summary>Ensure two .db files, which have tables that don't have SimulationID, can be merged.</summary>
         [Test]
         public void DBsThatHaveTablesWithNoSimulationIDMergeCorrectly()
         {
@@ -238,14 +239,14 @@
             DBMerger.Merge(database2, database1);
 
             Assert.AreEqual(Utilities.TableToString(database1, "_Simulations"),
-               "ID,Name,FolderName\r\n" +
-               " 1,Sim1,   Folder1\r\n" +
-               " 2,Sim2,   Folder2\r\n");
+               $"ID,Name,FolderName{Environment.NewLine}" +
+               $" 1,Sim1,   Folder1{Environment.NewLine}" +
+               $" 2,Sim2,   Folder2{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database1, "_Units"),
-               "TableName,ColumnHeading,Units\r\n" +
-               "   Report,            A, g/m2\r\n" +
-               "   Report,            B,kg/ha\r\n");
+               $"TableName,ColumnHeading,Units{Environment.NewLine}" +
+               $"   Report,            A, g/m2{Environment.NewLine}" +
+               $"   Report,            B,kg/ha{Environment.NewLine}");
 
         }
 

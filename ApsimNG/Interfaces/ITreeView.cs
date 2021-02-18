@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IExplorerView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-using UserInterface.Views;
+﻿using UserInterface.Views;
 namespace UserInterface.Interfaces
 {
     
@@ -31,11 +26,17 @@ namespace UserInterface.Interfaces
         /// <summary>Invoked then a node is renamed.</summary>
         event EventHandler<NodeRenameArgs> Renamed;
 
+        /// <summary>Invoked then a node is double clicked.</summary>
+        event EventHandler<EventArgs> DoubleClicked;
+
         /// <summary>Gets or sets the currently selected node.</summary>
         string SelectedNode { get; set; }
 
         /// <summary>Gets or sets the width of the tree view.</summary>
         Int32 TreeWidth { get; set; }
+
+        /// <summary>Gets or sets whether tree nodes can be changed.</summary>
+        bool ReadOnly { get; set; }
 
         /// <summary>Gets or sets the popup menu of the tree view.</summary>
         MenuView ContextMenu { get; set; }
@@ -86,7 +87,8 @@ namespace UserInterface.Interfaces
         /// Expands all child nodes recursively.
         /// </summary>
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
-        void ExpandChildren(string path);
+        /// <param name="recursive">Expand all children/descendants as well?</param>
+        void ExpandChildren(string path, bool recursive = true);
 
         /// <summary>
         /// Collapses all child nodes recursively.

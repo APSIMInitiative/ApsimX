@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 
@@ -17,6 +17,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
+    [ValidParent(ParentType = typeof(Market))]
     [Description("This holds all activities used in the CLEM simulation")]
     [HelpUri(@"Content/Features/Activities/ActivitiesHolder.htm")]
     [Version(1, 0, 1, "")]
@@ -27,7 +28,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// List of the all the Activities.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private List<IModel> activities;
 
         private void BindEvents(List<IModel> root)
@@ -69,6 +70,7 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -79,20 +81,26 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // ensure all folders are not APSIM folders
-            if(Apsim.ChildrenRecursively(this, typeof(Folder)).Count>0)
+            if (FindAllDescendants<Folder>().Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
                 results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>
         /// Last resource request that was in defecit
         /// </summary>
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
-        private void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
+        /// <summary>
+        /// Hander for shortfall
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // save resource request
             LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;
@@ -147,7 +155,7 @@ namespace Models.CLEM.Activities
         /// <param name="activity"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        private IModel SearchForNameInActivity(Model activity, string name)
+        private IModel SearchForNameInActivity(IModel activity, string name)
         {
             IModel found = activity.Children.Find(x => x.Name == name);
             if (found != null)
@@ -196,7 +204,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            activities = Apsim.Children(this, typeof(IModel));
+            activities = FindAllChildren<IModel>().ToList(); // = Children;
             BindEvents(activities);
         }
 
@@ -249,7 +257,7 @@ namespace Models.CLEM.Activities
             }
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in Apsim.ChildrenRecursively(this, typeof(IActivityTimer)))
+            foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())
             {
                 if (timer.ActivityDue)
                 {
@@ -292,6 +300,8 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -299,7 +309,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<h1>Activities summary</h1>";
+            return "\r\n<h1>Activities summary</h1>";
         }
 
         /// <summary>
@@ -308,7 +318,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"activity\">";
+            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>
@@ -317,7 +327,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
-        }
+            return "\r\n</div>";
+        } 
+        #endregion
     }
 }

@@ -3,6 +3,8 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
+    using Models.Core.Run;
     using Models.Interfaces;
     using Models.Soils;
     using Models.WaterModel;
@@ -22,7 +24,7 @@
         {
             var soil = new Soil
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Physical()
                     {
@@ -33,7 +35,7 @@
                         DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                         SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
 
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new SoilCrop
                             {
@@ -63,7 +65,7 @@
                     new Sample
                     {
                         Thickness = new double[] { 100, 300 },
-                        NO3N = new double[] { 23, 7 },
+                        NO3 = new double[] { 23, 7 },
                         OC = new double[] { 1.35, 1.4 },
                         SWUnits = Sample.SWUnitsEnum.Volumetric
                     }
@@ -71,6 +73,33 @@
             };
 
             return soil;
+        }
+
+        /// <summary>
+        /// Test a soil with its sample's NO3N property set to null.
+        /// Reproduces bug #4364.
+        /// </summary>
+        [Test]
+        public void TestSoilWithNullProperties()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.ApsimNG.Resources.SampleFiles.NullSample.apsimx");
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
+
+            if (fileErrors != null && fileErrors.Count > 0)
+                throw fileErrors[0];
+
+            // This simulation needs a weather node, but using a legit
+            // met component will just slow down the test.
+            IModel sim = file.FindInScope<Simulation>();
+            Model weather = new MockWeather();
+            sim.Children.Add(weather);
+            weather.Parent = sim;
+
+            // Run the file.
+            var runner = new Runner(file);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
         }
 
         ///// <summary>Test soil water layer structure conversion and mapping.</summary>

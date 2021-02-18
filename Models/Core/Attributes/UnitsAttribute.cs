@@ -1,15 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="UnitsAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// Specifies the units of the related field or property. Units must conform to the specification in Section 2.6.

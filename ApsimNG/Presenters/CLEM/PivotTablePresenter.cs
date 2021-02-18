@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="PivotTablePresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ApsimNG.Views.CLEM;
+﻿using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using Models.Storage;
@@ -86,7 +80,7 @@ namespace ApsimNG.Presenters.CLEM
             }
 
             // Look for the data source
-            var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
+            var store = table.FindInScope<IDataStore>();
             DataTable input = store.Reader.GetData(view.LedgerName);
 
             // Don't try to update if data source isn't found            
@@ -350,7 +344,7 @@ namespace ApsimNG.Presenters.CLEM
             }
 
             // Store the data
-            var store = Apsim.Find(table, typeof(IDataStore)) as IDataStore;
+            var store = table.FindInScope<IDataStore>();
             store.Writer.WriteTable(data);
         }
 

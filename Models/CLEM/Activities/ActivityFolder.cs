@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Perform Activity with partial resources available
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -103,6 +103,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -110,7 +112,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<div class=folder>"+this.Name+ " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
+            return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -128,16 +130,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            double opacity = 1;
-            if (!this.Enabled)
-            {
-                if (this.Parent.Enabled)
-                {
-                    opacity = 0.4;
-                }
-            }
-            return "\n<div class=\"activityborder\" style=\"opacity: " + opacity.ToString() + ";\">";
-        }
+            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
+        } 
+        #endregion
 
     }
 }

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -106,7 +107,7 @@ namespace Models.CLEM.Resources
             this.amount = 0;
             if (OpeningBalance > 0)
             {
-                Add(OpeningBalance, this, "Opening balance");
+                Add(OpeningBalance, this, "", "Opening balance");
             }
         }
 
@@ -129,7 +130,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -137,15 +138,27 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
-            if (resourceAmount.GetType().ToString()!="System.Double")
+            double multiplier = 0;
+            double addAmount = 0;
+
+            switch (resourceAmount.GetType().Name)
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                case "Double":
+                    addAmount = (double)resourceAmount;
+                    break;
+                case "ResourceRequest":
+                    addAmount = (resourceAmount as ResourceRequest).Required;
+                    multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                    break;
+                default:
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            double addAmount = (double)resourceAmount;
-            if (addAmount>0)
+
+            if (addAmount > 0)
             {
                 addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
@@ -154,12 +167,28 @@ namespace Models.CLEM.Resources
                 {
                     Gain = addAmount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
                 LastTransaction = details;
+                LastGain = addAmount;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
+
+                // if this request aims to trade with a market see if we need to set up details for the first time
+                if (multiplier > 0)
+                {
+                    FindEquivalentMarketStore();
+                    if (EquivalentMarketStore != null)
+                    {
+                        (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                        (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
+                        (resourceAmount as ResourceRequest).Category = "Farm transaction";
+                        (resourceAmount as ResourceRequest).RelatesToResource = EquivalentMarketStore.NameWithParent;
+                        (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
+                    }
+                }
             }
         }
 
@@ -174,6 +203,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
             
             // more than positive balance can be taken if withdrawal limit set to false
@@ -182,8 +217,6 @@ namespace Models.CLEM.Resources
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
             }
 
-            // avoid taking too much
-            //amountRemoved = Math.Min(this.Amount, amountRemoved);
             if (amountRemoved == 0)
             {
                 return;
@@ -191,13 +224,20 @@ namespace Models.CLEM.Resources
 
             this.amount -= amountRemoved;
 
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
+            }
+
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                RelatesToResource = request.RelatesToResource,
+                Category = request.Category
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -215,6 +255,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -222,44 +264,47 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00")+"</span>";
-            if (this.EnforceWithdrawalLimit)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>"; 
-            }
-            else
-            {
-                html += " with no withdrawal limit";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            if (this.InterestRateCharged + this.InterestRatePaid == 0)
-            {
-                html += "No interest rates included";
-            }
-            else
-            {
-                html += "Interest rate of ";
-                if (this.InterestRateCharged > 0)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
+                if (this.EnforceWithdrawalLimit)
                 {
-                    html += "<span class=\"setvalue\">";
-                    html += this.InterestRateCharged.ToString("0.##") + "</span>% charged ";
+                    htmlWriter.Write(" that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" with no withdrawal limit");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (this.InterestRateCharged + this.InterestRatePaid == 0)
+                {
+                    htmlWriter.Write("No interest rates included");
+                }
+                else
+                {
+                    htmlWriter.Write("Interest rate of ");
+                    if (this.InterestRateCharged > 0)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(this.InterestRateCharged.ToString("0.##") + "</span>% charged ");
+                        if (this.InterestRatePaid > 0)
+                        {
+                            htmlWriter.Write("and ");
+                        }
+                    }
                     if (this.InterestRatePaid > 0)
                     {
-                        html += "and ";
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(this.InterestRatePaid.ToString("0.##") + "</span>% paid");
                     }
                 }
-                if (this.InterestRatePaid > 0)
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += this.InterestRatePaid.ToString("0.##") + "</span>% paid";
-                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            return html;
-        }
+        } 
+        #endregion
 
     }
 }

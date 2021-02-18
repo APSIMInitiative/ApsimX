@@ -1,24 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.Globalization;
 
-// -----------------------------------------------------------------------
-// <copyright file="FileCrop.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace Models.CLEM
 {
     ///<summary>
@@ -38,19 +29,21 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This model holds a crop data file from a APSIM SQLite database for the CLEM simulation.")]
+    [Description("This component specifies a crop data file as a table in an SQLite database for the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
-    public class FileSQLiteCrop : CLEMModel, IFileCrop
+    public class FileSQLiteCrop : CLEMModel, IFileCrop, IValidatableObject
     {
         private bool nitrogenColumnExists = false;
+        private bool harvestTypeColumnExists = false;
 
         /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
         [Description("Crop database file name")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Crop database file name must be supplied")]
         public string FileName { get; set; }
 
@@ -115,11 +108,18 @@ namespace Models.CLEM
         public string PercentNitrogenColumnName { get; set; }
 
         /// <summary>
+        /// Name of column holding harvest details
+        /// </summary>
+        [Summary]
+        [Description("Column name for harvest type")]
+        public string HarvestTypeColumnName { get; set; }
+
+        /// <summary>
         /// Gets or sets the full file name (with path). 
         /// The Commands.ChangeProperty() uses this property to change the model.
         /// This is done after the user changes the file using the browse button in the View.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string FullFileName
         {
             get
@@ -130,7 +130,7 @@ namespace Models.CLEM
                 }  
                 else
                 {
-                    Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+                    Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
                     {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
@@ -152,6 +152,17 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Validate this component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            return results;
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for initialization.
         /// </summary>
         [EventSubscribe("Commencing")]
@@ -165,7 +176,7 @@ namespace Models.CLEM
                 // check table exists
                 if(!sQLiteReader.GetTableNames().Contains(TableName))
                 {
-                    string errorMsg = "The specified table named ["+TableName+ "] was not found\n. Please not these table names are case sensitive.";
+                    string errorMsg = "The specified table named ["+TableName+ "] was not found\r\n. Please note these table names are case sensitive.";
                     throw new ApsimXException(this, errorMsg);
                 }
 
@@ -176,16 +187,17 @@ namespace Models.CLEM
                     { "soil", SoilTypeColumnName },
                     { "crop", CropNameColumnName },
                     { "amount", AmountColumnName },
-                    { "N", PercentNitrogenColumnName }
+                    { "N", PercentNitrogenColumnName },
+                    { "HarvestType", PercentNitrogenColumnName }
                 };
                 foreach (var item in columnLinks)
                 {
                     // check each column name exists
-                    if (!(item.Key == "N" & item.Value == ""))
+                    if (!(item.Key == "N" & item.Value == "" & item.Value == "HarvestType"))
                     {
                         if (!sQLiteReader.GetColumnNames(TableName).Contains(item.Value))
                         {
-                            string errorMsg = "The specified column [" + item.Key + "] does not exist in the table named [" + TableName + "]\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
+                            string errorMsg = "The specified column [o=" + item.Key + "] does not exist in the table named [" + TableName + "] for [x="+this.Name+"]\r\nEnsure the column name is present in the table. Please not these column names are case sensitive.";
                             throw new ApsimXException(this, errorMsg);
                         }
                     }
@@ -193,7 +205,7 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
             if(sQLiteReader.IsOpen)
@@ -208,7 +220,7 @@ namespace Models.CLEM
         /// When the user selects a file using the browse button in the UserInterface 
         /// and the file can not be displayed for some reason in the UserInterface.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string ErrorMessage = string.Empty;
 
         /// <summary>
@@ -242,14 +254,15 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\n" + ex.Message;
+                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\r\n" + ex.Message;
             }
 
-            // check if Npct column exists in database
+            // check if Npct and harvestColumn column exists in database
             nitrogenColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(PercentNitrogenColumnName);
+            harvestTypeColumnExists = sQLiteReader.GetColumnNames(TableName).Contains(HarvestTypeColumnName);
 
             // define SQL filter to load data
-            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + SoilTypeColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + " FROM " + TableName
+            string sqlQuery = "SELECT " + YearColumnName + "," + MonthColumnName + "," + CropNameColumnName + "," + SoilTypeColumnName + "," + AmountColumnName + "" + (nitrogenColumnExists ? "," + PercentNitrogenColumnName : "") + (harvestTypeColumnExists ? "," + HarvestTypeColumnName : "") + " FROM " + TableName
                 + " WHERE " + SoilTypeColumnName + " = '" + soilId + "'"
                 + " AND " + CropNameColumnName + " = '" + cropName + "'";
 
@@ -273,7 +286,7 @@ namespace Models.CLEM
             }
             catch(Exception ex)
             {
-                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\n" + ex.Message;
+                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
 
@@ -315,10 +328,17 @@ namespace Models.CLEM
             {
                 cropdata.Npct = double.NaN;
             }
+            if(harvestTypeColumnExists)
+            {
+                cropdata.HarvestType = dr[HarvestTypeColumnName].ToString();
+            }
+
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
             return cropdata;
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -327,53 +347,105 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">[FILE NOT SET]</span>";
-                html += "\n</div>";
-            }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-                html += "\n</div>";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-
-                if (TableName == null || TableName == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
                 {
-                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>";
+                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+                    htmlWriter.Write("\r\n</div>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    htmlWriter.Write("\r\n</div>");
                 }
                 else
                 {
-                    // Add table name
-                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-                    html += "Using table <span class=\"filelink\">" + TableName + "</span>";
-                    // add column links
-                    html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is <span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is <span class=\"setvalue\">" + CropNameColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is <span class=\"setvalue\">" + YearColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is <span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-                    html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is <span class=\"setvalue\">" + AmountColumnName + "</span></div>";
-                    if(PercentNitrogenColumnName == "")
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+
+                    if (TableName == null || TableName == "")
                     {
-                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">IGNORED</span></div>";
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">Using table <span class=\"errorlink\">[TABLE NOT SET]</span></div>");
                     }
                     else
                     {
-                        html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>";
-                    }
-                    html += "\n</div>";
-                }
-                html += "\n</div>";
-            }
-            return html;
+                        // Add table name
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                        htmlWriter.Write("Using table <span class=\"filelink\">" + TableName + "</span>");
+                        // add column links
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+                        if (SoilTypeColumnName is null || SoilTypeColumnName == "")
+                        {
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
+                        }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
+                        if (CropNameColumnName is null || CropNameColumnName == "")
+                        {
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
+                        }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                        if (YearColumnName is null || YearColumnName == "")
+                        {
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+                        }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                        if (MonthColumnName is null || MonthColumnName == "")
+                        {
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                        }
 
-        }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
+                        if (AmountColumnName is null || AmountColumnName == "")
+                        {
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
+                        }
+                        if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+                        }
+                        if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+                        }
+                        htmlWriter.Write("\r\n</div>");
+                    }
+                    htmlWriter.Write("\r\n</div>");
+                }
+                return htmlWriter.ToString(); 
+            }
+
+        } 
+        #endregion
     }
 
 }

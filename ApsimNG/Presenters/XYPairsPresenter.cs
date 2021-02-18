@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="XYPairsPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +8,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Functions;
     using Views;
 
@@ -68,11 +63,11 @@ namespace UserInterface.Presenters
             this.presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.XYPairsGraph.xml");
             this.xYPairs.Children.Add(this.graph);
             this.graph.Parent = this.xYPairs;
-            (this.graph.Series[0] as Series).XFieldName = Apsim.FullPath(graph.Parent) + ".X";
-            (this.graph.Series[0] as Series).YFieldName = Apsim.FullPath(graph.Parent) + ".Y";
+            (this.graph.Series[0] as Series).XFieldName = graph.Parent.FullPath + ".X";
+            (this.graph.Series[0] as Series).YFieldName = graph.Parent.FullPath + ".Y";
             this.graphPresenter = new GraphPresenter();
             this.presenter.ApsimXFile.Links.Resolve(graphPresenter);
             this.graphPresenter.Attach(this.graph, this.xYPairsView.Graph, this.presenter);
@@ -130,7 +125,7 @@ namespace UserInterface.Presenters
             if (xProperty != null)
             {
                 string propertyName = xProperty.GetValue(xYPairs.Parent, null).ToString();
-                IVariable variable = Apsim.GetVariableObject(xYPairs, propertyName);
+                IVariable variable = xYPairs.FindByPath(propertyName);
                 if (variable != null && variable.UnitsLabel != null)
                 {
                     return propertyName + " " + variable.UnitsLabel;
@@ -138,13 +133,17 @@ namespace UserInterface.Presenters
 
                 return propertyName;
             }
-            else if (xYPairs.Parent is AirTemperatureFunction)
+            else if (xYPairs.Parent is LinearInterpolationFunction)
             {
-                return "Mean air temperature (oC)";
+                var xValue = xYPairs.Parent.FindChild("XValue");
+                if (xValue is VariableReference)
+                    return (xValue as VariableReference).VariableName;
+                else
+                    return "XValue";
             }
-            else if (xYPairs.Parent is SoilTemperatureFunction)
+            else if (xYPairs.Parent is HourlyInterpolation)
             {
-                return "Mean soil temperature (oC)";
+                return "Air temperature (oC)";
             }
             else if (xYPairs.Parent is SoilTemperatureWeightedFunction)
             {
@@ -167,15 +166,9 @@ namespace UserInterface.Presenters
         private string LookForYAxisTitle()
         {
             IModel modelContainingLinkField = xYPairs.Parent.Parent;
-            FieldInfo linkField = modelContainingLinkField.GetType().GetField(xYPairs.Parent.Name, BindingFlags.NonPublic | BindingFlags.Instance);
-            if (linkField != null)
-            {
-                UnitsAttribute units = ReflectionUtilities.GetAttribute(linkField, typeof(UnitsAttribute), true) as UnitsAttribute;
-                if (units != null)
-                {
-                    return xYPairs.Parent.Name + " (" + units.ToString() + ")";
-                }
-            }
+            var units = AutoDocumentation.GetUnits(modelContainingLinkField, xYPairs.Parent.Name);
+            if (!string.IsNullOrEmpty(units))
+                return xYPairs.Parent.Name + " (" + units.ToString() + ")";
 
             return xYPairs.Parent.Name;
         }

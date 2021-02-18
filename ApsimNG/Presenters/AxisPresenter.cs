@@ -1,12 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AxisPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
-    using Models.Graph;
+    using Models;
     using Views;
     using Interfaces;
 
@@ -45,6 +40,10 @@ namespace UserInterface.Presenters
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            this.view.IsDateAxis = axis.DateTimeAxis;
+
+            // Tell the view to populate the axis.
+            PopulateView();
 
             // Trap events from the view.
             this.view.TitleChanged += OnTitleChanged;
@@ -53,10 +52,6 @@ namespace UserInterface.Presenters
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
-            this.view.IsDateAxis = axis.DateTimeAxis;
-
-            // Tell the view to populate the axis.
-            PopulateView();
         }
 
 

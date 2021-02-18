@@ -8,6 +8,8 @@ namespace Models.Soils.Nutrients
     using System.Collections.Generic;
     using Interfaces;
     using System.Data;
+    using System.Linq;
+
     /// <summary>
     /// # [Name]
     /// Encapsulates a carbon and nutrient flow between pools.  This flow is characterised in terms of the rate of flow (fraction of the pool per day).  Carbon loss as CO2 is expressed in terms of the efficiency of C retension within the soil.
@@ -18,18 +20,21 @@ namespace Models.Soils.Nutrients
     [ViewName("UserInterface.Views.GridView")]
     public class CarbonFlow : Model, ICustomDocumentation
     {
-        private List<NutrientPool> destinations = new List<NutrientPool>();
+        private NutrientPool[] destinations;
+        private double[] carbonFlowToDestination;
+        private double[] nitrogenFlowToDestination;
 
-        [ChildLinkByName]
+
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction Rate = null;
 
-        [ChildLinkByName]
+        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction CO2Efficiency = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         ISolute NO3 = null;
 
-        [ScopedLinkByName]
+        [Link(ByName = true)]
         ISolute NH4 = null;
 
 
@@ -57,18 +62,23 @@ namespace Models.Soils.Nutrients
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (string destinationName in destinationNames)
+            destinations = new NutrientPool[destinationNames.Length];
+
+            for (int i = 0; i < destinationNames.Length; i++)
             {
-                NutrientPool destination = Apsim.Find(this, destinationName) as NutrientPool;
+                NutrientPool destination = FindInScope<NutrientPool>(destinationNames[i]);
                 if (destination == null)
-                    throw new Exception("Cannot find destination pool with name: " + destinationName);
-                destinations.Add(destination);
+                    throw new Exception("Cannot find destination pool with name: " + destinationNames[i]);
+                destinations[i] = destination;
             }
             MineralisedN = new double[(Parent as NutrientPool).C.Length];
             Catm = new double[(Parent as NutrientPool).C.Length];
+            carbonFlowToDestination = new double[destinations.Length];
+            nitrogenFlowToDestination = new double[destinations.Length];
+
         }
 
         /// <summary>
@@ -81,36 +91,40 @@ namespace Models.Soils.Nutrients
         {
             NutrientPool source = Parent as NutrientPool;
 
-            for (int i = 0; i < source.C.Length; i++)
+            double[] no3 = NO3.kgha;
+            double[] nh4 = NH4.kgha;
+            int numLayers = source.C.Length;
+            int numDestinations = destinations.Length;
+            for (int i = 0; i < numLayers; i++)
             {
 
                 double carbonFlowFromSource = Rate.Value(i) * source.C[i];
-                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource, source.CNRatio[i], 0);
+                double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource * source.N[i], source.C[i], 0);
 
-                double[] carbonFlowToDestination = new double[destinations.Count];
-                double[] nitrogenFlowToDestination = new double[destinations.Count];
-
-                for (int j = 0; j < destinations.Count; j++)
+                double totalNitrogenFlowToDestinations = 0;
+                double co2Efficiency = CO2Efficiency.Value(i);
+                for (int j = 0; j < numDestinations; j++)
                 {
-                    carbonFlowToDestination[j] = carbonFlowFromSource * CO2Efficiency.Value(i) * destinationFraction[j];
-                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j], destinations[j].CNRatio[i], 0.0);
+                    var destination = destinations[j];
+                    carbonFlowToDestination[j] = carbonFlowFromSource * co2Efficiency * destinationFraction[j];
+                    nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destination.N[i], destination.C[i], 0.0);
+                    totalNitrogenFlowToDestinations += nitrogenFlowToDestination[j];
                 }
 
-                double TotalNitrogenFlowToDestinations = MathUtilities.Sum(nitrogenFlowToDestination);
                 // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
-                double MineralNSupply = (NO3.kgha[i] + NH4.kgha[i]) * source.LayerFraction[i];
-                double NSupply = nitrogenFlowFromSource + MineralNSupply;
+                double mineralNSupply = (no3[i] + nh4[i]) * source.LayerFraction[i];
+                double nSupply = nitrogenFlowFromSource + mineralNSupply;
 
-                if (TotalNitrogenFlowToDestinations > NSupply)
+                if (totalNitrogenFlowToDestinations > nSupply)
                 {
-                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(MineralNSupply, TotalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralNSupply, totalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
 
-                    for (int j = 0; j < destinations.Count; j++)
+                    for (int j = 0; j < numDestinations; j++)
                     {
                         carbonFlowToDestination[j] *= NSupplyFactor;
                         nitrogenFlowToDestination[j] *= NSupplyFactor;
                     }
-                    TotalNitrogenFlowToDestinations *= NSupplyFactor;
+                    totalNitrogenFlowToDestinations *= NSupplyFactor;
 
                     carbonFlowFromSource *= NSupplyFactor;
                     nitrogenFlowFromSource *= NSupplyFactor;
@@ -119,27 +133,27 @@ namespace Models.Soils.Nutrients
 
                 source.C[i] -= carbonFlowFromSource;
                 source.N[i] -= nitrogenFlowFromSource;
-                Catm[i] = carbonFlowFromSource - MathUtilities.Sum(carbonFlowToDestination);
-                for (int j = 0; j < destinations.Count; j++)
+                Catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
+                for (int j = 0; j < numDestinations; j++)
                 {
                     destinations[j].C[i] += carbonFlowToDestination[j];
                     destinations[j].N[i] += nitrogenFlowToDestination[j];
                 }
 
-                if (TotalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
+                if (totalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
                 {
-                    MineralisedN[i] = nitrogenFlowFromSource - TotalNitrogenFlowToDestinations;
-                    NH4.kgha[i] += MineralisedN[i];
+                    MineralisedN[i] = nitrogenFlowFromSource - totalNitrogenFlowToDestinations;
+                    nh4[i] += MineralisedN[i];
                 }
                 else
                 {
-                    double NDeficit = TotalNitrogenFlowToDestinations - nitrogenFlowFromSource;
-                    double NH4Immobilisation = Math.Min(NH4.kgha[i], NDeficit);
-                    NH4.kgha[i] -= NH4Immobilisation;
+                    double NDeficit = totalNitrogenFlowToDestinations - nitrogenFlowFromSource;
+                    double NH4Immobilisation = Math.Min(nh4[i], NDeficit);
+                    nh4[i] -= NH4Immobilisation;
                     NDeficit -= NH4Immobilisation;
 
-                    double NO3Immobilisation = Math.Min(NO3.kgha[i], NDeficit);
-                    NO3.kgha[i] -= NO3Immobilisation;
+                    double NO3Immobilisation = Math.Min(no3[i], NDeficit);
+                    no3[i] -= NO3Immobilisation;
                     NDeficit -= NO3Immobilisation;
 
                     MineralisedN[i] = -NH4Immobilisation - NO3Immobilisation;
@@ -163,7 +177,7 @@ namespace Models.Soils.Nutrients
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // Write Phase Table
@@ -184,7 +198,7 @@ namespace Models.Soils.Nutrients
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
 
                 // write remaining children
-                foreach (IModel memo in Apsim.Children(this, typeof(IFunction)))
+                foreach (IModel memo in this.FindAllChildren<IFunction>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
             }

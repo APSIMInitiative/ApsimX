@@ -1,10 +1,5 @@
-﻿using System.Collections.Generic;
+﻿
 
-// -----------------------------------------------------------------------
-// <copyright file="DisplayAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace Models.Core
 {
     using System;
@@ -21,6 +16,13 @@ namespace Models.Core
         None,
 
         /// <summary>
+        /// Allows the user to select from a preset list of values.
+        /// If this is used, the Values property of DisplayAttribute
+        /// must also be set.
+        /// </summary>
+        DropDown,
+
+        /// <summary>
         /// Use the table name editor.
         /// </summary>
         TableName,
@@ -31,9 +33,29 @@ namespace Models.Core
         CultivarName,
 
         /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifeCycleName,
+
+        /// <summary>
+        /// A LifePhase name editor.
+        /// </summary>
+        LifePhaseName,
+
+        /// <summary>
         /// A file name editor.
         /// </summary>
         FileName,
+
+        /// <summary>
+        /// Allows selection of more than one file name.
+        /// </summary>
+        FileNames,
+
+        /// <summary>
+        /// Allows selection of a directory via a file chooser widget.
+        /// </summary>
+        DirectoryName,
 
         /// <summary>
         /// A field name editor.
@@ -51,19 +73,37 @@ namespace Models.Core
         Model,
 
         /// <summary>
-        /// A CLEM Resource name editor.
+        /// This property is an object whose properties
+        /// should also be displayed/editable in the GUI.
         /// </summary>
-        CLEMResourceName,
+        SubModel,
 
         /// <summary>
-        /// A CLEM Crop file reader editor.
+        /// A CLEM Resource.
         /// </summary>
-        CLEMCropFileName,
+        CLEMResource,
 
         /// <summary>
-        /// A CLEM Grasp file reader editor.
+        /// A CLEM Crop data reader.
         /// </summary>
-        CLEMGraspFileName
+        CLEMCropFileReader,
+
+        /// <summary>
+        /// A CLEM pasture data reader.
+        /// </summary>
+        CLEMPastureFileReader,
+
+        /// <summary>
+        /// A CLEM resource data reader.
+        /// </summary>
+        CLEMResourceFileReader,
+
+        /// <summary>
+        /// Only valid on an array property. Uses an multi-line
+        /// text editor. Each line of input is treated as an
+        /// element in the array.
+        /// </summary>
+        MultiLineText
     }
 
     /// <summary>
@@ -91,15 +131,15 @@ namespace Models.Core
 
         /// <summary>
         /// Gets or sets the types for the ResourceGroups whose Resource items are valid choices in the Resource name editor.
-        /// eg. [Display(CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
+        /// eg. [Display(CLEMResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } )]"
         /// Will create a dropdown list with all the Resource items from only the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// </summary>
-        public Type[] CLEMResourceNameResourceGroups { get; set; }
+        public Type[] CLEMResourceGroups { get; set; }
 
         /// <summary>
         /// Gets or sets strings that are manually added to the Resource name editor.
         /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
-        /// Will add these strings to the dropdown list created by CLEMResourceNameResourceGroups. 
+        /// Will add these strings to the dropdown list created by CLEMResourceGroups. 
         /// </summary>
         public string[] CLEMExtraEntries { get; set; }
 
@@ -113,5 +153,22 @@ namespace Models.Core
         /// Methods pointed to by this property can return any generic IEnumerable and must accept no arguments.
         /// </summary>
         public string Values { get; set; }
+
+        /// <summary>
+        /// Specifies a callback method that will be called by GUI to determine if this property is enabled.
+        /// </summary>
+        public string EnabledCallback { get; set; }
+
+        /// <summary>
+        /// Used in conjuction with <see cref="DisplayType.CultivarName"/>.
+        /// Specifies the name of a plant whose cultivars should be displayed.
+        /// </summary>
+        public string PlantName { get; set; }
+
+        /// <summary>
+        /// Used in conjuction with <see cref="DisplayType.LifePhaseName"/>.
+        /// Specifies the name of a LifeCycle whose phases should be displayed.
+        /// </summary>
+        public string LifeCycleName { get; set; }
     }
 }

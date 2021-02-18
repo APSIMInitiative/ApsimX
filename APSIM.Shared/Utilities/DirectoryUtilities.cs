@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DataTableUtilties.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
 
     /// <summary>
     /// A collection of directory utilities.
@@ -57,15 +52,20 @@ namespace APSIM.Shared.Utilities
         /// then it will look for matching files in all sub directories. If SearchHiddenFolders is
         /// true then it will look in hidden folders as well.
         /// </summary>
-        public static void FindFiles(string directoryName, string fileSpec, ref List<string> fileNames,
-                                     bool recurse = false, bool searchHiddenFolders = false)
+        /// <param name="fileSpec">
+        /// File specification - e.g. "*.apsimx". If a path/directory name
+        /// is ommitted, search will start from current working directory.
+        /// </param>
+        /// <param name="recurse">Search child directories?</param>
+        public static string[] FindFiles(string fileSpec, bool recurse = false)
         {
-            foreach (string FileName in System.IO.Directory.GetFiles(directoryName, fileSpec))
-                fileNames.Add(FileName);
-            if (recurse)
-                foreach (string ChildDirectoryName in System.IO.Directory.GetDirectories(directoryName))
-                    if (searchHiddenFolders || (File.GetAttributes(ChildDirectoryName) & FileAttributes.Hidden) != FileAttributes.Hidden)
-                        FindFiles(ChildDirectoryName, fileSpec, ref fileNames, recurse, searchHiddenFolders);
+            SearchOption searchType = recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            string fileName = Path.GetFileName(fileSpec);
+            string path = Path.GetDirectoryName(fileSpec);
+            if (string.IsNullOrEmpty(path))
+                path = Directory.GetCurrentDirectory();
+
+            return Directory.EnumerateFiles(path, fileName, searchType).ToArray();
         }
 
         /// <summary>

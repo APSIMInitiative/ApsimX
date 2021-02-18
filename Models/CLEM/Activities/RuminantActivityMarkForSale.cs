@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Groupings;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -38,6 +39,17 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// Overwrite any currently recorded sale flag
+        /// </summary>
+        [Description("Overwrite existing sale flag")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool OverwriteFlag { get; set; }
+
+        private int filterGroupsCount = 0;
+        private int numberToTag = 0;
+        private bool labourShortfall = false;
+
+        /// <summary>
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>List of required resource requests</returns>
@@ -51,10 +63,24 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = CurrentHerd(false);
-            int head = herd.Count();
+
+            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
+            if (filterGroupsCount > 0)
+            {
+                numberToTag = 0;
+                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                {
+                    numberToTag += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                }
+            }
+            else
+            {
+                numberToTag = herd.Count();
+            }
+
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
             double daysNeeded = 0;
@@ -66,18 +92,17 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
+                    numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
                     }
-
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Mark", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -85,6 +110,20 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void AdjustResourcesNeededForActivity()
         {
+            labourShortfall = false;
+            if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
+            {
+                switch (labourRequirement.UnitType)
+                {
+                    case LabourUnitType.Fixed:
+                    case LabourUnitType.perHead:
+                        numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
+                        labourShortfall = true;
+                        break;
+                    default:
+                        throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                }
+            }
             return;
         }
 
@@ -97,39 +136,24 @@ namespace Models.CLEM.Activities
             if (this.TimingOK)
             {
                 List<Ruminant> herd = CurrentHerd(false);
-                if (herd != null && herd.Count > 0)
+                if (numberToTag > 0)
                 {
-                    double numberToTag = herd.Count();
-                    if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
+                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        switch (labourRequirement.UnitType)
+                        foreach (Ruminant ind in herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
-                            case LabourUnitType.Fixed:
-                                // no individuals tagged
-                                numberToTag = 0;
-                                this.Status = ActivityStatus.Ignored;
-                                break;
-                            case LabourUnitType.perHead:
-                                numberToTag = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
-                                this.Status = ActivityStatus.Partial;
-                                break;
-                            default:
-                                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                            this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
+                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            numberToTag--;
                         }
                     }
-                    else
+                    if(filterGroupsCount == 0)
                     {
-                        this.Status = ActivityStatus.Success;
-                    }
-
-                    int cnt = 0;
-                    foreach (var ind in herd)
-                    {
-                        ind.SaleFlag = HerdChangeReason.MarkedSale;
-                        cnt++;
-                        if (cnt > numberToTag)
+                        foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
-                            break;
+                            this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
+                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            numberToTag--;
                         }
                     }
                 }
@@ -189,6 +213,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -196,10 +222,8 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Mark individuals in the following groups for sale";
-            html += "</div>";
-            return html;
-        }
+            return "\r\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
+        } 
+        #endregion
     }
 }

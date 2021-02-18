@@ -1,9 +1,11 @@
 ﻿namespace Models.Soils.Arbitrator
 {
     using System;
+    using System.Linq;
     using APSIM.Shared.Utilities;
     using Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
 
     /// <summary>
     /// Represents a zone (point, field etc) that has water and N values.
@@ -13,9 +15,7 @@
     {
         private ISolute NO3Solute;
         private ISolute NH4Solute;
-        private ISolute PlantAvailableNO3Solute;
-        private ISolute PlantAvailableNH4Solute;
-
+        private ISoilWater WaterBalance;
         private Soil soilInZone;
 
         /// <summary>
@@ -32,19 +32,11 @@
         /// <summary>Amount of NH4 (kg/ha)</summary>
         public double[] NH4N;
 
-        /// <summary>Amount of plant-avilable NO3 (kg/ha)</summary>
-        public double[] PlantAvailableNO3N;
-
-        /// <summary>Amount of plant-available NH4 (kg/ha)</summary>
-        public double[] PlantAvailableNH4N;
-
-        
-
         /// <summary>Gets the sum of 'Water' (mm)</summary>
-        public double TotalWater { get { return MathUtilities.Sum(Water); } }
+        public double TotalWater { get { return Water.Sum(); } }
 
         /// <summary>Gets the sum of 'NO3N' (mm)</summary>
-        public double TotalNO3N { get { return MathUtilities.Sum(NO3N); } }
+        public double TotalNO3N { get { return NO3N.Sum(); } }
 
         /// <summary>
         /// Constructor
@@ -53,8 +45,6 @@
         public ZoneWaterAndN(Zone zone)
         {
             Zone = zone;
-            soilInZone = Apsim.Child(zone, typeof(Soil)) as Soil;
-            Initialise();
         }
 
         /// <summary>
@@ -65,16 +55,13 @@
         {
             NO3Solute = from.NO3Solute;
             NH4Solute = from.NH4Solute;
-            PlantAvailableNO3Solute = from.PlantAvailableNO3Solute;
-            PlantAvailableNH4Solute = from.PlantAvailableNH4Solute;
             soilInZone = from.soilInZone;
             Zone = from.Zone;
+            WaterBalance = from.WaterBalance;
 
             Water = from.Water;
             NO3N = from.NO3N;
             NH4N = from.NH4N;
-            PlantAvailableNO3N = from.PlantAvailableNO3N;
-            PlantAvailableNH4N = from.PlantAvailableNH4N;
         }
 
         /// <summary>
@@ -92,20 +79,23 @@
         /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
-            NO3Solute = Apsim.Find(soilInZone, "NO3") as ISolute;
-            NH4Solute = Apsim.Find(soilInZone, "NH4") as ISolute;
-            PlantAvailableNO3Solute = Apsim.Find(soilInZone, "PlantAvailableNO3") as ISolute;
-            PlantAvailableNH4Solute = Apsim.Find(soilInZone, "PlantAvailableNH4") as ISolute;
+            WaterBalance = soilInZone.FindInScope<ISoilWater>();
+            NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
+            NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
+            var PlantAvailableNO3Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNO3");
+            if (PlantAvailableNO3Solute != null)
+                NO3Solute = PlantAvailableNO3Solute;
+            var PlantAvailableNH4Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNH4");
+            if (PlantAvailableNH4Solute != null)
+                NH4Solute = PlantAvailableNH4Solute;
         }
 
         /// <summary>Initialises this instance.</summary>
         public void InitialiseToSoilState()
         {
-            Water = soilInZone.Water;
+            Water = WaterBalance.SWmm;
             NO3N = NO3Solute.kgha;
             NH4N = NH4Solute.kgha;
-            PlantAvailableNO3N = PlantAvailableNO3Solute.kgha;
-            PlantAvailableNH4N = PlantAvailableNH4Solute.kgha;
         }
 
         /// <summary>Implements the operator *.</summary>
@@ -118,8 +108,6 @@
             NewZ.Water = MathUtilities.Multiply_Value(zone.Water, value);
             NewZ.NO3N = MathUtilities.Multiply_Value(zone.NO3N, value);
             NewZ.NH4N = MathUtilities.Multiply_Value(zone.NH4N, value);
-            NewZ.PlantAvailableNO3N = MathUtilities.Multiply_Value(zone.PlantAvailableNO3N, value);  
-            NewZ.PlantAvailableNH4N = MathUtilities.Multiply_Value(zone.PlantAvailableNH4N, value);
             return NewZ;
         }
 
@@ -136,8 +124,6 @@
             NewZ.Water = MathUtilities.Add(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Add(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Add(ZWN1.NH4N, ZWN2.NH4N);
-            NewZ.PlantAvailableNO3N = MathUtilities.Add(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
-            NewZ.PlantAvailableNH4N = MathUtilities.Add(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
 
@@ -154,8 +140,6 @@
             NewZ.Water = MathUtilities.Subtract(ZWN1.Water, ZWN2.Water);
             NewZ.NO3N = MathUtilities.Subtract(ZWN1.NO3N, ZWN2.NO3N);
             NewZ.NH4N = MathUtilities.Subtract(ZWN1.NH4N, ZWN2.NH4N);
-            NewZ.PlantAvailableNO3N = MathUtilities.Subtract(ZWN1.PlantAvailableNO3N, ZWN2.PlantAvailableNO3N);
-            NewZ.PlantAvailableNH4N = MathUtilities.Subtract(ZWN1.PlantAvailableNH4N, ZWN2.PlantAvailableNH4N);
             return NewZ;
         }
     }

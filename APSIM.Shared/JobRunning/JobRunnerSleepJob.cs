@@ -17,6 +17,16 @@
             durationOfSleep = duration;
         }
 
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
+
+        /// <summary>
+        /// Name of the job.
+        /// </summary>
+        public string Name { get { return $"Sleep job ({durationOfSleep}ms)"; } }
+
         /// <summary>Called to start the job. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)

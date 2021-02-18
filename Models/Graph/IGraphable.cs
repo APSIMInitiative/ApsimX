@@ -1,26 +1,25 @@
-﻿namespace Models.Graph
+﻿namespace Models
 {
     using Models.Storage;
     using System.Collections;
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
+    using Models.Core;
 
     /// <summary>
     /// An interface for a model that can graph itself.
     /// </summary>
-    public interface IGraphable
+    public interface IGraphable : IModel
     {
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
-        /// <param name="definitions">A list of definitions to add to.</param>
         /// <param name="storage">Storage service</param>
         /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
-        void GetSeriesToPutOnGraph(IStorageReader storage, List<SeriesDefinition> definitions, List<string> simulationFilter = null);
+        IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
-        /// <param name="annotations">A list of annotations to add to.</param>
-        void GetAnnotationsToPutOnGraph(List<Annotation> annotations);
+        IEnumerable<IAnnotation> GetAnnotations();
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
         /// <param name="seriesDefinition">The calling series definition.</param>
@@ -50,7 +49,12 @@
         /// <summary>
         /// A stacked area series - a line series with the area between the line and the x-axis filled with colour.
         /// </summary>
-        StackedArea
+        StackedArea,
+
+        /// <summary>
+        /// A box and whisker plot
+        /// </summary>
+        Box
     }
 
     /// <summary>An enumeration for the different types of markers</summary>
@@ -100,7 +104,14 @@
         Normal,
 
         /// <summary>Small markers</summary>
-        Small
+        Small,
+
+        /// <summary>Very small markers</summary>
+        VerySmall,
+
+        /// <summary>Large size markers.</summary>
+        Large,
+
     }
 
     /// <summary>An enumeration representing the different types of lines</summary>
@@ -133,14 +144,14 @@
     }
 
     /// <summary>Base interface for all annotations</summary>
-    public interface Annotation
+    public interface IAnnotation
     {
     }
 
     /// <summary>
     /// A class for defining a text annotation
     /// </summary>
-    public class TextAnnotation : Annotation
+    public class TextAnnotation : IAnnotation
     {
         /// <summary>X position - can be double.MinValue for autocalculated</summary>
         public object x;
@@ -164,7 +175,7 @@
     /// <summary>
     /// A class for defining a line annotation
     /// </summary>
-    public class LineAnnotation : Annotation
+    public class LineAnnotation : IAnnotation
     {
         /// <summary>X1 position - can be double.MinValue for autocalculated</summary>
         public object x1;
@@ -186,5 +197,11 @@
 
         /// <summary>Gets the line thickness</summary>
         public LineThicknessType thickness;
+
+        /// <summary>Draw the annotation in front of series?</summary>
+        public bool InFrontOfSeries { get; set; } = true;
+
+        /// <summary>Annotation tooltip</summary>
+        public string ToolTip { get; set; }
     }
 }

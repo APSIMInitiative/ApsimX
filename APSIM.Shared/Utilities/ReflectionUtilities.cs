@@ -1,13 +1,10 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ReflectionUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using System;
-    using System.CodeDom.Compiler;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -44,11 +41,25 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static List<FieldInfo> GetAllFields(Type type, BindingFlags flags)
         {
-            if (type == typeof(Object)) return new List<FieldInfo>();
+            if (type == null || type == typeof(Object)) return new List<FieldInfo>();
 
             var list = GetAllFields(type.BaseType, flags);
             // in order to avoid duplicates, force BindingFlags.DeclaredOnly
             list.AddRange(type.GetFields(flags | BindingFlags.DeclaredOnly));
+            return list;
+        }
+
+        /// <summary>
+        /// Return all properties. The normal .NET reflection doesn't return private fields in base classes.
+        /// This function does.
+        /// </summary>
+        public static List<PropertyInfo> GetAllProperties(Type type, BindingFlags flags)
+        {
+            if (type == typeof(Object) || type == null) return new List<PropertyInfo>();
+
+            var list = GetAllProperties(type.BaseType, flags);
+            // in order to avoid duplicates, force BindingFlags.DeclaredOnly
+            list.AddRange(type.GetProperties(flags | BindingFlags.DeclaredOnly));
             return list;
         }
 
@@ -104,7 +115,7 @@ namespace APSIM.Shared.Utilities
             }
             else
             {
-                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.IgnoreCase;
+                BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
                 FieldInfo F = obj.GetType().GetField(name, Flags);
                 if (F != null)
                 {
@@ -256,7 +267,7 @@ namespace APSIM.Shared.Utilities
         {
             PropertyInfo NameProperty = obj.GetType().GetProperty("Name");
             if (NameProperty == null || !NameProperty.CanWrite)
-                throw new Exception("Cannot set the name of object with type: " + obj.GetType().Name + 
+                throw new Exception("Cannot set the name of object with type: " + obj.GetType().Name +
                                     ". It does not have a public, settable, name property");
             else
                 NameProperty.SetValue(obj, newName, null);
@@ -326,12 +337,70 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Convert an object into a json string. 
+        /// </summary>
+        /// <param name="source">The source object.</param>
+        /// <param name="includePrivates">Serialise private members as well as publics?</param>
+        /// <returns>The string representation of the object.</returns>
+        public static string JsonSerialise(object source, bool includePrivates)
+        {
+            return JsonConvert.SerializeObject(source, Formatting.Indented,
+                    new JsonSerializerSettings
+                    {
+                        ContractResolver = new DynamicContractResolver(includePrivates),
+                        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    });
+        }
+
+        ///<summary> Custom Contract resolver to stop deseralization of Parent properties </summary>
+        private class DynamicContractResolver : DefaultContractResolver
+        {
+            private BindingFlags bindingFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+
+            public DynamicContractResolver(bool includePrivates)
+            {
+                if (includePrivates)
+                    bindingFlags |= BindingFlags.NonPublic;
+            }
+
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                var props = GetAllFields(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
+                            .Union(
+                            GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
+                            ).ToList();
+                props.ForEach(p => { p.Writable = true; p.Readable = true; });
+                return props.Where(p => p.PropertyName != "Parent").ToList();
+            }
+        }
+
+
+        /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'
         /// using the invariant culture. Will throw if cannot convert type.
         /// </summary>
         public static object StringToObject(Type dataType, string newValue)
         {
             return StringToObject(dataType, newValue, CultureInfo.InvariantCulture);
+        }
+
+        private static readonly HashSet<Type> numericTypes = new HashSet<Type>
+        {
+            typeof(decimal),
+            typeof(short), typeof(ushort),
+            typeof(int), typeof(uint),
+            typeof(long), typeof(ulong),
+            typeof(float), typeof(double)
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
+        public static bool IsNumericType(Type dataType)
+        {
+            return numericTypes.Contains(dataType);
         }
 
         /// <summary>
@@ -365,13 +434,18 @@ namespace APSIM.Shared.Utilities
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
+                //
+                // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
+                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
 
                 // An object array is not good enough. We need an array with correct element type.
                 Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
                 Array.Copy(arr, result, arr.Length);
                 return result;
             }
+
+            if (dataType == typeof(System.Drawing.Color) && int.TryParse(newValue, out int argb))
+                return System.Drawing.Color.FromArgb(argb);
 
             // Do we really want enums to be case-insensitive?
             if (dataType.IsEnum)
@@ -382,7 +456,14 @@ namespace APSIM.Shared.Utilities
             if (underlyingType != null)
                 dataType = underlyingType;
 
-            return Convert.ChangeType(newValue, dataType, format);
+            try
+            {
+                return Convert.ChangeType(newValue, dataType, format);
+            }
+            catch (Exception err)
+            {
+                throw new FormatException($"Unable to convert {newValue} to type {dataType}", err);
+            }
         }
 
         /// <summary>
@@ -402,6 +483,9 @@ namespace APSIM.Shared.Utilities
         /// <param name="format">Culture to use for the conversion.</param>
         public static string ObjectToString(object obj, IFormatProvider format)
         {
+            if (obj == null)
+                return null;
+
             if (obj.GetType().IsArray)
             {
                 string stringValue = "";
@@ -409,11 +493,13 @@ namespace APSIM.Shared.Utilities
                 for (int j = 0; j < arr.Length; j++)
                 {
                     if (j > 0)
-                        stringValue += ",";
+                        stringValue += ", ";
                     stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;
             }
+            else if (obj.GetType() == typeof(System.Drawing.Color))
+                return ((System.Drawing.Color)obj).ToArgb().ToString();
             else
                 return Convert.ToString(obj, format);
         }
@@ -518,22 +604,27 @@ namespace APSIM.Shared.Utilities
 
 
         /// <summary>
-        /// Get a string from a resource file.
+        /// Get a string from a resource file stored in the current assembly.
         /// </summary>
-        /// <param name="resourceName"></param>
-        /// <returns></returns>
+        /// <param name="resourceName">Name of the resource.</param>
         public static string GetResourceAsString(string resourceName)
         {
-            string result;
-            var assembly = Assembly.GetCallingAssembly();
-            assembly.GetManifestResourceStream(resourceName);
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                result = reader.ReadToEnd();
-            }
+            return GetResourceAsString(Assembly.GetCallingAssembly(), resourceName);
+        }
 
-            return result;
+        /// <summary>
+        /// Get a string from a resource file stored in a specific assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly which houses the resource file.</param>
+        /// <param name="resourceName">Name of the resource.</param>
+        public static string GetResourceAsString(Assembly assembly, string resourceName)
+        {
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                if (stream != null)
+                    using (StreamReader reader = new StreamReader(stream))
+                        return reader.ReadToEnd();
+
+            return null;
         }
     }
 }

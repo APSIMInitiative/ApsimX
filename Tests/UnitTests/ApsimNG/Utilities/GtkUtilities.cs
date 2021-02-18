@@ -11,12 +11,29 @@ using APSIM.Shared.Utilities;
 
 namespace UnitTests.ApsimNG.Utilities
 {
+    /// <summary>
+    /// gtk-related utility functions used by the UI tests.
+    /// </summary>
     public static class GtkUtilities
     {
+        /// <summary>
+        /// A type of button press.
+        /// </summary>
         public enum ButtonPressType : uint
         {
+            /// <summary>
+            /// A left click.
+            /// </summary>
             LeftClick = 1,
+
+            /// <summary>
+            /// A middle click.
+            /// </summary>
             MiddleClick = 2,
+
+            /// <summary>
+            /// A Right click.
+            /// </summary>
             RightClick = 3,
         };
 
@@ -40,6 +57,19 @@ namespace UnitTests.ApsimNG.Utilities
             GLib.Signal.Emit(target, "button-press-event", new object[0]);
             GLib.Signal.Emit(target, "button-release-event", new object[0]);
 
+            if (wait)
+                WaitForGtkEvents();
+        }
+
+        public static void ClickOnCheckBox(ICheckBoxView checkBox, bool wait = true)
+        {
+            CheckButton button = (CheckButton)ReflectionUtilities.GetValueOfFieldOrProperty("checkbutton1", checkBox);
+            ClickOnCheckBox(button, wait);
+        }
+
+        public static void ClickOnCheckBox(CheckButton checkBox, bool wait = true)
+        {
+            checkBox.Active = !checkBox.Active;
             if (wait)
                 WaitForGtkEvents();
         }
@@ -288,7 +318,7 @@ namespace UnitTests.ApsimNG.Utilities
 
             return modifier;
         }
-
+        
         public static void SelectComboBoxItem(IDropDownView view, string item, bool wait = true)
         {
             ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", view) as ComboBox;

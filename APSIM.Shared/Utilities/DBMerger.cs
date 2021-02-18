@@ -15,16 +15,24 @@
         /// Merge multiple .db files into a single .db file.
         /// </summary>
         /// <param name="fileSpec">The file specification for the .db files to merge.</param>
+        /// <param name="recurse">Recursively search for matching .db files in child directories?</param>
         /// <param name="outFileName">The name of the new output file.</param>
-        public static void MergeFiles(string fileSpec, string outFileName)
+        public static void MergeFiles(string fileSpec, bool recurse, string outFileName)
         {
             File.Delete(outFileName);
 
-            string path = Path.GetDirectoryName(fileSpec);
-            if (path == "")
-                path = Directory.GetCurrentDirectory();
-            var filesToMerge = Directory.GetFiles(path, Path.GetFileName(fileSpec)).ToList();
-            if (filesToMerge.Count > 1)
+            string[] filesToMerge = DirectoryUtilities.FindFiles(fileSpec, recurse);
+            MergeFiles(filesToMerge, outFileName);
+        }
+
+        /// <summary>
+        /// Merge multiple .db files into a single .db file.
+        /// </summary>
+        /// <param name="filesToMerge">The .db files to be merged.</param>
+        /// <param name="outFileName">The name of the new output file.</param>
+        public static void MergeFiles(string[] filesToMerge, string outFileName)
+        {
+            if (filesToMerge.Length > 1)
             {
                 File.Copy(filesToMerge[0], outFileName, overwrite:true);
 
@@ -32,11 +40,12 @@
                 destination.OpenDatabase(outFileName, readOnly: false);
                 try
                 {
-
                     foreach (var sourceFileName in filesToMerge.Where(file => file != filesToMerge[0]))
                     {
                         var source = new SQLite();
-                        source.OpenDatabase(sourceFileName, readOnly: true);
+                        // If readOnly is true then .db-shm files are not removed on close. Bug in SqLite.
+                        // http://sqlite.1065341.n5.nabble.com/journal-files-not-always-removed-td83700.html
+                        source.OpenDatabase(sourceFileName, readOnly: false); 
                         try
                         {
                             Merge(source, destination);
@@ -51,6 +60,10 @@
                 {
                     destination.CloseDatabase();
                 }
+            }
+            else if(filesToMerge.Length == 1)
+            {
+                File.Copy(filesToMerge[0], outFileName, true);
             }
         }
 
@@ -107,7 +120,7 @@
         {
             var sourceData = source.ExecuteQuery("SELECT * FROM " + tableName);
 
-            DataTable destinationData;
+            DataTable destinationData = null;
             if (destination.GetTableNames().Contains(tableName))
                 destinationData = destination.ExecuteQuery("SELECT * FROM " + tableName);
             else
@@ -118,6 +131,7 @@
                 destination.CreateTable(tableName, colNames, colTypes);
             }
 
+            DataView view = null;
             var columnNames = DataTableUtilities.GetColumnNames(sourceData).ToList();
             foreach (DataRow simulationRow in sourceData.Rows)
             {
@@ -130,7 +144,19 @@
                         simulationRow["SimulationID"] = newID;
                     }
                 }
-                destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
+                if (tableName == "_Units")
+                {
+                    // For the units table only copy the row if it doesn't already exist.
+                    if (view == null)
+                        view = new DataView(destinationData);
+                    var sourceTableName = (string)simulationRow["TableName"];
+                    var sourceColumnHeading = (string)simulationRow["ColumnHeading"];
+                    view.RowFilter = $"TableName='{sourceTableName}' and ColumnHeading='{sourceColumnHeading}'";
+                    if (view.Count == 0)
+                        destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
+                }
+                else
+                    destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
             }
 
         }

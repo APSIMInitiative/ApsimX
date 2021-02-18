@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -31,7 +32,7 @@ namespace Models.CLEM.Resources
         /// Total Area
         /// </summary>
         [Description("Land area")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double LandArea { get; set; }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1.0)]
         [Description("Allocate only proportion of Land area")]
-        [Required, Proportion]
+        [Required, Proportion, GreaterThanValue(0)]
         public double ProportionOfTotalArea { get; set; }
 
         /// <summary>
@@ -60,7 +61,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Area not currently being used (ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AreaAvailable { get { return areaAvailable; } }
         private double areaAvailable { get { return roundedAreaAvailable; } set { roundedAreaAvailable = Math.Round(value, 9); } }
         private double roundedAreaAvailable;
@@ -68,13 +69,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The total area available 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
 
         /// <summary>
         /// List of currently allocated land
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<LandActivityAllocation> AllocatedActivitiesList;
 
         private CLEMModel ActivityRequestingRemainingLand;
@@ -106,7 +107,7 @@ namespace Models.CLEM.Resources
         {
             if (UsableArea > 0)
             {
-                Add(UsableArea, this, "Initialise");
+                Add(UsableArea, this, this.NameWithParent, "Initialise");
             }
 
             // take away buildings (allows building to change over time. 
@@ -116,7 +117,7 @@ namespace Models.CLEM.Resources
                 {
                     ActivityModel = this,
                     AllowTransmutation = false,
-                    Reason = "Allocate buildings",
+                    Category = "Allocate buildings",
                     Required = UsableArea * PortionBuildings,
                     Resource = this as IResourceType,
                     ResourceTypeName = this.Name,
@@ -130,14 +131,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add to food store
         /// </summary>
-        /// <param name="resourceAmount"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
             {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported Add method in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
             }
             double addAmount = (double)resourceAmount;
             double amountAdded = addAmount;
@@ -156,14 +158,16 @@ namespace Models.CLEM.Resources
             {
                 Gain = amountAdded,
                 Activity = activity,
-                Reason = reason,
+                RelatesToResource = relatesToResource,
+                Category = category,
                 ResourceType = this
             };
+            LastGain = amountAdded;
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
             OnTransactionOccurred(te);
 
-            if (reason != "Initialise")
+            if (category != "Initialise")
             {
                 UpdateLandAllocatedList(activity, amountAdded, true);
                 // adjust activity using all remaining land as well.
@@ -189,7 +193,7 @@ namespace Models.CLEM.Resources
             // avoid taking too much
             amountRemoved = Math.Min(this.areaAvailable, amountRemoved);
 
-            if (request.Reason != "Assign unallocated")
+            if (request.Category != "Assign unallocated")
             {
                 this.areaAvailable -= amountRemoved;
             }
@@ -213,7 +217,8 @@ namespace Models.CLEM.Resources
                 ResourceType = this,
                 Loss = amountRemoved,
                 Activity = request.ActivityModel,
-                Reason = request.Reason
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource
             };
             LastTransaction = details;
             TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -287,10 +292,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -299,30 +306,44 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
-            string units = (this as IResourceType).Units;
-            if (units != "NA")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                if (units == null || units == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (LandArea == 0)
                 {
-                    html += "";
+                    htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
+                }
+                else if (ProportionOfTotalArea == 0)
+                {
+                    htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
                 }
                 else
                 {
-                    html += " <span class=\"setvalue\">" + units + "</span>";
+                    htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
+                    string units = (this as IResourceType).Units;
+                    if (units != "NA")
+                    {
+                        if (units == null || units == "")
+                        {
+                            htmlWriter.Write("");
+                        }
+                        else
+                        {
+                            htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
+                        }
+                    }
                 }
-            }
 
-            if (PortionBuildings > 0)
-            {
-                html += " of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings";
+                if (PortionBuildings > 0)
+                {
+                    htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "This land has soil of index <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>
@@ -333,6 +354,8 @@ namespace Models.CLEM.Resources
         {
             return "";
         }
+
+        #endregion 
     }
 
     /// <summary>
