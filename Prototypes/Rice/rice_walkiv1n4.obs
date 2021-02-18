@@ -1,0 +1,8 @@
+*ApsimVersion = 7.10
+Title = rice_walkiN4
+          Date           wagt            wso            wrr       wagterror    wsoerror     wrrerror   
+             (dd/mm/yyyy)        (kg/ha)        (kg/ha)             (kg/ha)      (kg/ha)  (kg/ha)  (kg/ha)      
+20/02/2018     	1492.237	  0.0             0.0	647.407   0.0   0.0
+12/04/2018	11934.15	2559.769          0.0	1950.023   447.504   0.0
+4/05/2018	15298.31	6815.25	      5494.013  3133.46    3111.88  267.72
+             
