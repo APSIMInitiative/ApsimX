@@ -307,6 +307,8 @@
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.ComponentModel.TypeConverter).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
             };
 
             if (previousCompilations != null)
