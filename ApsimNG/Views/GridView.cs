@@ -952,7 +952,14 @@
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
-                    splitter.Position = Math.Min(fixedColView.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
+                {
+#if NETFRAMEWORK
+                    int width = fixedColView.SizeRequest().Width;
+#else
+                    fixedColView.GetPreferredWidth(out _, out int width);
+#endif
+                    splitter.Position = Math.Min(width + splitterWidth, splitter.Allocation.Width / 2);
+                }
                 else
                     splitter.Position = fixedColView.WidthRequest + splitterWidth;
             }
