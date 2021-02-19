@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Activities
 {
@@ -25,25 +26,10 @@ namespace Models.CLEM.Activities
     [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
-    public class RuminantActivityPredictiveStockingENSO: CLEMActivityBase
+    public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase
     {
         [Link]
         Clock Clock = null;
-
-        /// <summary>
-        /// Herd to manage for dry season pasture availability
-        /// </summary>
-        [Description("Name of herd to manage")]
-        [Required]
-        public string HerdName { get; set; }
-
-        /// <summary>
-        /// Month for assessing dry season feed requirements
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(5)]
-        [Description("Month for assessing dry season feed requirements")]
-        [Required, Month]
-        public MonthsOfYear AssessmentMonth { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) before restocking
@@ -52,29 +38,11 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double MinimumFeedBeforeRestock { get; set; }
 
-        // restock proportion. I don't understand this.
-        // Maximum % restock breeders/age group
-
         /// <summary>
-        /// Allow dry cows to be sold if feed shortage
+        /// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
         /// </summary>
-        [Description("Allow dry cows to be sold if feed shortage")]
-        [Required]
-        public bool SellDryCows { get; set; }
-
-        /// <summary>
-        /// Allow wet cows to be sold if feed shortage
-        /// </summary>
-        [Description("Allow wet cows to be sold if feed shortage")]
-        [Required]
-        public bool SellWetCows { get; set; }
-
-        /// <summary>
-        /// Allow steers to be sold if feed shortage
-        /// </summary>
-        [Description("Allow steers to be sold if feed shortage")]
-        [Required]
-        public bool SellSteers { get; set; }
+        [Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
+        public string GrazeFoodStoreName { get; set; }
 
         /// <summary>
         /// File containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
@@ -83,50 +51,64 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("SOI monthly data file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "SOI monthly data filename required")]
+        [Models.Core.Display(Type = DisplayType.FileName)]
         public string MonthlySIOFile { get; set; }
 
-        private string fullFilename;
-
         /// <summary>
-        /// Name of GrazeFoodStore (paddock) to place purchases in for grazing (leave blank for general yards)
+        /// Mean SOI value before considered La Niña
         /// </summary>
-        [Description("Name of GrazeFoodStore (paddock) to place purchases in (leave blank for general yards)")]
-        public string GrazeFoodStoreName { get; set; }
-
-        private Dictionary<DateTime, double> ForecastSequence;
-
-        /// <summary>
-        /// Minimum mean SOI for La Nina
-        /// </summary>
-        [Description("Minimum mean SOI for La Nina")]
+        [Description("SOI cutoff before considered La Niña")]
         [Required, GreaterThanEqualValue(0)]
         public double MeanSOIForLaNina { get; set; }
 
         /// <summary>
-        /// Minimum mean SOI (absolute) for El Nino
+        /// Mean  SOI value before considered El Niño
         /// </summary>
-        [Description("Minimum mean SOI (absolute) for El Nino")]
+        [Description("SOI cutoff (-ve) before considered El Niño")]
         [Required, GreaterThanEqualValue(0)]
         public double MeanSOIForElNino { get; set; }
 
         /// <summary>
-        /// The relationship to convert pasture biomass to stock rate change for El Nino
+        /// The relationship to convert pasture biomass to stock rate change for El Niño
         /// </summary>
-        [Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
+        [Description("El Niño pasture biomass to herd change relationship")]
         [Required]
         public Relationship PastureToStockingChangeElNino { get; set; }
 
         /// <summary>
-        /// The relationship to convert pasture biomass to stock rate change for La Nina
+        /// The relationship to convert pasture biomass to stock rate change for La Niña
         /// </summary>
-        [Description("The relationship to convert last 6 months SOI to stock rate change proportion")]
+        [Description("La Niña pasture biomass to herd change relationship")]
         [Required]
         public Relationship PastureToStockingChangeLaNina { get; set; }
 
         /// <summary>
-        /// Store graze 
+        /// AE to destock
         /// </summary>
+        [field: NonSerialized]
+        public double AeToDestock { get; private set; }
+
+        /// <summary>
+        /// AE destocked
+        /// </summary>
+        [field: NonSerialized]
+        public double AeDestocked { get; private set; }
+
+        /// <summary>
+        /// AE to restock
+        /// </summary>
+        [field: NonSerialized]
+        public double AeToRestock { get; private set; }
+
+        /// <summary>
+        /// AE restocked
+        /// </summary>
+        [field: NonSerialized]
+        public double AeRestocked { get; private set; }
+
         private GrazeFoodStoreType foodStore;
+        private string fullFilename;
+        private Dictionary<DateTime, double> ForecastSequence;
 
         /// <summary>
         /// Constructor
@@ -143,7 +125,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             ForecastSequence = new Dictionary<DateTime, double>();
-            // load ENSO file into memory
 
             Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
@@ -161,7 +142,7 @@ namespace Models.CLEM.Activities
                 Summary.WriteWarning(this, String.Format("@error:Could not find ENSO SIO datafile [x={0}[ for [a={1}]", MonthlySIOFile, this.Name));
             }
 
-            // load data
+            // load ENSO file into memory
             using (StreamReader ensoStream = new StreamReader(MonthlySIOFile))
             {
                 string line = "";
@@ -180,6 +161,8 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+
+            this.InitialiseHerd(false, true);
 
             // check GrazeFoodStoreExists
             if (GrazeFoodStoreName == null)
@@ -226,8 +209,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
+            AeToDestock = 0;
+            AeDestocked = 0;
+            AeToRestock = 0;
+            AeRestocked = 0;
+
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == (int)AssessmentMonth)
+            if (this.TimingOK)
             {
                 // Get ENSO forcase for current time
                 ENSOState forecastEnsoState = GetENSOMeasure();
@@ -239,8 +227,8 @@ namespace Models.CLEM.Activities
                     // total adult equivalents of all breeds on pasture for utilisation
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
-                    double markedForSaleAE = newgroup.Where(a => a.ReadyForSale && a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
-                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key && a.HerdName == HerdName).Sum(a => a.AdultEquivalent);
+                    double markedForSaleAE = newgroup.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
                     switch (forecastEnsoState)
@@ -250,7 +238,6 @@ namespace Models.CLEM.Activities
                         case ENSOState.ElNino:
                             GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
                             double kgha = pasture.TonnesPerHectare * 1000;
-                            //NOTE: ensure calculation method in relationship is fixed values
                             herdChange = this.PastureToStockingChangeElNino.SolveY(kgha);
                             break;
                         case ENSOState.LaNina:
@@ -263,131 +250,90 @@ namespace Models.CLEM.Activities
                     }
                     if(herdChange> 1.0)
                     {
-                        double toBuyAE = Math.Max(0, (totalAE*herdChange) - purchaseAE);
-                        HandleRestocking(toBuyAE, newgroup.Key, newgroup.FirstOrDefault());
+                        AeToRestock = Math.Max(0, (totalAE*herdChange) - purchaseAE);
+                        HandleRestocking(AeToRestock, newgroup.Key, newgroup.FirstOrDefault());
                     }
                     else if(herdChange < 1.0)
                     {
-                        double toSellAE = Math.Max(0, (totalAE*(1-herdChange)) - markedForSaleAE);
-                        HandleDestocking(toSellAE, newgroup.Key);
+                        AeToDestock = Math.Max(0, (totalAE*(1-herdChange)) - markedForSaleAE);
+                        HandleDestocking(AeToDestock, newgroup.Key);
                     }
                 }
             }
         }
 
-        private void HandleDestocking(double aEforSale, string paddockName)
+        private void HandleDestocking(double animalEquivalentsForSale, string paddockName)
         {
-            if (aEforSale <= 0)
+            if (animalEquivalentsForSale <= 0)
             {
+                AeDestocked = 0;
+                this.Status = ActivityStatus.Ignored;
                 return;
             }
 
             // move to underutilised paddocks
             // TODO: This can be added later as an activity including spelling
 
-            // remove potential purchases from list
+            // remove all potential purchases from list as they can't be supported.
+            // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            List<Ruminant> purchases = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == paddockName && a.HerdName == HerdName).ToList();
-            while(purchases.Count()>0 && aEforSale>0)
-            {
-                aEforSale -= purchases[0].AdultEquivalent;
-                purchases.RemoveAt(0);
-                if (aEforSale < purchases.Min(a => a.AdultEquivalent))
-                {
-                    aEforSale = 0;
-                }
-            }
-            if (aEforSale <= 0)
-            {
-                return;
-            }
+            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-            // adjust remaining herd
-            // remove steers
-            if (this.SellSteers)
+            // remove individuals to sale as specified by destock groups
+            foreach (RuminantGroup item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
-                List<RuminantMale> steers = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire == false).ToList();
+                // works with current filtered herd to obey filtering.
+                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
+                herd = herd.Filter(item);
                 int cnt = 0;
-                while (cnt < steers.Count() && aEforSale > 0)
+                while (cnt < herd.Count() && animalEquivalentsForSale > 0)
                 {
-                    aEforSale -= steers[cnt].AdultEquivalent;
-                    steers[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (aEforSale < steers.Min(a => a.AdultEquivalent))
+                    this.Status = ActivityStatus.Success;
+                    if (herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        aEforSale = 0;
+                        animalEquivalentsForSale -= herd[cnt].AdultEquivalent;
+                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
                     }
                     cnt++;
                 }
-            }
-            if (aEforSale <= 0)
-            {
-                return;
-            }
-
-            // remove additional dry breeders
-            if (this.SellDryCows)
-            {
-                // find dry cows not already marked for sale
-                List<RuminantFemale> drybreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName && a.HerdName == HerdName && a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.DryBreeder == true).ToList();
-                int cnt = 0;
-                while (cnt < drybreeders.Count() && aEforSale > 0)
+                if (animalEquivalentsForSale <= 0)
                 {
-                    aEforSale -= drybreeders[cnt].AdultEquivalent;
-                    drybreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (aEforSale < drybreeders.Min(a => a.AdultEquivalent))
-                    {
-                        aEforSale = 0;
-                    }
-                    cnt++;
+                    AeDestocked = 0;
+                    this.Status = ActivityStatus.Success;
+                    return;
                 }
             }
-            if (aEforSale <= 0)
-            {
-                return;
-            }
+            AeDestocked = AeToDestock - animalEquivalentsForSale;
+            this.Status = ActivityStatus.Partial;
 
-            // remove wet breeders with no calf
-            // currently ignore pregnant
-            // is lactating with no calves are sold.
-
-            // TODO manage calves from sold wet breeders. eg move to yards
-            if (this.SellWetCows)
-            {
-                // remove wet cows
-                // find wet cows not already marked for sale
-                List<RuminantFemale> wetbreeders = ruminantHerd.Herd.Where(a => a.Location == paddockName & a.HerdName == HerdName & a.Gender == Sex.Female & a.SaleFlag == HerdChangeReason.None).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
-                int cnt = 0;
-                while (cnt < wetbreeders.Count() && aEforSale > 0)
-                {
-                    aEforSale -= wetbreeders[cnt].AdultEquivalent;
-                    wetbreeders[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    if (aEforSale < wetbreeders.Min(a => a.AdultEquivalent))
-                    {
-                        aEforSale = 0;
-                    }
-                    cnt++;
-                }
-            }
-
+            // handling of sucklings with sold female is in RuminantActivityBuySell
             // buy or sell is handled by the buy sell activity
         }
 
-        private void HandleRestocking(double aEtoBuy, string paddockName, Ruminant exampleRuminant)
+        private void HandleRestocking(double animalEquivalentsToBuy, string paddockName, Ruminant exampleRuminant)
         {
-            if (aEtoBuy <= 0)
+            if (animalEquivalentsToBuy <= 0)
             {
+                AeRestocked = 0;
+                this.Status = ActivityStatus.Ignored;
                 return;
             }
 
-            // we won't remove individuals from the sale pool as we can't assume we can keep them in the herd
-            // as management has already decided they need to be sold.
-
-            // buy steers to fatten up and take advantage of the good season growth.
+            // buy animals specified in restock ruminant groups
 
             // ensure min pasture for restocking
             if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumFeedBeforeRestock))
             {
-                double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
+                // for each define individual 
+                // only for set proportion of AE required.
+
+                // only set weight if not provided
+
+
+
+
+
+                    double weight = exampleRuminant.StandardReferenceWeight - ((1 - exampleRuminant.BreedParams.SRWBirth) * exampleRuminant.StandardReferenceWeight) * Math.Exp(-(exampleRuminant.BreedParams.AgeGrowthRateCoefficient * (exampleRuminant.Age * 30.4)) / (Math.Pow(exampleRuminant.StandardReferenceWeight, exampleRuminant.BreedParams.SRWGrowthScalar)));
                 double numberToBuy = aEtoBuy * Math.Pow(weight, 0.75) / Math.Pow(exampleRuminant.BreedParams.BaseAnimalEquivalent, 0.75); // convert to AE
 
                 for (int i = 0; i < Convert.ToInt32(numberToBuy, CultureInfo.InvariantCulture); i++)
