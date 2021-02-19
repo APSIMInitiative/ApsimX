@@ -20,7 +20,6 @@ namespace Utility
             Entry entryBox = (Entry)builder.GetObject("entryBox");
 
             dialog.TransientFor = topLevelWindow;
-            dialog.SetDefaultSize(600, 620);
             dialog.Parent = topLevelWindow;
             dialog.Title = caption;
             prompt.Text = labelText;
