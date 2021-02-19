@@ -174,15 +174,6 @@ namespace UserInterface.Views
             }
         }
 
-        ///// <summary>
-        ///// Display properties and their values to the user.
-        ///// </summary>
-        ///// <param name="properties">Properties to be displayed/edited.</param>
-        //public virtual void DisplayProperties(List<PropertyGroup> properties)
-        //{
-        //    throw new NotImplementedException("Multiple models is not supported in PropertyView");
-        //}
-
         /// <summary>
         /// Adds a group of properties to the GtkTable, starting at the specified row.
         /// </summary>
@@ -208,7 +199,7 @@ namespace UserInterface.Views
                         box.Realized += OnSeparatorLabelRealized;
                         box.Add(separatorLabel);
 #if NETFRAMEWORK
-                        propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
+                        propertyTable.Attach(box, 0, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
 #else
                         propertyTable.Attach(box, 0, startRow, 2, 1);
 #endif
@@ -223,7 +214,7 @@ namespace UserInterface.Views
 #if NETFRAMEWORK
                     propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 #else
-                    label.MarginRight = 10;
+                    label.MarginEnd = 10;
                     propertyTable.Attach(label, 0, startRow, 1, 1);
 #endif
                 }

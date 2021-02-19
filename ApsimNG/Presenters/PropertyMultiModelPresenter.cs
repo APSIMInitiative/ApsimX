@@ -12,6 +12,15 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
+    /// <summary>
+    /// This presenter adds functionality to the SimplePropertyPresenter by using the child models (of the same type) of the  
+    /// model passed to the presenter. The property descriptions (of the child moels) are provided on the left with a column (named)
+    /// of the property entries for each model provided
+    /// </summary>
+    /// <remarks>
+    /// This can be used to let the user see and update all child model entries of the parent model which generally does not have any properties
+    /// This approach is used in CLEM where the tree structure defines the setp of the simulation.
+    /// </remarks>
     public class PropertyMultiModelPresenter: SimplePropertyPresenter
     {
         /// <summary>
