@@ -10544,8 +10544,6 @@
             "[Weather].Radn as TotalRadiation",
             "[Row].Grapevine.Leaf.RadiationIntercepted",
             "[Alley].Slurp.Leaf.RadiationIntercepted",
-            "[Row].Grapevine.Leaf.RadiationIntercepted * Row.FractionArea / TotalRadiation as Row.f.rad  //fraction of radiation interception",
-            "[Alley].Slurp.Leaf.RadiationIntercepted * Alley.FractionArea / TotalRadiation as Alley.f.rad  //fraction of radiation interception",
             "",
             "// Carbon balance (basic)",
             "[Row].Grapevine.AboveGround.Wt",
