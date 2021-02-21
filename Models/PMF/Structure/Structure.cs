@@ -10,33 +10,55 @@ namespace Models.PMF.Struct
 {
     /// <summary>
     /// # Structure
-    /// The structure model simulates morphological development of the plant to inform the Leaf class when 
-    ///   and how many leaves appear and to provide a hight estimate for use in calculating potential transpiration.
+    /// 
+    /// The structure model simulates morphological development of the plant to inform the Leaf class 
+    /// when and how many leaves and branches appear and provides an estimate of height.
+    /// 
     /// ## Plant and Main-Stem Population
-    /// The *Plant.Population* is set at sowing with information sent from a manager script in the Sow method.    
-    ///   The *PrimaryBudNumber* is also sent with the Sow method and the main-stem population (*MainStemPopn*) for the crop is calculated as:  
-    ///   *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
-    ///   Primary bud number is > 1 for crops like potato and grape vine where there are more than one main-stem per plant
-    ///  ## Main-Stem leaf appearance
-    ///  Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:  
-    ///    *LeafTipsAppeared* += *DeltaTips*
-    ///  Where *DeltaTips* is calculated as:  
-    ///    *DeltaTips* = *ThermalTime*/*Phyllochron*  
-    ///    Where *Phyllochron* is the thermal time duration between the appearance of leaf tipx given by: 
+    /// 
+    /// The *Plant.Population* is set at sowing with information sent from a manager script 
+    /// in the Sow method.    
+    /// The *PrimaryBudNumber* is also sent with the Sow method and the main-stem 
+    /// population (*MainStemPopn*) for [Parent.Name] is calculated as:
+    /// 
+    /// *MainStemPopn* = *Plant.Population* x *PrimaryBudNumber*
+    /// 
+    /// Primary bud number is > 1 for crops like potato and grape vine where there are more
+    /// than one main-stem per plant
+    /// ## Main-Stem leaf appearance
+    /// Each day the number of main-stem leaf tips appeared (*LeafTipsAppeared*) is calculated as:
+    /// 
+    /// *LeafTipsAppeared* += *DeltaTips*
+    /// 
+    ///  Where *DeltaTips* is calculated as:
+    ///  
+    ///  *DeltaTips* = *ThermalTime*/*Phyllochron*
+    ///  
+    ///  Where *Phyllochron* is the thermal time duration between the appearance of leaf tips 
+    ///  given by:
     /// [Document Phyllochron]
-    ///   and *ThermalTime* is given by:
+    /// *ThermalTime* is given by:
     /// [Document ThermalTime]
-    /// *LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where *FinalLeafNumber* is calculated as:  
+    /// *LeafTipsAppeared* continues to increase until *FinalLeafNumber* is reached where 
+    /// *FinalLeafNumber* is calculated as:
+    /// 
     /// [Document FinalLeafNumber]
     /// ##Branching and Branch Mortality
-    /// The total population of stems (*TotalStemPopn*) is calculated as:  
-    ///   *TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*   
-    ///    Where *NewBranches* = *MainStemPopn* x *BranchingRate*  
-    ///    and *BranchingRate* is given by:
+    /// The total population of stems (*TotalStemPopn*) is calculated as:
+    /// 
+    /// *TotalStemPopn* = *MainStemPopn* + *NewBranches* - *NewlyDeadBranches*   
+    /// 
+    /// Where *NewBranches* = *MainStemPopn* x *BranchingRate*  
+    /// 
+    /// and *BranchingRate* is given by:
+    /// 
     /// [Document BranchingRate]
-    ///   *NewlyDeadBranches* is calcualted as:  
-    ///   *NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*  
-    ///   where *BranchMortality* is given by:  
+    /// *NewlyDeadBranches* is calcualted as:
+    /// 
+    /// *NewlyDeadBranches* = (*TotalStemPopn* - *MainStemPopn*) x *BranchMortality*
+    /// 
+    /// where *BranchMortality* is given by:
+    /// 
     /// [Document BranchMortality]
     /// ##Height
     ///  The Height of the crop is calculated by the *HeightModel*:

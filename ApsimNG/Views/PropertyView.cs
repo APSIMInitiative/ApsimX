@@ -581,18 +581,19 @@ namespace UserInterface.Views
         {
             try
             {
-                // When the user clicks on the button, we want to immediately show the tooltip.
-                // We can call Widget.TriggerTooltipQuery(), but the query to fail if the
-                // tooltip timeout hasn't elapsed yet. What we have here is a gnarly workaround
-                // for this problem. First, we get the current tooltip timeout duration. Then we
-                // change it to 0 (ms), then we trigger the tooltip timeout, then we reset the
-                // tooltip timeout to its original value so the user is none the wiser.
                 if (sender is Widget widget)
                 {
+#if NETFRAMEWORK
+                    // When the user clicks on the button, we want to immediately show the tooltip.
+                    // We can call Widget.TriggerTooltipQuery(), but the query to fail if the
+                    // tooltip timeout hasn't elapsed yet. What we have here is a gnarly workaround
+                    // for this problem. First, we get the current tooltip timeout duration. Then we
+                    // change it to 0 (ms), then we trigger the tooltip timeout, then we reset the
+                    // tooltip timeout to its original value so the user is none the wiser.
+
                     // Name of the tooltip timeout property.
                     string tooltipTimeout = "gtk-tooltip-timeout";
 
-#if NETFRAMEWORK
                     // To get the default tooltip timeout, we need to call the GetProperty() method,
                     // which for some reason is a protected method in the gtk#2 API.
                     BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
@@ -609,10 +610,7 @@ namespace UserInterface.Views
                     // Reset the tooltip timeout to the default value.
                     mainWidget.Settings.SetLongProperty(tooltipTimeout, timeout, "XProperty");
 #else
-                    int timeout = (int)mainWidget.GetProperty(tooltipTimeout).Val;
-                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(0));
                     widget.TriggerTooltipQuery();
-                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(timeout));
 #endif
                 }
             }

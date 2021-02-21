@@ -10,7 +10,9 @@ using Models.Functions;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
+    /// # [Name] Phase
+    /// The <i>[Name]</i> phase goes from the <i>[Start]</i> stage to the <i>[End] stage</i> 
+    /// which occurs when all leaves have fully senesced. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
