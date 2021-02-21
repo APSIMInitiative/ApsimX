@@ -45,7 +45,7 @@ namespace Utility
         private ExplorerPresenter explorerPresenter;
         private ScrolledWindow scroller;
         private VBox vbox1;
-        VBox dialogVBox;
+        Box dialogVBox;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -60,7 +60,7 @@ namespace Utility
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
             vbox1 = (VBox)builder.GetObject("vbox1");
-            dialogVBox = (VBox)builder.GetObject("dialog-vbox1");
+            dialogVBox = (Box)builder.GetObject("dialog-vbox1");
             scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
