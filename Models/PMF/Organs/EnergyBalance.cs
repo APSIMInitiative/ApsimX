@@ -51,7 +51,11 @@
         /// <summary>The extinction coefficient function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction ExtinctionCoefficientFunction = null;
-    
+
+        /// <summary>The extinction coefficient of non gree material function</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction ExtinctionCoefficientDeadFunction = null;
+
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction HeightFunction = null;
@@ -59,7 +63,11 @@
         /// <summary>TThe depth of canopy which organ resides in</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction DepthFunction = null;
-      
+
+        /// <summary>TThe depth of canopy which organ resides in</summary>
+        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        IFunction WidthFunction = null;
+
         /// <summary>The lai dead function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction GAIDeadFunction = null;
@@ -139,7 +147,9 @@
         public double Depth { get; set; }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
+        [Units("mm")]
+        [JsonIgnore]
+        public double Width { get; set; }
 
 
         /// <summary>Gets or sets the FRGR.</summary>
@@ -209,14 +219,31 @@
                  double TotalRadn = 0;
                  if (LightProfile != null)
                      for (int i = 0; i < LightProfile.Length; i++)
-                     TotalRadn += LightProfile[i].amount;
+                     TotalRadn += LightProfile[i].amountOnGreen;
                  return TotalRadn;
             }
         }
 
-         #endregion
+        /// <summary>
+        /// Radiation intercepted by the dead components of the canopy.
+        /// </summary>
+        [Units("MJ/m^2/day")]
+        public double RadiationInterceptedByDead
+        {
+            get
+            {
+                if (LightProfile == null)
+                    return 0;
 
-  
+                double totalRadn = 0;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    totalRadn += LightProfile[i].amountOnDead;
+                return totalRadn;
+            }
+        }
+        #endregion
+
+
         #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
@@ -227,7 +254,7 @@
             LAI = 0;
         }
 
-         #endregion
+        #endregion
 
         #region Top Level time step functions
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -237,7 +264,7 @@
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (parentPlant.IsEmerged)
+            if (parentPlant.IsAlive)
              {
 
                 FRGR = FRGRFunction.Value();
@@ -251,16 +278,23 @@
                 Height = HeightFunction.Value();
                 Depth = DepthFunction.Value();
                 LAIDead = GAIDeadFunction.Value();
+                if (WidthFunction != null)
+                    Width = WidthFunction.Value();
+                else
+                    Width = 0;
+                if (ExtinctionCoefficientDeadFunction != null)
+                    KDead = ExtinctionCoefficientDeadFunction.Value();
+                else
+                    KDead = 0.0;
             }
         }
-
         #endregion
      
      
         /// <summary>Constructor</summary>
         public EnergyBalance()
         {
-          }
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -271,6 +305,8 @@
             Height = 0.0;
             LAI = 0.0;
             Depth = 0.0;
+            Width = 0.0;
+            LAIDead = 0.0;
         }
  
         /// <summary>Called when crop is sowed</summary>
