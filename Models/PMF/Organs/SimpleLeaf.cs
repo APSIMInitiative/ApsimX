@@ -670,7 +670,7 @@
 
                 double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    totalRadn += LightProfile[i].amountOnGreen;
+                    totalRadn += LightProfile[i].AmountOnGreen;
                 return totalRadn;
             }
         }
@@ -688,7 +688,7 @@
 
                 double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    totalRadn += LightProfile[i].amountOnDead;
+                    totalRadn += LightProfile[i].AmountOnDead;
                 return totalRadn;
             }
         }

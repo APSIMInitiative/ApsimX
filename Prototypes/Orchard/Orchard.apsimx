@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 355,
-  "Version": 128,
+  "Version": 129,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -2444,7 +2444,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "FRGRFunction",
+                      "Name": "FRGRer",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2463,7 +2463,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Trunk].Tallness",
-                      "Name": "HeightFunction",
+                      "Name": "Tallness",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2472,7 +2472,7 @@
                     {
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Trunk].Tallness",
-                      "Name": "DepthFunction",
+                      "Name": "Deepness",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2482,7 +2482,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "GAIFunction",
+                      "Name": "GreenAreaIndex",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2490,7 +2490,7 @@
                     },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "GAIDeadFunction",
+                      "Name": "DeadAreaIndex",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -2539,7 +2539,7 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
                       "Units": null,
-                      "Name": "ExtinctionCoefficientFunction",
+                      "Name": "GreenExtinctionCoefficient",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2549,7 +2549,16 @@
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.5,
                       "Units": null,
-                      "Name": "ExtinctionCoefficientDeadFunction",
+                      "Name": "DeadExtinctionCoefficient",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Trunk].Wideness",
+                      "Name": "Wideness",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
