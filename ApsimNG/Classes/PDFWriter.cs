@@ -479,36 +479,42 @@
                                 presenter.Attach(modelView.model, view, explorerPresenter);
 
                                 Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                                popupWin.SetSizeRequest(700, 700);
-                                popupWin.Add(view.MainWidget);
-
-                                if (view is MapView map)
-                                    map.HideZoomControls();
-
-                                popupWin.ShowAll();
-
-                                while (Gtk.Application.EventsPending())
-                                    Gtk.Application.RunIteration();
-
-                                // From MapView:
-                                // With WebKit, it appears we need to give it time to actually update the display
-                                // Really only a problem with the temporary windows used for generating documentation
-                                string pngFileName;
-                                if (view is MapView mapView)
+                                try
                                 {
-                                    var img = mapView.Export();
-                                    pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-                                    if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
-                                        img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
-                                    img.Save(pngFileName);
+                                    popupWin.SetSizeRequest(700, 700);
+                                    popupWin.Add(view.MainWidget);
+
+                                    if (view is MapView map)
+                                        map.HideZoomControls();
+
+                                    popupWin.ShowAll();
+
+                                    while (Gtk.Application.EventsPending())
+                                        Gtk.Application.RunIteration();
+
+                                    // From MapView:
+                                    // With WebKit, it appears we need to give it time to actually update the display
+                                    // Really only a problem with the temporary windows used for generating documentation
+                                    string pngFileName;
+                                    if (view is MapView mapView)
+                                    {
+                                        var img = mapView.Export();
+                                        pngFileName = Path.ChangeExtension(Path.GetTempFileName(), ".png");
+                                        if (section.PageSetup.PageWidth > 0 && img.Width > section.PageSetup.PageWidth)
+                                            img = ImageUtilities.ResizeImage(img, section.PageSetup.PageWidth, double.MaxValue);
+                                        img.Save(pngFileName);
+                                    }
+                                    else
+                                        pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
+                                    section.AddResizeImage(pngFileName);
+                                    presenter.Detach();
+                                    view.MainWidget.Cleanup();
                                 }
-                                else
-                                    pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
-                                section.AddResizeImage(pngFileName);
-                                presenter.Detach();
-                                view.MainWidget.Cleanup();
-                                popupWin.Cleanup();
-                                while (GLib.MainContext.Iteration());
+                                finally
+                                {
+                                    popupWin.Cleanup();
+                                    while (GLib.MainContext.Iteration());
+                                }
                             }
                         }
                     }

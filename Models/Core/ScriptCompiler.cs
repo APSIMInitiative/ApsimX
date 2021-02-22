@@ -309,6 +309,7 @@
                MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.ComponentModel.TypeConverter).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
             };
 
             if (previousCompilations != null)
