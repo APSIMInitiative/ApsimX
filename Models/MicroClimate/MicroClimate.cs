@@ -322,7 +322,10 @@
             if (treeZone.DeltaZ.Sum() > 0 && alleyZone.DeltaZ.Sum() > 0)               // Don't perform calculations if layers are empty
             {
                 double Ht = treeZone.DeltaZ.Sum();                                 // Height of tree canopy
+                double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
+                double Wa = (alleyZone.Zone as Zones.RectangularZone).Width;   // Width of alley zone
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
+                double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
                 foreach (MicroClimateCanopy c in treeZone.Canopies)
                     if (c.Canopy.Depth < c.Canopy.Height)
                     {
@@ -331,33 +334,21 @@
                         else
                         {
                             CDt = c.Canopy.Depth/1000;
+                            CWt = Math.Min(c.Canopy.Width / 1000, (Wt + Wa));
                         }
                     }
-                double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
+                double CBHt = Ht - CDt;                                        // Base hight of the tree canopy
                 double Ha = alleyZone.DeltaZ.Sum();                            // Height of alley canopy
                 if ((Ha > CBHt) & (treeZone.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
-                double Wt = (treeZone.Zone as Zones.RectangularZone).Width;    // Width of tree zone
-                double Wa = (alleyZone.Zone as Zones.RectangularZone).Width;   // Width of alley zone
-                double CWt = 0;//Math.Min(tree.Canopies[0].Canopy.Width / 1000, (Wt + Wa));// Width of the tree canopy
-                foreach (MicroClimateCanopy c in treeZone.Canopies)
-                    if (c.Canopy.Depth < c.Canopy.Height)
-                    {
-                        if (CWt > 0.0)
-                            throw new Exception("Can't have two tree canopies");
-                        else
-                        {
-                            CWt = Math.Min(c.Canopy.Width / 1000,(Wt + Wa));
-                        }
-                    }
                 double WaOl = Math.Min(CWt - Wt, Wa);                         // Width of tree canopy that overlap the alley zone
                 double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
                 double Fa = WaOp / (Wt + Wa);                                 // Fraction of open space in the alley row
-                double LAIt = treeZone.LAItotsum.Sum();                           // LAI of trees
-                double LAIa = alleyZone.LAItotsum.Sum();                          // LAI of alley crop
-                double Kt = treeZone.Canopies[0].Ktot;                            // Extinction Coefficient of trees
-                double Ka = alleyZone.Canopies[0].Ktot;                           // Extinction Coefficient of alley crop
+                double LAIt = treeZone.LAItotsum.Sum();                       // LAI of trees
+                double LAIa = alleyZone.LAItotsum.Sum();                      // LAI of alley crop
+                double Kt = treeZone.layerKtot[treeZone.layerKtot.Length-1];  // Extinction Coefficient of trees
+                double Ka = alleyZone.layerKtot[0];                           // Extinction Coefficient of alley crop
                 double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
                 double Ftbla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;    // View factor for the tree canopy if a black body
                 double Fabla = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;  // View factor for the gap between trees in alley if trees a black body
