@@ -413,7 +413,7 @@ namespace Models.Optimisation
             Status = "Installing R Packages";
 
             R r = new R(cancelToken.Token);
-            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
+            r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
             r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
 
             Status = "Generating R Script";

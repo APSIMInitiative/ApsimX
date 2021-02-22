@@ -505,12 +505,15 @@
         {
             try
             {
+#if NETFRAMEWORK
+                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                                                       new DownloadPresenter());
+#else
                 throw new NotImplementedException();
-                // object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
-                // explorerPresenter.HideRightHandPanel();
-                // explorerPresenter.ShowInRightHandPanel(model,
-                //                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
-                //                                        new DownloadPresenter());
+#endif
             }
             catch (Exception err)
             {
@@ -896,8 +899,7 @@
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileNameWritten);
+                    ProcessUtilities.ProcessStart(fileNameWritten);
                 }
             }
             catch (Exception err)
