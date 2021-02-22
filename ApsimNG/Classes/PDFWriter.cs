@@ -70,7 +70,7 @@
             // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
             // See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
             // The work-around is to register our own fontresolver. We don't need to do this on Windows.
-            if (!ProcessUtilities.CurrentOS.IsWindows)
+            if (!ProcessUtilities.CurrentOS.IsWindows && !(GlobalFontSettings.FontResolver is MyFontResolver))
                 GlobalFontSettings.FontResolver = new MyFontResolver();
             
             // Create a temporary working directory.
@@ -423,11 +423,7 @@
                     graphView.Height = 500;
                     graphPresenter.Attach(tag, graphView, explorerPresenter);
                     string pngFileName = graphPresenter.ExportToPNG(WorkingDirectory);
-#if NETFRAMEWORK
-                    section.AddImage(pngFileName);
-#else
-                    section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                    section.AddResizeImage(pngFileName);
                     string caption = (tag as Graph).Caption;
                     if (caption != null)
                         section.AddParagraph(caption);
@@ -446,7 +442,7 @@
                         map = ImageUtilities.ResizeImage(map, section.PageSetup.PageWidth, double.MaxValue);
                     map.Save(pngFileName);
                     if (!String.IsNullOrEmpty(pngFileName))
-                        section.AddImage(pngFileName);
+                        section.AddResizeImage(pngFileName);
                     mapPresenter.Detach();
                     mapView.MainWidget.Destroy();
 #else
@@ -456,15 +452,9 @@
                 else if (tag is AutoDocumentation.Image)
                 {
                     AutoDocumentation.Image imageTag = tag as AutoDocumentation.Image;
-                    if (imageTag.image.Width > 700)
-                        imageTag.image = ImageUtilities.ResizeImage(imageTag.image, 700, 500);
                     string pngFileName = Path.Combine(WorkingDirectory, $"{imageTag.name}.png");
                     imageTag.image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
-#if NETFRAMEWORK
-                    section.AddImage(pngFileName);
-#else
-                    section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                    section.AddResizeImage(pngFileName);
                     figureNumber++;
                 }
                 else if (tag is AutoDocumentation.ModelView)
@@ -514,11 +504,7 @@
                                 }
                                 else
                                     pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
-#if NETFRAMEWORK
-                                section.AddImage(pngFileName);
-#else
-                                section.AddImage(ImageSource.FromFile(pngFileName));
-#endif
+                                section.AddResizeImage(pngFileName);
                                 presenter.Detach();
                                 view.MainWidget.Cleanup();
                                 popupWin.Cleanup();
@@ -539,7 +525,7 @@
         /// <param name="paragraph">The paragraph.</param>
         private void AddFormattedParagraphToSection(Section section, AutoDocumentation.Paragraph paragraph)
         {
-            string html = Markdown.ToHtml(paragraph.text);
+            string html = Markdown.ToHtml(paragraph.text, new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build());
 
             HtmlToMigraDoc.Convert(html, section, WorkingDirectory, RelativePath);
 

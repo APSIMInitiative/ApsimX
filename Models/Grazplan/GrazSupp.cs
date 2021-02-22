@@ -85,9 +85,12 @@ namespace Models.GrazPlan
         public static string DefaultLocale()
         {
             string loc = null;
-            Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(PARAMKEY);
-            if (regKey != null)
-                loc = (string)regKey.GetValue("locale");
+            if (ProcessUtilities.CurrentOS.IsWindows)
+            {
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(PARAMKEY);
+                if (regKey != null)
+                    loc = (string)regKey.GetValue("locale");
+            }
             if (string.IsNullOrEmpty(loc))
                 loc = "au";
             return loc.ToLower();
@@ -1660,15 +1663,18 @@ namespace Models.GrazPlan
         /// <returns>True if this locale is found</returns>
         public bool ReadFromRegistryFile(string locale)
         {
-            Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(GrazParam.PARAMKEY);
-            if (regKey != null)
+            if (ProcessUtilities.CurrentOS.IsWindows)
             {
-                string suppFile = (string)regKey.GetValue("supplib");
-                if (!string.IsNullOrEmpty(suppFile) && System.IO.File.Exists(suppFile))
+                Microsoft.Win32.RegistryKey regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(GrazParam.PARAMKEY);
+                if (regKey != null)
                 {
-                    string[] suppStrings = System.IO.File.ReadAllLines(suppFile);
-                    this.ReadFromStrings(locale, suppStrings);
-                    return true;
+                    string suppFile = (string)regKey.GetValue("supplib");
+                    if (!string.IsNullOrEmpty(suppFile) && System.IO.File.Exists(suppFile))
+                    {
+                        string[] suppStrings = System.IO.File.ReadAllLines(suppFile);
+                        this.ReadFromStrings(locale, suppStrings);
+                        return true;
+                    }
                 }
             }
             return false;
