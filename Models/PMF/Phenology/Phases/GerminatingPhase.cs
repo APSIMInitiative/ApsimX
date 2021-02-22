@@ -10,12 +10,17 @@ using Models.Interfaces;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through the germination.</summary>
+    /// <summary>
+    /// # [Name] Phase
+    /// The [Name] phase goes from [Start] stage to [End] stage and assumes
+    /// germination [End] will be reached on the day after sowing or the first day 
+    /// thereafter when the extractable soil water at sowing depth is greater than zero."
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GerminatingPhase : Model, IPhase, ICustomDocumentation
+    public class GerminatingPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -111,31 +116,6 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowingParameters data)
         {
             SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
-        }
-
-        /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("The model assumes that germination will be completed on the day after sowing, "
-                    + "provided that the extractable soil water is greater than zero.", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

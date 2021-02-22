@@ -34,37 +34,39 @@
  
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction FRGRFunction = null;  
+        IFunction FRGRer = null;  
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction StomatalConductanceCO2Modifier = null;
 
-        /// <summary>The cover function</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        IFunction CoverFunction = null;
-
-        /// <summary>The lai function</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        IFunction GAIFunction = null;
-   
-        /// <summary>The extinction coefficient function</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        IFunction ExtinctionCoefficientFunction = null;
-    
-        /// <summary>The height function</summary>
+        /// <summary>The green area index</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction HeightFunction = null;
+        IFunction GreenAreaIndex = null;
+   
+        /// <summary>The extinction coefficient of green material</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction GreenExtinctionCoefficient = null;
+
+        /// <summary>The extinction coefficient of dead material function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DeadExtinctionCoefficient = null;
+
+        /// <summary>The height of the top of the canopy</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction Tallness = null;
      
         /// <summary>TThe depth of canopy which organ resides in</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction DepthFunction = null;
-      
-        /// <summary>The lai dead function</summary>
+        IFunction Deepness = null;
+
+        /// <summary>The width of canopy which organ resides in</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction GAIDeadFunction = null;
+        IFunction Wideness = null;
 
-
+        /// <summary>The area index of dead material</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction DeadAreaIndex = null;
 
         #region Canopy interface
 
@@ -77,13 +79,7 @@
 
         /// <summary>Gets or sets the gsmax.</summary>
         [Description("Daily maximum stomatal conductance(m/s)")]
-        public double Gsmax
-        {
-            get
-            {
-                return Gsmax350*FRGR * StomatalConductanceCO2Modifier.Value();
-            }
-        }
+        public double Gsmax { get { return Gsmax350 * FRGR * StomatalConductanceCO2Modifier.Value(); } }
 
         /// <summary>Gets or sets the gsmax.</summary>
         [Description("Maximum stomatal conductance at CO2 concentration of 350 ppm (m/s)")]
@@ -103,31 +99,11 @@
 
         /// <summary>Gets the cover green.</summary>
         [Units("0-1")]
-        public double CoverGreen
-        {
-            get
-            {
-                if (Plant.IsAlive)
-                {
-                    double greenCover = 0.0;
-                    if (CoverFunction == null)
-                        greenCover = 1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI);
-                    else
-                        greenCover = CoverFunction.Value();
-                    return Math.Min(Math.Max(greenCover, 0.0), 0.999999999); // limiting to within 10^-9, so MicroClimate doesn't complain
-                }
-                else
-                    return 0.0;
-
-            }
-        }
+        public double CoverGreen { get { return 1.0 - Math.Exp(-GreenExtinctionCoefficient.Value() * LAI); } }
 
         /// <summary>Gets the cover total.</summary>
         [Units("0-1")]
-        public double CoverTotal
-        {
-            get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); }
-        }
+        public double CoverTotal { get { return 1.0 - (1 - CoverGreen) * (1 - CoverDead); } }
 
         /// <summary>Gets or sets the height.</summary>
         [JsonIgnore]
@@ -139,8 +115,9 @@
         public double Depth { get; set; }
 
         /// <summary>Gets the width of the canopy (mm).</summary>
-        public double Width { get { return 0; } }
-
+        [Units("mm")]
+        [JsonIgnore]
+        public double Width { get; set; }
 
         /// <summary>Gets or sets the FRGR.</summary>
         [Units("mm")]
@@ -209,14 +186,31 @@
                  double TotalRadn = 0;
                  if (LightProfile != null)
                      for (int i = 0; i < LightProfile.Length; i++)
-                     TotalRadn += LightProfile[i].amount;
+                     TotalRadn += LightProfile[i].AmountOnGreen;
                  return TotalRadn;
             }
         }
 
-         #endregion
+        /// <summary>
+        /// Radiation intercepted by the dead components of the canopy.
+        /// </summary>
+        [Units("MJ/m^2/day")]
+        public double RadiationInterceptedByDead
+        {
+            get
+            {
+                if (LightProfile == null)
+                    return 0;
 
-  
+                double totalRadn = 0;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    totalRadn += LightProfile[i].AmountOnDead;
+                return totalRadn;
+            }
+        }
+        #endregion
+
+
         #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
@@ -227,7 +221,7 @@
             LAI = 0;
         }
 
-         #endregion
+        #endregion
 
         #region Top Level time step functions
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
@@ -237,30 +231,24 @@
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (parentPlant.IsEmerged)
+            if (parentPlant.IsAlive)
              {
-
-                FRGR = FRGRFunction.Value();
-                if (CoverFunction == null && ExtinctionCoefficientFunction == null)
-                    throw new Exception("\"CoverFunction\" or \"ExtinctionCoefficientFunction\" should be defined in " + this.Name);
-                if (CoverFunction != null)
-                    LAI = (Math.Log(1 - CoverGreen) / (ExtinctionCoefficientFunction.Value() * -1));
-                if (GAIFunction != null)
-                    LAI = GAIFunction.Value();
-
-                Height = HeightFunction.Value();
-                Depth = DepthFunction.Value();
-                LAIDead = GAIDeadFunction.Value();
-            }
+                FRGR = FRGRer.Value();
+                Height = Tallness.Value();
+                Depth = Deepness.Value();
+                Width = Wideness.Value();
+                LAI = GreenAreaIndex.Value();
+                LAIDead = DeadAreaIndex.Value();
+                KDead = DeadExtinctionCoefficient.Value();
+             }
         }
-
         #endregion
      
      
         /// <summary>Constructor</summary>
         public EnergyBalance()
         {
-          }
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -271,6 +259,8 @@
             Height = 0.0;
             LAI = 0.0;
             Depth = 0.0;
+            Width = 0.0;
+            LAIDead = 0.0;
         }
  
         /// <summary>Called when crop is sowed</summary>
