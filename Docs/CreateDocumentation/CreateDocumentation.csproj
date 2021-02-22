@@ -23,12 +23,12 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-    <OutputPath>..\..\NetCoreBin\</OutputPath>
+    <OutputPath>..\NetCoreBin\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
     <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-    <OutputPath>..\..\Bin\</OutputPath>
+    <OutputPath>..\Bin\</OutputPath>
   </PropertyGroup>
   
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
