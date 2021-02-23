@@ -196,11 +196,6 @@ namespace UserInterface.Extensions
         {
             grid.Attach(child, left, top, right - left, bottom - top);
         }
-
-        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom)
-        {
-            grid.Attach(child, left, top, right - left, bottom - top);
-        }
 #endif
 
         public static MenuItem CreateImageMenuItem(string text, Image image)
