@@ -54047,7 +54047,7 @@
                     {
                       "$type": "Models.Climate.Weather, Models",
                       "ConstantsFile": null,
-                      "FileName": "met\\KIBOKO.MET",
+                      "FileName": "met\\kiboko.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],

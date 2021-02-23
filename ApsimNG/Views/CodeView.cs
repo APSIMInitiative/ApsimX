@@ -83,7 +83,8 @@ namespace UserInterface.Views
 
             set
             {
-                textEditor.Buffer.Text = value;
+                if (value != null)
+                    textEditor.Buffer.Text = value;
                 //if (Mode == EditorType.ManagerScript)
                 //{
                 //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
@@ -124,7 +125,8 @@ namespace UserInterface.Views
             }
             set
             {
-                Text = string.Join(Environment.NewLine, value);
+                if (value != null)
+                    Text = string.Join(Environment.NewLine, value);
             }
         }
 
@@ -322,8 +324,23 @@ namespace UserInterface.Views
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
+            // Attempt to load a style scheme from the user settings.
+            StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
+            if (style == null)
+            {
+                // If there's no style scheme specified in user settings (or if it's an unknown
+                // scheme), then fallback to adwaita, or adwaita-dark if dark mode is active.
+                if (Configuration.Settings.DarkTheme)
+                    style = StyleSchemeManager.Default.GetScheme("Adwaita-dark");
+                else
+                    style = StyleSchemeManager.Default.GetScheme("Adwaita");
+            }
+            if (style != null)
+                textEditor.Buffer.StyleScheme = style;
+
             // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddMenuItem("Change Style", OnChangeStyle);
 
             IntelliSenseChars = ".";
         }
@@ -359,6 +376,34 @@ namespace UserInterface.Views
                 textEditor.Cleanup();
                 textEditor = null;
                 owner = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the user wants to change the editor style.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
+        private void OnChangeStyle(object sender, EventArgs e)
+        {
+            try
+            {
+                using (Dialog popup = new Dialog("Choose a Style", mainWidget.Toplevel as Window, DialogFlags.Modal, new object[] { "Cancel", ResponseType.Cancel, "OK", ResponseType.Ok }))
+                {
+                    StyleSchemeChooserWidget styleChooser = new StyleSchemeChooserWidget();
+                    popup.ContentArea.PackStart(styleChooser, true, true, 0);
+                    popup.ShowAll();
+                    int response = popup.Run();
+                    if (response == (int)ResponseType.Ok)
+                    {
+                        textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
+                        Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                    }
+                }
             }
             catch (Exception err)
             {
@@ -516,17 +561,36 @@ namespace UserInterface.Views
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         public System.Drawing.Point GetPositionOfCursor()
         {
-            // tbi
-            return new System.Drawing.Point(0, 0);
-            //Point p = textEditor.LocationToPoint(textEditor.Caret.Location);
-            //p.Y += (int)textEditor.LineHeight;
-            //textEditor.Coord
-            //// Need to convert to screen coordinates....
-            //int x, y, frameX, frameY;
-            //MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            //textEditor.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            TextIter iter = textEditor.Buffer.GetIterAtOffset(Offset);
+            if (iter.Equals(TextIter.Zero))
+                return new System.Drawing.Point(0, 0);
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = textEditor.GetIterLocation(iter);
 
-            //return new System.Drawing.Point(x + frameX, y + frameY);
+            // Convert the buffer coordinates (line/col numbers) to actual cartesian
+            // coordinates (note that these are relative to the origin of the GtkSourceView
+            // widget's GdkWindow, not the GtkWindow itself).
+            textEditor.BufferToWindowCoords(TextWindowType.Text, location.X, location.Y, out int x, out int y);
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            textEditor.TranslateCoordinates(mainWidget.Toplevel, x, y, out int windowX, out int windowY);
+
+            // Don't forget to account for the offset of the window within the screen.
+            // (Remember that the screen is made up of multiple monitors, so this is
+            // what accounts for which particular monitor the on which the window is
+            // physically displayed.)
+            MasterView.MainWindow.GetOrigin(out int frameX, out int frameY);
+
+            // Also add on the line height of the current line. Arguably, this doesn't
+            // belong here - the method is called GetPositionOfCursor(), which doesn't
+            // really imply anything about accounting for the line height. However,
+            // all of the surrounding infrastructure really assumes that it *does* in
+            // fact account for line height, as the intellisense popup (the only thing
+            // which really uses these coods) will be displayed at this locataion.
+            textEditor.GetLineYrange(iter, out int _, out int lineHeight);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY + lineHeight);
         }
 
         /// <summary>

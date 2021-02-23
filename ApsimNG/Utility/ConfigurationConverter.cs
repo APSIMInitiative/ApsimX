@@ -47,7 +47,7 @@ namespace Utility
 
             document["Configuration"]["Version"].InnerText = version.ToString();
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Configuration));
+            XmlSerializer serializer = new XmlSerializer(typeof(Configuration), typeof(Configuration).GetNestedTypes());
             using (XmlReader reader = new XmlNodeReader(document))
                 return serializer.Deserialize(reader) as Configuration;
         }

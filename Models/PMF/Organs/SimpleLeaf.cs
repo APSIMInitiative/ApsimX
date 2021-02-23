@@ -670,10 +670,30 @@
 
                 double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    totalRadn += LightProfile[i].amount;
+                    totalRadn += LightProfile[i].AmountOnGreen;
                 return totalRadn;
             }
         }
+
+        /// <summary>
+        /// Radiation intercepted by the dead components of the canopy.
+        /// </summary>
+        [Units("MJ/m^2/day")]
+        public double RadiationInterceptedByDead
+        {
+            get
+            {
+                if (LightProfile == null)
+                    return 0;
+
+                double totalRadn = 0;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    totalRadn += LightProfile[i].AmountOnDead;
+                return totalRadn;
+            }
+        }
+
+
 
         /// <summary>
         /// Daily maximum stomatal conductance.

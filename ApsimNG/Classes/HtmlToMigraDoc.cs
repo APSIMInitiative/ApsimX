@@ -1,6 +1,7 @@
 ﻿namespace UserInterface.Classes
 {
     using APSIM.Shared.Utilities;
+    using Extensions;
     using HtmlAgilityPack;
 #if NETCOREAPP
     using MigraDocCore.DocumentObjectModel;
@@ -174,14 +175,7 @@
                     fullPath = GetImagePath(srcAttribute.Value, imagePath);
 
                 if (File.Exists(fullPath))
-                {
-                    Paragraph para = section.Section.AddParagraph();
-#if NETFRAMEWORK
-                    para.AddImage(fullPath);
-#else
-                    para.AddImage(ImageSource.FromFile(fullPath, 100));
-#endif
-                }
+                    section.AddResizeImage(fullPath);
             }
             return section;
         }
@@ -194,7 +188,7 @@
         /// <returns>Full path to the image.</returns>
         public static string GetImagePath(string imageName, string imageDirectory)
         {
-            string path = Path.Combine(imageDirectory, imageName);
+            string path = Path.Combine(imageDirectory, $"{Path.GetFileNameWithoutExtension(imageName)}-{Guid.NewGuid()}.png");
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 GetImageResource(imageName).CopyTo(file);

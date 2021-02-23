@@ -5,6 +5,7 @@
     using Presenters;
     using System;
     using System.IO;
+    using System.Text;
     using System.Threading.Tasks;
     using Utility;
     using Views;
@@ -20,6 +21,7 @@
             LoadTheme();
 #if NETCOREAPP
             Task.Run(() => Intellisense.CodeCompletionService.Init());
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
 
             Gtk.Application.Init();

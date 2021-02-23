@@ -8,11 +8,11 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// Starting with the first child function, recursively divide by the values of the subsequent child functions
+    /// [DocumentMathFunction d]
     /// </summary>
     [Serializable]
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
-    public class DivideFunction : Model, IFunction, ICustomDocumentation
+    public class DivideFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
@@ -44,18 +44,5 @@ namespace Models.Functions
             }
             return returnValue;
         }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
-            }
-        }
-
     }
 }

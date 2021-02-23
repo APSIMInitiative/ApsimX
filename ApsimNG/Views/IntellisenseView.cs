@@ -54,6 +54,7 @@
                 SkipPagerHint = true,
                 SkipTaskbarHint = true,
             };
+            mainWidget = completionForm;
 
             Frame completionFrame = new Frame();
             completionForm.Add(completionFrame);
@@ -288,14 +289,14 @@
             int xres = MainWindow.Screen.Width;
             int yres = MainWindow.Screen.Height;
 #else
-            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(MainWidget.Window).Workarea;
-            int xres = workArea.Width;
-            int yres = workArea.Height;
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
 #endif
 
-            if ((x + completionForm.WidthRequest) > xres)            
+            if ((x + completionForm.WidthRequest) > xres)
                 // We are very close to the right-hand side of the screen
-                x -= completionForm.WidthRequest;            
+                x -= completionForm.WidthRequest;
             
             if ((y + completionForm.HeightRequest) > yres)
                 // We are very close to the bottom of the screen
