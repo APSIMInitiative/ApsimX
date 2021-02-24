@@ -86,9 +86,7 @@
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n");
+                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine}");
 
                 database.CloseDatabase();
             }
@@ -160,11 +158,7 @@
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n" +
-                       " 1980-01-03\r\n" +
-                       " 1980-01-04\r\n");
+                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine} 1980-01-03{Environment.NewLine} 1980-01-04{Environment.NewLine}");
 
                 database.CloseDatabase();
             }
@@ -236,9 +230,7 @@
 
                 // Check that data was written to database.
                 Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n");
+                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine}");
 
                 database.CloseDatabase();
             }
@@ -673,8 +665,8 @@
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim1.db"), readOnly: true);
             Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   "                       Message\r\n" +
-                   "Simulation terminated normally\r\n");
+                   $"                       Message{Environment.NewLine}" +
+                   $"Simulation terminated normally{Environment.NewLine}");
 
             database.CloseDatabase();
 
@@ -682,8 +674,8 @@
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim2.db"), readOnly: true);
             Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   "                       Message\r\n" +
-                   "Simulation terminated normally\r\n");
+                   $"                       Message{Environment.NewLine}" +
+                   $"Simulation terminated normally{Environment.NewLine}");
             database.CloseDatabase();
         }
     }
