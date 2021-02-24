@@ -22,7 +22,6 @@
 
         private static RunTypeEnum[] runTypes = new RunTypeEnum[]
         {
-            RunTypeEnum.MultiProcess,
             RunTypeEnum.MultiThreaded,
             RunTypeEnum.SingleThreaded
         };

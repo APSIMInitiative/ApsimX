@@ -128,7 +128,6 @@
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
             };
             foreach (Runner runner in runners)
             {
