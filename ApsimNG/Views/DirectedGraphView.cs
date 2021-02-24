@@ -173,7 +173,28 @@
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
             return bitmap;
 #else
-            throw new NotImplementedException();
+            var window = new OffscreenWindow();
+            window.Add(MainWidget);
+
+            // Choose a good size for the image (which is square).
+            int maxX = (int)nodes.Max(n => n.Location.X);
+            int maxY = (int)nodes.Max(n => n.Location.Y);
+            int maxSize = nodes.Max(n => n.Width);
+            int size = Math.Max(maxX, maxY) + maxSize;
+
+            MainWidget.WidthRequest = size;
+            MainWidget.HeightRequest = size;
+            window.ShowAll();
+            while (GLib.MainContext.Iteration());
+
+            Gdk.Pixbuf screenshot = window.Pixbuf;
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            window.Dispose();
+            using (MemoryStream stream = new MemoryStream(buffer))
+            {
+                System.Drawing.Bitmap bitmap = new Bitmap(stream);
+                return bitmap;
+            }
 #endif
         }
 
