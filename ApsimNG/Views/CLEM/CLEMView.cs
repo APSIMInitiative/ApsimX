@@ -99,7 +99,7 @@ namespace UserInterface.Views
 
         public void AddTabView(string tabName, object control)
         {
-            if(labelDictionary.ContainsKey(tabName))
+            if (labelDictionary.ContainsKey(tabName))
             {
                 return;
             }
@@ -119,7 +119,7 @@ namespace UserInterface.Views
             viewportDictionary.Add(tabName, newViewport);
             labelDictionary.Add(tabName, newLabel);
 
-            if (nbook.GetTabLabelText(newViewport) == null)
+            if (!nbook.Children.Contains(newViewport))
             {
                 nbook.AppendPage(newViewport, newLabel);
             }

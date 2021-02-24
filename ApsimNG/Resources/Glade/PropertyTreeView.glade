@@ -11,7 +11,6 @@
         <property name="can_focus">False</property>
         <property name="double_buffered">False</property>
         <property name="toolbar_style">both</property>
-        <property name="icon_size">3</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -28,7 +27,7 @@
           <object class="GtkScrolledWindow" id="scrolledwindow1">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
+            <property name="hscrollbar_policy">never</property>
             <property name="vscrollbar_policy">automatic</property>
             <child>
               <object class="GtkTreeView" id="treeview1">
@@ -40,8 +39,8 @@
             </child>
           </object>
           <packing>
-            <property name="resize">True</property>
-            <property name="shrink">True</property>
+            <property name="resize">False</property>
+            <property name="shrink">False</property>
           </packing>
         </child>
         <child>
@@ -71,7 +70,7 @@
           </object>
           <packing>
             <property name="resize">True</property>
-            <property name="shrink">True</property>
+            <property name="shrink">False</property>
           </packing>
         </child>
       </object>

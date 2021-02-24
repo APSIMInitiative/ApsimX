@@ -43,6 +43,11 @@ namespace UserInterface.Views
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             mainWidget = vbox1;
 
+#if NETFRAMEWORK
+            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+            rightHandView.ShadowType = ShadowType.None ;
+#endif
+
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();

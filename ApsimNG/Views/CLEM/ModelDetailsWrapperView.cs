@@ -95,7 +95,6 @@ namespace UserInterface.Views
             hbox.PackStart(modelHelpLinkLabel, false, false, 0);
 
             vbox1.PackStart(hbox, false, true, 0);
-            vbox1.PackStart(modelTypeLabel, false, true, 0);
             vbox1.PackStart(modelDescriptionLabel, false, true, 0);
             vbox1.PackStart(modelVersionLabel, false, true, 4);
 
