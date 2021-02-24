@@ -82,7 +82,7 @@
         [Test]
         public void TestSoilWithNullProperties()
         {
-            string json = ReflectionUtilities.GetResourceAsString("UnitTests.ApsimNG.Resources.SampleFiles.NullSample.apsimx");
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.NullSample.apsimx");
             Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
 
             if (fileErrors != null && fileErrors.Count > 0)
