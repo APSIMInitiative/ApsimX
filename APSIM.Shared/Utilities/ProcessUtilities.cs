@@ -151,7 +151,7 @@ namespace APSIM.Shared.Utilities
             else
             {
                 if (System.IO.File.Exists(path))
-                    System.Diagnostics.Process.Start(path);
+                    System.Diagnostics.Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
                 else if (System.IO.Directory.Exists(path))
                 {
                     if (path.Contains(" ") && path[0] != '\"')
