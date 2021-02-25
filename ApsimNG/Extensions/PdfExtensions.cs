@@ -83,7 +83,11 @@ namespace UserInterface.Extensions
         /// <param name="targetHeight">Max allowed height of the image in pixels.</param>
         private static Image ReadAndResizeImage(string fullPath, double targetWidth, double targetHeight)
         {
-            var image = System.Drawing.Image.FromFile(fullPath);
+            // Using Image.FromFile() will cause the file to be locked until the image is disposed.
+            // This is a hack to read the file and ensure the file is not locked afterward.
+            Image image;
+            using (Bitmap bmp = new Bitmap(fullPath))
+                image = new Bitmap(bmp);
             if ( (targetWidth > 0 && image.Width > targetWidth) || (targetHeight > 0 && image.Height > targetHeight) )
                 image = ImageUtilities.ResizeImage(image, targetWidth, targetHeight);
             return image;
