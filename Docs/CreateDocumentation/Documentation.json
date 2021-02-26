@@ -335,15 +335,15 @@
                     ]
                 },
                 {
-                    "Name": "Soybean (under review)",
+                    "Name": "Soybean",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx"
+                            "FileName": "Tests/Validation/Soybean/Soybean.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx",
+                            "FileName": "Tests/Validation/Soybean/Soybean.apsimx",
                             "ModelNameToDocument": "Soybean"
                         }
                     ]
