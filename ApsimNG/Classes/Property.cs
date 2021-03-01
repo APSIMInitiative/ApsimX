@@ -230,13 +230,15 @@ namespace UserInterface.Classes
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
 
+                    object[] args = metadata.GetCustomAttribute<DisplayAttribute>().ValuesArgs;
+
                     // Attempt to resolve links - populating the dropdown may
                     // require access to linked models.
                     Simulations sims = model.FindAncestor<Simulations>();
                     if (sims != null)
                         sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
 
-                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, args))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
                 case DisplayType.CultivarName:
@@ -311,49 +313,6 @@ namespace UserInterface.Classes
                     DisplayMethod = PropertyType.MultiLineText;
                     if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
                         Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
-                    break;
-                case DisplayType.CLEMCropFileReader:
-                case DisplayType.CLEMPastureFileReader:
-                case DisplayType.CLEMResourceFileReader:
-                    DisplayMethod = PropertyType.DropDown;
-                    List<string> readersList = new List<string>();
-                    Simulation parentSimulation = model.FindAncestor<Simulation>();
-                    if (parentSimulation != null)
-                    {
-                        switch (displayType)
-                        {
-                            case DisplayType.CLEMCropFileReader:
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
-                                break;
-                            case DisplayType.CLEMPastureFileReader:
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
-                                break;
-                            case DisplayType.CLEMResourceFileReader:
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
-                                readersList.AddRange(parentSimulation.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
-                                break;
-                            default:
-                                break;
-                        } 
-                    }
-                    DropDownOptions = readersList.ToArray();
-                    break;
-                case DisplayType.CLEMResource:
-                    DisplayMethod = PropertyType.DropDown;
-                    List<string> resources = new List<string>();
-                    ResourcesHolder resourcesHolder = model.FindInScope<ResourcesHolder>();
-                    if (resourcesHolder != null)
-                    {
-                        resources.AddRange(resourcesHolder.GetCLEMResourceNames(attrib.CLEMResourceGroups));
-                    }
-                    // add any extras elements provided to the list.
-                    if (attrib.Values != null && attrib.Values != "")
-                    {
-                        resources.AddRange(attrib.Values.Split(','));
-                    }
-                    DropDownOptions = resources.ToArray();
                     break;
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:

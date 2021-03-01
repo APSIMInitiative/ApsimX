@@ -378,41 +378,23 @@ namespace Models.CLEM.Resources
         /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
         /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
         /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
-        public string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
+        public string[] GetCLEMResourceNames(Type resourceGroupType)
         {
             List<string> resourseTypes = new List<string>();
-            if (resourceNameResourceGroups != null)
+            if (resourceGroupType != null)
             {
                 // resource groups specified (use them)
-                foreach (Type resGroupType in resourceNameResourceGroups)
+                IModel resGroup = this.Children.Find(c => resourceGroupType.IsAssignableFrom(c.GetType()));
+                if (resGroup != null)  //see if this group type is included in this particular simulation.
                 {
-                    IModel resGroup = this.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
-                    if (resGroup != null)  //see if this group type is included in this particular simulation.
-                    {
-                        foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
-                        {
-                            if (item.GetType() != typeof(Memo))
-                            {
-                                resourseTypes.Add(resGroup.Name  + "." + item.Name);
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                // no resource groups specified so use all avaliable resources
-                foreach (IModel resGroup in this.FindAllChildren<IModel>())
-                {
-                    foreach (IModel item in resGroup.Children)
+                    foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
                     {
                         if (item.GetType() != typeof(Memo))
                         {
-                            resourseTypes.Add(resGroup.Name + "." + item.Name);
+                            resourseTypes.Add(resGroup.Name  + "." + item.Name);
                         }
-                    } 
+                    }
                 }
-
             }
             return resourseTypes.ToArray();
         }
