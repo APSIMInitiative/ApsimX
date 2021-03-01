@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Land) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 

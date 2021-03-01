@@ -87,7 +87,8 @@ namespace Models.CLEM.Resources
         /// Link to a AnimalFoodStore or GrazeFoodStore for pasture details
         /// </summary>
         [Description("AnimalFoodStore or GrazeFoodStore type for pasture details")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string PastureLink { get; set; }
 
         [NonSerialized]

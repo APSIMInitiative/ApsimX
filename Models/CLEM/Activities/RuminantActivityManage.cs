@@ -214,7 +214,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased sires in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreNameSires { get; set; }
 
         /// <summary>
@@ -222,7 +223,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Restock", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place purchased breeders in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreNameBreeders { get; set; }
 
         /// <summary>
@@ -230,7 +232,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out females in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreNameGrowOutFemales { get; set; }
 
         /// <summary>
@@ -238,7 +241,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("Grow out herd", "Pasture")]
         [Description("GrazeFoodStore (paddock) to place grow out males in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, Values = "Not specified - general yards")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreNameGrowOutMales { get; set; }
 
         private string grazeStoreSires = "";
