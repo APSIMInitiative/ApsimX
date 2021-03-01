@@ -337,7 +337,7 @@
                 {
                     // A from variable name  was specified.
                 }
-                else if (DateTime.TryParseExact(fromString, "dd-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                else if (DateTime.TryParseExact(fromString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
                       || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
@@ -357,7 +357,7 @@
                 {
                     // A to variable name  was specified.
                 }
-                else if (DateTime.TryParseExact(toString, "dd-MM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                else if (DateTime.TryParseExact(toString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
                       || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
