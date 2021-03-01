@@ -74,15 +74,6 @@ namespace Models
         public bool SingleThreaded { get; set; }
 
         /// <summary>
-        /// Use the multi-process job runner.
-        /// </summary>
-        /// <remarks>
-        /// SetName specified to make it incompatible with single-threaded switch.
-        /// </remarks>
-        [Option("multi-process", HelpText = "Use the multi-process job runner.", SetName = "multithreaded")]
-        public bool MultiProcess { get; set; }
-
-        /// <summary>
         /// Maximum number of threads/processes to spawn for running simulations.
         /// </summary>
         [Option("cpu-count", Default = -1, HelpText = "Maximum number of threads/processes to spawn for running simulations.")]
@@ -104,8 +95,6 @@ namespace Models
             {
                 if (SingleThreaded)
                     return Models.Core.Run.Runner.RunTypeEnum.SingleThreaded;
-                if (MultiProcess)
-                    return Models.Core.Run.Runner.RunTypeEnum.MultiProcess;
                 return Models.Core.Run.Runner.RunTypeEnum.MultiThreaded;
             }
         }

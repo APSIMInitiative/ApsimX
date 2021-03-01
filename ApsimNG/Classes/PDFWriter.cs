@@ -478,17 +478,21 @@
                                 explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                                 presenter.Attach(modelView.model, view, explorerPresenter);
 
+#if NETFRAMEWORK
                                 Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+#endif
                                 try
                                 {
+#if NETFRAMEWORK
                                     popupWin.SetSizeRequest(700, 700);
                                     popupWin.Add(view.MainWidget);
+#endif
 
                                     if (view is MapView map)
                                         map.HideZoomControls();
-
+#if NETFRAMEWORK
                                     popupWin.ShowAll();
-
+#endif
                                     while (Gtk.Application.EventsPending())
                                         Gtk.Application.RunIteration();
 
@@ -512,7 +516,9 @@
                                 }
                                 finally
                                 {
+#if NETFRAMEWORK
                                     popupWin.Cleanup();
+#endif
                                     while (GLib.MainContext.Iteration());
                                 }
                             }

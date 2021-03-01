@@ -43,13 +43,15 @@
         [SetUp]
         public void Initialise()
         {
-            string sqliteSourceFileName = FindSqlite3DLL();
+            if (ProcessUtilities.CurrentOS.IsWindows)
+            {
+                string sqliteSourceFileName = FindSqlite3DLL();
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+            }
 
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
             database = new SQLite();
             database.OpenDatabase(":memory:", readOnly: false);
         }
-
 
         /// <summary>Read all data from a table</summary>
         [Test]
@@ -59,11 +61,11 @@
 
             DataStoreReader reader = new DataStoreReader(database);
             Assert.AreEqual(Utilities.TableToString(reader.GetData("Report")),
-                            "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2\r\n" +
-                            "       Current,           1,          Sim1,           1,2017-01-01, 1.000\r\n" +
-                            "       Current,           1,          Sim1,           1,2017-01-02, 2.000\r\n" +
-                            "       Current,           1,          Sim2,           2,2017-01-01,21.000\r\n" +
-                            "       Current,           1,          Sim2,           2,2017-01-02,22.000\r\n");
+                            $"CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2017-01-01, 1.000{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2017-01-02, 2.000{Environment.NewLine}" +
+                            $"       Current,           1,          Sim2,           2,2017-01-01,21.000{Environment.NewLine}" +
+                            $"       Current,           1,          Sim2,           2,2017-01-02,22.000{Environment.NewLine}");
         }
 
         /// <summary>Ensure that GetData when passed a table name and simulation name returns the correct data</summary>
@@ -76,9 +78,9 @@
             var data = reader.GetData(tableName: "Report",
                                       simulationName: "Sim1");
             Assert.AreEqual(Utilities.TableToString(data),
-                            "CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1, Col2\r\n" +
-                            "       Current,           1,          Sim1,           1,2017-01-01,1.000\r\n" +
-                            "       Current,           1,          Sim1,           1,2017-01-02,2.000\r\n");
+                            $"CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1, Col2{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2017-01-01,1.000{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2017-01-02,2.000{Environment.NewLine}");
         }
 
         /// <summary>Read a single column for a simulation.</summary>
@@ -92,9 +94,9 @@
                                       simulationName: "Sim1",
                                       fieldNames: new string[] { "Col2" });
             Assert.AreEqual(Utilities.TableToString(data),
-                            "CheckpointName,CheckpointID,SimulationName,SimulationID, Col2\r\n" +
-                            "       Current,           1,          Sim1,           1,1.000\r\n" +
-                            "       Current,           1,          Sim1,           1,2.000\r\n");
+                            $"CheckpointName,CheckpointID,SimulationName,SimulationID, Col2{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,1.000{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2.000{Environment.NewLine}");
         }
 
         /// <summary>Read a single column for a simulation with a filter.</summary>
@@ -109,8 +111,8 @@
                                       fieldNames: new string[] { "Col2" },
                                       filter: "Col2=2");
             Assert.AreEqual(Utilities.TableToString(data),
-                            "CheckpointName,CheckpointID,SimulationName,SimulationID, Col2\r\n" +
-                            "       Current,           1,          Sim1,           1,2.000\r\n");
+                            $"CheckpointName,CheckpointID,SimulationName,SimulationID, Col2{Environment.NewLine}" +
+                            $"       Current,           1,          Sim1,           1,2.000{Environment.NewLine}");
         }
 
         /// <summary>Read data using SQL.</summary>
@@ -123,15 +125,15 @@
             var data = reader.GetDataUsingSql("SELECT [Col1] FROM [Report]");
 
             Assert.AreEqual(Utilities.TableToString(data),
-                                           "      Col1\r\n" +
-                                           "2017-01-01\r\n" +
-                                           "2017-01-02\r\n" +
-                                           "2017-01-01\r\n" +
-                                           "2017-01-02\r\n" +
-                                           "2017-01-01\r\n" +
-                                           "2017-01-02\r\n" +
-                                           "2017-01-01\r\n" +
-                                           "2017-01-02\r\n");
+                                           $"      Col1{Environment.NewLine}" +
+                                           $"2017-01-01{Environment.NewLine}" +
+                                           $"2017-01-02{Environment.NewLine}" +
+                                           $"2017-01-01{Environment.NewLine}" +
+                                           $"2017-01-02{Environment.NewLine}" +
+                                           $"2017-01-01{Environment.NewLine}" +
+                                           $"2017-01-02{Environment.NewLine}" +
+                                           $"2017-01-01{Environment.NewLine}" +
+                                           $"2017-01-02{Environment.NewLine}");
         }
 
         /// <summary>Get units for a column.</summary>
