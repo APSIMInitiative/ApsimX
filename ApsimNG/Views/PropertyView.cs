@@ -152,11 +152,10 @@ namespace UserInterface.Views
 
 #if NETFRAMEWORK
             uint nrow = 0;
-            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
 #else
             int nrow = 0;
-            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
 #endif
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
             mainWidget.ShowAll();
 
             // If a widget was previously focused, then try to give it focus again.
