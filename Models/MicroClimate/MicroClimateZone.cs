@@ -496,7 +496,8 @@
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].amount = Canopies[j].Rs[i] * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
                     }
