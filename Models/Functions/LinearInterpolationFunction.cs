@@ -38,7 +38,7 @@ namespace Models.Functions
             XYPairs = new XYPairs() { X = x, Y = y };
         }
 
-        /// <summary>Return the name of the x variable. Used as graph x axis title.summary>
+        /// <summary>Return the name of the x variable. Used as graph x axis title. </summary>
         public string XVariableName
         {
             get
