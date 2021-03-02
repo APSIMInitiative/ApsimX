@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -170,6 +171,8 @@ namespace Models.CLEM.Resources
         /// </summary>
         public event EventHandler AllocationReported;
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -177,28 +180,30 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Reported in ";
-            if(UnitsOfArea == null || UnitsOfArea == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Unspecified units of area</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + UnitsOfArea + "</span>";
-            }
-            html += "</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Reported in ");
+                if (UnitsOfArea == null || UnitsOfArea == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
+                }
+                htmlWriter.Write("</span>");
 
 
-            if (UnitsOfAreaToHaConversion != 1)
-            {
-                html += " (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)";
+                if (UnitsOfAreaToHaConversion != 1)
+                {
+                    htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            return html;
         }
+
+        #endregion
     }
-
-
 }

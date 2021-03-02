@@ -27,7 +27,7 @@
         [Link] ISummary summary = null;
         [Link] List<IPlantDamage> forages = null;
         [Link(ByName = true)] ISolute Urea = null;
-        [Link] Soil soil = null;
+        [Link] IPhysical soilPhysical = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
         [Link] ScriptCompiler compiler = null;
 
@@ -506,7 +506,7 @@
             {
                 // We will do the urine return.
                 // find the layer that the fertilizer is to be added to.
-                int layer = soil.LayerIndexOfDepth(DepthUrineIsAdded);
+                int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, DepthUrineIsAdded);
 
                 var ureaValues = Urea.kgha;
                 ureaValues[layer] += AmountUrineNReturned;
@@ -547,8 +547,8 @@
                     return true;
                 else
                 {
-                    summary.WriteMessage(this, "Defoliation will not happend because there is not enough plant material.");
-                    DaysSinceGraze = -1;
+                    summary.WriteMessage(this, "Defoliation will not happen because there is not enough plant material.");
+                    DaysSinceGraze = 0;
                 }
             }
             return false;

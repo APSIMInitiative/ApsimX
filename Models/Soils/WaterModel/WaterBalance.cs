@@ -49,6 +49,13 @@
         /// <summary>Link to the soil properties.</summary>
         [Link]
         private Soil soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        Sample initial = null;
 
         [Link]
         private ISummary summary = null;
@@ -172,16 +179,6 @@
         [Description("Cover for max curve number reduction")]
         public double CNCov { get; set; } = 0.8;
 
-        /// <summary>Slope of the catchment area for lateral flow calculations.</summary>
-        /// <remarks>
-        /// DSG: The units of slope are metres/metre.  Hence a slope = 0 means horizontal soil layers, and no lateral flows will occur.
-        /// A slope = 1 means basically a 45 degree angle slope, which we thought would be the most anyone would be wanting to simulate.  Hence the bounds 0-1.  I still think this is fine.
-        /// </remarks>
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Caption("Slope")]
-        [Description("Slope of the catchment area for lateral flow calculations")]
-        public double Slope { get; set; } = 0.5;
-
         /// <summary>Basal width of the downslope boundary of the catchment for lateral flow calculations (m).</summary>
         [Bounds(Lower = 0.0, Upper = 1.0e8F)]
         [Units("m")]
@@ -204,11 +201,11 @@
         {
             get
             {
-                return APSIM.Shared.APSoil.SoilUtilities.ToDepthStrings(Thickness);
+                return SoilUtilities.ToDepthStrings(Thickness);
             }
             set
             {
-                Thickness = APSIM.Shared.APSoil.SoilUtilities.ToThickness(value);
+                Thickness = SoilUtilities.ToThickness(value);
             }
         }
 
@@ -225,7 +222,7 @@
             set 
             { 
                 waterMM = value; 
-                waterVolumetric = MathUtilities.Divide(value, soil.Thickness); 
+                waterVolumetric = MathUtilities.Divide(value, soilPhysical.Thickness); 
             } 
         }
 
@@ -237,7 +234,7 @@
             set
             {
                 waterVolumetric = value;
-                waterMM = MathUtilities.Multiply(value, soil.Thickness);
+                waterMM = MathUtilities.Multiply(value, soilPhysical.Thickness);
             }
         }
 
@@ -322,7 +319,7 @@
 
         ///<summary>Gets extractable soil water relative to LL15(mm)</summary>
         [JsonIgnore]
-        public double[] ESW { get { return MathUtilities.Subtract(Water, soil.LL15mm); } }
+        public double[] ESW { get { return MathUtilities.Subtract(Water, soilPhysical.LL15mm); } }
 
         ///<summary>Gets potential evaporation from soil surface (mm)</summary>
         [JsonIgnore]
@@ -395,6 +392,29 @@
         /// <summary>Pond.</summary>
         public double Pond { get { return 0; } }
 
+        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
+        [Units("mm/mm")]
+        public double[] PAW
+        {
+            get
+            {
+                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness,
+                                                                  soilPhysical.LL15,
+                                                                  SW,
+                                                                  null);
+            }
+        }
+
+        /// <summary>Plant available water SW-LL15 (mm).</summary>
+        [Units("mm")]
+        public double[] PAWmm
+        {
+            get
+            {
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
+            }
+        }
+
         // --- Event handlers ------------------------------------------------------------
 
         /// <summary>Called when a simulation commences.</summary>
@@ -449,7 +469,7 @@
             {
                 if (irrigation.Amount > 0)
                 {
-                    int irrigationLayer = soil.LayerIndexOfDepth(Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
+                    int irrigationLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, Convert.ToInt32(irrigation.Depth, CultureInfo.InvariantCulture));
                     Water[irrigationLayer] += irrigation.Amount;
                     if (irrigationLayer == 0)
                         Infiltration += irrigation.Amount;
@@ -519,7 +539,7 @@
             urea.SetKgHa(SoluteSetterType.Soil, ureaValues);
 
             // Now that we've finished moving water, calculate volumetric water
-            waterVolumetric = MathUtilities.Divide(Water, soil.Thickness);
+            waterVolumetric = MathUtilities.Divide(Water, soilPhysical.Thickness);
         }
 
         /// <summary>Move water down the profile</summary>
@@ -651,54 +671,54 @@
 
             double min_sw = 0.0;
 
-            for (int i = 0; i < soil.Thickness.Length; i++)
+            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
             {
-                double max_sw = 1.0 - MathUtilities.Divide(soil.BD[i], specific_bd, 0.0);  // ie. Total Porosity
+                double max_sw = 1.0 - MathUtilities.Divide(soilPhysical.BD[i], specific_bd, 0.0);  // ie. Total Porosity
 
-                if (MathUtilities.IsLessThan(soil.AirDry[i], min_sw))
+                if (MathUtilities.IsLessThan(soilPhysical.AirDry[i], min_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " Air dry lower limit of ",
-                                               soil.AirDry[i],
+                                               soilPhysical.AirDry[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is below acceptable value of ",
                                                min_sw));
 
-                if (MathUtilities.IsLessThan(soil.LL15[i], soil.AirDry[i]))
+                if (MathUtilities.IsLessThan(soilPhysical.LL15[i], soilPhysical.AirDry[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " 15 bar lower limit of ",
-                                               soil.LL15[i],
+                                               soilPhysical.LL15[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is below air dry value of ",
-                                               soil.AirDry[i]));
+                                               soilPhysical.AirDry[i]));
 
-                if (MathUtilities.IsLessThanOrEqual(soil.DUL[i], soil.LL15[i]))
+                if (MathUtilities.IsLessThanOrEqual(soilPhysical.DUL[i], soilPhysical.LL15[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " drained upper limit of ",
-                                               soil.DUL[i],
+                                               soilPhysical.DUL[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is at or below lower limit of ",
-                                               soil.LL15[i]));
+                                               soilPhysical.LL15[i]));
 
-                if (MathUtilities.IsLessThanOrEqual(soil.SAT[i], soil.DUL[i]))
+                if (MathUtilities.IsLessThanOrEqual(soilPhysical.SAT[i], soilPhysical.DUL[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4})",
                                                " saturation of ",
-                                               soil.SAT[i],
+                                               soilPhysical.SAT[i],
                                                " in layer ",
                                                i,
                                                "\n",
                                                "         is at or below drained upper limit of ",
-                                               soil.DUL[i]));
+                                               soilPhysical.DUL[i]));
 
-                if (MathUtilities.IsGreaterThan(soil.SAT[i], max_sw))
+                if (MathUtilities.IsGreaterThan(soilPhysical.SAT[i], max_sw))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4} {7} {8} {9:G4} {10} {11} {12:G4})",
                                                " saturation of ",
-                                               soil.SAT[i],
+                                               soilPhysical.SAT[i],
                                                " in layer ",
                                                i,
                                                "\n",
@@ -706,12 +726,12 @@
                                                max_sw,
                                                "\n",
                                                "You must adjust bulk density (bd) to below ",
-                                               (1.0 - soil.SAT[i]) * specific_bd,
+                                               (1.0 - soilPhysical.SAT[i]) * specific_bd,
                                                "\n",
                                                "OR saturation (sat) to below ",
                                                max_sw));
 
-                if (MathUtilities.IsGreaterThan(SW[i], soil.SAT[i]))
+                if (MathUtilities.IsGreaterThan(SW[i], soilPhysical.SAT[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                                " soil water of ",
                                                SW[i],
@@ -719,9 +739,9 @@
                                                i,
                                                "\n",
                                                "         is above saturation of ",
-                                               soil.SAT[i]));
+                                               soilPhysical.SAT[i]));
 
-                if (MathUtilities.IsLessThan(SW[i], soil.AirDry[i]))
+                if (MathUtilities.IsLessThan(SW[i], soilPhysical.AirDry[i]))
                     throw new Exception(String.Format("({0} {1:G4}) {2} {3} {4} {5} {6:G4}",
                                                " soil water of ",
                                                SW[i],
@@ -729,7 +749,7 @@
                                                i,
                                                "\n",
                                                "         is below air-dry value of ",
-                                               soil.AirDry[i]));
+                                               soilPhysical.AirDry[i]));
             }
 
         }
@@ -760,7 +780,7 @@
             FlowNH4 = MathUtilities.CreateArrayOfValues(0.0, Thickness.Length);
             SoluteFlowEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
             SoluteFluxEfficiency = MathUtilities.CreateArrayOfValues(1.0, Thickness.Length);
-            Water = soil.Initial.SWmm;
+            Water = initial.SWmm;
             Runon = 0;
             Runoff = 0;
             PotentialInfiltration = 0;

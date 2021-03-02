@@ -21,6 +21,7 @@
     using System.Globalization;
     using Models.LifeCycle;
     using Models.PMF;
+    using global::UserInterface.Classes;
 
     /// <summary>
     /// <para>
@@ -248,7 +249,7 @@
         /// <param name="o">Object whose members will be retrieved.</param>
         private List<MemberInfo> GetMembers(object o)
         {
-            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).ToList();
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
             members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
             var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
             return orderedMembers;
@@ -392,7 +393,7 @@
                             crop = GetCrop(properties);
                         if (crop != null)
                         {
-                            cell.DropDownStrings = GetCultivarNames(crop);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetCultivarNames(crop);
                         }
                     }
 
@@ -402,7 +403,7 @@
                         Zone zone = model.FindInScope<Zone>();
                         if (zone != null)
                         {
-                            cell.DropDownStrings = GetLifeCycleNames(zone);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                         }
                     }
 
@@ -416,7 +417,7 @@
                             lifeCycle = GetLifeCycle(properties);
                         if (lifeCycle != null)
                         {
-                            cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                            cell.DropDownStrings = PropertyPresenterHelpers.GetPhaseNames(lifeCycle);
                         }
                     }
                     else if (properties[i].Display != null &&
@@ -511,6 +512,8 @@
                          properties[i].Display.Type == DisplayType.TableName)
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
+                    if (storage == null)
+                        storage = model.FindInScope<IDataStore>();
                     cell.DropDownStrings = storage.Reader.TableNames.ToArray();
                 }
                 else if (properties[i].Display != null && 
@@ -524,7 +527,7 @@
                         crop = GetCrop(properties);
                     if (crop != null)
                     {
-                        cell.DropDownStrings = GetCultivarNames(crop);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetCultivarNames(crop);
                     }
                 }
 
@@ -535,7 +538,7 @@
                     Zone zone = model.FindInScope<Zone>();
                     if (zone != null)
                     {
-                        cell.DropDownStrings = GetLifeCycleNames(zone);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetLifeCycleNames(zone);
                     }
                 }
 
@@ -546,7 +549,7 @@
                     LifeCycle lifeCycle = GetLifeCycle(properties);
                     if (lifeCycle != null)
                     {
-                        cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                        cell.DropDownStrings = PropertyPresenterHelpers.GetPhaseNames(lifeCycle);
                     }
                 }
                 else if (properties[i].Display != null && 
@@ -606,7 +609,7 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get crop file names
+                    // get crop file reader names
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
@@ -620,14 +623,27 @@
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
                     Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get Pasture file names
+                    // get Pasture file reader names
                     fieldNames.AddRange(clemParent.FindAllDescendants<FilePasture>().Select(a => a.Name).ToList());
                     fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLitePasture>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
-                }				
+                }
+                else if (properties[i].Display != null &&
+                    (properties[i].Display.Type == DisplayType.CLEMResourceFileReader))
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    List<string> fieldNames = new List<string>();
+                    Simulation clemParent = model.FindAncestor<Simulation>();
+                    // get Resource file reader names
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileResource>().Select(a => a.Name).ToList());
+                    if (fieldNames.Count != 0)
+                    {
+                        cell.DropDownStrings = fieldNames.ToArray();
+                    }
+                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -675,7 +691,8 @@
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
                         explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
-                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values);
+                        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                        MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values, flags);
                         string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = values;
@@ -694,101 +711,6 @@
 
             IGridColumn valueColumn = grid.GetColumn(1);
             valueColumn.Width = -1;
-        }
-
-        /// <summary>Get a list of cultivars for crop.</summary>
-        /// <param name="crop">The crop.</param>
-        /// <returns>A list of cultivars.</returns>
-        private string[] GetCultivarNames(IPlant crop)
-        {
-            Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
-            Replacements replacements = simulations.FindChild<Replacements>();
-
-            if (replacements == null)
-                return crop.CultivarNames;
-
-            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
-            if (replacementCrop != null)
-                return replacementCrop.CultivarNames;
-
-            // Check for cultivar folders under replacements.
-            List<string> cultivarNames = crop.CultivarNames.ToList();
-            foreach (IModel cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
-            {
-                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
-                if (replacementFolder != null)
-                {
-                    // If we find a matching cultivar folder under replacements, remove
-                    // all cultivar names added by this folder in the official plant
-                    // model, and add the cultivar names added by the matching cultivar
-                    // folder under replacements.
-                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
-                    {
-                        cultivarNames.Remove(cultivar.Name);
-
-                        // If the cultivar has memo children, then the memo text will
-                        // be appended to the cultivar name after a vertical bar |.
-                        // Technically, there could be a cultivar x and x|y, but the UI
-                        // will prevent users from doing this, so the user would really
-                        // just be digging their own hole at this point.
-                        cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
-                    }
-
-                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
-                        cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
-
-                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
-                        cultivarNames.Add(cultivar.Name);
-                }
-            }
-
-            return cultivarNames.ToArray();
-        }
-
-        /// <summary>Get a list of life cycles in the zone.</summary>
-        /// <param name="zone">The zone.</param>
-        /// <returns>A list of life cycles.</returns>
-        private string[] GetLifeCycleNames(Zone zone)
-        {
-            List<LifeCycle> LifeCycles = zone.FindAllInScope<LifeCycle>().ToList();
-            if (LifeCycles.Count > 0)
-            {
-                string[] Namelist = new string[LifeCycles.Count];
-                int i = 0;
-                foreach (IModel LC in LifeCycles)
-                {
-                    Namelist[i] = LC.Name;
-                    i++;
-                }
-                return Namelist;
-            }
-            return new string[0];
-        }
-
-        /// <summary>Get a list of phases for lifecycle.</summary>
-        /// <param name="lifecycle">The lifecycle.</param>
-        /// <returns>A list of phases.</returns>
-        private string[] GetPhaseNames(LifeCycle lifeCycle)
-        {
-            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
-            {
-                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
-                Replacements replacements = simulations.FindChild<Replacements>();
-                if (replacements != null)
-                {
-                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
-                    if (replacementLifeCycle != null)
-                    {
-                        return replacementLifeCycle.LifeCyclePhaseNames;
-                    }
-                }
-            }
-            else
-            {
-                return lifeCycle.LifeCyclePhaseNames;
-            }
-
-            return new string[0];
         }
 
         /// <summary>Get a list of database fieldnames. 
@@ -853,7 +775,7 @@
             LifeCycle lc = null;
             foreach (IVariable property in properties)
                 if (lc == null)
-                    lc = model.FindInScope<LifeCycle>(property.Value.ToString());
+                    lc = model.FindInScope<LifeCycle>(property.Value?.ToString());
             return lc;
         }
 
@@ -989,8 +911,10 @@
         /// <summary>
         /// Fetches from the model the value which should be displayed in a given cell.
         /// </summary>
+        /// <param name="property">The row and column correspond to this property.</param>
         /// <param name="row">Row index of the cell.</param>
         /// <param name="column">Column index of the cell.</param>
+        /// <remarks>Why do we need to pass row/column and property as well??</remarks>
         protected virtual object GetCellValue(IVariable property, int row, int column)
         {
             object result = property.ValueWithArrayHandling;
@@ -1010,7 +934,6 @@
         /// <summary>
         /// Gets the property in a given displayed by a given cell.
         /// </summary>
-        /// <remarks>
         /// <param name="row">Row inex.</param>
         /// <param name="column">Column index.</param>
         protected virtual IVariable GetProperty(int row, int column)
@@ -1022,6 +945,7 @@
         /// Gets the new value of the cell from a string containing the
         /// cell's new contents.
         /// </summary>
+        /// <param name="property">Property to which the cell belongs.</param>
         /// <param name="cell">Cell which has been changed.</param>
         protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {
@@ -1132,7 +1056,7 @@
         private void OnModelChanged(object changedModel)
         {
             if (changedModel == model)
-                PopulateGrid(model);
+                Refresh();
         }
 
         /// <summary>

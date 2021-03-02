@@ -72,6 +72,8 @@
             try
             {
                 storage.Writer.Empty();
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowRightHandPanel();
             }
             catch (Exception err)
             {
@@ -91,13 +93,33 @@
             try
             {
                 Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
-                ICommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
-                command.Do(null);
+                RunCommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                runner.AllSimulationsCompleted += RefreshRightHandPanel;
+                command.Do();
             }
             catch (Exception err)
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Refresh the right-hand panel of the UI.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void RefreshRightHandPanel(object sender, object args)
+        {
+            if (sender is Runner runner)
+                runner.AllSimulationsCompleted -= RefreshRightHandPanel;
+
+            // This can be called on the runner thread. The UI actions
+            // need to occur on the main thread.
+            Gtk.Application.Invoke(delegate
+            {
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowRightHandPanel();
+            });
         }
 
         /// <summary>
@@ -138,7 +160,13 @@
         {
             try
             {
-                RunAPSIMInternal(multiProcessRunner: false);
+                if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
+                {
+                    Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                    var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
+                    this.command.Do();
+                }
             }
             catch (Exception err)
             {
@@ -147,30 +175,10 @@
         }
 
         /// <summary>
-        /// Event handler for a User interface "Run APSIM multi-process (experimental)" action
-        /// </summary>
+        /// Event handler for the run on cloud action
+        /// </summary>        
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run APSIM multi-process (experimental)",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder),
-                                              typeof(Morris),
-                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
-                     ShortcutKey = "F6")]
-        public void RunAPSIMMultiProcess(object sender, EventArgs e)
-        {
-            try
-            {
-                RunAPSIMInternal(multiProcessRunner: true);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
         [ContextMenu(MenuName = "Run on cloud",
                      AppliesTo = new Type[] { typeof(Simulation),
                                               typeof(Simulations),
@@ -179,11 +187,6 @@
                                             }
                     )
         ]
-        /// <summary>
-        /// Event handler for the run on cloud action
-        /// </summary>        
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
         public void RunOnCloud(object sender, EventArgs e)
         {
             try
@@ -290,10 +293,16 @@
 
                 string text = string.IsNullOrEmpty(externalCBText) ? internalCBText : externalCBText;
 
-                var command = new AddModelCommand(explorerPresenter.CurrentNodePath,
-                                                  text, 
-                                                  explorerPresenter);
-                explorerPresenter.CommandHistory.Add(command, true);
+                IModel currentNode = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+                if (currentNode != null)
+                {
+                    ICommand command = new AddModelCommand(currentNode, text);
+                    explorerPresenter.CommandHistory.Add(command, true);
+                    explorerPresenter.Refresh();
+                    if (currentNode.Children.Count == 1)
+                        explorerPresenter.ExpandChildren(currentNode.FullPath, true);
+                    explorerPresenter.SelectNode(currentNode, false);
+                }
             }
             catch (Exception err)
             {
@@ -412,23 +421,6 @@
             }
         }
 
-        /// <summary>Run APSIM.</summary>
-        /// <param name="multiProcessRunner">Use the multi-process runner?</param>
-        private void RunAPSIMInternal(bool multiProcessRunner)
-        {
-            if (this.explorerPresenter.Save())
-            {
-                Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
-                if (multiProcessRunner)
-                    typeOfRun = Runner.RunTypeEnum.MultiProcess;
-
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
-                var runner = new Runner(model, runType:typeOfRun, wait: false);
-                this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                this.command.Do(null);
-            }
-        }
-
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
@@ -477,11 +469,15 @@
         {
             try
             {
+#if NETFRAMEWORK
                 object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
                 explorerPresenter.HideRightHandPanel();
                 explorerPresenter.ShowInRightHandPanel(model,
                                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
                                                        new DownloadPresenter());
+#else
+                throw new NotImplementedException();
+#endif
             }
             catch (Exception err)
             {
@@ -739,7 +735,7 @@
         public bool ShowModelStructureChecked()
         {
             IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
-            if (model.Children.Count < 1)
+            if (model != null && model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
         }
@@ -857,20 +853,17 @@
                     explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                     explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    ICommand command;
-                    string fileNameWritten;
                     var modelToDocument = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
 
                     var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                    fileNameWritten = (command as CreateFileDocumentationCommand).FileNameWritten;
+                    CreateFileDocumentationCommand command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
+                    string fileNameWritten = command.FileNameWritten;
 
-                    explorerPresenter.CommandHistory.Add(command, true);
+                    command.Do();
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileNameWritten);
+                    ProcessUtilities.ProcessStart(fileNameWritten);
                 }
             }
             catch (Exception err)

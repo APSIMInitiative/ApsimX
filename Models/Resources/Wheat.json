@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 118,
+  "Version": 129,
   "Name": "Simulations",
   "Children": [
     {
@@ -284,7 +284,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 18<sup>o</sup>C.",
+                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1^o^C to zero at 0^o^C and at 18^o^C.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -1583,7 +1583,7 @@
             {
               "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "Flowering",
-              "ReSetEvent": "never",
+              "ReSetEvent": "Germination",
               "Name": "FloweringDAS",
               "Children": [
                 {
@@ -2952,11 +2952,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -4917,7 +4928,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].RadIntTot",
+                  "VariableName": "[Leaf].RadiationIntercepted",
                   "Name": "RadnInt",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -5476,11 +5487,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "StartGrainFill",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -6157,11 +6179,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "StartGrainFill",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -7722,8 +7755,7 @@
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].PpSensitivity.FixedValue = 3.5",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0",
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue"
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0"
                   ],
                   "Name": "Gamenya",
                   "Children": [],

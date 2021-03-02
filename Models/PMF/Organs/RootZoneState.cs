@@ -5,6 +5,8 @@ using Models.Functions;
 using System.Linq;
 using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
+using Models.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -13,7 +15,13 @@ namespace Models.PMF.Organs
     public class ZoneState
     {
         /// <summary>The soil in this zone</summary>
-        public Soil soil = null;
+        public Soil Soil { get; set; }
+        
+        /// <summary>The soil in this zone</summary>
+        public IPhysical Physical { get; set; }
+
+        /// <summary>The water balance in this zone</summary>
+        public ISoilWater WaterBalance { get; set; }
 
         /// <summary>The NO3 solute.</summary>
         public ISolute NO3 = null;
@@ -26,6 +34,9 @@ namespace Models.PMF.Organs
 
         /// <summary>The root organ</summary>
         public Root root = null;
+
+        /// <summary>Is the Weirdo model present in the simulation?</summary>
+        public bool IsWeirdoPresent { get; set; }
 
         /// <summary>The root front velocity function</summary>
         private IFunction rootFrontVelocity;
@@ -145,19 +156,22 @@ namespace Models.PMF.Organs
                          BiomassDemand initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost)
         {
-            this.soil = soil;
+            this.Soil = soil;
             this.plant = Plant;
             this.root = Root;
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
+            Physical = soil.FindChild<IPhysical>();
+            WaterBalance = soil.FindChild<ISoilWater>();
+            IsWeirdoPresent = soil.FindChild("Weirdo") != null;
 
             Clear();
             Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = zone.FindInScope("NO3") as ISolute;
-            NH4 = zone.FindInScope("NH4") as ISolute;
+            NO3 = zone.FindInScope<ISolute>("NO3");
+            NH4 = zone.FindInScope<ISolute>("NH4");
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }
@@ -174,13 +188,13 @@ namespace Models.PMF.Organs
             //distribute root biomass evenly through root depth
             double[] fromLayer = new double[1] { depth };
             double[] fromStructural = new double[1] { initialDM.Structural.Value() };
-            double[] toStructural = Layers.MapMass(fromStructural, fromLayer, soil.Thickness);
+            double[] toStructural = Layers.MapMass(fromStructural, fromLayer, Physical.Thickness);
             double[] fromMetabolic = new double[1] { initialDM.Metabolic.Value() };
-            double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, soil.Thickness);
+            double[] toMetabolic = Layers.MapMass(fromMetabolic, fromLayer, Physical.Thickness);
             double[] fromStorage = new double[1] { initialDM.Storage.Value() };
-            double[] toStorage = Layers.MapMass(fromStorage, fromLayer, soil.Thickness);
+            double[] toStorage = Layers.MapMass(fromStorage, fromLayer, Physical.Thickness);
 
-            for (int layer = 0; layer < soil.Thickness.Length; layer++)
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
                 LayerLive[layer].StructuralWt = toStructural[layer] * population;
                 LayerLive[layer].MetabolicWt = toMetabolic[layer] * population;
@@ -219,18 +233,18 @@ namespace Models.PMF.Organs
         {
             WaterUptake = null;
             NitUptake = null;
-            DeltaNO3 = new double[soil.Thickness.Length];
-            DeltaNH4 = new double[soil.Thickness.Length];
-            RootProportions = new double[soil.Thickness.Length];
-            LLModifier = new double[soil.Thickness.Length];
+            DeltaNO3 = new double[Physical.Thickness.Length];
+            DeltaNH4 = new double[Physical.Thickness.Length];
+            RootProportions = new double[Physical.Thickness.Length];
+            LLModifier = new double[Physical.Thickness.Length];
 
             Depth = 0.0;
 
             if (LayerLive == null || LayerLive.Length == 0)
             {
-                LayerLive = new Biomass[soil.Thickness.Length];
-                LayerDead = new Biomass[soil.Thickness.Length];
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                LayerLive = new Biomass[Physical.Thickness.Length];
+                LayerDead = new Biomass[Physical.Thickness.Length];
+                for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
                     LayerLive[i] = new Biomass();
                     LayerDead[i] = new Biomass();
@@ -238,7 +252,7 @@ namespace Models.PMF.Organs
             }
             else
             {
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
                     LayerLive[i].Clear();
                     LayerDead[i].Clear();
@@ -251,24 +265,27 @@ namespace Models.PMF.Organs
         public void GrowRootDepth()
         {
             // Do Root Front Advance
-            int RootLayer = soil.LayerIndexOfDepth(Depth);
+            int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
             var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
-            if (soil.Weirdo == null)
+            if (!IsWeirdoPresent)
             {
-                var soilCrop = soil.Crop(plant.Name);
+                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name}Soil");
+
                 xf = soilCrop.XF;
 
                 Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
                     if (xf[i] > 0)
-                        MaxDepth += soil.Thickness[i];
+                        MaxDepth += Physical.Thickness[i];
                     else
                         break;
                 }
@@ -276,7 +293,7 @@ namespace Models.PMF.Organs
             else
             {
                 Depth = Depth + rootfrontvelocity;
-                MaxDepth = soil.Thickness.Sum();
+                MaxDepth = Physical.Thickness.Sum();
             }
 
             // Limit root depth for the crop specific maximum depth
@@ -303,15 +320,15 @@ namespace Models.PMF.Organs
         /// </summary>
         public double[] CalculateRootActivityValues()
         {
-            double[] RAw = new double[soil.Thickness.Length];
-            for (int layer = 0; layer < soil.Thickness.Length; layer++)
+            double[] RAw = new double[Physical.Thickness.Length];
+            for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
-                if (layer <= soil.LayerIndexOfDepth(Depth))
+                if (layer <= SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth))
                     if (LayerLive[layer].Wt > 0)
                     {
                         RAw[layer] = -WaterUptake[layer] / LayerLive[layer].Wt
-                                   * soil.Thickness[layer]
-                                   * soil.ProportionThroughLayer(layer, Depth);
+                                   * Physical.Thickness[layer]
+                                   * SoilUtilities.ProportionThroughLayer(Physical.Thickness, layer, Depth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
                     }
                     else if (layer > 0)
@@ -327,13 +344,13 @@ namespace Models.PMF.Organs
         /// </summary>
         public void PartitionRootMass(double TotalRAw, Biomass TotalDMAllocated)
         {
-            DMAllocated = new double[soil.Thickness.Length];
+            DMAllocated = new double[Physical.Thickness.Length];
  
             if (Depth > 0)
             {
                 double[] RAw = CalculateRootActivityValues();
 
-                for (int layer = 0; layer < soil.Thickness.Length; layer++)
+                for (int layer = 0; layer < Physical.Thickness.Length; layer++)
                     if (TotalRAw > 0)
                     {
                         LayerLive[layer].StructuralWt += TotalDMAllocated.StructuralWt * RAw[layer] / TotalRAw;

@@ -178,6 +178,16 @@
                         namePath = namePath.Remove(0, 1);
                     }
                 }
+                else
+                {
+                    // Try a report column.
+                    foreach (Report report in relativeTo.FindAllInScope<Report>())
+                    {
+                        IReportColumn column = report.Columns?.Find(c => c.Name == namePath);
+                        if (column != null)
+                            return new VariableObject(column.GetValue(0));
+                    }
+                }
 
                 // Now walk the series of '.' separated path bits, assuming the path bits
                 // are child models. Stop when we can't find the child model.

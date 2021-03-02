@@ -55,6 +55,7 @@ namespace Models.PMF.Organs
         public Biomass Removed { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        [Units("g/m^2")]
         virtual public double MaintenanceRespiration { get { return 0; } set { } }
 
         /// <summary>The dry matter demand</summary>
@@ -74,6 +75,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
+        [Units("g DM/g N")]
         public double NFixationCost { get { return 0; } }
 
         /// <summary>The water content</summary>
@@ -86,20 +88,24 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/m2")]
         IFunction NumberFunction = null;
+
         /// <summary>The n filling rate</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         IFunction NFillingRate = null;
+        
         /// <summary>The maximum n conc</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
+        
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
         /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
+        [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction CarbonConcentration = null;
 
@@ -114,14 +120,17 @@ namespace Models.PMF.Organs
 
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("g/m^2")]
         public IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>The cost for remobilisation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
         public IFunction RemobilisationCost = null;
 
         /// <summary>The ripe stage</summary>
@@ -320,14 +329,6 @@ namespace Models.PMF.Organs
         {
             if (Phenology.OnStartDayOf(RipeStage))
                 _ReadyForHarvest = true;
-
-            //Do Maintenance respiration
-            MaintenanceRespiration = 0;
-            if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
-            {
-                MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
-            }
         }
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
@@ -361,6 +362,7 @@ namespace Models.PMF.Organs
             Allocated.StructuralN = nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
+        [Units("g/g")]
         public double MaxNconc
         {
             get
@@ -369,6 +371,7 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
+        [Units("g/g")]
         public double MinNconc
         {
             get
@@ -381,11 +384,11 @@ namespace Models.PMF.Organs
         public Biomass Total { get { return Live + Dead; } }
 
         /// <summary>Gets the total grain weight</summary>
-        [Units("g/m2")]
+        [Units("g/m^2")]
         public double Wt { get { return Total.Wt; } }
 
         /// <summary>Gets the total grain N</summary>
-        [Units("g/m2")]
+        [Units("g/m^2")]
         public double N { get { return Total.N; } }
 
 
@@ -400,19 +403,6 @@ namespace Models.PMF.Organs
                 else
                     return 0.0;
             }
-        }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
         }
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>

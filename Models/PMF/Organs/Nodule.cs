@@ -20,17 +20,16 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
-        #region Paramater Input Classes
-
         /// <summary>The fixation metabolic cost</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g DM/g N")]
         IFunction FixationMetabolicCost = null;
+
         /// <summary>The specific nitrogenase activity</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m^2")]
         IFunction FixationRate = null;
-        #endregion
 
-        #region Class Fields
         /// <summary>The respired wt</summary>
         [Units("g/m2")]
         [JsonIgnore]
@@ -40,10 +39,9 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public double NFixed { get; set; }
 
-        #endregion
 
-        #region Arbitrator methods
         /// <summary>Gets or sets the n fixation cost.</summary>
+        [Units("g DM/g N")]
         public double NFixationCost { get { return FixationMetabolicCost.Value(); } }
 
         /// <summary>Sets the n allocation.</summary>
@@ -76,6 +74,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets the respired wt fixation.</summary>
+        [Units("g/m^2")]
         public double RespiredWtFixation { get { return RespiredWt; } }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -134,7 +133,6 @@ namespace Models.PMF.Organs
             RespiredWt = dryMatter.Respired;    // Now get the respired value for ourselves.
         }
 
-        #endregion
 
         /// <summary>Event from sequencer telling us to do phenology events.</summary>
         /// <param name="sender">The sender.</param>
@@ -148,6 +146,7 @@ namespace Models.PMF.Organs
 
 
         /// <summary>Tolerance for biomass comparisons</summary>
+        [Units("g/m^2")]
         protected double BiomassToleranceValue = 0.0000000001;
 
         /// <summary>The parent plant</summary>
@@ -181,10 +180,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
-
-        // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        // private IFunction nitrogenDemandSwitch = null;
 
         /// <summary>The DM retranslocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -238,11 +233,11 @@ namespace Models.PMF.Organs
 
         /// <summary>The cost for remobilisation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("")]
+        [Units("g/m^2")]
         private IFunction remobilisationCost = null;
 
         /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
+        /// [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction CarbonConcentration = null;
 
@@ -306,12 +301,14 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public Biomass Removed { get; private set; }
 
-        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Growth Respiration</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double GrowthRespiration { get; private set; }
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
@@ -319,26 +316,32 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double MaxNconc { get { return maximumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double MinNconc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double CritNconc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double N { get { return Live.N + Dead.N; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double Nconc
         {
             get
@@ -422,19 +425,6 @@ namespace Models.PMF.Organs
             potentialDMAllocation.Structural = dryMatter.Structural;
             potentialDMAllocation.Metabolic = dryMatter.Metabolic;
             potentialDMAllocation.Storage = dryMatter.Storage;
-        }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - MathUtilities.Divide(respiration * Live.MetabolicWt, total, 0);
-            Live.StorageWt = Live.StorageWt - MathUtilities.Divide(respiration * Live.StorageWt, total, 0);
         }
 
         /// <summary>Clears this instance.</summary>
@@ -551,10 +541,11 @@ namespace Models.PMF.Organs
 
                 // Do maintenance respiration
                 MaintenanceRespiration = 0;
-                if (maintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
+                if (maintenanceRespirationFunction.Value() > 0)
                 {
-                    MaintenanceRespiration += Live.MetabolicWt * maintenanceRespirationFunction.Value();
-                    MaintenanceRespiration += Live.StorageWt * maintenanceRespirationFunction.Value();
+                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
+                    Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+                    Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
             }
         }

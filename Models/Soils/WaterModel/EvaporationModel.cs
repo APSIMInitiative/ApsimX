@@ -25,7 +25,7 @@
     /// time since the end of first stage evaporation. The parameter CONA (from PERFECT) specifies the change in 
     /// cumulative second stage evaporation against the square root of time.
     /// 
-    ///    i.e. Es = CONA t<sup>1/2</sup> 
+    ///    i.e. Es = CONA t^1/2^ 
     ///
     /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry 
     /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry). 
@@ -33,10 +33,10 @@
     /// ![Alt Text](CurveNumberCover.png) 
     /// Figure: Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.
     ///
-    /// For t &lt;=  t<sub>1</sub>
+    /// For t &lt;=  t~1~
     ///    Es = Eos
-    /// For t &gt; t<sub>1</sub>
-    ///    Es = U x t + CONA x Sqrt(t-t<sub>1</sub>)
+    /// For t &gt; t~1~
+    ///    Es = U x t + CONA x Sqrt(t-t~1~)
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ProfileView")]
@@ -47,10 +47,10 @@
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance waterBalance = null;
-
-        /// <summary>The water movement model.</summary>
-        [Link]
-        private Soil soilProperties = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         [Link]
         private IClock clock = null;
@@ -125,8 +125,8 @@
             }
 
             //! set up evaporation stage
-            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilProperties.LL15mm[0]), 
-                                            (soilProperties.DULmm[0] - soilProperties.LL15mm[0]), 
+            var swr_top = MathUtilities.Divide((waterBalance.Water[0] - soilPhysical.LL15mm[0]), 
+                                            (soilPhysical.DULmm[0] - soilPhysical.LL15mm[0]), 
                                             0.0);
             swr_top = MathUtilities.Constrain(swr_top, 0.0, 1.0);
 
@@ -288,7 +288,7 @@
             Es = 0.0;
 
             // Calculate available soil water in top layer for actual soil evaporation (mm)
-            var airdryMM = waterBalance.Properties.AirDry[0] * waterBalance.Properties.Thickness[0];
+            var airdryMM = soilPhysical.AirDry[0] * soilPhysical.Thickness[0];
             double avail_sw_top = waterBalance.Water[0] - airdryMM;
             avail_sw_top = MathUtilities.Bound(avail_sw_top, 0.0, Eo);
 

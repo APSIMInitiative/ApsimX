@@ -56,9 +56,9 @@
         [Link]
         private PastureSpecies species = null;
 
-        /// <summary>Nutrient model.</summary>
+        /// <summary>Link to the soil physical properties.</summary>
         [Link]
-        private Soil soil = null;
+        private IPhysical soilPhysical = null;
 
         /// <summary>Nutrient model.</summary>
         [Link]
@@ -69,9 +69,9 @@
         /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
         public void Initialise(double[] initialDMByLayer, double[] initialNByLayer)
         {
-            pLayer = new double[soil.Thickness.Length];
-            dmLayersTransferedIn = new double[soil.Thickness.Length];
-            nLayersTransferedIn = new double[soil.Thickness.Length];
+            pLayer = new double[soilPhysical.Thickness.Length];
+            dmLayersTransferedIn = new double[soilPhysical.Thickness.Length];
+            nLayersTransferedIn = new double[soilPhysical.Thickness.Length];
             if (initialNByLayer != null && initialNByLayer != null)
             {
                 dmLayer = initialDMByLayer;
@@ -79,8 +79,8 @@
             }
             else
             {
-                dmLayer = new double[soil.Thickness.Length];
-                nLayer = new double[soil.Thickness.Length];
+                dmLayer = new double[soilPhysical.Thickness.Length];
+                nLayer = new double[soilPhysical.Thickness.Length];
             }
             UpdateDM();
         }

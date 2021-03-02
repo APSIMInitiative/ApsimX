@@ -11,7 +11,7 @@
     using System.Timers;
     using Utility;
 
-    public sealed class RunCommand : ICommand, IDisposable
+    public sealed class RunCommand : IDisposable
     {
         /// <summary>The name of the job</summary>
         private string jobName;
@@ -29,10 +29,9 @@
         private List<Exception> errors = new List<Exception>();
 
         /// <summary>Constructor</summary>
-        /// <param name="model">The model the user has selected to run</param>
+        /// <param name="name">Name of the job to be displayed in the UI..</param>
+        /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        /// <param name="multiProcess">Use the multi-process runner?</param>
-        /// <param name="storage">A storage writer where all data should be stored</param>
         public RunCommand(string name, Runner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;
@@ -47,7 +46,7 @@
         public bool IsRunning { get; private set; } = false;
 
         /// <summary>Perform the command</summary>
-        public void Do(CommandHistory commandHistory)
+        public void Do()
         {
             IsRunning = true;
             jobRunner.Run();
@@ -61,9 +60,6 @@
                 timer.Start();
             }
         }
-
-        /// <summary>Undo the command</summary>
-        public void Undo(CommandHistory commandHistory) { }
 
         /// <summary>All jobs have completed</summary>
         private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)

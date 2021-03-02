@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -48,49 +49,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Validate this component before simulation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (bankType == null && Resources.GetResourceGroupByType(typeof(Finance)) != null)
-            {
-                Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
-            }
-
-            // get check labour required
-            if (labourRequired == null)
-            {
-                string[] memberNames = new string[] { "Labour requirement" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\nThis activity will be ignored without this component.", this.Name), memberNames));
-            }
-            else
-            {
-                // check labour required is using fixed type
-                if(labourRequired.UnitType != LabourUnitType.Fixed)
-                {
-                    string[] memberNames = new string[] { "Labour requirement" };
-                    results.Add(new ValidationResult(String.Format("The UnitType of the [r=LabourRequirement] in [a={0}] must be [Fixed] for this activity.", this.Name), memberNames));
-                }
-            }
-
-            // check pricing
-            if(!Resources.Labour().PricingAvailable)
-            {
-                string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\nThis activity will be ignored without this component.", this.Name), memberNames));
-            }
-            return results;
-        }
-
-        /// <summary>
         /// Determines how much labour is required from this activity based on the requirement provided
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             // get fixed days per LabourRequirement
@@ -98,7 +61,8 @@ namespace Models.CLEM.Activities
             {
                 daysNeeded = labourRequired.LabourPerUnit;
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Off-farm", null);
+
         }
 
         /// <summary>
@@ -119,7 +83,7 @@ namespace Models.CLEM.Activities
             // receive payment for labour if bank type exists
             if (bankType != null)
             {
-                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "Off farm labour");
+                bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "", "Off farm labour");
             }
         }
 
@@ -168,6 +132,48 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
+        /// <summary>
+        /// Validate this component before simulation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (bankType == null && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            {
+                Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
+            }
+
+            // get check labour required
+            if (labourRequired == null)
+            {
+                string[] memberNames = new string[] { "Labour requirement" };
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
+            }
+            else
+            {
+                // check labour required is using fixed type
+                if (labourRequired.UnitType != LabourUnitType.Fixed)
+                {
+                    string[] memberNames = new string[] { "Labour requirement" };
+                    results.Add(new ValidationResult(String.Format("The UnitType of the [r=LabourRequirement] in [a={0}] must be [Fixed] for this activity.", this.Name), memberNames));
+                }
+            }
+
+            // check pricing
+            if (!Resources.Labour().PricingAvailable)
+            {
+                string[] memberNames = new string[] { "Labour pricing" };
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
+            }
+            return results;
+        } 
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -175,22 +181,25 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Earn ";
-            html += "Earnings will be paid to ";
-            if (BankAccountName == null || BankAccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + BankAccountName + "</span>";
-            }
-            html += " based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>";
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
+                htmlWriter.Write("Earnings will be paid to ");
+                if (BankAccountName == null || BankAccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span>");
+                }
+                htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

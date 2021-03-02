@@ -161,9 +161,10 @@
                         if (description != null)
                             return true;
 
-                        // If the model is under a replacements node, then serialize everything.
+                        // If the model is under a replacements node, or if the model doesn't have
+                        // a resource name (ie if it's a prototype), then serialize everything.
                         ModelCollectionFromResource resource = instance as ModelCollectionFromResource;
-                        if (resource.FindAncestor<Replacements>() != null)
+                        if (resource.FindAncestor<Replacements>() != null || string.IsNullOrEmpty(resource.ResourceName))
                             return true;
 
                         // Otherwise, only serialize if the property is inherited from

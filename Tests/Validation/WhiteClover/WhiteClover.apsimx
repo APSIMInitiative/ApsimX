@@ -1497,7 +1497,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "Lincoln-Broadfields.met",
+                      "FileName": "%root%\\Tests\\Validation\\WhiteClover\\Lincoln-Broadfields.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -21917,7 +21917,7 @@
                     },
                     {
                       "$type": "Models.Weather, Models",
-                      "FileName": "Ruakura.met",
+                      "FileName": "%root%\\Tests\\Validation\\WhiteClover\\Ruakura.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],

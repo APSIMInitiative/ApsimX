@@ -8,7 +8,13 @@
     using Models;
     using Models.Core;
     using Views;
+    using Interfaces;
+    using Utility;
+
+#if NETFRAMEWORK
+    // Used for the "code reformat option"..
     using ICSharpCode.NRefactory.CSharp;
+#endif
 
     /// <summary>
     /// Presenter for the Manager component
@@ -18,7 +24,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private PropertyPresenter propertyPresenter = new PropertyPresenter();
+        private IPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -69,7 +75,18 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
-            propertyPresenter.Attach(scriptModel, managerView.GridView, presenter);
+            if (Configuration.Settings.UseNewPropertyPresenter)
+                propertyPresenter = new SimplePropertyPresenter();
+            else
+                propertyPresenter = new PropertyPresenter();
+            try
+            {
+                propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -106,10 +123,12 @@
         {
             try
             {
+#if NETFRAMEWORK
                 if (e.ControlShiftSpace)
                     intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+#endif
             }
             catch (Exception err)
             {
@@ -128,9 +147,17 @@
             if (!intellisense.Visible)
                 BuildScript();
             if (scriptModel != null)
+                RefreshProperties();
+        }
+
+        private void RefreshProperties()
+        {
+            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
+                simplePresenter.RefreshView(scriptModel);
+            else if (propertyPresenter is PropertyPresenter presenter)
             {
-                propertyPresenter.UpdateModel(scriptModel);
-                propertyPresenter.Refresh();
+                presenter.UpdateModel(scriptModel);
+                presenter.Refresh();
             }
         }
 
@@ -143,10 +170,6 @@
             if (changedModel == manager)
             {
                 managerView.Editor.Text = manager.Code;
-            }
-            else if (changedModel == scriptModel)
-            {
-                propertyPresenter.UpdateModel(scriptModel);
             }
         }
 
@@ -186,8 +209,6 @@
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
-                if (scriptModel != null)
-                    propertyPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -207,6 +228,8 @@
             try
             {
                 BuildScript();
+                if (scriptModel != null)
+                    RefreshProperties();
             }
             catch (Exception err)
             {
@@ -223,10 +246,14 @@
         {
             try
             {
+#if NETFRAMEWORK
                 CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
                 string newText = formatter.Format(managerView.Editor.Text);
                 managerView.Editor.Text = newText;
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+#else
+                throw new NotImplementedException();
+#endif
             }
             catch (Exception err)
             {

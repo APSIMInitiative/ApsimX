@@ -53,10 +53,10 @@
         /// <summary>The surface organic matter</summary>
         [Link]
         private SurfaceOrganicMatter SurfaceOrganicMatter = null;
-
-        /// <summary>The surface organic matter</summary>
-        [Link]
-        private Soil Soil = null;
+        
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         /// <summary>The inert pool.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -476,7 +476,7 @@
 
             surfaceResiduePool.C[0] = 0;
             surfaceResiduePool.N[0] = 0;
-            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / Soil.Thickness[0]),0.0);
+            surfaceResiduePool.LayerFraction[0] = Math.Max(Math.Min(1.0, 100 / soilPhysical.Thickness[0]),0.0);
             for (int i = 0; i < PotentialSOMDecomp.Pool.Length; i++)
             {
                 surfaceResiduePool.C[0] += PotentialSOMDecomp.Pool[i].FOM.C;
@@ -487,6 +487,7 @@
         /// <summary>Calculate / create a directed graph from model</summary>
         public void CalculateDirectedGraph()
         {
+            DirectedGraph oldGraph = directedGraphInfo;
             if (directedGraphInfo == null)
                 directedGraphInfo = new DirectedGraph();
 
@@ -496,7 +497,11 @@
 
             foreach (NutrientPool pool in this.FindAllChildren<NutrientPool>())
             {
-                directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black);
+                Point location = default(Point);
+                Node oldNode;
+                if (oldGraph != null && pool.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == pool.Name)) != null)
+                    location = oldNode.Location;
+                directedGraphInfo.AddNode(pool.Name, ColourUtilities.ChooseColour(3), Color.Black, location);
 
                 foreach (CarbonFlow cFlow in pool.FindAllChildren<CarbonFlow>())
                 {
@@ -508,7 +513,13 @@
                             destName = "Atmosphere";
                             needAtmosphereNode = true;
                         }
-                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black);
+
+                        location = default(Point);
+                        Arc oldArc;
+                        if (oldGraph != null && pool.Name != null && (oldArc = oldGraph.Arcs.Find(f => f.SourceName == pool.Name && f.DestinationName == destName)) != null)
+                            location = oldArc.Location;
+
+                        directedGraphInfo.AddArc(null, pool.Name, destName, Color.Black, location);
 
                     }
                 }

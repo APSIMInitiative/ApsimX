@@ -97,7 +97,7 @@
             this.PopulateGrid();
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource("WaterGraph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.WaterGraph.xml");
             graph.Name = "";
             if (this.graph == null)
                 this.view.ShowGraph(false);
@@ -149,7 +149,7 @@
                             cropLLSeries.ShowInLegend = true;
                             cropLLSeries.XAxis = Axis.AxisType.Top;
                             cropLLSeries.YAxis = Axis.AxisType.Left;
-                            cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".DepthMidPoints";
+                            cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
                             cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
                             //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
                             cropLLSeries.Parent = this.graph;

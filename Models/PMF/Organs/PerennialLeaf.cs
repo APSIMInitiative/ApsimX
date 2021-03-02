@@ -344,10 +344,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
 
-        /// <summary>Gets the RAD int tot.</summary>
+        /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {
@@ -355,7 +355,7 @@ namespace Models.PMF.Organs
                     return 0;
                 double TotalRadn = 0;
                  for (int i = 0; i < LightProfile.Length; i++)
-                     TotalRadn += LightProfile[i].amount;
+                     TotalRadn += LightProfile[i].AmountOnGreen;
                  return TotalRadn;
             }
         }
@@ -680,20 +680,6 @@ namespace Models.PMF.Organs
             if (MathUtilities.IsGreaterThan(Removal, 0))
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
         }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        /// <param name="respiration">The respiration to remove</param>
-        public virtual void RemoveMaintenanceRespiration(double respiration)
-        {
-            double total = Live.MetabolicWt + Live.StorageWt;
-            if (respiration > total)
-            {
-                throw new Exception("Respiration is more than total biomass of metabolic and storage in live component.");
-            }
-            Live.MetabolicWt = Live.MetabolicWt - (respiration * Live.MetabolicWt / total);
-            Live.StorageWt = Live.StorageWt - (respiration * Live.StorageWt / total);
-        }
-
 
         /// <summary>Gets or sets the maximum nconc.</summary>
         public double MaxNconc { get { return MaximumNConc.Value(); } }

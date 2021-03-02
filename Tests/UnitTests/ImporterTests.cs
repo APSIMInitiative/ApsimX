@@ -149,9 +149,6 @@
             Assert.AreEqual(a.EC, new double[] { 0.2, 0.25, 0.31, 0.40 });
             Assert.AreEqual(a.PH, new double[] { 8.4, 8.8, 9.0, 9.2 });
 
-            Sample sam = s.Children[7] as Sample;
-            Assert.AreEqual(sam.Thickness, new double[] { 150, 150, 300 });
-
             SoilCrop crop = s.Children[1].Children[0] as SoilCrop;
             Assert.AreEqual(crop.LL, new double[] { 0.29, 0.29, 0.32, 0.38 });
             Assert.AreEqual(crop.KL, new double[] { 0.1, 0.1, 0.08, 0.06 });

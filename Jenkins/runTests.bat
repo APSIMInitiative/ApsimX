@@ -1,18 +1,14 @@
 @echo off
 setlocal
 SETLOCAL EnableDelayedExpansion
+setlocal enableExtensions
+
 if "%apsimx%"=="" (
 	pushd %~dp0..>nul
 	set apsimx=!cd!
 	popd>nul
 )
 set "bin=%apsimx%\Bin"
-
-rem Add bin to path.
-set "PATH=%PATH%;%bin%"
-
-rem Copy files from DeploymentSupport.
-copy /y %apsimx%\DeploymentSupport\Windows\Bin64\* %bin% >nul
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -23,7 +19,24 @@ set validationsyntax=Validation
 
 if "%1"=="%unitsyntax%" (
 	echo Running Unit Tests...
-	nunit3-console.exe %bin%\UnitTests.dll
+	call :numTempFiles
+	set count=!result!
+
+	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	if errorlevel 1 exit /b 1
+
+	call :numTempFiles
+	set count_after=!result!
+
+	if not !count!==!count_after! (
+		set /a n=!count_after!-!count!
+		echo !n! .apsimx files were created by not deleted by unit tests
+		exit /b 1
+	)
+
+	endlocal
+	endlocal
+
 	exit /b
 )
 
@@ -32,7 +45,7 @@ if "%1"=="%uisyntax%" (
 )
 
 if "%1"=="%prototypesyntax%" (
-	set testdir=%apsimx%\Prototypes
+	set testdir=%apsimx%\Prototypes\*.apsimx
 	
 	rem Extract restricted grapevine dataset
 	set grapevine=%apsimx%\Prototypes\Grapevine
@@ -42,14 +55,18 @@ if "%1"=="%prototypesyntax%" (
 )
 
 if "%1"=="%examplessyntax%" (
-	set testdir=%apsimx%\Examples
+	set testdir=%apsimx%\Examples\*.apsimx
 	goto :tests
 )
 
 if "%1"=="%validationsyntax%" (
-	set testdir=%apsimx%\Tests
-	set soybean=%apsimx%\Tests\UnderReview\Soybean
+	set "testdir=%apsimx%\Tests\Simulation\*.apsimx %apsimx%\Tests\UnderReview\*.apsimx %apsimx%\Tests\Validation\*.apsimx"
+	rem Extract restricted soybean dataset
+	set soybean=%apsimx%\Tests\Validation\Soybean
 	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
+	rem Extract restricted NPI wheat dataset
+	set wheat=%apsimx%\Tests\Validation\Wheat
+	echo %NPI_PASSWORD%| 7z x !wheat!\NPIValidation.7z -o!wheat!
 	goto :tests
 )
 
@@ -62,6 +79,13 @@ echo     %examplessyntax%
 echo     %validationsyntax%
 
 exit /b 1
+
+:numTempFiles
+setlocal
+set count=0
+for %%x in (%temp%\*.apsimx) do set /a count+=1
+endlocal & set result=%count%
+exit /b
 
 :uitests
 rem Run UI Tests
@@ -86,14 +110,9 @@ echo Successfully finished UI Tests.
 exit /b 0
 	
 :tests
-if not exist "%testdir%" (
-	echo %testdir% does not exist. Aborting...
-	exit 1
-)
-
 echo Deleting temp directory...
 del %TEMP%\ApsimX /S /Q 1>nul 2>nul
 
 echo Commencing simulations...
-models.exe %testdir%\*.apsimx /MultiProcess /Recurse /RunTests /Verbose
+"%bin%\Models.exe" %testdir% /Recurse /RunTests /Verbose
 endlocal

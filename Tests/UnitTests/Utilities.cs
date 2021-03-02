@@ -8,14 +8,32 @@ namespace UnitTests
     using Models.Core.ApsimFile;
     using Models.GrazPlan;
     using Models.Storage;
+    using NUnit.Framework;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
     using System.Reflection;
 
+    [SetUpFixture]
     public class Utilities
     {
+        private static string tempPath;
+        [OneTimeTearDown]
+        public static void TearDown()
+        {
+            Directory.Delete(tempPath, true);
+        }
+
+        [OneTimeSetUp]
+        public static void OneTimeSetUp()
+        {
+            tempPath = Path.Combine(Path.GetTempPath(), $"apsimx-unittests-{Guid.NewGuid().ToString()}");
+            Environment.SetEnvironmentVariable("TMP", tempPath);
+            if (!Directory.Exists(tempPath))
+                Directory.CreateDirectory(tempPath);
+        }
+
         /// <summary>
         /// Parent all children of 'model' and call 'OnCreated' in each child.
         /// </summary>
@@ -29,7 +47,7 @@ namespace UnitTests
         }
 
         /// <summary>
-        /// Event handler for a job runner's <see cref="IJobRunner.AllJobsCompleted"/> event.
+        /// Event handler for a job runner's <see cref="JobRunner.AllCompleted"/> event.
         /// Asserts that the job ran successfully.
         /// </summary>
         /// <param name="sender">Sender object.</param>

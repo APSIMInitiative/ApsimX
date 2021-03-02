@@ -127,6 +127,8 @@ namespace Models.CLEM.Groupings
             return str;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -134,7 +136,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            if(this.Value == null)
+            if (this.Value == null)
             {
                 return "<div class=\"filtererror\">No value provided</div>";
             }
@@ -160,7 +162,8 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
     }
 
     /// <summary>

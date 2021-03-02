@@ -22,7 +22,10 @@
 
         [Link]
         private Soil soil = null;
-
+        
+        [Link]
+        private IPhysical soilPhysical = null;
+        
         [Link]
         private ISummary summary = null;
 
@@ -350,11 +353,11 @@
             var poolsAsList = pools.ToList();
 
             var values = new NutrientPool();
-            values.C = new double[soil.Thickness.Length];
-            values.N = new double[soil.Thickness.Length];
+            values.C = new double[soilPhysical.Thickness.Length];
+            values.N = new double[soilPhysical.Thickness.Length];
             for (int p = 0; p < poolsAsList.Count; p++)
             {
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
                     values.C[i] += poolsAsList[p].C[i] * areas[p];
                     values.N[i] += poolsAsList[p].N[i] * areas[p];
@@ -372,13 +375,13 @@
             var areas = patches.Select(patch => patch.RelativeArea).ToList();
             var solutesAsList = solutes.ToList();
 
-            var values = new double[soil.Thickness.Length];
+            var values = new double[soilPhysical.Thickness.Length];
             string name = null;
             for (int s = 0; s < solutesAsList.Count; s++)
             {
                 if (s == 0)
                     name = solutesAsList[s].Name;
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     values[i] += solutesAsList[s].kgha[i] * areas[s];
             }
             return new Solute(soil, name, values);
@@ -393,10 +396,10 @@
             var areas = patches.Select(patch => patch.RelativeArea).ToArray();
             var valuesAsList = values.ToList();
 
-            var returnValues = new double[soil.Thickness.Length];
+            var returnValues = new double[soilPhysical.Thickness.Length];
             for (int s = 0; s < valuesAsList.Count; s++)
             {
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                     returnValues[i] += valuesAsList[s][i] * areas[s];
             }
             return returnValues;
@@ -425,11 +428,11 @@
         private INutrientPool SumNutrientPoolsWithoutArea(INutrientPool[] pools)
         {
             var values = new NutrientPool();
-            values.C = new double[soil.Thickness.Length];
-            values.N = new double[soil.Thickness.Length];
+            values.C = new double[soilPhysical.Thickness.Length];
+            values.N = new double[soilPhysical.Thickness.Length];
             foreach (var pool in pools)
             {
-                for (int i = 0; i < soil.Thickness.Length; i++)
+                for (int i = 0; i < soilPhysical.Thickness.Length; i++)
                 {
                     values.C[i] += pool.C[i];
                     values.N[i] += pool.N[i];
@@ -445,7 +448,7 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // Create a new nutrient patch.
-            var newPatch = new NutrientPatch(soil.Thickness, this);
+            var newPatch = new NutrientPatch(soilPhysical.Thickness, this);
             newPatch.CreationDate = clock.Today;
             newPatch.Name = "base";
             patches.Add(newPatch);
@@ -508,7 +511,7 @@
                                 for (int z = layer; z >= 0; z--)        // goes backwards till soil surface (but may stop before that)
                                 {
                                     thisLayerPatchSolute[k] += existingSoluteAmount[k][z];
-                                    layerUsed += soil.Thickness[z];
+                                    layerUsed += soilPhysical.Thickness[z];
                                     if ((LayerForNPartition > epsilon) && (layerUsed >= LayerForNPartition))
                                         // stop if thickness reaches a defined value
                                         z = -1;

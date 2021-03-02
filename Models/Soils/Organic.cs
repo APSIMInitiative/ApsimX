@@ -1,6 +1,7 @@
 ﻿namespace Models.Soils
 {
     using APSIM.Shared.APSoil;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 

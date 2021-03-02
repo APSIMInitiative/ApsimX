@@ -12,10 +12,8 @@ namespace Models.Functions
     [Description("Soil NO3 Denitrification model from CERES-Maize")]
     public class CERESDenitrificationModel : Model, IFunction, ICustomDocumentation
     {
-
         [Link]
-        Soils.Soil soil = null;
-
+        Soils.IPhysical soilPhysical = null;
         [Link(ByName = true)]
         INutrientPool Humic = null;
         [Link(ByName = true)]
@@ -42,11 +40,27 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES Denitrification Model");
 
             double ActiveC = Humic.C[arrayIndex] + Inert.C[arrayIndex]+FOMCarbohydrate.C[arrayIndex]+FOMCellulose.C[arrayIndex]+FOMLignin.C[arrayIndex];
-            double ActiveCppm = ActiveC/(soil.BD[arrayIndex] * soil.Thickness[arrayIndex] / 100);
+            double ActiveCppm = ActiveC/(soilPhysical.BD[arrayIndex] * soilPhysical.Thickness[arrayIndex] / 100);
             double CarbonModifier = 0.0031 * ActiveCppm + 24.5;
             double PotentialRate = 0.0006 * CarbonModifier;
              
             return PotentialRate * CERESTF.Value(arrayIndex) * CERESWF.Value(arrayIndex);
+        }
+
+        /// <summary>
+        /// Get the values for all soil layers.
+        /// </summary>
+        public double[] Values
+        {
+            get
+            {
+                if (soilPhysical == null)
+                    return null;
+                double[] result = new double[soilPhysical.Thickness.Length];
+                for (int i = 0; i < result.Length; i++)
+                    result[i] = Value(i);
+                return result;
+            }
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

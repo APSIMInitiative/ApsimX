@@ -123,22 +123,6 @@ namespace Models.PMF
         [JsonIgnore]
         public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
-        /// <summary>Gets the water demand.</summary>
-        /// <value>The water demand.</value>
-        [JsonIgnore]
-        public double WDemand { get; protected set; }
-
-        /// <summary>Gets the water Supply.</summary>
-        /// <value>The water supply.</value>
-        [JsonIgnore]
-        public double WSupply { get; protected set; }
-
-        /// <summary>Gets the water allocated in the plant (taken up).</summary>
-        /// <value>The water uptake.</value>
-        [JsonIgnore]
-        public double WAllocated { get; protected set; }
-
-
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 

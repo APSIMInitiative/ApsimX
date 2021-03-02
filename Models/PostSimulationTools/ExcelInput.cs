@@ -45,7 +45,7 @@
             set
             {
                 Simulations simulations = FindAncestor<Simulations>();
-                if (simulations != null && simulations.FileName != null)
+                if (simulations != null && simulations.FileName != null && value != null)
                     this.filenames = value.Select(v => PathUtilities.GetRelativePath(v, simulations.FileName)).ToArray();
                 else
                     this.filenames = value;

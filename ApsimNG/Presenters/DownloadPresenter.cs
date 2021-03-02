@@ -1,11 +1,14 @@
-﻿using APSIM.Shared.Utilities;
+﻿#if NETFRAMEWORK
+using APSIM.Shared.Utilities;
 using ApsimNG.ApsoilWeb;
+using UserInterface.Extensions;
 using ApsimNG.Cloud;
 using ISO3166;
 using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Soils.Nutrients;
 using Models.Soils.Standardiser;
 using Models.WaterModel;
 using Newtonsoft.Json;
@@ -18,6 +21,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using UserInterface.Commands;
 using UserInterface.Views;
 using Utility;
 
@@ -78,9 +82,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the view to this presenter.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="view"></param>
-        /// <param name="explorerPresenter"></param>
+        /// <param name="zoneModel"></param>
+        /// <param name="viewBase"></param>
+        /// <param name="explorerPresent"></param>
         public void Attach(object zoneModel, object viewBase, ExplorerPresenter explorerPresent)
         {
             view = (ViewBase)viewBase;
@@ -114,7 +118,7 @@ namespace UserInterface.Presenters
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;
-            view.MainWidget.Destroy();
+            view.MainWidget.Cleanup();
         }
 
         /// <summary>Populate the controls.</summary>
@@ -184,6 +188,7 @@ namespace UserInterface.Presenters
 
                 foreach (var soilInfo in allSoils)
                 {
+                    var soilPhysical = soilInfo.Soil.FindChild<Physical>();
                     var row = soilData.NewRow();
                     row["Name"] = soilInfo.Soil.Name;
                     row["Data source"] = soilInfo.DataSource;
@@ -193,11 +198,11 @@ namespace UserInterface.Presenters
                                                                  soilInfo.Soil.Latitude,
                                                                  soilInfo.Soil.Longitude).ToString("F1");
 
-                    var pawc = soilInfo.Soil.PAWCmm;
+                    var pawc = soilPhysical.PAWCmm;
                     row["PAWC for profile"] = pawc.Sum().ToString("F1");
 
-                    var pawcConcentration = MathUtilities.Divide(pawc, soilInfo.Soil.Thickness);
-                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilInfo.Soil.Thickness, pawcmappingLayerStructure, 0);
+                    var pawcConcentration = MathUtilities.Divide(pawc, soilPhysical.Thickness);
+                    var mappedPawcConcentration = Layers.MapConcentration(pawcConcentration, soilPhysical.Thickness, pawcmappingLayerStructure, 0);
                     var mappedPawc = MathUtilities.Multiply(mappedPawcConcentration, pawcmappingLayerStructure);
                     row["PAWC to 300mm"] = mappedPawc[0].ToString("F1");
                     row["PAWC to 600mm"] = (mappedPawc[0] + mappedPawc[1]).ToString("F1");
@@ -228,9 +233,12 @@ namespace UserInterface.Presenters
             {
                 var values = dataView.GetRow(selectedIndex);
                 var soilName = (string)values[0];
-                var matchingSoil = allSoils.First(s => s.Soil.Name == soilName).Soil as IModel;
-                if (matchingSoil != null)
-                    Structure.Add(matchingSoil as IModel, model);
+                Soil matchingSoil = Apsim.Clone<Soil>(allSoils.First(s => s.Soil.Name == soilName).Soil);
+
+                if (!matchingSoil.Children.Any(c => c is INutrient))
+                    matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
+                ICommand addSoil = new AddModelCommand(model, matchingSoil);
+                explorerPresenter.CommandHistory.Add(addSoil);
             }
             explorerPresenter.Refresh();
         }
@@ -254,6 +262,9 @@ namespace UserInterface.Presenters
         /// <summary>Return zero or more APSOIL soils.</summary>
         private IEnumerable<SoilFromDataSource> GetApsoilSoils()
         {
+#if NETCOREAPP
+            throw new NotImplementedException();
+#else
             var soils = new List<SoilFromDataSource>();
             try
             {
@@ -279,11 +290,13 @@ namespace UserInterface.Presenters
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
 
             return soils;
+#endif
         }
 
         /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
@@ -313,8 +326,9 @@ namespace UserInterface.Presenters
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                explorerPresenter.MainPresenter.ShowError(error);
             }
             return soils;
         }
@@ -349,8 +363,9 @@ namespace UserInterface.Presenters
                     });
                 }
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
         }
@@ -774,8 +789,9 @@ namespace UserInterface.Presenters
                     Soil = newSoil
                 });
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                explorerPresenter.MainPresenter.ShowError(err);
             }
             return soils;
         }
@@ -784,6 +800,7 @@ namespace UserInterface.Presenters
         /// Converts data for 7 input levels to layerCount (up to 10) depth ranges
         /// </summary>
         /// <param name="inputs"></param>
+        /// /// <param name="layerCount"></param>
         /// <returns></returns>
         private static double[] ConvertLayers(double[] inputs, int layerCount)
         {
@@ -900,3 +917,4 @@ namespace UserInterface.Presenters
 
     }
 }
+#endif

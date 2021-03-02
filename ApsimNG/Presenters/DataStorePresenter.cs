@@ -35,6 +35,9 @@ namespace UserInterface.Presenters
         /// <summary>Checkpoint name drop down.</summary>
         private DropDownView checkpointDropDown;
 
+        /// <summary>Only allow these tables to be selected/displayed.</summary>
+        private string[] tablesFilter = new string[0];
+
         /// <summary>table name drop down.</summary>
         public DropDownView tableDropDown { get; private set; }
 
@@ -56,9 +59,25 @@ namespace UserInterface.Presenters
         /// <summary>When specified will only show data from a given zone.</summary>
         public Zone ZoneFilter { get; set; }
 
+        public DataStorePresenter()
+        {
+
+        }
+
+        /// <summary>
+        /// Constructor. Used to restrict which tables can be selected.
+        /// </summary>
+        /// <param name="tables">Tables which may be displayed to the user.</param>
+        public DataStorePresenter(string[] tables)
+        {
+            if (tables == null)
+                throw new ArgumentNullException(nameof(tables));
+            tablesFilter = tables;
+        }
+
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
-        /// <param name="view">Data store view to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
@@ -84,6 +103,8 @@ namespace UserInterface.Presenters
             if (dataStore != null)
             {
                 tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
+                if (tablesFilter != null && tablesFilter.Length > 0)
+                    tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
                 checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
                 if (checkpointDropDown.Values.Length > 0)
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
@@ -91,6 +112,7 @@ namespace UserInterface.Presenters
                 {
                     maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                tableDropDown.SelectedIndex = -1;
             }
 
             tableDropDown.Changed += this.OnTableSelected;

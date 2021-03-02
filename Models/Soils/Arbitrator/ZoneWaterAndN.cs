@@ -15,7 +15,7 @@
     {
         private ISolute NO3Solute;
         private ISolute NH4Solute;
-
+        private ISoilWater WaterBalance;
         private Soil soilInZone;
 
         /// <summary>
@@ -57,6 +57,7 @@
             NH4Solute = from.NH4Solute;
             soilInZone = from.soilInZone;
             Zone = from.Zone;
+            WaterBalance = from.WaterBalance;
 
             Water = from.Water;
             NO3N = from.NO3N;
@@ -78,6 +79,7 @@
         /// <summary>Initialises this instance.</summary>
         public void Initialise()
         {
+            WaterBalance = soilInZone.FindInScope<ISoilWater>();
             NO3Solute = soilInZone.FindInScope<ISolute>("NO3");
             NH4Solute = soilInZone.FindInScope<ISolute>("NH4");
             var PlantAvailableNO3Solute = soilInZone.FindInScope<ISolute>("PlantAvailableNO3");
@@ -91,7 +93,7 @@
         /// <summary>Initialises this instance.</summary>
         public void InitialiseToSoilState()
         {
-            Water = soilInZone.Water;
+            Water = WaterBalance.SWmm;
             NO3N = NO3Solute.kgha;
             NH4N = NH4Solute.kgha;
         }

@@ -1,11 +1,16 @@
-﻿namespace UserInterface.Views
+﻿using Gtk;
+using Pango;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+
+#if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+
+namespace UserInterface.Views
 {
-    using Gtk;
-    using Pango;
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
 
     /// <summary>An interface for a list view</summary>
     public interface IListView
@@ -96,6 +101,7 @@
             tree = treeView;
             mainWidget = tree;
             tree.ButtonReleaseEvent += OnTreeClicked;
+            tree.ButtonPressEvent += OnTreeButtonDown;
             mainWidget.Destroyed += OnMainWidgetDestroyed;
             contextMenu = menu;
             tree.Selection.Mode = SelectionMode.Multiple;
@@ -260,6 +266,8 @@
         {
             try
             {
+                tree.ButtonPressEvent -= OnTreeButtonDown;
+                tree.ButtonReleaseEvent -= OnTreeClicked;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
                 owner = null;
             }
@@ -287,7 +295,7 @@
         /// Invoked for every cell in grid.
         /// </summary>
         /// <param name="col">The column.</param>
-        /// <param name="cell">The cell.</param>
+        /// <param name="baseCell">The cell.</param>
         /// <param name="model">The tree model.</param>
         /// <param name="iter">The tree iterator.</param>
         private void OnFormatColumn(TreeViewColumn col, CellRenderer baseCell, TreeModel model, TreeIter iter)
@@ -347,6 +355,32 @@
             //{
             //    ShowError(err);
             //}
+        }
+
+        /// <summary>
+        /// Called when the user pushes the mouse button down.
+        /// If it's a right click event, we will prevent the
+        /// signal from propagating any further. If we don't do this,
+        /// the selection (if multiple rows are selected) will be
+        /// cleared before the button release event is fired. The
+        /// result will be right clicking on a selection and having
+        /// the selection disappear, which is not what would be expected.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [GLib.ConnectBefore]
+        private void OnTreeButtonDown(object sender, ButtonPressEventArgs args)
+        {
+            try
+            {
+                tree.GetPathAtPos((int)args.Event.X, (int)args.Event.Y, out TreePath path);
+                if (args.Event.Button == 3 && tree.Selection.GetSelectedRows().Contains(path))
+                    args.RetVal = true;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>

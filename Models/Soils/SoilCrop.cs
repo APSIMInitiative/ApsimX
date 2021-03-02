@@ -1,5 +1,6 @@
 ﻿namespace Models.Soils
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
 
@@ -41,16 +42,16 @@
 
         /// <summary>Return the plant available water CAPACITY at standard thickness.</summary>
         [Description("PAWC")]
-        [Display(Format = "N2")]
+        [Display(Format = "N2", ShowTotal = true)]
         [Units("mm/mm")]
         public double[] PAWC
         {
             get
             {
-                Soil soil = FindAncestor<Soil>();
-                if (soil == null)
+                var soilPhysical = FindAncestor<IPhysical>();
+                if (soilPhysical == null)
                     return null;
-                return Soil.CalcPAWC(soil.Thickness, LL, soil.DUL, XF);
+                return SoilUtilities.CalcPAWC(soilPhysical.Thickness, LL, soilPhysical.DUL, XF);
             }
         }
     }

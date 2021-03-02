@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -73,23 +74,6 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            // check that this activity contains at least one CollectProduct activity
-            if(this.Children.OfType<CropActivityManageProduct>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "Collect product activity" };
-                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
-            }
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -113,9 +97,9 @@ namespace Models.CLEM.Activities
                     AllowTransmutation = false,
                     Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
                     ResourceType = typeof(Land),
-                    ResourceTypeName = LandItemNameToUse.Split('.').Last(),
+                    ResourceTypeName = LandItemNameToUse,
                     ActivityModel = this,
-                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    Category = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
                 };
@@ -149,7 +133,7 @@ namespace Models.CLEM.Activities
         {
             if (Area == 0 && UseAreaAvailable)
             {
-                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
+                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
             }
         }
 
@@ -265,7 +249,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -278,6 +262,28 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that this activity contains at least one CollectProduct activity
+            if (this.Children.OfType<CropActivityManageProduct>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "Collect product activity" };
+                results.Add(new ValidationResult("At least one [a=CropActivityManageProduct] activity must be present under this manage crop activity", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -285,44 +291,46 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">This crop uses ";
-
-            Land parentLand = null;
-            IModel clemParent = FindAncestor<ZoneCLEM>();
-            if(LandItemNameToUse != null && LandItemNameToUse != "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                if (clemParent != null && clemParent.Enabled)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This crop uses ");
+
+                Land parentLand = null;
+                IModel clemParent = FindAncestor<ZoneCLEM>();
+                if (LandItemNameToUse != null && LandItemNameToUse != "")
                 {
-                    parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+                    if (clemParent != null && clemParent.Enabled)
+                    {
+                        parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
+                    }
                 }
-            }
 
-            if(UseAreaAvailable)
-            {
-                html += "the unallocated portion of ";
-            }
-            else
-            {
-                if (parentLand == null)
+                if (UseAreaAvailable)
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ";
+                    htmlWriter.Write("the unallocated portion of ");
                 }
                 else
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ";
+                    if (parentLand == null)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
+                    }
                 }
+                if (LandItemNameToUse == null || LandItemNameToUse == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + LandItemNameToUse + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            if (LandItemNameToUse == null || LandItemNameToUse == "")
-            {
-                html += "<span class=\"errorlink\">[LAND NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + LandItemNameToUse + "</span>";
-            }
-            html += "</div>";
-            return html;
         }
 
         /// <summary>
@@ -331,12 +339,14 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n</div>";
+                if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
+                {
+                    htmlWriter.Write("\r\n</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -345,24 +355,26 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-
-            if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"errorbanner clearfix\">";
-                html += "<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>";
-                html += "</div>";
-            }
-            else
-            {
-                bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
-                if (rotation)
+                if (this.FindAllChildren<CropActivityManageProduct>().Count() == 0)
                 {
-                    html += "\n<div class=\"croprotationlabel\">Rotating through crops</div>";
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No Crop Activity Manage Product component provided</div>");
+                    htmlWriter.Write("</div>");
                 }
-                html += "\n<div class=\"croprotationborder\">";
+                else
+                {
+                    bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
+                    if (rotation)
+                    {
+                        htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
+                    }
+                    htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
-        }
+        } 
+        #endregion
     }
 }

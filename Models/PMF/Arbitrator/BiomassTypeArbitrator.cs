@@ -8,7 +8,8 @@ using System.Linq;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for arbitrating Biomass - either DM or N/// </summary>
+    /// This class holds the functions for arbitrating Biomass - either DM or N
+    /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IArbitrator))]
     public class BiomassTypeArbitrator : Model
@@ -57,34 +58,9 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e) 
         {
-            //read list of models into lists
-
-            var folders = this.FindAllChildren<Folder>();
-
-            potentialPartitioningMethods = new List<IPartitionMethod>();
-            var folder = folders.FirstOrDefault(f => f.Name == "PotentialPartitioningMethods");
-            if (folder != null)
-            {
-                var methods = folder.FindAllChildren<IPartitionMethod>();
-                foreach (var method in methods) { potentialPartitioningMethods.Add(method as IPartitionMethod); }
-            }
-
-            actualPartitioningMethods = new List<IPartitionMethod>();
-            folder = folders.FirstOrDefault(f => f.Name == "ActualPartitioningMethods");
-            if(folder != null)
-            {
-                var methods = folder.FindAllChildren<IPartitionMethod>();
-                foreach (var method in methods) { actualPartitioningMethods.Add(method as IPartitionMethod); }
-            }
-
-            allocationMethods = new List<IAllocationMethod>();
-            folder = folders.FirstOrDefault(f => f.Name == "AllocationMethods");
-            if (folder != null)
-            {
-                var methods = folder.FindAllChildren<IAllocationMethod>();
-                foreach (var method in methods) { allocationMethods.Add(method as IAllocationMethod); }
-            }
+            potentialPartitioningMethods = FindChild<Folder>("PotentialPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();
+            actualPartitioningMethods = FindChild<Folder>("ActualPartitioningMethods")?.FindAllChildren<IPartitionMethod>().ToList();
+            allocationMethods = FindChild<Folder>("AllocationMethods")?.FindAllChildren<IAllocationMethod>().ToList();
         }
-
     }
 }

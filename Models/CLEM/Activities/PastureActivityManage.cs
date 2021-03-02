@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Pasture management activity</summary>
     /// <summary>This activity provides a pasture based on land unit, area and pasture type</summary>
-    /// <summary>Ruminant mustering activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
+    /// <summary>Ruminant move activities place individuals in the paddack after which they will graze pasture for the paddock stored in the PastureP Pools</summary>
     /// <version>1.0</version>
     /// <updates>First implementation of this activity using NABSA grazing processes</updates>
     [Serializable]
@@ -124,6 +125,7 @@ namespace Models.CLEM.Activities
         //EcologicalCalculationIntervals worth of data read from pasture database file 
         private List<PastureDataType> PastureDataList;
 
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -135,12 +137,12 @@ namespace Models.CLEM.Activities
             if (LandConditionIndex == null)
             {
                 string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
             }
             if (GrassBasalArea == null)
             {
                 string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
+                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
             }
             if (FilePasture == null)
             {
@@ -150,6 +152,7 @@ namespace Models.CLEM.Activities
             return results;
         }
 
+        #endregion
         /// <summary>An event handler to intitalise this activity just once at start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -199,7 +202,7 @@ namespace Models.CLEM.Activities
                     ResourceType = typeof(Land),
                     ResourceTypeName = LandTypeNameToUse.Split('.').Last(),
                     ActivityModel = this,
-                    Reason = UseAreaAvailable ?"Assign unallocated":"Assign",
+                    Category = UseAreaAvailable ?"Assign unallocated":"Assign",
                     FilterDetails = null
                 }
                 };
@@ -295,7 +298,7 @@ namespace Models.CLEM.Activities
                     newPasture.DMD = newPasture.Nitrogen * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
                     newPasture.DMD = Math.Min(100, Math.Max(LinkedNativeFoodType.MinimumDMD, newPasture.DMD));
                     newPasture.Growth = newPasture.Amount;
-                    this.LinkedNativeFoodType.Add(newPasture, this, "Growth");
+                    this.LinkedNativeFoodType.Add(newPasture, this, "", "Growth");
                 }
             }
 
@@ -356,8 +359,19 @@ namespace Models.CLEM.Activities
 
             List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
 
-            while (includedMonthCount < 5)
+            // number of previous growth months to consider. default should be 5 
+            int growMonthHistory = 5;
+
+            while (includedMonthCount < growMonthHistory)
             {
+                // start month before start of simulation.
+                monthCount++;
+                month--;
+                currentN -= LinkedNativeFoodType.DecayNitrogen;
+                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
+                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
+                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
+
                 if (month == 0)
                 {
                     month = 12;
@@ -376,12 +390,6 @@ namespace Models.CLEM.Activities
                     includedMonthCount++;
                 }
                 propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
-                currentN -= LinkedNativeFoodType.DecayNitrogen;
-                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
-                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
-                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
-                monthCount++;
-                month--;
             }
 
             // assign pasture biomass to pools based on proportion of total
@@ -418,7 +426,7 @@ namespace Models.CLEM.Activities
                 {
                     reason = "Initialise pool " + pool.Age.ToString();
                 }
-                LinkedNativeFoodType.Add(pool, this, reason);
+                LinkedNativeFoodType.Add(pool, this, "", reason);
             }
         }
 
@@ -583,7 +591,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -596,6 +604,8 @@ namespace Models.CLEM.Activities
             return;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -603,53 +613,56 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FeedTypeName == null || FeedTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[PASTURE TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += " occupies ";
-            Land parentLand = null;
-            if (LandTypeNameToUse != null && LandTypeNameToUse != "")
-            {
-                parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
-            }
-
-            if (UseAreaAvailable)
-            {
-                html += "the unallocated portion of ";
-            }
-            else
-            {
-                if (parentLand == null)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (FeedTypeName == null || FeedTypeName == "")
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ";
+                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE TYPE NOT SET]</span>");
                 }
                 else
                 {
-                    html += "<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ";
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
                 }
-            }
-            if (LandTypeNameToUse == null || LandTypeNameToUse == "")
-            {
-                html += "<span class=\"errorlink\">[LAND NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + LandTypeNameToUse + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write(" occupies ");
+                Land parentLand = null;
+                if (LandTypeNameToUse != null && LandTypeNameToUse != "")
+                {
+                    parentLand = this.FindInScope(LandTypeNameToUse.Split('.')[0]) as Land;
+                }
 
-            html += "\n<div class=\"activityentry\">";
-            html += "The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha";
-            html += "</div>";
+                if (UseAreaAvailable)
+                {
+                    htmlWriter.Write("the unallocated portion of ");
+                }
+                else
+                {
+                    if (parentLand == null)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
+                    }
+                }
+                if (LandTypeNameToUse == null || LandTypeNameToUse == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + LandTypeNameToUse + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha");
+                htmlWriter.Write("</div>");
+
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
 }

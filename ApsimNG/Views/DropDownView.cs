@@ -106,7 +106,7 @@
             {
                 combobox1.Changed -= OnSelectionChanged;
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -139,13 +139,16 @@
                 try
                 {
                     comboModel.Clear();
-                    foreach (string text in value)
-                        comboModel.AppendValues(text);
+                    if (value != null)
+                    {
+                        foreach (string text in value)
+                            comboModel.AppendValues(text);
 
-                    // if (comboModel.IterNChildren() > 0)
-                    //     combobox1.Active = 0;
-                    // else
-                    combobox1.Active = 1;
+                        // if (comboModel.IterNChildren() > 0)
+                        //     combobox1.Active = 0;
+                        // else
+                        combobox1.Active = 1;
+                    }
                 }
                 finally
                 {
@@ -207,7 +210,6 @@
             {
                 return combobox1.Visible;
             }
-
             set
             {
                 combobox1.Visible = value;

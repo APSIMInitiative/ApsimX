@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -92,6 +93,18 @@ namespace Models.CLEM.Activities
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);
+
+            switch (CutStyle)
+            {
+                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                case RuminantFeedActivityTypes.ProportionOfWeight:
+                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                    InitialiseHerd(true, true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>An event handler for a Cut and Carry</summary>
@@ -170,7 +183,7 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Reason = "Cut and carry",
+                        Category = "Cut and carry",
                         Required = AmountHarvested,
                         Resource = pasture,
                     }
@@ -184,7 +197,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             // TODO add labour multiplier if pasture below given amount and difficult to cut
@@ -210,7 +223,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Cut and carry", pasture.NameWithParent);
         }
 
         /// <summary>
@@ -252,7 +265,7 @@ namespace Models.CLEM.Activities
                 DMD = pasture.EstimateDMD(pasture.Nitrogen)
             };
 
-            foodstore.Add(packet, this, "Cut and carry");
+            foodstore.Add(packet, this,"", "Cut and carry");
         }
 
         private void PutPastureInStore()
@@ -323,13 +336,13 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Reason = "Cut and carry",
+                        Category = "Cut and carry",
                         Required = AmountHarvested,
                         Resource = pasture
                     };
                     pasture.Remove(request);
 
-                    foodstore.Add(packet, this, "Cut and carry");
+                    foodstore.Add(packet, this, "", "Cut and carry");
                 }
                 SetStatusSuccess();
             }
@@ -397,6 +410,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -404,50 +419,52 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Cut ";
-            switch (CutStyle)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#,##0.##") + "</span> kg ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">live weight</span> ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">potential intake</span> ";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    html += "<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">remaining intake required</span> ";
-                    break;
-                default:
-                    break;
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Cut ");
+                switch (CutStyle)
+                {
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#,##0.##") + "</span> kg ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfWeight:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">live weight</span> ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">potential intake</span> ");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                        htmlWriter.Write("<span class=\"setvalue\">" + Supply.ToString("#0.##%") + "</span> of herd <span class=\"setvalue\">remaining intake required</span> ");
+                        break;
+                    default:
+                        break;
+                }
 
-            html += "from ";
-            if (PaddockName == null || PaddockName == "")
-            {
-                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + PaddockName + "</span>";
-            }
-            html += " and carry to ";
-            if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
-            {
-                html += "<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("from ");
+                if (PaddockName == null || PaddockName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
+                }
+                htmlWriter.Write(" and carry to ");
+                if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
-        }
-
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

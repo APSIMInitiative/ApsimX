@@ -378,10 +378,10 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
 
-        /// <summary>Gets the RAD int tot.</summary>
+        /// <summary>Gets the total radiation intercepted.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {
@@ -427,13 +427,6 @@ namespace Models.PMF.Organs
             DMSupply.Uptake = 0;
             DMSupply.Fixation = DMSupplyFixation.Value();
         }
-
-        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        public double MaintenanceRespiration { get; }
-
-        /// <summary>Remove maintenance respiration from live component of organs.</summary>
-        public void RemoveMaintenanceRespiration(double respiration)
-        { }
 
         #endregion
 
@@ -804,9 +797,9 @@ namespace Models.PMF.Organs
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
-            double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadIntTot, 0);
+            double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadiationIntercepted, 0);
 
-            double radnCanopy = MathUtilities.Divide(RadIntTot, CoverGreen, MetData.Radn);
+            double radnCanopy = MathUtilities.Divide(RadiationIntercepted, CoverGreen, MetData.Radn);
             if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
                 radnCanopy = 0;
 
@@ -925,7 +918,7 @@ namespace Models.PMF.Organs
                     Senesced.StorageWt += storageWtSenescing;
 
                     double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max(slnToday, 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 
@@ -1111,6 +1104,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
+
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
+        [JsonIgnore]
+        public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]

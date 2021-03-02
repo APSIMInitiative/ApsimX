@@ -10,6 +10,8 @@ namespace UserInterface.Views
     using Gtk;
     using Models.Management;
     using Models;
+    using Extensions;
+    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -20,6 +22,7 @@ namespace UserInterface.Views
     /// - use IDs not names?
     /// - refactor the mechanism used to generate a unique name for new nodes/arcs.
     /// - reconsider the packing rules. Setting expand and fill both to true might be unnecessary
+    /// - should use property presenter rather than manually handle properties like InitialState.
     /// </remarks>
     public class BubbleChartView : ViewBase, IBubbleChartView
     {
@@ -38,17 +41,13 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user deletes an arc</summary>
         public event EventHandler<DelArcEventArgs> DelArc;
 
-        /// <summary> Invoked when the user changes the initial state. </summary>
-        public event EventHandler<InitialStateEventArgs> OnInitialStateChanged;
-
         private Paned vpaned1 = null;
-        private ComboBox combobox1 = null;
         private ListStore comboModel = new ListStore(typeof(string));
         private CellRendererText comboRender = new CellRendererText();
 
         private DirectedGraphView graphView;
         private ContextMenuHelper contextMenuHelper;
-        private Label ctxLabel = null;
+        private Frame ctxFrame;
         private Widget arcSelWdgt = null;
         public IEditorView RuleList { get; private set; } = null;
         public IEditorView ActionList { get; private set; } = null;
@@ -57,6 +56,8 @@ namespace UserInterface.Views
         private Entry descEntry = null;
         private ColorButton colourChooser = null;
         private Widget infoWdgt = null;
+        private HPaned hpaned1;
+        private HPaned hpaned2;
 
         private Box ctxBox = null;
         private Menu ContextMenu = new Menu();
@@ -64,6 +65,11 @@ namespace UserInterface.Views
         private Dictionary<string, List<string>> rules = new Dictionary<string, List<string>>();
         private Dictionary<string, List<string>> actions = new Dictionary<string, List<string>>();
         private Dictionary<string, string> nodeDescriptions = new Dictionary<string, string>();
+
+        /// <summary>
+        /// Properties editor.
+        /// </summary>
+        public IPropertyView PropertiesView { get; private set; }
 
         public BubbleChartView(ViewBase owner = null) : base(owner)
         {
@@ -76,8 +82,6 @@ namespace UserInterface.Views
 
             VBox vbox1 = new VBox(false, 0);
             ctxBox = new VBox(false, 0);
-            ctxLabel = new Label("Information");
-            ctxBox.PackStart(ctxLabel, true, true, 0);
 
             // Arc selection: rules & actions
             VBox arcSelBox = new VBox();
@@ -91,7 +95,11 @@ namespace UserInterface.Views
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
             rules.AddWithViewport((RuleList as ViewBase).MainWidget);
+#else
+            rules.Add((RuleList as ViewBase).MainWidget);
+#endif
             (RuleList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(rules, true, true, 0); rules.Show();
 
@@ -104,35 +112,52 @@ namespace UserInterface.Views
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
             actions.AddWithViewport((ActionList as ViewBase).MainWidget);
+#else
+            actions.Add((ActionList as ViewBase).MainWidget);
+#endif
             (ActionList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(actions, true, true, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
-            arcSelWdgt.HideAll();
+            arcSelWdgt.Hide();
             ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
-            Table t1 = new Table(3, 2, true);
+#if NETFRAMEWORK
+            Table t1 = new Table(3, 2, false);
+#else
+            Grid t1 = new Grid();
+#endif
             Label l3 = new Label("Name");
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l3.Xalign = 0;
+            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             Label l4 = new Label("Description");
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l4.Xalign = 0;
+            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             Label l5 = new Label("Colour");
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Shrink, AttachOptions.Fill, 0, 0);
+            l5.Xalign = 0;
+            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
 
             nameEntry = new Entry();
-            nameEntry.WidthRequest = 350;
             nameEntry.Changed += OnNameChanged;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            nameEntry.Xalign = 0;
+            // Setting the WidthRequest to 350 will effectively
+            // set the minimum size, beyond which it cannot be further
+            // shrunk by dragging the HPaned's splitter.
+            nameEntry.WidthRequest = 350;
+            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             descEntry = new Entry();
-            descEntry.WidthRequest = 350;
+            descEntry.Xalign = 0;
             descEntry.Changed += OnDescriptionChanged;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            descEntry.WidthRequest = 350;
+            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             colourChooser = new ColorButton();
+            colourChooser.Xalign = 0;
             colourChooser.ColorSet += OnColourChanged;
-            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            colourChooser.WidthRequest = 350;
+            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             nodeSelWdgt = t1;
-            nodeSelWdgt.HideAll();
             ctxBox.PackStart(t1, true, true, 0);
 
             // Info
@@ -148,25 +173,54 @@ namespace UserInterface.Views
             "Transition arcs are created by firstly selecting a source node,\n" +
             "then right-clicking over a target node.\n";
             infoWdgt = l6 as Widget;
-            infoWdgt.HideAll();
-            ctxBox.PackStart(infoWdgt, true, true, 0);
-            vbox1.PackStart(ctxBox, true, true, 0);
+            infoWdgt.ShowAll();
+            Alignment infoWdgtWrapper = new Alignment(0, 0, 0, 0);
+            infoWdgtWrapper.Add(infoWdgt);
+            //ctxBox.PackStart(infoWdgt, true, true, 0);
+            //vbox1.PackStart(ctxBox, false, false, 0);
 
-            vbox1.PackStart(new Label("Initial State"), true, true, 0);
-            combobox1 = new ComboBox();
-            combobox1.PackStart(comboRender, false);
-            combobox1.AddAttribute(comboRender, "text", 0);
-            combobox1.Model = comboModel;
-            vbox1.PackStart(combobox1, true, true, 0);
-            Alignment halign = new Alignment(0, 0, 0, 1);
-            halign.Add(vbox1);
+            PropertiesView = new PropertyView(this);
+            // settingsBox = new Table(2, 2, false);
+            // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            // combobox1 = new ComboBox();
+            // combobox1.PackStart(comboRender, false);
+            // combobox1.AddAttribute(comboRender, "text", 0);
+            // combobox1.Model = comboModel;
+            // settingsBox.Attach(combobox1, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+
+            // chkVerbose = new CheckButton();
+            // chkVerbose.Toggled += OnToggleVerboseMode;
+            // settingsBox.Attach(new Label("Verbose Mode"), 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            // settingsBox.Attach(chkVerbose, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+
+            hpaned1 = new HPaned();
+            hpaned2 = new HPaned();
+            Frame frame1 = new Frame("Rotation Settings");
+            frame1.Add(((ViewBase)PropertiesView).MainWidget);
+            frame1.ShadowType = ShadowType.In;
+            Frame frame2 = new Frame();
+            frame2.Add(hpaned2);
+            frame2.ShadowType = ShadowType.In;
+            ctxFrame = new Frame();
+            ctxFrame.Add(ctxBox);
+            ctxFrame.ShadowType = ShadowType.In;
+            Frame frame4 = new Frame("Instructions");
+            frame4.Add(infoWdgtWrapper);
+            frame4.ShadowType = ShadowType.In;
+            hpaned1.Pack1(frame1, false, false);
+            hpaned1.Pack2(frame2, true, false);
+            hpaned2.Pack1(ctxFrame, true, false);
+            hpaned2.Pack2(frame4, true, false);
+            hpaned1.ShowAll();
+            Alignment halign = new Alignment(0, 0, 1, 1);
+            halign.Add(hpaned1);
 
             vpaned1.Pack2(halign, false, false);
             vpaned1.Show();
 
             graphView.OnGraphObjectSelected += OnGraphObjectSelected;
             graphView.OnGraphObjectMoved += OnGraphObjectMoved;
-            combobox1.Changed += OnComboBox1SelectedValueChanged;
+            //combobox1.Changed += OnComboBox1SelectedValueChanged;
 
             contextMenuHelper = new ContextMenuHelper(graphView.MainWidget);
             contextMenuHelper.ContextMenu += OnPopup;
@@ -211,42 +265,12 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The initial state of the simulation is in a combobox. Allow simple get/set access.
-        /// </summary>
-        public string InitialState
-        {
-            get
-            {
-                if (combobox1.GetActiveIter(out TreeIter iter))
-                    return (string)combobox1.Model.GetValue(iter, 0);
-                return null;
-            }
-            set
-            {
-                if (combobox1.Model.GetIterFirst(out TreeIter iter))
-                do
-                {
-                    GLib.Value thisRow = new GLib.Value();
-                    combobox1.Model.GetValue(iter, 0, ref thisRow);
-                    if ((thisRow.Val as string).Equals(value))
-                    {
-                        combobox1.Changed -= OnComboBox1SelectedValueChanged;
-                        combobox1.SetActiveIter(iter);
-                        combobox1.Changed += OnComboBox1SelectedValueChanged;
-                        break;
-                    }
-                } while (combobox1.Model.IterNext(ref iter));
-            }
-        }
-
-        /// <summary>
         /// Set the graph in the view.
         /// </summary>
         /// <param name="nodes">Nodes of the graph.</param>
         /// <param name="arcs">Arcs of the graph.</param>
         public void SetGraph(List<StateNode> nodes, List<RuleAction> arcs)
         {
-            string lastSelected = InitialState;
             rules.Clear();
             actions.Clear();
             nodeDescriptions.Clear();
@@ -267,7 +291,6 @@ namespace UserInterface.Views
                 graph.AddArc(arc);
             });
             graphView.DirectedGraph = graph;
-            InitialState = lastSelected;
             graphView.MainWidget.QueueDraw();
         }
 
@@ -278,15 +301,13 @@ namespace UserInterface.Views
         public void Select(string objectName)
         {
             ctxBox.Foreach(c => ctxBox.Remove(c)); 
-            ctxBox.PackStart(ctxLabel, true, true, 0);
-            ctxLabel.WidthRequest = -1;
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
+            Models.Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
             if (node != null)
             {
-                ctxLabel.Text = "State";
-
+                //ctxLabel.Text = "State";
+                ctxFrame.Label = $"{node.Name} settings";
                 // Need to detach the event handlers before changing the entries.
                 // Otherwise a changed event will fire which we don't really want.
                 nameEntry.Changed -= OnNameChanged;
@@ -300,23 +321,27 @@ namespace UserInterface.Views
                     descEntry.Changed += OnDescriptionChanged;
                 }
                 colourChooser.ColorSet -= OnColourChanged;
+#if NETFRAMEWORK
                 colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
+#else
+                colourChooser.Rgba = node.Colour.ToRGBA();
+#endif
                 colourChooser.ColorSet += OnColourChanged;
 
                 ctxBox.PackStart(nodeSelWdgt, true, true, 0);
             }
             else if (arc != null)
             {
-                ctxLabel.Text = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
+                ctxFrame.Label = "Transition from " + arc.SourceName + " to " + arc.DestinationName;
                 RuleList.Text = String.Join(Environment.NewLine, rules[arc.Name].ToArray()) ;
                 ActionList.Text = String.Join(Environment.NewLine, actions[arc.Name].ToArray());
                 ctxBox.PackStart(arcSelWdgt, true, true, 0);
-                ctxLabel.WidthRequest = 500;
             }
             else
             {
-                ctxLabel.Text = "Information";
-                ctxBox.PackStart(infoWdgt, true, true, 0);
+                //ctxLabel.Text = "Information";
+                //ctxBox.PackStart(infoWdgt, true, true, 0);
+                ctxFrame.Label = "";
             }
             ctxBox.ShowAll();
         }
@@ -397,7 +422,6 @@ namespace UserInterface.Views
 
                 graphView.OnGraphObjectSelected -= OnGraphObjectSelected;
                 graphView.OnGraphObjectMoved -= OnGraphObjectMoved;
-                combobox1.Changed -= OnComboBox1SelectedValueChanged;
 
                 contextMenuHelper.ContextMenu -= OnPopup;
 
@@ -427,6 +451,7 @@ namespace UserInterface.Views
                     // name to the dict.
                     nodeDescriptions[nameEntry.Text] = nodeDescriptions[graphView.SelectedObject.Name];
                     graphView.SelectedObject.Name = nameEntry.Text;
+                    ctxFrame.Label = $"{nameEntry.Text} settings";
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -468,7 +493,12 @@ namespace UserInterface.Views
             {
                 if (graphView.SelectedObject != null)
                 {
-                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colourChooser.Color);
+#if NETFRAMEWORK
+                    var colour = colourChooser.Color;
+#else
+                    var colour = colourChooser.Rgba.ToColour().ToGdk();
+#endif
+                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -620,27 +650,6 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The selected item in the combo box has changed.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnComboBox1SelectedValueChanged(object sender, EventArgs args)
-        {
-            try
-            {
-                if (combobox1.GetActiveIter(out TreeIter iter))
-                {
-                    string selectedText = (string)combobox1.Model.GetValue(iter, 0);
-                    OnInitialStateChanged?.Invoke(sender, new InitialStateEventArgs() { initialState = selectedText } );
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Callback for the 'add node' context menu option.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -650,7 +659,7 @@ namespace UserInterface.Views
             try
             {
                 // todo: set location to context menu location
-                Node node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
+                var node = new Models.Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }

@@ -73,6 +73,11 @@ namespace Models.CLEM.Resources
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
 
         /// <summary>
+        /// Marked as a replacement breeder
+        /// </summary>
+        public bool ReplacementBreeder { get; set; }
+
+        /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
@@ -170,7 +175,7 @@ namespace Models.CLEM.Resources
         /// The adult equivalent of this individual
         /// </summary>
         public double AdultEquivalent { get { return adultEquivalent; } }
-        // Needs to include ind.Number*weight if ever added to this model
+        // TODO: Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
         /// Highest previous weight
@@ -197,6 +202,30 @@ namespace Models.CLEM.Resources
             get
             {
                 return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+            }
+        }
+
+        /// <summary>
+        /// The current health score -2 to 2 with 0 standard weight
+        /// </summary>
+        public int HealthScore
+        {
+            get
+            {
+                double result = 0;
+                double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
+                double mid = NormalisedAnimalWeight;
+                double max = BreedParams.MaximumSizeOfIndividual;
+
+                if(weight < mid)
+                {
+                    result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
+                }
+                else if (weight > mid)
+                {
+                    result = Math.Round((weight - mid) / ((max - mid) / 2.5));
+                }
+                return Convert.ToInt32(result);
             }
         }
 
@@ -231,9 +260,9 @@ namespace Models.CLEM.Resources
                 {
                     if(this is RuminantFemale)
                     {
-                        if ((this as RuminantFemale).IsHeifer)
+                        if ((this as RuminantFemale).IsPreBreeder)
                         {
-                            return "Heifer";
+                            return "PreBreeder";
                         }
                         else
                         {
@@ -310,7 +339,7 @@ namespace Models.CLEM.Resources
         /// Required monthly intake of milk
         /// </summary>
         /// <units>kg/month</units>
-        public double MilkIntakePotential { get; set; }
+        public double MilkPotentialIntake { get; set; }
 
         /// <summary>
         /// Percentage nitrogen of current intake
@@ -328,6 +357,25 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>kg/month</units>
         public double PotentialIntake { get; set; }
+
+        /// <summary>
+        /// Return intake as a proportion of the potential inake
+        /// This includes milk for sucklings
+        /// </summary>
+        public double ProportionOfPotentialIntakeObtained
+        {
+            get
+            {
+                if (PotentialIntake + MilkPotentialIntake > 0)
+                {
+                    return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
 
         /// <summary>
         /// Current monthly metabolic intake after crude protein adjustment
@@ -348,7 +396,41 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of individual tags
         /// </summary>
-        public List<string> Tags { get; set; }
+        private List<string> tags { get; set; }
+
+        /// <summary>
+        /// Check if the selected tag exists on this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        /// <returns></returns>
+        public bool TagExists(string tag)
+        {
+            return tags.Contains(tag);
+        }
+
+        /// <summary>
+        /// Add the tag to this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        public void TagAdd(string tag)
+        {
+            if (!tags.Contains(tag))
+            {
+                tags.Add(tag); 
+            }
+        }
+
+        /// <summary>
+        /// Remove the tag from this individual
+        /// </summary>
+        /// <param name="tag">Tag label</param>
+        public void TagRemove(string tag)
+        {
+            if (tags.Contains(tag))
+            {
+                tags.Remove(tag);
+            }
+        }
 
         /// <summary>
         /// Determines if the change resson is her positive or negative
@@ -369,7 +451,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
                     case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessHeiferSale:
+                    case HerdChangeReason.ExcessPreBreederSale:
                     case HerdChangeReason.Consumed:
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
@@ -412,7 +494,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Energy used for foetal development
         /// </summary>
-        public double EnergyFoetus { get; set; }
+        public double EnergyFetus { get; set; }
 
         /// <summary>
         /// Energy used for maintenance
@@ -500,7 +582,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = this,
-                    Reason = reason
+                    Category = reason
                 };
                 (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }
@@ -610,7 +692,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.Tags = new List<string>();
+            this.tags = new List<string>();
         }
     }
 

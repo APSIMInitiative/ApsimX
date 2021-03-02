@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -102,7 +103,7 @@ namespace Models.CLEM.Resources
             if (StartingAmount > 0)
             {
                 HumanFoodStorePool initialpPool = new HumanFoodStorePool(StartingAmount, StartingAge);
-                Add(initialpPool, this, "Starting value");
+                Add(initialpPool, this, "", "Starting value");
             }
         }
 
@@ -113,8 +114,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             HumanFoodStorePool pool;
             switch (resourceAmount.GetType().Name)
@@ -146,9 +148,11 @@ namespace Models.CLEM.Resources
                 {
                     Gain = pool.Amount,
                     Activity = activity,
-                    Reason = reason,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
                     ResourceType = this
                 };
+                base.LastGain = pool.Amount;
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
@@ -185,7 +189,7 @@ namespace Models.CLEM.Resources
                 // send to market if needed
                 if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
                 {
-                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, "Farm sales");
+                    (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
                 }
 
                 if (amountRequired <= 0)
@@ -203,7 +207,8 @@ namespace Models.CLEM.Resources
                     ResourceType = this,
                     Loss = amountRemoved,
                     Activity = request.ActivityModel,
-                    Reason = request.Reason
+                    Category = request.Category,
+                    RelatesToResource = request.RelatesToResource
                 };
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -250,7 +255,7 @@ namespace Models.CLEM.Resources
                         ResourceType = this,
                         Loss = spoiled,
                         Activity = this,
-                        Reason = "Spoiled"
+                        Category = "Spoiled"
                     };
                     LastTransaction = details;
                     TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
@@ -281,6 +286,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -288,55 +295,59 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if ((Units??"").ToUpper() != "KG")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Each unit of this resource is equivalent to ";
-                if (ConvertToKg == 0)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if ((Units ?? "").ToUpper() != "KG")
                 {
-                    html += "<span class=\"errorlink\">NOT SET";
+                    htmlWriter.Write("Each unit of this resource is equivalent to ");
+                    if (ConvertToKg == 0)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + this.ConvertToKg.ToString("0.###"));
+                    }
+                    htmlWriter.Write("</span> kg");
                 }
                 else
                 {
-                    html += "<span class=\"setvalue\">" + this.ConvertToKg.ToString("0.###");
+                    if (ConvertToKg != 1)
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
+                    }
                 }
-                html += "</span> kg";
-            }
-            else
-            {
-                if(ConvertToKg != 1)
+                htmlWriter.Write("\r\n</div>");
+                if (StartingAmount > 0)
                 {
-                    html += "<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg";
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("0.###") + "</span>");
+                    if (StartingAge > 0)
+                    {
+                        htmlWriter.Write(" with an age of <span class=\"setvalue\">" + this.StartingAge.ToString("###") + "%</span> months");
+                    }
+                    htmlWriter.Write("\r\n</div>");
                 }
-            }
-            html += "\n</div>";
-            if (StartingAmount > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "The simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("0.###") + "</span>";
-                if (StartingAge > 0)
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (UseByAge == 0)
                 {
-                    html += " with an age of <span class=\"setvalue\">" + this.StartingAge.ToString("###") + "%</span> months";
+                    htmlWriter.Write("This food does not spoil");
                 }
-                html += "\n</div>";
-            }
+                else
+                {
+                    htmlWriter.Write("This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old");
+                }
+                htmlWriter.Write("\r\n</div>");
 
-            html += "\n<div class=\"activityentry\">";
-            if (UseByAge == 0)
-            {
-                html += "This food does not spoil";
-            }
-            else
-            {
-                html += "This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month"+((UseByAge>1)?"s":"")+" old";
-            }
-            html += "\n</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
+                htmlWriter.Write(((EdibleProportion == 1) ? "All" : EdibleProportion.ToString("#0%")) + "</span> of this raw food is edible");
+                htmlWriter.Write("\r\n</div>");
 
-            html += "\n<div class=\"activityentry\"><span class=\"setvalue\">";
-            html += ((EdibleProportion == 1)?"All":EdibleProportion.ToString("#0%"))+"</span> of this raw food is edible";
-            html += "\n</div>";
-
-            return html;
-        }
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
 }

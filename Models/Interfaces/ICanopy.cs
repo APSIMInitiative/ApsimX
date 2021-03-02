@@ -60,7 +60,10 @@
         /// <summary>The thickness</summary>
         public double thickness;
 
-        /// <summary>The amount</summary>
-        public double amount;
+        /// <summary>The amount or radiation on green area</summary>
+        public double AmountOnGreen;
+
+        ///  <summary>The amount of radiation on dead area</summary>
+        public double AmountOnDead;
     }
 }

@@ -21,7 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This component provides the random number sequence to be used for all stochastic processes in CLEM")]
     [Version(1, 0, 1, "Moved this functionality from the CLEM component to an individual component placed under the simulation to allow sharing between multiple farms in a simulation")]
-    [HelpUri(@"Content/Features/RandomNumbersGenerator.htm")]
+    [HelpUri(@"Content/Features/Random numbers generator.htm")]
     public class RandomNumberGenerator: Model
     {
         [ThreadStatic]
@@ -53,7 +53,7 @@ namespace Models.CLEM
             { 
                 if(generator is null)
                 {
-                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\nThis simulation uses stochastic processes requiring random numbers\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
                 }
                 return generator; 
             } 
