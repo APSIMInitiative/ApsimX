@@ -289,19 +289,38 @@ namespace Models.GrazPlan
         [Description("Sulf C c-su-")]
         public double[] SulfC { get; set; } = new double[5];
 
-        /// <summary>Meth C c-h-</summary>
+        /// <summary>Methane C c-h-1,2,3,4,5,6,7  
+        /// 1. gross energy content of DM intake MJ/g
+        /// 2. constant term at maintenance
+        /// 3. M/D term at maintenance kg/MJ
+        /// 4. constant term in feediing level effect
+        /// 5. M/D term in feeding level effect kg/MJ
+        /// 6. weight:energy ratio kg/MJ
+        /// 7. volume:energy ratio m^3/MJ
+        /// </summary>
         [Description("Meth C c-h-")]
         public double[] MethC { get; set; } = new double[8];
 
-        /// <summary>Ash alkalinity C c-aa-</summary>
+        /// <summary>Ash alkalinity C c-aa-1,2,3
+        /// 1. Ash alkalinity of basal weight and conceptus    
+        /// 2. Ash alkalinity of greasy wool  
+        /// 3. Ash alkalinity of faeces  
+        /// </summary>
+        [Units("mol/kg")]
         [Description("Ash alkalinity C c-aa-")]
         public double[] AshAlkC { get; set; } = new double[4];
 
-        /// <summary>Ovulation period c-f</summary>
+        /// <summary>Ovulation period c-f  
+        /// Conception: length of oestrus cycle
+        /// </summary>
         [Description("Ovulation period c-f4")]
         public int OvulationPeriod { get; set; }
 
-        /// <summary>Puberty c-pbt</summary>
+        /// <summary>Puberty c-pbt-1,2  
+        /// 1. Puberty: females
+        /// 2. Puberty: males
+        /// </summary>
+        [Units("d")]
         [Description("Puberty c-pbt-")]
         public int[] Puberty { get; set; } = new int[2];                  //array[Boolean]
 
