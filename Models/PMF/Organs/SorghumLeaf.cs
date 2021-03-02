@@ -174,10 +174,8 @@ namespace Models.PMF.Organs
         /// <summary>The leaf cohort parameters</summary>
         [Link] LeafParameters Parameters = new LeafParameters();
 
-        #region Canopy interface
-
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
-        public string CanopyType { get { return Plant.PlantType; } }
+        public string CanopyType { get { return plant.PlantType; } }
 
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
@@ -211,7 +209,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the depth.</summary>
         [Units("mm")]
-        public double Depth { get { return Math.Max(0, Height - BaseHeight); } }
+        public double Depth => Math.Max(0, Height - BaseHeight); 
 
         /// <summary>The width of an individual plant</summary>
         [Units("mm")]
@@ -236,12 +234,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        #endregion
 
         /// <summary>
         /// The SMM2SM
         /// </summary>
-        public const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
+        private const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
 
         /// <summary>
         /// Flag to test if Microclimate is present
@@ -251,87 +248,95 @@ namespace Models.PMF.Organs
 
         /// <summary>The plant</summary>
         [Link]
-        public Plant Plant = null; //todo change back to private
+        Plant plant = null; 
 
         [Link]
-        ISummary Summary = null;
+        ISummary summary = null;
 
         [Link]
         private LeafCulms culms = null;
 
         [Link]
-        private Phenology phenology = null;
+        Phenology phenology = null;
 
-        /// <summary>
-        /// Linke to weather, used for frost senescence calcs.
-        /// </summary>
+        /// <summary> Link to weather, used for frost senescence calcs. </summary>
         [Link]
-        private IWeather weather = null;
+        IWeather weather = null;
 
         /// <summary>The met data</summary>
         [Link]
-        public IWeather MetData = null;
+        IWeather metData = null;
 
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //private IFunction minLeafNo = null;
+        /// <summary>The surface organic matter model</summary>
+        [Link]
+        ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //private IFunction maxLeafNo = null;
+        /// <summary>Link to biomass removal model</summary>
+        [Link(Type = LinkType.Child)]
+        private BiomassRemoval biomassRemovalModel = null;
 
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //private IFunction TTEmergToFI = null;
-
+        /// <summary>The DM reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction SDRatio = null;
+        [Units("/d")]
+        private IFunction dmReallocationFactor = null;
+
+        /// <summary>The DM demand function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemands = null;
+
+        /// <summary>The N demand function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand nDemands = null;
+
+        //#pragma warning disable 414
+        /// <summary>Carbon concentration</summary>
+        /// [Units("-")]
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction CarbonConcentration = null;
+        //#pragma warning restore 414
+
+        /// <summary>SupplyDemandRatio</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        IFunction SDRatio = null;
 
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
-        private IFunction DltTT { get; set; }
+        IFunction DltTT { get; set; }
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction frgr = null;
+        IFunction frgr = null;
 
-        #region Canopy interface
+        /// <summary> Number of leaf primordia present in seed. </summary>
+        public double SeeNo => Parameters.LeafNumSeed?.Value() ?? 0;
 
-        /// <summary>
-        /// Number of leaf primordia present in seed.
-        /// </summary>
-        public double SeedNo
-        {
-            get
-            {
-                return Parameters.LeafNumSeed?.Value() ?? 0;
-            }
-        }
-
-        /// <summary>
-        /// Degree days to initiate each leaf primordium until floral init (deg day).
-        /// </summary>
-        public double LeafInitRate
-        {
-            get
-            {
-                return Parameters.LeafInitRate?.Value() ?? 0;
-            }
-        }
+        /// <summary> Degree days to initiate each leaf primordium until floral init (deg day). </summary>
+        public double LeafInitRate => Parameters.LeafInitRate?.Value() ?? 0;
 
         /// <summary>/// Min Leaf Number.</summary>
-        public double MinLeafNo
-        {
-            get
-            {
-                return Parameters.MinLeafNo.Value();
-            }
-
-        }
+        public double MinLeafNo => Parameters.MinLeafNo.Value();
 
         /// <summary>Max Leaf Number.</summary>
-        public double MaxLeafNo
-        {
-            get
-            {
-                return Parameters.MaxLeafNo.Value();
-            }
-        }
+        public double MaxLeafNo => Parameters.MaxLeafNo.Value();
+
+        /// <summary>Radiation level for onset of light senescence.</summary>
+        public double SenRadnCrit => Parameters.SenRadnCrit.Value();
+
+        /// <summary>sen_light_time_const.</summary>
+        public double SenLightTimeConst =>  Parameters.SenLightTimeConst.Value();
+
+        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
+        public double FrostKill => Parameters.FrostKill.Value();
+
+        /// <summary>temperature threshold for leaf death.</summary>
+        public double FrostKillSevere => Parameters.FrostKillSevere.Value();
+
+        /// <summary>supply:demand ratio for onset of water senescence.</summary>
+        public double SenThreshold => Parameters.SenThreshold.Value();
+
+        /// <summary>Delay factor for water senescence.</summary>
+        public double SenWaterTimeConst => Parameters.SenWaterTimeConst.Value();
+
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -339,11 +344,11 @@ namespace Models.PMF.Organs
         
         /// <summary>Gets the Potential DltLAI</summary>
         [Units("m^2/m^2")]
-        public double dltPotentialLAI { get; set; }
+        public double dltPotentialLAI { get; set; }   //culms ref
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
-        public double dltStressedLAI { get; set; }
+        public double dltStressedLAI { get; set; } //culms ref
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -364,7 +369,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (parentPlant != null && parentPlant.IsAlive)
+                if (plant != null && plant.IsAlive)
                     return Math.Min(MaxCover * (1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI / MaxCover)), 0.999999999);
                 return 0;
             }
@@ -376,7 +381,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                if (parentPlant != null && parentPlant.IsAlive)
+                if (plant != null && plant.IsAlive)
                     return 1.0 - (1 - CoverGreen) * (1 - CoverDead);
                 return 0;
             }
@@ -395,9 +400,6 @@ namespace Models.PMF.Organs
         /// </summary>
         public bool MicroClimatePresent { get; set; } = false;
 
-        #endregion
-
-        #region Parameters
 
         /// <summary>The extinction coefficient function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -405,11 +407,7 @@ namespace Models.PMF.Organs
         
         /// <summary>The photosynthesis</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction Photosynthesis = null;
-
-        ///// <summary>External calculation for largest leaf size.</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //public IFunction LargestLeafSize = null;
+        IFunction Photosynthesis = null;
 
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -432,12 +430,36 @@ namespace Models.PMF.Organs
         IFunction MinPlantWt = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nPhotoStress = null;
+        IFunction nPhotoStress = null;
 
         /// <summary>Input for TargetSLN</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction TargetSLN = null;
+        IFunction TargetSLN = null;
 
+        /// <summary>Nitrogen Photosynthesis Stress</summary>
+        public double NitrogenPhotoStress { get; set; }
+
+        /// <summary>Nitrogen Phenology Stress</summary>
+        public double NitrogenPhenoStress { get; set; }
+
+        /// <summary>Phosphorus Stress</summary>
+        public double PhosphorusStress { get; set; }
+
+        /// <summary>Final Leaf Number.</summary>
+        public double FinalLeafNo { get { return culms.FinalLeafNo; } }
+
+        /// <summary>Leaf number.</summary>
+        public double LeafNo { get { return culms.LeafNo; } }
+
+        /// <summary> /// Sowing Density (Population). /// </summary>
+        public double SowingDensity { get; set; }
+
+        private bool LeafInitialised = false;
+
+        /// <summary>Gets or sets the water allocation.</summary>
+        [JsonIgnore]
+        public double WaterAllocation { get; set; }
+        
         /// <summary>Potential Biomass via Radiation Use Efficientcy.</summary>
         public double BiomassRUE { get; set; }
 
@@ -448,9 +470,52 @@ namespace Models.PMF.Organs
         [Description("The Stage that leaves are initialised on")]
         public string LeafInitialisationStage { get; set; } = "Emergence";
 
-        #endregion
+        /// Diff between potentialLAI and stressedLAI
+        public double LossFromExpansionStress { get; set; }
 
-        #region States and variables
+        /// <summary>Total LAII as a result of senescence.</summary>
+        public double SenescedLai { get; set; }
+
+        /// <summary>Amount of N retranslocated today.</summary>
+        public double DltRetranslocatedN { get; set; }
+        /// <summary>Delta of N removed due to Senescence.</summary>
+        public double DltSenescedN { get; set; }
+        /// <summary>Delta of LAI removed due to N Senescence.</summary>
+        public double DltSenescedLaiN { get; set; }
+        /// <summary>Delta of LAI removed due to Senescence.</summary>
+        public double DltSenescedLai { get; set; }
+        /// <summary>Delta of LAI removed due to Light Senescence.</summary>
+        public double DltSenescedLaiLight { get; set; }
+        /// <summary>Delta of LAI removed due to Water Senescence.</summary>
+        public double DltSenescedLaiWater { get; set; }
+        /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
+        public double DltSenescedLaiFrost { get; set; }
+        /// <summary>Delta of LAI removed due to age senescence.</summary>
+        public double DltSenescedLaiAge { get; set; }
+
+        /// <summary>Tolerance for biomass comparisons</summary>
+        protected double BiomassToleranceValue = 0.0000000001;
+
+        /// <summary>The live biomass state at start of the computation round</summary>
+        public Biomass StartLive = null;
+
+        /// <summary>The dry matter supply</summary>
+        public BiomassSupplyType DMSupply { get; set; }
+
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemandPriorityFactor { get; set; }
+
+        /// <summary>The nitrogen supply</summary>
+        public BiomassSupplyType NSupply { get; set; }
+
+        /// <summary>The dry matter demand</summary>
+        public BiomassPoolType DMDemand { get; set; }
+
+        /// <summary>Structural nitrogen demand</summary>
+        public BiomassPoolType NDemand { get; set; }
+
+        /// <summary>The dry matter potentially being allocated</summary>
+        public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Gets or sets the k dead.</summary>
         [Description("Extinction Coefficient (Dead)")]
@@ -495,34 +560,9 @@ namespace Models.PMF.Organs
                     return TotalRadn;
                 }
                 else
-                    return CoverGreen * MetData.Radn;
+                    return CoverGreen * metData.Radn;
             }
         }
-        /// <summary>Nitrogen Photosynthesis Stress</summary>
-        public double NitrogenPhotoStress { get; set; }
-
-        /// <summary>Nitrogen Phenology Stress</summary>
-        public double NitrogenPhenoStress { get; set; }
-
-        /// <summary>Phosphorus Stress</summary>
-        public double PhosphorusStress { get; set; }
-
-        /// <summary>Final Leaf Number.</summary>
-        public double FinalLeafNo { get { return culms.FinalLeafNo; } }
-
-        /// <summary>Leaf number.</summary>
-        public double LeafNo { get { return culms.LeafNo; } }
-
-        /// <summary> /// Sowing Density (Population). /// </summary>
-        public double SowingDensity { get; set; }
-
-        private bool LeafInitialised = false;
-        #endregion
-
-        #region Arbitrator Methods
-        /// <summary>Gets or sets the water allocation.</summary>
-        [JsonIgnore]
-        public double WaterAllocation { get; set; }
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
@@ -533,10 +573,6 @@ namespace Models.PMF.Organs
             DMSupply.Uptake = 0;
             DMSupply.Fixation = DMSupplyFixation.Value();
         }
-
-        #endregion
-
-        #region Events
 
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
@@ -555,10 +591,6 @@ namespace Models.PMF.Organs
                 Live.StorageN = 0;
             }
         }
-
-        #endregion
-
-        #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
@@ -602,9 +634,6 @@ namespace Models.PMF.Organs
             LossFromExpansionStress = 0.0;
             culms.Initialize();
         }
-        #endregion
-
-        #region Top Level time step functions
 
         [EventSubscribe("StartOfDay")]
         private void ResetDailyVariables(object sender, EventArgs e)
@@ -628,7 +657,7 @@ namespace Models.PMF.Organs
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
-            if (parentPlant.IsEmerged)
+            if (plant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             dltPotentialLAI = 0;
             dltStressedLAI = 0;
@@ -651,7 +680,7 @@ namespace Models.PMF.Organs
         /// <summary>Update area.</summary>
         public void UpdateArea()
         {
-            if (Plant.IsEmerged)
+            if (plant.IsEmerged)
             {
                 //areaActual in old model
                 // culms.AreaActual() will update this.DltLAI
@@ -667,16 +696,10 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            // if (!parentPlant.IsAlive) return; wtf
-            if (!Plant.IsAlive) return;
+            if (!plant.IsAlive) return;
             if (!LeafInitialised) return;
 
             calcSenescence();
-
-            //double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-            //DltSenescedN = DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
-            //double slnToday = laiToday > 0.0 ? Live.N / laiToday : 0.0;
-            //var DltSenescedN = DltSenescedLai * Math.Max((slnToday - senescedLeafSLN), 0.0);
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
@@ -691,20 +714,15 @@ namespace Models.PMF.Organs
                 if (LAI - DltSenescedLai < 0.1)
                 {
                     string message = "Crop failed due to loss of leaf area \r\n";
-                    Summary.WriteMessage(this, message);
-                //scienceAPI.write(" ********** Crop failed due to loss of leaf area ********");
-                Plant.EndCrop();
+                    summary.WriteMessage(this, message);
+                    plant.EndCrop();
                     return;
                 }
             }
             LAIDead = SenescedLai; // drew todo
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
             
-            //CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-ExtinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-            //CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-0.03 * LAIDead), 0.0, 0.999999999);
-            //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
-
-            NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
+            NitrogenPhotoStress = nPhotoStress.Value();
 
             NitrogenPhenoStress = 1.0;
             if (phenology.Between("Emergence", "Flowering"))
@@ -714,53 +732,8 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Radiation level for onset of light senescence.</summary>
-        public double SenRadnCrit
-        {
-            get
-            {
-                return Parameters.SenRadnCrit.Value();
-            }
-        }
 
-        /// <summary>sen_light_time_const.</summary>
-        public double SenLightTimeConst { get { return Parameters.SenLightTimeConst.Value(); } }
 
-        /// Temperature threshold for leaf death, when plant is between floral init and flowering.
-        public double FrostKill { get { return Parameters.FrostKill.Value(); } }
-
-        /// <summary>temperature threshold for leaf death.</summary>
-        public double FrostKillSevere { get { return Parameters.FrostKillSevere.Value(); } }
-
-        /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        public double SenThreshold { get { return Parameters.SenThreshold.Value(); } }
-
-        /// <summary>Delay factor for water senescence.</summary>
-        public double SenWaterTimeConst { get { return Parameters.SenWaterTimeConst.Value(); } }
-
-        /// <summary>Only water stress at this stage.</summary>
-        /// Diff between potentialLAI and stressedLAI
-        public double LossFromExpansionStress { get; set; }
-
-        /// <summary>Total LAII as a result of senescence.</summary>
-        public double SenescedLai { get; set; }
-
-        /// <summary>Amount of N retranslocated today.</summary>
-        public double DltRetranslocatedN { get; set; }
-        /// <summary>Delta of N removed due to Senescence.</summary>
-        public double DltSenescedN { get; set; }
-        /// <summary>Delta of LAI removed due to N Senescence.</summary>
-        public double DltSenescedLaiN { get; set; }
-        /// <summary>Delta of LAI removed due to Senescence.</summary>
-        public double DltSenescedLai { get; set; }
-        /// <summary>Delta of LAI removed due to Light Senescence.</summary>
-        public double DltSenescedLaiLight { get; set; }
-        /// <summary>Delta of LAI removed due to Water Senescence.</summary>
-        public double DltSenescedLaiWater { get; set; }
-        /// <summary>Delta of LAI removed due to Frost Senescence.</summary>
-        public double DltSenescedLaiFrost { get; set; }
-        /// <summary>Delta of LAI removed due to age senescence.</summary>
-        public double DltSenescedLaiAge { get; set; }
 
         private double nDeadLeaves;
         private double dltDeadLeaves;
@@ -840,7 +813,7 @@ namespace Models.PMF.Organs
         /// </summary>
         private double calcLaiSenescenceFrost()
         {
-            if (weather.MinT > FrostKill || !Plant.IsEmerged)
+            if (weather.MinT > FrostKill || !plant.IsEmerged)
                 return 0;
 
             if (weather.MinT > FrostKillSevere)
@@ -852,13 +825,13 @@ namespace Models.PMF.Organs
                 {
                     // The plant will survive but all of the leaf area is removed except a fraction.
                     // 3 degrees is a default for now - extract to a parameter to customise it.
-                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
+                    summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: false));
                     return Math.Max(0, LAI - 0.1);
                 }
                 else if (phenology.Between("FloralInitiation", "Flowering"))
                 {
                     // Plant is between floral init and flowering - time to die.
-                    Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+                    summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
                     return LAI; // rip
                 }
                 else
@@ -868,7 +841,7 @@ namespace Models.PMF.Organs
             }
 
             // Temperature is below frostKillSevere parameter, senesce all LAI.
-            Summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
+            summary.WriteMessage(this, GetFrostSenescenceMessage(fatal: true));
             return LAI;
         }
 
@@ -892,13 +865,12 @@ namespace Models.PMF.Organs
         private double calcLaiSenescenceWater()
         {
             //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
-            //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
             double dlt_dm_transp = PotentialBiomassTEFunction.Value();
 
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
             double effectiveRue = MathUtilities.Divide(Photosynthesis.Value(), RadiationIntercepted, 0);
 
-            double radnCanopy = MathUtilities.Divide(RadiationIntercepted, CoverGreen, MetData.Radn);
+            double radnCanopy = MathUtilities.Divide(RadiationIntercepted, CoverGreen, metData.Radn);
             if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
                 radnCanopy = 0;
 
@@ -916,20 +888,14 @@ namespace Models.PMF.Organs
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
-            avSDRatio = updateAvSDRatio(SDRatio.Value(), 5);
-            //// average of the last 10 days of laiEquilibWater`
-            //laiEquilibWater.push_back(laiEquilibWaterToday);
-            //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
-
             //// calculate a 5 day moving average of the supply demand ratio
-            //avSD.push_back(plant->water->getSdRatio());
+            avSDRatio = updateAvSDRatio(SDRatio.Value(), 5);
 
             double dltSlaiWater = 0.0;
             if (SDRatio.Value() < Parameters.SenThreshold.Value())
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), Parameters.SenWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
-            //return 0.0;
         }
         
         /// <summary>Return the lai that would senesce on the current day from natural ageing</summary>
@@ -957,7 +923,7 @@ namespace Models.PMF.Organs
 
         private double calcLaiSenescenceLight()
         {
-            double critTransmission = MathUtilities.Divide(SenRadnCrit, MetData.Radn, 1);
+            double critTransmission = MathUtilities.Divide(SenRadnCrit, metData.Radn, 1);
             /* TODO : Direct translation - needs cleanup */
             //            ! needs rework for row spacing
             double laiEqlbLightToday;
@@ -974,8 +940,8 @@ namespace Models.PMF.Organs
 
             // dh - In old apsim, we had another variable frIntcRadn which is always set to 0.
             // Set Plant::radnInt(void) in Plant.cpp.
-            double radnInt = MetData.Radn * CoverGreen;
-            double radnTransmitted = MetData.Radn - radnInt;
+            double radnInt = metData.Radn * CoverGreen;
+            double radnTransmitted = metData.Radn - radnInt;
             double dltSlaiLight = 0.0;
             if (radnTransmitted < SenRadnCrit)
                 dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, SenLightTimeConst, 0.0));
@@ -1043,80 +1009,6 @@ namespace Models.PMF.Organs
         }
         
 
-        #endregion
-
-        /// <summary>Tolerance for biomass comparisons</summary>
-        protected double BiomassToleranceValue = 0.0000000001;
-
-        /// <summary>The parent plant</summary>
-        [Link]
-        private Plant parentPlant = null;
-
-        /// <summary>The surface organic matter model</summary>
-        [Link]
-        private ISurfaceOrganicMatter surfaceOrganicMatter = null;
-
-        /// <summary>Link to biomass removal model</summary>
-        [Link(Type = LinkType.Child)]
-        private BiomassRemoval biomassRemovalModel = null;
-
-        /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        private IFunction dmReallocationFactor = null;
-
-        /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
-
-        /// <summary>The N demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
-
-        ///// <summary>The maximum N concentration</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("g/g")]
-        //protected IFunction maximumNConc = null;
-
-        ///// <summary>The minimum N concentration</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("g/g")]
-        //private IFunction minimumNConc = null;
-
-        ///// <summary>The critical N concentration</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //[Units("g/g")]
-        //private IFunction criticalNConc = null;
-
-//#pragma warning disable 414
-        /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction CarbonConcentration = null;
-//#pragma warning restore 414
-
-        /// <summary>The live biomass state at start of the computation round</summary>
-        public Biomass StartLive = null;
-
-        /// <summary>The dry matter supply</summary>
-        public BiomassSupplyType DMSupply { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
-
-        /// <summary>The nitrogen supply</summary>
-        public BiomassSupplyType NSupply { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>Structural nitrogen demand</summary>
-        public BiomassPoolType NDemand { get; set; }
-
-        /// <summary>The dry matter potentially being allocated</summary>
-        public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Constructor</summary>
         public SorghumLeaf()
@@ -1557,7 +1449,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
+            if (plant.IsAlive)
             {
                 Allocated.Clear();
                 Senesced.Clear();
@@ -1583,7 +1475,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("PlantSowing")]
         protected void OnPlantSowing(object sender, SowingParameters data)
         {
-            if (data.Plant == parentPlant)
+            if (data.Plant == plant)
             {
                 //OnPlantSowing let structure do the clear so culms isn't cleared before initialising the first one
                 //Clear();
@@ -1602,7 +1494,7 @@ namespace Models.PMF.Organs
             {
                 Detached.Add(Live);
                 Detached.Add(Dead);
-                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
+                surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, plant.PlantType, Name);
             }
 
             Clear();
