@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 113,
+  "Version": 129,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -37,7 +37,7 @@
             "[Soil].Nutrient.NO3.kgha[2] as NO3kgpha30cm",
             "[Soil].Nutrient.NO3.kgha[3] as NO3kgpha50cm",
             "[Soil].SoilWater.Eo",
-            "[Soil].FBiom[1] as FBiom10cm",
+            "[Soil].Organic.FBiom[1] as FBiom10cm",
             "[Soil].SoilWater.SW[1] as SurfaceSW",
             "[SurfaceOrganicMatter].Wt",
             "[Gliricidia].Leaf.LAI",
@@ -132,7 +132,7 @@
             "[Soil].SoilWater.FlowNO3",
             "[SurfaceOrganicMatter].Wt",
             "[Soil].SoilWater.Eo",
-            "[Soil].FBiom[1] as FBiom10cm",
+            "[Soil].Organic.FBiom[1] as FBiom10cm",
             "[Soil].SoilWater.SW[1] as SurfaceSW",
             "[Maize].Leaf.Fw",
             "[Maize].Leaf.Fn",
@@ -295,12 +295,12 @@
         },
         {
           "$type": "Models.Map, Models",
+          "Zoom": 360.0,
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 31.653381399664,
-            "Longitude": -69.257812500000014
+            "Latitude": 0.0,
+            "Longitude": 0.0
           },
-          "Zoom": 2.0,
           "Name": "Map",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -378,6 +378,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Hamakuapoko.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -436,6 +437,7 @@
                       "Latitude": 20.894444,
                       "Longitude": 156.363888,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "NRCS 1976",
                       "Comments": "NRCS 1976 Soil Survey . . . of Hawaii, p. 110-111",
                       "Name": "Hamakuapoko Soil",
@@ -462,6 +464,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.4,
                             1.3,
@@ -510,6 +513,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -604,7 +608,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": 0.04,
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -777,8 +780,8 @@
                             270.0,
                             130.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.23,
                             0.23,
@@ -803,7 +806,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -842,7 +845,7 @@
                         "[Soil].SoilWater.SW[2] as SW30cm",
                         "[Soil].SoilWater.SW[3] as SW50cm",
                         "[Soil].SoilWater.SW[4] as SW70cm",
-                        "[Soil].FInert[1] as FInert10cm",
+                        "[Soil].Organic.FInert[1] as FInert10cm",
                         "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                         "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                         "[Soil].SoilNitrogen.OC[3] as SOC50cm",
@@ -859,7 +862,7 @@
                         "[MicroClimate].peta",
                         "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
-                        "[Soil].FBiom[1] as FBiom10cm",
+                        "[Soil].Organic.FBiom[1] as FBiom10cm",
                         "[Soil].SoilWater.SW[1] as SurfaceSW",
                         "[SurfaceOrganicMatter].Wt",
                         "sum([Soil].SoilNitrogen.FOMN) as FOMN",
@@ -928,8 +931,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -984,7 +987,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                      "Code": "using Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Zone zone;\r\n        [Link] private Irrigation irrigation;\r\n        [Link] private Soil soil;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\r\n                              - excess_fr * waterBalance.SWmm[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
                       "Parameters": [
                         {
                           "Key": "FASW",
@@ -1770,6 +1773,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Guadeloupe.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -1828,6 +1832,7 @@
                       "Latitude": 16.2,
                       "Longitude": 61.65,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Nygren and Cruz 1998 Biomass allocation . . . . Agrof. Sys 41:277-292; Sierra etal 2003 application of STICS Plant Soil 256:333-345",
                       "Comments": null,
                       "Name": "Soil",
@@ -1854,6 +1859,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -1902,6 +1908,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -1996,7 +2003,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -2126,8 +2132,8 @@
                             200.0,
                             1500.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.25,
                             0.25,
@@ -2150,7 +2156,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2181,7 +2187,7 @@
                         "[Soil].SoilWater.SW[2] as SW30cm",
                         "[Soil].SoilWater.SW[3] as SW50cm",
                         "[Soil].SoilWater.SW[4] as SW70cm",
-                        "[Soil].FInert[1] as FInert10cm",
+                        "[Soil].Organic.FInert[1] as FInert10cm",
                         "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                         "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                         "[Soil].SoilNitrogen.OC[3] as SOC50cm",
@@ -2198,7 +2204,7 @@
                         "[MicroClimate].peta",
                         "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
-                        "[Soil].FBiom[1] as FBiom10cm",
+                        "[Soil].Organic.FBiom[1] as FBiom10cm",
                         "[Soil].SoilWater.SW[1] as SurfaceSW",
                         "[SurfaceOrganicMatter].Wt",
                         "sum([Soil].SoilNitrogen.FOMN) as FOMN",
@@ -2234,8 +2240,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3734,6 +3740,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "GuadeloupeGodet.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -3792,6 +3799,7 @@
                       "Latitude": 16.33,
                       "Longitude": -61.5,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Nygren et al 2000 Influence of biomass harvesting . . . . Tree Physiol 20:41-48; Cruz 1997 Effecct of shade . . . Plant Soil 188:227-237; Tournebize et al 1996 Modelling evapotranspiration . . . Ag For Meteorol 81:255-272",
                       "Comments": "Soil depth ranged from 0.1 to 0.75 m",
                       "Name": "Soil",
@@ -3814,6 +3822,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             0.92,
                             1.01,
@@ -3852,6 +3861,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -3934,7 +3944,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -4068,8 +4077,8 @@
                             200.0,
                             500.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.25,
                             0.25,
@@ -4092,7 +4101,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4121,7 +4130,7 @@
                         "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4N",
                         "sum([Soil].SoilWater.SWmm) as SW200cm",
                         "[Soil].SoilWater.SW[2] as SW30cm",
-                        "[Soil].FInert[1] as FInert10cm",
+                        "[Soil].Organic.FInert[1] as FInert10cm",
                         "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                         "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                         "[Soil].SoilNitrogen.NO3.kghappm[1] as NO3ppm10cm",
@@ -4132,7 +4141,7 @@
                         "[MicroClimate].peta",
                         "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
-                        "[Soil].FBiom[1] as FBiom10cm",
+                        "[Soil].Organic.FBiom[1] as FBiom10cm",
                         "[Soil].SoilWater.SW[1] as SurfaceSW",
                         "[SurfaceOrganicMatter].Wt",
                         "sum([Soil].SoilNitrogen.FOMN) as FOMN",
@@ -4164,8 +4173,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -6404,6 +6413,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -6462,6 +6472,7 @@
                       "Latitude": -15.25,
                       "Longitude": 37.25,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": null,
                       "Comments": null,
                       "Name": "Makoka Soil",
@@ -6500,6 +6511,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -6578,6 +6590,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -6708,7 +6721,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -6926,8 +6938,8 @@
                             200.0,
                             1000.0
                           ],
-                          "NO3N": null,
-                          "NH4N": null,
+                          "NO3": null,
+                          "NH4": null,
                           "SW": [
                             0.18,
                             0.18,
@@ -6957,7 +6969,7 @@
                         },
                         {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -6988,7 +7000,7 @@
                         "[Soil].SoilWater.SW[2] as SW30cm",
                         "[Soil].SoilWater.SW[3] as SW50cm",
                         "[Soil].SoilWater.SW[4] as SW70cm",
-                        "[Soil].FInert[1] as FInert10cm",
+                        "[Soil].Organic.FInert[1] as FInert10cm",
                         "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                         "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                         "[Soil].SoilNitrogen.OC[3] as SOC50cm",
@@ -7007,7 +7019,7 @@
                         "[MicroClimate].peta",
                         "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
-                        "[Soil].FBiom[1] as FBiom10cm",
+                        "[Soil].Organic.FBiom[1] as FBiom10cm",
                         "[Soil].SoilWater.SW[1] as SurfaceSW",
                         "[SurfaceOrganicMatter].Wt",
                         "sum([Soil].SoilNitrogen.FOMN) as FOMN",
@@ -7090,7 +7102,7 @@
                         "[Soil].SoilWater.SW[2] as SW30cm",
                         "[Soil].SoilWater.SW[3] as SW50cm",
                         "[Soil].SoilWater.SW[4] as SW70cm",
-                        "[Soil].FInert[1] as FInert10cm",
+                        "[Soil].Organic.FInert[1] as FInert10cm",
                         "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                         "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                         "[Soil].SoilNitrogen.OC[3] as SOC50cm",
@@ -7109,7 +7121,7 @@
                         "[MicroClimate].peta",
                         "[MicroClimate].petr",
                         "[Soil].SoilWater.Eo",
-                        "[Soil].FBiom[1] as FBiom10cm",
+                        "[Soil].Organic.FBiom[1] as FBiom10cm",
                         "[Soil].SoilWater.SW[1] as SurfaceSW",
                         "[Maize].Leaf.Fw",
                         "[Maize].Leaf.Photosynthesis.FVPD.Value",
@@ -7189,8 +7201,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -7211,7 +7223,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Maize;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -9562,7 +9574,7 @@
                   "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 3,
+              "LegendPosition": 5,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
@@ -9641,7 +9653,7 @@
                   "CrossesAtZero": false
                 }
               ],
-              "LegendPosition": 0,
+              "LegendPosition": 5,
               "LegendOrientation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
@@ -9818,6 +9830,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -9938,8 +9951,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -10039,6 +10052,7 @@
                       "Latitude": -2.15,
                       "Longitude": 30.45,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Rwanda soil database using properties for Ferralsol",
                       "Comments": null,
                       "Name": "GliricidiaZoneSoil",
@@ -10056,35 +10070,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-20",
-                            "20-180"
-                          ],
-                          "Thickness": [
-                            200.0,
-                            1600.0
-                          ],
-                          "NO3N": null,
-                          "NH4N": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10112,7 +10099,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -10166,6 +10152,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -10244,6 +10231,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -10571,8 +10559,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -10624,6 +10612,7 @@
                       "Latitude": -2.15,
                       "Longitude": 30.45,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Rwanda soil database using properties for Ferralsol",
                       "Comments": null,
                       "Name": "MaizeZoneSoil",
@@ -10641,35 +10630,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-20",
-                            "20-180"
-                          ],
-                          "Thickness": [
-                            200.0,
-                            1600.0
-                          ],
-                          "NO3N": null,
-                          "NH4N": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -10697,7 +10659,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -10751,6 +10712,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -10829,6 +10791,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -11194,7 +11157,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Maize;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -11303,6 +11266,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -11367,8 +11331,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -11420,6 +11384,7 @@
                       "Latitude": -2.15,
                       "Longitude": 30.45,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Rwanda soil database using properties for Ferralsol",
                       "Comments": null,
                       "Name": "MaizeZoneSoil",
@@ -11437,35 +11402,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-20",
-                            "20-180"
-                          ],
-                          "Thickness": [
-                            200.0,
-                            1600.0
-                          ],
-                          "NO3N": null,
-                          "NH4N": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -11493,7 +11431,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -11547,6 +11484,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -11625,6 +11563,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -11976,7 +11915,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Maize;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -12085,6 +12024,7 @@
                 },
                 {
                   "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
                   "FileName": "Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
@@ -12149,8 +12089,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -12202,6 +12142,7 @@
                       "Latitude": -2.15,
                       "Longitude": 30.45,
                       "LocationAccuracy": null,
+                      "YearOfSampling": null,
                       "DataSource": "Rwanda soil database using properties for Ferralsol",
                       "Comments": null,
                       "Name": "MaizeZoneSoil",
@@ -12219,35 +12160,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-20",
-                            "20-180"
-                          ],
-                          "Thickness": [
-                            200.0,
-                            1600.0
-                          ],
-                          "NO3N": null,
-                          "NH4N": null,
-                          "SW": null,
-                          "OC": null,
-                          "EC": null,
-                          "CL": null,
-                          "ESP": null,
-                          "PH": null,
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "CERESSoilTemperature",
+                          "Name": "Temperature",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -12275,7 +12189,6 @@
                           "CN2Bare": 65.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "Slope": "NaN",
                           "DischargeWidth": "NaN",
                           "CatchmentArea": "NaN",
                           "Thickness": [
@@ -12329,6 +12242,7 @@
                           "ParticleSizeSand": null,
                           "ParticleSizeSilt": null,
                           "Rocks": null,
+                          "Texture": null,
                           "BD": [
                             1.42,
                             1.45,
@@ -12407,6 +12321,7 @@
                           "SATMetadata": null,
                           "KSMetadata": null,
                           "RocksMetadata": null,
+                          "TextureMetadata": null,
                           "ParticleSizeSandMetadata": null,
                           "ParticleSizeSiltMetadata": null,
                           "ParticleSizeClayMetadata": null,
@@ -12758,7 +12673,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Maize;\r\n        [Link] Soil Soil;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Climate;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Fertiliser Fertiliser;\r\n        [Link] private Summary Summary;\r\n        [Link] private Plant Maize;\r\n        [Link] private Soil Soil;\r\n        private Accumulator accumulatedRain;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set; }\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set; }\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set; }\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set; }\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set; }\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if ((DateUtilities.WithinDates(StartDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true &&\r\n                MathUtilities.Sum(waterBalance.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain) ||\r\n               (DateUtilities.WithinDates(EndDate, Clock.Today, EndDate) &&\r\n                Maize.IsAlive != true))\r\n            {\r\n                Maize.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "StartDate",
@@ -12887,6 +12802,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "15043_-91905.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "15043_-91905",
@@ -12912,6 +12828,7 @@
                                   "Latitude": 15.125,
                                   "Longitude": -91.875,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -12942,8 +12859,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -13034,6 +12951,7 @@
                                         25.1
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         0.968,
                                         1.049,
@@ -13113,6 +13031,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -14453,7 +14372,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -14645,7 +14563,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -14673,6 +14591,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "15000_-91950.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "15000_-91950",
@@ -14698,6 +14617,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -91.875,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -14728,8 +14648,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -14820,6 +14740,7 @@
                                         28.8
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         0.972,
                                         1.069,
@@ -14899,6 +14820,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -16239,7 +16161,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -16431,7 +16352,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -16459,6 +16380,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14950_-92000.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14950_-92000",
@@ -16484,6 +16406,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -16514,8 +16437,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -16606,6 +16529,7 @@
                                         23.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -16685,6 +16609,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -18025,7 +17950,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -18217,7 +18141,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -18245,6 +18169,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14900_-92050.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14900_-92050",
@@ -18270,6 +18195,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -18300,8 +18226,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -18392,6 +18318,7 @@
                                         23.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -18471,6 +18398,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -19811,7 +19739,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -20003,7 +19930,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -20031,6 +19958,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14850_-92100.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14850_-92100",
@@ -20056,6 +19984,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -20086,8 +20015,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -20178,6 +20107,7 @@
                                         23.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -20257,6 +20187,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -21597,7 +21528,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -21789,7 +21719,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -21817,6 +21747,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14800_-92150.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14800_-92150",
@@ -21842,6 +21773,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -21872,8 +21804,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -21964,6 +21896,7 @@
                                         23.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -22043,6 +21976,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -23383,7 +23317,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -23575,7 +23508,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -23603,6 +23536,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14750_-92200.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14750_-92200",
@@ -23628,6 +23562,7 @@
                                   "Latitude": 14.875,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -23658,8 +23593,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -23750,6 +23685,7 @@
                                         23.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.222,
                                         1.256,
@@ -23829,6 +23765,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -25169,7 +25106,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -25361,7 +25297,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -25389,6 +25325,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "14700_-92250.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "14700_-92250",
@@ -25414,6 +25351,7 @@
                                   "Latitude": 14.625,
                                   "Longitude": -92.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -25444,8 +25382,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -25536,6 +25474,7 @@
                                         30.0
                                       ],
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.194,
                                         1.235,
@@ -25615,6 +25554,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -26955,7 +26895,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -27147,7 +27086,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -27207,6 +27146,7 @@
                     },
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Guadeloupe.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
@@ -27250,8 +27190,8 @@
                       "Children": [
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -27361,6 +27301,7 @@
                           "Latitude": -1.375,
                           "Longitude": 29.625,
                           "LocationAccuracy": "+- 250 m",
+                          "YearOfSampling": null,
                           "DataSource": "ISRIC SoilGrids",
                           "Comments": "",
                           "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -27391,8 +27332,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -27461,6 +27402,7 @@
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
                               "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 0.868,
                                 0.954,
@@ -27540,6 +27482,7 @@
                               "SATMetadata": null,
                               "KSMetadata": null,
                               "RocksMetadata": null,
+                              "TextureMetadata": null,
                               "ParticleSizeSandMetadata": null,
                               "ParticleSizeSiltMetadata": null,
                               "ParticleSizeClayMetadata": null,
@@ -28880,7 +28823,6 @@
                               "CN2Bare": 73.0,
                               "CNRed": 20.0,
                               "CNCov": 0.0,
-                              "Slope": "NaN",
                               "DischargeWidth": "NaN",
                               "CatchmentArea": "NaN",
                               "Thickness": [
@@ -29072,7 +29014,7 @@
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -29148,6 +29090,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1400_29550.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1400_29550",
@@ -29173,6 +29116,7 @@
                                   "Latitude": -1.375,
                                   "Longitude": 29.625,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -29203,8 +29147,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -29273,6 +29217,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         0.868,
                                         0.954,
@@ -29352,6 +29297,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -30739,7 +30685,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -30931,7 +30876,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -30959,6 +30904,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1500_29600.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1500_29600",
@@ -30984,6 +30930,7 @@
                                   "Latitude": -1.625,
                                   "Longitude": 29.625,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -31014,8 +30961,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -31084,6 +31031,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.098,
                                         1.188,
@@ -31163,6 +31111,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -32550,7 +32499,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -32742,7 +32690,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -32770,6 +32718,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1600_29700.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1600_29700",
@@ -32795,6 +32744,7 @@
                                   "Latitude": -1.625,
                                   "Longitude": 29.625,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -32825,8 +32775,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -32895,6 +32845,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.098,
                                         1.188,
@@ -32974,6 +32925,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -34361,7 +34313,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -34553,7 +34504,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -34581,6 +34532,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1700_29800.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1700_29800",
@@ -34606,6 +34558,7 @@
                                   "Latitude": -1.625,
                                   "Longitude": 29.875,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -34636,8 +34589,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -34706,6 +34659,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         0.957,
                                         1.033,
@@ -34785,6 +34739,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -36172,7 +36127,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -36364,7 +36318,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -36392,6 +36346,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1800_29900.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1800_29900",
@@ -36417,6 +36372,7 @@
                                   "Latitude": -1.875,
                                   "Longitude": 29.875,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -36447,8 +36403,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -36517,6 +36473,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.219,
                                         1.29,
@@ -36596,6 +36553,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -37983,7 +37941,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -38175,7 +38132,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -38203,6 +38160,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-1900_30000.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-1900_30000",
@@ -38228,6 +38186,7 @@
                                   "Latitude": -1.875,
                                   "Longitude": 29.875,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -38258,8 +38217,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -38328,6 +38287,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.219,
                                         1.29,
@@ -38407,6 +38367,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -39794,7 +39755,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -39986,7 +39946,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -40014,6 +39974,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-2000_30100.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2000_30100",
@@ -40039,6 +40000,7 @@
                                   "Latitude": -2.125,
                                   "Longitude": 30.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -40069,8 +40031,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -40139,6 +40101,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.303,
                                         1.356,
@@ -40218,6 +40181,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -41605,7 +41569,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -41797,7 +41760,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -41825,6 +41788,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-2100_30200.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2100_30200",
@@ -41850,6 +41814,7 @@
                                   "Latitude": -2.125,
                                   "Longitude": 30.125,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -41880,8 +41845,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -41950,6 +41915,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.303,
                                         1.356,
@@ -42029,6 +41995,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -43416,7 +43383,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -43608,7 +43574,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -43636,6 +43602,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-2200_30300.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2200_30300",
@@ -43661,6 +43628,7 @@
                                   "Latitude": -2.125,
                                   "Longitude": 30.375,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -43691,8 +43659,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -43761,6 +43729,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.328,
                                         1.373,
@@ -43840,6 +43809,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -45227,7 +45197,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -45419,7 +45388,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -45447,6 +45416,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Climate.Weather, Models",
+                                  "ConstantsFile": null,
                                   "FileName": "-2300_30400.met",
                                   "ExcelWorkSheetName": "",
                                   "Name": "-2300_30400",
@@ -45472,6 +45442,7 @@
                                   "Latitude": -2.375,
                                   "Longitude": 30.375,
                                   "LocationAccuracy": "+- 250 m",
+                                  "YearOfSampling": null,
                                   "DataSource": "ISRIC SoilGrids",
                                   "Comments": "",
                                   "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -45502,8 +45473,8 @@
                                         300.0,
                                         300.0
                                       ],
-                                      "NO3N": null,
-                                      "NH4N": null,
+                                      "NO3": null,
+                                      "NH4": null,
                                       "SW": null,
                                       "OC": null,
                                       "EC": null,
@@ -45572,6 +45543,7 @@
                                       "ParticleSizeSand": null,
                                       "ParticleSizeSilt": null,
                                       "Rocks": null,
+                                      "Texture": null,
                                       "BD": [
                                         1.148,
                                         1.258,
@@ -45651,6 +45623,7 @@
                                       "SATMetadata": null,
                                       "KSMetadata": null,
                                       "RocksMetadata": null,
+                                      "TextureMetadata": null,
                                       "ParticleSizeSandMetadata": null,
                                       "ParticleSizeSiltMetadata": null,
                                       "ParticleSizeClayMetadata": null,
@@ -47038,7 +47011,6 @@
                                       "CN2Bare": 73.0,
                                       "CNRed": 20.0,
                                       "CNCov": 0.0,
-                                      "Slope": "NaN",
                                       "DischargeWidth": "NaN",
                                       "CatchmentArea": "NaN",
                                       "Thickness": [
@@ -47230,7 +47202,7 @@
                                     },
                                     {
                                       "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                      "Name": "CERESSoilTemperature",
+                                      "Name": "Temperature",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -47290,6 +47262,7 @@
                     },
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Guadeloupe.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
@@ -47333,8 +47306,8 @@
                       "Children": [
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -47444,6 +47417,7 @@
                           "Latitude": -1.375,
                           "Longitude": 29.625,
                           "LocationAccuracy": "+- 250 m",
+                          "YearOfSampling": null,
                           "DataSource": "ISRIC SoilGrids",
                           "Comments": "",
                           "Name": "Synthetic Soil Derived from ISRIC SoilGrids",
@@ -47474,8 +47448,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -47544,6 +47518,7 @@
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
                               "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 0.868,
                                 0.954,
@@ -47623,6 +47598,7 @@
                               "SATMetadata": null,
                               "KSMetadata": null,
                               "RocksMetadata": null,
+                              "TextureMetadata": null,
                               "ParticleSizeSandMetadata": null,
                               "ParticleSizeSiltMetadata": null,
                               "ParticleSizeClayMetadata": null,
@@ -48963,7 +48939,6 @@
                               "CN2Bare": 73.0,
                               "CNRed": 20.0,
                               "CNCov": 0.0,
-                              "Slope": "NaN",
                               "DischargeWidth": "NaN",
                               "CatchmentArea": "NaN",
                               "Thickness": [
@@ -49155,7 +49130,7 @@
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -50456,6 +50431,7 @@
                     },
                     {
                       "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "Makoka.met",
                       "ExcelWorkSheetName": "",
                       "Name": "Weather",
@@ -50497,6 +50473,7 @@
                           "Latitude": -15.25,
                           "Longitude": 37.25,
                           "LocationAccuracy": null,
+                          "YearOfSampling": null,
                           "DataSource": null,
                           "Comments": null,
                           "Name": "Makoka Soil",
@@ -50535,6 +50512,7 @@
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
                               "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 1.42,
                                 1.45,
@@ -50613,6 +50591,7 @@
                               "SATMetadata": null,
                               "KSMetadata": null,
                               "RocksMetadata": null,
+                              "TextureMetadata": null,
                               "ParticleSizeSandMetadata": null,
                               "ParticleSizeSiltMetadata": null,
                               "ParticleSizeClayMetadata": null,
@@ -50743,7 +50722,6 @@
                               "CN2Bare": 65.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": "NaN",
                               "DischargeWidth": "NaN",
                               "CatchmentArea": "NaN",
                               "Thickness": [
@@ -50961,8 +50939,8 @@
                                 200.0,
                                 1000.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.18,
                                 0.18,
@@ -50992,7 +50970,7 @@
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -51040,7 +51018,7 @@
                             "[Soil].SoilWater.SW[2] as SW30cm",
                             "[Soil].SoilWater.SW[3] as SW50cm",
                             "[Soil].SoilWater.SW[4] as SW70cm",
-                            "[Soil].FInert[1] as FInert10cm",
+                            "[Soil].Organic.FInert[1] as FInert10cm",
                             "[Soil].SoilNitrogen.OC[1] as SOC10cm",
                             "[Soil].SoilNitrogen.OC[2] as SOC30cm",
                             "[Soil].SoilNitrogen.OC[3] as SOC50cm",
@@ -51059,7 +51037,7 @@
                             "[MicroClimate].peta",
                             "[MicroClimate].petr",
                             "[Soil].SoilWater.Eo",
-                            "[Soil].FBiom[1] as FBiom10cm",
+                            "[Soil].Organic.FBiom[1] as FBiom10cm",
                             "[Soil].SoilWater.SW[1] as SurfaceSW",
                             "[SurfaceOrganicMatter].Wt",
                             "sum([Soil].SoilNitrogen.FOMN) as FOMN",
@@ -51126,8 +51104,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
