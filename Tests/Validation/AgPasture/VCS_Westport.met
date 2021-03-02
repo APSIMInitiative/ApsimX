@@ -33,7 +33,7 @@ annual_average_pet = 794.5           !Average annual PET (mm/yr)
 average_windspeed = 3.9              !Average windspeed (m/s)
 
     Location          xDate           year            day           rain           mint           maxt           avgt           radn           wind           evap             vp             rh          rhmin          rhmax
-          ()             ()             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
+          ()   (dd/MM/yyyy)             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
 VCS_Westport     01/01/1978           1978              1            0.0            6.5           18.3           12.4           28.8            4.0            5.9           11.1           87.8           52.8          100.0
 VCS_Westport     02/01/1978           1978              2            0.0            8.4           17.7           13.1           12.8            4.0            2.8           13.3           89.1           65.7          100.0
 VCS_Westport     03/01/1978           1978              3            0.0            9.6           18.9           14.2           27.4            4.0            6.1           12.4           74.1           56.8          100.0

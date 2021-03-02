@@ -4,6 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -32,7 +33,7 @@ namespace Models.Functions
        
         private double AccumulatedValue = 0;
 
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         ///Public Properties
         /// -----------------------------------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ namespace Models.Functions
         private void PostPhenology(object sender, EventArgs e)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction));
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (phenology.Between(startStageIndex, endStageIndex))
             {
@@ -123,7 +124,7 @@ namespace Models.Functions
             AccumulatedValue -= FractionRemovedOnCut * AccumulatedValue;
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when harvest.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Harvesting")]
@@ -131,7 +132,7 @@ namespace Models.Functions
         {
             AccumulatedValue -= FractionRemovedOnHarvest * AccumulatedValue;
         }
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when Graze.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Grazing")]
@@ -140,7 +141,7 @@ namespace Models.Functions
             AccumulatedValue -= FractionRemovedOnGraze * AccumulatedValue;
         }
 
-        /// <summary>Called when [cut].</summary>
+        /// <summary>Called when winter pruning.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Pruning")]
@@ -172,7 +173,7 @@ namespace Models.Functions
                                                             + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
 
                 // write children.
-                foreach (IModel child in Apsim.Children(this, typeof(IModel)))
+                foreach (IModel child in this.FindAllChildren<IModel>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
             }
         }

@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 56,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-05",
   "Name": "Simulations",
   "Children": [
     {
@@ -12,8 +13,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "observed.xlsx"
+          ],
           "SheetNames": [
             "ObsCrop",
             "ObsSoil"
@@ -65,463 +67,472 @@
           "Name": "Factors",
           "Children": [
             {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[operations]",
-              "Name": "Rotation",
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
               "Children": [
                 {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[operations]",
+                  "Name": "Rotation",
+                  "Children": [
                     {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1978-07-18",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1978-07-18",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1979-06-21",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1980-07-16",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1981-07-16",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1982-06-07",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1983-06-04",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1984-06-26",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1985-06-11",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1986-07-21",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1987-06-02",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1988-06-23",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1989-06-06",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1990-07-23",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1991-06-26",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1992-06-01",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1993-06-24",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1994-06-24",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1995-06-24",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1996-06-23",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "WW",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1979-06-21",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1980-07-16",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1981-07-16",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1982-06-07",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1983-06-04",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1984-06-26",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1985-06-11",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1986-07-21",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1987-06-02",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1988-06-23",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1989-06-06",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1990-07-23",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1991-06-26",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1992-06-01",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1993-06-24",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1994-06-24",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1995-06-24",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1996-06-23",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1979-06-21",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1981-07-16",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1983-06-04",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1985-06-11",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1987-06-02",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1989-06-06",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1991-06-26",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1993-06-24",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1995-06-24",
+                          "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "WF",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "Name": "WW",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[stubbleoperations]",
+                  "Name": "Stubble",
+                  "Children": [
                     {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1979-06-21",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1978-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1979-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1980-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1981-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1982-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1983-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1984-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1985-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1986-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1987-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1988-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1989-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1990-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1991-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1992-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1993-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1994-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1995-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "Burnt",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1981-07-16",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1978-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1979-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1980-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1981-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1982-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1983-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1984-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1985-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1986-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1987-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1988-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1989-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1990-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1991-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1992-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1993-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1994-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "1995-12-31",
+                          "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "Incorporated",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1983-06-04",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1985-06-11",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1987-06-02",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1989-06-06",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1991-06-26",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1993-06-24",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1995-06-24",
-                      "Action": " [Wheat].Sow(cultivar:hartog, depth:30, population:100, rowSpacing:300);",
-                      "Enabled": true
+                      "$type": "Models.Operations, Models",
+                      "Operation": null,
+                      "Name": "Retained",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
-                  "Name": "WF",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[SowingFertiliser].Script.Amount = 0,40,80",
+                  "Name": "N",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[stubbleoperations]",
-              "Name": "Stubble",
-              "Children": [
-                {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1978-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1979-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1980-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1981-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1982-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1983-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1984-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1985-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1986-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1987-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1988-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1989-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1990-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1991-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1992-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1993-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1994-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1995-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 0)",
-                      "Enabled": true
-                    }
-                  ],
-                  "Name": "Burnt",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "Operation": [
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1978-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1979-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1980-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1981-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1982-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1983-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1984-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1985-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1986-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1987-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1988-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1989-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1990-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1991-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1992-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1993-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1994-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    },
-                    {
-                      "$type": "Models.Operation, Models",
-                      "Date": "1995-12-31",
-                      "Action": " [SurfaceOrganicMatter].Incorporate(fraction: 0.90, depth: 100)",
-                      "Enabled": true
-                    }
-                  ],
-                  "Name": "Incorporated",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Operations, Models",
-                  "Operation": null,
-                  "Name": "Retained",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Factorial.Factor, Models",
-              "Specification": "[SowingFertiliser].Script.Amount = 0,40,80",
-              "Name": "N",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -533,7 +544,6 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
-          "Descriptors": null,
           "Name": "TarleeBaseSimulation",
           "Children": [
             {
@@ -548,8 +558,8 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "StartDate": "1978-01-01T00:00:00",
-              "EndDate": "1996-12-31T00:00:00",
+              "Start": "1978-01-01T00:00:00",
+              "End": "1996-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -571,6 +581,8 @@
               "$type": "Models.Core.Zone, Models",
               "Area": 1.0,
               "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
               "Name": "Field",
               "Children": [
                 {
@@ -710,7 +722,6 @@
                   "$type": "Models.Report.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Soil].SoilNitrogen.oc[1:3]",
                     "[Soil].Nutrient.TotalC[1] as TOC0_10cm",
                     "[Soil].Nutrient.TotalC[2] as TOC10_30cm",
                     "[Soil].Nutrient.TotalC[3] as TOC30_60cm",
@@ -744,13 +755,14 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "Canopies": [],
                   "InitialResidueName": "wheat",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 1000.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 80.0,
-                  "FractionFaecesAdded": 0.5,
+                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "stubble",
                   "IncludeInDocumentation": true,
@@ -760,6 +772,7 @@
                 {
                   "$type": "Models.PMF.Plant, Models",
                   "CropType": "Wheat",
+                  "IsAlive": false,
                   "IsEnding": false,
                   "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
@@ -776,6 +789,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.23,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -800,7 +814,6 @@
                 },
                 {
                   "$type": "Models.Soils.Soil, Models",
-                  "Weirdo": null,
                   "RecordNumber": 450,
                   "ASCOrder": "Sodosol",
                   "ASCSubOrder": "Red",
@@ -821,7 +834,14 @@
                   "Name": "Soil",
                   "Children": [
                     {
-                      "$type": "Models.Soils.Water, Models",
+                      "$type": "Models.Soils.Physical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-125"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -829,6 +849,9 @@
                         300.0,
                         350.0
                       ],
+                      "ParticleSizeClay": null,
+                      "ParticleSizeSand": null,
+                      "ParticleSizeSilt": null,
                       "BD": [
                         1.54,
                         1.41,
@@ -871,7 +894,7 @@
                       "DULMetadata": null,
                       "SATMetadata": null,
                       "KSMetadata": null,
-                      "Name": "Water",
+                      "Name": "Physical",
                       "Children": [
                         {
                           "$type": "Models.Soils.SoilCrop, Models",
@@ -935,6 +958,13 @@
                         300.0,
                         350.0
                       ],
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-125"
+                      ],
                       "SWCON": [
                         0.5,
                         0.5,
@@ -943,7 +973,7 @@
                         0.5
                       ],
                       "KLAT": null,
-                      "ResidueInterception": 0.0,
+                      "PrecipitationInterception": 0.0,
                       "Name": "SoilWater",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -951,17 +981,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilOrganicMatter, Models",
-                      "RootCN": 40.0,
-                      "EnrACoeff": 7.4,
-                      "EnrBCoeff": 0.2,
-                      "Thickness": [
-                        100.0,
-                        200.0,
-                        300.0,
-                        300.0,
-                        350.0
-                      ],
+                      "$type": "Models.Soils.Organic, Models",
                       "Depth": [
                         "0-10",
                         "10-30",
@@ -969,15 +989,22 @@
                         "60-90",
                         "90-125"
                       ],
-                      "OC": [
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        100.0,
+                        200.0,
+                        300.0,
+                        300.0,
+                        350.0
+                      ],
+                      "Carbon": [
                         0.96,
                         0.72,
                         0.38,
                         0.12,
                         0.12
                       ],
-                      "OCMetadata": null,
-                      "SoilCN": [
+                      "SoilCNRatio": [
                         12.0,
                         12.0,
                         12.0,
@@ -998,22 +1025,28 @@
                         0.99,
                         0.99
                       ],
-                      "RootWt": [
+                      "FOM": [
                         2347.554137155329,
                         1452.6275114375128,
                         707.06971826172889,
                         344.16778048487805,
                         148.58085266055133
                       ],
-                      "OCUnits": 0,
-                      "Name": "SoilOrganicMatter",
+                      "Name": "Organic",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.Analysis, Models",
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Depth": [
+                        "0-10",
+                        "10-30",
+                        "30-60",
+                        "60-90",
+                        "90-125"
+                      ],
                       "Thickness": [
                         100.0,
                         200.0,
@@ -1021,14 +1054,20 @@
                         300.0,
                         350.0
                       ],
-                      "Rocks": null,
-                      "RocksMetadata": null,
-                      "Texture": null,
-                      "TextureMetadata": null,
-                      "MunsellColour": null,
-                      "MunsellMetadata": null,
-                      "EC": null,
-                      "ECMetadata": null,
+                      "NO3N": [
+                        0.35637918745545266,
+                        0.35637918745545255,
+                        0.35637918745545261,
+                        0.35637918745545261,
+                        0.35637918745545272
+                      ],
+                      "NH4N": [
+                        0.035637918745545262,
+                        0.035637918745545255,
+                        0.035637918745545262,
+                        0.035637918745545276,
+                        0.035637918745545248
+                      ],
                       "PH": [
                         7.0,
                         7.9,
@@ -1036,36 +1075,10 @@
                         9.2,
                         9.2
                       ],
-                      "PHMetadata": null,
                       "CL": null,
-                      "CLMetadata": null,
-                      "Boron": null,
-                      "BoronMetadata": null,
-                      "CEC": null,
-                      "CECMetadata": null,
-                      "Ca": null,
-                      "CaMetadata": null,
-                      "Mg": null,
-                      "MgMetadata": null,
-                      "Na": null,
-                      "NaMetadata": null,
-                      "K": null,
-                      "KMetadata": null,
+                      "EC": null,
                       "ESP": null,
-                      "ESPMetadata": null,
-                      "Mn": null,
-                      "MnMetadata": null,
-                      "Al": null,
-                      "AlMetadata": null,
-                      "ParticleSizeSand": null,
-                      "ParticleSizeSandMetadata": null,
-                      "ParticleSizeSilt": null,
-                      "ParticleSizeSiltMetadata": null,
-                      "ParticleSizeClay": null,
-                      "ParticleSizeClayMetadata": null,
-                      "PHUnits": 0,
-                      "BoronUnits": 0,
-                      "Name": "Analysis",
+                      "Name": "Chemical",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1085,23 +1098,20 @@
                     },
                     {
                       "$type": "Models.Soils.Sample, Models",
+                      "Depth": [
+                        "0-180"
+                      ],
                       "Thickness": [
                         1800.0
                       ],
-                      "NO3": [
-                        10.0
-                      ],
-                      "NH4": [
-                        1.0
-                      ],
+                      "NO3N": null,
+                      "NH4N": null,
                       "SW": null,
                       "OC": null,
                       "EC": null,
                       "CL": null,
                       "ESP": null,
                       "PH": null,
-                      "NO3Units": 1,
-                      "NH4Units": 1,
                       "SWUnits": 0,
                       "OCUnits": 0,
                       "PHUnits": 0,
@@ -1127,40 +1137,40 @@
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Inert",
-                            "Location": "65, 426",
-                            "Colour": "0, 158, 115",
+                            "Location": "656, 254",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "SurfaceResidue",
-                            "Location": "345, 45",
-                            "Colour": "0, 158, 115",
+                            "Location": "566, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMLignin",
-                            "Location": "265, 151",
-                            "Colour": "0, 158, 115",
+                            "Location": "261, 69",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCellulose",
-                            "Location": "444, 154",
-                            "Colour": "0, 158, 115",
+                            "Location": "397, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "FOMCarbohydrate",
-                            "Location": "50, 200",
-                            "Colour": "0, 158, 115",
+                            "Location": "123, 70",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1168,7 +1178,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Microbial",
                             "Location": "218, 299",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1176,7 +1186,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Humic",
                             "Location": "458, 293",
-                            "Colour": "0, 158, 115",
+                            "Colour": "0, 114, 178",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1184,7 +1194,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Urea",
                             "Location": "529, 419",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1192,7 +1202,7 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NO3",
                             "Location": "185, 435",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
@@ -1200,33 +1210,17 @@
                             "$type": "Models.Graph.Node, Models",
                             "Name": "NH4",
                             "Location": "357, 422",
-                            "Colour": "86, 180, 233",
+                            "Colour": "0, 158, 115",
                             "OutlineColour": "Black",
                             "Transparent": false
                           },
                           {
                             "$type": "Models.Graph.Node, Models",
                             "Name": "Atmosphere",
-                            "Location": "63, 290",
+                            "Location": "48, 338",
                             "Colour": "White",
                             "OutlineColour": "White",
                             "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "702, 339",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "675, 205",
-                            "Colour": "86, 180, 233",
-                            "OutlineColour": "Black",
-                            "Transparent": false
                           }
                         ],
                         "Arcs": [
@@ -1234,7 +1228,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "415, 173",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1242,7 +1236,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "SurfaceResidue",
                             "DestinationName": "Humic",
-                            "Location": "349, 151",
+                            "Location": "499, 172",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1258,7 +1252,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMLignin",
                             "DestinationName": "Humic",
-                            "Location": "0, 0",
+                            "Location": "255, 105",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1282,7 +1276,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "FOMCarbohydrate",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "141, 131",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1298,7 +1292,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Microbial",
-                            "Location": "0, 0",
+                            "Location": "335, 301",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1306,7 +1300,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Microbial",
                             "DestinationName": "Humic",
-                            "Location": "321, 241",
+                            "Location": "319, 278",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1314,7 +1308,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "Humic",
                             "DestinationName": "Microbial",
-                            "Location": "319, 267",
+                            "Location": "334, 340",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1330,7 +1324,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NO3",
                             "DestinationName": "Atmosphere",
-                            "Location": "0, 0",
+                            "Location": "1, 319",
                             "Colour": "Black",
                             "Text": null
                           },
@@ -1338,7 +1332,7 @@
                             "$type": "Models.Graph.Arc, Models",
                             "SourceName": "NH4",
                             "DestinationName": "NO3",
-                            "Location": "0, 0",
+                            "Location": "243, 409",
                             "Colour": "Black",
                             "Text": null
                           }
@@ -1432,7 +1426,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Yield",
               "Children": [
                 {
@@ -1452,8 +1448,8 @@
                   "TableName": "HarvestReport",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "Wheat.Grain.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1482,8 +1478,8 @@
                   "TableName": "ObsCrop",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "Wheat.Grain.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1528,7 +1524,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "Obs vs Pre Yield",
               "Children": [
                 {
@@ -1548,8 +1546,8 @@
                   "TableName": "PredictedObserved",
                   "XFieldName": "Observed.Wheat.Grain.Wt",
                   "YFieldName": "Predicted.Wheat.Grain.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1606,7 +1604,9 @@
                 }
               ],
               "LegendPosition": 0,
+              "LegendOrientation": 0,
               "DisabledSeries": [],
+              "LegendOutsideGraph": false,
               "Name": "GrainSize",
               "Children": [
                 {
@@ -1626,8 +1626,8 @@
                   "TableName": "HarvestReport",
                   "XFieldName": "Clock.Today.Year",
                   "YFieldName": "Wheat.Grain.Size",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1682,7 +1682,9 @@
                 }
               ],
               "LegendPosition": 2,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "TOC 30cm",
               "Children": [
                 {
@@ -1702,8 +1704,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC0_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1732,8 +1734,8 @@
                   "TableName": "ObsSoil",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC0_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1778,7 +1780,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Obs vs Pre TOC 30cm",
               "Children": [
                 {
@@ -1798,8 +1802,8 @@
                   "TableName": "PredictedObservedSoil",
                   "XFieldName": "Observed.TOC0_30cm",
                   "YFieldName": "Predicted.TOC0_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1856,7 +1860,9 @@
                 }
               ],
               "LegendPosition": 2,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "TOC 0 to 10cm",
               "Children": [
                 {
@@ -1876,8 +1882,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC0_10cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1906,8 +1912,8 @@
                   "TableName": "ObsSoil",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC0_10cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -1952,7 +1958,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Obs vs Pre TOC 10cm",
               "Children": [
                 {
@@ -1972,8 +1980,8 @@
                   "TableName": "PredictedObservedSoil",
                   "XFieldName": "Observed.TOC0_10cm",
                   "YFieldName": "Predicted.TOC0_10cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2030,7 +2038,9 @@
                 }
               ],
               "LegendPosition": 2,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "TOC 10 to 30cm",
               "Children": [
                 {
@@ -2050,8 +2060,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC10_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2080,8 +2090,8 @@
                   "TableName": "ObsSoil",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC10_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2126,7 +2136,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Obs vs Pre TOC 10 to 30 cm",
               "Children": [
                 {
@@ -2146,8 +2158,8 @@
                   "TableName": "PredictedObservedSoil",
                   "XFieldName": "Observed.TOC10_30cm",
                   "YFieldName": "Predicted.TOC10_30cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2204,7 +2216,9 @@
                 }
               ],
               "LegendPosition": 2,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "TOC 30 to 60cm",
               "Children": [
                 {
@@ -2224,8 +2238,8 @@
                   "TableName": "Report",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC30_60cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2254,8 +2268,8 @@
                   "TableName": "ObsSoil",
                   "XFieldName": "Clock.Today",
                   "YFieldName": "TOC30_60cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,
@@ -2300,7 +2314,9 @@
                 }
               ],
               "LegendPosition": 3,
+              "LegendOrientation": 0,
               "DisabledSeries": null,
+              "LegendOutsideGraph": false,
               "Name": "Obs vs Pre TOC 30 to 60cm",
               "Children": [
                 {
@@ -2320,8 +2336,8 @@
                   "TableName": "PredictedObservedSoil",
                   "XFieldName": "Observed.TOC30_60cm",
                   "YFieldName": "Predicted.TOC30_60cm",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
                   "ShowInLegend": true,
                   "IncludeSeriesNameInLegend": false,
                   "Cumulative": false,

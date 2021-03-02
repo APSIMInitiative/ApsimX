@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Activities;
@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantCohort.htm")]
+    [HelpUri(@"Content/Features/Resources/Ruminants/RuminantTypeCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
         [Link]
@@ -90,25 +90,42 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals using the Cohort parameterisations.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
+        {
+            return CreateIndividuals(Convert.ToInt32(this.Number));
+        }
+
+        /// <summary>
+        /// Create the individual ruminant animals using the Cohort parameterisations.
+        /// </summary>
+        /// <param name="number">The number of individuals to create</param>
+        /// <returns>List of ruminants</returns>
+        public List<Ruminant> CreateIndividuals(int number)
         {
             List<Ruminant> individuals = new List<Ruminant>();
 
-            RuminantType parent = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
-
-            // get Ruminant Herd resource for unique ids
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-
-            if (Number > 0)
+            if (number > 0)
             {
-                for (int i = 1; i <= Number; i++)
+                RuminantType parent = FindAncestor<RuminantType>();
+
+                // get Ruminant Herd resource for unique ids
+                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+
+                for (int i = 1; i <= number; i++)
                 {
-                    double u1 = ZoneCLEM.RandomGenerator.NextDouble();
-                    double u2 = ZoneCLEM.RandomGenerator.NextDouble();
-                    double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                 Math.Sin(2.0 * Math.PI * u2);
-                    double weight = Weight + WeightSD * randStdNormal;
+                    double weight = 0;
+                    if(Weight > 0)
+                    {
+                        // avoid accidental small weight if SD provided but weight is 0
+                        // if weight is 0 then the normalised weight will be applied in Ruminant constructor.
+                        double u1 = RandomNumberGenerator.Generator.NextDouble();
+                        double u2 = RandomNumberGenerator.Generator.NextDouble();
+                        double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                     Math.Sin(2.0 * Math.PI * u2);
+                        weight = Weight + WeightSD * randStdNormal;
+                    }
+
                     object ruminantBase;
                     if (this.Gender == Sex.Male)
                     {
@@ -131,21 +148,21 @@ namespace Models.CLEM.Resources
 
                     if (Sire)
                     {
-                        if(this.Gender == Sex.Male)
+                        if (this.Gender == Sex.Male)
                         {
                             RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                            ruminantMale.BreedingSire = true;
+                            ruminantMale.IsSire = true;
                         }
                         else
                         {
-                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r="+parent.Name+"].[r="+this.Parent.Name+"].[r="+this.Name+"]");
+                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]");
                         }
                     }
 
                     // if weight not provided use normalised weight
                     ruminant.PreviousWeight = ruminant.Weight;
 
-                    if(this.Gender == Sex.Female)
+                    if (this.Gender == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
                         ruminantFemale.DryBreeder = true;
@@ -195,13 +212,13 @@ namespace Models.CLEM.Resources
                     html += "\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>";
                 }
 
-                RuminantType rumtype = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
+                RuminantType rumtype = FindAncestor<RuminantType>();
                 Ruminant newInd = null;
                 string normWtString = "Unavailable";
 
                 if (rumtype != null)
                 {
-                    newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
+                    newInd = new Ruminant(this.Age, this.Gender, 0, FindAncestor<RuminantType>());
                     normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                 }
 
@@ -291,14 +308,14 @@ namespace Models.CLEM.Resources
 
             if (formatForParentControl)
             {
-                RuminantType rumtype = Apsim.Parent(this, typeof(RuminantType)) as RuminantType;
+                RuminantType rumtype = FindAncestor<RuminantType>();
                 Ruminant newInd = null;
                 string normWtString = "Unavailable";
                 double normalisedWt = 0;
 
                 if (rumtype != null)
                 {
-                    newInd = new Ruminant(this.Age, this.Gender, 0, Apsim.Parent(this, typeof(RuminantType)) as RuminantType);
+                    newInd = new Ruminant(this.Age, this.Gender, 0, FindAncestor<RuminantType>());
                     normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                     normalisedWt = newInd.NormalisedAnimalWeight;
                     if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)

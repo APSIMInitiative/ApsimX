@@ -16,7 +16,6 @@
     using System.IO;
     using System.Linq;
     using System.Threading;
-    using System.Xml.Serialization;
     using Utilities;
 
     /// <summary>
@@ -39,12 +38,15 @@
         private int _numPaths = 1000;
 
         /// <summary>Parameter values coming back from R</summary>
+        [JsonIgnore]
         public DataTable ParameterValues { get; set; }
 
         /// <summary>X1 values coming back from R</summary>
+        [JsonIgnore]
         public DataTable X1 { get; set; }
 
         /// <summary>X2 values coming back from R</summary>
+        [JsonIgnore]
         public DataTable X2 { get; set; }
 
         /// <summary>The number of paths to run</summary>
@@ -83,7 +85,7 @@
         /// <summary>
         /// Gets or sets the table of values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<DataTable> Tables
         {
             get
@@ -148,7 +150,7 @@
         /// <summary>Gets a list of simulation descriptions.</summary>
         public List<SimulationDescription> GenerateSimulationDescriptions()
         {
-            var baseSimulation = Apsim.Child(this, typeof(Simulation)) as Simulation;
+            var baseSimulation = this.FindChild<Simulation>();
 
             // Calculate all combinations.
             CalculateFactors();
@@ -189,8 +191,8 @@
             r.InstallPackage("sensitivity");
             if (ParametersHaveChanged)
             {
-                allCombinations.Clear();
-                ParameterValues.Clear();
+                allCombinations?.Clear();
+                ParameterValues?.Clear();
             }
         }
 
@@ -201,7 +203,7 @@
         {
             if (allCombinations.Count == 0)
             {
-                if (ParameterValues.Rows.Count == 0)
+                if (ParameterValues == null || ParameterValues.Rows.Count == 0)
                 {
                     // Write a script to get random numbers from R.
                     string script = string.Format
@@ -277,13 +279,16 @@
         {
             get
             {
-                return Apsim.Child(this, typeof(Simulation)) as Simulation;
+                return this.FindChild<Simulation>();
             }
         }
 
         /// <summary>Main run method for performing our calculations and storing data.</summary>
         public void Run()
         {
+            if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains("Report"))
+                return;
+
             DataTable predictedData = dataStore.Reader.GetData("Report", filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
             if (predictedData != null)
             {

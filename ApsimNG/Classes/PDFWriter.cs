@@ -5,7 +5,6 @@
     using MigraDoc.Rendering;
     using Models;
     using Models.Core;
-    using Models.Graph;
     using PdfSharp.Drawing;
     using PdfSharp.Fonts;
     using System;
@@ -13,6 +12,7 @@
     using System.Data;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using UserInterface.Classes;
     using UserInterface.Commands;
@@ -87,8 +87,7 @@
             document.DefaultPageSetup.LeftMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             document.DefaultPageSetup.TopMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
             document.DefaultPageSetup.BottomMargin = MigraDoc.DocumentObjectModel.Unit.FromCentimeter(1);
-            if (!portrait)
-                document.DefaultPageSetup.Orientation = Orientation.Landscape;
+            document.DefaultPageSetup.Orientation = portrait ? Orientation.Portrait : Orientation.Landscape;
 
             // Create a MigraDoc section.
             Section section = document.AddSection();
@@ -126,7 +125,14 @@
             xyStyle.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
 
             Style tableStyle = document.Styles.AddStyle("Table", "Normal");
-            //tableStyle.Font.Size = 8;
+            tableStyle.Font.Size = 10;
+
+            Style smallStyle = document.Styles.AddStyle("Small", "Normal");
+            smallStyle.Font.Size = 8;
+
+            Style verySmallStyle = document.Styles.AddStyle("VerySmall", "Normal");
+            verySmallStyle.Font.Size = 6;
+
         }
 
         /// <summary>Scans for citations.</summary>
@@ -242,6 +248,43 @@
                 }
             }
             while (tagsRemoved);
+
+            // Adjust heading levels so we don't have heading levels that have gaps e.g. go from 1 to 3
+            int previousHeadingLevel = 0;
+            for (int i = 0; i < tags.Count - 1; i++)
+            {
+                var thisTag = tags[i] as AutoDocumentation.Heading;
+                if (thisTag != null)
+                { 
+                    var gapInHeadingLevel = thisTag.headingLevel - previousHeadingLevel;
+                    if (gapInHeadingLevel > 1)
+                        RemoveGapInHeadingLevel(tags, i, gapInHeadingLevel - 1);
+                    previousHeadingLevel = thisTag.headingLevel;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove the gap in heading levels for a 'branch' of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="thisTag"></param>
+        /// <param name="nextTag"></param>
+        private void RemoveGapInHeadingLevel(List<AutoDocumentation.ITag> tags, int tagIndex, int deltaHeadingLevel)
+        {
+            int referenceHeadingLevel = (tags[tagIndex] as AutoDocumentation.Heading).headingLevel;
+            while (tagIndex + 1 < tags.Count)
+            {
+                var tag = tags[tagIndex] as AutoDocumentation.Heading;
+                if (tag != null)
+                {
+                    if (tag.headingLevel >= referenceHeadingLevel)
+                        tag.headingLevel -= deltaHeadingLevel;   // apply delta heading level
+                    else
+                        break;   // branch has ended so exit.
+                }
+                tagIndex++;
+            }
         }
 
         /// <summary>Creates a table of contents.</summary>
@@ -323,7 +366,20 @@
                 else if (tag is GraphPage)
                     CreateGraphPage(section, tag as GraphPage);
                 else if (tag is AutoDocumentation.NewPage)
+                {
                     section.AddPageBreak();
+                    if ((tag as AutoDocumentation.NewPage).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
+                else if (tag is AutoDocumentation.PageSetup)
+                {
+                    if ((tag as AutoDocumentation.PageSetup).Portrait)
+                        section.PageSetup.Orientation = Orientation.Portrait;
+                    else
+                        section.PageSetup.Orientation = Orientation.Landscape;
+                }
                 else if (tag is AutoDocumentation.Table)
                     CreateTable(section, tag as AutoDocumentation.Table);
                 else if (tag is Graph)
@@ -373,7 +429,11 @@
                     PresenterNameAttribute presenterName = ReflectionUtilities.GetAttribute(modelView.model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     if (viewName != null && presenterName != null)
                     {
-                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { ViewBase.MasterView }, null, null) as ViewBase;
+                        ViewBase owner = ViewBase.MasterView as ViewBase;
+                        if (viewName.ToString() == "UserInterface.Views.MapView")
+                            owner = null;
+
+                        ViewBase view = Assembly.GetExecutingAssembly().CreateInstance(viewName.ToString(), false, BindingFlags.Default, null, new object[] { owner }, null, null) as ViewBase;
                         IPresenter presenter = Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as IPresenter;
 
                         if (view != null && presenter != null)
@@ -381,21 +441,28 @@
                             explorerPresenter.ApsimXFile.Links.Resolve(presenter);
                             presenter.Attach(modelView.model, view, explorerPresenter);
 
-                            Gtk.Window popupWin = null;
-                            if (view is MapView)
-                            {
-                                popupWin = (view as MapView)?.GetPopupWin();
-                                popupWin?.SetSizeRequest(515, 500);
-                            }
-                            if (popupWin == null)
-                            {
-                                popupWin = new Gtk.Window(Gtk.WindowType.Popup);
-                                popupWin.SetSizeRequest(800, 800);
-                                popupWin.Add(view.MainWidget);
-                            }
+                            Gtk.Window popupWin = new Gtk.Window(Gtk.WindowType.Popup);
+                            popupWin.SetSizeRequest(800, 800);
+                            popupWin.Add(view.MainWidget);
+
+                            if (view is IMapView map)
+                                map.HideZoomControls();
+
                             popupWin.ShowAll();
+
                             while (Gtk.Application.EventsPending())
                                 Gtk.Application.RunIteration();
+
+                            // From MapView:
+                            // With WebKit, it appears we need to give it time to actually update the display
+                            // Really only a problem with the temporary windows used for generating documentation
+                            if (view is MapView)
+                            {
+                                var watch = new System.Diagnostics.Stopwatch();
+                                watch.Start();
+                                while (watch.ElapsedMilliseconds < 1000)
+                                    Gtk.Application.RunIteration();
+                            }
 
                             string pngFileName = (presenter as IExportable).ExportToPNG(WorkingDirectory);
                             section.AddImage(pngFileName);
@@ -468,16 +535,16 @@
             graph.Height = 250;
 
             // Create a line series.
-            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null,
-                                     Models.Graph.Axis.AxisType.Bottom, Models.Graph.Axis.AxisType.Left,
-                                     System.Drawing.Color.Blue, Models.Graph.LineType.Solid, Models.Graph.MarkerType.None,
-                                     Models.Graph.LineThicknessType.Normal, Models.Graph.MarkerSizeType.Normal, true);
+            graph.DrawLineAndMarkers("", graphAndTable.xyPairs.X, graphAndTable.xyPairs.Y, null, null, null, null,
+                                     Models.Axis.AxisType.Bottom, Models.Axis.AxisType.Left,
+                                     System.Drawing.Color.Blue, Models.LineType.Solid, Models.MarkerType.None,
+                                     Models.LineThicknessType.Normal, Models.MarkerSizeType.Normal, 1, true);
 
             graph.ForegroundColour = OxyPlot.OxyColors.Black;
             graph.BackColor = OxyPlot.OxyColors.White;
             // Format the axes.
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
-            graph.FormatAxis(Models.Graph.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Axis.AxisType.Bottom, graphAndTable.xName, false, double.NaN, double.NaN, double.NaN, false);
+            graph.FormatAxis(Models.Axis.AxisType.Left, graphAndTable.yName, false, double.NaN, double.NaN, double.NaN, false);
             graph.FontSize = 10;
             graph.Refresh();
 
@@ -537,7 +604,7 @@
                 graphView.BackColor = OxyPlot.OxyColors.White;
                 graphView.ForegroundColour = OxyPlot.OxyColors.Black;
                 graphView.FontSize = 22;
-                graphView.MarkerSize = 8;
+                graphView.MarkerSize = MarkerSizeType.Normal;
                 graphView.Width = image.Width / numColumns;
                 graphView.Height = image.Height / numRows;
                 graphView.LeftRightPadding = 0;
@@ -562,10 +629,10 @@
                     }
                 }
 
-                string pngFileName = Path.Combine(WorkingDirectory,
-                                                  graphPage.graphs[0].Parent.Parent.Name +
-                                                  graphPage.graphs[0].Parent.Name +
-                                                  graphPage.name + ".png");
+                string basePngFileName = graphPage.graphs[0].Parent.FullPath + "." +
+                                                        graphPage.name + ".png";
+                basePngFileName = basePngFileName.TrimStart('.');
+                string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);
                 image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);
 
                 MigraDoc.DocumentObjectModel.Shapes.Image sectionImage = section.AddImage(pngFileName);
@@ -580,14 +647,15 @@
         private void CreateTable(Section section, AutoDocumentation.Table tableObj)
         {
             var table = section.AddTable();
-            table.Style = "Table";
+            table.Style = tableObj.Style;
             table.Borders.Color = Colors.Blue;
             table.Borders.Width = 0.25;
             table.Borders.Left.Width = 0.5;
             table.Borders.Right.Width = 0.5;
             table.Rows.LeftIndent = 0;
 
-            var gdiFont = new XFont("Arial", 10);
+            var fontSize = section.Document.Styles[tableObj.Style].Font.Size.Value;
+            var gdiFont = new XFont("Arial", fontSize);
             XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
 
             // Add the required columns to the table.
@@ -645,37 +713,15 @@
                     }
                 }
 
-                table.Columns[columnIndex].Width = Unit.FromPoint(maxSize + 10);
+                // maxWidth is the maximum allowed width of the column. E.g. if tableObj.ColumnWidth
+                // is 50, then maxWidth is the amount of space taken up by 50 characters.
+                // maxSize, on the other hand, is the length of the longest string in the column.
+                // The actual column width is whichever of these two values is smaller.
+                // MigraDoc will automatically wrap text to ensure the column respects this width.
+                double maxWidth = graphics.MeasureString(new string('m', tableObj.ColumnWidth), gdiFont).Width;
+                table.Columns[columnIndex].Width = Unit.FromPoint(Math.Min(maxWidth, maxSize) + 0);
             }
-            //for (int rowIndex = 0; rowIndex < tableObj.data.Count; rowIndex++)
-            //{
-            //    row = table.AddRow();
-            //    for (int columnIndex = 0; columnIndex < tableObj.data.Table.Columns.Count; columnIndex++)
-            //    {
-            //        string cellText = tableObj.data[rowIndex][columnIndex].ToString();
-            //
-            //        var match = hrefRegEx.Match(cellText);
-            //        if (match.Success)
-            //        {
-            //            var paragraph = row.Cells[columnIndex].AddParagraph();
-            //            var hyperlink = paragraph.AddHyperlink(match.Groups[1].ToString().TrimStart('#'), HyperlinkType.Bookmark);
-            //            hyperlink.AddFormattedText(match.Groups[2].ToString(), TextFormat.Underline);
-            //        }
-            //        else
-            //        {
-            //            match = italicsRegEx.Match(cellText);
-            //            if (match.Success)
-            //            {
-            //                var para = row.Cells[columnIndex].AddParagraph(match.Groups[1].ToString());
-            //                para.AddLineBreak();
-            //                para.AddFormattedText(match.Groups[2].ToString(), TextFormat.Italic);
-            //            }
-            //            else
-            //                row.Cells[columnIndex].AddParagraph(cellText);
-            //        }
-            //    }
-            //
-            //}
+            
             section.AddParagraph();
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 
 namespace Models.Functions
@@ -12,13 +13,13 @@ namespace Models.Functions
     public class AddFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>The child functions</summary>
-        private List<IModel> ChildFunctions;
+        private IEnumerable<IFunction> ChildFunctions;
 
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
             if (ChildFunctions == null)
-                ChildFunctions = Apsim.Children(this, typeof(IFunction)); 
+                ChildFunctions = FindAllChildren<IFunction>().ToList(); 
 
             double returnValue = 0.0;
 

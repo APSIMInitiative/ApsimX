@@ -49,12 +49,12 @@
             // Replace model.
             try
             {
-                this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToReplace));
+                this.explorerView.Tree.Delete(this.modelToReplace.FullPath);
                 parent.Children.Remove(modelToReplace as Model);
                 parent.Children.Insert(modelIndex, modelToInsert as Model);
                 modelToInsert.Parent = parent;
                 var nodeDescription = presenter.GetNodeDescription(modelToInsert);
-                this.explorerView.Tree.AddChild(Apsim.FullPath(parent), nodeDescription, modelIndex);
+                this.explorerView.Tree.AddChild(parent.FullPath, nodeDescription, modelIndex);
                 modelWasReplaced = true;
             }
             catch (Exception err)
@@ -74,12 +74,12 @@
                 int modelIndex = parent.Children.IndexOf(modelToInsert as Model);
                 try
                 {
-                    this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToInsert));
+                    this.explorerView.Tree.Delete(this.modelToInsert.FullPath);
                     parent.Children.Remove(modelToInsert as Model);
                     parent.Children.Insert(modelIndex, modelToReplace as Model);
                     modelToReplace.Parent = parent;
                     var nodeDescription = presenter.GetNodeDescription(modelToReplace);
-                    this.explorerView.Tree.AddChild(Apsim.FullPath(parent), nodeDescription, modelIndex);
+                    this.explorerView.Tree.AddChild(parent.FullPath, nodeDescription, modelIndex);
                 }
                 catch (Exception err)
                 {

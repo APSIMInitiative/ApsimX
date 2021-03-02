@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
 
@@ -55,7 +52,7 @@ namespace Models.Functions
 
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in this.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

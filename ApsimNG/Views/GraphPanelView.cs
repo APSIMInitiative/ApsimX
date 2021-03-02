@@ -1,5 +1,6 @@
-﻿using Gtk;
-using Models.Graph;
+﻿using ApsimNG.EventArguments;
+using Gtk;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace UserInterface.Views
         /// Grid which displays the model's properties.
         /// </summary>
         public IGridView PropertiesGrid { get { return propertiesGrid; } }
-        
+
+        public event EventHandler<CustomDataEventArgs<IGraphView>> GraphViewCreated;
+
         /// <summary>
         /// Adds a new tab containing a page of graphs.
         /// </summary>
@@ -40,39 +43,45 @@ namespace UserInterface.Views
             // must be run on the main UI thread.
             Application.Invoke(delegate
             {
-                int numGraphs = tab.Graphs.Count;
-                int numRows = numGraphs / numCols;
-                if (numGraphs % numCols > 0)
-                    numRows++;
-
-                Table panel = new Table((uint)numRows, (uint)numCols, true);
-                for (int n = 0; n < numGraphs; n++)
+                try
                 {
-                    GraphPresenter presenter = new GraphPresenter();
-                    presenter.SimulationFilter = new List<string>() { tab.SimulationName };
-                    tab.Presenter.ApsimXFile.Links.Resolve(presenter);
+                    int numGraphs = tab.Graphs.Count;
+                    int numRows = numGraphs / numCols;
+                    if (numGraphs % numCols > 0)
+                        numRows++;
 
-                    GraphView view = new GraphView();
-                    presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
+                    Table panel = new Table((uint)numRows, (uint)numCols, true);
+                    for (int n = 0; n < numGraphs; n++)
+                    {
+                        GraphPresenter presenter = new GraphPresenter();
+                        presenter.SimulationFilter = new List<string>() { tab.SimulationName };
+                        tab.Presenter.ApsimXFile.Links.Resolve(presenter);
 
-                    tab.Graphs[n].Presenter = presenter;
-                    tab.Graphs[n].View = view;
+                        GraphView view = new GraphView();
+                        presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
+                        GraphViewCreated?.Invoke(this, new CustomDataEventArgs<IGraphView>(view));
 
-                    uint i = (uint)(n / numCols);
-                    uint j = (uint)(n % numCols);
+                        tab.Graphs[n].Presenter = presenter;
+                        tab.Graphs[n].View = view;
 
-                    panel.Attach(view.MainWidget, j, j + 1, i, i + 1);
+                        uint i = (uint)(n / numCols);
+                        uint j = (uint)(n % numCols);
+
+                        panel.Attach(view.MainWidget, j, j + 1, i, i + 1);
+                    }
+
+                    Label tabLabel = new Label(tab.SimulationName);
+                    tabLabel.UseUnderline = false;
+
+                    notebook.AppendPage(panel, tabLabel);
+                    notebook.ShowAll();
                 }
-
-                Label tabLabel = new Label(tab.SimulationName);
-                tabLabel.UseUnderline = false;
-
-                notebook.AppendPage(panel, tabLabel);
-                notebook.ShowAll();
-
-                //while (GLib.MainContext.Iteration()) ;
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             });
-            while (GLib.MainContext.Iteration()) ;
+            //while (GLib.MainContext.Iteration()) ;
         }
 
         /// <summary>
@@ -84,10 +93,17 @@ namespace UserInterface.Views
             // must be run on the main UI thread.
             Application.Invoke(delegate
             {
-                while (notebook.NPages > 1)
-                    notebook.RemovePage(notebook.NPages - 1);
+                try
+                {
+                    while (notebook.NPages > 1)
+                        notebook.RemovePage(notebook.NPages - 1);
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             });
-            while (GLib.MainContext.Iteration()) ;
+            //while (GLib.MainContext.Iteration()) ;
         }
     }
 }

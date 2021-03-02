@@ -46,6 +46,29 @@
     <Word>of</Word>
     <Word>from</Word>
     <Word>to</Word>
+    <Word>mean</Word>
+    <Word>stddev</Word>
+    <Word>prod</Word>
+    <Word>median</Word>
+    <Word>percentile5</Word>
+    <Word>percentile10</Word>
+    <Word>percentile15</Word>
+    <Word>percentile20</Word>
+    <Word>percentile25</Word>
+    <Word>percentile30</Word>
+    <Word>percentile35</Word>
+    <Word>percentile40</Word>
+    <Word>percentile45</Word>
+    <Word>percentile50</Word>
+    <Word>percentile55</Word>
+    <Word>percentile60</Word>
+    <Word>percentile65</Word>
+    <Word>percentile70</Word>
+    <Word>percentile75</Word>
+    <Word>percentile80</Word>
+    <Word>percentile85</Word>
+    <Word>percentile90</Word>
+    <Word>percentile95</Word>
   </Keywords>
 
   <Rule name = "Comment">

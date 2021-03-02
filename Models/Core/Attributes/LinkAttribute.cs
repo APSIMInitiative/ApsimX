@@ -1,14 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="LinkAttribute.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
-    using PMF;
-    using Functions;
     using System;
-    using System.Reflection;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -44,7 +36,7 @@ namespace Models.Core
     /// exception will be thrown. 
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class LinkAttribute : XmlIgnoreAttribute
+    public class LinkAttribute : Attribute
     {
         /// <summary>Iff true, an exception will not be thrown if an object cannot be found.</summary>
         public bool IsOptional { get; set; }

@@ -7,7 +7,7 @@ Latitude =10.45(DECIMALDEGREES)
 
 ! data taken from NASA LARC data with temperature adjusted to give monthly averages for nearby town of Degolo (Not town used in the paper which is 85 km away)
 ! Rainfall adjusted to give monthly averages for Kombolcha
-! Did not have data for 2012 so use monthly averages for Degolo for 2 weeks
+! Did not have data for 2012 so use monthly averages for Degolo for 3 weeks
  Site        year      day  radn    maxt    mint    rain
  ()          ()        ()   () (oC)    (oC)    (mm)
 Jamma   2011   1   17.9   17.2   8.1   0.5
@@ -389,4 +389,10 @@ Jamma   2012    11   22.1   19.0   10.0  0.0
 Jamma   2012    12   22.1   19.0   10.0  0.0
 Jamma   2012    13   22.1   19.0   10.0  0.0
 Jamma   2012    14   22.1   19.0   10.0  0.0
-
+Jamma   2012    15   22.1   19.0   10.0  0.0
+Jamma   2012    16   22.1   19.0   10.0  0.0
+Jamma   2012    17   22.1   19.0   10.0  0.0
+Jamma   2012    18   22.1   19.0   10.0  0.0
+Jamma   2012    19   22.1   19.0   10.0  0.0
+Jamma   2012    20   22.1   19.0   10.0  0.0
+Jamma   2012    21   22.1   19.0   10.0  0.0

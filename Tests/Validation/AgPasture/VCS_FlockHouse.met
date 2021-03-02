@@ -33,7 +33,7 @@ annual_average_pet = 889.0           !Average annual PET (mm/yr)
 average_windspeed = 4.3              !Average windspeed (m/s)
 
       Location            xDate             year              day             rain             mint             maxt             avgt             radn             wind             evap               vp               rh            rhmin            rhmax
-            ()               ()               ()               ()             (mm)             (oC)             (oC)             (oC)         (MJ/m^2)            (m/s)             (mm)            (hPa)              (%)              (%)              (%)
+            ()     (dd/MM/yyyy)               ()               ()             (mm)             (oC)             (oC)             (oC)         (MJ/m^2)            (m/s)             (mm)            (hPa)              (%)              (%)              (%)
 VCS_FlockHouse       01/01/1981             1981                1              0.0             10.8             22.2             16.5             32.6              4.6              5.4             15.7             80.3             58.7            100.0
 VCS_FlockHouse       02/01/1981             1981                2              0.0             10.7             21.2             15.9             26.9              4.6              4.2             15.9             81.6             63.2            100.0
 VCS_FlockHouse       03/01/1981             1981                3              0.0             15.3             20.5             17.9             23.4              4.6              3.2             15.7             80.9             65.1             90.3

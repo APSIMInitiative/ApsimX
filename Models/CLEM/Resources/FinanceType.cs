@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -129,7 +129,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -140,12 +140,23 @@ namespace Models.CLEM.Resources
         /// <param name="reason">Name of individual adding resource</param>
         public new void Add(object resourceAmount, CLEMModel activity, string reason)
         {
-            if (resourceAmount.GetType().ToString()!="System.Double")
+            double multiplier = 0;
+            double addAmount = 0;
+
+            switch (resourceAmount.GetType().Name)
             {
-                throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                case "Double":
+                    addAmount = (double)resourceAmount;
+                    break;
+                case "ResourceRequest":
+                    addAmount = (resourceAmount as ResourceRequest).Required;
+                    multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                    break;
+                default:
+                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            double addAmount = (double)resourceAmount;
-            if (addAmount>0)
+
+            if (addAmount > 0)
             {
                 addAmount = Math.Round(addAmount, 2, MidpointRounding.ToEven);
                 amount += addAmount;
@@ -160,6 +171,19 @@ namespace Models.CLEM.Resources
                 LastTransaction = details;
                 TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
                 OnTransactionOccurred(te);
+
+                // if this request aims to trade with a market see if we need to set up details for the first time
+                if (multiplier > 0)
+                {
+                    FindEquivalentMarketStore();
+                    if (EquivalentMarketStore != null)
+                    {
+                        (resourceAmount as ResourceRequest).Required *= (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
+                        (resourceAmount as ResourceRequest).MarketTransactionMultiplier = 0;
+                        (resourceAmount as ResourceRequest).Reason = "Farm transaction";
+                        (EquivalentMarketStore as FinanceType).Remove(resourceAmount as ResourceRequest);
+                    }
+                }
             }
         }
 
@@ -174,6 +198,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
             
             // more than positive balance can be taken if withdrawal limit set to false
@@ -182,14 +212,19 @@ namespace Models.CLEM.Resources
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
             }
 
-            // avoid taking too much
-            //amountRemoved = Math.Min(this.Amount, amountRemoved);
             if (amountRemoved == 0)
             {
                 return;
             }
 
             this.amount -= amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm purchases");
+            }
+
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction

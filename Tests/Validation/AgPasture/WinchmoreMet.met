@@ -7,7 +7,7 @@ Latitude = -48.48
   amp = 10.54 (oC) ! annual amplitude (mean JAn - Jul temperature                             
 
 datx   year   day   radn   rain   mint   maxt
-()   ()   ()   (Mj/M2)   (mm)   (oC)   (oC)
+(dd/MM/yyyy)   ()   ()   (Mj/M2)   (mm)   (oC)   (oC)
 1/01/1966   1966   1   25.6   16   15.3   27.8
 2/01/1966   1966   2   12.5   1   8.6   14.4
 3/01/1966   1966   3   14.1   0   8.4   19.1

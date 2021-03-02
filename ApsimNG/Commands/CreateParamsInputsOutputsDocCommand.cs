@@ -36,23 +36,24 @@
         /// <summary>List of parameter names for the model being documented.</summary>
         private List<string> parameterNames;
 
-        /// <summary>An enum used to call GetProperties indicating what type of properties to return..</summary>
-        private enum PropertyType { Parameters, NonParameters };
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="model">The model to document.</param>
         /// <param name="destinationFolder">Name of directory to put pdf file into.</param>
-        public CreateParamsInputsOutputsDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder)
+        /// <param name="outputFileName">Output file name. Can be null.</param>
+        public CreateParamsInputsOutputsDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder, string outputFileName)
         {
             this.explorerPresenter = explorerPresenter;
             this.modelToDocument = model;
 
             namespaceToDocument = modelToDocument.GetType().Namespace;
             var modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
-            FileNameWritten = Path.Combine(destinationFolder, modelNameToDocument + ".description.pdf");
+            if (outputFileName == null)
+                FileNameWritten = Path.Combine(destinationFolder, modelNameToDocument + ".description.pdf");
+            else
+                FileNameWritten = Path.Combine(destinationFolder, outputFileName);
         }
 
         /// <summary>The name of the file written.</summary>
@@ -89,23 +90,24 @@
 
             tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
             AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(objectToDocument.GetType()), modelToDocument, tags, 1, 0,false);
 
             // If there are parameters then write them to the tags.
-            if (parameterNames != null)
+            if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
             {
-                var parameters = GetProperties(objectToDocument.GetType(), PropertyType.Parameters);
+                var parameters = GetParameters(objectToDocument);
                 var parameterTable = PropertiesToTable(parameters, objectToDocument);
                 tags.Add(new AutoDocumentation.Paragraph("**Parameters (Inputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(parameterTable) { Sort = "Name asc" }, 2));
+                tags.Add(new AutoDocumentation.Table(new DataView(parameterTable) { Sort = "Name asc" }, 2, width:30));
             }
 
-            var outputs = GetProperties(objectToDocument.GetType(), PropertyType.NonParameters);
+            var outputs = GetOutputs(objectToDocument.GetType());
 
             if (outputs != null && outputs.Count > 0)
             {
                 var outputTable = PropertiesToTable(outputs);
                 tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2));
+                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2, width: 30));
             }
 
             DocumentLinksEventsMethods(objectToDocument.GetType(), tags);
@@ -124,8 +126,9 @@
 
             tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
             AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummary(typeToDocument), modelToDocument, tags, 1, 0, false);
+            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetRemarks(typeToDocument), modelToDocument, tags, 1, 0, false);
 
-            var outputs = GetProperties(typeToDocument, PropertyType.NonParameters);
+            var outputs = GetOutputs(typeToDocument);
             if (outputs != null && outputs.Count > 0)
             {
                 var outputTable = PropertiesToTable(outputs);
@@ -167,42 +170,38 @@
         /// </summary>
         /// <param name="properties">The list of properties to put into table.</param>
         /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
-        private DataTable PropertiesToTable(List<PropertyInfo> properties, object objectToDocument = null)
+        private DataTable PropertiesToTable(List<IVariable> properties, object objectToDocument = null)
         {
             var outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
             outputs.Columns.Add("Description", typeof(string));
             outputs.Columns.Add("Units", typeof(string));
             outputs.Columns.Add("Type", typeof(string));
-            outputs.Columns.Add("Settable?", typeof(bool));
-            if (objectToDocument != null)
+            if (objectToDocument == null)
+                outputs.Columns.Add("Settable?", typeof(bool));
+            else
                 outputs.Columns.Add("Value", typeof(string));
             foreach (var property in properties)
             {
                 var row = outputs.NewRow();
 
-                string typeName = GetTypeName(property.PropertyType);
-                string units = property.GetCustomAttribute<UnitsAttribute>()?.ToString();
-                var description = AutoDocumentation.GetSummary(property);
-                if (description == null)
-                {
-                    var descriptionAttribute = property.GetCustomAttribute<DescriptionAttribute>();
-                    description = descriptionAttribute?.ToString();
-                }
-                // Truncate descriptions so they fit onto the page.
-                if (description?.Length > maxDescriptionLength)
-                    description = description.Remove(maxDescriptionLength) + "...";
+                string typeName = GetTypeName(property.DataType);
+                var summary = property.Summary + property.Description;
+                string remarks = property.Remarks;
+                if (!string.IsNullOrEmpty(remarks))
+                    summary += Environment.NewLine + Environment.NewLine + remarks;
 
                 row["Name"] = property.Name;
                 row["Type"] = typeName;
-                row["Units"] = units;
-                row["Description"] = description;
-                row["Settable?"] = property.CanWrite;
-                if (objectToDocument != null)
+                row["Units"] = property.Units;
+                row["Description"] = summary;
+                if (objectToDocument == null)
+                    row["Settable?"] = property.Writable;
+                else
                 {
                     try
                     {
-                        row["Value"] = ReflectionUtilities.ObjectToString(property.GetValue(objectToDocument, null));
+                        row["Value"] = property.Value;
                     }
                     catch (Exception)
                     { }
@@ -220,9 +219,28 @@
         /// </summary>
         /// <param name="typeToDocument">The type of object to inspect.</param>
         /// <param name="typeofProperties">The type of properties to include in the return table.</param>
-        private List<PropertyInfo> GetProperties(Type typeToDocument, PropertyType typeofProperties)
+        private List<IVariable> GetParameters(object objectToDocument)
         {
-            var properties = new List<PropertyInfo>();
+            var parameters = new List<IVariable>();
+
+            foreach (var parameterName in parameterNames)
+            {
+                var parameter = (objectToDocument as IModel).FindByPath(parameterName);
+                if (parameter != null)
+                    parameters.Add(parameter);
+            }
+
+            return parameters;
+        }
+
+        /// <summary>
+        /// Create and return a new Output object for member
+        /// </summary>
+        /// <param name="typeToDocument">The type of object to inspect.</param>
+        /// <param name="typeofProperties">The type of properties to include in the return table.</param>
+        private List<IVariable> GetOutputs(Type typeToDocument)
+        {
+            var outputs = new List<IVariable>();
             foreach (var property in typeToDocument.GetProperties(BindingFlags.Public |
                                                                   BindingFlags.Instance |
                                                                   BindingFlags.FlattenHierarchy |
@@ -234,13 +252,11 @@
                     // the outputs table.
                     bool isParameter = parameterNames != null && parameterNames.Contains(property.Name);
 
-                    bool includeInTable = typeofProperties == PropertyType.Parameters && isParameter ||
-                                          typeofProperties == PropertyType.NonParameters && !isParameter;
-                    if (includeInTable)
-                        properties.Add(property);
+                    if (!isParameter)
+                        outputs.Add(new VariableProperty(null, property));
                 }
             }
-            return properties;
+            return outputs;
         }
 
         /// <summary>Get a type name for the specified class member.</summary>
@@ -383,6 +399,10 @@
                         parameters += GetTypeName(argument.ParameterType) + " " + argument.Name;
                     }
                     string description = AutoDocumentation.GetSummary(method);
+                    string remarks = AutoDocumentation.GetRemarks(method);
+                    if (!string.IsNullOrEmpty(remarks))
+                        description += Environment.NewLine + Environment.NewLine + remarks;
+
                     if (description != null)
                         description = "<i>" + description + "</i>"; // italics
                     var st = string.Format("<p>{0} {1}({2})</p>{3}",

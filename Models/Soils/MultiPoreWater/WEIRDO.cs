@@ -6,16 +6,16 @@ using System.Text;
 using System.IO;
 using Models.Core;
 using Models;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.PMF;
 using System.Runtime.Serialization;
 using Models.Surface;
 using Models.Soils;
-using Models.Soils.SoilWaterBackend;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Functions;
 using Models.Soils.Standardiser;
+using Models.Climate;
 
 namespace Models.Soils
 {
@@ -33,116 +33,116 @@ namespace Models.Soils
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         public double PrecipitationInterception { get; set; }
         ///<summary> This doesn't do anything currently</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double PotentialInfiltration { get; set; }
         ///<summary> Model name</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string WaterModelName { get { return this.Name; } }
         /// <summary>The amount of rainfall intercepted by surface residues</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double ResidueInterception { get { return ResidueWater; } set { } }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double catchment_area { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CN2Bare { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CNCov { get; set; }
 
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CNRed { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DiffusConst { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double DiffusSlope { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double discharge_width { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlayer { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_sw { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] dlt_sw_dep { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Drainage { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] DULmm { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eo { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Eos { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Es { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] ESW { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Flow { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNH4 { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowNO3 { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] FlowUrea { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Flux { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double gravity_gradient { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Infiltration { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] KLAT { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNH4 { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachNO3 { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LeachUrea { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LL15mm { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double max_pond { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] PAWC { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double pond { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double pond_evap { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Runoff { get; set; }
         ///<summary>Soil Albedo</summary>
         [Units("0-1")]
@@ -150,51 +150,51 @@ namespace Models.Soils
         [Description("The proportion of incoming radiation that is reflected by the soil surface")]
         public double Salb { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SATmm { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double slope { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] solute_flow_eff { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] solute_flux_eff { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double specific_bd { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SummerCona { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string SummerDate { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double SummerU { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SW { get; set; }
         ///<summary> Who knows</summary>
 
         public double[] SWCON { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] SWmm { get; set; }
         ///<summary> Who knows</summary>
         public double[] Thickness { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WaterTable { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WinterCona { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public string WinterDate { get; set; }
         ///<summary> Who knows</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double WinterU { get; set; }
         ///<summary> Who knows</summary>
         public void RemoveWater(double[] NewSWmm) { }
@@ -437,7 +437,7 @@ namespace Models.Soils
         [Units("mm/h")]
         [Summary]
         [Display(Format = "N1")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] Ksat { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy into each pore
@@ -484,13 +484,13 @@ namespace Models.Soils
         [Units("mm/d")]
         public double[] Diffusion { get; set; }
         ///<summary> Water extracted by crop roots for transpiration</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm/d")]
         public double WaterExtraction { get; set; }
         /// <summary>
         /// Factor quantifying the hydrophobicity of the soi
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double[] MatrixRelativeWater { get; set;}
         #endregion
@@ -642,8 +642,8 @@ namespace Models.Soils
             WaterExtraction = 0;
             double CropCover = 0;
             if(Plant != null)
-                if (Plant.Canopy != null)
-                    CropCover = Plant.Canopy.CoverTotal;
+                if (Plant.Leaf != null)
+                    CropCover = Plant.Leaf.CoverTotal;
             TotalCover = Math.Min(1, SurfaceOM.Cover + CropCover);
             double SoilRadn = Met.Radn * (1-TotalCover);
             double WindRun = Met.Wind * 86400 / 1000 * (1 - TotalCover);
@@ -1011,10 +1011,10 @@ namespace Models.Soils
         private void doTranspiration()
         {
             if(Plant != null)
-                if (Plant.Canopy != null)
+                if (Plant.Leaf != null)
                 {
                     Array.Clear(HourlyWaterExtraction, 0, ProfileLayers);
-                    double HourlyTranspirationDemand = Plant.Canopy.PotentialEP / 24;
+                    double HourlyTranspirationDemand = Plant.Leaf.PotentialEP / 24;
                     double UnMetDemand = HourlyTranspirationDemand;
                     for (int l = 0; (l < ProfileLayers && UnMetDemand > 0); l++)
                     {
@@ -1093,7 +1093,7 @@ namespace Models.Soils
         /// <summary>
         /// This is the Irrigation ariving at the soil surface, less what has been intercepted by residue
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         private double Irrigation {get;set; }
         private double IrrigationDuration { get; set; }
         /// <summary>
@@ -1115,6 +1115,12 @@ namespace Models.Soils
         private double ProfileSaturation { get; set; }
         private double SODPondDepth { get; set; }
         private double EODPondDepth { get; set; }
+        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>
+        /// <remarks>Not imlpemented</remarks>
+        public double[] SoluteFluxEfficiency { get; set; }
+        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>
+        /// <remarks>Not imlpemented</remarks>
+        public double[] SoluteFlowEfficiency { get; set; }
         #endregion
 
         #region Internal Properties and Methods

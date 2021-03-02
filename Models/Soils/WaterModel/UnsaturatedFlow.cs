@@ -23,30 +23,16 @@
     ///    Flow = Diffusivity x Volumetric Soil Water Gradient
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.ProfileView")]
+    [PresenterName("UserInterface.Presenters.ProfilePresenter")]
+    [ValidParent(ParentType = typeof(WaterBalance))]
     public class UnsaturatedFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
         [Link]
         private WaterBalance soil = null;
 
-
-
-
-        /// <summary>
-        /// Gets or sets the diffusivity constant for soil texture
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 1000.0)]
-        [DescriptionAttribute("Diffusivity constant for soil texture")]
-        public double DiffusConst { get; set; }
-
-        /// <summary>
-        /// Gets or sets the diffusivity slope for diffusivity/soil water content relationship
-        /// </summary>
-        [Bounds(Lower = 0.0, Upper = 100.0)]
-        [DescriptionAttribute("Diffusivity slope for diffusivity/soil water content relationship")]
-        public double DiffusSlope { get; set; }
-
-
+ 
         /// <summary>Calculate unsaturated flow below drained upper limit.</summary>
         public double[] Values
         {
@@ -54,10 +40,10 @@
             {
                 const double gravity_gradient = 0.00002;
 
-                double[] Thickness = soil.Properties.Water.Thickness;
+                double[] Thickness = soil.Properties.Thickness;
                 double[] SW = soil.Water;
-                double[] LL15 = MathUtilities.Multiply(soil.Properties.Water.LL15, soil.Properties.Water.Thickness);
-                double[] DUL = MathUtilities.Multiply(soil.Properties.Water.DUL, soil.Properties.Water.Thickness);
+                double[] LL15 = MathUtilities.Multiply(soil.Properties.LL15, soil.Properties.Thickness);
+                double[] DUL = MathUtilities.Multiply(soil.Properties.DUL, soil.Properties.Thickness);
 
                 int second_last_layer = Thickness.Length - 2;
 
@@ -67,7 +53,7 @@
                 double w_out = 0.0;
 
                 double[] flow = new double[Thickness.Length];
-                for (int i = 0; i < second_last_layer; i++)
+                for (int i = 0; i <= second_last_layer; i++)
                 {
                     double ave_dlayer = (Thickness[i] + Thickness[i+1]) * 0.5;
 
@@ -80,7 +66,7 @@
                     double theta2 = MathUtilities.Divide(esw_dep2, Thickness[i+1], 0.0);
 
                     // find diffusivity, a function of mean thet.
-                    double dbar = DiffusConst * Math.Exp(DiffusSlope * (theta1 + theta2) * 0.5);
+                    double dbar = soil.DiffusConst * Math.Exp(soil.DiffusSlope * (theta1 + theta2) * 0.5);
 
                     // testing found that a limit of 10000 (as used in ceres-maize)
                     // for dbar limits instability for flow direction for consecutive

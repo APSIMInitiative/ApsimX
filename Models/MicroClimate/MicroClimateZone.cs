@@ -161,20 +161,26 @@
         /// <summary>The dry leaf time fraction</summary>
         public double DryLeafFraction;
 
+        /// <summary>The height difference between canopies required for a new layer to be created (m).</summary>
+        public double MinimumHeightDiffForNewLayer { get; set; }
+
+
         /// <summary>Gets or sets the component data.</summary>
         public List<MicroClimateCanopy> Canopies = new List<MicroClimateCanopy>();
 
         /// <summary>Constructor.</summary>
         /// <param name="clockModel">The clock model.</param>
         /// <param name="zoneModel">The zone model.</param>
-        public MicroClimateZone(Clock clockModel, Zone zoneModel)
+        /// <param name="minHeightDiffForNewLayer">Minimum canopy height diff for new layer.</param>
+        public MicroClimateZone(Clock clockModel, Zone zoneModel, double minHeightDiffForNewLayer)
         {
             clock = clockModel;
             Zone = zoneModel;
-            canopyModels = Apsim.ChildrenRecursively(Zone, typeof(ICanopy)).Cast<ICanopy>();
-            modelsThatHaveCanopies = Apsim.ChildrenRecursively(Zone, typeof(IHaveCanopy)).Cast<IHaveCanopy>();
-            soilWater = Apsim.Find(Zone, typeof(ISoilWater)) as ISoilWater;
-            surfaceOM = Apsim.Find(Zone, typeof(ISurfaceOrganicMatter)) as ISurfaceOrganicMatter;
+            MinimumHeightDiffForNewLayer = minHeightDiffForNewLayer;
+            canopyModels = Zone.FindAllDescendants<ICanopy>().ToList();
+            modelsThatHaveCanopies = Zone.FindAllDescendants<IHaveCanopy>().ToList();
+            soilWater = Zone.FindInScope<ISoilWater>();
+            surfaceOM = Zone.FindInScope<ISurfaceOrganicMatter>();
         }
 
         /// <summary>The zone model.</summary>
@@ -390,8 +396,8 @@
         /// <param name="ReferenceHeight">Height of the weather instruments.</param>
         public void CalculateGa(double ReferenceHeight)
         {
-            double sumDeltaZ = MathUtilities.Sum(DeltaZ);
-            double sumLAI = MathUtilities.Sum(LAItotsum);
+            double sumDeltaZ = DeltaZ.Sum();
+            double sumLAI = LAItotsum.Sum();
             double totalGa = AerodynamicConductanceFAO(Wind, ReferenceHeight, sumDeltaZ, sumLAI);
 
             for (int i = 0; i <= numLayers - 1; i++)
@@ -442,10 +448,10 @@
 
             for (int j = 0; j <= Canopies.Count - 1; j++)
             {
-                sumRl += MathUtilities.Sum(Canopies[j].Rl);
-                sumRsoil += MathUtilities.Sum(Canopies[j].Rsoil);
-                sumInterception += MathUtilities.Sum(Canopies[j].interception);
-                freeEvapGa += MathUtilities.Sum(Canopies[j].Ga);
+                sumRl += Canopies[j].Rl.Sum();
+                sumRsoil += Canopies[j].Rsoil.Sum();
+                sumInterception += Canopies[j].interception.Sum();
+                freeEvapGa += Canopies[j].Ga.Sum();
             }
 
             double netRadiation = ((1.0 - Albedo) * sumRs + sumRl + sumRsoil) * 1000000.0;   // MJ/J
@@ -528,7 +534,7 @@
                 double HeightMetres = Math.Round(Canopies[compNo].Canopy.Height, 5) / 1000.0; // Round off a bit and convert mm to m } }
                 double DepthMetres = Math.Round(Canopies[compNo].Canopy.Depth, 5) / 1000.0; // Round off a bit and convert mm to m } }
                 double canopyBase = HeightMetres - DepthMetres;
-                if (Array.IndexOf(nodes, HeightMetres) == -1)
+                if (IsNewLayer(nodes, HeightMetres, numNodes))
                 {
                     nodes[numNodes] = HeightMetres;
                     numNodes = numNodes + 1;
@@ -567,6 +573,24 @@
             }
             for (int i = 0; i <= numNodes - 2; i++)
                 DeltaZ[i] = nodes[i + 1] - nodes[i];
+        }
+
+        /// <summary>
+        /// Create a new layer for the specified height?
+        /// </summary>
+        /// <param name="nodes">The existing layer nodes.</param>
+        /// <param name="height">The height (m).</param>
+        /// <param name="numNodes">Number of nodes in nodes array.</param>
+        private bool IsNewLayer(double[] nodes, double height, int numNodes)
+        {
+            // Find height in nodes array within tolerance (minimumHeightDiffForNewLayer)
+            bool found = false;
+            for (int i = 1; i < numNodes; i++)
+                if (Math.Abs(nodes[i] - height) < MinimumHeightDiffForNewLayer)
+                    found = true;
+
+            // If it wasn't found then return true to signal create
+            return !found;
         }
 
         /// <summary>Break the components into layers</summary>

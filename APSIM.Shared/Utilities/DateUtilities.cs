@@ -1,12 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DateUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.Utilities
+﻿namespace APSIM.Shared.Utilities
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
 
@@ -171,19 +165,19 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// Compare <paramref name="ddMMM"/> and <paramref name="today"/> (ignoring year component)
+        /// Compare <paramref name="date"/> and <paramref name="today"/> (ignoring year component)
         /// </summary>
-        /// <param name="ddMMM">String containing 'day of month' and at least the first 3 letters of a month's name</param>
-        /// <param name="today">The date to check</param>
+        /// <param name="date">String, "dd-mmm" </param>
+        /// <param name="today">DateTime, to compare to date (e.g clock.Today)</param>
         /// <returns>true if the day and month components of <paramref name="today"/> match ddMMM, else false</returns>
-        public static bool DatesEqual(string ddMMM, DateTime today)
+        public static bool DatesEqual(string date, DateTime today)
         {
-            if (ddMMM == null)
+            if (date == null)
                 return false;
             return 
-                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(ddMMM).Value.ToLower()) + 1
+                today.Month == Array.IndexOf(LowerCaseMonths, rxMMM.Match(date).Value.ToLower()) + 1
                 &&
-                today.Day == int.Parse(rxDD.Match(ddMMM).Value);
+                today.Day == int.Parse(rxDD.Match(date).Value);
         }
 
         /// <summary>
@@ -351,6 +345,8 @@ namespace APSIM.Shared.Utilities
             else
             {
                 DateTime.TryParse(dateStr, out d);
+                if (d == DateTime.MinValue)
+                    return null;
                 returnDate = d.ToString("yyyy-MM-dd");
             }
             return returnDate;
@@ -387,6 +383,24 @@ namespace APSIM.Shared.Utilities
         public static bool DatesAreEqual(string dateStr, DateTime d)
         {
             return d == validateDateString(dateStr, d.Year);
+        }
+
+        /// <summary>
+        /// Is a specified date at the end of a month?
+        /// </summary>
+        /// <param name="date">The date.</param>
+        public static bool IsEndOfMonth(DateTime date)
+        {
+            return date.AddDays(1).Day == 1;
+        }
+
+        /// <summary>
+        /// Is a specified date at the end of a year?
+        /// </summary>
+        /// <param name="date">The date.</param>
+        public static bool IsEndOfYear(DateTime date)
+        {
+            return date.Day == 31 && date.Month == 12;
         }
     }
 }

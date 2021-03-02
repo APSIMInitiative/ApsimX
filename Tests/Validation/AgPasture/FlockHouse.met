@@ -31,7 +31,7 @@ average_windspeed = 4.6            !Average windspeed (m/s)
 
 
 xDate           year            day             radn            maxt            mint            rain            evap            vp              rh              wind            rhmax           rhmin           co2             co2ambient
-()              ()              ()              (MJ/m^2)        (oC)            (oC)            (mm)            (mm)            (hPa)           (%)             (m/s)           (%)             (%)             (ppm)           (ppm)
+(dd/MM/yyyy)    ()              ()              (MJ/m^2)        (oC)            (oC)            (mm)            (mm)            (hPa)           (%)             (m/s)           (%)             (%)             (ppm)           (ppm)
 01/01/1973      1973            1               28.5            22.3            15              0               4.1             17.8            88.8            5.1             100             66.1            328.6           328.6
 02/01/1973      1973            2               29.9            22.2            10              0               5               13.4            69.3            3.6             100             50.1            328.6           328.6
 03/01/1973      1973            3               33.4            21.4            8.3             0               4.3             12.4            49.3            3.7             100             48.7            328.6           328.6

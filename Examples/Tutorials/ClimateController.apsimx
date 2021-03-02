@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 76,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-01-31",
+  "Version": 100,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -156,6 +156,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "ClimateControl",
               "Children": [
                 {
@@ -180,7 +181,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "AllowControl",
@@ -188,7 +189,7 @@
                     },
                     {
                       "Key": "EnableDate",
-                      "Value": "1980-01-15"
+                      "Value": "01/15/1980 00:00:00"
                     },
                     {
                       "Key": "WithinYearControl",
@@ -291,6 +292,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -317,14 +319,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 15.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -599,7 +599,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilWater, Models",
+                          "$type": "Models.WaterModel.WaterBalance, Models",
                           "SummerDate": "1-Nov",
                           "SummerU": 6.0,
                           "SummerCona": 3.5,
@@ -612,10 +612,9 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "slope": 0.0,
-                          "discharge_width": 0.0,
-                          "catchment_area": 0.0,
-                          "max_pond": 0.0,
+                          "Slope": 0.0,
+                          "DischargeWidth": 0.0,
+                          "CatchmentArea": 0.0,
                           "Thickness": [
                             150.0,
                             150.0,
@@ -624,15 +623,6 @@
                             250.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-50",
-                            "50-65",
-                            "65-90",
-                            "90-120",
-                            "120-150"
                           ],
                           "SWCON": [
                             0.5,
@@ -652,9 +642,8 @@
                             0.0,
                             0.0
                           ],
-                          "PrecipitationInterception": 0.0,
+                          "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -790,229 +779,6 @@
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                          "DirectedGraphInfo": {
-                            "$type": "Models.Graph.DirectedGraph, Models",
-                            "Nodes": [
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Inert",
-                                "Location": "656, 254",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "SurfaceResidue",
-                                "Location": "566, 69",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMLignin",
-                                "Location": "261, 69",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMCellulose",
-                                "Location": "397, 70",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMCarbohydrate",
-                                "Location": "123, 70",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Microbial",
-                                "Location": "218, 299",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Humic",
-                                "Location": "458, 293",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Urea",
-                                "Location": "529, 419",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "NO3",
-                                "Location": "185, 435",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "NH4",
-                                "Location": "357, 422",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Atmosphere",
-                                "Location": "48, 338",
-                                "Colour": "White",
-                                "OutlineColour": "White",
-                                "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              }
-                            ],
-                            "Arcs": [
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Microbial",
-                                "Location": "415, 173",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Humic",
-                                "Location": "499, 172",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Microbial",
-                                "Location": "259, 221",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Humic",
-                                "Location": "255, 105",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Microbial",
-                                "Location": "370, 184",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Humic",
-                                "Location": "463, 224",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Microbial",
-                                "Location": "141, 131",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Humic",
-                                "Location": "204, 215",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Microbial",
-                                "Location": "335, 301",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Humic",
-                                "Location": "319, 278",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Humic",
-                                "DestinationName": "Microbial",
-                                "Location": "334, 340",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Urea",
-                                "DestinationName": "NH4",
-                                "Location": "433, 416",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "NO3",
-                                "DestinationName": "Atmosphere",
-                                "Location": "1, 319",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "NH4",
-                                "DestinationName": "NO3",
-                                "Location": "243, 409",
-                                "Colour": "Black",
-                                "Text": null
-                              }
-                            ]
-                          },
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
                           "IncludeInDocumentation": true,
@@ -1025,7 +791,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Report.Report, Models",
+                      "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "[Weather].Rain",
@@ -1040,6 +806,7 @@
                       "EventNames": [
                         "[Clock].EndOfDay"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Results",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1062,11 +829,11 @@
               "Name": "Plots",
               "Children": [
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1077,7 +844,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1095,7 +862,7 @@
                   "Name": "Rainfall",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1107,7 +874,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Rain",
@@ -1130,11 +896,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1145,7 +911,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1167,7 +933,7 @@
                   "Name": "Radiation",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1179,7 +945,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Radn",
@@ -1202,11 +967,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1217,7 +982,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1235,7 +1000,7 @@
                   "Name": "MinT",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1247,7 +1012,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.MinT",
@@ -1270,11 +1034,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1285,7 +1049,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1303,7 +1067,7 @@
                   "Name": "MaxT",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1315,7 +1079,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.MinT",
@@ -1338,11 +1101,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1353,7 +1116,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1371,7 +1134,7 @@
                   "Name": "Wind",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1383,7 +1146,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Wind",
@@ -1406,11 +1168,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -1421,7 +1183,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -1439,7 +1201,7 @@
                   "Name": "VapourPressure",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -1451,7 +1213,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.VP",
@@ -1636,6 +1397,7 @@
             },
             {
               "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
               "Name": "ClimateControl1",
               "Children": [
                 {
@@ -1660,7 +1422,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "AllowControl",
@@ -1771,6 +1533,7 @@
                       "d_interception": 0.0,
                       "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
@@ -1797,14 +1560,12 @@
                     },
                     {
                       "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "Canopies": [],
                       "InitialResidueName": "Sward",
                       "InitialResidueType": "grass",
                       "InitialResidueMass": 1000.0,
                       "InitialStandingFraction": 0.0,
                       "InitialCPR": 0.0,
                       "InitialCNR": 15.0,
-                      "FractionFaecesAdded": 1.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
                       "IncludeInDocumentation": true,
@@ -2079,7 +1840,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilWater, Models",
+                          "$type": "Models.WaterModel.WaterBalance, Models",
                           "SummerDate": "1-Nov",
                           "SummerU": 6.0,
                           "SummerCona": 3.5,
@@ -2092,10 +1853,9 @@
                           "CN2Bare": 73.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
-                          "slope": 0.0,
-                          "discharge_width": 0.0,
-                          "catchment_area": 0.0,
-                          "max_pond": 0.0,
+                          "Slope": 0.0,
+                          "DischargeWidth": 0.0,
+                          "CatchmentArea": 0.0,
                           "Thickness": [
                             150.0,
                             150.0,
@@ -2104,15 +1864,6 @@
                             250.0,
                             300.0,
                             300.0
-                          ],
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-50",
-                            "50-65",
-                            "65-90",
-                            "90-120",
-                            "120-150"
                           ],
                           "SWCON": [
                             0.5,
@@ -2132,9 +1883,8 @@
                             0.0,
                             0.0
                           ],
-                          "PrecipitationInterception": 0.0,
+                          "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2270,229 +2020,6 @@
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                          "DirectedGraphInfo": {
-                            "$type": "Models.Graph.DirectedGraph, Models",
-                            "Nodes": [
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Inert",
-                                "Location": "656, 254",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "SurfaceResidue",
-                                "Location": "566, 69",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMLignin",
-                                "Location": "261, 69",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMCellulose",
-                                "Location": "397, 70",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "FOMCarbohydrate",
-                                "Location": "123, 70",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Microbial",
-                                "Location": "218, 299",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Humic",
-                                "Location": "458, 293",
-                                "Colour": "0, 114, 178",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Urea",
-                                "Location": "529, 419",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "NO3",
-                                "Location": "185, 435",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "NH4",
-                                "Location": "357, 422",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "Atmosphere",
-                                "Location": "48, 338",
-                                "Colour": "White",
-                                "OutlineColour": "White",
-                                "Transparent": true
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNO3",
-                                "Location": "688, 415",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              },
-                              {
-                                "$type": "Models.Graph.Node, Models",
-                                "Name": "PlantAvailableNH4",
-                                "Location": "691, 421",
-                                "Colour": "0, 158, 115",
-                                "OutlineColour": "Black",
-                                "Transparent": false
-                              }
-                            ],
-                            "Arcs": [
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Microbial",
-                                "Location": "415, 173",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "SurfaceResidue",
-                                "DestinationName": "Humic",
-                                "Location": "499, 172",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Microbial",
-                                "Location": "259, 221",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMLignin",
-                                "DestinationName": "Humic",
-                                "Location": "255, 105",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Microbial",
-                                "Location": "370, 184",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCellulose",
-                                "DestinationName": "Humic",
-                                "Location": "463, 224",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Microbial",
-                                "Location": "141, 131",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "FOMCarbohydrate",
-                                "DestinationName": "Humic",
-                                "Location": "204, 215",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Microbial",
-                                "Location": "335, 301",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Microbial",
-                                "DestinationName": "Humic",
-                                "Location": "319, 278",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Humic",
-                                "DestinationName": "Microbial",
-                                "Location": "334, 340",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "Urea",
-                                "DestinationName": "NH4",
-                                "Location": "433, 416",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "NO3",
-                                "DestinationName": "Atmosphere",
-                                "Location": "1, 319",
-                                "Colour": "Black",
-                                "Text": null
-                              },
-                              {
-                                "$type": "Models.Graph.Arc, Models",
-                                "SourceName": "NH4",
-                                "DestinationName": "NO3",
-                                "Location": "243, 409",
-                                "Colour": "Black",
-                                "Text": null
-                              }
-                            ]
-                          },
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
                           "IncludeInDocumentation": true,
@@ -2505,7 +2032,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Report.Report, Models",
+                      "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
                         "[Weather].Rain",
@@ -2520,6 +2047,7 @@
                       "EventNames": [
                         "[Clock].EndOfDay"
                       ],
+                      "GroupByVariableName": null,
                       "Name": "Results",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -2542,11 +2070,11 @@
               "Name": "Plots",
               "Children": [
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2557,7 +2085,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2575,7 +2103,7 @@
                   "Name": "Rainfall",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2587,7 +2115,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Rain",
@@ -2610,11 +2137,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2625,7 +2152,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2643,7 +2170,7 @@
                   "Name": "Radiation",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2655,7 +2182,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Radn",
@@ -2678,11 +2204,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2693,7 +2219,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2711,7 +2237,7 @@
                   "Name": "MinT",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2723,7 +2249,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.MinT",
@@ -2746,11 +2271,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2761,7 +2286,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2779,7 +2304,7 @@
                   "Name": "MaxT",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2791,7 +2316,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.MinT",
@@ -2814,11 +2338,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2829,7 +2353,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2847,7 +2371,7 @@
                   "Name": "Wind",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2859,7 +2383,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.Wind",
@@ -2882,11 +2405,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": null,
                       "Inverted": false,
@@ -2897,7 +2420,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 3,
                       "Title": null,
                       "Inverted": false,
@@ -2915,7 +2438,7 @@
                   "Name": "VapourPressure",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 0,
@@ -2927,7 +2450,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": "Results",
                       "XFieldName": "Date",
                       "YFieldName": "Weather.VP",
@@ -2979,11 +2501,11 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Graph.Graph, Models",
+          "$type": "Models.Graph, Models",
           "Caption": null,
           "Axis": [
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 3,
               "Title": "Date",
               "Inverted": false,
@@ -2994,7 +2516,7 @@
               "CrossesAtZero": false
             },
             {
-              "$type": "Models.Graph.Axis, Models",
+              "$type": "Models.Axis, Models",
               "Type": 0,
               "Title": "Yield (kg/ha)",
               "Inverted": false,
@@ -3012,7 +2534,7 @@
           "Name": "Wheat Yield Time Series",
           "Children": [
             {
-              "$type": "Models.Graph.Series, Models",
+              "$type": "Models.Series, Models",
               "Type": 1,
               "XAxis": 3,
               "YAxis": 0,
@@ -3024,7 +2546,6 @@
               "MarkerSize": 0,
               "Line": 0,
               "LineThickness": 0,
-              "Checkpoint": "Current",
               "TableName": "Report",
               "XFieldName": "Clock.Today",
               "YFieldName": "Yield",
@@ -3048,6 +2569,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
           "Name": "DalbyWheatNormalRainfall",
           "Children": [
             {
@@ -3098,7 +2620,7 @@
               "Name": "Field",
               "Children": [
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Wheat].Phenology.Zadok.Stage",
@@ -3116,6 +2638,7 @@
                   "EventNames": [
                     "[Wheat].Harvesting"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -3280,7 +2803,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilWater, Models",
+                      "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-Nov",
                       "SummerU": 5.0,
                       "SummerCona": 5.0,
@@ -3293,10 +2816,9 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "slope": "NaN",
-                      "discharge_width": "NaN",
-                      "catchment_area": "NaN",
-                      "max_pond": 0.0,
+                      "Slope": "NaN",
+                      "DischargeWidth": "NaN",
+                      "CatchmentArea": "NaN",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -3305,15 +2827,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
                       ],
                       "SWCON": [
                         0.3,
@@ -3325,9 +2838,8 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "PrecipitationInterception": 0.0,
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3567,229 +3079,6 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "DirectedGraphInfo": {
-                        "$type": "Models.Graph.DirectedGraph, Models",
-                        "Nodes": [
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Inert",
-                            "Location": "656, 254",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "SurfaceResidue",
-                            "Location": "566, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMLignin",
-                            "Location": "261, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCellulose",
-                            "Location": "397, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCarbohydrate",
-                            "Location": "123, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Microbial",
-                            "Location": "218, 299",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Humic",
-                            "Location": "458, 293",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Urea",
-                            "Location": "529, 419",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NO3",
-                            "Location": "185, 435",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NH4",
-                            "Location": "357, 422",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Atmosphere",
-                            "Location": "48, 338",
-                            "Colour": "White",
-                            "OutlineColour": "White",
-                            "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          }
-                        ],
-                        "Arcs": [
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Microbial",
-                            "Location": "415, 173",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Humic",
-                            "Location": "499, 172",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Microbial",
-                            "Location": "259, 221",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Humic",
-                            "Location": "255, 105",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Microbial",
-                            "Location": "370, 184",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Humic",
-                            "Location": "463, 224",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Microbial",
-                            "Location": "141, 131",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Humic",
-                            "Location": "204, 215",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Microbial",
-                            "Location": "335, 301",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Humic",
-                            "Location": "319, 278",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Humic",
-                            "DestinationName": "Microbial",
-                            "Location": "334, 340",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Urea",
-                            "DestinationName": "NH4",
-                            "Location": "433, 416",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NO3",
-                            "DestinationName": "Atmosphere",
-                            "Location": "1, 319",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NH4",
-                            "DestinationName": "NO3",
-                            "Location": "243, 409",
-                            "Colour": "Black",
-                            "Text": null
-                          }
-                        ]
-                      },
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
                       "IncludeInDocumentation": true,
@@ -3803,14 +3092,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -3819,9 +3106,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "CropType": "Wheat",
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
                   "Name": "Wheat",
                   "IncludeInDocumentation": false,
@@ -3836,6 +3120,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -3846,7 +3131,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "Amount",
@@ -3864,8 +3149,8 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                  "Parameters": null,
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
                   "Name": "Harvest",
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -3873,7 +3158,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link(ByName = true)] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",
@@ -3929,6 +3214,7 @@
         },
         {
           "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
           "Name": "DalbyWheatDoubleRainfall",
           "Children": [
             {
@@ -3964,7 +3250,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing System.Xml.Serialization;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        // - Links to APSIM models\r\n        [Link] Zone zone;\r\n        [Link] Clock clock;\r\n        [Link] Weather weather;\r\n        [Link] ISummary summary = null;\r\n\r\n        // - Paramters for this manager\r\n        [Description(\"Enable? Set to 'No' to completely disable this manager\")] public bool AllowControl { get; set; }\r\n\r\n        [Separator(\"General settings\")]\r\n        [Description(\"Start the climate controls beginning on date (dd/mmm/yyyy): \")] public DateTime EnableDate { get; set; }\r\n        [Description(\"Implement climate control only during part of the year?\")] public bool WithinYearControl { get; set; }\r\n        [Description(\"Within each year, the first day to start the climate controls is (dd-mmm)\")] public string ControlStart { get; set; }\r\n        [Description(\"Within each year, end last day of climate control is (dd-mmm)\")] public string ControlEnd { get; set; }\r\n\r\n        [Separator(\"Rainfall\")]\r\n        [Description(\"Rainfall multiplier (-): \")] public double RainfallMultiplier { get; set; }\r\n        [Description(\"Rainfall addition (mm): \")] public double RainfallAddition { get; set; }\r\n\r\n        [Separator(\"Radiation\")]\r\n        [Description(\"Radiation multiplier (-): \")] public double RadiationMultiplier { get; set; }\r\n        [Description(\"Radiation addition (MJ/m2): \")] public double RadiationAddition { get; set; }\r\n\r\n        [Separator(\"Minimum temperature\")]\r\n        [Description(\"Minimum temperature multiplier (-): \")] public double MinTMultiplier { get; set; }\r\n        [Description(\"Minimum temperature addition (C): \")] public double MinTAddition { get; set; }\r\n\r\n        [Separator(\"Maximum temperature\")]\r\n        [Description(\"Maximum temperature multiplier (-): \")] public double MaxTMultiplier { get; set; }\r\n        [Description(\"Maximum temperature addition (C): \")] public double MaxTAddition { get; set; }\r\n\r\n        [Separator(\"Wind speed\")]\r\n        [Description(\"Wind speed multiplier (-): \")] public double WindMultiplier { get; set; }\r\n        [Description(\"Wind speed addition (m/s): \")] public double WindAddition { get; set; }\r\n\r\n        [Separator(\"Vapour pressure\")]\r\n        [Description(\"Vapour pressure multiplier (-): \")] public double VPMultiplier { get; set; }\r\n        [Description(\"Vapour pressure addition (hPa): \")] public double VPAddition { get; set; }\r\n\r\n        [XmlIgnore] public bool DoControl { get; set; }\r\n        [XmlIgnore] public int DoControlInt { get; set; }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")] private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            // Check if this manager is enabled\r\n            if ((AllowControl) && (clock.Today >= EnableDate))\r\n            {\r\n                DoControl = true;\r\n                if (WithinYearControl)\r\n                    DoControl = DateUtilities.WithinDates(ControlStart, clock.Today, ControlEnd); \r\n            }\r\n\r\n            if (DoControl)\r\n                DoControlInt = 1;\r\n            else\r\n                DoControlInt = 0;\r\n\r\n            if (DoControl)\r\n            {\r\n                // do the weather alterations \r\n                weather.Rain = RainfallMultiplier * weather.Rain + RainfallAddition;\r\n                weather.Radn = RadiationMultiplier * weather.Radn + RadiationAddition;\r\n                weather.MinT = MinTMultiplier * weather.MinT + MinTAddition;\r\n                weather.MaxT = MaxTMultiplier * weather.MaxT + MaxTAddition;\r\n                weather.Wind = WindMultiplier * weather.Wind + WindAddition;\r\n                weather.VP = VPMultiplier * weather.VP + VPAddition;\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "AllowControl",
@@ -4057,7 +3343,7 @@
               "Name": "Field",
               "Children": [
                 {
-                  "$type": "Models.Report.Report, Models",
+                  "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
                     "[Wheat].Phenology.Zadok.Stage",
@@ -4075,6 +3361,7 @@
                   "EventNames": [
                     "[Wheat].Harvesting"
                   ],
+                  "GroupByVariableName": null,
                   "Name": "Report",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -4239,7 +3526,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilWater, Models",
+                      "$type": "Models.WaterModel.WaterBalance, Models",
                       "SummerDate": "1-Nov",
                       "SummerU": 5.0,
                       "SummerCona": 5.0,
@@ -4252,10 +3539,9 @@
                       "CN2Bare": 73.0,
                       "CNRed": 20.0,
                       "CNCov": 0.8,
-                      "slope": "NaN",
-                      "discharge_width": "NaN",
-                      "catchment_area": "NaN",
-                      "max_pond": 0.0,
+                      "Slope": "NaN",
+                      "DischargeWidth": "NaN",
+                      "CatchmentArea": "NaN",
                       "Thickness": [
                         150.0,
                         150.0,
@@ -4264,15 +3550,6 @@
                         300.0,
                         300.0,
                         300.0
-                      ],
-                      "Depth": [
-                        "0-15",
-                        "15-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180"
                       ],
                       "SWCON": [
                         0.3,
@@ -4284,9 +3561,8 @@
                         0.3
                       ],
                       "KLAT": null,
-                      "PrecipitationInterception": 0.0,
+                      "ResourceName": "WaterBalance",
                       "Name": "SoilWater",
-                      "Children": [],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4526,229 +3802,6 @@
                     },
                     {
                       "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                      "DirectedGraphInfo": {
-                        "$type": "Models.Graph.DirectedGraph, Models",
-                        "Nodes": [
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Inert",
-                            "Location": "656, 254",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "SurfaceResidue",
-                            "Location": "566, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMLignin",
-                            "Location": "261, 69",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCellulose",
-                            "Location": "397, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "FOMCarbohydrate",
-                            "Location": "123, 70",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Microbial",
-                            "Location": "218, 299",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Humic",
-                            "Location": "458, 293",
-                            "Colour": "0, 114, 178",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Urea",
-                            "Location": "529, 419",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NO3",
-                            "Location": "185, 435",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "NH4",
-                            "Location": "357, 422",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "Atmosphere",
-                            "Location": "48, 338",
-                            "Colour": "White",
-                            "OutlineColour": "White",
-                            "Transparent": true
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNO3",
-                            "Location": "688, 415",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          },
-                          {
-                            "$type": "Models.Graph.Node, Models",
-                            "Name": "PlantAvailableNH4",
-                            "Location": "691, 421",
-                            "Colour": "0, 158, 115",
-                            "OutlineColour": "Black",
-                            "Transparent": false
-                          }
-                        ],
-                        "Arcs": [
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Microbial",
-                            "Location": "415, 173",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "SurfaceResidue",
-                            "DestinationName": "Humic",
-                            "Location": "499, 172",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Microbial",
-                            "Location": "259, 221",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMLignin",
-                            "DestinationName": "Humic",
-                            "Location": "255, 105",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Microbial",
-                            "Location": "370, 184",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCellulose",
-                            "DestinationName": "Humic",
-                            "Location": "463, 224",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Microbial",
-                            "Location": "141, 131",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "FOMCarbohydrate",
-                            "DestinationName": "Humic",
-                            "Location": "204, 215",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Microbial",
-                            "Location": "335, 301",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Microbial",
-                            "DestinationName": "Humic",
-                            "Location": "319, 278",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Humic",
-                            "DestinationName": "Microbial",
-                            "Location": "334, 340",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "Urea",
-                            "DestinationName": "NH4",
-                            "Location": "433, 416",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NO3",
-                            "DestinationName": "Atmosphere",
-                            "Location": "1, 319",
-                            "Colour": "Black",
-                            "Text": null
-                          },
-                          {
-                            "$type": "Models.Graph.Arc, Models",
-                            "SourceName": "NH4",
-                            "DestinationName": "NO3",
-                            "Location": "243, 409",
-                            "Colour": "Black",
-                            "Text": null
-                          }
-                        ]
-                      },
                       "ResourceName": "Nutrient",
                       "Name": "Nutrient",
                       "IncludeInDocumentation": true,
@@ -4762,14 +3815,12 @@
                 },
                 {
                   "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                  "Canopies": [],
                   "InitialResidueName": "wheat_stubble",
                   "InitialResidueType": "wheat",
                   "InitialResidueMass": 500.0,
                   "InitialStandingFraction": 0.0,
                   "InitialCPR": 0.0,
                   "InitialCNR": 100.0,
-                  "FractionFaecesAdded": 1.0,
                   "ResourceName": "SurfaceOrganicMatter",
                   "Name": "SurfaceOrganicMatter",
                   "IncludeInDocumentation": false,
@@ -4778,9 +3829,6 @@
                 },
                 {
                   "$type": "Models.PMF.Plant, Models",
-                  "CropType": "Wheat",
-                  "IsEnding": false,
-                  "DaysAfterEnding": 0,
                   "ResourceName": "Wheat",
                   "Name": "Wheat",
                   "IncludeInDocumentation": false,
@@ -4795,6 +3843,7 @@
                   "d_interception": 0.0,
                   "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
+                  "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
@@ -4805,7 +3854,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        \r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set;}\r\n        \r\n        [Description(\"Crop to be fertilised\")]\r\n        public string CropName { get; set;}\r\n        \r\n        \r\n        \r\n\r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n            Model crop = sender as Model;\r\n            if (crop.Name.ToLower()==CropName.ToLower())\r\n                Fertiliser.Apply(Amount: Amount, Type: Fertiliser.Types.NO3N);\r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "Amount",
@@ -4823,8 +3872,8 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                  "Parameters": null,
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Parameters": [],
                   "Name": "Harvest",
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -4832,7 +3881,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"Commencing\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link(ByName = true)] Plant Wheat;\r\n        [Link] Soil Soil; \r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Start of sowing window (d-mmm)\")]\r\n        public string StartDate { get; set;}\r\n        [Description(\"End of sowing window (d-mmm)\")]\r\n        public string EndDate { get; set;}\r\n        [Description(\"Minimum extractable soil water for sowing (mm)\")]\r\n        public double MinESW { get; set;}\r\n        [Description(\"Accumulated rainfall required for sowing (mm)\")]\r\n        public double MinRain { get; set;}\r\n        [Description(\"Duration of rainfall accumulation (d)\")]\r\n        public int RainDays { get; set;}\r\n        [Description(\"Cultivar to be sown\")]\r\n        [Display(Type=DisplayType.CultivarName)]\r\n        public string CultivarName { get; set;}\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set;}        \r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set;}    \r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set;}    \r\n        \r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain = new Accumulator(this, \"[Weather].Rain\", RainDays);\r\n        }\r\n        \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            accumulatedRain.Update();\r\n            \r\n            if (DateUtilities.WithinDates(StartDate,Clock.Today,EndDate) &&\r\n                !Wheat.IsAlive &&\r\n                MathUtilities.Sum(Soil.SoilWater.ESW) > MinESW &&\r\n                accumulatedRain.Sum > MinRain)\r\n            {\r\n               Wheat.Sow(population:Population, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing);    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "StartDate",

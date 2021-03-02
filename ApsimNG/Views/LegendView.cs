@@ -11,6 +11,7 @@ namespace UserInterface.Views
     /// </summary>
     interface ILegendView
     {
+        bool LegendInsideGraph { get; }
         event PositionChangedDelegate OnPositionChanged;
         void Populate(string title, string[] values);
 
@@ -18,7 +19,7 @@ namespace UserInterface.Views
         void SetDisabledSeriesNames(string[] seriesNames);
         string[] GetDisabledSeriesNames();
         event EventHandler DisabledSeriesChanged;
-        
+        event EventHandler LegendInsideGraphChanged;
     }
 
     /// <summary>
@@ -30,6 +31,7 @@ namespace UserInterface.Views
 
         public event PositionChangedDelegate OnPositionChanged;
         public event EventHandler DisabledSeriesChanged;
+        public event EventHandler LegendInsideGraphChanged;
 
         private ComboBox combobox1 = null; // fixme - should use IDropDownView, and make public.
         private HBox hbox1 = null;
@@ -41,6 +43,8 @@ namespace UserInterface.Views
         private ListStore listModel = new ListStore(typeof(Boolean), typeof(string));
         private CellRendererText listRender = new CellRendererText();
         private CellRendererToggle listToggle = new CellRendererToggle();
+
+        private CheckButton chkLegendInsideGraph;
 
         /// <summary>
         /// Construtor
@@ -56,7 +60,10 @@ namespace UserInterface.Views
             combobox1.PackStart(comboRender, false);
             combobox1.AddAttribute(comboRender, "text", 0);
             combobox1.Changed += OnPositionComboChanged;
-            combobox1.Focused += OnTitleTextBoxEnter; 
+            combobox1.Focused += OnTitleTextBoxEnter;
+
+            chkLegendInsideGraph = (CheckButton)builder.GetObject("chkLegendInsideGraph");
+            chkLegendInsideGraph.Toggled += OnToggleLegendInsideGraph;
 
             listview.Model = listModel;
             TreeViewColumn column = new TreeViewColumn();
@@ -72,10 +79,23 @@ namespace UserInterface.Views
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
 
+        private void OnToggleLegendInsideGraph(object sender, EventArgs e)
+        {
+            try
+            {
+                LegendInsideGraphChanged?.Invoke(this, EventArgs.Empty);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
+                chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
                 combobox1.Changed -= OnPositionComboChanged;
                 combobox1.Focused -= OnTitleTextBoxEnter;
                 listToggle.Toggled -= OnItemChecked;
@@ -94,6 +114,17 @@ namespace UserInterface.Views
         }
 
         private bool settingCombo = false;
+
+        /// <summary>
+        /// Returns whether or not the check button to show the legend inside the graph is checked.
+        /// </summary>
+        public bool LegendInsideGraph
+        {
+            get
+            {
+                return chkLegendInsideGraph.Active;
+            }
+        }
 
         /// <summary>
         /// Populate the view with the specified title.

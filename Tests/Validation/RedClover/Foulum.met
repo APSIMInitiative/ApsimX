@@ -30,7 +30,7 @@ annual_average_pet = 580.7       !Average annual PET (mm/yr)
 average_windspeed = 3.9          !Average windspeed (m/s)
 
 xDate           year     month       day      rain      mint      maxt      avgt       radn      wind      evap    rhmean
-()                ()        ()        ()      (mm)      (oC)      (oC)      (oC)   (MJ/m^2)     (m/s)      (mm)       (%)
+(dd/MM/yyyy)      ()        ()        ()      (mm)      (oC)      (oC)      (oC)   (MJ/m^2)     (m/s)      (mm)       (%)
 03/11/1999      1999        11       307       0.4       5.6      11.3       8.8        4.8       3.7       0.7      85.7
 04/11/1999      1999        11       308       0.0       6.1      12.2      10.1        1.9       4.4       0.3      89.3
 05/11/1999      1999        11       309       0.0       5.0       7.3       6.0        3.7       6.6       0.5      87.5

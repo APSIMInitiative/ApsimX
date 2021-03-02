@@ -17,6 +17,9 @@ namespace Models.WaterModel
     {
         // --- Links -------------------------------------------------------------------------
 
+        [Link]
+        private WaterBalance waterBalance = null;
+
         /// <summary>A multiplier to CoverTot to get effective cover for runoff.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private LinearInterpolationFunction EffectiveCoverMultiplier = null;
@@ -30,14 +33,6 @@ namespace Models.WaterModel
         private ISurfaceOrganicMatter surfaceOrganicMatter = null;
 
         // --- Settable properties -----------------------------------------------------------
-
-        /// <summary>Gets or sets the cn cov.</summary>
-        [Description("Cover for max curve number reduction")]
-        public double CNCov { get; set; }
-
-        /// <summary>Gets or sets the cn red.</summary>
-        [Description("Max. reduction in curve number due to cover")]
-        public double CNRed { get; set; }
 
         // --- Outputs -----------------------------------------------------------------------
 
@@ -62,28 +57,13 @@ namespace Models.WaterModel
             // Reduce CN2 for the day due to the cover effect
             // NB cover_surface_runoff should really be a parameter to this function
             // proportion of maximum cover effect on runoff (0-1)
-            double cover_fract = MathUtilities.Divide(cover_surface_runoff, CNCov, 0.0);
+            double cover_fract = MathUtilities.Divide(cover_surface_runoff, waterBalance.CNCov, 0.0);
             cover_fract = MathUtilities.Bound(cover_fract, 0.0, 1.0);
-            double cover_reduction = CNRed * cover_fract;
+            double cover_reduction = waterBalance.CNRed * cover_fract;
             return cover_reduction;
         }
 
         // --- Methods -----------------------------------------------------------------------
-
-        /// <summary>Constructor</summary>
-        public CNReductionForCover()
-        {
-            CNCov = 0.8;
-            CNRed = 20;
-
-            double[] canopyFactHeight = { 0, 600, 1800, 30000 };
-            double[] canopyFact = new double[] { 1, 1, 0, 0 };
-
-            EffectiveCoverMultiplier = new LinearInterpolationFunction("[CNReductionForCover].CanopyHeights", canopyFactHeight, canopyFact);
-            EffectiveCoverMultiplier.Parent = this;
-            Children.Add(EffectiveCoverMultiplier);
-        }
-
 
         /// <summary>Calculate an effective cover that is used for runoff.</summary>
         /// <returns>The effective cover to use in the runoff calculations.</returns>
@@ -99,7 +79,7 @@ namespace Models.WaterModel
             double coverSurfaceCrop = 0.0;  // efective total cover (0-1)
             for (int canopy = 0; canopy < canopies.Count; canopy++)
             {
-                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.Value(canopy);
+                double effectiveCropCover = canopies[canopy].CoverTotal * EffectiveCoverMultiplier.ValueForX(canopies[canopy].Height);
                 coverSurfaceCrop = addCover(coverSurfaceCrop, effectiveCropCover);
             }
 

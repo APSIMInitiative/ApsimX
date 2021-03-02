@@ -81,20 +81,5 @@ namespace ApsimNG.Interfaces
         /// Output directory as specified by user.
         /// </summary>
         string DownloadPath { get; set; }
-
-        /// <summary>
-        /// Should results be extracted?
-        /// </summary>
-        bool ExtractResults { get; }
-
-        /// <summary>
-        /// Should results be exported to .csv format?
-        /// </summary>
-        bool ExportCsv { get; }
-
-        /// <summary>
-        /// Should debug files be downloaded?
-        /// </summary>
-        bool DownloadDebugFiles { get; }
     }
 }

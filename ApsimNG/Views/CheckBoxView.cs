@@ -10,7 +10,7 @@ namespace UserInterface.Views
         event EventHandler Changed;
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
-        bool IsChecked { get; set; }
+        bool Checked { get; set; }
 
         /// <summary>Gets or sets whether the checkbox can be changed by the user.</summary>
         bool IsSensitive { get; set; }
@@ -24,6 +24,11 @@ namespace UserInterface.Views
         public event EventHandler Changed;
 
         private CheckButton checkbutton1;
+
+        /// <summary>Constructor.</summary>
+        public CheckBoxView()
+        {
+        }
 
         /// <summary>Constructor</summary>
         public CheckBoxView(ViewBase owner) : base(owner)
@@ -49,7 +54,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Gets or sets whether the checkbox is checked.</summary>
-        public bool IsChecked
+        public bool Checked
         {
             get
             {
@@ -97,6 +102,20 @@ namespace UserInterface.Views
         {
             get { return checkbutton1.Label; }
             set { checkbutton1.Label = value; }
+        }
+
+        /// <summary>
+        /// A method used when a view is wrapping a gtk control.
+        /// </summary>
+        /// <param name="ownerView">The owning view.</param>
+        /// <param name="gtkControl">The gtk control being wrapped.</param>
+        protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
+        {
+            owner = ownerView;
+            checkbutton1 = (CheckButton)gtkControl;
+            checkbutton1.Clicked += OnCheckChanged;
+            mainWidget = checkbutton1;
+            mainWidget.Destroyed += _mainWidget_Destroyed;
         }
     }
 }

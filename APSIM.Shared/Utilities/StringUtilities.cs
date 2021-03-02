@@ -1,14 +1,10 @@
-// -----------------------------------------------------------------------
-// <copyright file="StringUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
+    using System.Globalization;
 
     /// <summary>
     /// Static functions for string manipulation
@@ -185,20 +181,20 @@ namespace APSIM.Shared.Utilities
         ///         Bits[1]=Leaves[Leaf.CurrentRank]
         ///         Bits[2]=CoverAbove
         /// </summary>
-        public static string[] SplitStringHonouringBrackets(string text, char delimiter, char openBracket, char closeBracket)
+        public static string[] SplitStringHonouringBrackets(string text, string delimiters, char openBracket, char closeBracket)
         {
             List<string> ReturnStrings = new List<string>();
             if (text.Trim() == "")
                 return ReturnStrings.ToArray();
             //if no delimiters in the string then return the original
-            if (!text.Contains("."))
+            if (text.IndexOfAny(delimiters.ToCharArray()) < 0)
             {
                 ReturnStrings.Add(text.Trim());
                 return ReturnStrings.ToArray();
             }
 
             bool InsideBracket = false;
-            int Start = IndexNotOfAny(text, delimiter.ToString().ToCharArray());
+            int Start = IndexNotOfAny(text, delimiters.ToCharArray());
             for (int i = Start; i < text.Length; i++)
             {
                 if (text[i] == openBracket)
@@ -207,7 +203,7 @@ namespace APSIM.Shared.Utilities
                     InsideBracket = false;
                 else if (!InsideBracket)
                 {
-                    if (text[i] == delimiter)
+                    if (delimiters.IndexOf(text[i]) != -1)
                     {
                         // Found a word - store it.
                         if (Start != i)
@@ -780,7 +776,7 @@ namespace APSIM.Shared.Utilities
                 TextToken(ref parseSt, out token);
                 token = "-" + token;
             }
-            bool result = int.TryParse(token, out n); // Parse the integer
+            bool result = int.TryParse(token, NumberStyles.Any, CultureInfo.InvariantCulture, out n); // Parse the integer
             if (result)
                 inSt = parseSt;
             return result;
@@ -823,7 +819,7 @@ namespace APSIM.Shared.Utilities
                     token = "";          // This forces a FALSE return
             }
 
-            bool result = Single.TryParse(token, out x); // Parse the value
+            bool result = Single.TryParse(token, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;
@@ -866,7 +862,7 @@ namespace APSIM.Shared.Utilities
                     token = "";          // This forces a FALSE return
             }
 
-            bool result = Double.TryParse(token, out x); // Parse the value
+            bool result = Double.TryParse(token, System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out x); // Parse the value
             if (result)
                 inSt = parseSt;
             return result;

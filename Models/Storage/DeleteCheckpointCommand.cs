@@ -15,6 +15,16 @@
         private DataStoreWriter writer;
         private int checkpointIDToDelete;
 
+        /// <summary>
+        /// Name of the job.
+        /// </summary>
+        public string Name { get { return "Delete Checkpoint"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
+
         /// <summary>Constructor</summary>
         /// <param name="dataStoreWriter">The datastore writer that called this constructor.</param>
         /// <param name="checkpointID">The new checkpoint name to create.</param>

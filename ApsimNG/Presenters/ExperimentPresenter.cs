@@ -56,7 +56,7 @@
             view.MaximumNumSimulations.Leave += OnSetMaxNumSims;
 
             // Give the view the default maximum number of simulations to display.
-            view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
+            view.MaximumNumSimulations.Text = DefaultMaxSims.ToString();
 
             // Get a list of all simulation descriptions (even disabled ones).
             GetAllSimulationDescriptionsFromExperiment();
@@ -96,7 +96,7 @@
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Value, CultureInfo.InvariantCulture);
+            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Text, CultureInfo.InvariantCulture);
             var cellRenderDetails = new List<CellRendererDescription>();
             for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
             {
@@ -126,7 +126,7 @@
             view.List.CellRenderDetails = cellRenderDetails;
 
             // Populate the number of simulations label.
-            view.NumberSimulationsLabel.Value = "Number of simulations: " + simulationDescriptions.Count;
+            view.NumberSimulationsLabel.Text = "Number of simulations: " + simulationDescriptions.Count;
         }
 
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
@@ -142,7 +142,7 @@
         private List<string> GetSelectedSimulationNamesFromView()
         {
             var selectedSimulationNames = new List<string>();
-            foreach (var row in view.List.SelectedRows)
+            foreach (var row in view.List.SelectedIndicies)
                 selectedSimulationNames.Add(view.List.DataSource.Rows[row]["SimulationName"].ToString());
             return selectedSimulationNames;
         }
@@ -270,10 +270,10 @@
         {
             try
             {
-                var maxNumSimsString = view.MaximumNumSimulations.Value;
+                var maxNumSimsString = view.MaximumNumSimulations.Text;
                 int n;
                 if (string.IsNullOrEmpty(maxNumSimsString))
-                    view.MaximumNumSimulations.Value = DefaultMaxSims.ToString();
+                    view.MaximumNumSimulations.Text = DefaultMaxSims.ToString();
                 else if (Int32.TryParse(maxNumSimsString, out n))
                 {
                     if (n > 1000 && explorerPresenter.MainPresenter.AskQuestion("Displaying more than 1000 rows of data is not recommended! Are you sure you wish to do this?") != QuestionResponseEnum.Yes)

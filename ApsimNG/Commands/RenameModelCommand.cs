@@ -24,7 +24,7 @@
             if (modelToRename.ReadOnly)
                 throw new ApsimXException(modelToRename, string.Format("Unable to rename {0} - it is read-only.", modelToRename.Name));
             this.modelToRename = modelToRename;
-            this.newName = newName;
+            this.newName = newName.Trim();
             this.explorerView = explorerView;
         }
 
@@ -32,7 +32,7 @@
         /// <param name="commandHistory">The command history.</param>
         public void Do(CommandHistory commandHistory)
         {
-            string originalPath = Apsim.FullPath(this.modelToRename);
+            string originalPath = this.modelToRename.FullPath;
 
             // Get original value of property so that we can restore it in Undo if needed.
             originalName = this.modelToRename.Name;
@@ -46,7 +46,7 @@
         /// <param name="commandHistory">The command history.</param>
         public void Undo(CommandHistory commandHistory)
         {
-            explorerView.Tree.Rename(Apsim.FullPath(modelToRename), originalName);
+            explorerView.Tree.Rename(modelToRename.FullPath, originalName);
             modelToRename.Name = originalName;
         }
     }

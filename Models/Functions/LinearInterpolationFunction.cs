@@ -76,10 +76,17 @@ namespace Models.Functions
         public double Value(int arrayIndex = -1)
         {
             // Shortcut exit when the Y values are all the same. Runs quicker.
-            if (YsAreAllTheSame)
-                return XYPairs.Y[0];
-            else
-                return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
+            try
+            {
+                if (YsAreAllTheSame)
+                    return XYPairs.Y[0];
+                else
+                    return XYPairs.ValueIndexed(XValue.Value(arrayIndex));
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to evaluate linear interpolation function {FullPath}", err);
+            }
         }
 
         /// <summary>Values for x.</summary>
@@ -102,18 +109,20 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
 
                 // add graph and table.
                 if (XYPairs != null)
                 {
-                    IModel xValue = (IModel)Apsim.Get(this, "XValue");
+                    IModel xValue = (IModel)this.FindByPath("XValue")?.Value;
                     string xName = xValue.Name;
                     
-                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + xName + "</i>", indent));
+                    tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated using linear interpolation", indent));
 
                     tags.Add(new AutoDocumentation.GraphAndTable(XYPairs, string.Empty, xName, LookForYAxisTitle(this), indent));
+
+                    AutoDocumentation.DocumentModel(xValue, tags, headingLevel + 1, indent);
                 }
             }
         }

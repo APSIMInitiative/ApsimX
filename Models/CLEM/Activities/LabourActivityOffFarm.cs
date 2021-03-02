@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Bank account name to pay to
         /// </summary>
         [Description("Bank account to pay to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         public string BankAccountName { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -44,7 +44,7 @@ namespace Models.CLEM.Activities
         {
             // locate resources
             bankType = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
-            labourRequired = Apsim.Children(this, typeof(LabourRequirement)).FirstOrDefault() as LabourRequirement;
+            labourRequired = this.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
         }
 
         /// <summary>

@@ -1,14 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ConvertSoilNode.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace APSIM.Shared.OldAPSIM
+﻿namespace APSIM.Shared.OldAPSIM
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Xml;
     using APSIM.Shared.Utilities;
 

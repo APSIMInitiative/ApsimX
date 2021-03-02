@@ -1,4 +1,4 @@
-﻿using Models.Graph;
+﻿using Models;
 
 namespace Models.Interfaces
 {

@@ -3,17 +3,19 @@
     using Interfaces;
     using System;
     using Models.Core;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
+    using Models.Soils.Nutrients;
 
     /// <summary>This class encapsulates a SoilNitrogen model NH4 solute.</summary>
     [Serializable]
+    [ValidParent(ParentType = typeof(SoilNitrogen))]
     public class SoilNitrogenPlantAvailableNH4 : Model, ISolute
     {
         [Link(Type = LinkType.Ancestor)]
         SoilNitrogen parent = null;
 
         /// <summary>Solute amount (kg/ha)</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] kgha
         {
             get

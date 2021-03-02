@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="CustomQueryPresenter.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-using ApsimNG.Views.CLEM;
+﻿using ApsimNG.Views.CLEM;
 using Models.Core;
 using Models.CLEM.Reporting;
 using System;
@@ -96,7 +90,7 @@ namespace ApsimNG.Presenters.CLEM
         /// <param name="e"></param>        
         private void OnRunQuery(object sender, EventArgs e)
         {
-            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            var store = query.FindInScope<IDataStore>();
             view.Grid.DataSource = store.Reader.GetDataUsingSql(view.Sql);
 
             TrackChanges();
@@ -112,7 +106,7 @@ namespace ApsimNG.Presenters.CLEM
             DataTable data = view.Grid.DataSource;
             data.TableName = view.Tablename;
 
-            var store = Apsim.Find(query, typeof(IDataStore)) as IDataStore;
+            var store = query.FindInScope<IDataStore>();
             store.Writer.WriteTable(data);
 
             TrackChanges();

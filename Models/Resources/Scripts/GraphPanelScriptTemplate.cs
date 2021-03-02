@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
-using Models.Graph;
+using Models;
 using Models.Storage;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace Models
 		{
 			// Get a list of all descendants of the panel's parent which are runnable
 			// (simulations, experiments, etc).
-			List<ISimulationDescriptionGenerator> runnables = Apsim.ChildrenRecursively(panel.Parent, typeof(ISimulationDescriptionGenerator)).Cast<ISimulationDescriptionGenerator>().ToList();
+			List<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();
 
 			// Remove all simulations which are children of an experiment.
 			runnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);
@@ -38,7 +38,7 @@ namespace Models
         /// </summary>
         /// <param name="graph">The graph.</param>
         /// <param name="simulationName">Simulation name for this tab.</param>
-        public void TransformGraph(Models.Graph.Graph graph, string simulationName)
+        public void TransformGraph(Models.Graph graph, string simulationName)
         {
         }
     }

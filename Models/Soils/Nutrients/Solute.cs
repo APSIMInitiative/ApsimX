@@ -6,6 +6,7 @@ namespace Models.Soils.Nutrients
     using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
+    using Newtonsoft.Json;
 
     /// <summary>
     /// # [Name]
@@ -23,7 +24,19 @@ namespace Models.Soils.Nutrients
         [Link]
         Soil soil = null;
 
+        /// <summary>Default constructor.</summary>
+        public Solute() { }
+
+        /// <summary>Default constructor.</summary>
+        public Solute(Soil soilModel, string soluteName, double[] value) 
+        {
+            soil = soilModel;
+            kgha = value;
+            Name = soluteName;
+        }
+
         /// <summary>Solute amount (kg/ha)</summary>
+        [JsonIgnore]
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
@@ -32,7 +45,7 @@ namespace Models.Soils.Nutrients
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             Reset();
@@ -43,7 +56,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = Apsim.Get(soil.Initial, Name + "N") as double[];           
+            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];           
             if (initialkgha == null)
                 kgha = new double[soil.Thickness.Length];  // Urea will fall to here.
             else
@@ -54,7 +67,8 @@ namespace Models.Soils.Nutrients
         /// <param name="value">New values.</param>
         public void SetKgHa(SoluteSetterType callingModelType, double[] value)
         {
-            kgha = value;
+            for (int i = 0; i < value.Length; i++)
+                kgha[i] = value[i];
         }
 
         /// <summary>Setter for kgha delta.</summary>

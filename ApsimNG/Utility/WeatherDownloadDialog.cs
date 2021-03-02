@@ -4,6 +4,7 @@ namespace Utility
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models;
+    using Models.Climate;
     using Models.Core;
     using Models.Core.ApsimFile;
     using Newtonsoft.Json;
@@ -290,7 +291,7 @@ namespace Utility
             dialog1.Parent = view.MainWidget.Toplevel;
             dialog1.WindowPosition = WindowPosition.CenterOnParent;
             // Attempt to find an initial latitude and longitude from a Weather model
-            IModel weather = Apsim.Find(dest, typeof(Models.Interfaces.IWeather));
+            IModel weather = dest.FindInScope<Models.Interfaces.IWeather>() as IModel;
             double latitude, longitude;
             if (weather != null && weather is Weather)
             {

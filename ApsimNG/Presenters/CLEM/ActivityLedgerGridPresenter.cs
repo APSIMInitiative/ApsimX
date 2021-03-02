@@ -1,20 +1,11 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ActivityLedgerGridPresenter.cs" company="CSIRO CLEM">
-//     Copyright (c) CSIRO CLEM based  upon GridePresenter APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
+    using Models.Storage;
     using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.Linq;
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Factorial;
     using Views;
-    using global::UserInterface.Interfaces;
-    using System.Collections.Generic;
-    using Models.Storage;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class ActivityLedgerGridPresenter : IPresenter

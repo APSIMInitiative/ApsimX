@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -20,6 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
+    [Version(1, 0, 1, "Included new ProportionOfAvailable option for moving pasture")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
@@ -32,7 +33,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Graze food store/paddock")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze food store where pasture is located required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string PaddockName { get; set; }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Animal food store to receive pasture")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Animal food store to receive pasture is required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
         public string AnimalFoodStoreName { get; set; }
 
         /// <summary>
@@ -61,13 +62,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Amount harvested this timestep after limiter accounted for
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountHarvested { get; set; }
 
         /// <summary>
         /// Amount available for harvest from crop file
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
         private GrazeFoodStoreType pasture { get; set; }
@@ -104,32 +105,28 @@ namespace Models.CLEM.Activities
 
             if (this.TimingOK)
             {
-                List<Ruminant> herd = new List<Ruminant>();
-
-                // determine amount to be cut and carried
-                if (CutStyle != RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                {
-                    herd = CurrentHerd(false);
-                }
                 switch (CutStyle)
                 {
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                        AmountHarvested += pasture.Amount * Supply;
+                        break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                         AmountHarvested += Supply * 30.4;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * ind.Weight * 30.4;
                         }
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * ind.PotentialIntake;
                         }
                         break;
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        foreach (Ruminant ind in herd)
+                        foreach (Ruminant ind in CurrentHerd(false))
                         {
                             AmountHarvested += Supply * (ind.PotentialIntake - ind.Intake);
                         }
@@ -352,7 +349,7 @@ namespace Models.CLEM.Activities
         private ActivityCutAndCarryLimiter LocateCutAndCarryLimiter(IModel model)
         {
             // search children
-            ActivityCutAndCarryLimiter limiterFound = Apsim.Children(model, typeof(ActivityCutAndCarryLimiter)).Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
+            ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
             {
                 if (model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))

@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="SQLite.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -729,7 +724,7 @@ namespace APSIM.Shared.Utilities
         /// <returns></returns>
         public List<string> GetColumnNames(string tableName)
         {
-            string sql = "select * from " + tableName + " LIMIT 0";
+            string sql = "select * from [" + tableName + "] LIMIT 0";
 
             //prepare the statement
             IntPtr stmHandle = Prepare(sql);
@@ -915,17 +910,18 @@ namespace APSIM.Shared.Utilities
         public string CreateInsertSQL(string tableName, IEnumerable<string> columnNames)
         {
             StringBuilder sql = new StringBuilder();
-            sql.Append("INSERT INTO ");
+            sql.Append("INSERT INTO [");
             sql.Append(tableName);
-            sql.Append('(');
+            sql.Append("](");
 
-            foreach (var columnName in columnNames)
+            for (int i = 0; i < columnNames.Count(); i++)
             {
-                if (sql[sql.Length-1] == ']')
+                string columnName = columnNames.ElementAt(i);
+                if (i > 0)
                     sql.Append(',');
-                sql.Append('[');
+                sql.Append('"');
                 sql.Append(columnName);
-                sql.Append(']');
+                sql.Append('"');
             }
             sql.Append(") VALUES (");
 
@@ -1035,6 +1031,8 @@ namespace APSIM.Shared.Utilities
                 return "real";
             else if (type.ToString() == "System.Double")
                 return "real";
+            else if (type.ToString() == "System.Boolean")
+                return "integer";
             else
                 return "text";
         }
@@ -1070,16 +1068,16 @@ namespace APSIM.Shared.Utilities
                 if (sql.Length > 0)
                     sql.Append(',');
 
-                sql.Append("[");
+                sql.Append("\"");
                 sql.Append(colNames[c]);
-                sql.Append("] ");
+                sql.Append("\" ");
                 if (colTypes[c] == null)
                     sql.Append("integer");
                 else
                     sql.Append(colTypes[c]);
             }
 
-            sql.Insert(0, "CREATE TABLE " + tableName + " (");
+            sql.Insert(0, "CREATE TABLE [" + tableName + "] (");
             sql.Append(')');
             ExecuteNonQuery(sql.ToString());
         }
@@ -1098,9 +1096,9 @@ namespace APSIM.Shared.Utilities
                 if (columnNamesCSV.Length > 0)
                     columnNamesCSV.Append(',');
 
-                columnNamesCSV.Append("[");
+                columnNamesCSV.Append('"');
                 columnNamesCSV.Append(colNames[c]);
-                columnNamesCSV.Append("] ");
+                columnNamesCSV.Append("\" ");
             }
 
             string uniqueString = null;

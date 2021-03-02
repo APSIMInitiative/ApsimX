@@ -21,9 +21,10 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args); 
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -42,9 +43,10 @@
             var events = new Events(zone);
             var args = new object[] { this, new EventArgs() };
             events.Publish("Commencing", args);
+            events.Publish("StartOfSimulation", args);
             events.Publish("DoDailyInitialisation", args);
 
-            var soilWater = zone.Children[1].Children[4] as SoilWater;
+            var soilWater = zone.Children[1].Children[4] as Models.WaterModel.WaterBalance;
             var swBeforeIrrigation = MathUtilities.Sum(soilWater.SWmm);
             var irrigation = zone.Children[0] as Irrigation;
 
@@ -61,12 +63,12 @@
             var zone = new Zone()
             {
                 Area = 1,
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Irrigation(),
                     new Soil()
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Physical()
                             {
@@ -76,7 +78,7 @@
                                 LL15 = new double[] { 0.27, 0.267, 0.261, 0.261, 0.261, 0.261 },
                                 DUL = new double[] { 0.365, 0.461, 0.43, 0.412, 0.402, 0.404 },
                                 SAT = new double[] { 0.400, 0.481, 0.45, 0.432, 0.422, 0.424 },
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new SoilCrop()
                                     {
@@ -100,12 +102,13 @@
                             {
                                 Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SW = new double[] { 0.103, 0.238, 0.253, 0.261, 0.261, 0.261 },
-                                NO3N = new double[] { 23, 7, 2, 1, 1, 1 },
+                                NO3 = new double[] { 23, 7, 2, 1, 1, 1 },
                                 OC = new double[] { 1.35, double.NaN, double.NaN, double.NaN, double.NaN, double.NaN },
                                 SWUnits = Sample.SWUnitsEnum.Gravimetric
                             },
-                            new SoilWater()
+                            new Models.WaterModel.WaterBalance()
                             {
+                                Thickness = new double[] { 100, 300, 300, 300, 300, 300  },
                                 SummerCona = 6,
                                 WinterCona = 3,
                                 SummerU = 6,
@@ -115,12 +118,16 @@
                                 CNRed = 10,
                                 DiffusConst = 10,
                                 DiffusSlope = 10,
-                                Salb = 10
+                                Salb = 10,
+                                ResourceName = "WaterBalance"
                             },
                             new Nutrient()
                             {
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
+                                    new MockNutrientPool() { Name = "Inert" },
+                                    new MockNutrientPool() { Name = "Microbial" },
+                                    new MockNutrientPool() { Name = "Humic" },
                                     new MockNutrientPool() { Name = "FOMCellulose" },
                                     new MockNutrientPool() { Name = "FOMCarbohydrate" },
                                     new MockNutrientPool() { Name = "FOMLignin" },
@@ -154,8 +161,9 @@
                 }
             };
 
-            Apsim.ParentAllChildren(zone);
-            Apsim.ChildrenRecursively(zone).ForEach(m => m.OnCreated());
+            zone.ParentAllDescendants();
+            foreach (IModel model in zone.FindAllDescendants())
+                model.OnCreated();
             var links = new Links();
             links.Resolve(zone, true);
             var events = new Events(zone);

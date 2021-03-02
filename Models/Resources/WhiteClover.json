@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 77,
+  "Version": 118,
   "Name": "Simulations",
   "Children": [
     {
@@ -35,7 +35,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AirTemperatureFunction, Models",
+              "$type": "Models.Functions.HourlyInterpolation, Models",
               "Name": "ThermalTime",
               "Children": [
                 {
@@ -59,16 +59,25 @@
                     22.0,
                     0.0
                   ],
-                  "Name": "XYPairs",
+                  "Name": "Response",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ThreeHourSin, Models",
+                  "Name": "InterpolationMethod",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "agregationMethod": "0"
             },
             {
               "$type": "Models.Functions.PhotoperiodFunction, Models",
@@ -421,40 +430,134 @@
           "Name": "Arbitrator",
           "Children": [
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "NArbitrator",
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "DMArbitration",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Controls the allocation of N to each of the plant's organs. Partitioning is based on:  \r\n",
-                  "Name": "Description",
-                  "Children": [],
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
+                      "Name": "SendPotentialDMAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NutrientConstrainedAllocationMethod, Models",
+                      "Name": "NutrientConstrainedAllocationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
+                      "Name": "DryMatterAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Controls the allocation of biomass to each of the plant's organs. Partitioning is based on:  \r\n",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
             },
             {
-              "$type": "Models.PMF.RelativeAllocation, Models",
-              "Name": "DMArbitrator",
+              "$type": "Models.PMF.BiomassTypeArbitrator, Models",
+              "Name": "NArbitration",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "Controls the allocation of biomass to each of the plant's organs. Partitioning is based on:  \r\n",
-                  "Name": "Description",
-                  "Children": [],
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "PotentialPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
+                      "Name": "ReallocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "ActualPartitioningMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.AllocateFixationMethod, Models",
+                      "Name": "AllocateFixationMethod"
+                    },
+                    {
+                      "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
+                      "Name": "RetranslocationMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "Name": "AllocationMethods",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
+                      "Name": "NitrogenAllocationsMethod"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.PMF.RelativeAllocation, Models",
+                  "Name": "ArbitrationMethod",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Controls the allocation of N to each of the plant's organs. Partitioning is based on:  \r\n",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Arbitrator.AllocateUptakesMethod, Models",
+                  "Name": "AllocateUptakesMethod"
                 }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
+              ]
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
+              "Name": "WaterUptakeMethod"
+            },
+            {
+              "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
+              "Name": "NitrogenUptakeMethod"
             }
           ],
           "IncludeInDocumentation": false,
@@ -2067,34 +2170,6 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3E-05,
-                  "Units": "g/plant",
-                  "Name": "InitialOrganWt",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Plant].Population",
-                  "Name": "Population",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 0.4,
               "Units": "gC/gDM",
@@ -2974,6 +3049,50 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 3E-05,
+                      "Units": "g/plant",
+                      "Name": "InitialOrganWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Plant].Population",
+                      "Name": "Population",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -2995,34 +3114,6 @@
               "Text": "This organt is parameterised to represent all the stolons in the plant, without distinction between ages or placement in the canopy.  \r\n",
               "Name": "Description",
               "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 2E-05,
-                  "Units": "g/plant",
-                  "Name": "InitialOrganWt",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Plant].Population",
-                  "Name": "Population",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -4119,6 +4210,50 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2E-05,
+                      "Units": "g/plant",
+                      "Name": "InitialOrganWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Plant].Population",
+                      "Name": "Population",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -4139,16 +4274,6 @@
               "$type": "Models.Memo, Models",
               "Text": "Note that this organ represents all the reproductive parts of the plant: flowers, pods, seeds, etc.  No distinction is made between ages or placement in the canopy.  \r\nThe main reason for grouping all flowers and seeds together is the complexity of the reproductive phase of white clover.  There are variations in phenology between plants in the same sward, and even in the same plant there can be new flowers being initiated while others contain mature seeds (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]).  A comprehensive and specific dataset is necessary to support the implementation of distinct organs within the inflorescence, this may be revisited in the future.  \r\n",
               "Name": "Description",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.0,
-              "Units": "g/m^2",
-              "Name": "InitialWtFunction",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
@@ -5085,6 +5210,32 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "g/m^2",
+                  "Name": "Structural",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -6164,34 +6315,6 @@
               "Text": "Note that this represents the taproots of all the plant in the population.  These are primarily considered as storage organs, its researves can be made available to boost plant growth in spring and/or following a defoliation.  \r\nTaproots in white clover are generally efemerous.  They develop from seeds and are ubiquitous in young plants, but these generally die out about a year after germination and adult plants are often described as having no taproots ([HartChapter1987]; [BrockEtAl2000]).  However, some secondary roots can be taproot-like, especially in especific cultivars, e.g. ladino ([ThomasChapter1987]; [CaradusAndWoodfield1998]). Given that, and because the model simulates the a whole population, it is assumed that taproots are always present, but typically constitute a minor fraction of the root systems in most cultivars.  \r\n",
               "Name": "Description",
               "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "InitialWtFunction",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 5E-05,
-                  "Units": "g/plant",
-                  "Name": "InitialOrganWt",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Plant].Population",
-                  "Name": "Population",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -7293,6 +7416,50 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 5E-05,
+                      "Units": "g/plant",
+                      "Name": "InitialOrganWt",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Plant].Population",
+                      "Name": "Population",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -7313,30 +7480,15 @@
           "Name": "Root",
           "Children": [
             {
+              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "Name": "RootShape",
+              "Children": []
+            },
+            {
               "$type": "Models.Memo, Models",
               "Text": "Note that this organs is parameterised to represents all the fine roots of the plant.  The root organ is reponsible for uptake but can also supply both N and DM from its non-structural biomass, although this typically represents only a small contribution to plant growth and only happen upon senescence.  The taproot organ is used for simulating biomass storage and remobilisation.  The root depth increases through time, as described below, but currently it does not retreat in case of root depth, something that will have to be revisited in the future.  \r\n",
               "Name": "Description",
               "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.Constant, Models",
-              "FixedValue": 0.00035,
-              "Units": "g/plant",
-              "Name": "InitialDM",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "It is assumed that approximately 2/3 of the seed biomass is allocated to roots upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter]; [BissuelBelaygueEtAl2002_seed]; [MurrayThesis2012]). ",
-                  "Name": "Description",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -8274,295 +8426,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "DMRetranslocationFactor",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "A generic relationship between retranslocation and environmental factors is assumed, this is done so that retranslocation is enhanced when conditions are good for growth. Plus retranslocation is only allowed when days are increasing, thus helping growth in spring and allowing for some replenishing in late summer and autumn.  \r\n",
-                  "Name": "Description",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
-                  "Units": "/day",
-                  "Name": "ReferenceRate",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                  "MaximumTemperatureWeighting": 0.5,
-                  "Name": "TemperatureFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        2.5,
-                        7.5,
-                        15.0,
-                        18.0,
-                        27.0,
-                        35.0,
-                        37.5
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        0.15,
-                        0.7,
-                        1.0,
-                        1.0,
-                        0.1,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SoilMoistureFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.5,
-                        1.0
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "PhotoPeriodFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.015,
-                        0.03,
-                        0.04,
-                        0.05
-                      ],
-                      "Y": [
-                        0.0,
-                        0.1,
-                        0.5,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].PhotoperiodVariation",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 1.0,
               "Units": "/day",
               "Name": "DMReallocationFactor",
               "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.MultiplyFunction, Models",
-              "Name": "NRetranslocationFactor",
-              "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "A generic relationship between retranslocation and environmental factors is assumed, this is done so that retranslocation is enhanced when conditions are good for growth. Plus retranslocation is only allowed when days are increasing, thus helping growth in spring and allowing for some replenishing in late summer and autumn.  \r\n",
-                  "Name": "Description",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.1,
-                  "Units": "/day",
-                  "Name": "ReferenceRate",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.WeightedTemperatureFunction, Models",
-                  "MaximumTemperatureWeighting": 0.5,
-                  "Name": "TemperatureFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        2.5,
-                        7.5,
-                        15.0,
-                        18.0,
-                        27.0,
-                        35.0,
-                        37.5
-                      ],
-                      "Y": [
-                        0.0,
-                        0.0,
-                        0.15,
-                        0.7,
-                        1.0,
-                        1.0,
-                        0.1,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SoilMoistureFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.5,
-                        1.0
-                      ],
-                      "Y": [
-                        0.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Fw",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "PhotoPeriodFactor",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        0.015,
-                        0.03,
-                        0.04,
-                        0.05
-                      ],
-                      "Y": [
-                        0.0,
-                        0.1,
-                        0.5,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].PhotoperiodVariation",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -8808,6 +8676,47 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "InitialWt",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.00035,
+                  "Units": "g/plant",
+                  "Name": "Structural",
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "It is assumed that approximately 2/3 of the seed biomass is allocated to roots upon emergence.  The weight of white clover seeds varies between 0.5 and 0.8 g/1000 seeds ([Thomas1987Chapter]; [BissuelBelaygueEtAl2002_seed]; [MurrayThesis2012]). ",
+                      "Name": "Description",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "0.0"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "0.0"
+                }
+              ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "RootDepthStressFactor",
+              "FixedValue": "1"
             }
           ],
           "IncludeInDocumentation": false,
@@ -9187,8 +9096,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.XYPairs.X = 2.5,25,37.5",
-                "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
+                "[Phenology].ThermalTime.Response.X = 2.5,25,37.5",
+                "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].Tallness.XYPairs.Y = 20,75,110,140,150",
@@ -9218,8 +9127,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.XYPairs.X = 0,21,32",
-                "[Phenology].ThermalTime.XYPairs.X = 0,21,0",
+                "[Phenology].ThermalTime.Response.X = 0,21,32",
+                "[Phenology].ThermalTime.Response.X = 0,21,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = -1,0,5,12.5,15.5,24.5,32.5,35",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.4",
                 "[Leaf].Tallness.XYPairs.Y = 20,50,75,97.5,104",
@@ -9248,8 +9157,8 @@
             {
               "$type": "Models.PMF.Cultivar, Models",
               "Command": [
-                "[Phenology].ThermalTime.XYPairs.X = 2.5,25,37.5",
-                "[Phenology].ThermalTime.XYPairs.X = 0,22.5,0",
+                "[Phenology].ThermalTime.Response.X = 2.5,25,37.5",
+                "[Phenology].ThermalTime.Response.X = 0,22.5,0",
                 "[Leaf].Photosynthesis.FT.XYPairs.X = 0,2.5,7.5,15,18,27,35,37.5",
                 "[Leaf].TargetBiomassProportion.VegetativeInductive.TargetProportion.FixedValue = 0.45",
                 "[Leaf].Tallness.XYPairs.Y = 20,65,100,130,135",
@@ -9279,11 +9188,22 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Functions.Constant, Models",
+          "FixedValue": 0.0,
+          "Units": null,
+          "Name": "MortalityRate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
       "Enabled": true,
-      "ReadOnly": false
+      "ReadOnly": false,
+      "PlantType": "WhiteClover"
     }
   ]
 }

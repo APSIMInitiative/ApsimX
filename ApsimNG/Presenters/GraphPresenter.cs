@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GraphPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections;
@@ -17,7 +11,7 @@ namespace UserInterface.Presenters
     using EventArguments;
     using Interfaces;
     using Models.Core;
-    using Models.Graph;
+    using Models;
     using Models.Storage;
     using Views;
     
@@ -42,7 +36,7 @@ namespace UserInterface.Presenters
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>The series definitions to show on graph.</summary>
-        public List<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
+        public IEnumerable<SeriesDefinition> SeriesDefinitions { get; set; } = new List<SeriesDefinition>();
 
         /// <summary>Attach the model to the view.</summary>
         /// <param name="model">The model.</param>
@@ -99,12 +93,12 @@ namespace UserInterface.Presenters
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
 
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter);
+                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter).ToArray();
             }
             catch (SQLiteException e)
             {
@@ -119,11 +113,11 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Draw the graph on the screen.</summary>
-        public void DrawGraph(List<SeriesDefinition> definitions)
+        public void DrawGraph(IEnumerable<SeriesDefinition> definitions)
         {
             graphView.Clear();
             if (storage == null)
-                storage = Apsim.Find(graph, typeof(IDataStore)) as IDataStore;
+                storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
 
@@ -139,7 +133,7 @@ namespace UserInterface.Presenters
                 DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the axes.
-                foreach (Models.Graph.Axis a in graph.Axis)
+                foreach (Models.Axis a in graph.Axis)
                 {
                     FormatAxis(a);
                 }
@@ -186,7 +180,7 @@ namespace UserInterface.Presenters
 
             graphView.Export(ref img, r, true);
 
-            string path = Apsim.FullPath(graph).Replace(".Simulations.", string.Empty);
+            string path = graph.FullPath.Replace(".Simulations.", string.Empty);
             string fileName = Path.Combine(folder, path + ".png");
             img.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
 
@@ -254,7 +248,8 @@ namespace UserInterface.Presenters
                                                     definition.Y,
                                                     definition.XFieldName,
                                                     definition.YFieldName,
-                                                    definition.Error,
+                                                    definition.XError,
+                                                    definition.YError,
                                                     definition.XAxis,
                                                     definition.YAxis,
                                                     colour,
@@ -262,6 +257,7 @@ namespace UserInterface.Presenters
                                                     definition.Marker,
                                                     definition.LineThickness,
                                                     definition.MarkerSize,
+                                                    definition.MarkerModifier,
                                                     definition.ShowInLegend);
                     }
                     else if (definition.Type == SeriesType.Region)
@@ -322,7 +318,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
-        private void DrawOnView(List<Annotation> annotations)
+        private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
             double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
@@ -330,14 +326,14 @@ namespace UserInterface.Presenters
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
-            for (int i = 0; i < annotations.Count; i++)
+            for (int i = 0; i < annotations.Count(); i++)
             {
-                if (annotations[i] is TextAnnotation)
+                IAnnotation annotation = annotations.ElementAt(i);
+                if (annotation is TextAnnotation textAnnotation)
                 {
-                    TextAnnotation textAnnotation = annotations[i] as TextAnnotation;
                     if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
                     {
-                        double interval = (largestAxisScale - lowestAxisScale) / 10; // fit 10 annotations on graph.
+                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
 
                         double yPosition = largestAxisScale - (i * interval);
                         graphView.DrawText(
@@ -363,10 +359,8 @@ namespace UserInterface.Presenters
                                             Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                 }
-                else
+                else if (annotation is LineAnnotation lineAnnotation)
                 {
-                    LineAnnotation lineAnnotation = annotations[i] as LineAnnotation;
-
                     graphView.DrawLine(
                                         lineAnnotation.x1, 
                                         lineAnnotation.y1,
@@ -378,12 +372,14 @@ namespace UserInterface.Presenters
                                         lineAnnotation.InFrontOfSeries,
                                         lineAnnotation.ToolTip);
                 }
+                else
+                    throw new Exception($"Unknown annotation type {annotation.GetType()}");
             }
         }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(Models.Graph.Axis axis)
+        private void FormatAxis(Models.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)
@@ -434,7 +430,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || Apsim.ChildrenRecursively(graph).Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model))
                 DrawGraph();
         }
 

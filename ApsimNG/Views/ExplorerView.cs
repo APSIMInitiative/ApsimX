@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ExplorerView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-// The basics are all here, but there are still a few things to be implemented:
+﻿// The basics are all here, but there are still a few things to be implemented:
 // Drag and drop is pinning an object so we can pass its address around as data. Is there a better way?
 // (Probably not really, as we go through a native layer, unless we can get by with the serialized XML).
 // Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.

@@ -1,13 +1,6 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="HoverPointArgs.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.EventArguments
+﻿namespace UserInterface.EventArguments
 {
     using System;
-    using System.Collections.Generic;
-    using Interfaces;
 
     /// <summary>
     /// When the user hovers over a point on a graph, this structure will be 

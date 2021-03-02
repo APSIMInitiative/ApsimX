@@ -23,8 +23,11 @@
             if (parent.ReadOnly)
                 throw new Exception(string.Format("Unable to modify {0} - it is read-only.", parent.Name));
 
+            if (modelToAdd is Simulations s && s.Children.Count == 1)
+                modelToAdd = s.Children[0];
+
             modelToAdd.Parent = parent;
-            Apsim.ParentAllChildren(modelToAdd);
+            modelToAdd.ParentAllDescendants();
             parent.Children.Add(modelToAdd as Model);
 
             // Ensure the model name is valid.
@@ -32,7 +35,21 @@
 
             // Call OnCreated
             modelToAdd.OnCreated();
-            Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
+            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
+                model.OnCreated();
+
+            // If the model is being added at runtime then need to resolve links and events.
+            Simulation parentSimulation = parent.FindAncestor<Simulation>();
+            if (parentSimulation != null && parentSimulation.IsRunning)
+            {
+                var links = new Links(parentSimulation.Services);
+                links.Resolve(modelToAdd, true);
+                var events = new Events(modelToAdd);
+                events.ConnectEvents();
+
+                // Call StartOfSimulation events
+                events.PublishToModelAndChildren("StartOfSimulation", new object[] { parent, new EventArgs() });
+            }
 
             Apsim.ClearCaches(modelToAdd);
             return modelToAdd;
@@ -76,13 +93,14 @@
             }
 
             // Correctly parent all models.
-            Add(modelToAdd, parent);
+            modelToAdd = Add(modelToAdd, parent);
 
             // Ensure the model name is valid.
             EnsureNameIsUnique(modelToAdd);
 
             // Call OnCreated
-            Apsim.ChildrenRecursively(modelToAdd).ForEach(m => m.OnCreated());
+            foreach (IModel model in modelToAdd.FindAllDescendants().ToList())
+                model.OnCreated();
 
             return modelToAdd;
         }
@@ -95,7 +113,7 @@
         {
             model.Name = newName;
             EnsureNameIsUnique(model);
-            Apsim.ClearCache(model);
+            Apsim.ClearCaches(model);
         }
 
         /// <summary>Move a model from one parent to another.</summary>
@@ -109,11 +127,11 @@
                 // Clear the cache for all models in scope of the model to be moved.
                 // The models in scope will be different after the move so we will
                 // need to do this again after we move the model.
-                Apsim.ClearCache(model);
+                Apsim.ClearCaches(model);
                 newParent.Children.Add(model as Model);
                 model.Parent = newParent;
                 EnsureNameIsUnique(model);
-                Apsim.ClearCache(model);
+                Apsim.ClearCaches(model);
             }
             else
                 throw new Exception("Cannot move model " + model.Name);
@@ -128,13 +146,12 @@
             string originalName = modelToCheck.Name;
             string newName = originalName;
             int counter = 0;
-            List<IModel> siblings = Apsim.Siblings(modelToCheck);
-            IModel child = siblings.Find(m => m.Name == newName);
-            while (child != null && child != modelToCheck && counter < 10000)
+            IModel siblingWithSameName = modelToCheck.FindSibling(newName);
+            while (siblingWithSameName != null && counter < 10000)
             {
                 counter++;
                 newName = originalName + counter.ToString();
-                child = siblings.Find(m => m.Name == newName);
+                siblingWithSameName = modelToCheck.FindSibling(newName);
             }
 
             if (counter == 1000)
@@ -143,6 +160,14 @@
             }
 
             modelToCheck.Name = newName;
+        }
+
+        /// <summary>Deletes the specified model.</summary>
+        /// <param name="model">The model.</param>
+        public static bool Delete(IModel model)
+        {
+            Apsim.ClearCaches(model);
+            return model.Parent.Children.Remove(model as Model);
         }
     }
 }

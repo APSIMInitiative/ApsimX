@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="FolderView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using Gtk;
 
     /// <summary>
@@ -81,7 +75,6 @@ namespace UserInterface.Views
                         gview.ShowControls(false);
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
-                        gview.IsLegendVisible = false;
                         gview.MainWidget.SetSizeRequest(400, 400);
                         gview.ShowControls(false);
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);

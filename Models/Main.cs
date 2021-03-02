@@ -30,6 +30,7 @@
         private static bool csv { get { return arguments.Contains("/Csv"); } }
         private static bool mergeDBFiles { get { return arguments.Contains("/MergeDBFiles"); } }
         private static bool edit { get { return arguments.Contains("/Edit"); } }
+        private static bool listSimulationNames { get { return arguments.Contains("/ListSimulations"); } }
 
         private static Runner.RunTypeEnum runType
         {
@@ -90,8 +91,10 @@
                     WriteVersion();
                 else if (upgrade)
                     UpgradeFile(fileName, recurse);
+                else if (listSimulationNames)
+                    ListSimulationNames();
                 else if (edit)
-                    EditFile(fileName, recurse);
+                    ModifyFile(fileName, recurse);
                 else if (mergeDBFiles)
                     DBMerger.MergeFiles(fileName, recurse, Path.Combine(Path.GetDirectoryName(fileName), "merged.db"));
                 else
@@ -126,7 +129,7 @@
         /// </summary>
         private static void WriteUsageMessage()
         {
-            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/m] [/?]";
+            string usageMessage = "Usage: Models ApsimXFileSpec [/Recurse] [/SingleThreaded] [/RunTests] [/Csv] [/Version] [/Verbose] [/Upgrade] [/MultiProcess] [/NumberOfProcessors:xx] [/SimulationNameRegexPattern:xx] [/MergeDBFiles] [/Edit <PathToConfigFile>] [/ListSimulations] [/?]";
             string detailedHelpInfo = usageMessage;
             detailedHelpInfo += Environment.NewLine + Environment.NewLine;
             detailedHelpInfo += "ApsimXFileSpec:          The path to an .apsimx file. May include wildcard.";
@@ -143,6 +146,7 @@
             detailedHelpInfo += "    /SimulationNameRegexPattern:xx  Use to filter simulation names to run." + Environment.NewLine;
             detailedHelpInfo += "    /MergeDBFiles                   Merges .db files into a single .db file." + Environment.NewLine;
             detailedHelpInfo += "    /Edit <PathToConfigFile>        Edits the .apsimx file. Path to a config file must be specified which contains lines of parameters to change in the form 'path = value'" + Environment.NewLine;
+            detailedHelpInfo += "    /ListSimulations                List all simulation names in the file, without running the file." + Environment.NewLine;
 
             detailedHelpInfo += "    /?                              Show detailed help information.";
             Console.WriteLine(detailedHelpInfo);
@@ -169,14 +173,23 @@
             string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
             {
-                List<Exception> errors;
-                IModel sims = FileFormat.ReadFromFile<Model>(file, out errors);
-                if (errors != null && errors.Count > 0)
-                    foreach (Exception error in errors)
-                        Console.Error.WriteLine(error.ToString());
-                File.WriteAllText(file, FileFormat.WriteToString(sims));
+                string contents = File.ReadAllText(file);
+                ConverterReturnType converter = Converter.DoConvert(contents, fileName: file);
+                if (converter.DidConvert)
+                    File.WriteAllText(file, converter.Root.ToString());
                 Console.WriteLine("Successfully upgraded " + file);
             }
+        }
+
+        private static void ListSimulationNames()
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
+            jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
+
         }
 
         /// <summary>
@@ -184,7 +197,7 @@
         /// Performs pattern matching and edits all specified .apsimx
         /// files (e.g. *.apsimx /Recurse).
         /// </summary>
-        private static void EditFile(string fileName, bool recurse)
+        private static void ModifyFile(string fileName, bool recurse)
         {
             int index = Array.IndexOf(arguments, "/Edit");
             if (index < 0)
@@ -192,7 +205,6 @@
             if (index + 1 >= arguments.Length)
                 throw new Exception("/Edit option was provided but no config file argument was given. The config file argument must directly follow the /Edit argument. Use this syntax: Models.exe path/to/apsimXFile.apsimx /Edit path/to/configfile.txt");
             string configFileName = arguments[index + 1];
-            List<CompositeFactor> factors = GetFactors(configFileName);
 
             string dir = Path.GetDirectoryName(fileName);
             if (!Directory.Exists(dir))
@@ -200,61 +212,7 @@
 
             string[] files = Directory.EnumerateFiles(dir, Path.GetFileName(fileName), recurse ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly).ToArray();
             foreach (string file in files)
-                EditFile(file, factors);
-        }
-
-        /// <summary>
-        /// Gets a list of factors from a config file.
-        /// </summary>
-        /// <remarks>
-        /// Each line in the file must be of the form:
-        /// 
-        /// path = value
-        /// 
-        /// e.g.
-        /// 
-        /// [Clock].StartDate = 1/1/2019
-        /// .Simulations.Simulation.Weather.FileName = asdf.met
-        /// </remarks>
-        /// <param name="configFileName">Path to the config file.</param>
-        private static List<CompositeFactor> GetFactors(string configFileName)
-        {
-            List<CompositeFactor> factors = new List<CompositeFactor>();
-            string[] lines = File.ReadAllLines(configFileName);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                if (string.IsNullOrWhiteSpace(lines[i]))
-                    continue;
-
-                string[] values = lines[i].Split('=');
-                if (values.Length != 2)
-                    throw new Exception($"Wrong number of values specified on line {i} of config file '{configFileName}'.");
-
-                string path = values[0].Trim();
-                string value = values[1].Trim();
-                factors.Add(new CompositeFactor("factor", path, value));
-            }
-
-            return factors;
-        }
-
-        /// <summary>
-        /// Edits a single apsimx file according to the changes specified in the config file.
-        /// </summary>
-        /// <param name="apsimxFileName">Path to an .apsimx file.</param>
-        /// <param name="factors">Factors to apply to the file.</param>
-        private static void EditFile(string apsimxFileName, List<CompositeFactor> factors)
-        {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw new Exception($"Error reading file ${apsimxFileName}: {errors[0].ToString()}");
-
-            foreach (CompositeFactor factor in factors)
-            {
-                IVariable variable = Apsim.GetVariableObject(file, factor.Paths[0]);
-                variable.Value = ReflectionUtilities.StringToObject(variable.DataType, factor.Values[0].ToString());
-            }
-            file.Write(apsimxFileName);
+                EditFile.Do(file, configFileName);
         }
 
         /// <summary>Job has completed</summary>
@@ -283,7 +241,7 @@
             {
                 string fileName = Path.ChangeExtension((sender as SimulationGroup).FileName, ".db");
                 var storage = new Storage.DataStore(fileName);
-                Report.Report.WriteAllTables(storage, fileName);
+                Report.WriteAllTables(storage, fileName);
                 Console.WriteLine("Successfully created csv file " + Path.ChangeExtension(fileName, ".csv"));
             }
         }

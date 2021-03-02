@@ -40,11 +40,15 @@ if not exist APSIM.PerformanceTests (
 )
 
 rem Cleanup any modified files.
-cd APSIM.PerformanceTests\APSIM.PerformanceTests.Collector
-git checkout .
-git clean -fdxq
+cd APSIM.PerformanceTests
+
 git checkout master
+git checkout .
+git reset .
+git clean -fdxq
 git pull
+
+cd APSIM.PerformanceTests.Collector
 
 echo Restoring nuget packages for APSIM.PerformanceTests.Collector...
 nuget restore -verbosity quiet

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -18,12 +18,12 @@ namespace Models.CLEM.Resources
         ///<summary>
         /// Link to resource being requested 
         ///</summary> 
-        [XmlIgnore]
+        [JsonIgnore]
         public IResourceType Resource { get; set; }
         ///<summary>
-        /// Link to resource being requested 
+        /// Type of resource being requested 
         ///</summary> 
-        [XmlIgnore]
+        [JsonIgnore]
         public Type ResourceType { get; set; }
         ///<summary>
         /// Name of resource type being requested 
@@ -74,6 +74,12 @@ namespace Models.CLEM.Resources
         /// Allow transmutation
         ///</summary> 
         public bool TransmutationPossible { get; set; }
+        ///<summary>
+        /// Market transcation multiplier
+        /// 0 (default) = not a market transaction
+        ///</summary> 
+        public double MarketTransactionMultiplier { get; set; }
+
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 

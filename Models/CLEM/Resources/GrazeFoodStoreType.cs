@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
@@ -37,8 +37,53 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of pools available
         /// </summary>
-        [XmlIgnore]
-        public List<GrazeFoodStorePool> Pools = new List<GrazeFoodStorePool>();
+        [JsonIgnore]
+        public List<GrazeFoodStorePool> Pools =  new List<GrazeFoodStorePool>();
+
+        /// <summary>
+        /// Return the specified pool 
+        /// </summary>
+        /// <param name="index">index to use</param>
+        /// <param name="getByAge">return where index is age</param>
+        /// <returns>GraxeFoodStore pool</returns>
+        public GrazeFoodStorePool Pool(int index, bool getByAge)
+        {
+            if(getByAge)
+            {
+                var res = Pools.Where(a => a.Age == index);
+                if (res.Count() > 1)
+                {
+                    // return an average pool for N and DMD
+                    GrazeFoodStorePool average = new GrazeFoodStorePool()
+                    {
+                        Age = index,
+                        Consumed = res.Sum(a => a.Consumed),
+                        Detached = res.Sum(a => a.Detached),
+                        Growth = res.Sum(a => a.Growth),
+                        DMD = res.Sum(a => a.DMD * a.Amount) / res.Sum(a => a.Amount),
+                        Nitrogen = res.Sum(a => a.Nitrogen * a.Amount) / res.Sum(a => a.Amount)
+                    };
+                    average.Set(res.Sum(a => a.Amount));
+                    return average;
+                }
+                else
+                {
+                    return res.FirstOrDefault();
+                }
+            }
+            else
+            {
+                if (index < Pools.Count())
+                {
+                    return Pools[index];
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+        } 
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
@@ -78,7 +123,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
-        [Description("Minimum Nitrogen %")]
+        [Description("Minimum nitrogen %")]
         [Required, Percentage]
         public double MinimumNitrogen { get; set; }
 
@@ -125,10 +170,12 @@ namespace Models.CLEM.Resources
         public double IntakeQualityCoefficient { get; set; }
 
         private IPastureManager manager;
+        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IPastureManager Manager
         {
             get
@@ -173,12 +220,9 @@ namespace Models.CLEM.Resources
             {
                 if (biomassAddedThisYear == 0)
                 {
-                    if (biomassConsumed > 0)
-                    {
-                        return 100;
-                    }
+                    return (biomassConsumed > 0) ? 100: 0;
                 }
-                return biomassConsumed == 0 ? 0 : biomassConsumed / biomassAddedThisYear * 100;
+                return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
             }
         }
 
@@ -217,7 +261,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// DecayOfPasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool PastureDecays
         {
             get
@@ -229,7 +273,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (kg)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount {
             get
             {
@@ -240,7 +284,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (tonnes per ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TonnesPerHectare
         {
             get
@@ -302,7 +346,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount (tonnes per ha)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double TonnesPerHectareStartOfTimeStep { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -315,6 +359,7 @@ namespace Models.CLEM.Resources
             {
                 ResourceType = this.Name
             };
+            grazeFoodStoreFertilityLimiter = FindAllChildren<GrazeFoodStoreFertilityLimiter>().FirstOrDefault() as GrazeFoodStoreFertilityLimiter;
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -440,6 +485,12 @@ namespace Models.CLEM.Resources
             {
                 case "GrazeFoodStorePool":
                     pool = resourceAmount as GrazeFoodStorePool;
+                    // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
+                    if (pool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
+                    {
+                        double reduction = grazeFoodStoreFertilityLimiter.GetProportionNitrogenLimited(pool.Amount / Manager.Area);
+                        pool.Nitrogen = Math.Max(MinimumNitrogen, pool.Nitrogen * reduction);
+                    }
                     break;
                 case "FoodResourcePacket":
                     pool = new GrazeFoodStorePool();
@@ -458,11 +509,10 @@ namespace Models.CLEM.Resources
                     // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
-            pool.Growth += pool.Amount;
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available
-                if(PastureDecays || Pools.Count() == 0)
+                if (PastureDecays || Pools.Count() == 0)
                 {
                     Pools.Insert(0, pool);
                 }
@@ -471,7 +521,11 @@ namespace Models.CLEM.Resources
                     Pools[0].Add(pool);
                 }
                 // update biomass available
-                biomassAddedThisYear += pool.Amount;
+                if(!reason.StartsWith("Initialise"))
+                {
+                    // do not update if this is ian initialisation pool
+                    biomassAddedThisYear += pool.Amount;
+                }
 
                 ResourceTransaction details = new ResourceTransaction
                 {
@@ -656,7 +710,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -677,7 +731,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Ecological indicators of this pasture
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
         /// <summary>
@@ -688,7 +742,16 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\n<div class=\"activityentry\">";
-            html += "This pasture has an initial green nitrogen content of <span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
+            html += "This pasture has an initial green nitrogen content of ";
+            if(this.GreenNitrogen == 0)
+            {
+                html += "<span class=\"errorlink\">Not set</span>%";
+            }
+            else
+            {
+                html += "<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
+            }
+            
             if (DecayNitrogen > 0)
             {
                 html += " and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>";

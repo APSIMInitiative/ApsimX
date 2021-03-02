@@ -3,7 +3,7 @@
   <par name="edited">30 Jan 2013</par>
   <par name="dairy">false</par>
   <par name="c-srs-">1.2,1.4</par>
-  <par name="c-i-">,1.7,,,,25.0,22.0,,,,,0.15,,0.002,0.5,1.0,0.01,20.0,3.0,1.5</par>
+  <par name="c-i-">,1.7,,,,25.0,22.0,,,,,0.15,,0.002,0.5,1.0,0.01,20.0,3.0,1.5,</par>
   <par name="c-r-">0.8,0.17,1.7,,0.6,,,,0.14,0.28,10.5,0.8,0.35,1.0,0.0,0.0,0.012,1.0,1.0,11.5</par>
   <par name="c-k-">0.5,0.02,0.85,0.7,0.4,0.02,0.6,0.133,0.95,0.84,0.8,0.7,0.035,0.33,0.12,0.043</par>
   <par name="c-m-">0.09,,0.00008,0.84,0.23,,0.9,0.000052,0.16,0.0152,,,,,0.15,0.0026,</par>
@@ -21,7 +21,7 @@
 
   <set name="small ruminants">
     <par name="c-n-">0.0157,0.27,0.4,1.2</par>
-    <par name="c-i-">0.04,,0.5,25.0,0.01,,,28.0,1.4,,,,0.02,,,,,,,</par>
+    <par name="c-i-">0.04,,0.5,25.0,0.01,,,28.0,1.4,,,,0.02,,,,,,,,</par>
     <par name="c-r-">,,,0.00112,,0.00112,0.0,21.0,,,,,,,,,,,,</par>
     <par name="c-m-">,0.26,,,,0.02,,,,,0.00046,0.000147,0.003375,,,,40.0</par>
     <par name="c-p-">150.0,1.304,2.625,0.33,1.43,3.38,0.91,4.33,4.37,0.965,0.145,4.56,0.9</par>
@@ -39,7 +39,7 @@
       <par name="animal">sheep</par>
 
       <set name="wool breeds">
-        <par name="c-imx-">0.524,0.707,0.891</par>
+        <par name="c-imx-">0.524,0.524,0.707,0.891</par>
         <par name="c-l0-">0.389,0.622,0.746</par>
         <par name="c-f1-">0.23,0.39,0.39</par>
         <par name="c-f2-">0.64,1.315,5.0</par>
@@ -51,7 +51,7 @@
           <par name="c-w-6">0.032</par>
 
           <set name="Small Merino" locales="au;cn">
-            <translate lang="es">Merino peque&#xf1;o</translate>
+            <translate lang="es">Merino pequeño</translate>
             <par name="srw">40.0</par>
             <par name="c-mu">19.0</par>
           </set>
@@ -104,7 +104,7 @@
         <par name="srw">55.0</par>
         <par name="c-pfw">0.077</par>
         <par name="c-mu">23.0</par>
-        <par name="c-imx-">0.59,0.725,1.0</par>
+        <par name="c-imx-">0.59,0.59,0.725,1.0</par>
         <par name="c-l0-">0.437,0.7,0.839</par>
         <par name="c-w-6">0.07</par>
         <par name="c-f1-">0.34,0.64,0.64</par>
@@ -129,7 +129,7 @@
       <set name="meat breeds">
         <par name="c-pfw">0.063</par>
         <par name="c-mu">26.0</par>
-        <par name="c-imx-">0.655,0.884,1.114</par>
+        <par name="c-imx-">0.655,0.655,0.884,1.114</par>
         <par name="c-l0-">0.486,0.778,0.933</par>
         <par name="c-f1-">0.34,0.64,0.64</par>
         <par name="c-f2-">0.75,0.94,5.0</par>
@@ -236,8 +236,7 @@
   <set name="cattle">
     <par name="animal">cattle</par>
     <par name="c-n-">0.0115,0.27,0.4,1.1</par>
-    <par name="c-i-">0.025,,0.22,60.0,0.02,,,62.0,1.7,0.6,0.05,,0.005,,,,,,,</par>
-    <par name="c-idy-">0.85,81.0,0.7</par>
+    <par name="c-i-">0.025,,0.22,60.0,0.02,,,62.0,1.7,0.6,0.05,,0.005,,,,,,,,</par>
     <par name="c-r-">,,,0.00078,,0.00074,0.5,,,,,,,,,,,,,</par>
     <par name="c-m-">,0.36,,,,0.0025,,,,,0.000526,0.0161,0.0422,0.00011,,,5.0</par>
     <par name="c-p-">285.0,2.2,1.77,0.33,1.8,2.42,1.16,4.11,343.5,0.0164,0.134,6.22,0.747</par>
@@ -254,7 +253,8 @@
     <par name="c-d-">0.0000553,0.3,0.6,,,,,,,,,0.1,0.0000553,300.0,365.0</par>
 
     <set name="beef breeds">
-      <par name="c-imx-">0.416,0.9,</par>
+      <par name="c-i-21">1.7</par>
+      <par name="c-imx-">0.416,0.416,0.9,</par>
       <par name="c-r-8">64.0</par>
       <par name="c-l0-">0.375,0.47,</par>
       <par name="c-l-">,,,0.6,,,,,,,,,,,,,,,,,0.004,0.006,,,</par>
@@ -291,7 +291,7 @@
       </set>
 
       <set name="indicus">
-        <par name="c-i-">,,,,0.01,,,,,,,,,,,0.5,,,,</par>
+        <par name="c-i-">,,,,0.01,,,,,,,,,,,0.5,,,,,</par>
         <par name="c-m-">,0.31,,,,,,,,,,0.0129,0.0338,,,,</par>
 
         <set name="Brahman" locales="au;ca;us">
@@ -322,7 +322,7 @@
 
       <set name="British x Brahman" locales="au;ca;us">
         <par name="srw">550.0</par>
-        <par name="c-i-">,,,,0.015,,,,,,,,,,,0.75,,,,</par>
+        <par name="c-i-">,,,,0.015,,,,,,,,,,,0.75,,,,,</par>
         <par name="c-m-">,0.335,,,,,,,,,,0.0145,0.038,,,,</par>
         <par name="c-g-">,,,,,,,25.1,18.4,,,0.082,0.13,,,,,</par>
       </set>
@@ -374,7 +374,8 @@
 
     <set name="dairy breeds">
       <par name="dairy">true</par>
-      <par name="c-imx-">0.577,0.9,</par>
+      <par name="c-i-">,,,,,,,81.0,,,,,,,,,,,,,0.7</par>
+      <par name="c-imx-">0.85,0.577,0.9,</par>
       <par name="c-r-8">150.0</par>
       <par name="c-l0-">0.5,0.62,</par>
       <par name="c-l-">,,,0.105,,,,,,,,,,,,,,,,,0.0027,0.004,,,</par>

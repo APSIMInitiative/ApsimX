@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 
@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
                     ragp.Resources = this.Resources;
                     ragp.InitialiseHerd(true, true);
 
-                    foreach (RuminantType herdType in Apsim.Children(Resources.RuminantHerd(), typeof(RuminantType)))
+                    foreach (RuminantType herdType in Resources.RuminantHerd().FindAllChildren<RuminantType>())
                     {
                         RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                         {

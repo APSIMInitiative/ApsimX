@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -70,7 +70,7 @@ namespace Models.Functions
                 tags.Add(new AutoDocumentation.Paragraph("A value of 1 is returned if phenology is between " + Start + " and " + End + " phases, otherwise a value of 0 is returned.", indent));
 
                 // write memos.
-                foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+                foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
             }
         }

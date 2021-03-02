@@ -24,7 +24,7 @@
         private Dictionary<string, int> simulationIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
-        private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, Checkpoint> checkpointIDs = new Dictionary<string, Checkpoint>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// A copy of the units table.
@@ -162,7 +162,15 @@
             {
                 var data = Connection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture));
+                {
+                    checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
+                    {
+                        ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null &&
+                                       !Convert.IsDBNull(row["OnGraphs"]) &&
+                                       Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
+                    });
+                }
             }
 
             // For each table in the database, read in field names.
@@ -245,6 +253,7 @@
             }
 
             fieldList.Remove("CheckpointID");
+            fieldList.Remove("CheckpointName");
             fieldList.Remove("SimulationName");
             fieldList.Remove("SimulationID");
 
@@ -256,7 +265,7 @@
                         sql.Append(", ");
                     firstField = false;
                     sql.Append("T.");
-                    sql.Append("[");
+                    sql.Append('"');
                     if (!(Connection is Firebird) || tableName.StartsWith("_")
                       || fieldName.Equals("SimulationID", StringComparison.OrdinalIgnoreCase)
                       || fieldName.Equals("SimulationName", StringComparison.OrdinalIgnoreCase)
@@ -265,7 +274,7 @@
                         sql.Append(fieldName);
                     else
                         sql.Append("COL_" + (Connection as Firebird).GetColumnNumber(tableName, fieldName).ToString());
-                    sql.Append(']');
+                    sql.Append('"');
                     if (fieldName == "Clock.Today")
                         hasToday = true;
                 }
@@ -423,7 +432,17 @@
         /// <returns></returns>
         public int GetCheckpointID(string checkpointName)
         {
-            return checkpointIDs[checkpointName];
+            return checkpointIDs[checkpointName].ID;
+        }
+
+        /// <summary>
+        /// Return true if checkpoint is to be shown on graphs.
+        /// </summary>
+        /// <param name="checkpointName">The checkpoint name to look for.</param>
+        /// <returns></returns>
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            return checkpointIDs[checkpointName].ShowOnGraphs;
         }
 
         /// <summary>

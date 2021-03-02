@@ -89,15 +89,15 @@
                 throw new ApsimXException(forestryModel, "Error: TreeProxy must be a child of ForestrySystem.");
 
             Soil soil;
-            List<IModel> zones = Apsim.ChildrenRecursively(forestryModel.Parent, typeof(Zone));
-            if (zones.Count == 0)
+            IEnumerable<Zone> zones = forestryModel.Parent.FindAllDescendants<Zone>();
+            if (!zones.Any())
                 return;
 
             // Setup tree heights.
             forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
 
             // Get the first soil. For now we're assuming all soils have the same structure.
-            soil = Apsim.Find(zones[0], typeof(Soil)) as Soil;
+            soil = zones.First().FindInScope<Soil>();
 
             forestryViewer.SoilMidpoints = soil.DepthMidPoints;
             

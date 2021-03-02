@@ -20,15 +20,16 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs mustering based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
+    [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be mustered")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMustering.htm")]
-    public class RuminantActivityMuster: CLEMRuminantActivityBase
+    public class RuminantActivityMuster: CLEMRuminantActivityBase, IValidatableObject
     {
-        /// <summary>
+        /// <summary>F
         /// Managed pasture to muster to
         /// </summary>
         [Description("Managed pasture to muster to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string ManagedPastureName { get; set; }
 
         private string pastureName = "";
@@ -41,11 +42,22 @@ namespace Models.CLEM.Activities
         public bool PerformAtStartOfSimulation { get; set; }
 
         /// <summary>
-        /// Determines whether sucklings are automatically mustered with the mother or seperated
+        /// Determines whether sucklings are automatically mustered with the mother or separated
         /// </summary>
         [Description("Move sucklings with mother")]
         [Required]
         public bool MoveSucklings { get; set; }
+
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            return results;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -72,29 +84,34 @@ namespace Models.CLEM.Activities
         private void Muster()
         {
             Status = ActivityStatus.NotNeeded;
-            foreach (Ruminant ind in this.CurrentHerd(false))
+            // allow multiple filter groups for mustering.. 
+            var filterGroups = FindAllChildren<RuminantGroup>().ToList();
+            if(filterGroups.Count() == 0)
             {
-                // set new location ID
-                if(ind.Location != pastureName)
+                filterGroups.Add(new RuminantGroup());
+            }
+            foreach (RuminantGroup item in filterGroups)
+            {
+                foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
                 {
-                    this.Status = ActivityStatus.Success;
-                }
-
-                ind.Location = pastureName;
-
-                // check if sucklings are to be moved with mother
-                if (MoveSucklings)
-                {
-                    // if female
-                    if (ind.GetType() == typeof(RuminantFemale))
+                    // set new location ID
+                    if (ind.Location != pastureName)
                     {
-                        RuminantFemale female = ind as RuminantFemale;
-                        // check if mother with sucklings
-                        if (female.SucklingOffspringList.Count > 0)
+                        this.Status = ActivityStatus.Success;
+                        ind.Location = pastureName;
+
+                        // check if sucklings are to be moved with mother
+                        if (MoveSucklings)
                         {
-                            foreach (var suckling in female.SucklingOffspringList)
+                            // if female
+                            if (ind is RuminantFemale)
                             {
-                                suckling.Location = pastureName;
+                                RuminantFemale female = ind as RuminantFemale;
+                                // check if mother with sucklings
+                                foreach (var suckling in female.SucklingOffspringList)
+                                {
+                                    suckling.Location = pastureName;
+                                }
                             }
                         }
                     }
@@ -224,7 +241,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activityentry\">Muster to ";
+            html += "\n<div class=\"activityentry\">Muster the following groups to ";
             if (ManagedPastureName == null || ManagedPastureName == "")
             {
                 html += "<span class=\"errorlink\">General yards</span>";
@@ -244,7 +261,5 @@ namespace Models.CLEM.Activities
             }
             return html;
         }
-
-
     }
 }

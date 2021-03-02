@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM.Activities
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Food to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] {typeof(HumanFoodStore)} )]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food type required")]
         public string FeedTypeName { get; set; }
 
@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public HumanFoodStoreType FeedType { get; set; }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
                 double value = (child as LabourFeedGroup).Value;
 
@@ -132,7 +132,7 @@ namespace Models.CLEM.Activities
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = group.Filter(child).ToList();
                 head += subgroup.Count();
@@ -222,7 +222,7 @@ namespace Models.CLEM.Activities
                     return;
                 }
 
-                foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+                foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
                 {
                     double value = (child as LabourFeedGroup).Value;
 

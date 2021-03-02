@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ContextMenu.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +12,6 @@ namespace UserInterface.Presenters
     using Models.Soils;
     using APSIM.Shared.Utilities;
     using Models.Storage;
-    using Models.Report;
     using Utility;
     using Models.Core.ApsimFile;
     using Models.Core.Run;
@@ -26,7 +20,8 @@ namespace UserInterface.Presenters
     using System.Text;
     using Models.Functions;
     using Models.Soils.Standardiser;
-    using Models.Graph;
+    using Models.GrazPlan;
+    using Models.Climate;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -95,18 +90,9 @@ namespace UserInterface.Presenters
         {
             try
             {
-                // Run all child model post processors.
-                var runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false);
-                runner.Run();
-
-                if (runner.ExceptionsThrown != null && runner.ExceptionsThrown.Count > 0)
-                {
-                    explorerPresenter.MainPresenter.ShowError(runner.ExceptionsThrown);
-                    return;
-                }
-
-                (explorerPresenter.CurrentPresenter as DataStorePresenter).PopulateGrid();
-                this.explorerPresenter.MainPresenter.ShowMessage("Post processing models have successfully completed", Simulation.MessageType.Information);
+                Runner runner = new Runner(explorerPresenter.ApsimXFile, runSimulations: false, wait: false);
+                ICommand command = new RunCommand("Post-simulation tools", runner, explorerPresenter);
+                command.Do(null);
             }
             catch (Exception err)
             {
@@ -125,7 +111,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                GraphPanel panel = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as GraphPanel;
+                GraphPanel panel = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as GraphPanel;
                 panel.Cache.Clear();
             }
             catch (Exception err)
@@ -145,7 +131,8 @@ namespace UserInterface.Presenters
                                               typeof(Experiment),
                                               typeof(Folder),
                                               typeof(Morris),
-                                              typeof(Sobol)},
+                                              typeof(Sobol),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F5")]
         public void RunAPSIM(object sender, EventArgs e)
         {
@@ -169,7 +156,8 @@ namespace UserInterface.Presenters
                                               typeof(Simulations),
                                               typeof(Experiment),
                                               typeof(Folder),
-                                              typeof(Morris)},
+                                              typeof(Morris),
+                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
                      ShortcutKey = "F6")]
         public void RunAPSIMMultiProcess(object sender, EventArgs e)
         {
@@ -202,11 +190,11 @@ namespace UserInterface.Presenters
             {
                 if (Environment.OSVersion.Platform == PlatformID.Win32NT)
                 {
-                    object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                    object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowInRightHandPanel(model,
-                                                           "UserInterface.Views.RunOnCloudView",
-                                                           "UserInterface.Presenters.RunOnCloudPresenter");
+                                       "ApsimNG.Resources.Glade.RunOnCloudView.glade",
+                                       new RunOnCloudPresenter());
                 }
                 else
                 {
@@ -236,7 +224,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                explorerPresenter.GenerateApsimXFiles(Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel);
+                explorerPresenter.GenerateApsimXFiles(explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel);
             }
             catch (Exception err)
             {
@@ -272,7 +260,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
+                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                 if (model != null)
                 {
                     // Set the clipboard text.
@@ -323,7 +311,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.Delete(model);
             }
@@ -343,7 +331,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.MoveUp(model);
             }
@@ -363,7 +351,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.MoveDown(model);
             }
@@ -416,11 +404,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                string nodePath = explorerPresenter.CurrentNodePath;
-                if (Apsim.Get(explorerPresenter.ApsimXFile, nodePath) is IFunction)
-                    nodePath += ".Value()";
-
-                explorerPresenter.SetClipboardText(Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName) + nodePath, "CLIPBOARD");
+                explorerPresenter.SetClipboardText(explorerPresenter.CurrentNodePath, "CLIPBOARD");
             }
             catch (Exception err)
             {
@@ -434,23 +418,14 @@ namespace UserInterface.Presenters
         {
             if (this.explorerPresenter.Save())
             {
-                List<string> duplicates = this.explorerPresenter.ApsimXFile.FindDuplicateSimulationNames();
-                if (duplicates.Count > 0)
-                {
-                    string errorMessage = "Duplicate simulation names found " + StringUtilities.BuildString(duplicates.ToArray(), ", ");
-                    explorerPresenter.MainPresenter.ShowError(errorMessage);
-                }
-                else
-                {
-                    Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
-                    if (multiProcessRunner)
-                        typeOfRun = Runner.RunTypeEnum.MultiProcess;
+                Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
+                if (multiProcessRunner)
+                    typeOfRun = Runner.RunTypeEnum.MultiProcess;
 
-                    Model model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Model;
-                    var runner = new Runner(model, runType:typeOfRun, wait: false);
-                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                    this.command.Do(null);
-                }
+                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                var runner = new Runner(model, runType:typeOfRun, wait: false);
+                this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
+                this.command.Do(null);
             }
         }
 
@@ -479,15 +454,11 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Soil currentSoil = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Soil;
+                Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Soil;
                 if (currentSoil != null)
                 {
-
-                    string errorMessages = SoilChecker.CheckWithStandardisation(currentSoil);
-                    if (!string.IsNullOrEmpty(errorMessages))
-                        explorerPresenter.MainPresenter.ShowError(errorMessages);
-                    else
-                        explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
+                    SoilChecker.CheckWithStandardisation(currentSoil);
+                    explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
@@ -506,7 +477,11 @@ namespace UserInterface.Presenters
         {
             try
             {
-                this.explorerPresenter.DownloadSoil();
+                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                                                       new DownloadPresenter());
             }
             catch (Exception err)
             {
@@ -548,7 +523,7 @@ namespace UserInterface.Presenters
                     return;
                 }
 
-                Tests test = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as Tests;
+                Tests test = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Tests;
                 try
                 {
                     test.Test(true);
@@ -677,7 +652,7 @@ namespace UserInterface.Presenters
         {
             try
             {
-                object model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath);
+                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
                 explorerPresenter.HideRightHandPanel();
                 explorerPresenter.ShowInRightHandPanel(model,
                                                        "ApsimNG.Resources.Glade.AddModelView.glade",
@@ -699,7 +674,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool IncludeInDocumentationChecked()
         {
-            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
             return (model != null) ? model.IncludeInDocumentation : false;
         }
 
@@ -708,7 +683,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool ShowPageOfGraphsChecked()
         {
-            Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+            Folder folder = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as Folder;
             return (folder != null) ? folder.ShowPageOfGraphs : false;
         }
 
@@ -718,15 +693,15 @@ namespace UserInterface.Presenters
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Checkpoints", IsToggle = true,
-                     AppliesTo = new Type[] { typeof(Simulations) })]
+                     AppliesTo = new Type[] { typeof(DataStore) })]
         public void ShowCheckpoints(object sender, EventArgs e)
         {
             try
             {
                 explorerPresenter.HideRightHandPanel();
                 explorerPresenter.ShowInRightHandPanel(explorerPresenter.ApsimXFile,
-                                                       "UserInterface.Views.ListButtonView",
-                                                       "UserInterface.Presenters.CheckpointsPresenter");
+                                                       "ApsimNG.Resources.Glade.CheckpointView.glade",
+                                                       new CheckpointsPresenter());
             }
             catch (Exception err)
             {
@@ -746,10 +721,10 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
-                    foreach (IModel child in Apsim.ChildrenRecursively(model))
+                    foreach (IModel child in model.FindAllDescendants())
                         child.IsHidden = !child.IsHidden;
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
@@ -763,7 +738,7 @@ namespace UserInterface.Presenters
 
         public bool ShowModelStructureChecked()
         {
-            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
             if (model.Children.Count < 1)
                 return true;
             return !model.Children[0].IsHidden;
@@ -777,15 +752,68 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
-                    model.Enabled = !model.Enabled;
-                    foreach (IModel child in Apsim.ChildrenRecursively(model))
-                        child.Enabled = model.Enabled;
+                    // Toggle the enabled property on the model, and change the enabled property
+                    // on all descendants to the new value of the model's enabled property.
+                    List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+                    changes.Add(new ChangeProperty.Property(model, nameof(model.Enabled), !model.Enabled));
+                    foreach (IModel child in model.FindAllDescendants())
+                        changes.Add(new ChangeProperty.Property(child, nameof(model.Enabled), !model.Enabled));
+
+                    ChangeProperty command = new ChangeProperty(changes);
+                    explorerPresenter.CommandHistory.Add(command);
+
+                    // Now call OnCreated() for all changed models. Note ToList() to force greedy evaluation.
+                    if (model.Enabled)
+                    {
+                        model.OnCreated();
+                        foreach (IModel descendant in model.FindAllDescendants().ToList())
+                            descendant.OnCreated();
+                    }
+
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.Refresh();
                 }
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Event handler for 'Enabled' menu item.
+        /// </summary>
+        [ContextMenu(MenuName = "Read-only", IsToggle = true)]
+        public void ReadOnly(object sender, EventArgs e)
+        {
+            try
+            {
+                IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+                if (model == null)
+                    return;
+                
+                // Don't allow users to change read-only status of released models.
+                if (model is ModelCollectionFromResource || model.FindAncestor<ModelCollectionFromResource>() != null)
+                    return;
+
+                bool readOnly = !model.ReadOnly;
+                List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
+                
+                // Toggle read-only on the model and all descendants.
+                changes.Add(new ChangeProperty.Property(model, nameof(model.ReadOnly), readOnly));
+                foreach (IModel child in model.FindAllDescendants())
+                    changes.Add(new ChangeProperty.Property(child, nameof(child.ReadOnly), readOnly));
+
+                // Apply changes.
+                ChangeProperty command = new ChangeProperty(changes);
+                explorerPresenter.CommandHistory.Add(command);
+
+                // Refresh the context menu.
+                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -798,8 +826,18 @@ namespace UserInterface.Presenters
         /// </summary>
         public bool EnabledChecked()
         {
-            IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+            IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
             return model.Enabled;
+        }
+
+        /// <summary>
+        /// Event handler for checkbox for 'ReadOnly' menu item.
+        /// </summary>
+        /// <returns></returns>
+        public bool ReadOnlyChecked()
+        {
+            IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
+            return model.ReadOnly;
         }
 
         /// <summary>
@@ -821,7 +859,7 @@ namespace UserInterface.Presenters
 
                     ICommand command;
                     string fileNameWritten;
-                    var modelToDocument = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                    var modelToDocument = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
 
                     var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
                     command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
@@ -831,7 +869,8 @@ namespace UserInterface.Presenters
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    Process.Start(fileNameWritten);
+                    if (ProcessUtilities.CurrentOS.IsWindows)
+                        Process.Start(fileNameWritten);
                 }
             }
             catch (Exception err)
@@ -854,10 +893,10 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as IModel;
                 model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
 
-                foreach (IModel child in Apsim.ChildrenRecursively(model))
+                foreach (IModel child in model.FindAllDescendants())
                     child.IncludeInDocumentation = model.IncludeInDocumentation;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                 explorerPresenter.Refresh();
@@ -893,9 +932,9 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Folder folder = Apsim.Get(explorerPresenter.ApsimXFile, explorerPresenter.CurrentNodePath) as Folder;
+                Folder folder = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value as Folder;
                 folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
-                foreach (Folder child in Apsim.ChildrenRecursively(folder, typeof(Folder)))
+                foreach (Folder child in folder.FindAllDescendants<Folder>())
                     child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             }
@@ -913,21 +952,21 @@ namespace UserInterface.Presenters
         {
             try
             {
-                IModel model = Apsim.Get(this.explorerPresenter.ApsimXFile, this.explorerPresenter.CurrentNodePath) as IModel;
+                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
                 if (model != null)
                 {
-                    string modelPath = Apsim.FullPath(model);
-                    StringBuilder message = new StringBuilder($"Searching for references to model {Apsim.FullPath(model)}...");
+                    string modelPath = model.FullPath;
+                    StringBuilder message = new StringBuilder($"Searching for references to model {model.FullPath}...");
                     List<Reference> references = new List<Reference>();
                     message.AppendLine();
                     message.AppendLine();
                     Stopwatch timer = Stopwatch.StartNew();
 
-                    foreach (VariableReference reference in Apsim.FindAll(model, typeof(VariableReference)))
+                    foreach (VariableReference reference in model.FindAllInScope<VariableReference>())
                     {
                         try
                         {
-                            if (Apsim.Get(reference, reference.VariableName.Replace(".Value()", "")) == model)
+                            if (reference.FindByPath(reference.VariableName.Replace(".Value()", ""))?.Value == model)
                                 references.Add(new Reference() { Member = typeof(VariableReference).GetProperty("VariableName"), Model = reference, Target = model });
                         }
                         catch

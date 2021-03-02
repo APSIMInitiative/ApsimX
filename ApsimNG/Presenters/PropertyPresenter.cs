@@ -1,9 +1,4 @@
-//-----------------------------------------------------------------------
-// <copyright file="PropertyPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Collections.Generic;
@@ -24,6 +19,8 @@ namespace UserInterface.Presenters
     using Models.CLEM.Resources;
     using Models.Storage;
     using System.Globalization;
+    using Models.LifeCycle;
+    using Models.PMF;
 
     /// <summary>
     /// <para>
@@ -108,7 +105,7 @@ namespace UserInterface.Presenters
 
             if (this.model != null)
             {
-                FindAllProperties(this.model);
+                properties = FindAllProperties(this.model);
                 if (grid.DataSource == null)
                     PopulateGrid(this.model);
                 else
@@ -148,7 +145,7 @@ namespace UserInterface.Presenters
                     if (value)
                         properties = properties.Where(p => !p.DataType.IsArray).ToList();
                     else
-                        FindAllProperties(model);
+                        properties = FindAllProperties(model);
                     PopulateGrid(model);
                 }
             }
@@ -251,7 +248,7 @@ namespace UserInterface.Presenters
         /// <param name="o">Object whose members will be retrieved.</param>
         private List<MemberInfo> GetMembers(object o)
         {
-            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public).ToList();
+            var members = o.GetType().GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly).ToList();
             members.RemoveAll(m => !Attribute.IsDefined(m, typeof(DescriptionAttribute)));
             var orderedMembers = members.OrderBy(m => ((DescriptionAttribute)m.GetCustomAttribute(typeof(DescriptionAttribute), true)).LineNumber).ToList();
             return orderedMembers;
@@ -259,10 +256,11 @@ namespace UserInterface.Presenters
 
         public void Refresh()
         {
+            grid.EndEdit();
             if (model == null)
                 return;
             properties.Clear();
-            FindAllProperties(model);
+            properties.AddRange(FindAllProperties(model));
             PopulateGrid(model);
         }
 
@@ -270,22 +268,22 @@ namespace UserInterface.Presenters
         /// Find all properties from the model and fill this.properties.
         /// </summary>
         /// <param name="model">The mode object</param>
-        protected virtual void FindAllProperties(IModel model)
+        protected virtual List<IVariable> FindAllProperties(object model)
         {
-            this.model = model;
+            List<IVariable> properties = new List<IVariable>();
+
             bool filterByCategory = !((this.CategoryFilter == "") || (this.CategoryFilter == null));
             bool filterBySubcategory = !((this.SubcategoryFilter == "") || (this.SubcategoryFilter == null));
-            if (this.model != null)
+            if (model != null)
             {
                 var orderedMembers = GetMembers(model);
-                properties.Clear();
                 foreach (MemberInfo member in orderedMembers)
                 {
                     IVariable property = null;
                     if (member is PropertyInfo)
-                        property = new VariableProperty(this.model, member as PropertyInfo);
+                        property = new VariableProperty(model, member as PropertyInfo);
                     else if (member is FieldInfo)
-                        property = new VariableField(this.model, member as FieldInfo);
+                        property = new VariableField(model, member as FieldInfo);
 
                     if (property != null && property.Description != null && property.Writable)
                     {
@@ -307,10 +305,10 @@ namespace UserInterface.Presenters
 
                         if (includeProperty && filterByCategory)
                         {
-                            bool hasCategory = Attribute.IsDefined(member,typeof(CategoryAttribute), false);
+                            bool hasCategory = Attribute.IsDefined(member, typeof(CategoryAttribute), false);
                             if (hasCategory)
                             {
-                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member,typeof(CategoryAttribute));
+                                CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(member, typeof(CategoryAttribute));
                                 if (catAtt.Category == this.CategoryFilter)
                                 {
                                     if (filterBySubcategory)
@@ -324,12 +322,12 @@ namespace UserInterface.Presenters
                                     {
                                         includeProperty = true;
                                     }
-                                } 
+                                }
                                 else
                                 {
                                     includeProperty = false;
                                 }
-                                
+
                             }
                             else
                             {
@@ -342,6 +340,15 @@ namespace UserInterface.Presenters
                                     includeProperty = false;
                             }
                         }
+
+                        if (ScalarsOnly && property.DataType.IsArray)
+                            includeProperty = false;
+
+                        if (property.Display != null && property.Display.Type == DisplayType.SubModel && property.Value != null)
+                        {
+                            includeProperty = false;
+                            properties.AddRange(FindAllProperties(property.Value));
+                        }
 			
                         if (includeProperty)
                             properties.Add(property);
@@ -351,6 +358,8 @@ namespace UserInterface.Presenters
                     }
                 }
             }
+
+            return properties;
         }
 
         /// <summary>
@@ -359,7 +368,7 @@ namespace UserInterface.Presenters
         /// new crop has been selecled.
         /// </summary>
         /// <param name="model">The new model</param>
-        public void UpdateModel(Model model)
+        public void UpdateModel(IModel model)
         {
             this.model = model;
             if (this.model != null)
@@ -378,12 +387,36 @@ namespace UserInterface.Presenters
                     {
                         IPlant crop;
                         if (properties[i].Display.PlantName != null)
-                            crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                            crop = model.FindInScope<IPlant>(properties[i].Display.PlantName);
                         else
                             crop = GetCrop(properties);
                         if (crop != null)
                         {
                             cell.DropDownStrings = GetCultivarNames(crop);
+                        }
+                    }
+
+                    else if (properties[i].Display != null &&
+                             properties[i].Display.Type == DisplayType.LifeCycleName)
+                    {
+                        Zone zone = model.FindInScope<Zone>();
+                        if (zone != null)
+                        {
+                            cell.DropDownStrings = GetLifeCycleNames(zone);
+                        }
+                    }
+
+                    else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                    {
+                        LifeCycle lifeCycle;
+                        if (properties[i].Display.LifeCycleName != null)
+                            lifeCycle = model.FindAllInScope<LifeCycle>().FirstOrDefault(p => p.Name == properties[i].Display.LifeCycleName) as LifeCycle;
+                        else
+                            lifeCycle = GetLifeCycle(properties);
+                        if (lifeCycle != null)
+                        {
+                            cell.DropDownStrings = GetPhaseNames(lifeCycle);
                         }
                     }
                     else if (properties[i].Display != null &&
@@ -406,7 +439,7 @@ namespace UserInterface.Presenters
             {
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(model, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(e.Code, e.Offset, model, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
@@ -435,8 +468,11 @@ namespace UserInterface.Presenters
             int row = properties.IndexOf(property);
             if (property is VariableObject)
                 table.Rows.Add(new object[] { property.Value, null, null });
-            else if (property.Value is IModel)
-                table.Rows.Add(new object[] { property.Description, Apsim.FullPath(property.Value as IModel), property.Name });
+            else if (property.Value is IModel m)
+            {
+                string cellValue = IsSiblingOfModel(m) ? m.Name : m.FullPath;
+                table.Rows.Add(new object[] { property.Description, cellValue, property.Name });
+            }
             else if (property is VariableProperty p)
                 table.Rows.Add(new object[] { property.Description, GetCellValue(property, row, 1), p.Tooltip });
             else
@@ -483,7 +519,7 @@ namespace UserInterface.Presenters
                     cell.EditorType = EditorTypeEnum.DropDown;
                     IPlant crop;
                     if (properties[i].Display.PlantName != null)
-                        crop = Apsim.FindAll(model, typeof(IPlant)).FirstOrDefault(p => p.Name == properties[i].Display.PlantName) as IPlant;
+                        crop = model.FindInScope<IPlant>(properties[i].Display.PlantName);
                     else
                         crop = GetCrop(properties);
                     if (crop != null)
@@ -491,11 +527,39 @@ namespace UserInterface.Presenters
                         cell.DropDownStrings = GetCultivarNames(crop);
                     }
                 }
+
+                else if (properties[i].Display != null &&
+                         properties[i].Display.Type == DisplayType.LifeCycleName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    Zone zone = model.FindInScope<Zone>();
+                    if (zone != null)
+                    {
+                        cell.DropDownStrings = GetLifeCycleNames(zone);
+                    }
+                }
+
+                else if (properties[i].Display != null &&
+                        properties[i].Display.Type == DisplayType.LifePhaseName)
+                {
+                    cell.EditorType = EditorTypeEnum.DropDown;
+                    LifeCycle lifeCycle = GetLifeCycle(properties);
+                    if (lifeCycle != null)
+                    {
+                        cell.DropDownStrings = GetPhaseNames(lifeCycle);
+                    }
+                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FileName)
                 {
                     cell.EditorType = EditorTypeEnum.Button;
                 }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.FileNames)
+                {
+                    cell.EditorType = EditorTypeEnum.MultiFiles;
+                }
+                else if (properties[i].Display != null && properties[i].Display.Type == DisplayType.DirectoryName)
+                    cell.EditorType = EditorTypeEnum.DirectoryChooser;
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.FieldName)
                 {
@@ -519,11 +583,11 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMResourceName))
+					(properties[i].Display.Type == DisplayType.CLEMResource))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceNameResourceGroups));
+                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceGroups));
 
                     // add any extras elements provided to the list.
                     if (this.properties[i].Display.CLEMExtraEntries != null)
@@ -537,28 +601,28 @@ namespace UserInterface.Presenters
                     }
                 }
                 else if (properties[i].Display != null && 
-					(properties[i].Display.Type == DisplayType.CLEMCropFileName))
+					(properties[i].Display.Type == DisplayType.CLEMCropFileReader))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
+                    Simulation clemParent = model.FindAncestor<Simulation>();
                     // get crop file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileCrop)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteCrop)).Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
                     }
                 }
                 else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMGraspFileName))
+					(properties[i].Display.Type == DisplayType.CLEMPastureFileReader))
                 {
                     cell.EditorType = EditorTypeEnum.DropDown;
                     List<string> fieldNames = new List<string>();
-                    Simulation clemParent = Apsim.Parent(this.model, typeof(Simulation)) as Simulation;
-                    // get GRASP file names
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileGRASP)).Select(a => a.Name).ToList());
-                    fieldNames.AddRange(Apsim.ChildrenRecursively(clemParent, typeof(FileSQLiteGRASP)).Select(a => a.Name).ToList());
+                    Simulation clemParent = model.FindAncestor<Simulation>();
+                    // get Pasture file names
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FilePasture>().Select(a => a.Name).ToList());
+                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLitePasture>().Select(a => a.Name).ToList());
                     if (fieldNames.Count != 0)
                     {
                         cell.DropDownStrings = fieldNames.ToArray();
@@ -596,7 +660,7 @@ namespace UserInterface.Presenters
                     {
                         cell.EditorType = EditorTypeEnum.DropDown;
                         List<string> cropNames = new List<string>();
-                        foreach (Model crop in Apsim.FindAll(model, typeof(IPlant)))
+                        foreach (Model crop in model.FindAllInScope<IPlant>())
                         {
                             cropNames.Add(crop.Name);
                         }
@@ -605,9 +669,8 @@ namespace UserInterface.Presenters
                     }
                     else if (properties[i].DataType == typeof(IPlant))
                     {
-                        List<string> plantNames = Apsim.FindAll(model, typeof(IPlant)).Select(m => m.Name).ToList();
                         cell.EditorType = EditorTypeEnum.DropDown;
-                        cell.DropDownStrings = plantNames.ToArray();
+                        cell.DropDownStrings = model.FindAllInScope<IPlant>().OfType<IModel>().Select(m => m.Name).ToArray();
                     }
                     else if (!string.IsNullOrWhiteSpace(properties[i].Display?.Values))
                     {
@@ -638,22 +701,91 @@ namespace UserInterface.Presenters
         /// <returns>A list of cultivars.</returns>
         private string[] GetCultivarNames(IPlant crop)
         {
-            if (crop.CultivarNames.Length == 0)
+            Simulations simulations = (crop as IModel).FindAncestor<Simulations>();
+            Replacements replacements = simulations.FindChild<Replacements>();
+
+            if (replacements == null)
+                return crop.CultivarNames;
+
+            IPlant replacementCrop = replacements.FindChild((crop as IModel).Name) as IPlant;
+            if (replacementCrop != null)
+                return replacementCrop.CultivarNames;
+
+            // Check for cultivar folders under replacements.
+            List<string> cultivarNames = crop.CultivarNames.ToList();
+            foreach (IModel cultivarFolder in (crop as IModel).FindAllChildren<CultivarFolder>())
             {
-                Simulations simulations = Apsim.Parent(crop as IModel, typeof(Simulations)) as Simulations;
-                Replacements replacements = Apsim.Child(simulations, typeof(Replacements)) as Replacements;
+                IModel replacementFolder = replacements.FindChild(cultivarFolder.Name);
+                if (replacementFolder != null)
+                {
+                    // If we find a matching cultivar folder under replacements, remove
+                    // all cultivar names added by this folder in the official plant
+                    // model, and add the cultivar names added by the matching cultivar
+                    // folder under replacements.
+                    foreach (IModel cultivar in cultivarFolder.FindAllDescendants<Cultivar>())
+                    {
+                        cultivarNames.Remove(cultivar.Name);
+
+                        // If the cultivar has memo children, then the memo text will
+                        // be appended to the cultivar name after a vertical bar |.
+                        // Technically, there could be a cultivar x and x|y, but the UI
+                        // will prevent users from doing this, so the user would really
+                        // just be digging their own hole at this point.
+                        cultivarNames.RemoveAll(c => c.StartsWith(cultivar.Name + "|"));
+                    }
+
+                    foreach (Alias alias in cultivarFolder.FindAllDescendants<Alias>())
+                        cultivarNames.RemoveAll(c => c.StartsWith(alias.Name + "|"));
+
+                    foreach (IModel cultivar in replacementFolder.FindAllDescendants<Cultivar>())
+                        cultivarNames.Add(cultivar.Name);
+                }
+            }
+
+            return cultivarNames.ToArray();
+        }
+
+        /// <summary>Get a list of life cycles in the zone.</summary>
+        /// <param name="zone">The zone.</param>
+        /// <returns>A list of life cycles.</returns>
+        private string[] GetLifeCycleNames(Zone zone)
+        {
+            List<LifeCycle> LifeCycles = zone.FindAllInScope<LifeCycle>().ToList();
+            if (LifeCycles.Count > 0)
+            {
+                string[] Namelist = new string[LifeCycles.Count];
+                int i = 0;
+                foreach (IModel LC in LifeCycles)
+                {
+                    Namelist[i] = LC.Name;
+                    i++;
+                }
+                return Namelist;
+            }
+            return new string[0];
+        }
+
+        /// <summary>Get a list of phases for lifecycle.</summary>
+        /// <param name="lifecycle">The lifecycle.</param>
+        /// <returns>A list of phases.</returns>
+        private string[] GetPhaseNames(LifeCycle lifeCycle)
+        {
+            if (lifeCycle.LifeCyclePhaseNames.Length == 0)
+            {
+                Simulations simulations = (lifeCycle as IModel).FindAncestor<Simulations>();
+                Replacements replacements = simulations.FindChild<Replacements>();
                 if (replacements != null)
                 {
-                    IPlant replacementCrop = Apsim.Child(replacements, (crop as IModel).Name) as IPlant;
-                    if (replacementCrop != null)
+                    LifeCycle replacementLifeCycle = replacements.FindChild((lifeCycle as IModel).Name) as LifeCycle;
+                    if (replacementLifeCycle != null)
                     {
-                        return replacementCrop.CultivarNames;
+                        return replacementLifeCycle.LifeCyclePhaseNames;
                     }
                 }
             }
             else
             {
-                return crop.CultivarNames;
+                return lifeCycle.LifeCyclePhaseNames;
             }
 
             return new string[0];
@@ -707,7 +839,22 @@ namespace UserInterface.Presenters
             }
 
             // Not found so look for one in scope.
-            return Apsim.Find(model, typeof(IPlant)) as IPlant;
+            return model.FindInScope<IPlant>();
+        }
+
+        /// <summary>
+        /// Go find a Life Cycle property in the specified list of properties or if not
+        /// found, find the first Life Cycle in scope.
+        /// </summary>
+        /// <param name="properties">The list of properties to look through.</param>
+        /// <returns>The found Life Cycle or null if none found.</returns>
+        private LifeCycle GetLifeCycle(List<IVariable> properties)
+        {
+            LifeCycle lc = null;
+            foreach (IVariable property in properties)
+                if (lc == null)
+                    lc = model.FindInScope<LifeCycle>(property.Value.ToString());
+            return lc;
         }
 
         private string[] GetResidueNames()
@@ -736,17 +883,17 @@ namespace UserInterface.Presenters
         private string[] GetCLEMResourceNames(Type[] resourceNameResourceGroups)
         {
             List<string> result = new List<string>();
-            ZoneCLEM zoneCLEM = Apsim.Parent(this.model, typeof(ZoneCLEM)) as ZoneCLEM;
-            ResourcesHolder resHolder = Apsim.Child(zoneCLEM, typeof(ResourcesHolder)) as ResourcesHolder;
+            IModel zoneCLEM = model.FindAncestor<Zone>();
+            ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
             if (resourceNameResourceGroups != null)
             {
                 // resource groups specified (use them)
                 foreach (Type resGroupType in resourceNameResourceGroups)
                 {
-                    IModel resGroup = Apsim.Child(resHolder, resGroupType);
+                    IModel resGroup = resHolder.Children.Find(c => resGroupType.IsAssignableFrom(c.GetType()));
                     if (resGroup != null)  //see if this group type is included in this particular simulation.
                     {
-                        foreach (IModel item in resGroup.Children)
+                        foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
                         {
                             if (item.GetType() != typeof(Memo))
                             {
@@ -759,7 +906,7 @@ namespace UserInterface.Presenters
             else
             {
                 // no resource groups specified so use all avaliable resources
-                foreach (IModel resGroup in Apsim.Children(resHolder, typeof(IModel)))
+                foreach (IModel resGroup in resHolder.FindAllChildren<IModel>())
                 {
                     foreach (IModel item in resGroup.Children)
                     {
@@ -783,13 +930,18 @@ namespace UserInterface.Presenters
         {
             List<IModel> models;
             if (t == null)
-                models = Apsim.FindAll(model);
+                models = model.FindAllInScope().ToList();
             else
-                models = Apsim.FindAll(model, t);
+                models = model.FindAllInScope().Where(m => t.IsAssignableFrom(m.GetType())).ToList();
 
             List<string> modelNames = new List<string>();
             foreach (IModel model in models)
-                modelNames.Add(Apsim.FullPath(model));
+            {
+                if (IsSiblingOfModel(model))
+                    modelNames.Add(model.Name);
+                else
+                    modelNames.Add(model.FullPath);
+            }
             return modelNames.ToArray();
         }
 
@@ -844,6 +996,14 @@ namespace UserInterface.Presenters
             object result = property.ValueWithArrayHandling;
             if (property.DataType == typeof(double) && double.IsNaN((double)result))
                 result = "";
+            if (result is IModel m)
+            {
+                if (IsSiblingOfModel(m))
+                    return m.Name;
+
+                return m.FullPath;
+            }
+
             return result;
         }
 
@@ -866,10 +1026,16 @@ namespace UserInterface.Presenters
         protected virtual object GetNewPropertyValue(IVariable property, GridCellChangedArgs cell)
         {
             if (typeof(IPlant).IsAssignableFrom(property.DataType))
-                return Apsim.Find(property.Object as IModel, cell.NewValue);
+                return (property.Object as IModel).FindInScope(cell.NewValue);
 
             if (property.Display != null && property.Display.Type == DisplayType.Model)
-                return Apsim.Get(property.Object as IModel, cell.NewValue);
+            {
+                object result = (property.Object as IModel).FindByPath(cell.NewValue)?.Value;
+                if (result == null)
+                    result = (property.Object as IModel).FindInScope(cell.NewValue);
+
+                return result;
+            }
 
             try
             {
@@ -908,6 +1074,11 @@ namespace UserInterface.Presenters
                 IGridCell cell = grid.GetCell(1, i);
                 cell.IsRowReadonly = !IsPropertyEnabled(i);
             }
+
+            // Model has been modified - need to refresh the grid.
+            // Note: Refresh() interrogates the model. grid.Refresh()
+            // updates the UI.
+            Refresh();
             grid.Refresh();
         }
 
@@ -938,6 +1109,23 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
+        /// Checks if a given model is a sibling of this.model.
+        /// </summary>
+        /// <param name="m">The model to be tested.</param>
+        private bool IsSiblingOfModel(IModel m)
+        {
+            IModel parent = this.model.Parent;
+            if (parent is Manager)
+                parent = parent.Parent;
+
+            IModel targetParent = m.Parent;
+            if (targetParent is Manager)
+                targetParent = targetParent.Parent;
+
+            return parent == targetParent;
+        }
+
+        /// <summary>
         /// The model has changed, update the grid.
         /// </summary>
         /// <param name="changedModel">The model that has changed</param>
@@ -961,7 +1149,14 @@ namespace UserInterface.Presenters
                 Prompt = "Select file path",
                 InitialDirectory = e.OldValue
             };
-            string fileName = fileChooser.GetFile();
+            if (properties[e.RowIndex].Display.Type == DisplayType.DirectoryName)
+            {
+                fileChooser.Action = FileDialog.FileActionType.SelectFolder;
+                fileChooser.Prompt = "Select a folder";
+            }
+
+            IGridCell cell = grid.GetCell(e.ColIndex, e.RowIndex);
+            string fileName = properties[e.RowIndex].Display.Type == DisplayType.FileNames ? string.Join(", ", fileChooser.GetFiles()) : fileChooser.GetFile();
 
             if (!string.IsNullOrWhiteSpace(fileName) && fileName != e.OldValue)
             {

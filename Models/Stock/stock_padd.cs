@@ -1,10 +1,4 @@
 // -----------------------------------------------------------------------
-// <copyright file="stock_padd.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-
-// -----------------------------------------------------------------------
 // GrazPlan animal model paddock and forage objects
 // -----------------------------------------------------------------------
 
@@ -212,11 +206,6 @@ namespace Models.GrazPlan
         /// Gets or sets the paddock of this forage
         /// </summary>
         public PaddockInfo InPaddock { get; set; }
-
-        /// <summary>
-        /// Gets or sets the herbage info
-        /// </summary>
-        public GrazType.PopulationHerbageData HerbageData { get; set; }
 
         /// <summary>
         /// Gets or sets the amount of this forage removed (output)
@@ -851,7 +840,7 @@ namespace Models.GrazPlan
                         dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
                         dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                         totalDMD += dmd;
-                        totalN += (greenPropn * biomass.Live.N) + biomass.Dead.N;   // g/m^2
+                        totalN += (greenPropn * biomass.Live.N) + (biomass.Dead.Wt > 0 ? biomass.Dead.N : 0);   // g/m^2
                     }
                 }
             }
@@ -880,7 +869,21 @@ namespace Models.GrazPlan
                     result.Herbage[idx].AshAlkalinity = 0.70;   // TODO: use a modelled value
                 }
 
-                result.LegumePropn = ((IPlant)forageObj).Legumosity;  
+                if (forageObj is IPlant plant)
+                {
+                    switch (plant.PlantType)
+                    {
+                        case "AGPLucerne":
+                        case "AGPRedClover":
+                        case "AGPWhiteClover":
+                            result.LegumePropn = 1;
+                            break;
+                        default:
+                            result.LegumePropn = 0;
+                            break;
+                    }
+                }
+                    
                 result.SelectFactor = 0;    // TODO: set from Plant model value
 
                 // TODO: Store any seed pools
@@ -1113,417 +1116,6 @@ namespace Models.GrazPlan
                 return this.forageProviderList[idx];
             else
                 return null;
-        }
-    }
-
-    /// <summary>
-    /// Paddock details
-    /// </summary>
-    [Serializable]
-    public class PaddockInfo
-    {
-        /// <summary>
-        /// Missing item
-        /// </summary>
-        public const int NOTTHERE = -1;
-
-        /// <summary>
-        /// Slope in degrees
-        /// </summary>
-        private double slope;  
-                                            
-        /// <summary>
-        /// Steepness code (1-2)
-        /// </summary>
-        private double steepness;   
-                                          
-        /// <summary>
-        /// CAREFUL - FForages does not own its members
-        /// </summary>
-        private ForageList forages;  
-        
-        /// <summary>
-        /// The supplement placed in the paddock
-        /// </summary>
-        private SupplementRation suppInPadd;
-
-        /// <summary>
-        /// Feed the supplement before eating pasture
-        /// </summary>
-        private bool feedSupplementFirst = false;
-
-        /// <summary>
-        /// Create the PaddockInfo
-        /// </summary>
-        public PaddockInfo()
-        {
-            this.forages = new ForageList(false);
-            this.suppInPadd = new SupplementRation();
-            this.Area = 1.0;
-            this.slope = 0.0;
-        }
-
-        /// <summary>
-        /// Gets or sets the summed green mass
-        /// </summary>
-        public double FSummedGreenMass { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock ID
-        /// </summary>
-        public int PaddID { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock object
-        /// </summary>
-        public object PaddObj { get; set; }
-
-        /// <summary>
-        /// Gets or sets the excretion destination
-        /// </summary>
-        public string ExcretionDest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the urine destination
-        /// </summary>
-        public string UrineDest { get; set; }
-
-        /// <summary>
-        /// Gets or sets the faeces destination
-        /// </summary>
-        public object AddFaecesObj { get; set; }
-
-        /// <summary>
-        /// Gets or sets the urine destination
-        /// </summary>
-        public object AddUrineObj { get; set; }
-
-        /// <summary>
-        /// Gets or sets the soil of the paddock
-        /// </summary>
-        public ISoil Soil { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock area (ha)
-        /// </summary>
-        public double Area { get; set; }
-
-        /// <summary>
-        /// Gets or sets the waterlogging index (0-1)
-        /// </summary>
-        public double Waterlog { get; set; }
-
-        /// <summary>
-        /// Gets or sets the total pot. intake
-        /// </summary>
-        public double SummedPotIntake { get; set; }                                                  
-
-        /// <summary>
-        /// Gets or sets the supplement removal amount
-        /// </summary>
-        public double SuppRemovalKG { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paddock slope
-        /// </summary>
-        public double Slope
-        {
-            get { return this.slope; }
-            set { this.SetSlope(value); }
-        }
-
-        /// <summary>
-        /// Gets the steepness code (1-2)
-        /// </summary>
-        public double Steepness
-        {
-            get { return this.steepness; }
-        }
-
-        /// <summary>
-        /// Gets the supplement that is in the paddock
-        /// </summary>
-        public SupplementRation SuppInPadd
-        {
-            get { return this.suppInPadd; }
-        }
-
-        /// <summary>
-        /// Gets the forage list
-        /// </summary>
-        public ForageList Forages
-        {
-            get { return this.forages; }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether feeding the supplement first. Bail feeding.
-        /// </summary>
-        public bool FeedSuppFirst
-        {
-            get { return this.feedSupplementFirst; }
-        }
-
-        /// <summary>
-        /// Set the paddock slope value
-        /// </summary>
-        /// <param name="slopeValue">The value in degrees</param>
-        private void SetSlope(double slopeValue)
-        {
-            this.slope = slopeValue;
-            this.steepness = 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(this.slope * Math.PI / 180) / Math.Cos(this.slope * Math.PI / 180)));
-        }
-
-        /// <summary>
-        /// Assign a forage to this paddock
-        /// </summary>
-        /// <param name="forage">The forage object to assign to this paddock</param>
-        public void AssignForage(ForageInfo forage)
-        {
-            this.forages.Add(forage);
-            forage.InPaddock = this;
-        }
-
-        /// <summary>
-        /// Aggregates the initial forage availability of each species in the list       
-        /// * If FForages.Count=0, then the aggregate forage availability is taken to    
-        ///   have been passed at the paddock level using setGrazingInputs()             
-        /// </summary>
-        public void ComputeTotals()
-        {
-            this.FSummedGreenMass = 0.0;
-            for (int jdx = 0; jdx <= this.Forages.Count() - 1; jdx++)
-            {
-                this.Forages.ByIndex(jdx).SummariseInitHerbage();
-                this.FSummedGreenMass = this.FSummedGreenMass + this.Forages.ByIndex(jdx).GreenMass;
-            }
-        }
-
-        /// <summary>
-        /// Zero the removal amounts
-        /// </summary>
-        public void ZeroRemoval()
-        {
-            this.SuppRemovalKG = 0.0;
-            for (int jdx = 0; jdx <= this.Forages.Count() - 1; jdx++)
-                this.Forages.ByIndex(jdx).RemovalKG = new GrazType.GrazingOutputs();
-        }
-
-        /// <summary>
-        /// Feed the supplement
-        /// </summary>
-        /// <param name="newAmount">The amount to feed in kg</param>
-        /// <param name="newSupp">The supplement to feed</param>
-        /// <param name="feedSuppFirst">True if bail feeding</param>
-        public void FeedSupplement(double newAmount, FoodSupplement newSupp, bool feedSuppFirst)
-        {
-            bool found;
-            int idx;
-
-            this.feedSupplementFirst = false;
-            if (newAmount > 0.0)
-            {
-                this.feedSupplementFirst = feedSuppFirst;
-                idx = 0;
-                found = false;
-                while (!found && (idx < this.SuppInPadd.Count))
-                {
-                    found = newSupp.IsSameAs(this.SuppInPadd[idx]);
-                    if (!found)
-                        idx++;
-                }
-                if (found)
-                    this.SuppInPadd[idx].Amount = this.SuppInPadd[idx].Amount + newAmount;    
-                else
-                {
-                    FoodSupplement oneSupp = new FoodSupplement();
-                    oneSupp.Assign(newSupp);
-                    this.SuppInPadd.Add(oneSupp, newAmount);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Clear the supplement ration that is in the paddock
-        /// </summary>
-        public void ClearSupplement()
-        {
-            this.SuppInPadd.Clear();
-        }
-    }
-
-    /// <summary>
-    /// The PaddockList class
-    /// </summary>
-    [Serializable]
-    public class PaddockList
-    {
-        /// <summary>
-        /// List of paddock info objects
-        /// </summary>
-        private PaddockInfo[] items;
-
-        /// <summary>
-        /// Create the PaddockList
-        /// </summary>
-        public PaddockList()
-        {
-            Array.Resize(ref this.items, 0);
-        }
-
-        /// <summary>
-        /// Get the count of paddocks
-        /// </summary>
-        /// <returns>The count of paddocks</returns>
-        public int Count()
-        {
-            return this.items.Length;
-        }
-
-        /// <summary>
-        /// Add a paddock
-        /// </summary>
-        /// <param name="paddInfo">The paddock info</param>
-        public void Add(PaddockInfo paddInfo)
-        {
-            int idx = this.items.Length;
-            Array.Resize(ref this.items, idx + 1);
-            this.items[idx] = paddInfo;
-        }
-
-        /// <summary>
-        /// Add a new paddock using ID and name
-        /// </summary>
-        /// <param name="paddockID">Paddock ID</param>
-        /// <param name="paddName">The name of the paddock</param>
-        public void Add(int paddockID, string paddName)
-        {
-            PaddockInfo newPadd;
-
-            newPadd = new PaddockInfo();
-            newPadd.PaddID = paddockID;
-            newPadd.Name = paddName.ToLower();
-            this.Add(newPadd);
-        }
-
-        /// <summary>
-        /// Add a new paddock object using reference and name
-        /// </summary>
-        /// <param name="paddObj">The paddock object</param>
-        /// <param name="paddName">The name of the paddock</param>
-        public void Add(object paddObj, string paddName)
-        {
-            PaddockInfo newPadd;
-
-            newPadd = new PaddockInfo();
-            newPadd.PaddID = this.Count() + 1; // ID is 1 based here
-            newPadd.PaddObj = paddObj;
-            newPadd.Name = paddName.ToLower();
-            this.Add(newPadd);
-        }
-
-        /// <summary>
-        /// Delete the paddock at the index
-        /// </summary>
-        /// <param name="indexValue">Paddock index</param>
-        public void Delete(int indexValue)
-        {
-            this.items[indexValue] = null;
-            for (int idx = indexValue + 1; idx <= this.items.Length - 1; idx++)
-                this.items[idx - 1] = this.items[idx];
-            Array.Resize(ref this.items, this.items.Length - 1);
-        }
-
-        /// <summary>
-        /// Get the paddock info at the index
-        /// </summary>
-        /// <param name="indexValue">The paddock index. 0-n</param>
-        /// <returns>The paddock info</returns>
-        public PaddockInfo ByIndex(int indexValue)
-        {
-            return this.items[indexValue];
-        }
-
-        /// <summary>
-        /// Get the paddock index by ID
-        /// </summary>
-        /// <param name="idValue">The paddock ID</param>
-        /// <returns>The paddock index</returns>
-        public PaddockInfo ByID(int idValue)
-        {
-            PaddockInfo result = null;
-            int idx = 0;
-            while ((idx < this.Count()) && (result == null))
-            {
-                if (this.ByIndex(idx).PaddID == idValue)
-                    result = this.ByIndex(idx);
-                else
-                    idx++;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Get the paddock by object
-        /// </summary>
-        /// <param name="paddObj">The paddock object</param>
-        /// <returns>The paddock info</returns>
-        public PaddockInfo ByObj(object paddObj)
-        {
-            PaddockInfo result = null;
-            int idx = 0;
-            while ((idx < this.Count()) && (result == null))
-            {
-                if (this.ByIndex(idx).PaddObj == paddObj)
-                    result = this.ByIndex(idx);
-                else
-                    idx++;
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Get the paddock by name
-        /// </summary>
-        /// <param name="paddName">Paddock name</param>
-        /// <returns>The PaddockInfo object</returns>
-        public PaddockInfo ByName(string paddName)
-        {
-            int idx = this.IndexOf(paddName);
-            if (idx >= 0)
-                return this.ByIndex(idx);
-            else
-                return null;
-        }
-
-        /// <summary>
-        /// Get the index of the paddock by name
-        /// </summary>
-        /// <param name="paddName">The paddock name. Case insensitive test.</param>
-        /// <returns>The index. 0->n</returns>
-        public int IndexOf(string paddName)
-        {
-            int result = this.Count() - 1;
-            while ((result >= 0) && (this.ByIndex(result).Name != paddName.ToLower()))
-                result--;
-            return result;
-        }
-
-        /// <summary>
-        /// Initialise at the first timestep
-        /// </summary>
-        public void BeginTimeStep()
-        {
-            for (int paddIdx = 0; paddIdx <= this.Count() - 1; paddIdx++)
-            {
-                this.ByIndex(paddIdx).ClearSupplement();
-                this.ByIndex(paddIdx).ZeroRemoval();
-            }
         }
     }
 }

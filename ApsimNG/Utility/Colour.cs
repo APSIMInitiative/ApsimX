@@ -51,6 +51,15 @@ namespace Utility
         }
 
         /// <summary>
+        /// Translates a System.Drawing.Color to a Gdk.Color.
+        /// </summary>
+        /// <param name="colour">Colour to be translated.</param>
+        public static Gdk.Color ToGdk(Color colour)
+        {
+            return new Gdk.Color(colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
         /// Translates a System.Drawing.Color to an OxyColor.
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>

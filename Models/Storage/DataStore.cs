@@ -12,14 +12,13 @@
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Xml.Serialization;
 
     /// <summary>
     /// # [Name]
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.DataStoreView")]
+    [ViewName("ApsimNG.Resources.Glade.DataStoreView.glade")]
     [PresenterName("UserInterface.Presenters.DataStorePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     public class DataStore : Model, IDataStore, IDisposable
@@ -177,12 +176,12 @@
         {
             string extension = useFirebird ? ".fdb" : ".db";
 
-            Simulations simulations = Apsim.Parent(this, typeof(Simulations)) as Simulations;
+            Simulations simulations = FindAncestor<Simulations>();
 
             // If we have been cloned prior to a run, then we won't be able to locate
             // the simulations object. In this situation we can fallback to using the
             // parent simulation's filename (which should be the same anyway).
-            Simulation simulation = Apsim.Parent(this, typeof(Simulation)) as Simulation;
+            Simulation simulation = FindAncestor<Simulation>();
 
             if (simulations != null && simulations.FileName != null)
                 FileName = Path.ChangeExtension(simulations.FileName, extension);

@@ -43,7 +43,7 @@
             this.factorView = view as IFactorView;
             this.presenter = explorerPresenter;
             intellisense = new IntellisensePresenter(factorView as ViewBase);
-            this.factorView.Specification.Value = factor.Specification;
+            this.factorView.Specification.Text = factor.Specification;
 
             this.factorView.Specification.Leave += this.OnTextHasChangedByUser;
             this.factorView.Specification.IntellisenseItemsNeeded += this.OnContextItemsNeeded;
@@ -81,7 +81,7 @@
                 string currentLine = GetLine(e.Code, e.LineNo - 1);
                 if (e.ControlShiftSpace)
                     intellisense.ShowMethodCompletion(factor, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, e.ControlSpace))
+                else if (intellisense.GenerateGridCompletions(currentLine, e.ColNo, factor, true, false, false, false, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
             }
             catch (Exception err)
@@ -125,10 +125,10 @@
         {
             try
             {
-                if (factor.Specification != factorView.Specification.Value)
+                if (factor.Specification != factorView.Specification.Text)
                 {
                     presenter.CommandHistory.ModelChanged -= OnModelChanged;
-                    presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Value));
+                    presenter.CommandHistory.Add(new Commands.ChangeProperty(factor, "Specification", factorView.Specification.Text));
                     presenter.CommandHistory.ModelChanged += OnModelChanged;
                 }
             }
@@ -144,7 +144,7 @@
         /// <param name="changedModel">The model</param>
         private void OnModelChanged(object changedModel)
         {
-            factorView.Specification.Value = factor.Specification;
+            factorView.Specification.Text = factor.Specification;
         }
 
         /// <summary>

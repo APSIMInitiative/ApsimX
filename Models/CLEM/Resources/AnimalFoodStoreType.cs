@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -45,7 +45,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current store nitrogen (%)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CurrentStoreNitrogen { get; set; }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount currently available (kg dry)
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Amount { get { return amount; } set { return; } }
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
@@ -138,6 +138,12 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.amount, amountRemoved);
@@ -151,6 +157,14 @@ namespace Models.CLEM.Resources
             request.AdditionalDetails = additionalDetails;
 
             request.Provided = amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                additionalDetails.Amount = amountRemoved * request.MarketTransactionMultiplier;
+                (EquivalentMarketStore as AnimalFoodStoreType).Add(additionalDetails, request.ActivityModel, "Farm sales");
+            }
+
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
@@ -190,7 +204,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion

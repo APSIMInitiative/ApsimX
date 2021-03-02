@@ -1,12 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="DeleteModelCommand.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
     using Models.Core;
     using Interfaces;
+    using Models.Core.ApsimFile;
 
     /// <summary>This command deletes a model</summary>
     public class DeleteModelCommand : ICommand
@@ -46,9 +42,9 @@ namespace UserInterface.Commands
         /// <param name="commandHistory">The command history instance</param>
         public void Do(CommandHistory commandHistory)
         {
-            this.explorerView.Tree.Delete(Apsim.FullPath(this.modelToDelete));
+            this.explorerView.Tree.Delete(this.modelToDelete.FullPath);
             pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
-            modelWasRemoved = Apsim.Delete(this.modelToDelete as Model);
+            modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
         }
 
         /// <summary>Undo the command</summary>
@@ -58,8 +54,8 @@ namespace UserInterface.Commands
             if (this.modelWasRemoved)
             {
                 this.parent.Children.Insert(pos, this.modelToDelete as Model);
-                this.explorerView.Tree.AddChild(Apsim.FullPath(this.parent), nodeDescription, pos);
-                Apsim.ClearCache(this.modelToDelete);
+                this.explorerView.Tree.AddChild(this.parent.FullPath, nodeDescription, pos);
+                Apsim.ClearCaches(this.modelToDelete);
             }
         }
     }

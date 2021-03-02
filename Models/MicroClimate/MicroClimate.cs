@@ -78,6 +78,11 @@
         [Units("MJ/MJ")]
         public double SoilHeatFluxFraction { get; set; }
 
+        /// <summary>The minimum height difference between canopies for a new layer to be created (m).</summary>
+        [Description("The minimum height difference between canopies for a new layer to be created (m)")]
+        [Units("m")]
+        public double MinimumHeightDiffForNewLayer { get; set; } = 0.0;
+
         /// <summary>Height of the tallest canopy.</summary>
         [Units("mm")]
         public double CanopyHeight
@@ -208,6 +213,13 @@
             get { return microClimatesZones[0].CanopyCover; }
         }
 
+        /// <summary>The number of canopy layers.</summary>
+        [Description("Number of canopy layers")]
+        public int NumLayers
+        {
+            get { return microClimatesZones[0].DeltaZ.Length; }
+        }
+
         /// <summary>Called when simulation starts.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event data.</param>
@@ -215,10 +227,10 @@
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             microClimatesZones = new List<MicroClimateZone>();
-            foreach (Zone newZone in Apsim.ChildrenRecursively(this.Parent, typeof(Zone)))
-                microClimatesZones.Add(new MicroClimateZone(clock, newZone));
+            foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
+                microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
             if (microClimatesZones.Count == 0)
-                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone));
+                microClimatesZones.Add(new MicroClimateZone(clock, this.Parent as Zone, MinimumHeightDiffForNewLayer));
         }
 
         /// <summary>Called when the canopy energy balance needs to be calculated.</summary>
@@ -233,8 +245,7 @@
             dayLengthEvap = MathUtilities.DayLength(clock.Today.DayOfYear, sunAngleNetPositiveRadiation, weather.Latitude);
             // VOS - a temporary kludge to get this running for high latitudes. MicroMet is due for a clean up soon so reconsider then.
             dayLengthEvap = Math.Max(dayLengthEvap, (dayLengthLight * 2.0 / 3.0));
-            if (microClimatesZones.Count == 2 && microClimatesZones[0].Zone is Zones.RectangularZone 
-                && microClimatesZones[1].Zone is Zones.RectangularZone && microClimatesZones[0].Canopies.Count > 0 && microClimatesZones[1].Canopies.Count > 0)
+            if (microClimatesZones.Count == 2 && microClimatesZones[0].Zone is Zones.RectangularZone && microClimatesZones[1].Zone is Zones.RectangularZone)
             {
                 // We are in a strip crop simulation
                 microClimatesZones[0].DoCanopyCompartments();
@@ -270,7 +281,7 @@
             
             MicroClimateZone tallest;
             MicroClimateZone shortest;
-            if (MathUtilities.Sum(microClimatesZones[0].DeltaZ)> MathUtilities.Sum(microClimatesZones[1].DeltaZ))
+            if (microClimatesZones[0].DeltaZ.Sum()> microClimatesZones[1].DeltaZ.Sum())
             {
                 tallest = microClimatesZones[0];
                 shortest = microClimatesZones[1];
@@ -282,13 +293,21 @@
             }
 
             bool TallestIsTree = false;
+            bool TallestIsVine = false;
+            double Wt = (tallest.Zone as Zones.RectangularZone).Width*1000;    // Width of tallest crop zone
             foreach (MicroClimateCanopy c in tallest.Canopies)
             {
-                if ((c.Canopy.Height - c.Canopy.Depth) > 0)
+               
+                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width > Wt)
                     TallestIsTree = true;
+
+                if ((c.Canopy.Height - c.Canopy.Depth) > 0 && c.Canopy.Width <= Wt)
+                    TallestIsVine = true;
             }
             if (TallestIsTree)
                 DoTreeRowCropShortWaveRadiation(ref tallest, ref shortest);
+            if (TallestIsVine)
+                DoVineStripShortWaveRadiation(ref tallest, ref shortest);
             else
                 DoStripCropShortWaveRadiation(ref tallest, ref shortest);
         }
@@ -300,9 +319,9 @@
         /// <param name="alley"></param>
         private void DoTreeRowCropShortWaveRadiation(ref MicroClimateZone tree, ref MicroClimateZone alley)
         {
-            if (MathUtilities.Sum(tree.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            if (tree.DeltaZ.Sum() > 0 && alley.DeltaZ.Sum() > 0)  // Don't perform calculations if layers are empty
             {
-                double Ht = MathUtilities.Sum(tree.DeltaZ);                // Height of tree canopy
+                double Ht = tree.DeltaZ.Sum();                // Height of tree canopy
                 double CDt = 0;//tree.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy
                 foreach (MicroClimateCanopy c in tree.Canopies)
                     if (c.Canopy.Depth < c.Canopy.Height)
@@ -315,7 +334,7 @@
                         }
                     }
                 double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
-                double Ha = MathUtilities.Sum(alley.DeltaZ);               // Height of alley canopy
+                double Ha = alley.DeltaZ.Sum();               // Height of alley canopy
                 if ((Ha > CBHt) & (tree.DeltaZ.Length > 1))
                     throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
                 double Wt = (tree.Zone as Zones.RectangularZone).Width;    // Width of tree zone
@@ -335,8 +354,8 @@
                 double WaOp = Wa - WaOl;                                      // Width of the open alley zone between tree canopies
                 double Ft = CWt / (Wt + Wa);                                  // Fraction of space in tree canopy
                 double Fs = WaOp / (Wt + Wa);                                 // Fraction of open space in the alley row
-                double LAIt = MathUtilities.Sum(tree.LAItotsum);           // LAI of trees
-                double LAIa = MathUtilities.Sum(alley.LAItotsum);          // LAI of alley crop
+                double LAIt = tree.LAItotsum.Sum();           // LAI of trees
+                double LAIa = alley.LAItotsum.Sum();          // LAI of alley crop
                 double Kt = tree.Canopies[0].Ktot;                         // Extinction Coefficient of trees
                 double Ka = alley.Canopies[0].Ktot;                        // Extinction Coefficient of alley crop
                 double LAIthomo = Ft * LAIt;                                  // LAI of trees if spread homogeneously across row and alley zones
@@ -364,7 +383,7 @@
                 Ft = (Wt) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
                 Fs = (Wa) / (Wt + Wa);  // Remove overlap so scaling back to zone ground area works
 
-                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft);
+                CalculateLayeredShortWaveRadiation(tree, weather.Radn * It / Ft); 
                 
                 CalculateLayeredShortWaveRadiation(alley, weather.Radn * Ia / Fs);
             }
@@ -382,18 +401,24 @@
         /// <param name="shortest"></param>
         private void DoStripCropShortWaveRadiation(ref MicroClimateZone tallest, ref MicroClimateZone shortest)
         {
-            if (MathUtilities.Sum(tallest.DeltaZ) > 0)  // Don't perform calculations if layers are empty
+            if (tallest.DeltaZ.Sum() > 0)  // Don't perform calculations if layers are empty
             {
-                double Ht = MathUtilities.Sum(tallest.DeltaZ);                // Height of tallest strip
-                double Hs = MathUtilities.Sum(shortest.DeltaZ);               // Height of shortest strip
+                double Ht = tallest.DeltaZ.Sum();                // Height of tallest strip
+                double Hs = shortest.DeltaZ.Sum();               // Height of shortest strip
                 double Wt = (tallest.Zone as Zones.RectangularZone).Width;    // Width of tallest strip
                 double Ws = (shortest.Zone as Zones.RectangularZone).Width;   // Width of shortest strip
                 double Ft = Wt / (Wt + Ws);                                   // Fraction of space in tallest strip
                 double Fs = Ws / (Wt + Ws);                                   // Fraction of space in the shortest strip
-                double LAIt = MathUtilities.Sum(tallest.LAItotsum);           // LAI of tallest strip
-                double LAIs = MathUtilities.Sum(shortest.LAItotsum);          // LAI of shortest strip
-                double Kt = tallest.Canopies[0].Ktot;                         // Extinction Coefficient of the tallest strip
-                double Ks = shortest.Canopies[0].Ktot;                        // Extinction Coefficient of the shortest strip
+                double LAIt = tallest.LAItotsum.Sum();           // LAI of tallest strip
+                double LAIs = shortest.LAItotsum.Sum();          // LAI of shortest strip
+                if (LAIs > 0)
+                { }
+                double Kt = 0;                                                // Extinction Coefficient of the tallest strip
+                if (tallest.Canopies.Count>0)                                 // If it exists...
+                    Kt = tallest.Canopies[0].Ktot;
+                double Ks = 0;                                                // Extinction Coefficient of the shortest strip
+                if (shortest.Canopies.Count>0)                                // If it exists...
+                    Ks = shortest.Canopies[0].Ktot;
                 double Httop = Ht - Hs;                                       // Height of the top layer in tallest strip (ie distance from top of shortest to top of tallest)
                 double LAIttop = Httop / Ht * LAIt;                           // LAI of the top layer of the tallest strip (ie LAI in tallest strip above height of shortest strip)
                 double LAItbot = LAIt - LAIttop;                              // LAI of the bottom layer of the tallest strip (ie LAI in tallest strip below height of the shortest strip)
@@ -414,15 +439,16 @@
                 if (Math.Abs(1 - EnergyBalanceCheck) > 0.001)
                     throw (new Exception("Energy Balance not maintained in strip crop light interception model"));
 
-                //tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
-                //tallest.SurfaceRs = weather.Radn * Soilt / Ft;
-                CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
+                if (tallest.Canopies.Count>0)
+                    tallest.Canopies[0].Rs[0] = weather.Radn * (Intttop + Inttbot) / Ft;
+                tallest.SurfaceRs = weather.Radn * Soilt / Ft;
+                //CalculateLayeredShortWaveRadiation(tallest, weather.Radn * (Intttop + Inttbot) / Ft);
 
-               // if (shortest.Canopies[0].Rs != null)
-               //     if (shortest.Canopies[0].Rs.Length > 0)
-               //         shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
-                //shortest.SurfaceRs = weather.Radn * Soils / Fs;
-                CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
+                if (shortest.Canopies.Count>0 && shortest.Canopies[0].Rs != null)
+                    if (shortest.Canopies[0].Rs.Length > 0)
+                        shortest.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                shortest.SurfaceRs = weather.Radn * Soils / Fs;
+                //CalculateLayeredShortWaveRadiation(shortest, weather.Radn * Ints / Fs);
             }
             else
             {
@@ -432,6 +458,104 @@
                 shortest.SurfaceRs = weather.Radn;
             }
 
+
+        }
+
+        /// <summary>
+        /// This model is for strip crops where there is no verticle overlap of the shortest and tallest crops canopy but no horizontal overlap
+        /// </summary>
+        /// <param name="vine"></param>
+        /// <param name="alley"></param>
+        private void DoVineStripShortWaveRadiation(ref MicroClimateZone vine, ref MicroClimateZone alley)
+        {
+            if (vine.DeltaZ.Sum() > 0)  // Don't perform calculations if layers are empty
+            {
+                double Ht = vine.DeltaZ.Sum();                // Height of tree canopy
+
+                double CDt = vine.Canopies[0].Canopy.Depth / 1000;         // Depth of tree canopy    
+                double CBHt = Ht - CDt;                                    // Base hight of the tree canopy
+                double Ha = alley.DeltaZ.Sum();               // Height of alley canopy
+                if ((Ha > CBHt) & (vine.DeltaZ.Length > 1))
+                    throw (new Exception("Height of the alley canopy must not exceed the base height of the tree canopy"));
+                
+                double Wt = (vine.Zone as Zones.RectangularZone).Width;    // Width of tree zone
+                double Wa = (alley.Zone as Zones.RectangularZone).Width;   // Width of alley zone
+                double CWt = vine.Canopies[0].Canopy.Width / 1000;         // Width of the tree canopy
+                             
+                double WaOp = Wa +Wt - CWt;                               // Width of the open alley zone between tree canopies
+                double Ft = CWt / (Wt + Wa);                              // Fraction of space in tree canopy
+                double Fs = WaOp / (Wt + Wa);                             // Fraction of open space in the alley row
+
+               
+                double LAIt = vine.LAItotsum.Sum() * Wt/ CWt;  // adjusting the LAI of tallest strip based on new width
+                double LAIs = alley.LAItotsum.Sum() * Wa/ WaOp; // adjusting the LAI of shortest strip based on new width
+
+                double Kt = 0;                                               // Extinction Coefficient of the tallest strip
+                if (vine.Canopies.Count > 0 & LAIt > 0 )                                 // If it exists...
+                    Kt = vine.Canopies[0].Ktot;
+                double Ka = 0;                                                // Extinction Coefficient of the shortest strip
+                if (alley.Canopies.Count > 0 & LAIs > 0)                                 // If it exists...
+                    Ka = alley.Canopies[0].Ktot;
+
+                double Httop = Ht-Ha;                                       // distance from top of shortest to top of tallest
+                double LAIthomo = Ft * LAIt;                                // LAI of top layer of tallest strip if spread homogeneously across all of the space
+                
+                double fhomo = 1 - Math.Exp(-Kt * LAIthomo);
+                double fcompr = (1 - Math.Exp(-Kt * LAIt)) * CWt / WaOp;
+
+                double IPblackt = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(WaOp, 2)) - CDt) / WaOp;
+
+                double IRblackt = (Math.Sqrt(Math.Pow(CDt, 2) + Math.Pow(CWt, 2)) - CDt) / CWt;  // View factor for top layer of tallest strip
+
+                double SPt = IPblackt + (1 - IPblackt) * Math.Exp(-Kt * LAIthomo);
+                double SRt = IRblackt * Math.Exp(-Kt * LAIt) +
+                            (1 - IRblackt) * Math.Exp(-Kt * LAIthomo);   // Transmission of light to bottom of top layer in tallest strip
+                double W = 0;
+                if (vine.Canopies.Count > 0 & LAIt > 0 & Kt > 0)                                 // If it exists...
+                   W = (SPt - SRt) / (1 - Math.Exp(-Kt * LAIt));
+
+                double ftop = fhomo * (1 - W) + fcompr * W;              // light interception by the vine row
+
+                //use different height and LAI distribution for calculating the light penetrate to the interrow
+                //this is for accounting the effect of trunk, cordon, and post that shading on the interrow
+
+                double IPblackb = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(WaOp, 2)) - Httop) / WaOp; //bottom part
+
+                double IRblackb = (Math.Sqrt(Math.Pow(Httop, 2) + Math.Pow(CWt, 2)) - Httop) / CWt;  // View factor for top layer of tallest strip
+
+                double SPb = IPblackb + (1 - IPblackb) * Math.Exp(-Kt * LAIthomo);
+                double SRb = IRblackb * Math.Exp(-Kt * LAIt) +
+                            (1 - IRblackb) * Math.Exp(-Kt * LAIthomo);  //  Transmission of light to bottom of top layer in tallest strip
+                //double Wb = (SPt - SRt) / (1 - Math.Exp(-Kt * LAIt));
+
+                //double fb = fhomo * (1 - W) + fcompr * W;  //light interception by the vine row
+
+                double Soilt = SRb * Ft ;                   // Transmission to the soil below tallest strip        
+ 
+                double Intttop = ftop;   // Interception by the top layer of the tallest strip (ie light intercepted in tallest strip above height of shortest strip)
+                              
+                double Ints =  SPb * (1 - Math.Exp(-Ka * LAIs)) * Fs;               // Interception by the shortest strip
+                double Soils = SPb * (Math.Exp(-Ka * LAIs)) * Fs;                  // Transmission to the soil below shortest strip
+ 
+                Ft = (Wt) / (Wt + Wa);  // Scaling back to zone ground area works
+                Fs = (Wa) / (Wt + Wa);  // Scaling back to zone ground area works
+
+                if (vine.Canopies.Count > 0 & LAIt > 0 )
+                    vine.Canopies[0].Rs[0] = weather.Radn * (Intttop)/Ft; //intttop is already a fraction compare to the overall layer
+                    vine.SurfaceRs = weather.Radn * Soilt / Ft;
+                
+                if (alley.Canopies.Count > 0 && alley.Canopies[0].Rs != null)
+                    if (alley.Canopies[0].Rs.Length > 0)
+                        alley.Canopies[0].Rs[0] = weather.Radn * Ints / Fs;
+                        alley.SurfaceRs = weather.Radn * Soils / Fs;
+                }
+            else
+            {
+                //tallest.Canopies[0].Rs[0] =0;
+                vine.SurfaceRs = weather.Radn;
+                //shortest.Canopies[0].Rs[0] = 0;
+                alley.SurfaceRs = weather.Radn;
+            }
 
         }
 
@@ -447,6 +571,8 @@
             {
                 if (double.IsNaN(Rint))
                     throw new Exception("Bad Radiation Value in Light partitioning");
+                if (ZoneMC.LAItotsum[i] > 0)
+                { }
                 Rint = Rin * (1.0 - Math.Exp(-ZoneMC.layerKtot[i] * ZoneMC.LAItotsum[i]));
                 for (int j = 0; j <= ZoneMC.Canopies.Count - 1; j++)
                     ZoneMC.Canopies[j].Rs[i] = Rint * MathUtilities.Divide(ZoneMC.Canopies[j].Ftot[i] * ZoneMC.Canopies[j].Ktot, ZoneMC.layerKtot[i], 0.0);

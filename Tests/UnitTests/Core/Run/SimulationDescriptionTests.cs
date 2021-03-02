@@ -1,6 +1,8 @@
 ﻿namespace UnitTests.Core.Run
 {
+    using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Soils;
     using NUnit.Framework;
@@ -19,7 +21,7 @@
             var sim = new Simulation()
             {
                 Name = "BaseSimulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockWeather()
                     {
@@ -29,7 +31,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var simulationDescription = new SimulationDescription(sim, "CustomName");
             simulationDescription.AddOverride(new PropertyReplacement("Weather.MaxT", 2));
@@ -47,7 +49,7 @@
             var sim = new Simulation()
             {
                 Name = "BaseSimulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new MockWeather()
                     {
@@ -57,7 +59,7 @@
                     },
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var replacementWeather = new MockWeather()
             {
@@ -85,12 +87,12 @@
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
-                    new Folder()
+                    new Replacements()
                     {
                         Name = "Replacements",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -104,7 +106,7 @@
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -116,7 +118,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -139,12 +141,12 @@
         {
             var simulations = new Simulations()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Folder()
                     {
                         Name = "Replacements",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -158,7 +160,7 @@
                     new Simulation()
                     {
                         Name = "BaseSimulation",
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockWeather()
                             {
@@ -170,7 +172,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(simulations);
+            simulations.ParentAllDescendants();
 
             var sim = simulations.Children[1] as Simulation;
             var simulationDescription = new SimulationDescription(sim);
@@ -189,11 +191,11 @@
             var sim = new Simulation()
             {
                 Name = "Simulation",
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Soil
                     {
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new Physical()
                             {
@@ -204,7 +206,7 @@
                                 DUL = new double[] { 0.365, 0.461, 0.43 },
                                 SAT = new double[] { 0.400, 0.481, 0.45 },
 
-                                Children = new List<Model>()
+                                Children = new List<IModel>()
                                 {
                                     new SoilCrop
                                     {
@@ -214,7 +216,7 @@
                                     }
                                 }
                             },
-                            new SoilWater(),
+                            new Models.WaterModel.WaterBalance(),
                             new Organic
                             {
                                 Thickness = new double[] { 100, 300 },
@@ -235,7 +237,7 @@
                             new Sample
                             {
                                 Thickness = new double[] { 1000 },
-                                NO3N = new double[] { 27 },
+                                NO3 = new double[] { 27 },
                                 OC = new double[] { 1.35 },
                                 SWUnits = Sample.SWUnitsEnum.Volumetric
                             },
@@ -244,7 +246,7 @@
                     }
                 }
             };
-            Apsim.ParentAllChildren(sim);
+            sim.ParentAllDescendants();
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
@@ -268,5 +270,27 @@
             Assert.AreEqual(sample.SWUnits, Sample.SWUnitsEnum.Volumetric);
         }
 
+        /// <summary>
+        /// This test attempts to run a simulation with multiple models under the replacements
+        /// node. One replacement overrides wheat's cultivar folder, giving the axe cultivar
+        /// an invalid parameter, which should cause the simulation to bomb.
+        /// </summary>
+        [Test]
+        public void TestMultipleModelReplacements()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            Runner runner = new Runner(sims);
+            errors = runner.Run();
+
+            // The above should throw. The simulations contains a replacements node which
+            // replaces wheat's cultivars folder, giving axe an invalid parameter. We sow
+            // axe in this sim, so we should get an error when the plant is sown.
+            Assert.NotNull(errors);
+            Assert.AreEqual(1, errors.Count);
+        }
     }
 }

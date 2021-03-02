@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using MathNet.Numerics.LinearAlgebra.Double;
 using Models.Core;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Zones;
-
+using Models.Soils.Nutrients;
 
 namespace Models.Agroforestry
 {
@@ -60,42 +60,42 @@ namespace Models.Agroforestry
         /// <summary>
         /// Distance from zone in tree heights
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("TreeHeights")]
         public double H { get; set; }
 
         /// <summary>
         /// Height of the tree.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m")]
         public double heightToday { get { return GetHeightToday();}}
 
         /// <summary>
         /// Leaf Area
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("m2")]
         public double ShadeModiferToday { get { return GetShadeModifierToday();} }
 
         /// <summary>
         /// The trees water uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("mm")]
         public double[] WaterUptake { get; set; }
 
         /// <summary>
         /// The trees N uptake per layer in a single zone
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("g/m2")]
         public double[] NUptake { get; set; }
 
         /// <summary>
         /// The trees water demand across all zones.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("L")]
         public double SWDemand {get; set; }  // Tree water demand (L)
 
@@ -135,14 +135,14 @@ namespace Models.Agroforestry
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double WaterStress { get; set; }
 
         /// <summary>
         /// N stress factor.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Units("0-1")]
         public double NStress { get; set; }
 
@@ -150,13 +150,13 @@ namespace Models.Agroforestry
         /// <summary>
         /// A list containing forestry information for each zone.
         /// </summary>
-        [XmlIgnore]
-        public List<IModel> ZoneList;
+        [JsonIgnore]
+        public IEnumerable<Zone> ZoneList;
 
         /// <summary>
         /// Return an array of shade values.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Summary]
         [Units("%")]
         public double[] Shade { get { return shade.Values.ToArray(); } }
@@ -188,9 +188,9 @@ namespace Models.Agroforestry
 
         private Dictionary<double, double> shade = new Dictionary<double, double>();
         private Dictionary<double, double[]> rld = new Dictionary<double, double[]>();
-        private List<IModel> forestryZones;
+        private IEnumerable<Zone> forestryZones;
         private Zone treeZone;
-        private Soils.SoilWater treeZoneWater;
+        private ISoilWater treeZoneWater;
 
         /// <summary>
         /// Return the distance from the tree for a given zone. The tree is assumed to be in the first Zone.
@@ -204,7 +204,7 @@ namespace Models.Agroforestry
             {
                 if (zone is RectangularZone)
                 {
-                    if (zone == ZoneList[0])
+                    if (zone == ZoneList.FirstOrDefault())
                         D += 0; // the tree is at distance 0
                     else
                         D += (zone as RectangularZone).Width; 
@@ -350,7 +350,7 @@ namespace Models.Agroforestry
         /// Calculate water use from each zone (mm)
         /// </summary>
         [Units("mm")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double[] TreeWaterUptake { get; private set; }
 
         /// <summary>
@@ -376,7 +376,7 @@ namespace Models.Agroforestry
         /// Calculate water use on a per tree basis (L)
         /// </summary>
         [Units("L")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double IndividualTreeWaterDemand
         {
             get;
@@ -389,15 +389,15 @@ namespace Models.Agroforestry
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            ZoneList = Apsim.Children(this.Parent, typeof(Zone));
+            ZoneList = Parent.FindAllChildren<Zone>().ToList();
             SetupTreeProperties();
 
             //pre-fetch static information
-            forestryZones = Apsim.ChildrenRecursively(Parent, typeof(Zone));
-            treeZone = ZoneList[0] as Zone;
-            treeZoneWater = Apsim.Find(treeZone, typeof(Soils.SoilWater)) as Soils.SoilWater;
+            forestryZones = Parent.FindAllDescendants<Zone>().ToList();
+            treeZone = ZoneList.FirstOrDefault();
+            treeZoneWater = treeZone.FindInScope<ISoilWater>();
 
-            TreeWaterUptake = new double[ZoneList.Count];
+            TreeWaterUptake = new double[ZoneList.Count()];
 
         }
 
@@ -432,15 +432,13 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                                 break;
                             }
 
                         double[] SW = Z.Water;
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
-                        Uptake.PlantAvailableNO3N = new double[SW.Length];
-                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] RLD = GetRLD(ZI);
@@ -486,7 +484,7 @@ namespace Models.Agroforestry
         /// <returns></returns>
         public List<Soils.Arbitrator.ZoneWaterAndN> GetNitrogenUptakeEstimates(Soils.Arbitrator.SoilState soilstate)
         {
-            Zone treeZone = ZoneList[0] as Zone;
+            Zone treeZone = ZoneList.FirstOrDefault() as Zone;
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             double PotNO3Supply = 0; // Total N supply (kg)
@@ -506,7 +504,7 @@ namespace Models.Agroforestry
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
-                                ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                                ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                                 break;
                             }
 
@@ -514,8 +512,6 @@ namespace Models.Agroforestry
                         
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
-                        Uptake.PlantAvailableNO3N = new double[SW.Length];
-                        Uptake.PlantAvailableNH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
                         double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
                         double[] BD = ThisSoil.BD;
@@ -593,7 +589,7 @@ namespace Models.Agroforestry
                     Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = Apsim.Find(SearchZ, typeof(Soils.Soil)) as Soils.Soil;
+                        ThisSoil = SearchZ.FindInScope<Soils.Soil>();
                         ThisSoil.SoilWater.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
@@ -617,11 +613,11 @@ namespace Models.Agroforestry
                 {
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        var NO3Solute = Apsim.Find(SearchZ, "NO3") as ISolute;
+                        var NO3Solute = SearchZ.FindInScope("NO3") as ISolute;
                         double[] NewNO3 = new double[ZI.NO3N.Length];
                         for (int i = 0; i <= ZI.NO3N.Length - 1; i++)
                             NewNO3[i] = NO3Solute.kgha[i] - ZI.NO3N[i];
-                        NO3Solute.kgha = NewNO3;
+                        NO3Solute.SetKgHa(SoluteSetterType.Plant, NewNO3);
                     }
                 }
             }

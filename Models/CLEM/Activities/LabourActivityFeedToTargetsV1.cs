@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // check that at least one target has been provided. 
-            if (Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
+            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
             intakeLimit -= this.DailyIntakeOtherSources * aE * 30.4;
             intakeLimit -= peopleList.Sum(a => a.GetAmountConsumed());
 
-            List<LabourActivityFeedTarget> labourActivityFeedTargets = Apsim.Children(this, typeof(LabourActivityFeedTarget)).Cast<LabourActivityFeedTarget>().ToList();
+            List<LabourActivityFeedTarget> labourActivityFeedTargets = this.FindAllChildren<LabourActivityFeedTarget>().Cast<LabourActivityFeedTarget>().ToList();
             int feedTargetIndex = 0;
 
             // determine targets
@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
             }
 
             // order food to achieve best returns for first criteria conversion factor decreasing
-            List<HumanFoodStoreType> foodStoreTypes = Apsim.Children(food, typeof(HumanFoodStoreType)).Cast<HumanFoodStoreType>().OrderBy(a => a.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric)).ToList();
+            List<HumanFoodStoreType> foodStoreTypes = food.FindAllChildren<HumanFoodStoreType>().Cast<HumanFoodStoreType>().OrderBy(a => a.ConversionFactor(labourActivityFeedTargets[feedTargetIndex].Metric)).ToList();
 
             // check availability to take food based on order in simulation tree
             while (foodStoreTypes.Count() > 0 & intakeLimit > 0)
@@ -250,7 +250,7 @@ namespace Models.CLEM.Activities
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in Apsim.Children(this, typeof(LabourFeedGroup)))
+            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = group.Filter(child).ToList();
                 head += subgroup.Count();
@@ -437,7 +437,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"croprotationborder\">";
             html += "<div class=\"croprotationlabel\">The people will eat to the following targets:</div>";
 
-            if (Apsim.Children(this, typeof(LabourActivityFeedTarget)).Count() == 0)
+            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
                 html += "\n<div class=\"errorbanner clearfix\">";
                 html += "<div class=\"filtererror\">No Feed To Target component provided</div>";

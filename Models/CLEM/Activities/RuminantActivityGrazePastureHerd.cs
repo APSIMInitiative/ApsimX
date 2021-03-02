@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Resources;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
@@ -47,13 +47,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
         /// paddock or pasture to graze
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public GrazeFoodStoreType GrazeFoodStoreModel { get; set; }
 
         /// <summary>
@@ -61,13 +61,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(RuminantHerd) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(RuminantHerd) })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>
         /// Ruminant group to graze
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public RuminantType RuminantTypeModel { get; set; }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Models.CLEM.Activities
                         {
                             // treat sucklings separate
                             // they eat what was previously assigned in RuminantGrow minus what's been fed
-                            amount += ind.PotentialIntake - ind.Intake;
+                            amount += ind.PotentialIntake - ind.MilkIntake - ind.Intake;
                         }
                         else
                         {
@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
 
                             // assumes animals will stop eating at potential intake if they have been feed before grazing.
                             // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential intake
-                            indAmount = Math.Min(ind.PotentialIntake - ind.Intake, indAmount);
+                            indAmount = Math.Min(ind.PotentialIntake*1.2 - ind.Intake, indAmount);
                             amount += indAmount;
                         }
                     }
@@ -284,7 +284,7 @@ namespace Models.CLEM.Activities
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
                 if (herd.Count() > 0)
                 {
-                    //Get total amount
+                    // Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
                     // hours grazed is not adjusted for this reduced feeding. Used to be 1.2 * Potential
                     double totalDesired = 0;

@@ -30,11 +30,12 @@
                 destination.OpenDatabase(outFileName, readOnly: false);
                 try
                 {
-
                     foreach (var sourceFileName in filesToMerge.Where(file => file != filesToMerge[0]))
                     {
                         var source = new SQLite();
-                        source.OpenDatabase(sourceFileName, readOnly: true);
+                        // If readOnly is true then .db-shm files are not removed on close. Bug in SqLite.
+                        // http://sqlite.1065341.n5.nabble.com/journal-files-not-always-removed-td83700.html
+                        source.OpenDatabase(sourceFileName, readOnly: false); 
                         try
                         {
                             Merge(source, destination);
@@ -49,6 +50,10 @@
                 {
                     destination.CloseDatabase();
                 }
+            }
+            else if(filesToMerge.Length == 1)
+            {
+                File.Copy(filesToMerge[0], outFileName, true);
             }
         }
 
@@ -105,7 +110,7 @@
         {
             var sourceData = source.ExecuteQuery("SELECT * FROM " + tableName);
 
-            DataTable destinationData;
+            DataTable destinationData = null;
             if (destination.GetTableNames().Contains(tableName))
                 destinationData = destination.ExecuteQuery("SELECT * FROM " + tableName);
             else
@@ -116,6 +121,7 @@
                 destination.CreateTable(tableName, colNames, colTypes);
             }
 
+            DataView view = null;
             var columnNames = DataTableUtilities.GetColumnNames(sourceData).ToList();
             foreach (DataRow simulationRow in sourceData.Rows)
             {
@@ -128,7 +134,19 @@
                         simulationRow["SimulationID"] = newID;
                     }
                 }
-                destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
+                if (tableName == "_Units")
+                {
+                    // For the units table only copy the row if it doesn't already exist.
+                    if (view == null)
+                        view = new DataView(destinationData);
+                    var sourceTableName = (string)simulationRow["TableName"];
+                    var sourceColumnHeading = (string)simulationRow["ColumnHeading"];
+                    view.RowFilter = $"TableName='{sourceTableName}' and ColumnHeading='{sourceColumnHeading}'";
+                    if (view.Count == 0)
+                        destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
+                }
+                else
+                    destination.InsertRows(tableName, columnNames, new List<object[]>() { simulationRow.ItemArray });
             }
 
         }

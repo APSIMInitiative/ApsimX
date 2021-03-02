@@ -1,15 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterView.cs" company="CSIRO">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using Gtk;
     using System;
-    //using System.Windows.Forms;
-    using Interfaces;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

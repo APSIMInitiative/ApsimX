@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="VariableProperty.cs" company="APSIM Initiative">
-// Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
@@ -47,17 +42,20 @@ namespace Models.Core
         /// <param name="arraySpecifier">An optional array specification e.g. 1:3</param>
         public VariableProperty(object model, PropertyInfo property, string arraySpecifier = null)
         {
-            if (model == null || property == null)
+            if (property == null)
             {
                 throw new ApsimXException(null, "Cannot create an instance of class VariableProperty with a null model or propertyInfo");
             }
-
             this.Object = model;
             this.property = property;
             this.lowerArraySpecifier = 0;
             this.upperArraySpecifier = 0;
 
             ProcessArraySpecifier(arraySpecifier);
+
+            // If the array specifier was specified and it was a zero then issue error
+            if (arraySpecifier != null && lowerArraySpecifier == 0)
+                throw new Exception("Array indexing in APSIM (report) is one based. Cannot have an index of zero. Variable called " + property.Name);
         }
 
         /// <summary>
@@ -159,7 +157,7 @@ namespace Models.Core
             {
                 string unitString = null;
                 UnitsAttribute unitsAttribute = ReflectionUtilities.GetAttribute(this.property, typeof(UnitsAttribute), false) as UnitsAttribute;
-                PropertyInfo unitsInfo = this.Object.GetType().GetProperty(this.property.Name + "Units");
+                PropertyInfo unitsInfo = this.Object?.GetType().GetProperty(this.property.Name + "Units");
                 if (unitsAttribute != null)
                 {
                     unitString = unitsAttribute.ToString();
@@ -673,7 +671,7 @@ namespace Models.Core
                 }
                 else if (this.DataType == typeof(int[]))
                 {
-                    this.Value = MathUtilities.StringsToDoubles(stringValues);
+                    this.Value = MathUtilities.StringsToIntegers(stringValues);
                 }
                 else if (this.DataType == typeof(string[]))
                 {
@@ -800,5 +798,11 @@ namespace Models.Core
                 }
             }
         }
+
+        /// <summary>Return the summary comments from the source code.</summary>
+        public override string Summary { get { return AutoDocumentation.GetSummary(property); } }
+
+        /// <summary>Return the remarks comments from the source code.</summary>
+        public override string Remarks { get { return AutoDocumentation.GetRemarks(property); } }
     }
 }

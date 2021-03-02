@@ -41,6 +41,12 @@ namespace Utility
         /// <summary>The previous height of the status panel</summary>
         public int StatusPanelHeight { get; set; }
 
+        /// <summary>
+        /// The position of the splitter between the variables
+        /// and frequency text editors in the report UI.
+        /// </summary>
+        public int ReportSplitterPosition { get; set; }
+
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
         public bool DarkTheme { get; set; }
 
@@ -119,7 +125,12 @@ namespace Utility
         /// Stores the user's preferred font.
         /// </summary>
         /// <value></value>
-        public Pango.FontDescription Font { get; set; }
+        public string FontName { get; set; } = "Segoe UI 11";
+
+        /// <summary>
+        /// Country name used in the download soil view.
+        /// </summary>
+        public string DownloadFromDataSourceCountry { get; set; }
 
         public ApsimFileMetadata GetMruFile(string fileName)
         {

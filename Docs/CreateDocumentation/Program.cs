@@ -143,7 +143,12 @@
                     int columnIndex = 1;
                     foreach (var documentDescription in model["Documents"] as JArray)
                     {
-                        documentationRow[columnIndex] = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
+                        var html = CreateModelDocumentation(documentDescription as JObject, apsimDirectory, destinationFolder, destinationUrl);
+                        if (columnIndex > 3)
+                            documentationRow[3] += html;
+                        else
+                            documentationRow[columnIndex] = html;
+
                         columnIndex++;
                     }
                     documentationTable.Rows.Add(documentationRow);
@@ -211,10 +216,11 @@
 
                         // Specific model description documentation.
                         var modelNameToDocument = documentObject["ModelNameToDocument"].ToString();
-                        var model = Apsim.Find(simulations, modelNameToDocument) as IModel;
+                        var model = simulations.FindInScope(modelNameToDocument) as IModel;
                         if (model == null)
                             return null;
-                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder);
+                        var outputFileName = documentObject["OutputFileName"]?.ToString();
+                        var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder, outputFileName);
                         createDoc.Do(null);
                         href = Path.GetFileName(createDoc.FileNameWritten);
                     }

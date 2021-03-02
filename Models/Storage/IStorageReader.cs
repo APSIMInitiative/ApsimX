@@ -90,6 +90,13 @@ namespace Models.Storage
         int GetCheckpointID(string checkpointName);
 
         /// <summary>
+        /// Return true if checkpoint is to be shown on graphs.
+        /// </summary>
+        /// <param name="checkpointName">The checkpoint name to look for.</param>
+        /// <returns></returns>
+        bool GetCheckpointShowOnGraphs(string checkpointName);
+
+        /// <summary>
         /// Return a simulation ID for the specified name.
         /// </summary>
         /// <param name="simulationName">The simulation name to look for.</param>

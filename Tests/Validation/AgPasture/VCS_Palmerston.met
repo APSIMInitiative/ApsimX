@@ -33,7 +33,7 @@ annual_average_pet = 731.1           !Average annual PET (mm/yr)
 average_windspeed = 3.7              !Average windspeed (m/s)
 
       Location            xDate             year              day             rain             mint             maxt             avgt             radn             wind             evap               vp               rh            rhmin            rhmax
-            ()               ()               ()               ()             (mm)             (oC)             (oC)             (oC)         (MJ/m^2)            (m/s)             (mm)            (hPa)              (%)              (%)              (%)
+            ()     (dd/MM/yyyy)               ()               ()             (mm)             (oC)             (oC)             (oC)         (MJ/m^2)            (m/s)             (mm)            (hPa)              (%)              (%)              (%)
 VCS_Palmerston       01/01/1978             1978                1              0.0              8.3             16.2             12.2             18.1              3.8              2.9              9.0             65.1             48.9             82.2
 VCS_Palmerston       02/01/1978             1978                2              0.0              8.8             18.7             13.8             32.4              3.8              6.9             12.0             77.6             55.6            100.0
 VCS_Palmerston       03/01/1978             1978                3              0.0              9.0             22.5             15.8             21.4              3.8              4.9             13.6             57.7             49.9            100.0

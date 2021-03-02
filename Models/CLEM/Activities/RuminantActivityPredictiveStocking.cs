@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Version(1, 0, 3, "Avoids double accounting while removing individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
@@ -34,9 +35,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Month for assessing dry season feed requirements
         /// </summary>
-        [Description("Month for assessing dry season feed requirements (1-12)")]
+        [Description("Month for assessing dry season feed requirements")]
         [Required, Month]
-        public int AssessmentMonth { get; set; }
+        public MonthsOfYear AssessmentMonth { get; set; }
 
         /// <summary>
         /// Number of months to assess
@@ -88,7 +89,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
             // check that this activity contains at least one RuminantDestockGroups group with filters
             bool destockGroupFound = false;
-            foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
+            foreach (RuminantGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
             {
                 foreach (RuminantFilter filter in item.Children.Where(a => a.GetType() == typeof(RuminantFilter)))
                 {
@@ -127,12 +128,13 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == AssessmentMonth)
+            if (Clock.Today.Month == (int)AssessmentMonth)
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
                 RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+
+                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
                 {
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
@@ -146,6 +148,7 @@ namespace Models.CLEM.Activities
                     double shortfallAE = 0;
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
+
                     GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     double pastureBiomass = pasture.Amount;
 
@@ -216,7 +219,7 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (RuminantDestockGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantDestockGroup)))
+            foreach (IModel item in FindAllChildren<RuminantDestockGroup>())
             {
                 // works with current filtered herd to obey filtering.
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
@@ -225,12 +228,11 @@ namespace Models.CLEM.Activities
                 while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {
                     this.Status = ActivityStatus.Success;
-                    animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                    herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
-                    //if (animalEquivalentsforSale < herd.Min(a => a.AdultEquivalent))
-                    //{
-                    //    animalEquivalentsforSale = 0;
-                    //}
+                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    {
+                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
+                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                    }
                     cnt++;
                 }
                 if (animalEquivalentsforSale <= 0)
@@ -349,10 +351,10 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
-            if (AssessmentMonth > 0 & AssessmentMonth <= 12)
+            if ((int)AssessmentMonth > 0 & (int)AssessmentMonth <= 12)
             {
                 html += "<span class=\"setvalue\">";
-                html += new DateTime(2000, AssessmentMonth, 1).ToString("MMMM");
+                html += AssessmentMonth.ToString();
             }
             else
             {
@@ -399,7 +401,7 @@ namespace Models.CLEM.Activities
             html += "\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
-            if(Apsim.Children(this, typeof(RuminantDestockGroup)).Count() == 0)
+            if(FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }

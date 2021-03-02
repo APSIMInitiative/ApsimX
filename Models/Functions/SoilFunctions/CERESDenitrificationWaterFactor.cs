@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -18,7 +16,9 @@ namespace Models.Functions
     {
 
         [Link]
-        Soil soil = null;
+        ISoilWater soilwater = null;
+        [Link]
+        Physical physical = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -27,7 +27,7 @@ namespace Models.Functions
             if (arrayIndex == -1)
                 throw new Exception("Layer number must be provided to CERES Nitrification Model");
 
-            double WF = MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex], soil.SAT[arrayIndex] - soil.DUL[arrayIndex], 0.0);     
+            double WF = MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex], 0.0);     
             return MathUtilities.Bound(WF, 0, 1); 
         }
 

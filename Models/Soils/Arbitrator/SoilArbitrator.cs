@@ -54,8 +54,8 @@
     [ValidParent(ParentType = typeof(Simulation))]
     public class SoilArbitrator : Model
     {
-        private List<IModel> uptakeModels = null;
-        private List<Zone> zones = null;
+        private IEnumerable<IUptake> uptakeModels = null;
+        private IEnumerable<Zone> zones = null;
         private SoilState InitialSoilState;
 
 
@@ -65,8 +65,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            uptakeModels = Apsim.ChildrenRecursively(Parent, typeof(IUptake));
-            zones = Apsim.ChildrenRecursively(this.Parent, typeof(Zone)).Cast<Zone>().ToList();
+            uptakeModels = Parent.FindAllDescendants<IUptake>().ToList();
+            zones = Parent.FindAllDescendants<Zone>().ToList();
             InitialSoilState = new SoilState(zones);
             if (!(this.Parent is Simulation))
                 throw new Exception(this.Name + " must be placed directly under the simulation node as it won't work properly anywhere else");

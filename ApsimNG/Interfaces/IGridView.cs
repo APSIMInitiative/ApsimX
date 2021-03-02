@@ -1,13 +1,7 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="IGridView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Interfaces
+﻿namespace UserInterface.Interfaces
 {
-    using System;
-    using System.Drawing;
     using EventArguments;
+    using System;
     using System.Collections.Generic;
 
     /// <summary>

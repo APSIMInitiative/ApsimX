@@ -1,14 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="GridColumn.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Classes
+﻿namespace UserInterface.Classes
 {
-    using System;
-    using System.Drawing;
     using Gtk;
     using Interfaces;
+    using System.Drawing;
     using Views;
 
     /// <summary>

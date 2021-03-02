@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
+using MathNet.Numerics;
 
 namespace Models.CLEM.Activities
 {
@@ -22,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
+    [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
@@ -34,7 +36,7 @@ namespace Models.CLEM.Activities
         /// eg. AnimalFoodStore.RiceStraw
         /// </summary>
         [Description("Feed to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore)} )]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore)} )]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type required")]
         public string FeedTypeName { get; set; }
 
@@ -48,7 +50,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Feed type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public IFeedType FeedType { get; set; }
 
         private double feedRequired = 0;
@@ -78,7 +80,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(RuminantFeedGroup)).Count + Apsim.Children(this, typeof(RuminantFeedGroupMonthly)).Count == 0)
+            if (FindAllChildren<RuminantFeedGroup>().Count() + this.FindAllChildren<RuminantFeedGroupMonthly>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant feed group" };
                 results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] filter group must be present", memberNames));
@@ -107,27 +109,37 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = CurrentHerd(false);
 
-            // get zero limited month from clock
-            int month = Clock.Today.Month - 1;
-
             feedRequired = 0;
 
+            bool firstGroup = true;
             // get list from filters
             foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
                 double value = 0;
-                if(child is RuminantFeedGroup)
+                if (child is RuminantFeedGroup)
                 {
                     value = (child as RuminantFeedGroup).Value;
                 }
                 else
                 {
-                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[month];
+                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                 }
 
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
                 {
-                    feedRequired += value * 30.4;
+                    if(firstGroup)
+                    {
+                        feedRequired += (value * (1.0 - this.ProportionTramplingWastage)) * 30.4;
+                        firstGroup = false;
+                    }
+                }
+                else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+                {
+                    if (firstGroup)
+                    {
+                        feedRequired += value * FeedType.Amount;
+                        firstGroup = false;
+                    }
                 }
                 else
                 {
@@ -142,10 +154,11 @@ namespace Models.CLEM.Activities
                                 feedRequired += value * ind.Weight * 30.4;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                feedRequired += value * ind.PotentialIntake;
+                                // allow setting of model defined overfeed of 1.2 x potential
+                                feedRequired += Math.Min(1.2,value) * ind.PotentialIntake;
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                feedRequired += value * (ind.PotentialIntake - ind.Intake);
+                                feedRequired += value * ((ind.PotentialIntake*1.2) - ind.Intake);
                                 break;
                             default:
                                 throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
@@ -263,8 +276,8 @@ namespace Models.CLEM.Activities
             {
                 // calculate feed limit
                 double feedLimit = 0.0;
-                double wastage = 1.0 - this.ProportionTramplingWastage;
                 double dailyAmountShortfall = 1.0;
+                double wastage = 1.0 - this.ProportionTramplingWastage;
 
                 ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(AnimalFoodStore)).FirstOrDefault();
                 FoodResourcePacket details = new FoodResourcePacket();
@@ -275,7 +288,6 @@ namespace Models.CLEM.Activities
                 }
 
                 // feed animals
-                int month = Clock.Today.Month - 1;
 
                 if(feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
                 {
@@ -284,15 +296,16 @@ namespace Models.CLEM.Activities
                 }
 
                 // if feed style is fixed daily amount compare amount received against herd requirement.
-                // this produces a reduction from potential intake for each individual.
-                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
+                // this produces a reduction from potential intake (up to 1.2x) for each individual.
+                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount | FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
                 {
                     double herdRequirement = 0;
                     foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
                     {
-                        herdRequirement += herd.Filter(child).Sum(a => a.PotentialIntake - a.Intake);
+                        // allow slight model set overfeed of 1.2xpotential
+                        herdRequirement += herd.Filter(child).Sum(a => (a.PotentialIntake*1.2) - a.Intake);
                     }
-                    dailyAmountShortfall = Math.Min(1.0, (feedRequest.Provided*wastage) / herdRequirement);
+                    dailyAmountShortfall = Math.Min(1.0, feedRequest.Provided / herdRequirement);
                 }
 
                 // get list from filters
@@ -305,7 +318,7 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[month];
+                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                     }
 
                     foreach (Ruminant ind in herd.Filter(child))
@@ -313,33 +326,35 @@ namespace Models.CLEM.Activities
                         switch (FeedStyle)
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                                details.Amount = (ind.PotentialIntake - ind.Intake);
+                            case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                                details.Amount = ((ind.PotentialIntake * 1.2) - ind.Intake);
                                 details.Amount *= dailyAmountShortfall;
                                 ind.AddIntake(details);
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                details.Amount = value * 30.4; // * ind.Number;
+                                details.Amount = value * 30.4;
                                 details.Amount *= feedLimit * wastage;
                                 ind.AddIntake(details);
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfWeight:
-                                details.Amount = value * ind.Weight * 30.4; // * ind.Number;
+                                details.Amount = value * ind.Weight * 30.4;
                                 details.Amount *= feedLimit * wastage;
                                 ind.AddIntake(details);
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                details.Amount = value * ind.PotentialIntake; // * ind.Number;
+                                details.Amount = Math.Min(1.2,value) * ind.PotentialIntake;
                                 details.Amount *= feedLimit * wastage;
                                 ind.AddIntake(details);
                                 break;
                             case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                details.Amount = value * (ind.PotentialIntake - ind.Intake); // * ind.Number;
+                                details.Amount = value * ((ind.PotentialIntake * 1.2) - ind.Intake); 
                                 details.Amount *= feedLimit * wastage;
                                 ind.AddIntake(details);
                                 break;
                             default:
                                 throw new Exception("Feed style used [" + FeedStyle + "] not implemented in [" + this.Name + "]");
                         }
+
                     }
                 }
                 SetStatusSuccess();

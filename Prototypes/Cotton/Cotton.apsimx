@@ -1,7 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 282,
-  "Version": 74,
+  "Version": 80,
+  "ApsimVersion": "Version 0.0.0.0, built 2020-03-10",
   "Name": "Simulations",
   "Children": [
     {
@@ -20,6 +21,7 @@
         {
           "$type": "Models.PMF.Plant, Models",
           "CropType": "Cotton",
+          "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
           "ResourceName": null,
@@ -6309,7 +6311,6 @@
           "VariableNames": [
             "[Clock].Today",
             "[Clock].Today.DayOfYear",
-            "[Cotton].Leaf.ThermalTime.ReproductiveGrowth.PPModifiedThermalTime.Stress as PPModifier",
             "[Cotton].Phenology.DaysAfterSowing",
             "[Cotton].Phenology.Stage",
             "[Cotton].Phenology.VegetativeThermalTime",
@@ -6323,16 +6324,11 @@
             "[Cotton].Arbitrator.DM.TotalPlantDemand",
             "[Cotton].Arbitrator.WDemand",
             "[Cotton].Arbitrator.WSupply",
-            "[Cotton].Phenology.Vegetative.PhotoperiodEffect",
             "[Cotton].Phenology.CurrentStageName",
             "[Cotton].Phenology.Photoperiod",
             "[Cotton].AboveGround.Wt",
             "[Cotton].AboveGround.N",
             "[Cotton].Leaf.NodeNumber",
-            "[Cotton].Leaf.DMSupplyPhotosynthesis",
-            "[Cotton].Leaf.AppearedCohortNo",
-            "[Cotton].Leaf.DeadCohortNo",
-            "[Cotton].Leaf.GreenCohortNo",
             "[Cotton].Leaf.Fw",
             "[Cotton].Leaf.Fn",
             "[Cotton].Leaf.Photosynthesis.FT",
@@ -6370,7 +6366,6 @@
             "[Cotton].Grain.Nconc",
             "[Cotton].Grain.HarvestIndex",
             "[Cotton].Shell.Wt",
-            "[Cotton].Shell.PodNumber",
             "[Cotton].Pod.Wt",
             "[Cotton].Pod.N",
             "[Cotton].Pod.NConc",
@@ -6426,8 +6421,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileName": "Observed.xlsx",
-          "FileNameMetadata": null,
+          "FileNames": [
+            "Observed.xlsx"
+          ],
           "SheetNames": [
             "Observed",
             "ObservedET",
@@ -6789,6 +6785,7 @@
                               "d_interception": 0.0,
                               "soil_albedo": 0.23,
                               "SoilHeatFluxFraction": 0.4,
+                              "MinimumHeightDiffForNewLayer": 0.0,
                               "NightInterceptionFraction": 0.5,
                               "ReferenceHeight": 2.0,
                               "Name": "MicroClimate",
@@ -7033,11 +7030,11 @@
                             {
                               "$type": "Models.PMF.Plant, Models",
                               "CropType": "Cotton",
+                              "IsAlive": false,
                               "IsEnding": false,
                               "DaysAfterEnding": 0,
                               "ResourceName": "Cotton",
                               "Name": "Cotton",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -7084,6 +7081,8 @@
                                     200.0
                                   ],
                                   "ParticleSizeClay": null,
+                                  "ParticleSizeSand": null,
+                                  "ParticleSizeSilt": null,
                                   "BD": [
                                     1.425,
                                     1.425,
@@ -7436,7 +7435,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Inert",
                                         "Location": "656, 254",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7444,7 +7443,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "SurfaceResidue",
                                         "Location": "566, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7452,7 +7451,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMLignin",
                                         "Location": "261, 69",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7460,7 +7459,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCellulose",
                                         "Location": "397, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7468,7 +7467,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "FOMCarbohydrate",
                                         "Location": "123, 70",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7476,7 +7475,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Microbial",
                                         "Location": "218, 299",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7484,7 +7483,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Humic",
                                         "Location": "458, 293",
-                                        "Colour": "0, 158, 115",
+                                        "Colour": "0, 114, 178",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7492,7 +7491,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "Urea",
                                         "Location": "529, 419",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7500,7 +7499,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NO3",
                                         "Location": "185, 435",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7508,7 +7507,7 @@
                                         "$type": "Models.Graph.Node, Models",
                                         "Name": "NH4",
                                         "Location": "357, 422",
-                                        "Colour": "86, 180, 233",
+                                        "Colour": "0, 158, 115",
                                         "OutlineColour": "Black",
                                         "Transparent": false
                                       },
@@ -7519,22 +7518,6 @@
                                         "Colour": "White",
                                         "OutlineColour": "White",
                                         "Transparent": true
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNO3",
-                                        "Location": "688, 415",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
-                                      },
-                                      {
-                                        "$type": "Models.Graph.Node, Models",
-                                        "Name": "PlantAvailableNH4",
-                                        "Location": "691, 421",
-                                        "Colour": "86, 180, 233",
-                                        "OutlineColour": "Black",
-                                        "Transparent": false
                                       }
                                     ],
                                     "Arcs": [

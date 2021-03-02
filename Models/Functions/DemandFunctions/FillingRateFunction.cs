@@ -21,7 +21,7 @@ namespace Models.Functions.DemandFunctions
         [Units("grains/m2")]
         IFunction NumberFunction = null;
 
-        /// <summary>The arbitrator</summary>
+        /// <summary>Thermal time</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction ThermalTime = null;
 

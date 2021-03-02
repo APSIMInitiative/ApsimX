@@ -87,7 +87,7 @@ namespace Models.Functions.DemandFunctions
         }
         
         [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowPlant2Type data)
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             AccumulatedThermalTime = 0;
         }

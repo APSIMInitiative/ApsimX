@@ -1,16 +1,16 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 77,
+  "Version": 118,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.Soils.Nutrients.Nutrient, Models",
       "DirectedGraphInfo": {
-        "$type": "Models.Graph.DirectedGraph, Models",
+        "$type": "Models.DirectedGraph, Models",
         "Nodes": [
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "Inert",
             "Location": "656, 254",
             "Colour": "0, 158, 115",
@@ -18,7 +18,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "SurfaceResidue",
             "Location": "566, 69",
             "Colour": "0, 158, 115",
@@ -26,7 +26,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "FOMLignin",
             "Location": "261, 69",
             "Colour": "0, 158, 115",
@@ -34,7 +34,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "FOMCellulose",
             "Location": "397, 70",
             "Colour": "0, 158, 115",
@@ -42,7 +42,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "FOMCarbohydrate",
             "Location": "123, 70",
             "Colour": "0, 158, 115",
@@ -50,7 +50,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "Microbial",
             "Location": "218, 299",
             "Colour": "0, 158, 115",
@@ -58,7 +58,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "Humic",
             "Location": "458, 293",
             "Colour": "0, 158, 115",
@@ -66,7 +66,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "Urea",
             "Location": "529, 419",
             "Colour": "86, 180, 233",
@@ -74,7 +74,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "NO3",
             "Location": "185, 435",
             "Colour": "86, 180, 233",
@@ -82,7 +82,7 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "NH4",
             "Location": "357, 422",
             "Colour": "86, 180, 233",
@@ -90,33 +90,17 @@
             "Transparent": false
           },
           {
-            "$type": "Models.Graph.Node, Models",
+            "$type": "Models.Node, Models",
             "Name": "Atmosphere",
             "Location": "48, 338",
             "Colour": "White",
             "OutlineColour": "White",
             "Transparent": true
-          },
-          {
-            "$type": "Models.Graph.Node, Models",
-            "Name": "PlantAvailableNO3",
-            "Location": "688, 415",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
-          },
-          {
-            "$type": "Models.Graph.Node, Models",
-            "Name": "PlantAvailableNH4",
-            "Location": "691, 421",
-            "Colour": "86, 180, 233",
-            "OutlineColour": "Black",
-            "Transparent": false
           }
         ],
         "Arcs": [
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "SurfaceResidue",
             "DestinationName": "Microbial",
             "Location": "415, 173",
@@ -124,7 +108,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "SurfaceResidue",
             "DestinationName": "Humic",
             "Location": "499, 172",
@@ -132,7 +116,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMLignin",
             "DestinationName": "Microbial",
             "Location": "259, 221",
@@ -140,7 +124,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMLignin",
             "DestinationName": "Humic",
             "Location": "255, 105",
@@ -148,7 +132,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMCellulose",
             "DestinationName": "Microbial",
             "Location": "370, 184",
@@ -156,7 +140,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMCellulose",
             "DestinationName": "Humic",
             "Location": "463, 224",
@@ -164,7 +148,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMCarbohydrate",
             "DestinationName": "Microbial",
             "Location": "141, 131",
@@ -172,7 +156,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "FOMCarbohydrate",
             "DestinationName": "Humic",
             "Location": "204, 215",
@@ -180,7 +164,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "Microbial",
             "DestinationName": "Microbial",
             "Location": "335, 301",
@@ -188,7 +172,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "Microbial",
             "DestinationName": "Humic",
             "Location": "319, 278",
@@ -196,7 +180,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "Humic",
             "DestinationName": "Microbial",
             "Location": "334, 340",
@@ -204,7 +188,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "Urea",
             "DestinationName": "NH4",
             "Location": "433, 416",
@@ -212,7 +196,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "NO3",
             "DestinationName": "Atmosphere",
             "Location": "1, 319",
@@ -220,7 +204,7 @@
             "Text": null
           },
           {
-            "$type": "Models.Graph.Arc, Models",
+            "$type": "Models.Arc, Models",
             "SourceName": "NH4",
             "DestinationName": "NO3",
             "Location": "243, 409",
@@ -236,6 +220,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Inert",
           "Children": [
@@ -285,6 +270,35 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Inert].C / [Inert].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -295,6 +309,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "SurfaceResidue",
           "Children": [
@@ -322,6 +337,16 @@
               "FixedValue": 0.0,
               "Units": null,
               "Name": "InitialNitrogen",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -392,7 +417,6 @@
         },
         {
           "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
           "Name": "Urea",
           "Children": [
             {
@@ -471,7 +495,6 @@
         },
         {
           "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
           "Name": "NO3",
           "Children": [
             {
@@ -512,50 +535,12 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "$type": "Models.Functions.CERESDenitrificationModel, Models",
                   "Name": "Rate",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0006,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.ExpressionFunction, Models",
-                      "Expression": "0.0031 * [TotalCppm] + 24.5",
-                      "Name": "ActiveC",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Denitrification rate is affected by soil carbon content using an approach originally described by [Reddy1980]. ",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.ExpressionFunction, Models",
-                          "Expression": "([Humic].C+[Inert].C+[FOMCarbohydrate].C+[FOMCellulose].C+[FOMLignin].C)/[ppm2kgha]",
-                          "Name": "TotalCppm",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.CERESDenitrificationTemperatureFactor, Models",
-                      "Name": "TF",
+                      "Name": "CERESDenitrificationTemperatureFactor",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -563,7 +548,7 @@
                     },
                     {
                       "$type": "Models.Functions.CERESDenitrificationWaterFactor, Models",
-                      "Name": "WF",
+                      "Name": "CERESDenitrificationWaterFactor",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -606,6 +591,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMLignin",
           "Children": [
@@ -652,6 +638,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -737,6 +733,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMCellulose",
           "Children": [
@@ -783,6 +780,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -868,6 +875,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "FOMCarbohydrate",
           "Children": [
@@ -914,6 +922,16 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "InitialPhosphorus",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -999,6 +1017,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Microbial",
           "Children": [
@@ -1050,10 +1069,39 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Microbial].C / [Microbial].InitialCPRatio",
+              "Name": "InitialPhosphorus",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Functions.Constant, Models",
               "FixedValue": 8.0,
               "Units": null,
               "Name": "CNRatio",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 60.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
@@ -1087,36 +1135,45 @@
                   "Name": "Rate",
                   "Children": [
                     {
-                      "$type": "Models.Functions.StringComparisonFunction, Models",
-                      "PropertyName": "[Soil].SoilType",
-                      "StringValue": "sand",
+                      "$type": "Models.Functions.CalculateOnceFunction, Models",
                       "Name": "PotentialRate",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0324,
-                          "Units": null,
-                          "Name": "TrueValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0081,
-                          "Units": null,
-                          "Name": "FalseValue",
-                          "Children": [],
+                          "$type": "Models.Functions.StringComparisonFunction, Models",
+                          "PropertyName": "[Soil].SoilType",
+                          "StringValue": "sand",
+                          "Name": "ConstantValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The default potential decomposition rate comes from SoilN ([probert_apsims_1998]). For sandy soils, the rate is modified as per [Asseng1998163].",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0324,
+                              "Units": null,
+                              "Name": "TrueValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0081,
+                              "Units": null,
+                              "Name": "FalseValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1171,6 +1228,7 @@
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,
+          "P": null,
           "LayerFraction": null,
           "Name": "Humic",
           "Children": [
@@ -1206,6 +1264,25 @@
               "$type": "Models.Functions.ExpressionFunction, Models",
               "Expression": "[Humic].C / [Soil].InitialSoilCNR",
               "Name": "InitialNitrogen",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Initial N (kg/ha) is calculated with the assumption that the inert pool has the same C:N ratio as the bulk soil.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.ExpressionFunction, Models",
+              "Expression": "[Humic].C / [Humic].InitialCPRatio",
+              "Name": "InitialPhosphorus",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -1291,6 +1368,16 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 100.0,
+              "Units": null,
+              "Name": "InitialCPRatio",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -1299,7 +1386,6 @@
         },
         {
           "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
           "Name": "NH4",
           "Children": [
             {
@@ -1501,44 +1587,6 @@
           "Expression": "([Soil].BD*[Soil].Thickness)/100",
           "Name": "ppm2kgha",
           "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
-          "Name": "PlantAvailableNO3",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "This pool is required as part of the interface for some plant models.  Currently, no functionality is provided for this pool.",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Soils.Nutrients.Solute, Models",
-          "kgha": null,
-          "Name": "PlantAvailableNH4",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "This pool is required as part of the interface for some plant models.  Currently, no functionality is provided for this pool.",
-              "Name": "Memo",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
           "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false

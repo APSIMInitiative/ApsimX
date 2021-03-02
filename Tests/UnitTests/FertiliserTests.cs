@@ -4,6 +4,7 @@
     using Models;
     using Models.Core;
     using Models.Interfaces;
+    using Models.Soils.Nutrients;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
@@ -59,7 +60,7 @@
             // Create a tree with a root node for our models.
             var simulation = new Simulation()
             {
-                Children = new List<Model>()
+                Children = new List<IModel>()
                 {
                     new Clock()
                     {
@@ -71,7 +72,7 @@
                     {
                         Thickness = new double[] { 100, 100, 100 },
                         NO3 = new double[] { 1, 2, 3 },
-                        Children = new List<Model>()
+                        Children = new List<IModel>()
                         {
                             new MockSoilSolute("NO3"),
                             new MockSoilSolute("NH4"),

@@ -16,16 +16,16 @@ namespace Models.LifeCycle
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(LifeStage))]
+    [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model
     {
         /// <summary>Returns the potential damage that an individual can cause per day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g")]
-        private IFunction RateOfOrganConsumptionPerIndividual = null;
+        private IFunction OrganWtConsumptionPerIndividual = null;
 
         [Link(Type = LinkType.Ancestor)]
-        private LifeStage ParentStage = null;
+        private LifeCyclePhase ParentPhase = null;
 
         /// <summary>Host plant that Pest/Disease bothers</summary>
         [Description("Select host plant that Pest/Disease may bother")]
@@ -41,8 +41,18 @@ namespace Models.LifeCycle
         private void DoPestDiseaseDamage(object sender, EventArgs e)
         {
             OrganBiomassRemovalType consumption = new OrganBiomassRemovalType();
-            consumption.FractionLiveToRemove = Math.Max(1,ParentStage.TotalPopulation * RateOfOrganConsumptionPerIndividual.Value() * HostOrgan.Live.Wt);
-            HostPlant.RemoveBiomass(HostOrgan.Name, "Graze", consumption);
+            double organWtConsumed = 0;
+            if ((ParentPhase.Cohorts != null)&&(HostPlant.IsAlive))
+            {
+                foreach (Cohort c in ParentPhase.Cohorts)
+                {
+                    ParentPhase.CurrentCohort = c;
+                    organWtConsumed += c.Population * OrganWtConsumptionPerIndividual.Value();
+                    consumption.FractionLiveToRemove += Math.Max(1, organWtConsumed / HostOrgan.Live.Wt);
+                }
+                HostPlant.RemoveBiomass(HostOrgan.Name, "Graze", consumption);
+            }
+           
         }
     }
 }

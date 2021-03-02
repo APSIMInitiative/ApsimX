@@ -33,7 +33,7 @@ annual_average_pet = 860.6           !Average annual PET (mm/yr)
 average_windspeed = 3.0              !Average windspeed (m/s)
 
     Location          xDate           year            day           rain           mint           maxt           avgt           radn           wind           evap             vp             rh          rhmin          rhmax
-          ()             ()             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
+          ()   (dd/MM/yyyy)             ()             ()           (mm)           (oC)           (oC)           (oC)       (MJ/m^2)          (m/s)           (mm)          (hPa)            (%)            (%)            (%)
 VCS_Wairakei     01/01/1974           1974              1            0.0           13.5           22.8           18.1           17.3            3.2            3.6           15.3           80.1           55.1           98.9
 VCS_Wairakei     02/01/1974           1974              2            0.0           11.8           23.0           17.4           15.4            3.2            3.6           15.5           71.3           55.2          100.0
 VCS_Wairakei     03/01/1974           1974              3            4.5           14.1           19.7           16.9            9.0            3.2            2.9           17.7           86.9           77.1          100.0

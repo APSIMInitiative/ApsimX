@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         [Description("Units (nominal)")]
         public string Units { get { return "kg"; } }
 
@@ -75,7 +75,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
@@ -118,10 +118,23 @@ namespace Models.CLEM.Resources
             {
                 return;
             }
+
+            // if this request aims to trade with a market see if we need to set up details for the first time
+            if (request.MarketTransactionMultiplier > 0)
+            {
+                FindEquivalentMarketStore();
+            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
             this.amount -= amountRemoved;
+
+            // send to market if needed
+            if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
+            {
+                (EquivalentMarketStore as GreenhouseGasesType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, "Farm sales");
+            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction

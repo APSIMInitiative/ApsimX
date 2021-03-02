@@ -7,6 +7,8 @@ using System.Text;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using Newtonsoft.Json;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
@@ -20,14 +22,26 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject
+    public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject, IFilterGroup
     {
         /// <summary>
         /// Daily value to supply for each month
         /// </summary>
         [Description("Daily value to supply for each month")]
-        [ArrayItemCount(12), GreaterThanValue(0)]
+        [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
+
+        /// <summary>
+        /// Combined ML ruleset for LINQ expression tree
+        /// </summary>
+        [JsonIgnore]
+        public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// Proportion of group to use
+        /// </summary>
+        [JsonIgnore]
+        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -47,19 +61,12 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            switch ((this.Parent as RuminantActivityFeed).FeedStyle)
+            if(MonthlyValues.Count() > 0)
             {
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    if(MonthlyValues.Max() > 1)
-                    {
-                        string[] memberNames = new string[] { "Monthly values" };
-                        results.Add(new ValidationResult("Invalid monthly value provided [v"+ MonthlyValues.Max().ToString() + "] for ["+this.Name+"] Feed Group for ["+this.Parent.Name+"] given the style of feeding selected requires a proportion.", memberNames));
-                    }
-                    break;
-                default:
-                    break;
+                if(MonthlyValues.Max() == 0)
+                {
+                    Summary.WriteWarning(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]");
+                }
             }
             return results;
         }
@@ -149,6 +156,10 @@ namespace Models.CLEM.Groupings
 
             html += "</div>";
 
+            html += "\n<div class=\"activityentry\">";
+            html += "Individual's intake will automatically be limited to 1.2 x potential intake, with excess food still utilised";
+            html += "</div>";
+
             return html;
         }
 
@@ -171,7 +182,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\n<div class=\"filterborder clearfix\">";
-            if (!(Apsim.Children(this, typeof(RuminantFilter)).Count() >= 1))
+            if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

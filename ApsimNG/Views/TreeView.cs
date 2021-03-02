@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="TreeView.cs"  company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
 namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
@@ -568,9 +563,18 @@ namespace UserInterface.Views
         {
             try
             {
+                // Note - this will not be called on the main thread, so we
+                // need to wrap any Gtk calls inside an appropriate delegate
                 Gtk.Application.Invoke(delegate
                 {
-                    BeginRenamingCurrentNode();
+                    try
+                    {
+                        BeginRenamingCurrentNode();
+                    }
+                    catch (Exception err)
+                    {
+                        ShowError(err);
+                    }
                 });
             }
             catch (Exception err)

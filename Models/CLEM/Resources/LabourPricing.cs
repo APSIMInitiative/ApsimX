@@ -31,21 +31,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Create a copy of the current instance
-        /// </summary>
-        /// <returns></returns>
-        public LabourPricing Clone()
-        {
-            LabourPricing clone = new LabourPricing();
-
-            foreach (LabourPriceGroup item in this.Children.OfType<LabourPriceGroup>())
-            {
-                clone.Children.Add(item.Clone());
-            }
-            return clone;
-        }
-
-        /// <summary>
         /// Validate model
         /// </summary>
         /// <param name="validationContext"></param>
@@ -54,12 +39,12 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            if (Apsim.Children(this, typeof(LabourPriceGroup)).Count() == 0)
+            if (this.FindAllChildren<LabourPriceGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
                 results.Add(new ValidationResult("No [LabourPriceGroups] have been provided for [r=" + this.Name + "].\nAdd [LabourPriceGroups] to include labour pricing.", memberNames));
             }
-            else if (Apsim.Children(this, typeof(LabourPriceGroup)).Cast<LabourPriceGroup>().Where(a => a.Value == 0).Count() > 0)
+            else if (this.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
                 results.Add(new ValidationResult("No price [Value] has been set for some of the [LabourPriceGroup] in [r=" + this.Name + "]\nThese will not result in price calculations and can be deleted.", memberNames));

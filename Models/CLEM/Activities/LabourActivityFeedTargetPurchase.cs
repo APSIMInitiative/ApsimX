@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Food store type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food store required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(HumanFoodStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(HumanFoodStore) })]
         public string FoodStoreName { get; set; }
 
         /// <summary>

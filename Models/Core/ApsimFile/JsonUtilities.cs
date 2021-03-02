@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Models.Functions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -121,10 +122,12 @@ namespace Models.Core.ApsimFile
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="name">The type of children to return.</param>
+        /// <param name="ignoreCase">Perform a case-insensitive search?</param>
         /// <returns>The found child or null if not found.</returns>
-        public static JObject ChildWithName(JObject node, string name)
+        public static JObject ChildWithName(JObject node, string name, bool ignoreCase = false)
         {
-            return Children(node).Find(child => Name(child) == name);
+            StringComparison comparisonType = ignoreCase ? StringComparison.InvariantCultureIgnoreCase : StringComparison.InvariantCulture;
+            return Children(node).Find(child => string.Equals(Name(child), name, comparisonType));
         }
 
         /// <summary>
@@ -289,7 +292,8 @@ namespace Models.Core.ApsimFile
         public static void RenameChildModel(JObject node, string childName, string newName)
         {
             JObject child = ChildWithName(node, childName);
-            RenameModel(child, newName);
+            if (child != null)
+                RenameModel(child, newName);
         }
 
         /// <summary>
@@ -339,17 +343,23 @@ namespace Models.Core.ApsimFile
         /// <param name="report">The report model.</param>
         /// <param name="searchPattern">The pattern to search for.</param>
         /// <param name="replacePattern">The string to replace.</param>
-        public static void SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
+        public static bool SearchReplaceReportVariableNames(JObject report, string searchPattern, string replacePattern)
         {
             var variableNames = Values(report, "VariableNames");
 
+            bool replacementMade = false;
             if (variableNames != null)
             {
                 for (int i = 0; i < variableNames.Count; i++)
-                    variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
-
-                SetValues(report, "VariableNames", variableNames);
+                    if (variableNames[i].Contains(searchPattern))
+                    {
+                        variableNames[i] = variableNames[i].Replace(searchPattern, replacePattern);
+                        replacementMade = true;
+                    }
+                if (replacementMade)
+                    SetValues(report, "VariableNames", variableNames);
             }
+            return replacementMade;
         }
 
         /// <summary>
@@ -448,6 +458,29 @@ namespace Models.Core.ApsimFile
             return newChild;
         }
 
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        /// <param name="childName">Name of the child to be removed.</param>
+        public static void RemoveChild(JObject node, string childName)
+        {
+            var child = ChildWithName(node, childName);
+            if (child == null)
+                return;
+
+            child.Remove();
+        }
+
+        /// <summary>
+        /// Renames a child node if it exists.
+        /// </summary>
+        /// <param name="node">Parent node.</param>
+        public static void RemoveChildren(JObject node)
+        {
+            var children = node["Children"] as JArray;
+            children.RemoveAll();
+        }
 
         /// <summary>
         /// Helper method for <see cref="ChildrenRecursively(JObject)"/>.
@@ -476,5 +509,141 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Helper method for renaming variables in report and manager.
+        /// </summary>
+        /// <param name="node">The JSON root node.</param>
+        /// <param name="changes">List of old and new name tuples.</param>
+        public static bool RenameVariables(JObject node, Tuple<string, string>[] changes)
+        {
+            bool replacementMade = false;
+            foreach (var manager in JsonUtilities.ChildManagers(node))
+            {
+
+                foreach (var replacement in changes)
+                {
+                    if (manager.Replace(replacement.Item1, replacement.Item2))
+                        replacementMade = true;
+                }
+                if (replacementMade)
+                    manager.Save();
+            }
+            foreach (var report in JsonUtilities.ChildrenOfType(node, "Report"))
+            {
+                foreach (var replacement in changes)
+                {
+                    if (JsonUtilities.SearchReplaceReportVariableNames(report, replacement.Item1, replacement.Item2))
+                        replacementMade = true;
+                }
+            }
+
+            foreach (var simpleGrazing in JsonUtilities.ChildrenOfType(node, "SimpleGrazing"))
+            {
+                var expression = simpleGrazing["FlexibleExpressionForTimingOfGrazing"]?.ToString();
+                if (!string.IsNullOrEmpty(expression))
+                {
+                    foreach (var replacement in changes)
+                    {
+                        if (expression.Contains(replacement.Item1))
+                        {
+                            expression = expression.Replace(replacement.Item1, replacement.Item2);
+                            replacementMade = true;
+                        }
+                    }
+                    simpleGrazing["FlexibleExpressionForTimingOfGrazing"] = expression;
+                }
+            }
+
+            foreach (var compositeFactor in JsonUtilities.ChildrenOfType(node, "CompositeFactor"))
+            {
+                var specifications = compositeFactor["Specifications"] as JArray;
+                if (specifications != null)
+                {
+                    bool replacementFound = false;
+                    foreach (var replacement in changes)
+                        for (int i = 0; i < specifications.Count; i++)
+                        {
+                            replacementFound = replacementFound || specifications[i].ToString().Contains(replacement.Item1);
+                            specifications[i] = specifications[i].ToString().Replace(replacement.Item1, replacement.Item2);
+                        }
+                    if (replacementFound)
+                    {
+                        replacementMade = true;
+                        compositeFactor["Specifications"] = specifications;
+                    }
+                }
+            }
+
+            foreach (JObject variableRef in ChildrenOfType(node, typeof(VariableReference).Name))
+            {
+                foreach (var replacement in changes)
+                {
+                    string variableName = variableRef["VariableName"]?.ToString();
+                    if (variableName.Contains(replacement.Item1))
+                    {
+                        replacementMade = true;
+                        variableRef["VariableName"] = variableName?.Replace(replacement.Item1, replacement.Item2);
+                    }
+                }
+            }
+
+            foreach (JObject series in ChildrenOfType(node, nameof(Series)))
+            {
+                foreach (var change in changes)
+                {
+                    if (series["XFieldName"]?.ToString() != null && series["XFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["XFieldName"] = series["XFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["YFieldName"]?.ToString() != null && series["YFieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["YFieldName"] = series["YFieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["X2FieldName"]?.ToString() != null && series["X2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["X2FieldName"] = series["X2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Y2FieldName"]?.ToString() != null && series["Y2FieldName"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Y2FieldName"] = series["Y2FieldName"].ToString().Replace(change.Item1, change.Item2);
+                    }
+
+                    if (series["Filter"]?.ToString() != null && series["Filter"].ToString().Contains(change.Item1))
+                    {
+                        replacementMade = true;
+                        series["Filter"] = series["Filter"].ToString().Replace(change.Item1, change.Item2);
+                    }
+                }
+            }
+
+            return replacementMade;
+        }
+
+        /// <summary>
+        /// Find an ancestor model of the given type.
+        /// </summary>
+        /// <param name="token">Model whose ancestor we want to find.</param>
+        /// <param name="type">Type of ancestor to search for.</param>
+        public static JObject Ancestor(JObject token, Type type)
+        {
+            JToken parent = Parent(token);
+            while (parent != null)
+            {
+                Type parentType = System.Type.GetType(Type(parent, true));
+                if (type.IsAssignableFrom(parentType))
+                    return parent as JObject;
+
+                parent = Parent(parent);
+            }
+
+            return null;
+        }
     }
 }

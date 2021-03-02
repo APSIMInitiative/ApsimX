@@ -102,13 +102,13 @@
         [Description("NO3N")]
         [Summary]
         [Units("kg/ha")]
-        public double[] NO3N { get; set; }
+        public double[] NO3 { get; set; }
 
         /// <summary>Ammonia NH4</summary>
         [Description("NH4N")]
         [Summary]
         [Units("kg/ha")]
-        public double[] NH4N { get; set; }
+        public double[] NH4 { get; set; }
 
         /// <summary>
         /// Gets or sets soil water. Units will be as specified by SWUnits
@@ -343,7 +343,7 @@
         {
             get
             {
-                return Apsim.Parent(this, typeof(Soil)) as Soil;
+                return FindAncestor<Soil>();
             }
         }
     }

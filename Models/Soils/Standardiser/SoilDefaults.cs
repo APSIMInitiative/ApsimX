@@ -22,10 +22,10 @@
             AddPredictedCrops(soil);
             CheckAnalysisForMissingValues(soil);
 
-            var water = Apsim.Child(soil, typeof(Physical)) as Physical;
+            var water = soil.FindChild<Physical>();
             if (water != null)
             {
-                var crops = Apsim.Children(water, typeof(SoilCrop)).Cast<SoilCrop>().ToArray();
+                var crops = water.FindAllChildren<SoilCrop>().Cast<SoilCrop>().ToArray();
 
                 foreach (var crop in crops)
                 {
@@ -45,7 +45,7 @@
                 }
             }
 
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             foreach (Sample sample in samples)
                 CheckSampleForMissingValues(sample, soil);
 
@@ -120,12 +120,14 @@
         /// <param name="soil">The soil.</param>
         private static void CheckAnalysisForMissingValues(Soil soil)
         {
-            var analysis = Apsim.Child(soil, typeof(Chemical)) as Chemical;
+            var analysis = soil.FindChild<Chemical>();
 
             analysis.CL = FillMissingValues(analysis.CL, analysis.Thickness.Length, 0);
             analysis.EC = FillMissingValues(analysis.EC, analysis.Thickness.Length, 0);
             analysis.ESP = FillMissingValues(analysis.ESP, analysis.Thickness.Length, 0);
             analysis.PH = FillMissingValues(analysis.PH, analysis.Thickness.Length, 7.0);
+            analysis.NO3N = FillMissingValues(analysis.NO3N, analysis.Thickness.Length, 0.1);
+            analysis.NH4N = FillMissingValues(analysis.NH4N, analysis.Thickness.Length, 0.01);
         }
 
         /// <summary>Changes all missing values in an array to a valid value.</summary>
@@ -173,7 +175,7 @@
         /// <param name="soil">The soil.</param>
         private static void CheckCropForMissingValues(SoilCrop crop, Soil soil)
         {
-            var water = Apsim.Child(soil, typeof(Physical)) as Physical;
+            var water = soil.FindChild<Physical>();
 
             for (int i = 0; i < water.Thickness.Length; i++)
             {
@@ -193,10 +195,10 @@
         {
             if (!MathUtilities.ValuesInArray(sample.SW))
                 sample.SW = null;
-            if (sample.NO3N != null && !MathUtilities.ValuesInArray(sample.NO3N))
-                sample.NO3N = null;
-            if (sample.NH4N != null && !MathUtilities.ValuesInArray(sample.NH4N))
-                sample.NH4N = null;
+            if (sample.NO3 != null && !MathUtilities.ValuesInArray(sample.NO3))
+                sample.NO3 = null;
+            if (sample.NH4 != null && !MathUtilities.ValuesInArray(sample.NH4))
+                sample.NH4 = null;
             if (!MathUtilities.ValuesInArray(sample.CL))
                 sample.CL = null;
             if (!MathUtilities.ValuesInArray(sample.EC))
@@ -221,7 +223,7 @@
             if (sample.OC != null)
                 sample.OC = MathUtilities.FixArrayLength(sample.OC, sample.Thickness.Length);
 
-            var water = Apsim.Child(soil, typeof(Physical)) as Physical;
+            var water = soil.FindChild<Physical>();
             if (water != null)
             {
                 double[] ll15 = Layers.LL15Mapped(soil, sample.Thickness);
@@ -418,8 +420,8 @@
 
                 if (predictedCropNames != null)
                 {
-                    var water = Apsim.Child(soil, typeof(Physical)) as Physical;
-                    var crops = Apsim.Children(water, typeof(SoilCrop));
+                    var water = soil.FindChild<Physical>();
+                    var crops = water.FindAllChildren<SoilCrop>().ToList();
 
                     foreach (string cropName in predictedCropNames)
                     {

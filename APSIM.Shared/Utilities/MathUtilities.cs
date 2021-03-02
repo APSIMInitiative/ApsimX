@@ -1,8 +1,3 @@
-// -----------------------------------------------------------------------
-// <copyright file="MathUtilities.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
 {
     using System;
@@ -50,7 +45,15 @@ namespace APSIM.Shared.Utilities
         {
             return (value1 - value2) > tolerance;
         }
-        
+
+        /// <summary>
+        /// Return true if the true if value 1 is greater than or equal to value 2
+        /// </summary>
+        public static bool IsGreaterThanOrEqual(double value1, double value2)
+        {
+            return (value1 - value2) >= tolerance;
+        }
+
         /// <summary>
         /// Return true if the true if value 1 is less than value 2
         /// </summary>
@@ -191,7 +194,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static double Divide(double value1, double value2, double errVal)
         {
-            return (value2 == 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
         }
 
         /// <summary>
@@ -292,6 +295,22 @@ namespace APSIM.Shared.Utilities
                 foreach (var value in values)
                     result += value;
             return result;
+        }
+
+        /// <summary>
+        /// Product of an array of doubles 
+        /// </summary>
+        public static double Prod(IEnumerable Values)
+        {
+            double prod = 1.0;
+            foreach (object Value in Values)
+            {
+                if (Value != null && !double.IsNaN(Convert.ToDouble(Value, CultureInfo.InvariantCulture)))
+                {
+                    prod *= Convert.ToDouble(Value, CultureInfo.InvariantCulture);
+                }
+            }
+            return prod;
         }
 
         /// <summary>
@@ -400,7 +419,11 @@ namespace APSIM.Shared.Utilities
 
             int pos = Array.BinarySearch(dXCoordinate, dX);
             if (pos == -1)
+            {
+                if (dXCoordinate.Length > 1 && dXCoordinate[0] > dXCoordinate[1])
+                    throw new Exception("Linear interp x-series out of order (must be in ascending order)");
                 return dYCoordinate[0];  // off the bottom
+            }
             else if (pos >= 0)
                 return dYCoordinate[pos];   // exact match
             else if (pos < 0)
@@ -1614,6 +1637,29 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Utility method which averages a specific field in a collection of data rows.
+        /// </summary>
+        /// <param name="rows">Rows to be summed.</param>
+        /// <param name="fieldName">Name of the field to be summed.</param>
+        /// <returns></returns>
+        private static double AverageOfRows(DataRow[] rows, string fieldName)
+        {
+            double total = 0;
+            foreach (DataRow row in rows)
+            {
+                double field;
+                if (double.TryParse(row.Field<object>(fieldName)?.ToString(), out field))
+                    total += field;
+                else
+                {
+                    DateTime date = DataTableUtilities.GetDateFromRow(row);
+                    throw new Exception("Invalid data in column " + fieldName + " on date " + date.ToShortDateString() + " (day of year = " + date.DayOfYear + ")");
+                }
+            }
+            return Divide(total, rows.Length, 0);
+        }
+
+        /// <summary>
         /// Returns monthly totals for the given variable.
         /// </summary>
         /// <param name="table">The data table containing the data.</param>
@@ -1698,6 +1744,63 @@ namespace APSIM.Shared.Utilities
             return null;
         }
 
+
+        /// <summary>
+        /// Return longterm average monthly averages for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// Assumes a a date can be derived from the data table using the 
+        /// DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of 12 numbers or null if no data in table.</returns>
+        public static double[] AverageMonthlyAverages(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                // This first query gives monthly totals for each year.
+                var result = from row in table.AsEnumerable()
+                             where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
+                                    DataTableUtilities.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = DataTableUtilities.GetDateFromRow(row).Year,
+                                 Month = DataTableUtilities.GetDateFromRow(row).Month,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Month = grp.Key.Month,
+                                 Avg = AverageOfRows(grp.AsEnumerable().ToArray(), fieldName)
+                             };
+
+                // This second query gives average monthly totals using the first query.
+                var result2 = from row in result
+                              group row by new
+                              {
+                                  Month = row.Month,
+                              } into grp
+                              select new
+                              {
+                                  Month = grp.Key.Month,
+                                  Avg = grp.Average(row => row.Avg)
+                              };
+
+
+                List<double> totals = new List<double>();
+                foreach (var row in result2)
+                    totals.Add(row.Avg);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Return yearly totals for the given variable. 
         /// </summary>
@@ -1725,6 +1828,45 @@ namespace APSIM.Shared.Utilities
                              {
                                  Year = grp.Key.Year,
                                  Total = SumOfRows(grp.AsEnumerable().ToArray(), fieldName)
+                             };
+
+                List<double> totals = new List<double>();
+                foreach (var row in result)
+                    totals.Add(row.Total);
+
+                return totals.ToArray();
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Return yearly averages for the given variable. 
+        /// </summary>
+        /// <remarks>
+        /// Assumes a a date can be derived from the data table using the 
+        /// DataTable.GetDateFromRow function.
+        /// </remarks>
+        /// <param name="table">The data table containing the data</param>
+        /// <param name="fieldName">The field name to look at</param>
+        /// <param name="firstDate">Only data after this date will be used</param>
+        /// <param name="lastDate">Only data before this date will be used</param>
+        /// <returns>An array of yearly totals or null if no data in table.</returns>
+        public static double[] YearlyAverages(System.Data.DataTable table, string fieldName, DateTime firstDate, DateTime lastDate)
+        {
+            if (table.Rows.Count > 0)
+            {
+                var result = from row in table.AsEnumerable()
+                             where (DataTableUtilities.GetDateFromRow(row) >= firstDate &&
+                                    DataTableUtilities.GetDateFromRow(row) <= lastDate)
+                             group row by new
+                             {
+                                 Year = DataTableUtilities.GetDateFromRow(row).Year,
+                             } into grp
+                             select new
+                             {
+                                 Year = grp.Key.Year,
+                                 Total = AverageOfRows(grp.AsEnumerable().ToArray(), fieldName)
                              };
 
                 List<double> totals = new List<double>();

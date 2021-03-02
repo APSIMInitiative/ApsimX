@@ -33,7 +33,7 @@ annual_average_pet = 657.4           !Average annual PET (mm/yr)
 average_windspeed = 3.9              !Average windspeed (m/s)
 
   Location        xDate         year          day         rain         mint         maxt         avgt         radn         wind         evap           vp           rh        rhmin        rhmax
-        ()           ()           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
+        () (dd/MM/yyyy)           ()           ()         (mm)         (oC)         (oC)         (oC)     (MJ/m^2)        (m/s)         (mm)        (hPa)          (%)          (%)          (%)
 VCS_Hindon   01/01/1975         1975            1          0.0          5.3         18.0         11.7         21.6          4.2          2.8         12.1         77.3         58.6        100.0
 VCS_Hindon   02/01/1975         1975            2          0.0          5.8         22.1         14.0         28.0          4.2          5.6          9.5         53.3         35.7        100.0
 VCS_Hindon   03/01/1975         1975            3          0.0         13.6         24.4         19.0         10.2          4.2          2.8         11.3         45.7         37.0         72.5

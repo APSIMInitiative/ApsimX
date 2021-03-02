@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ListButtonView.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Linq;
@@ -175,9 +170,10 @@ namespace UserInterface.Views
 
             // Unsure why, but sometimes the label's font is incorrect
             // (inconsistent with default font).
-            Pango.FontDescription font = Utility.Configuration.Settings.Font;
+            Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             if (font != null && font != btnLabel.Style.FontDescription)
-                btnLabel.ModifyFont(Utility.Configuration.Settings.Font);
+                btnLabel.ModifyFont(font);
+
             btnLabel.LineWrap = true;
             btnLabel.LineWrapMode = Pango.WrapMode.Word;
             btnLabel.Justify = Justification.Center;

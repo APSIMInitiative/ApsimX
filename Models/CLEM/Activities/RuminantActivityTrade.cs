@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Pasture details")]
         [Description("GrazeFoodStore (paddock) to place purchases in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreName { get; set; }
 
         private string grazeStore = "";
@@ -122,14 +122,14 @@ namespace Models.CLEM.Activities
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
-            numberToStock = Apsim.Children(this, typeof(Relationship)).FirstOrDefault() as Relationship;
+            numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if(numberToStock != null)
             {
                 if (grazeStore != "")
@@ -148,6 +148,7 @@ namespace Models.CLEM.Activities
             // purchase details only on timer
             if(TimingOK)
             {
+                this.Status = ActivityStatus.NotNeeded;
                 // remove any old potential sales from list as these will be updated here
                 Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
@@ -156,15 +157,16 @@ namespace Models.CLEM.Activities
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
-                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare, false), CultureInfo.InvariantCulture);
+                        //NOTE: ensure calculation method in relationship is fixed values
+                        number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
                     }
 
                     for (int i = 0; i < number; i++)
                     {
                         object ruminantBase = null;
 
-                        double u1 = ZoneCLEM.RandomGenerator.NextDouble();
-                        double u2 = ZoneCLEM.RandomGenerator.NextDouble();
+                        double u1 = RandomNumberGenerator.Generator.NextDouble();
+                        double u2 = RandomNumberGenerator.Generator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                      Math.Sin(2.0 * Math.PI * u2);
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
@@ -191,7 +193,7 @@ namespace Models.CLEM.Activities
                         {
                             case Sex.Male:
                                 RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                                ruminantMale.BreedingSire = false;
+                                ruminantMale.IsSire = false;
                                 break;
                             case Sex.Female:
                                 RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
@@ -204,6 +206,7 @@ namespace Models.CLEM.Activities
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(ruminantBase as Ruminant);
+                        this.Status = ActivityStatus.Success;
                     }
                 }
             }
@@ -213,10 +216,12 @@ namespace Models.CLEM.Activities
                 if (ind.Age - ind.PurchaseAge >= MinMonthsKept)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
                 if (TradeWeight > 0 && ind.Weight >= TradeWeight)
                 {
                     ind.SaleFlag = HerdChangeReason.TradeSale;
+                    this.Status = ActivityStatus.Success;
                 }
             }
         }
@@ -322,7 +327,7 @@ namespace Models.CLEM.Activities
             }
             html += "</div>";
 
-            Relationship numberRelationship = Apsim.Children(this, typeof(Relationship)).FirstOrDefault() as Relationship;
+            Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if (numberRelationship != null)
             {
                 html += "\n<div class=\"activityentry\">";

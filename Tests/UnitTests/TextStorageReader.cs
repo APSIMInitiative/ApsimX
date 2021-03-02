@@ -165,6 +165,11 @@ namespace UnitTests
         {
             return new List<Tuple<string, Type>>();
         }
+
+        public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            return true;
+        }
     }
 
 }

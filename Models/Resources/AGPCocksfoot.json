@@ -1,12 +1,11 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 77,
+  "Version": 118,
   "Name": "Simulations",
   "Children": [
     {
       "$type": "Models.AgPasture.PastureSpecies, Models",
-      "MaximumNUptake": 10.0,
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
@@ -31,26 +30,6 @@
       "GrowthRespirationCoefficient": 0.25,
       "RespirationTReference": 20.0,
       "RespirationExponent": 1.5,
-      "NThresholdsForLeaves": [
-        0.04,
-        0.012,
-        0.05
-      ],
-      "NThresholdsForStems": [
-        0.02,
-        0.006,
-        0.025
-      ],
-      "NThresholdsForStolons": [
-        0.0,
-        0.0,
-        0.0
-      ],
-      "NThresholdsForRoots": [
-        0.02,
-        0.006,
-        0.025
-      ],
       "DegreesDayForGermination": 125,
       "TargetShootRootRatio": 4.0,
       "MaxRootAllocation": 0.25,
@@ -67,7 +46,6 @@
       "FractionLeafExponent": 3.0,
       "FractionToStolon": 0.0,
       "SpecificLeafArea": 20.0,
-      "SpecificRootLength": 75.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 1000.0,
       "MaxStemEffectOnLAI": 1.0,
@@ -82,11 +60,6 @@
       "TurnoverDroughtThreshold": 0.5,
       "TurnoverDefoliationCoefficient": 0.5,
       "TurnoverDefoliationRootEffect": 0.1,
-      "FractionNLuxuryRemobilisable": [
-        0.1,
-        0.1,
-        0.1
-      ],
       "MinimumNFixation": 0.0,
       "MaximumNFixation": 0.0,
       "SoilSaturationEffectMax": 0.2,
@@ -99,153 +72,10 @@
       "PlantHeightMaximum": 300.0,
       "PlantHeightMassForMax": 9000.0,
       "PlantHeightExponent": 2.6,
-      "RootDepthMinimum": 50.0,
-      "RootDepthMaximum": 1000.0,
-      "RootElongationRate": 25.0,
-      "RootDistributionDepthParam": 250.0,
-      "RootDistributionExponent": 3.2,
-      "DigestibilitiesCellWall": [
-        0.6,
-        0.6,
-        0.6,
-        0.2
-      ],
       "MinimumGreenWt": 50.0,
-      "FractionStolonStanding": 0.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
       "WaterAvailableMethod": 0,
-      "NitrogenAvailableMethod": 0,
-      "Name": "Cocksfoot",
-      "Children": [
-        {
-          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "Name": "Leaves",
-          "Children": [
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "Name": "Stems",
-          "Children": [
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "Name": "Stolons",
-          "Children": [
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort1",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort2",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "LeafCohort3",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.AgPasture.GenericTissue, Models",
-              "Name": "Dead",
-              "Children": [],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        }
-      ],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false,
-      "PhotosynthesisPathwayType": 3.0,
       "PhotosyntheticEfficiency": 0.01,
       "PhotosynthesisCurveFactor": 0.8,
       "FractionPAR": 0.5,
@@ -273,15 +103,207 @@
       "NFixingCostFactor": 0.0,
       "GenericGLF": 1.0,
       "SoilFertilityGLF": 1.0,
-      "rootDistributionDepthParam": 90.0,
-      "rootDistributionExponent": 3.2,
-      "SugarFractionNewGrowth": 0.5,
-      "FractionStolonsStanding": 0.0,
-      "referenceRLD": 5.0,
-      "ReferenceKSuptake": 15.0,
       "NuptakeSWFactor": 0.25,
       "MaximumUptakeRateNH4": 0.5,
-      "MaximumUptakeRateNO3": 0.5
+      "MaximumUptakeRateNO3": 0.5,
+      "Name": "AGPCocksfoot",
+      "Children": [
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "NConcOptimum": 0.04,
+          "NConcMinimum": 0.012,
+          "NConcMaximum": 0.05,
+          "Name": "Leaf",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.6,
+              "Name": "EmergingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "DevelopingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "MatureTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "NConcOptimum": 0.02,
+          "NConcMinimum": 0.006,
+          "NConcMaximum": 0.025,
+          "Name": "Stem",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.6,
+              "Name": "EmergingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "DevelopingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "MatureTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
+          "FractionStanding": 0.0,
+          "NConcOptimum": 0.0,
+          "NConcMinimum": 0.0,
+          "NConcMaximum": 0.0,
+          "Name": "Stolon",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionSugarNewGrowth": 0.5,
+              "DigestibilityCellWall": 0.6,
+              "Name": "EmergingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "DevelopingTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "DigestibilityCellWall": 0.6,
+              "Name": "MatureTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.GenericTissue, Models",
+              "FractionNLuxuryRemobilisable": 0,
+              "DigestibilityCellWall": 0.2,
+              "Name": "DeadTissue",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+          "NConcOptimum": 0.02,
+          "NConcMinimum": 0.006,
+          "NConcMaximum": 0.025,
+          "RootDistributionDepthParam": 90.0,
+          "RootDistributionExponent": 3.2,
+          "RootBottomDistributionFactor": 1.05,
+          "SpecificRootLength": 75.0,
+          "RootDepthMinimum": 50.0,
+          "RootDepthMaximum": 1000.0,
+          "RootElongationRate": 25.0,
+          "KNO3": 0.02,
+          "KNH4": 0.01,
+          "MaximumNUptake": 10.0,
+          "ReferenceRLD": 5.0,
+          "ReferenceKSuptake": 15.0,
+          "Name": "Root",
+          "Children": [
+            {
+              "$type": "Models.AgPasture.RootTissue, Models",
+              "Name": "Live",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.AgPasture.RootTissue, Models",
+              "Name": "Dead",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false,
+      "PlantType": "AGPCocksfoot"
     }
   ]
 }

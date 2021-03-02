@@ -7,7 +7,6 @@
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Xml.Serialization;
     using System.Data;
     using APSIM.Shared.Utilities;
 
@@ -57,11 +56,11 @@
                     return (DateTime)Start;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.StartDate;
 
-                throw new Exception($"No start date provided in clock {Apsim.FullPath(this)} and no weather file could be found.");
+                throw new Exception($"No start date provided in clock {this.FullPath} and no weather file could be found.");
             }
             set
             {
@@ -87,11 +86,11 @@
                     return (DateTime)End;
 
                 // If no start date provided, try and find a weather component and use its start date.
-                IWeather weather = Apsim.Find(this, typeof(IWeather)) as IWeather;
+                IWeather weather = this.FindInScope<IWeather>();
                 if (weather != null)
                     return weather.EndDate;
 
-                throw new Exception($"No end date provided in {Apsim.FullPath(this)}: and no weather file could be found.");
+                throw new Exception($"No end date provided in {this.FullPath}: and no weather file could be found.");
             }
             set
             {
@@ -120,6 +119,8 @@
         public event EventHandler EndOfWeek;
         /// <summary>Occurs when [end of simulation].</summary>
         public event EventHandler EndOfSimulation;
+        /// <summary>Last initialisation event.</summary>
+        public event EventHandler FinalInitialise;
 
         /// <summary>Occurs when [do weather].</summary>
         public event EventHandler DoWeather;
@@ -229,13 +230,13 @@
         // Public properties available to other models.
         /// <summary>Gets the today.</summary>
         /// <value>The today.</value>
-        [XmlIgnore]
+        [JsonIgnore]
         public DateTime Today { get; private set; }
 
         /// <summary>
         /// Returns the current fraction of the overall simulation which has been completed
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FractionComplete
         {
             get
@@ -282,6 +283,9 @@
 
             if (CLEMInitialiseActivity != null)
                 CLEMInitialiseActivity.Invoke(this, args);
+
+            if (FinalInitialise != null)
+                FinalInitialise.Invoke(this, args);
 
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);

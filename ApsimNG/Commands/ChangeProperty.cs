@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ChangeProperty.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Commands
+﻿namespace UserInterface.Commands
 {
     using System;
     using System.Collections.Generic;
@@ -137,8 +132,8 @@ namespace UserInterface.Commands
             /// <param name="value">The new value of the property</param>
             public Property(object obj, string name, object value)
             {
-                if (obj is IModel && (obj as IModel).ReadOnly)
-                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", (obj as IModel).Name));
+                if (obj is IModel model && model.ReadOnly && name != nameof(model.ReadOnly) && name != nameof(model.Enabled))
+                    throw new ApsimXException(obj as IModel, string.Format("Unable to modify {0} - it is read-only.", model.FullPath));
                 this.Obj = obj;
                 this.Name = name;
                 this.NewValue = value;

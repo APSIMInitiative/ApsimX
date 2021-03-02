@@ -37,7 +37,7 @@
         private Dictionary<string, SimulationDetails> simulationIDs = new Dictionary<string, SimulationDetails>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>The IDs for all checkpoints</summary>
-        private Dictionary<string, int> checkpointIDs = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, Checkpoint> checkpointIDs = new Dictionary<string, Checkpoint>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>A list of simulation names that have been cleaned up for each table.</summary>
         private Dictionary<string, List<string>> simulationNamesThatHaveBeenCleanedUp = new Dictionary<string, List<string>>();
@@ -94,6 +94,16 @@
         }
 
         /// <summary>
+        /// A list of table names which have been modified in the most recent simulations run.
+        /// </summary>
+        public List<string> TablesModified { get; private set; } = new List<string>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int NumJobs { get { return 0; } }
+
+        /// <summary>
         /// Add rows to a table in the db file. Note that the data isn't written immediately.
         /// </summary>
         /// <param name="data">Name of simulation the values correspond to.</param>
@@ -116,6 +126,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -148,6 +160,8 @@
             lock (lockObject)
             {
                 commands.Add(new WriteTableCommand(Connection, table));
+                if (!TablesModified.Contains(table.TableName))
+                    TablesModified.Add(table.TableName);
             }
         }
 
@@ -158,6 +172,9 @@
         public void DeleteTable(string tableName)
         {
             Connection.ExecuteNonQuery($"DROP TABLE {tableName}");
+            lock (lockObject)
+                if (!TablesModified.Contains(tableName))
+                    TablesModified.Add(tableName);
         }
 
         /// <summary>Wait for all records to be written.</summary>
@@ -288,6 +305,17 @@
             Stop();
         }
 
+        /// <summary>Set a checkpoint show on graphs flag.</summary>
+        /// <param name="name">Name of checkpoint.</param>
+        /// <param name="showGraphs">Show graphs?</param>
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
+        {
+            Start();
+            if (checkpointIDs.ContainsKey(name))
+                checkpointIDs[name].ShowOnGraphs = showGraphs;
+            Stop();
+        }
+
         /// <summary>
         /// Add a list of column units for the specified table.
         /// </summary>
@@ -361,16 +389,17 @@
 
             lock (lockObject)
             {
-                if (!checkpointIDs.TryGetValue(checkpointName, out int id))
+                if (!checkpointIDs.TryGetValue(checkpointName, out Checkpoint checkpoint))
                 {
+                    checkpoint = new Checkpoint();
                     // Not found so create a new ID, add it to our collection of ids
                     if (checkpointIDs.Count > 0)
-                        id = checkpointIDs.Values.Max() + 1;
+                        checkpoint.ID = checkpointIDs.Select(c => c.Value.ID).Max() + 1;
                     else
-                        id = 1;
-                    checkpointIDs.Add(checkpointName, id);
+                        checkpoint.ID = 1;
+                    checkpointIDs.Add(checkpointName, checkpoint); 
                 }
-                return id;
+                return checkpoint.ID;
             }
         }
 
@@ -403,7 +432,13 @@
             {
                 var data = dbConnection.ExecuteQuery("SELECT * FROM [_Checkpoints]");
                 foreach (DataRow row in data.Rows)
-                    checkpointIDs.Add(row["Name"].ToString(), Convert.ToInt32(row["ID"]));
+                    checkpointIDs.Add(row["Name"].ToString(), new Checkpoint()
+                    {
+                        ID = Convert.ToInt32(row["ID"], CultureInfo.InvariantCulture),
+                        ShowOnGraphs = data.Columns["OnGraphs"] != null && 
+                                       !Convert.IsDBNull(row["OnGraphs"]) &&
+                                       Convert.ToInt32(row["OnGraphs"], CultureInfo.InvariantCulture) == 1
+                    });
             }
         }
 
@@ -623,13 +658,15 @@
                 checkpointsTable.Columns.Add("ID", typeof(int));
                 checkpointsTable.Columns.Add("Name", typeof(string));
                 checkpointsTable.Columns.Add("Version", typeof(string));
-                checkpointsTable.Columns.Add("Date", typeof(DateTime));
+                checkpointsTable.Columns.Add("OnGraphs", typeof(int));
 
                 foreach (var checkpoint in checkpointIDs)
                 {
                     var row = checkpointsTable.NewRow();
-                    row[0] = checkpoint.Value;
+                    row[0] = checkpoint.Value.ID;
                     row[1] = checkpoint.Key;
+                    if (checkpoint.Value.ShowOnGraphs)
+                        row[3] = 1;
                     checkpointsTable.Rows.Add(row);
                 }
                 WriteTable(checkpointsTable);

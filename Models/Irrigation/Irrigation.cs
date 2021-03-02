@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using System.Xml.Serialization;
+    using Newtonsoft.Json;
     using Models.Core;
     using Soils;
     /// <summary>
@@ -19,23 +19,23 @@
         [Link] private Soil soil = null;
 
         /// <summary>Gets the amount of irrigation actually applied (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double IrrigationApplied { get; private set; }
 
         /// <summary>Gets or sets the depth at which irrigation is applied (mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Depth { get; private set; }
 
         /// <summary>Gets or sets the duration of the irrigation event (minutes).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Duration { get; private set; }
 
         /// <summary>Gets or sets the efficiency of the irrigation system (mm/mm).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Efficiency { get; private set; }
 
         /// <summary>Gets or sets the flag for whether the irrigation can run off (true/false).</summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public bool WillRunoff { get; private set; }
 
         /// <summary>Occurs when [irrigated].</summary>
@@ -91,7 +91,7 @@
                 if (doOutput)
                     summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
             }
-            else if (doOutput)
+            else if (doOutput && amount < 0)
                 summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative");
         }
 

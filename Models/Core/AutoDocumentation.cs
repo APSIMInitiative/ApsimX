@@ -1,20 +1,14 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="AutoDocumentation.cs" company="APSIM Initiative">
-// Copyright APSIM Initiative.
-// </copyright>
-// -----------------------------------------------------------------------
-namespace Models.Core
+﻿namespace Models.Core
 {
+    using APSIM.Shared.Utilities;
+    using Models.Functions;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Reflection;
-    using APSIM.Shared.Utilities;
-    using System.Xml;
-    using System.IO;
-    using Models.Functions;
     using System.Data;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Xml;
 
     /// <summary>
     /// A class of auto-documentation methods and HTML building widgets.
@@ -110,7 +104,6 @@ namespace Models.Core
                 ParseTextForTags(summaryNode.InnerXml, model, tags, headingLevel, indent, documentAllChildren);
         }
 
-
         /// <summary>
         /// Get the summary of a member (field, property)
         /// </summary>
@@ -127,12 +120,36 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Get the summary of a member (field, property)
+        /// Get the summary of a type.
         /// </summary>
         /// <param name="t">The type to get the summary for.</param>
         public static string GetSummary(Type t)
         {
             return GetSummary(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks tag of a type (if it exists).
+        /// </summary>
+        /// <param name="t">The type.</param>
+        public static string GetRemarks(Type t)
+        {
+            return GetRemarks(t.FullName, 'T');
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (field, property) if it exists.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        public static string GetRemarks(MemberInfo member)
+        {
+            var fullName = member.ReflectedType + "." + member.Name;
+            if (member is PropertyInfo)
+                return GetRemarks(fullName, 'P');
+            else if (member is FieldInfo)
+                return GetRemarks(fullName, 'F');
+            else
+                return GetRemarks(fullName, 'M');
         }
 
         /// <summary>
@@ -142,6 +159,9 @@ namespace Models.Core
         /// <param name="typeLetter">Type type letter: 'T' for type, 'F' for field, 'P' for property.</param>
         private static string GetSummary(string path, char typeLetter)
         {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
             if (doc == null)
             {
                 string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
@@ -152,6 +172,33 @@ namespace Models.Core
             path = path.Replace("+", ".");
 
             string nameToFindInSummary = string.Format("members/{0}:{1}/summary", typeLetter, path);
+            XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
+            if (summaryNode != null)
+                return summaryNode.InnerXml;
+            return null;
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (class, field, property).
+        /// </summary>
+        /// <param name="path">The path to the member.</param>
+        /// <param name="typeLetter">Type letter: 'T' for type, 'F' for field, 'P' for property.</param>
+        /// <returns></returns>
+        private static string GetRemarks(string path, char typeLetter)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
+
+            if (doc == null)
+            {
+                string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, ".xml");
+                doc = new XmlDocument();
+                doc.Load(fileName);
+            }
+
+            path = path.Replace("+", ".");
+
+            string nameToFindInSummary = string.Format("members/{0}:{1}/remarks", typeLetter, path);
             XmlNode summaryNode = XmlUtilities.Find(doc.DocumentElement, nameToFindInSummary);
             if (summaryNode != null)
                 return summaryNode.InnerXml;
@@ -224,7 +271,7 @@ namespace Models.Core
 
                     // Find child
                     string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = Apsim.Get(model, childName) as IModel;
+                    IModel child = model.FindByPath(childName)?.Value as IModel;
                     if (child == null)
                         paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
                     else
@@ -240,7 +287,7 @@ namespace Models.Core
                     // Find children
                     string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
                     Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in Apsim.Children(model, childType))
+                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
                     {
                         DocumentModel(child, tags, targetHeadingLevel + 1, indent);
                         childrenDocumented.Add(child);
@@ -259,7 +306,7 @@ namespace Models.Core
             if (documentAllChildren)
             {
                 // write children.
-                foreach (IModel child in Apsim.Children(model, typeof(IModel)))
+                foreach (IModel child in model.FindAllChildren<IModel>())
                 {
                     if (!childrenDocumented.Contains(child))
                         DocumentModel(child, tags, headingLevel + 1, indent, documentAllChildren);
@@ -280,7 +327,7 @@ namespace Models.Core
                     string macro = line.Substring(posMacro + 1, posEndMacro - posMacro - 1);
                     try
                     {
-                        object value = Apsim.Get(model, macro, true);
+                        object value = model.FindByPath(macro, true)?.Value;
                         if (value != null)
                         {
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
@@ -466,15 +513,25 @@ namespace Models.Core
             /// <summary>The indent level.</summary>
             public int indent;
 
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public int ColumnWidth { get; private set; }
+
+            /// <summary>Max width of each column (in terms of number of characters).</summary>
+            public string Style { get; private set; } = "Table";
+
             /// <summary>
             /// Initializes a new instance of the <see cref="Table"/> class.
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(DataTable data, int indent)
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataTable data, int indent, int width = 50, string style = "Table")
             {
                 this.data = new DataView(data);
                 this.indent = indent;
+                this.ColumnWidth = width;
+                Style = style;
             }
 
             /// <summary>
@@ -482,10 +539,14 @@ namespace Models.Core
             /// </summary>
             /// <param name="data">The column / row data.</param>
             /// <param name="indent">The indentation.</param>
-            public Table(DataView data, int indent)
+            /// <param name="width">Max width of each column (in terms of number of characters).</param>
+            /// <param name="style">The style to use for the table.</param>
+            public Table(DataView data, int indent, int width = 50, string style = "Table")
             {
                 this.data = data;
                 this.indent = indent;
+                this.ColumnWidth = width;
+                Style = style;
             }
         }
 
@@ -502,7 +563,15 @@ namespace Models.Core
         /// <summary>Describes a new page for the tags system.</summary>
         public class NewPage : ITag
         {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
+        }
 
+        /// <summary>Page setup tag.</summary>
+        public class PageSetup : ITag
+        {
+            /// <summary>Is new page portrait?</summary>
+            public bool Portrait { get; set; } = true;
         }
 
         /// <summary>Describes a model view for the tags system.</summary>

@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core.Attributes;
 
 namespace Models.CLEM
@@ -121,10 +121,10 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"content/features/transmutation/transmutationcost.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCost.htm")]
     public class TransmutationCost : CLEMModel, IValidatableObject, ITransmutationCost
     {
-        [XmlIgnore]
+        [JsonIgnore]
         [Link]
         private ResourcesHolder Resources = null;
 
@@ -137,7 +137,7 @@ namespace Models.CLEM
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
         [Required]
         public string ResourceTypeName { get; set; }
 
@@ -176,8 +176,17 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        string[] memberNames = new string[] { "ResourceTypeName" };
-                        results.Add(new ValidationResult("Could not find resource " + ResourceTypeName.Split('.').First() + " in transmutation cost", memberNames));
+                        string[] memberNames = new string[] { "ResourceGroup" };
+                        results.Add(new ValidationResult("Could not find resource [r=" + ResourceTypeName.Split('.').First() + "] in transmutation cost", memberNames));
+                    }
+                    else
+                    {
+                        object resultType = Resources.GetResourceItem(this, ResourceTypeName,OnMissingResourceActionTypes.Ignore,OnMissingResourceActionTypes.Ignore);
+                        if (resultType is null)
+                        {
+                            string[] memberNames = new string[] { "ResourceType" };
+                            results.Add(new ValidationResult($"Could not find resource [r={ResourceTypeName.Split('.').First()}][r={ResourceTypeName.Split('.').Last()}] in transmutation cost", memberNames));
+                        }
                     }
                 }
             }
@@ -186,7 +195,6 @@ namespace Models.CLEM
 
         // This was in commencing, but I don't think there is any reason it has to be
         // could be a problem in future, thus this message.
-
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -255,7 +263,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostlabour.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
     public class TransmutationCostLabour : CLEMModel, IValidatableObject, ITransmutationCost
     {
         /// <summary>
@@ -358,7 +366,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost uses the pricing drfined for the given resource.")]
-    [HelpUri(@"content/features/transmutation/transmutationcostusepricing.htm")]
+    [HelpUri(@"Content/Features/Transmutation/TransmutationCostUsePricing.htm")]
     public class TransmutationCostUsePricing : CLEMModel, IValidatableObject, ITransmutationCost
     {
         private ResourcePricing pricing;
@@ -366,20 +374,21 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [JsonIgnore]
         public Type ResourceType { get; set; }
 
         /// <summary>
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(Finance) })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
         [Required]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
         /// Cost per unit taken from pricing component if available.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double CostPerUnit
         {
             get
@@ -402,6 +411,7 @@ namespace Models.CLEM
         /// <summary>
         /// Get the price object for this transmutation cost
         /// </summary>
+        [JsonIgnore]
         public ResourcePricing Pricing { get {return pricing; } }
 
         /// <summary>
@@ -420,6 +430,18 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+
+            // get pricing if available
+            IResourceType parentResource = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            if (parentResource != null)
+            {
+                pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
+            }
+            if(pricing is null)
+            {
+                string[] memberNames = new string[] { "Resource pricing" };
+                results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as IModel).Name}] required for a price based transmutation [{this.Name}]", memberNames));
+            }
             return results;
         }
 
@@ -433,9 +455,6 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             ResourceType = typeof(Finance);
-
-            // get pricing if available
-            pricing = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
         }
 
         /// <summary>
@@ -448,12 +467,14 @@ namespace Models.CLEM
             string html = "";
 
             // get the pricing 
-            ResourcePricing price = Apsim.Children(Apsim.Parent(this, typeof(IResourceType)), typeof(ResourcePricing)).FirstOrDefault() as ResourcePricing;
-            if (price!=null)
+            var w = FindAncestor<CLEMResourceTypeBase>() as IResourceType;
+            bool multiPrice = (w as IModel).FindAllChildren<ResourcePricing>().Count() > 1;
+            ResourcePricing price = w.Price(PurchaseOrSalePricingStyleType.Purchase);
+            if (price != null)
             {
                 html += "<div class=\"activityentry\">Use ";
                 html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Account not set</span>";
-                html += " based upon the <span class=\"resourcelink\">" + price.Name+"</span> packet size and price for this resource</div>";
+                html += " based upon the " + (multiPrice ? "most suitable" : "<span class=\"resourcelink\"> " + price.Name + "</span>") + " packet size and price for this resource</div>";
             }
             else
             {

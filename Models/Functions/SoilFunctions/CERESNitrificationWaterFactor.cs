@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
-using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
 using Models.Soils;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -18,7 +16,9 @@ namespace Models.Functions
     {
 
         [Link]
-        Soil soil = null;
+        ISoilWater soilwater = null;
+        [Link]
+        Physical physical = null;
 
    
         /// <summary>Gets the value.</summary>
@@ -29,12 +29,12 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
             double WF = 0;
 
-            if (soil.SoilWater.SW[arrayIndex] < soil.LL15[arrayIndex])
+            if (soilwater.SW[arrayIndex] < physical.LL15[arrayIndex])
                 WF = 0;
-            else if (soil.SoilWater.SW[arrayIndex] < soil.DUL[arrayIndex])
-                WF = Math.Min(1, 4 * MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.LL15[arrayIndex],soil.DUL[arrayIndex] - soil.LL15[arrayIndex],0.0));
+            else if (soilwater.SW[arrayIndex] < physical.DUL[arrayIndex])
+                WF = Math.Min(1, 4 * MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.LL15[arrayIndex], physical.DUL[arrayIndex] - physical.LL15[arrayIndex],0.0));
             else
-                WF = 1 - MathUtilities.Divide(soil.SoilWater.SW[arrayIndex] - soil.DUL[arrayIndex], soil.SAT[arrayIndex] - soil.DUL[arrayIndex],0.0);
+                WF = 1 - MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex],0.0);
 
             return WF;
         }
@@ -51,7 +51,7 @@ namespace Models.Functions
 
 
             // write memos.
-            foreach (IModel memo in Apsim.Children(this, typeof(Memo)))
+            foreach (IModel memo in this.FindAllChildren<Memo>())
                 AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
 

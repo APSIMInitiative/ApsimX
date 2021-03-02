@@ -119,6 +119,9 @@
         ///                                   . String must be of the form: 10-30</exception>
         public static double[] ToThickness(string[] DepthStrings)
         {
+            if (DepthStrings == null)
+                return null;
+
             double[] Thickness = new double[DepthStrings.Length];
             for (int i = 0; i != DepthStrings.Length; i++)
             {

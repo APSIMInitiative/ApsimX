@@ -60,7 +60,7 @@
         {
             try
             {
-                parent = Apsim.Get(presenter.ApsimXFile, parentPath) as IModel;
+                parent = presenter.ApsimXFile.FindByPath(parentPath)?.Value as IModel;
                 if (parent == null)
                     throw new Exception("Cannot find model " + parentPath);
 
@@ -68,9 +68,6 @@
                     modelToAdd = Structure.Add(xmlOrJson, parent);
                 else
                     modelToAdd = Structure.Add(child, parent);
-
-                if (modelToAdd is Simulations && modelToAdd.Children.Count == 1)
-                    modelToAdd = modelToAdd.Children[0];
 
                 presenter.AddChildToTree(parentPath, modelToAdd);
                 modelAdded = true;
@@ -89,7 +86,7 @@
             if (modelAdded && modelToAdd != null)
             {
                 parent.Children.Remove(modelToAdd as Model);
-                presenter.DeleteFromTree(Apsim.FullPath(modelToAdd));
+                presenter.DeleteFromTree(modelToAdd.FullPath);
             }
         }
     }

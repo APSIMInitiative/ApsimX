@@ -54,7 +54,7 @@ namespace Models.CLEM.Activities
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
         [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceName, CLEMResourceNameResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
         public string GrazeFoodStoreName { get; set; }
         
         private string grazeStore; 
@@ -83,8 +83,8 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                var ah = Apsim.Find(this, typeof(ActivitiesHolder));
-                if (Apsim.ChildrenRecursively(ah, typeof(PastureActivityManage)).Count() != 0)
+                var ah = this.FindInScope<ActivitiesHolder>();
+                if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
                     Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until mustered and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
                 }
@@ -126,6 +126,7 @@ namespace Models.CLEM.Activities
 
                     if (readyToWean)
                     {
+                        this.Status = ActivityStatus.Success;
                         string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;

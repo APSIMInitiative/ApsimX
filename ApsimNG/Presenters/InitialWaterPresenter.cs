@@ -1,13 +1,8 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="InitialWaterPresenter.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using Interfaces;
-    using Models.Graph;
+    using Models;
     using Models.Soils;
     using Commands;
     using System.Globalization;

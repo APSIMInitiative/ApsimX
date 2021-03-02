@@ -13,7 +13,6 @@
       "Cattle": null,
       "PaddockList": [
         {
-          "$type": "Models.GrazPlan.PaddockInit, Models",
           "forages": null,
           "name": null,
           "area": 1,

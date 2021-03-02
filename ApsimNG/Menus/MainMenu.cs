@@ -1,9 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MainMenu.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-// -----------------------------------------------------------------------
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
     using System;
     using System.Diagnostics;
@@ -75,6 +70,7 @@ namespace UserInterface.Presenters
             try
             {
                 this.explorerPresenter.CommandHistory.Undo();
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -93,6 +89,7 @@ namespace UserInterface.Presenters
             try
             {
                 explorerPresenter.CommandHistory.Redo();
+                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {

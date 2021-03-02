@@ -84,13 +84,20 @@ namespace Models.CLEM.Activities
                     List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList();
 
                     // get dry breeders from females
-                    foreach (RuminantFemale female in herd.Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth && a.PreviousConceptionRate >= MinimumConceptionBeforeSell && a.AgeAtLastBirth > 0))
+                    foreach (RuminantFemale female in herd.Where(a => a.Age - a.AgeAtLastBirth >= MonthsSinceBirth && a.PreviousConceptionRate <= MinimumConceptionBeforeSell && a.AgeAtLastBirth > 0))
                     {
-                        if (ZoneCLEM.RandomGenerator.NextDouble() <= ProportionToRemove * labourLimiter)
+                        if (RandomNumberGenerator.Generator.NextDouble() <= ProportionToRemove * labourLimiter)
                         {
                             // flag female ready to transport.
                             female.SaleFlag = HerdChangeReason.DryBreederSale;
-                            Status = ActivityStatus.Success;
+                            if (ProportionToRemove * labourLimiter >= 1)
+                            {
+                                Status = ActivityStatus.Success;
+                            }
+                            else
+                            {
+                                Status = ActivityStatus.Partial;
+                            }
                         }
                     }
                 }

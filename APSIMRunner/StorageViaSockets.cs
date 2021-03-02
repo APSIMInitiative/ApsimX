@@ -10,10 +10,15 @@
     using System.IO;
     using System.Linq;
 
+    [Serializable]
     class StorageViaSockets : Model, IDataStore, IStorageWriter
     {
         public List<ReportData> reportDataThatNeedsToBeWritten = new List<ReportData>();
         public List<DataTable> dataTablesThatNeedToBeWritten = new List<DataTable>();
+
+        public StorageViaSockets()
+        {
+        }
 
         public StorageViaSockets(string filename)
         {
@@ -38,6 +43,7 @@
 
         public IStorageWriter Writer { get { return this; } }
 
+        public List<string> TablesModified { get; set; }
 
         public void Empty()
         {
@@ -115,6 +121,11 @@
         }
 
         public void DeleteTable(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCheckpointShowGraphs(string name, bool showGraphs)
         {
             throw new NotImplementedException();
         }

@@ -49,11 +49,14 @@
         [Units("%")]
         public double[] ParticleSizeSilt { get; set; }
 
-        // <summary>Particle size clay.</summary>
-        //[Summary]
-        //[Description("Rocks")]
-        //[Units("%")]
-        //public double[] Rocks { get; set; }
+        /// <summary>Particle size clay.</summary>
+        [Summary]
+        [Description("Rocks")]
+        [Units("%")]
+        public double[] Rocks { get; set; }
+
+        /// <summary>Texture.</summary>
+        public string[] Texture { get; set; }
 
         /// <summary>Gets or sets the bd.</summary>
         [Summary]
@@ -114,5 +117,21 @@
         
         /// <summary>Gets or sets the ks metadata.</summary>
         public string[] KSMetadata { get; set; }
+
+        /// <summary>Gets or sets the rocks metadata.</summary>
+        public string[] RocksMetadata { get; set; }
+
+        /// <summary>Gets or sets the texture metadata.</summary>
+        public string[] TextureMetadata { get; set; }
+
+        /// <summary>Particle size sand metadata.</summary>
+        public string[] ParticleSizeSandMetadata { get; set; }
+
+        /// <summary>Particle size silt metadata.</summary>
+        public string[] ParticleSizeSiltMetadata { get; set; }
+
+        /// <summary>Particle size clay metadata.</summary>
+        public string[] ParticleSizeClayMetadata { get; set; }
+
     }
 }

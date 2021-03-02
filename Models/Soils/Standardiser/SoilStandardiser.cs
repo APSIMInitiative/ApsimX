@@ -11,6 +11,7 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
+            soil.FindChildren();
             Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);
@@ -23,7 +24,7 @@
         /// <param name="soil">The soil.</param>
         private static void MergeSamplesIntoOne(Soil soil)
         {
-            var samples = Apsim.Children(soil, typeof(Sample)).Cast<Sample>().ToArray();
+            var samples = soil.FindAllChildren<Sample>().Cast<Sample>().ToArray();
             for (int i = 1; i < samples.Length; i++)
             {
                 if (MathUtilities.ValuesInArray(samples[i].SW))
@@ -72,9 +73,9 @@
             initial.Name = "Initial";
 
             if (analysis.NO3N != null)
-                initial.NO3N = soil.ppm2kgha(analysis.NO3N);
+                initial.NO3 = soil.ppm2kgha(analysis.NO3N);
             if (analysis.NH4N != null)
-                initial.NH4N = soil.ppm2kgha(analysis.NH4N);
+                initial.NH4 = soil.ppm2kgha(analysis.NH4N);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
             initial.PH = MergeArrays(initial.PH, analysis.PH);
@@ -119,10 +120,10 @@
         /// <param name="soil">The soil.</param>
         private static void RemoveInitialWater(Soil soil)
         {
-            var initialWater = Apsim.Child(soil, typeof(InitialWater)) as InitialWater;
+            var initialWater = soil.FindChild<InitialWater>();
             if (initialWater != null)
             {
-                var sample = Apsim.Child(soil, typeof(Sample)) as Sample;
+                var sample = soil.FindChild<Sample>();
                 if (sample == null)
                 {
                     sample = new Sample();

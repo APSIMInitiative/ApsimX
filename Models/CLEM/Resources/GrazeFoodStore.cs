@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;  //enumerator
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models.Core;
 using Models.CLEM.Reporting;
@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current state of this resource.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public List<GrazeFoodStoreType> Items;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         {
             Items = new List<GrazeFoodStoreType>();
 
-            List<IModel> childNodes = Apsim.Children(this, typeof(IModel));
+            IEnumerable<IModel> childNodes = FindAllChildren<IModel>();
 
             foreach (IModel childModel in childNodes)
             {
@@ -67,12 +67,12 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            foreach (GrazeFoodStoreType childModel in Apsim.Children(this, typeof(GrazeFoodStoreType)))
+            foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
             }
-            foreach (CommonLandFoodStoreType childModel in Apsim.Children(this, typeof(CommonLandFoodStoreType)))
+            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
             {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
             }
@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last ecological indicators received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
         #endregion

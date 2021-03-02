@@ -25,7 +25,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function which reports progress to the user.</param>
-        Task<List<JobDetails>> ListJobsAsync(CancellationToken ct, Action<double> ShowProgress);
+        void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJob);
 
         /// <summary>
         /// Halt the execution of a job.

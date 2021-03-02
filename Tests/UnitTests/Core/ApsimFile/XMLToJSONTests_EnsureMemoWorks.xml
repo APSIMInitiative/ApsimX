@@ -4,9 +4,7 @@
   <Memo>
     <Name>TitlePage</Name>
 f    <MemoText>
-      <![CDATA[# The APSIM Wheat Model
-
-_Brown, H.E., Huth, N.I. and Holzworth, D.P._]]>
+      <![CDATA[# The APSIM Wheat Model]]>
     </MemoText>
   </Memo>
 </Simulations>

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.Graph
+namespace Models
 {
     /// <summary>
     /// Represents a panel of graphs which has more flexibility than the
@@ -22,7 +22,7 @@ namespace Models.Graph
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class GraphPanel : Model, IPostSimulationTool
+    public class GraphPanel : Model, IPostSimulationTool, ICustomDocumentation
     {
         /// <summary>
         /// When set to anything other than default, changes the legend
@@ -114,7 +114,7 @@ namespace Models.Graph
         /// </summary>
         public override void OnCreated()
         {
-            if (Apsim.Child(this, typeof(Manager)) == null)
+            if (this.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();
                 script.Name = "Config";
@@ -132,6 +132,35 @@ namespace Models.Graph
         {
             Cache.Clear();
         }
+
+        /// <summary>
+        /// Document the graph panel.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="headingLevel"></param>
+        /// <param name="indent"></param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            
+        }
+
+        /// <summary>
+        /// Hide individual graph titles?
+        /// </summary>
+        [Description("Hide individual graph titles?")]
+        public bool HideTitles { get; set; }
+
+        /// <summary>
+        /// Font Size.
+        /// </summary>
+        [Description("Font Size")]
+        public double FontSize { get; set; } = 14;
+
+        /// <summary>
+        /// Marker Size. Defaults to MarkerSizeType.Normal.
+        /// </summary>
+        [Description("Marker Size")]
+        public MarkerSizeType MarkerSize { get; set; }
 
         /// <summary>
         /// Use same x-axis scales for all graphs?
@@ -179,15 +208,26 @@ namespace Models.Graph
         {
             get
             {
-                Manager manager = Apsim.Child(this, typeof(Manager)) as Manager;
+                Manager manager = this.FindChild<Manager>();
                 return manager?.Children?.FirstOrDefault() as IGraphPanelScript;
             }
         }
 
         /// <summary>
+        /// The cache can be huge so it cannot be de/serialized. Need to have
+        /// field + property combo because we need the [NonSerialized]
+        /// attribute, which is only legal on a field. If we just had a
+        /// property, the backing field would be serialized because it wouldn't
+        /// have a [NonSerialized] attribute.
+        /// </summary>
+        [JsonIgnore]
+        [NonSerialized]
+        private Dictionary<string, Dictionary<int, List<SeriesDefinition>>> cache = new Dictionary<string, Dictionary<int, List<SeriesDefinition>>>();
+
+        /// <summary>
         /// Cached graph data.
         /// </summary>
         [JsonIgnore]
-        public Dictionary<string, Dictionary<int, List<SeriesDefinition>>> Cache { get; set; } = new Dictionary<string, Dictionary<int, List<SeriesDefinition>>>();
+        public Dictionary<string, Dictionary<int, List<SeriesDefinition>>> Cache { get { return cache; } set { cache = value; } }
     }
 }

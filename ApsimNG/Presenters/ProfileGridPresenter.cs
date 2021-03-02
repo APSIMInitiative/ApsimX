@@ -62,6 +62,15 @@ namespace UserInterface.Presenters
         {
             try
             {
+                try
+                {
+                    RemoveEmptyRows();
+                }
+                catch (Exception err)
+                {
+                    presenter.MainPresenter.ShowError(err);
+                }
+
                 base.Detach();
                 grid.CellsChanged -= OnCellsChanged;
                 presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -126,9 +135,9 @@ namespace UserInterface.Presenters
                     // bets are off. Otherwise, we find an ancestor which is a simulation
                     // generator (experiment, simulation, morris, etc.) and search for
                     // a physical node somewhere under the simulation generator.
-                    IModel parent = Apsim.Parent(model, typeof(ISimulationDescriptionGenerator));
+                    IModel parent = model.FindAncestor<ISimulationDescriptionGenerator>() as IModel;
                     if (parent != null)
-                        water = Apsim.ChildrenRecursively(parent, typeof(Physical)).FirstOrDefault() as Physical;
+                        water = parent.FindAllDescendants<Physical>().FirstOrDefault() as Physical;
                 }
                 if (water != null)
                 {
@@ -146,7 +155,7 @@ namespace UserInterface.Presenters
             }
 
             // Get properties of all child models of type SoilCrop.
-            foreach (SoilCrop crop in Apsim.Children(model, typeof(SoilCrop)))
+            foreach (SoilCrop crop in model.FindAllChildren<SoilCrop>())
                 properties.AddRange(FindAllProperties(crop));
 
             return properties;
@@ -243,7 +252,7 @@ namespace UserInterface.Presenters
                     continue;
 
                 SoilCrop crop = property.Object as SoilCrop;
-                int index = Apsim.Children(crop.Parent, typeof(SoilCrop)).IndexOf(crop);
+                int index = crop.Parent.FindAllChildren<SoilCrop>().ToList().IndexOf(crop);
                 Color foreground = ColourUtilities.ChooseColour(index);
                 if (property.IsReadOnly)
                     foreground = Color.Red;
@@ -352,14 +361,7 @@ namespace UserInterface.Presenters
         private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
-            try
-            {
-                presenter.CommandHistory.Add(changedProperty);
-            }
-            catch (Exception err)
-            {
-                presenter.MainPresenter.ShowError(err);
-            }
+            presenter.CommandHistory.Add(changedProperty);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
         }
 
@@ -460,56 +462,6 @@ namespace UserInterface.Presenters
         {
             List<ChangeProperty.Property> changes = new List<ChangeProperty.Property>();
 
-            // If all cells are being set to null, and the number of changed
-            // cells is a multiple of the number of properties, we could be
-            // deleting an entire row (or rows). In this case, we need
-            // different logic, to resize all of the arrays.
-            bool deletedRow = false;
-            if (args.ChangedCells.All(c => c.NewValue == null) &&
-                args.ChangedCells.Count % properties.Where(p => !p.IsReadOnly).Count() == 0)
-            {
-                // Get list of distinct rows which have been changed.
-                int[] changedRows = args.ChangedCells.Select(c => c.RowIndex).Distinct().ToArray();
-                List<int> rowsToDelete = new List<int>();
-                foreach (int row in changedRows)
-                {
-                    // Get columns which have been changed in this row.
-                    var changesInRow = args.ChangedCells.Where(c => c.RowIndex == row);
-                    int[] columns = changesInRow.Select(c => c.ColIndex).ToArray();
-
-                    // If all non-readonly properties have been set to null in this row,
-                    // delete the row.
-                    bool deleteRow = true;
-                    for (int i = 0; i < properties.Count; i++)
-                        if (!properties[i].IsReadOnly && !columns.Contains(i))
-                            deleteRow = false;
-
-                    if (deleteRow)
-                    {
-                        // We can't delete the row now - what if the user has deleted
-                        // multiple rows at once (this is possible via shift-clicking).
-                        // We need one change property command per property. Otherwise,
-                        // only the last command will have an effect.
-                        deletedRow = true;
-                        rowsToDelete.Add(row);
-                    }
-                }
-
-                if (rowsToDelete.Count > 0)
-                {
-                    // This assumes that only consecutive rows can be deleted together.
-                    // ie the user can shift click multiple rows and hit delete to delete
-                    // more than 1 row. They cannot ctrl click to select non-adjacent rows.
-                    int from = rowsToDelete.Min();
-                    int to = rowsToDelete.Max();
-                    changes.AddRange(DeleteRows(from, to));
-
-                    // Remove cells in deleted rows from list of changed cells,
-                    // as we've already dealt with them.
-                    args.ChangedCells = args.ChangedCells.Where(c => !rowsToDelete.Contains(c.RowIndex)).ToList();
-                }
-            }
-
             foreach (var column in args.ChangedCells.GroupBy(c => c.ColIndex))
             {
                 VariableProperty property = properties[column.Key];
@@ -533,11 +485,16 @@ namespace UserInterface.Presenters
                     if (change.NewValue == change.OldValue)
                         continue; // silently fail
 
+                    if (change.RowIndex >= newArray.Length && string.IsNullOrEmpty(change.NewValue))
+                        continue;
+
                     // If the user has entered data into a new row, we will need to
                     // resize all of the array properties.
                     changes.AddRange(CheckArrayLengths(change));
 
-                    object element = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), change.NewValue);
+                    // Need to convert user input to a string using the current
+                    // culture.
+                    object element = ReflectionUtilities.StringToObject(property.DataType.GetElementType(), change.NewValue, CultureInfo.CurrentCulture);
                     if (newArray.Length <= change.RowIndex)
                         Resize(ref newArray, change.RowIndex + 1);
 
@@ -561,17 +518,92 @@ namespace UserInterface.Presenters
 
             // If the user deleted an entire row, do a full refresh of the
             // grid. Otherwise, only refresh read-only columns (PAWC).
-            if (deletedRow)
+            if (RemoveEmptyRows())
                 PopulateGrid(model);
             else
                 UpdateReadOnlyProperties();
         }
 
         /// <summary>
-        /// Deletes a row of data from all properties.
-        /// Returns a list of change property objects.
+        /// Remove all empty rows - that is, resize all property arrays
+        /// to remove elements where each array has NaN at a given
+        /// index.
+        /// 
+        /// E.g. if each array has NaN at the 3rd and 4th indices,
+        /// the arrays will all be resized to remove these elements.
         /// </summary>
-        /// <param name="row">Index of the row to be deleted.</param>
+        /// <returns></returns>
+        private bool RemoveEmptyRows()
+        {
+            int numRows = properties.Max(p => (p.Value as Array)?.Length ?? 0);
+
+            // First, check which rows need to be deleted.
+            List<int> rowsToDelete = new List<int>();
+            for (int i = 0; i < numRows; i++)
+                if (IsEmptyRow(i))
+                    rowsToDelete.Add(i);
+
+            if (rowsToDelete == null || rowsToDelete.Count < 1)
+                return false;
+
+            // Ideally, the entire change would be undoable in a single
+            // click. Unfortunately, this is not possible if the rows
+            // to be deleted are not all contiguous - e.g. if we want
+            // to delete rows 3, 4, 6, and 7. We can't just delete rows
+            // 3-7 because we want to keep row 5. We also can't delete
+            // rows 3-4, then 6-7 because the array indices will all
+            // change after we delete rows 3 and 4.
+            int from = rowsToDelete[0];
+            int numDeleted = 0;
+            for (int i = 0; i < rowsToDelete.Count; i++)
+            {
+                // Delete this batch of rows iff we've reached the last
+                // row to be deleted or there's a gap before the next
+                // row (ie next row to be deleted is not the row
+                // immediately below this one).
+                if (i == rowsToDelete.Count - 1 || rowsToDelete[i] + 1 != rowsToDelete[i + 1])
+                {
+                    // Need to subtract number of rows already deleted
+                    // from the to/from indices. E.g. if we've deleted
+                    // rows 3-4, the rows which were originally at
+                    // indices 6-7 will now be at indices 4-5.
+                    int to = rowsToDelete[i];
+                    SetPropertyValue(new ChangeProperty(DeleteRows(from - numDeleted, to - numDeleted)));
+                    numDeleted += to - from;
+                    if (i < rowsToDelete.Count - 1)
+                        from = rowsToDelete[i + 1];
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true iff a given row is empty.
+        /// This ignores read-only columns - e.g. if the row is
+        /// empty except for a read-only column, then the row
+        /// is still considered empty.
+        /// </summary>
+        /// <param name="row">The row to check.</param>
+        private bool IsEmptyRow(int row)
+        {
+            // Iterate over columns (each property is shown in its own column).
+            for (int j = 0; j < properties.Count; j++)
+                if (!properties[j].IsReadOnly && !string.IsNullOrEmpty(GetCellValue(row, j)?.ToString()))
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Deletes a row of data from all properties.
+        /// Note that this method does not actually perform the
+        /// deletion, but instead returns a list of change property
+        /// objects which may be passed into the ChangeProperty
+        /// constructor and executed to be undoable in a single click.
+        /// </summary>
+        /// <param name="from">Index of the first row to be deleted.</param>
+        /// <param name="to">Index of the last row to be deleted.</param>
         private List<ChangeProperty.Property> DeleteRows(int from, int to)
         {
             if (from > to)
@@ -609,7 +641,7 @@ namespace UserInterface.Presenters
         /// <param name="changedModel">The model that has changed</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == model)
+            if (changedModel == model || (changedModel is SoilCrop && model.Children.Contains(changedModel)))
                 PopulateGrid(model);
         }
     }

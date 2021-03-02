@@ -1,15 +1,8 @@
-// -----------------------------------------------------------------------
-// <copyright file="FTPClient.cs" company="APSIM Initiative">
-//     Copyright (c) APSIM Initiative
-// </copyright>
-//-----------------------------------------------------------------------
 namespace APSIM.Shared.Utilities
-    {
-    using System;
+{
     using System.IO;
-    using System.Collections.Generic;
-    using System.Text;
     using System.Net;
+    using System.Text;
 
     /// <summary>
     /// An FTP client

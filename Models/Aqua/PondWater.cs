@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 
 
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using System.Runtime.Serialization;
 using Models;
+using Models.Climate;
 using Models.Core;
 using APSIM.Shared.Utilities;
 
@@ -111,7 +112,7 @@ namespace Models.Aqua
         /// Evaporation from the Pond (mm)
         /// </summary>
         [Units("(mm)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondEvap
             {
             get { return pondEvap; }
@@ -121,7 +122,7 @@ namespace Models.Aqua
         /// Current Depth Water in the Pond (m)
         /// </summary>
         [Units("(m)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondDepth 
             {
             get { return pondVolume / SurfaceArea; } //TODO: watch out for a divide by zero exception. 
@@ -132,7 +133,7 @@ namespace Models.Aqua
         /// Current Properties of any given volume/amount of water in the Pond.
         /// Used when mixing water together or evaporating water.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public WaterProperties PondProps
             {
             get 
@@ -148,7 +149,7 @@ namespace Models.Aqua
         /// Temperature of the water in the Pond (oC)
         /// </summary>
         [Units("(oC)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PondTemp 
             { 
             get { return pondProps.Temperature; } 
@@ -158,7 +159,7 @@ namespace Models.Aqua
         /// Salinity of the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double Salinity
             {
             get { return pondProps.Salinity; }
@@ -169,7 +170,7 @@ namespace Models.Aqua
         /// PH of the water in the Pond 
         /// </summary>
         [Units("()")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double PH
             {
             get { return pondProps.PH; }
@@ -180,7 +181,7 @@ namespace Models.Aqua
         /// Nitrogen in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double N
             {
             get { return pondProps.N; }
@@ -190,7 +191,7 @@ namespace Models.Aqua
         /// Phosphorus in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double P
             {
             get { return pondProps.P; }
@@ -200,7 +201,7 @@ namespace Models.Aqua
         /// Total Suspended Soild in the water in the Pond (kg/m^3)
         /// </summary>
         [Units("(kg/m^3)")]
-        [XmlIgnore]
+        [JsonIgnore]
         public double TSS
             {
             get { return pondProps.TSS; }

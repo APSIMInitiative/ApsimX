@@ -14,6 +14,13 @@
         private IEnumerable<int> simIds;
         private int checkId;
 
+        public string Name { get { return "Delete rows"; } }
+
+        /// <summary>
+        /// Returns the job's progress as a real number in range [0, 1].
+        /// </summary>
+        public double Progress { get { return 0; } }
+
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database to cleanup.</param>
         /// <param name="tableName">The table to cleanup.</param>

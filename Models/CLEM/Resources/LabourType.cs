@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Xml.Serialization;
+using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -47,7 +47,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age in years.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
 
         private double ageInMonths = 0;
@@ -55,7 +55,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Age in months.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AgeInMonths
         {
             get
@@ -78,7 +78,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Adult equivalent.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AdultEquivalent
         {
             get
@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 if(adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\nAdd a suitable relationship identified with \"AE\" in the component name.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
@@ -116,20 +116,6 @@ namespace Models.CLEM.Resources
                 foreach (LabourDietComponent dietComponent in DietaryComponentList)
                 {
                     value += dietComponent.GetTotal(metric);
-
-                    //double doubleResult = 0;
-                    //if(dietComponent.FoodStore is null)
-                    //{
-                    //    doubleResult = dietComponent.
-                    //}
-
-
-                    //var result = (dietComponent.FoodStore as CLEMResourceTypeBase).ConvertTo(metric, dietComponent.AmountConsumed);
-                    //if (result != null)
-                    //{
-                    //    Double.TryParse(result.ToString(), out doubleResult);
-                    //}
-                    //value += doubleResult;
                 }
             }
             return value;
@@ -170,7 +156,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The amount of feed eaten during the feed to target activity processing.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double FeedToTargetIntake { get; set; }
 
         /// <summary>
@@ -189,37 +175,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The unique id of the last activity request for this labour type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public Guid LastActivityRequestID { get; set; }
 
         /// <summary>
         /// The amount of labour supplied to the last activity for this labour type
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LastActivityRequestAmount { get; set; }
 
         /// <summary>
         /// The number of hours provided to the current activity
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double LastActivityLabour { get; set; }
 
         /// <summary>
         /// Available Labour (in days) in the current month. 
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AvailableDays { get; private set; }
 
         /// <summary>
         /// Link to the current labour availability for this person
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public LabourSpecificationItem LabourAvailability { get; set; }
 
         /// <summary>
         /// A proportion (0-1) to limit available labour. This may be from financial shortfall for hired labour.
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public double AvailabilityLimiter { get; set; }
 
         /// <summary>
@@ -387,7 +373,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Last transaction received
         /// </summary>
-        [XmlIgnore]
+        [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>

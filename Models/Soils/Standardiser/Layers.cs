@@ -15,20 +15,20 @@
         /// <returns>A standardised soil.</returns>
         public static void Standardise(Soil soil)
         {
-            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
-            var analysisNode = Apsim.Child(soil, typeof(Chemical)) as Chemical;
-            var layerStructure = Apsim.Child(soil, typeof(LayerStructure)) as LayerStructure;
+            var waterNode = soil.FindChild<Physical>();
+            var analysisNode = soil.FindChild<Chemical>();
+            var layerStructure = soil.FindChild<LayerStructure>();
 
             // Determine the target layer structure.
             var targetThickness = soil.Thickness;
             if (layerStructure != null)
                 targetThickness = layerStructure.Thickness;
 
-            foreach (Sample sample in Apsim.Children(soil, typeof(Sample)))
+            foreach (Sample sample in soil.FindAllChildren<Sample>())
                 SetSampleThickness(sample, targetThickness, soil);
 
-            if (soil.SoilWater != null)
-                SetSoilWaterThickness(soil.SoilWater as SoilWater, targetThickness);
+            if (soil.SoilWater is WaterModel.WaterBalance)
+                SetSoilWaterThickness(soil.SoilWater as WaterModel.WaterBalance, targetThickness);
             if (soil.Weirdo != null)
                 soil.Weirdo.MapVariables(targetThickness);
             SetAnalysisThickness(analysisNode, targetThickness);
@@ -92,7 +92,7 @@
         /// <summary>Sets the soil water thickness.</summary>
         /// <param name="soilWater">The soil water.</param>
         /// <param name="thickness">Thickness to change soil water to.</param>
-        private static void SetSoilWaterThickness(SoilWater soilWater, double[] thickness)
+        private static void SetSoilWaterThickness(WaterModel.WaterBalance soilWater, double[] thickness)
         {
             if (soilWater != null)
             {
@@ -103,7 +103,8 @@
 
                     soilWater.Thickness = thickness;
                 }
-
+                if (soilWater.SWCON == null)
+                    soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);
                 MathUtilities.ReplaceMissingValues(soilWater.SWCON, 0.0);
             }
         }
@@ -165,10 +166,10 @@
             {
                 if (sample.SW != null)
                     sample.SW = MapSW(sample.SW, sample.Thickness, thickness, soil);
-                if (sample.NH4N != null)
-                    sample.NH4N = MapConcentration(sample.NH4N, sample.Thickness, thickness, 0.2);
-                if (sample.NO3N != null)
-                    sample.NO3N = MapConcentration(sample.NO3N, sample.Thickness, thickness, 1.0);
+                if (sample.NH4 != null)
+                    sample.NH4 = MapConcentration(sample.NH4, sample.Thickness, thickness, 0.2);
+                if (sample.NO3 != null)
+                    sample.NO3 = MapConcentration(sample.NO3, sample.Thickness, thickness, 1.0);
 
                 // The elements below will be overlaid over other arrays of values so we want 
                 // to have missing values (double.NaN) used at the bottom of the profile.
@@ -235,7 +236,7 @@
                 }
 
                 values.Add(defaultValueForBelowProfile);
-                thickness.Add(3000);
+                thickness.Add(30000);
                 double[] massValues = MathUtilities.Multiply(values.ToArray(), thickness.ToArray());
 
                 double[] newValues = MapMass(massValues, thickness.ToArray(), toThickness, allowMissingValues);
@@ -295,7 +296,7 @@
             if (fromValues == null || fromThickness == null)
                 return null;
 
-            var waterNode = Apsim.Child(soil, typeof(Physical)) as Physical;
+            var waterNode = soil.FindChild<Physical>();
 
             // convert from values to a mass basis with a dummy bottom layer.
             List<double> values = new List<double>();

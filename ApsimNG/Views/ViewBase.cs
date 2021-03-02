@@ -10,9 +10,11 @@
     public class ViewBase
     {
         /// <summary>A builder instance for extracting controls from resource.</summary>
-        private readonly Builder builder;
+        private Builder builder;
 
         private string gladeString;
+
+        private object lockObject = new object();
 
         /// <summary>
         /// A reference to the main view.
@@ -154,6 +156,15 @@
         public ViewBase(ViewBase owner, string gladeResourceName)
         {
             this.owner = owner;
+            SetGladeResource(gladeResourceName);
+        }
+
+        /// <summary>
+        /// Set the GLADE resource to use.
+        /// </summary>
+        /// <param name="gladeResourceName">The GLADE resource name.</param>
+        public void SetGladeResource(string gladeResourceName)
+        {
             builder = GetBuilderFromResource(gladeResourceName);
             SetMainWidget();
         }
@@ -172,6 +183,22 @@
         }
 
         /// <summary>
+        /// Invoke an event handler on the main application thread.
+        /// </summary>
+        /// <param name="handler">The handler to invoke.</param>
+        public void InvokeOnMainThread(EventHandler handler)
+        {
+            if (handler != null)
+            {
+                // The invoke below exits immediately before the handler has completed
+                // running. This can be problem if InvokeOnMainThread is called again
+                // before the previous call has finished running.
+                lock (lockObject)
+                    Application.Invoke(handler);
+            }
+        }
+
+        /// <summary>
         /// A method used when a view is wrapping a gtk control.
         /// </summary>
         /// <param name="ownerView">The owning view.</param>
@@ -180,5 +207,6 @@
         {
             owner = ownerView;
         }
+
     }
 }

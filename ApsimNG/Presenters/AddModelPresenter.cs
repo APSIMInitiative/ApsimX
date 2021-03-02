@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Presenters
 {
+    using APSIM.Shared.Utilities;
     using global::UserInterface.Commands;
     using Interfaces;
     using Models.Core;
@@ -64,7 +65,7 @@
             var rootNode = new TreeViewNode()
             {
                 Name = "Models",
-                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Simulations), null)
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Simulations), null, null)
             };
 
             foreach (var modelThatCanBeAdded in models)
@@ -77,10 +78,29 @@
 
         private static void AddTreeNodeIfDoesntExist(Apsim.ModelDescription modelThatCanBeAdded, TreeViewNode parent)
         {
-            var namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
+            List<string> namespaceWords;
 
             // Remove the first namespace word ('Models')
-            namespaceWords.Remove(namespaceWords.First());
+            bool resourceIsInSubDirectory = false;
+            if (modelThatCanBeAdded.ResourceString != null)
+            {
+                // Need to determine if the resource name is in a sub directory of Models.Resources e.g. Models.Resources.GrazPlan.Cattle.Angus.json
+                var subDirectory = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "").Replace(".json", "");
+                resourceIsInSubDirectory = subDirectory.Contains('.');
+            }
+            if (resourceIsInSubDirectory)
+            { 
+                var path = modelThatCanBeAdded.ResourceString.Replace("Models.Resources.", "");
+                namespaceWords = path.Split(".".ToCharArray()).ToList();
+                namespaceWords.Remove(namespaceWords.Last());  // remove the "json" word at the end.
+                namespaceWords.Remove(namespaceWords.Last());  // remove the model name at the end.
+            }
+            else
+            {
+                namespaceWords = modelThatCanBeAdded.ModelType.Namespace.Split(".".ToCharArray()).ToList();
+                namespaceWords.Remove(namespaceWords.First());
+                modelThatCanBeAdded.ResourceString = modelThatCanBeAdded.ModelName;
+            }
 
             foreach (var namespaceWord in namespaceWords.Where(word => word != "Models"))
             {
@@ -90,7 +110,7 @@
                     node = new TreeViewNode()
                     {
                         Name = namespaceWord,
-                        ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Folder), null)
+                        ResourceNameForImage = ExplorerPresenter.GetIconResourceName(typeof(Folder), null, null)
                     };
                     parent.Children.Add(node);
                 }
@@ -101,7 +121,7 @@
             var description = new TreeViewNode()
             {
                 Name = modelThatCanBeAdded.ModelName,
-                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.ModelType, modelThatCanBeAdded.ModelName)
+                ResourceNameForImage = ExplorerPresenter.GetIconResourceName(modelThatCanBeAdded.ModelType, modelThatCanBeAdded.ModelName, modelThatCanBeAdded.ResourceString)
             };
             parent.Children.Add(description);
         }
@@ -115,34 +135,58 @@
             filterEdit.Changed -= OnFilterChanged;
         }
 
+        private Apsim.ModelDescription GetModelDescription(string namePath)
+        {
+            Type selectedType = typeof(IModel).Assembly.GetType(tree.SelectedNode);
+            if (selectedType != null)
+                return allowableChildModels.FirstOrDefault(m => m.ModelType == selectedType);
+
+            // Try a resource model (e.g. wheat).
+            string modelName = tree.SelectedNode.Split('.').Last();
+            Apsim.ModelDescription[] resourceModels = allowableChildModels.Where(c => !string.IsNullOrEmpty(c.ResourceString)).ToArray();
+            return resourceModels.FirstOrDefault(m => m.ModelName == modelName);
+        }
+
         /// <summary>The user has clicked the add button.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         private void OnAddButtonClicked(object sender, EventArgs e)
         {
-            var namespaceWords = tree.SelectedNode.Split(".".ToCharArray()).ToList();
-            var modelName = namespaceWords.Last();
-
-            var selectedModelType = this.allowableChildModels.FirstOrDefault(m => m.ModelName == modelName);
-            if (selectedModelType != null)
+            try
             {
-                this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                try
-                {
-                    IModel child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
-                    child.Name = modelName;
-                    if (child is ModelCollectionFromResource)
-                        (child as ModelCollectionFromResource).ResourceName = selectedModelType.ModelName;
+                Apsim.ModelDescription selectedModelType = GetModelDescription(tree.SelectedNode);
 
-                    var command = new AddModelCommand(Apsim.FullPath(this.model),
-                                                      child,
-                                                      explorerPresenter);
+                if (selectedModelType != null)
+                {
+                    this.explorerPresenter.MainPresenter.ShowWaitCursor(true);
+
+                    IModel child;
+                    if (!(selectedModelType.ModelType == typeof(ModelCollectionFromResource)) && 
+                        selectedModelType.ResourceString != null &&
+                        selectedModelType.ResourceString.Contains('.'))
+                    {
+                        List<Exception> exceptions;
+                        var contents = ReflectionUtilities.GetResourceAsString(explorerPresenter.ApsimXFile.GetType().Assembly,
+                                                                               selectedModelType.ResourceString);
+                        child = FileFormat.ReadFromString<Model>(contents, out exceptions);
+                        if (child.Children.Count == 1)
+                            child = child.Children[0];
+                    }
+                    else
+                    { 
+                        child = (IModel)Activator.CreateInstance(selectedModelType.ModelType, true);
+                        child.Name = selectedModelType.ModelName;
+                        if (child is ModelCollectionFromResource resource)
+                            resource.ResourceName = selectedModelType.ResourceString;
+                    }
+
+                    var command = new AddModelCommand(this.model.FullPath, child, explorerPresenter);
                     explorerPresenter.CommandHistory.Add(command, true);
                 }
-                finally
-                {
-                    this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
-                }
+            }
+            finally
+            {
+                this.explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
@@ -197,7 +241,7 @@
         /// <param name="e">Event arguments.</param>
         private void OnFilterChanged(object sender, EventArgs e)
         {
-            string filter = filterEdit.Value;
+            string filter = filterEdit.Text;
             PopulateTree(allowableChildModels
                             .Where(m => m.ModelName.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0));
         }
