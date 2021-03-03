@@ -160,32 +160,13 @@
         {
             try
             {
-                RunAPSIMInternal(multiProcessRunner: false);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for a User interface "Run APSIM multi-process (experimental)" action
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Run APSIM multi-process (experimental)",
-                     AppliesTo = new Type[] { typeof(Simulation),
-                                              typeof(Simulations),
-                                              typeof(Experiment),
-                                              typeof(Folder),
-                                              typeof(Morris),
-                                              typeof(APSIM.Shared.JobRunning.IRunnable)},
-                     ShortcutKey = "F6")]
-        public void RunAPSIMMultiProcess(object sender, EventArgs e)
-        {
-            try
-            {
-                RunAPSIMInternal(multiProcessRunner: true);
+                if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
+                {
+                    Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
+                    var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                    this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
+                    this.command.Do();
+                }
             }
             catch (Exception err)
             {
@@ -440,23 +421,6 @@
             }
         }
 
-        /// <summary>Run APSIM.</summary>
-        /// <param name="multiProcessRunner">Use the multi-process runner?</param>
-        private void RunAPSIMInternal(bool multiProcessRunner)
-        {
-            if (!Configuration.Settings.AutoSave || this.explorerPresenter.Save())
-            {
-                Runner.RunTypeEnum typeOfRun = Runner.RunTypeEnum.MultiThreaded;
-                if (multiProcessRunner)
-                    typeOfRun = Runner.RunTypeEnum.MultiProcess;
-
-                Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
-                var runner = new Runner(model, runType:typeOfRun, wait: false);
-                this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
-                this.command.Do();
-            }
-        }
-
         /// <summary>
         /// A run has completed so re-enable the run button.
         /// </summary>
@@ -505,12 +469,15 @@
         {
             try
             {
+#if NETFRAMEWORK
+                object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                                       "ApsimNG.Resources.Glade.DownloadSoilView.glade",
+                                                       new DownloadPresenter());
+#else
                 throw new NotImplementedException();
-                // object model = explorerPresenter.ApsimXFile.FindByPath(explorerPresenter.CurrentNodePath)?.Value;
-                // explorerPresenter.HideRightHandPanel();
-                // explorerPresenter.ShowInRightHandPanel(model,
-                //                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
-                //                                        new DownloadPresenter());
+#endif
             }
             catch (Exception err)
             {
@@ -896,8 +863,7 @@
                     explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
 
                     // Open the document.
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileNameWritten);
+                    ProcessUtilities.ProcessStart(fileNameWritten);
                 }
             }
             catch (Exception err)

@@ -70,6 +70,15 @@ namespace Utility
             return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
         }
 
+        /// <summary>
+        /// Convert from an OxyColor to a System.Drawing.Color.
+        /// </summary>
+        /// <param name="colour">The colour to be converted.</param>
+        internal static Color FromOxy(OxyColor colour)
+        {
+            return Color.FromArgb(colour.R, colour.G, colour.B);
+        }
+
         internal static Cairo.Color ToCairo(Gdk.Color colour)
         {
             return ToCairo(FromGtk(colour));

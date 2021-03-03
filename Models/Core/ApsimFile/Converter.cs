@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 128; } }
+        public static int LatestVersion { get { return 129; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3362,7 +3362,32 @@
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
         }
-	
+
+
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion129(JObject root, string fileName)
+        {
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "EnergyBalance"))
+            {
+                JsonUtilities.RenameChildModel(Root, "FRGRFunction", "FRGRer");
+                JsonUtilities.RenameChildModel(Root, "GAIFunction", "GreenAreaIndex");
+                JsonUtilities.RenameChildModel(Root, "ExtinctionCoefficientFunction", "GreenExtinctionCoefficient");
+                JsonUtilities.RenameChildModel(Root, "ExtinctionCoefficientDeadFunction", "DeadExtinctionCoefficient");
+                JsonUtilities.RenameChildModel(Root, "HeightFunction", "Tallness");
+                JsonUtilities.RenameChildModel(Root, "DepthFunction", "Deepness");
+                JsonUtilities.RenameChildModel(Root, "WidthFunction", "Wideness");
+                JsonUtilities.RenameChildModel(Root, "GAIDeadFunction", "DeadAreaIndex");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "Wideness", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadExtinctionCoefficient", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenExtinctionCoefficient", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenAreaIndex", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadAreaIndex", "0");
+            }
+        }
 
         /// <summary>
         /// Refactor LifeCycle model

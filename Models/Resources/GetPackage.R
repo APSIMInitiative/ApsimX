@@ -4,7 +4,8 @@
 #' @param pkgpath Path where package is to be installed.
 #' @return Nothing.
 getPackage <- function(pkg, pkgpath) {
-    if (!pkg %in% rownames(installed.packages(lib.loc = pkgpath))) {
+    print(pkg)
+    if (!pkg %in% rownames(installed.packages())) {
         if (!dir.exists(pkgpath)) {
             dir.create(pkgpath)
         }
