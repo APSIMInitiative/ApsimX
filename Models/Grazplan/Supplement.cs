@@ -534,6 +534,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The name.
         /// </value>
+        [Units("-")]
         public string Name { get; set; }
 
         /// <summary>
@@ -542,6 +543,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The description.
         /// </value>
+        [Units("kg")]
         public double Stored { get; set; }
     }
 

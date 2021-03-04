@@ -39,6 +39,19 @@ namespace UserInterface.Views
         private const string modelMime = "application/x-model-component";
         private Timer timer = new Timer();
 
+        /// <summary>
+        /// Keep track of whether the accelerator group is attached to the toplevel window.
+        /// </summary>
+        /// <remarks>
+        /// Normally we just need to remove the accelerators when the treeview loses focus,
+        /// and re-add them when it regains focus. However, it's possible for the treeview
+        /// to gain focus multiple times without losing it in-between, which leads to
+        /// gtk warnings. Typically this occurs after using the search functionality.
+        /// The solution is to use this variable to keep track of whether the accelerators
+        /// are already attached to the window, so that we only add them when necessary.
+        /// </remarks>
+        private bool acceleratorsAreAttached;
+
         // If you add a new item to the tree model that is not at the end (e.g. add a bool as the third item), a lot of things will break.
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
 
@@ -885,8 +898,11 @@ namespace UserInterface.Views
         {
             try
             {
-                if (ContextMenu != null)
+                if (ContextMenu != null && acceleratorsAreAttached)
+                {
                     (treeview1.Toplevel as Gtk.Window).RemoveAccelGroup(ContextMenu.Accelerators);
+                    acceleratorsAreAttached = false;
+                }
             }
             catch (Exception err)
             {
@@ -903,8 +919,12 @@ namespace UserInterface.Views
         {
             try
             {
-                if (ContextMenu != null)
+                // window is already in the list of acceleratables. Need to remove accelerators before we add them!
+                if (ContextMenu != null && !acceleratorsAreAttached)
+                {
                     (treeview1.Toplevel as Gtk.Window).AddAccelGroup(ContextMenu.Accelerators);
+                    acceleratorsAreAttached = true;
+                }
             }
             catch (Exception err)
             {
