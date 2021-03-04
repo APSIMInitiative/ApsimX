@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#
+# This is the main script which handles jenkins builds of ApsimX.
+# This script will run a script specified by first argument inside
+# an apsimng-complete docker image. The script must be located
+# inside the container-scripts directory.
+#
+# Additionally, the PULL_ID variable must be set before running
+# this script.
+set -e
+
+# Sometimes PULL_ID variable is not set by jenkins
+# and we need to use ghprbPullId. This seems to occur
+# after a manual retest.
+test -z ${PULL_ID:+x} && PULL_ID=$ghprbPullId
+test -z ${PULL_ID:+x} && ( echo "PULL_ID not set"; exit 1 )
+echo PULL_ID=$PULL_ID
+
+test -z ${COMMIT_AUTHOR:+x} && COMMIT_AUTHOR=$ghprbActualCommitAuthor
+
+if [ $# -lt 1 ];
+then
+    echo $0: Expected at least 1 argument - should be a command to run inside docker container
+    exit 1
+fi
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+container=apsiminitiative/apsimng-complete
+docker pull -q $container
+docker run --rm --entrypoint=$1 -v "$DIR/container-scripts":/jenkins -w /jenkins -e PULL_ID -e COMMIT_AUTHOR -e GRAPEVINE_PASSWORD -e SOYBEAN_PASSWORD -e NPI_PASSWORD -e TESTDB -e NEWDB -e OLDDB -e CollectorURL $container "${@:2}"

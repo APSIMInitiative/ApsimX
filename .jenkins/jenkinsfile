@@ -1,0 +1,34 @@
+pipeline {
+    agent none
+    stages {
+        stage('main') {
+            parallel {
+                stage('Validation') {
+                    agent {
+                        label "linux && vm && large"
+                    }
+                    environment {
+                        GRAPEVINE_PASSWORD = credentials('grapevine-validation-password')
+                        SOYBEAN_PASSWORD = credentials('soybean-validation-password')
+                        NPI_PASSWORD = credentials('npi-archive-password')
+                        TESTDB = credentials('TESTDB')
+                        NEWDB = credentials('NEWDB')
+                        OLDDB = credentials('OLDDB')
+                        CollectorURL = credentials('CollectorURL')
+                    }
+                    steps {
+                        sh './.jenkins/jenkins-main ./run-validation-tests'
+                    }
+                }
+                stage('Unit Tests') {
+                    agent {
+                        label "linux && vm && small"
+                    }
+                    steps {
+                        sh './.jenkins/jenkins-main ./run-unit-tests'
+                    }
+                }
+            }
+        }
+    }
+}

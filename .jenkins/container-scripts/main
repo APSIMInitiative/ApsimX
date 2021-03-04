@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#
+# This is run inside a docker container and handles tasks
+# common to all build stages:
+# - Clones apsim
+# - Builds apsim
+#
+# Note that this script does not change the working directory.
+
+set -e
+
+git clone --quiet https://github.com/APSIMInitiative/ApsimX
+
+pushd ApsimX
+FrameworkPathOverride=/usr/lib/mono/4.7.2-api/ dotnet build -v m --nologo -c Release ApsimX.sln
+popd

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e
+
+# Clone and build apsim
+./main
+cd ApsimX
+
+# Run unit tests
+nunit3-console Bin/UnitTests.dll

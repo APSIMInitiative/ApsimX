@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -e
+
+# Clone and build apsim
+./main
+cd ApsimX
+apsimx=$(pwd)
+
+# Extract password-protected datasets.
+grapevine=Prototypes/Grapevine
+soybean=Tests/Validation/Soybean
+wheat=Tests/Validation/Wheat
+unzip -oP $GRAPEVINE_PASSWORD -d $grapevine $grapevine/Observations.zip
+7z -p$SOYBEAN_PASSWORD x $soybean/ObservedFACTS.7z -o$soybean
+7z -p$NPI_PASSWORD x $wheat/NPIValidation.7z -o$wheat
+
+# Run all .apsimx files outside of ./Tests and ./ApsimNG
+find . -not \( -path ./Tests/UnitTests -prune \) -not \( -path ./ApsimNG -prune \)  -name '*.apsimx' -print0 | xargs -0 dotnet NetCoreBin/Models.dll --verbose --run-tests
+
+# Get build info for P/O stats collector
+temp_file=$(mktemp)
+curl -ks https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetPullRequestDetails?pullRequestID=$PULL_ID >$temp_file
+response=$(sed -e 's/<[^>]*>//g' $temp_file)
+rm $temp_file
+arr=(${response//,/ })
+TIMESTAMP=${arr[0]}
+DATE=(${TIMESTAMP//-/ })
+ISSUE_ID=${arr[1]}
+VERSION=$DATE.$ISSUE_ID
+
+test -z ${COMMIT_AUTHOR:+x} && COMMIT_AUTHOR=$(git log -1 --pretty=%an)
+
+# Run P/O stats collector
+cd ..
+git clone https://github.com/APSIMInitiative/APSIM.PerformanceTests APSIM.PerformanceTests
+cd APSIM.PerformanceTests
+git checkout refactor
+collector=APSIM.POStats.Collector
+dotnet build -v m -c Release $collector/$collector.csproj
+dotnet $collector/bin/Release/netcoreapp3.1/$collector.dll $PULL_ID $TIMESTAMP $COMMIT_AUTHOR $apsimx/Tests/Validation $apsimx/Tests/UnderReview
