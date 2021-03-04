@@ -58,7 +58,8 @@
             set
             {
                 showDocumentationStatus = value;
-                Refresh();
+                throw new NotImplementedException();
+                // Refresh();
             }
         }
 
@@ -97,6 +98,21 @@
         /// </summary>
         public ViewBase CurrentRightHandView { get; private set; }
 
+        /// <summary>
+        /// Convenience function - controls the currently-selected model.
+        /// </summary>
+        public IModel CurrentNode
+        {
+            get
+            {
+                return (IModel)ApsimXFile.FindByPath(CurrentNodePath)?.Value;
+            }
+            set
+            {
+                SelectNode(value.FullPath);
+            }
+        }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -127,6 +143,7 @@
             this.CommandHistory = new CommandHistory();
             // When the user undoes/redoes something we want to select the affected
             // model. Therefore we can use the same callback for both events.
+            this.CommandHistory.OnDo += OnUndoRedo;
             this.CommandHistory.OnUndo += OnUndoRedo;
             this.CommandHistory.OnRedo += OnUndoRedo;
             this.ApsimXFile = model as Simulations;
@@ -141,7 +158,7 @@
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
 
-            Refresh();
+            Populate();
 
             ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
             if (file != null && file.ExpandedNodes != null)
@@ -154,27 +171,63 @@
         /// Called after undoing/redoing a command.
         /// Selects the model which was affected by the command.
         /// </summary>
-        /// <param name="model">The model which was affected by the command.</param>
+        /// <param name="command">The command which has been executed.</param>
         /// <remarks>
         /// When the user undoes/redoes something we want to select the affected
         /// model. Therefore this callback is used for both undo and redo operations.
         /// </remarks>
-        public void OnUndoRedo(IModel model)
+        public void OnUndoRedo(ICommand command)
         {
-            Refresh();
-            if (model != null)
+            // Refresh();
+            if (command.AffectedModel != null)
             {
-                if (ApsimXFile.FindAllDescendants().Contains(model))
-                    SelectNode(model);
-                else if (model.Parent != null && ApsimXFile.FindAllDescendants().Contains(model.Parent))
-                    SelectNode(model.Parent);
+                IModel modelToSelect;
+                IModel modelToRefresh;
+                bool expandChildren = false;
+                if (command is AddModelCommand)
+                {
+                    modelToSelect = modelToRefresh = command.AffectedModel.Parent;
+                    expandChildren = true;
+                }
+                else if (command is DeleteModelCommand delete)
+                {
+                    modelToRefresh = command.AffectedModel.Parent;
+                    // After deleting a model, we want to select its nearest sibling.
+                    if (modelToRefresh.Children.Any())
+                        modelToSelect = modelToRefresh.Children[Math.Min(modelToRefresh.Children.Count - 1, delete.Pos)];
+                    else
+                        modelToSelect = modelToRefresh;
+                }
+                else if (command is MoveModelUpDownCommand || command is MoveModelCommand)
+                {
+                    modelToRefresh = command.AffectedModel.Parent;
+                    modelToSelect = command.AffectedModel;
+                }
+                else
+                    modelToSelect = modelToRefresh = command.AffectedModel;
+
+                RefreshNode(modelToRefresh);
+                SelectNode(modelToSelect);
+
+                if (expandChildren)
+                    view.Tree.ExpandChildren(modelToRefresh.FullPath, true);
             }
+        }
+
+        /// <summary>
+        /// Refresh the specified model and its descendants in the tree control.
+        /// </summary>
+        /// <param name="model">Model to be refreshed.</param>
+        public void RefreshNode(IModel model)
+        {
+            if (model != null)
+                view.Tree.RefreshNode(model.FullPath, GetNodeDescription(model));
         }
 
         /// <summary>
         /// Refresh the view.
         /// </summary>
-        public void Refresh()
+        public void Populate()
         {
             view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
         }
@@ -186,6 +239,7 @@
             {
                 if (File.Exists(ApsimXFile.FileName))
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+                CommandHistory.OnDo -= OnUndoRedo;
                 CommandHistory.OnRedo -= OnUndoRedo;
                 CommandHistory.OnUndo -= OnUndoRedo;
             }
@@ -954,7 +1008,7 @@
                     {
                         var command = new AddModelCommand(toParent, modelString);
                         CommandHistory.Add(command, true);
-                        Refresh();
+                        // RefreshNode(toParent);
                     }
                     else if (e.Moved)
                     {
@@ -965,7 +1019,8 @@
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
                                 CommandHistory.Add(cmd);
-                                Refresh();
+                                // RefreshNode(toParent);
+                                RefreshNode(fromModel.Parent);
                             }
                         }
                     }

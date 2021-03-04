@@ -373,6 +373,56 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Refresh the node at the given data..
+        /// </summary>
+        /// <param name="path">The node to refresh.</param>
+        /// <param name="description">Data to use to refresh the node.</param>
+        public void RefreshNode(string path, TreeViewNode description)
+        {
+            TreeIter iter = FindNode(path);
+            if (iter.Equals(TreeIter.Zero))
+                throw new Exception($"Unable to refresh node - invalid path '{path}'");
+            
+            // The recursive calls to RefreshNode() will add in all of its children - so
+            // we need to first remove any existing children. Afterwards, we want any
+            // previously-expanded nodes to still be expanded, so we first need to record
+            // which rows are expanded.
+            List<string> expandedRows = new List<string>();
+            treeview1.MapExpandedRows(new TreeViewMappingFunc((tree, path) => expandedRows.Add(path.ToString())));
+
+            while (treemodel.IterChildren(out TreeIter child, iter))
+                treemodel.Remove(ref child);
+
+            RefreshNode(iter, description);
+
+            foreach (string row in expandedRows)
+            {
+                // treemodel.GetIter(out TreeIter rowIter, rowPath);
+                // if (IsAncestor(iter, rowIter))
+                    treeview1.ExpandRow(new TreePath(row), false);
+            }
+        }
+
+        /// <summary>
+        /// Check if a TreeIter is an ancestor of another TreeIter.
+        /// </summary>
+        /// <param name="ancestor"></param>
+        /// <param name="child"></param>
+        /// <returns></returns>
+        private bool IsAncestor(TreeIter ancestor, TreeIter child)
+        {
+            if (ancestor.Equals(TreeIter.Zero) || child.Equals(TreeIter.Zero) || ancestor.Equals(child))
+                return false;
+            while (treemodel.IterParent(out TreeIter parent, child))
+            {
+                if (parent.Equals(ancestor))
+                    return true;
+                child = parent;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
         /// Recursively descends through all child nodes as well.
         /// </summary>

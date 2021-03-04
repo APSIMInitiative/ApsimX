@@ -23,7 +23,7 @@
         private bool modelWasRemoved;
 
         /// <summary>The position of the model in the list of child models.</summary>
-        private int pos;
+        public int Pos { get; private set; }
 
         /// <summary>
         /// The model which was changed by the command. This will be selected
@@ -50,7 +50,7 @@
         public void Do(CommandHistory commandHistory)
         {
             this.explorerView.Tree.Delete(this.modelToDelete.FullPath);
-            pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
+            Pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
         }
 
@@ -60,8 +60,8 @@
         {
             if (this.modelWasRemoved)
             {
-                this.parent.Children.Insert(pos, this.modelToDelete as Model);
-                this.explorerView.Tree.AddChild(this.parent.FullPath, nodeDescription, pos);
+                this.parent.Children.Insert(Pos, this.modelToDelete as Model);
+                this.explorerView.Tree.AddChild(this.parent.FullPath, nodeDescription, Pos);
                 Apsim.ClearCaches(this.modelToDelete);
             }
         }

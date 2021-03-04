@@ -240,7 +240,7 @@ namespace UserInterface.Presenters
                 ICommand addSoil = new AddModelCommand(model, matchingSoil);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
-            explorerPresenter.Refresh();
+            explorerPresenter.Populate();
         }
 
         /// <summary>User has clicked the APSOIL help button.</summary>

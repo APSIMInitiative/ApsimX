@@ -8,7 +8,7 @@ namespace UserInterface
 {
     public delegate void Changed(bool haveUnsavedChanges);
     public delegate void ModelChangedDelegate(object changedModel);
-    public delegate void ModelStructureChangedDelegate(IModel model);
+    public delegate void ModelStructureChangedDelegate(ICommand command);
 
     /// <summary>
     /// Simple Command history class.
@@ -27,7 +27,7 @@ namespace UserInterface
         public event ModelChangedDelegate ModelChanged;
         public event ModelStructureChangedDelegate OnUndo;
         public event ModelStructureChangedDelegate OnRedo;
-        public event ModelStructureChangedDelegate ModelStructureChanged;
+        public event ModelStructureChangedDelegate OnDo;
 
         public void Clear()
         {
@@ -98,6 +98,7 @@ namespace UserInterface
             }
 
             OnChanged(true);
+            OnDo(command);
         }
 
         public void Undo()
@@ -112,7 +113,7 @@ namespace UserInterface
                         commands[lastExecuted].Undo(this);
                         lastExecuted--;
                         OnChanged(lastExecuted != lastSaved);
-                        OnUndo(commands[lastExecuted + 1].AffectedModel);
+                        OnUndo(commands[lastExecuted + 1]);
                     }
                     finally
                     {
@@ -132,7 +133,7 @@ namespace UserInterface
                     commands[lastExecuted + 1].Do(this);
                     lastExecuted++;
                     OnChanged(lastExecuted != lastSaved);
-                    OnRedo(commands[lastExecuted].AffectedModel);
+                    OnRedo(commands[lastExecuted]);
                 }
                 finally
                 {
@@ -145,12 +146,6 @@ namespace UserInterface
         {
             if (ModelChanged != null && model != null)
                 ModelChanged(model);
-        }
-
-        public void InvokeModelStructureChanged(IModel model)
-        {
-            if (ModelStructureChanged != null && model != null)
-                ModelStructureChanged(model);
         }
     }
 }

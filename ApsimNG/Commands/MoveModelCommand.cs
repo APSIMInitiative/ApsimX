@@ -55,8 +55,8 @@
             {
                 Structure.Move(fromModel, toParent);
                 presenter.Move(originalPath, toParent, nodeDescription);
-                commandHistory.InvokeModelStructureChanged(fromParent);
-                commandHistory.InvokeModelStructureChanged(toParent);
+                // commandHistory.InvokeModelStructureChanged(fromParent);
+                // commandHistory.InvokeModelStructureChanged(toParent);
             }
             catch (Exception err)
             {
@@ -75,8 +75,8 @@
                 fromModel.Name = originalName;
                 nodeDescription.Name = originalName;
 
-                commandHistory.InvokeModelStructureChanged(fromParent);
-                commandHistory.InvokeModelStructureChanged(toParent);
+                // commandHistory.InvokeModelStructureChanged(fromParent);
+                // commandHistory.InvokeModelStructureChanged(toParent);
             }
         }
 
