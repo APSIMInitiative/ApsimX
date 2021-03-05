@@ -584,10 +584,55 @@
                       "Name": "ReproductiveGrowth",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].ReproductiveThermalTime",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "TT",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Phenology].ReproductiveThermalTime",
+                              "Name": "ReproductiveTT",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "PPModifier",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    12.0,
+                                    13.0,
+                                    20.0
+                                  ],
+                                  "Y": [
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].Photoperiod",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1461,11 +1506,29 @@
                   "Name": "Area",
                   "Children": [
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.03,
-                      "Units": null,
-                      "Name": "InitialArea",
-                      "Children": [],
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "Initial",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.005,
+                          "Units": null,
+                          "Name": "AreaPerPlant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Peanut].SowingData.Population",
+                          "Name": "Population",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2227,11 +2290,29 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "InitialWt",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.06,
+                      "Units": null,
+                      "Name": "MassPerPlant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Peanut].SowingData.Population",
+                      "Name": "Population",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6838,13 +6919,13 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 420",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1450",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1050",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.40",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.66",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
                     "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,10,11",
-                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,4"
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0.4"
                   ],
                   "Name": "EarlyBunch",
                   "Children": [],
@@ -6922,7 +7003,7 @@
                     "[Grain].MaximumNConc.FixedValue = 0.067",
                     "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
                     "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
-                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,1.0,1.0,0",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,0.5,0.5,0",
                     "",
                     "[Leaf].ExtinctionCoefficient.XYPairs.X = 5, 335",
                     "[Leaf].ExtinctionCoefficient.XYPairs.Y = 0.2, 0.55"
@@ -9322,16 +9403,16 @@
                               "Value": "EarlyBunch"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "30"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "760"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "30"
                             }
                           ],
                           "Name": "SowingRule",
@@ -9714,6 +9795,73 @@
                     }
                   ],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Growing Season Photoperiod",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Peanut.Phenology.Photoperiod",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -10955,7 +11103,7 @@
                           "YFieldName": "Peanut.AboveGround.Wt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -11012,7 +11160,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Pop",
+                          "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -11039,8 +11187,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Sow",
-                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -11051,7 +11199,7 @@
                           "YFieldName": "Peanut.Pod.Wt",
                           "X2FieldName": "",
                           "Y2FieldName": "",
-                          "ShowInLegend": false,
+                          "ShowInLegend": true,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
@@ -14624,16 +14772,16 @@
                               "Value": "EarlyBunch"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "30"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "760"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "30"
                             }
                           ],
                           "Name": "SowingRule",
@@ -17057,6 +17205,73 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Growing Season Photoperiod",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Peanut.Phenology.Photoperiod",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Core.Folder, Models",
                   "ShowPageOfGraphs": true,
                   "Name": "Biomass",
@@ -17209,7 +17424,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Pop",
+                          "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -17247,8 +17462,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Sow",
-                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -17316,7 +17531,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Biomass",
+                      "Name": "Biomass N",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -17326,7 +17541,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Pop",
+                          "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -17353,8 +17568,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Sow",
-                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -17412,7 +17627,7 @@
                       "LegendOrientation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Pod",
+                      "Name": "Pod N",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -17422,7 +17637,7 @@
                           "ColourArgb": -16777216,
                           "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": "Pop",
+                          "FactorToVaryLines": null,
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
@@ -17449,8 +17664,8 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -16777216,
-                          "FactorToVaryColours": "Sow",
-                          "FactorToVaryMarkers": "Cv",
+                          "FactorToVaryColours": "Cv",
+                          "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
                           "Marker": 0,
                           "MarkerSize": 0,
@@ -17523,16 +17738,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "5"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "5"
                             }
                           ],
                           "Name": "5",
@@ -17553,16 +17768,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "10"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "10"
                             }
                           ],
                           "Name": "10",
@@ -17583,16 +17798,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "15"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "15"
                             }
                           ],
                           "Name": "15",
@@ -17613,16 +17828,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "20"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "20"
                             }
                           ],
                           "Name": "20",
@@ -17643,16 +17858,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "25"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "25"
                             }
                           ],
                           "Name": "25",
@@ -17673,16 +17888,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "30"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "450"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "30"
                             }
                           ],
                           "Name": "30",
@@ -17925,16 +18140,16 @@
                               "Value": "VB97"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "600"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
                             }
                           ],
                           "Name": "SowingRule",
@@ -18461,6 +18676,73 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Growing Season Photoperiod",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Peanut.Phenology.Photoperiod",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Core.Folder, Models",
                   "ShowPageOfGraphs": true,
                   "Name": "Biomass",
@@ -18765,6 +19047,84 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "Cover",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Pop",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Peanut.Leaf.CoverGreen",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [
+                            {
+                              "$type": "Models.EventNamesOnGraph, Models",
+                              "ColumnName": "Peanut.Phenology.CurrentStageName",
+                              "SimulationName": null,
+                              "Name": "EventNamesOnGraph",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -19467,16 +19827,16 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\t\t\t   [Description(\"Emergence Date\")]\r\n               public string EmergDate { get; set; }\r\n\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = (1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A)*1000;\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n                    Peanut.SetEmergenceDate(EmergDate);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "SpacingRatio",
                               "Value": "1"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -23528,6 +23888,73 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 2,
+                  "LegendOrientation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "Growing Season Photoperiod",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "DailyReport",
+                      "XFieldName": "Peanut.DaysAfterSowing",
+                      "YFieldName": "Peanut.Phenology.Photoperiod",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": "[Peanut.DaysAfterSowing] > 0",
+                      "Name": "Series",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
                   "Name": "Gainsville90",
@@ -23797,6 +24224,10 @@
                               "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing (mm) between rows\")]\r\n               public double RowSpacing { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                               "Parameters": [
                                 {
+                                  "Key": "SowingDate",
+                                  "Value": "05/15/1990 00:00:00"
+                                },
+                                {
                                   "Key": "CultivarName",
                                   "Value": "EarlyBunch"
                                 },
@@ -23811,10 +24242,6 @@
                                 {
                                   "Key": "SowingRate",
                                   "Value": "13.7"
-                                },
-                                {
-                                  "Key": "SowingDate",
-                                  "Value": "05/15/1990 00:00:00"
                                 }
                               ],
                               "Name": "SowingRule",
