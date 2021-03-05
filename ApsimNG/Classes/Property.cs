@@ -8,8 +8,6 @@ namespace UserInterface.Classes
     using System.Reflection;
     using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
-    using Models.CLEM;
-    using Models.CLEM.Resources;
     using Models.Core;
     using Models.LifeCycle;
     using Models.Storage;
