@@ -34,7 +34,7 @@
  
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction FRGRer = null;  
+        IFunction FRGRer = null;
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
         [Link(Type = LinkType.Child, ByName = true)]

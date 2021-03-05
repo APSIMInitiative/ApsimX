@@ -410,6 +410,25 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        public static void AddVariableReferenceIfNotExists(JObject modelToken, string name, string variable)
+        {
+            if (ChildWithName(modelToken, name) == null)
+            {
+                JArray children = modelToken["Children"] as JArray;
+                if (children == null)
+                {
+                    children = new JArray();
+                    modelToken["Children"] = children;
+                }
+
+                JObject variableReference = new JObject();
+                variableReference["$type"] = "Models.Functions.VariableReference, Models";
+                variableReference["Name"] = name;
+                variableReference["VariableName"] = variable;
+                children.Add(variableReference);
+            }
+        }
+
         /// <summary>
         /// Adds the given model as a child of node.
         /// </summary>
