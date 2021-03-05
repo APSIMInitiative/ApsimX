@@ -498,8 +498,8 @@
                 else
                 {
                     Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                    Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
                 }
+                Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
             }
         }
 
