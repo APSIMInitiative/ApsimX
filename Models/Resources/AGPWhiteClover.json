@@ -243,9 +243,8 @@
           "RootElongationRate": 25.0,
           "KNO3": 0.01,
           "KNH4": 0.005,
+          "ExponentSoilMoisture": 1.5,
           "MaximumNUptake": 10.0,
-          "ReferenceRLD": 5.0,
-          "ReferenceKSuptake": 15.0,
           "Name": "Root",
           "Children": [
             {

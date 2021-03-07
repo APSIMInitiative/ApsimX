@@ -273,10 +273,9 @@
           "RootElongationRate": 30.0,
           "KNO3": 0.02,
           "KNH4": 0.01,
-          "Name": "Root",
+          "ExponentSoilMoisture": 1.5,
           "MaximumNUptake": 10.0,
-          "ReferenceRLD": 5.0,
-          "ReferenceKSuptake": 15.0,
+          "Name": "Root",
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",

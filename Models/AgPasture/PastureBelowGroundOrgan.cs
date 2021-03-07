@@ -158,14 +158,8 @@
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         public double MaximumNUptake { get; set; } = 10.0;
 
-        /// <summary>Reference value for root length density for the Water and N availability.</summary>
-        public double ReferenceRLD { get; set; } = 5.0;
-
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        private double ExponentSoilMoisture = 1.50;
-
-        /// <summary>Reference value of Ksat for water availability function.</summary>
-        public double ReferenceKSuptake { get; set; } = 15.0;
+        public double ExponentSoilMoisture = 1.50;
 
         /// <summary>Gets or sets the rooting depth (mm).</summary>
         public double Depth { get; set; }
