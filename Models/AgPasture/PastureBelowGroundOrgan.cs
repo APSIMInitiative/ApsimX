@@ -318,8 +318,8 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
-                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
+                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
                     result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
