@@ -2368,6 +2368,14 @@
             get { return roots[0].BottomLayer; }
         }
 
+        /// <summary>Gets the fraction of root biomass for each soil layer (0-1).</summary>
+        //[Description("Fraction of root dry matter for each soil layer")]
+        [Units("-")]
+        public double[] RootWtFraction
+        {
+            get { return roots[0].DMFractions; }
+        }
+
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Get above ground biomass</summary>

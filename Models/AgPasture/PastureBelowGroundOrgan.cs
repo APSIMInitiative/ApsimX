@@ -176,19 +176,6 @@
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
 
-        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
-        internal double DMTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length; t++)
-                    result += tissue[t].DM.Wt;
-
-                return result;
-            }
-        }
-
         /// <summary>Returns the root live tissue.</summary>
         public RootTissue Live { get; private set; }
 
@@ -213,6 +200,32 @@
         internal double DMDead
         {
             get { return tissue[tissue.Length - 1].DM.Wt; }
+        }
+
+        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
+        internal double DMTotal
+        {
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < tissue.Length; t++)
+                    result += tissue[t].DM.Wt;
+
+                return result;
+            }
+        }
+
+        /// <summary>Gets the dry matter fraction in each soil layer (0-1).</summary>
+        internal double[] DMFractions
+        {
+            get
+            {
+                double[] result = new double[soilPhysical.Thickness.Length];
+                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
+                    result[layer] = tissue[0].FractionWt[layer];
+
+                return result;
+            }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
