@@ -383,7 +383,7 @@
                         zones.Add(UptakeDemands);
 
                         // Get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailable(zone);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
