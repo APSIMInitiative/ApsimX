@@ -363,14 +363,8 @@
             CalculateRootZoneBottomLayer();
 
             var rootFractions = CurrentRootDistributionTarget();
-            var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
+            var rootBiomass = MathUtilities.Multiply_Value(rootFractions, rootWt);
             Live.ResetTo(rootBiomass);
-        }
-
-        /// <summary>Reset this root organ's state to the inital state.</summary>
-        public void Reset()
-        {
-            Reset(minimumLiveDM, RootDepthMinimum);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>

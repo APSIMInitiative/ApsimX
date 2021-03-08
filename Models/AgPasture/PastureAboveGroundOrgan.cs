@@ -233,24 +233,6 @@
         }
 
         /// <summary>
-        /// Reset this organ's state at emergence.
-        /// </summary>
-        /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
-        /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
-        /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
-        /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
-        public void ResetEmergence(double emergingWt, double developingWt, double matureWt, double deadWt)
-        {
-            EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
-            DevelopingTissue.Reset(developingWt, developingWt * NConcOptimum);
-            MatureTissue.Reset(matureWt, matureWt * NConcOptimum);
-            DeadTissue.Reset(deadWt, deadWt * NConcOptimum);
-
-            // Tissue states have changed so recalculate our states.
-            CalculateStates();
-        }
-
-        /// <summary>
         /// Remove biomass from organ
         /// </summary>
         /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>

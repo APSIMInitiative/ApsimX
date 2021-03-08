@@ -2673,19 +2673,19 @@
             var rootDM = Math.Max(0.0, InitialRootDM);
 
             // Perform the organ resets.
-            Leaf.Reset(emergingWt: initialDMFractions[0] * shootDM,
-                       developingWt: initialDMFractions[1] * shootDM,
-                       matureWt: initialDMFractions[2] * shootDM,
-                       deadWt: initialDMFractions[3] * shootDM);
+            Leaf.Reset(emergingWt: shootDM * initialDMFractions[0],
+                       developingWt: shootDM * initialDMFractions[1],
+                       matureWt: shootDM * initialDMFractions[2],
+                       deadWt: shootDM * initialDMFractions[3]);
 
-            Stem.Reset(emergingWt: initialDMFractions[4] * shootDM,
-                       developingWt: initialDMFractions[5] * shootDM,
-                       matureWt: initialDMFractions[6] * shootDM,
-                       deadWt: initialDMFractions[7] * shootDM);
+            Stem.Reset(emergingWt: shootDM * initialDMFractions[4],
+                       developingWt: shootDM * initialDMFractions[5],
+                       matureWt: shootDM * initialDMFractions[6],
+                       deadWt: shootDM * initialDMFractions[7]);
 
-            Stolon.Reset(emergingWt: initialDMFractions[8] * shootDM,
-                         developingWt: initialDMFractions[9] * shootDM,
-                         matureWt: initialDMFractions[10] * shootDM,
+            Stolon.Reset(emergingWt: shootDM * initialDMFractions[8],
+                         developingWt: shootDM * initialDMFractions[9],
+                         matureWt: shootDM * initialDMFractions[10],
                          deadWt: 0.0);
 
             roots[0].Reset(rootDM, InitialRootDepth);
@@ -2708,20 +2708,20 @@
         /// <summary>Set the plant state at germination.</summary>
         internal void SetEmergenceState()
         {
-            Leaf.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
+            Leaf.Reset(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
                                 developingWt: MinimumGreenWt * emergenceDMFractions[1],
                                 matureWt: MinimumGreenWt * emergenceDMFractions[2],
                                 deadWt: MinimumGreenWt * emergenceDMFractions[3]);
-            Stem.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
+            Stem.Reset(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
                                 developingWt: MinimumGreenWt * emergenceDMFractions[5],
                                 matureWt: MinimumGreenWt * emergenceDMFractions[6],
                                 deadWt: MinimumGreenWt * emergenceDMFractions[7]);
-            Stolon.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[8],
+            Stolon.Reset(emergingWt: MinimumGreenWt * emergenceDMFractions[8],
                                   developingWt: MinimumGreenWt * emergenceDMFractions[9],
                                   matureWt: MinimumGreenWt * emergenceDMFractions[10],
                                   deadWt: 0.0);
 
-            roots[0].Reset();
+            roots[0].Reset(MinimumGreenWt * MinimumGreenRootProp,roots[0].RootDepthMinimum);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
