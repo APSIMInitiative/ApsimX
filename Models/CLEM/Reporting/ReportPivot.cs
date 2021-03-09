@@ -29,7 +29,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("The column to aggregate values for")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetValueNames))]
-        public string[] Value { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
         /// Populates the value filter
@@ -41,7 +41,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("The column to pivot into rows")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetRowNames))]
-        public string[] Row { get; set; }
+        public string Row { get; set; }
 
         /// <summary>
         /// Populates the row filter
@@ -53,7 +53,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("The column to pivot into columns")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetColumnNames))]
-        public string[] Column { get; set; }
+        public string Column { get; set; }
 
         /// <summary>
         /// Populates the column filter
@@ -65,7 +65,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("The time filter")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetTimes))]
-        public string[] Time { get; set; }
+        public string Time { get; set; }
 
         /// <summary>
         /// Populates the time filter
@@ -77,7 +77,7 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("The aggregation method")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetAggregators))]
-        public string[] Aggregator { get; set; }
+        public string Aggregator { get; set; }
 
         /// <summary>
         /// Populates the aggregate filter
@@ -128,7 +128,7 @@ namespace Models.CLEM.Reporting
 
             // Create the pivot table and populate it
             var pivot = new DataTable(Parent.Name + "_" + Name);
-            pivot.Columns.Add(Row[0]);
+            pivot.Columns.Add(Row);
             pivot.Columns.AddRange(columns.ToArray());
             AddPivotRows(report, pivot);
 
@@ -170,11 +170,11 @@ namespace Models.CLEM.Reporting
         {
             // Determine the column names from 
             var cols = source.AsEnumerable()
-                .Select(r => r[Column[0]])
+                .Select(r => r[Column])
                 .Distinct();
 
             // Rescale the time over the columns if required
-            var type = source.Columns[Column[0]].DataType;
+            var type = source.Columns[Column].DataType;
 
             // Group the data based on the time filter
             if (type == typeof(DateTime))
@@ -195,11 +195,11 @@ namespace Models.CLEM.Reporting
         /// <returns>A string representing the date in a new format</returns>
         private string FormatDate(DateTime date)
         {
-            if (Time[0] == "Day")
+            if (Time == "Day")
                 return date.ToString("dd/MM/yyyy");
-            else if (Time[0] == "Month")
+            else if (Time == "Month")
                 return date.ToString("MM/yyyy");
-            else if (Time[0] == "Year")
+            else if (Time == "Year")
                 return date.ToString("yyyy");
             else
                 throw new Exception("");
@@ -214,10 +214,10 @@ namespace Models.CLEM.Reporting
         private void AddPivotRows(DataTable source, DataTable pivot)
         {
             // Rescale the time over the rows if required
-            var date = source.Columns[Row[0]].DataType == typeof(DateTime);
+            var date = source.Columns[Row].DataType == typeof(DateTime);
 
             var names = source.AsEnumerable()
-                    .Select(r => date ? FormatDate(Convert.ToDateTime(r[Row[0]])) : r[Row[0]].ToString())
+                    .Select(r => date ? FormatDate(Convert.ToDateTime(r[Row])) : r[Row].ToString())
                     .Distinct();
 
             foreach (var name in names)
@@ -228,9 +228,9 @@ namespace Models.CLEM.Reporting
                 foreach (var col in pivot.Columns.Cast<DataColumn>().Skip(1))
                 {
                     var values = source.AsEnumerable()
-                        .Where(r => r[Row[0]].ToString().Contains(name))
-                        .Where(r => r[Column[0]].ToString().Contains(col.ColumnName))
-                        .Select(r => Convert.ToDouble(r[Value[0]]));
+                        .Where(r => r[Row].ToString().Contains(name))
+                        .Where(r => r[Column].ToString().Contains(col.ColumnName))
+                        .Select(r => Convert.ToDouble(r[Value]));
 
                     // Aggregate the data
                     row[col] = AggregateValues(values);
@@ -249,7 +249,7 @@ namespace Models.CLEM.Reporting
         /// <returns>The aggregated values</returns>
         private double AggregateValues(IEnumerable<double> values)
         {
-            switch (Aggregator[0])
+            switch (Aggregator)
             {
                 case "Sum":
                     return values.Sum();
