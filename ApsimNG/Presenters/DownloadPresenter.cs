@@ -603,33 +603,17 @@ namespace UserInterface.Presenters
                 WaterBalance soilWater = new WaterBalance();
                 InitialWater initialWater = new InitialWater();
                 Sample initialNitrogen = new Sample();
-                SoilNitrogen soilN = new SoilNitrogen();
+                Nutrient nutrient = new Nutrient();
+                nutrient.ResourceName = "Nutrient";
 
                 SoilCrop wheat = new SoilCrop();
                 waterNode.Children.Add(wheat);
                 wheat.Name = "WheatSoil";
                 waterNode.ParentAllDescendants();
 
-                Model nh4 = new SoilNitrogenNH4();
-                nh4.Name = "NH4";
-                soilN.Children.Add(nh4);
-                Model no3 = new SoilNitrogenNO3();
-                no3.Name = "NO3";
-                soilN.Children.Add(no3);
-                Model urea = new SoilNitrogenUrea();
-                urea.Name = "Urea";
-                soilN.Children.Add(urea);
-                Model plantAvailNH4 = new SoilNitrogenPlantAvailableNH4();
-                plantAvailNH4.Name = "PlantAvailableNH4";
-                soilN.Children.Add(plantAvailNH4);
-                Model plantAvailNO3 = new SoilNitrogenPlantAvailableNO3();
-                plantAvailNO3.Name = "PlantAvailableNO3";
-                soilN.Children.Add(plantAvailNO3);
-                soilN.ParentAllDescendants();
-
                 newSoil.Children.Add(waterNode);
                 newSoil.Children.Add(soilWater);
-                newSoil.Children.Add(soilN);
+                newSoil.Children.Add(nutrient);
                 newSoil.Children.Add(organicMatter);
                 newSoil.Children.Add(analysis);
                 newSoil.Children.Add(initialWater);
