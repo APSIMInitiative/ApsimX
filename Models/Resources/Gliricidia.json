@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 116,
+  "Version": 129,
   "Name": "Simulations",
   "Children": [
     {
@@ -694,7 +694,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].RadIntTot",
+                  "VariableName": "[Leaf].RadiationIntercepted",
                   "Name": "InterceptedRadiation",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1375,11 +1375,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -1950,11 +1961,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Old",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -2521,7 +2543,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Emergence",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
@@ -2532,6 +2554,16 @@
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
