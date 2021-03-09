@@ -214,19 +214,18 @@
             MinimumLiveDM = minimumLiveWt;
         }
 
-        /// <summary>
-        /// Reset this organ's state.
-        /// </summary>
+        /// <summary>Reset this organ's state.</summary>
         /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
         /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
         /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        /// <remarks>It is assumed that N is at optimum content.</remarks>
         public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
             EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
             DevelopingTissue.Reset(developingWt, developingWt * NConcOptimum);
             MatureTissue.Reset(matureWt, matureWt * NConcOptimum);
-            DeadTissue.Reset(deadWt, deadWt * NConcMinimum);
+            DeadTissue.Reset(deadWt, deadWt * NConcOptimum);
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();
@@ -257,10 +256,12 @@
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        public void DoResetOrgan()
+        public void DoResetOrganToZero()
         {
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].Reset(0, 0);
+            {
+                Tissue[t].Reset(0.0, 0.0);
+            }
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();
@@ -270,7 +271,7 @@
         public void DoCleanTransferAmounts()
         {
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].ClearDailyDeltas();
+                Tissue[t].ClearDailyFlows();
         }
 
         /// <summary>Preparation before the main daily processes.</summary>

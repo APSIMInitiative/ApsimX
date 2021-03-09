@@ -90,7 +90,7 @@
         {
             DMRemoved = 0;
             NRemoved = 0;
-            ClearDailyDeltas();
+            ClearDailyFlows();
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -139,9 +139,7 @@
             CalculateStates();
         }
 
-        /// <summary>
-        /// Initialise tissue to the specified amount.
-        /// </summary>
+        /// <summary>Reset this tissue to the specified amount.</summary>
         /// <param name="dmAmount">The amount of dry matter to reset to (kg/ha).</param>
         /// <param name="nAmount">The amount of nitrogen to reset to (kg/ha).</param>
         public void Reset(double dmAmount, double nAmount)
@@ -149,11 +147,11 @@
             dryMatter.Wt = dmAmount;
             dryMatter.N = nAmount;
             CalculateStates();
-            ClearDailyDeltas();
+            ClearDailyFlows();
         }
 
-        /// <summary>Clear the daily deltas.</summary>
-        public void ClearDailyDeltas()
+        /// <summary>Clear the daily flows of DM and N.</summary>
+        public void ClearDailyFlows()
         {
             DMTransferedIn = 0.0;
             DMTransferedOut = 0.0;

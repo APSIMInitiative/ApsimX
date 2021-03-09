@@ -288,11 +288,11 @@
 
             // zero all variables
             RefreshVariables();
-            Leaf.DoResetOrgan();
-            Stem.DoResetOrgan();
-            Stolon.DoResetOrgan();
+            Leaf.DoResetOrganToZero();
+            Stem.DoResetOrganToZero();
+            Stolon.DoResetOrganToZero();
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
+                root.DoResetOrganToZero();
 
             // clean up secondary variables
             greenLAI = 0.0;
@@ -3728,11 +3728,11 @@
         /// <summary>Resets this plant state to its initial values.</summary>
         public void Reset()
         {
-            Leaf.DoResetOrgan();
-            Stem.DoResetOrgan();
-            Stolon.DoResetOrgan();
+            Leaf.DoResetOrganToZero();
+            Stem.DoResetOrganToZero();
+            Stolon.DoResetOrganToZero();
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
+                root.DoResetOrganToZero();
             SetInitialState();
         }
 

@@ -351,11 +351,10 @@
                 return (1 / threshold) * LengthDensity[layerIndex];
         }
 
-        /// <summary>
-        /// Reset this root organ's state.
-        /// </summary>
+        /// <summary>Reset this root organ's state.</summary>
         /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
         /// <param name="rootDepth">The depth of roots to reset to(mm).</param>
+        /// <remarks>It is assumed that N is at optimum content.</remarks>
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
@@ -363,18 +362,18 @@
 
             var rootFractions = CurrentRootDistributionTarget();
             var rootBiomass = MathUtilities.Multiply_Value(rootFractions, rootWt);
-            Live.ResetTo(rootBiomass);
+            var rootNContents = MathUtilities.Multiply_Value(rootBiomass, NConcOptimum);
+            Live.Reset(rootBiomass, rootNContents);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        internal void DoResetOrgan()
+        internal void DoResetOrganToZero()
         {
             Depth = 0;
             CalculateRootZoneBottomLayer();
             for (int t = 0; t < tissue.Length; t++)
             {
-                tissue[t].Reset();
-                DoCleanTransferAmounts();
+                tissue[t].Reset(new double[nLayers], new double[nLayers]);
             }
         }
 
@@ -382,7 +381,7 @@
         internal void DoCleanTransferAmounts()
         {
             for (int t = 0; t < tissue.Length; t++)
-                tissue[t].DailyReset();
+                tissue[t].ClearDailyTransferAmounts();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>

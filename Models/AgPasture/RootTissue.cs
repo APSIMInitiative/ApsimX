@@ -223,8 +223,6 @@
         {
             var removed = RemoveBiomass(fractionToRemove, sendToSoil: false);
             toTissue.AddBiomass(removed.Wt, removed.N);
-            if (fractionToRemove == 1)
-                Reset();
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -330,11 +328,10 @@
             biomass.N = nLayer.Sum();
         }
 
-        /// <summary>
-        /// Reset tissue to the specified amount.
-        /// </summary>
-        /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
-        public void ResetTo(double[] dmAmount)
+        /// <summary>Reset this tissue to the specified amount.</summary>
+        /// <param name="dmAmount">The amount, per layer, of dry matter by layer to reset to (kg/ha).</param>
+        /// <param name="nAmount">The amount, per layer, of nitrogen to reset to (kg/ha).</param>
+        public void Reset(double[] dmAmount, double[] nAmount)
         {
             for (int layer = 0; layer < dmLayer.Length; layer++)
                 dmLayer[layer] += dmAmount[layer];
@@ -342,18 +339,8 @@
             UpdateDM();
         }
 
-        /// <summary>Reset root tissue to initial state.</summary>
-        public void Reset()
-        {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-            {
-                dmLayer[layer] = 0;
-                nLayer[layer] = 0;
-            }
-        }
-
-        /// <summary>Called each day to reset the transfer variables.</summary>
-        public void DailyReset()
+        /// <summary>Clear the daily flows of DM and N.</summary>
+        public void ClearDailyTransferAmounts()
         {
             dmTransferedIn = 0.0;
             dmTransferedOut = 0.0;
