@@ -25,7 +25,6 @@
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
 
-
         /// <summary>The soil physical node</summary>
         private IPhysical soilPhysical = null;
 
@@ -60,8 +59,7 @@
         /// <param name="initialDM">Initial dry matter weight</param>
         /// <param name="initialDepth">Initial root depth</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        public void Initialise(Zone zone, double initialDM, double initialDepth,
-                               double minLiveDM)
+        public void Initialise(Zone zone, double initialDM, double initialDepth, double minLiveDM)
         {
             soil = zone.FindInScope<Soil>();
             if (soil == null)
@@ -90,18 +88,20 @@
             if (nh4 == null)
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 
-            // save the parameters for this organ
+            // link to soil and initialise related variables
+            zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
-            minimumLiveDM = minLiveDM;
             dulMM = soilPhysical.DULmm;
             ll15MM = soilPhysical.LL15mm;
-            Live = tissue[0];
-            Dead = tissue[1];
-
-            // Link to soil and initialise variables
-            zoneName = soil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
+
+            // save the parameters for this organ
+            minimumLiveDM = minLiveDM;
+
+            // initialise tissues
+            Live = tissue[0];
+            Dead = tissue[1];
 
             // Initialise root DM, N, depth, and distribution
             Depth = initialDepth;
@@ -350,7 +350,6 @@
             else
                 return (1 / threshold) * LengthDensity[layerIndex];
         }
-
 
         /// <summary>
         /// Reset this root organ's state.

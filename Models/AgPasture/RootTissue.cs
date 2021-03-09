@@ -82,6 +82,7 @@
                 dmLayer = new double[soilPhysical.Thickness.Length];
                 nLayer = new double[soilPhysical.Thickness.Length];
             }
+
             UpdateDM();
         }
 
@@ -129,6 +130,7 @@
                     nLayer[layer] += nLayersTransferedIn[layer] - (nRemobilised * (nLayersTransferedIn[layer] / nTransferedIn));
                 }
             }
+
             UpdateDM();
         }
 
@@ -148,6 +150,7 @@
                     amountDMLayered[layer] = amountDM * fractionWt[layer];
                     amountNLayered[layer] = amountN * fractionWt[layer];
                 }
+
                 DetachBiomass(amountDMLayered, amountNLayered);
             }
         }
@@ -200,10 +203,13 @@
                 dmLayer[layer] -= removed.Wt[layer];
                 nLayer[layer] -= removed.N[layer];
             }
+
             UpdateDM();
 
             if (sendToSoil)
+            {
                 DetachBiomass(removed.Wt, removed.N);
+            }
 
             return removed;
         }
@@ -272,6 +278,7 @@
                 dmLayersTransferedIn[layer] = turnoverDM * fractionWt[layer];
                 nLayersTransferedIn[layer] = turnoverN * fractionWt[layer];
             }
+
             dmTransferedIn += turnoverDM;
             nTransferedIn += turnoverN;
             UpdateDM();
@@ -305,6 +312,7 @@
                 dmLayer[layer] += dmToAdd[layer];
                 nLayer[layer] += nToAdd[layer];
             }
+
             UpdateDM();
         }
 

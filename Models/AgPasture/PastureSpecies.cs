@@ -499,20 +499,15 @@
         [Units("kgDM/ha")]
         public double InitialShootDM { get; set; }
 
-
         /// <summary>Initial below ground DM weight (kgDM/ha).</summary>
         [Description("Initial below ground DM weight")]
         [Units("kgDM/ha")]
         public double InitialRootDM { get; set; }
 
-
-
         /// <summary>Initial rooting depth (mm).</summary>
         [Description("Initial rooting depth")]
         [Units("mm")]
         public double InitialRootDepth { get; set; }
-
-
 
         /// <summary>Initial fractions of DM for each plant part in grasses (0-1).</summary>
         public double[] initialDMFractionsGrasses { get; set; } = { 0.15, 0.25, 0.25, 0.05, 0.05, 0.10, 0.10, 0.05, 0.00, 0.00, 0.00 };
@@ -529,8 +524,6 @@
         [Units("mg/m^2/s")]
         public double ReferencePhotosyntheticRate { get; set; } = 1.0;
 
-
-
         /// <summary>Gets or sets the leaf photosynthetic efficiency (mg CO2/J).</summary>
         [Units("mg CO2/J")]
         public double PhotosyntheticEfficiency { get; set; } = 0.01;
@@ -546,8 +539,6 @@
         /// <summary>Light extinction coefficient (0-1).</summary>
         [Units("0-1")]
         public double LightExtinctionCoefficient { get; set; } = 0.5;
-
-
 
         /// <summary>Reference CO2 concentration for photosynthesis (ppm).</summary>
         [Units("ppm")]
@@ -573,18 +564,13 @@
         [Units("oC")]
         public double GrowthTminimum { get; set; } = 1.0;
 
-
-
         /// <summary>Optimum temperature for growth (oC).</summary>
         [Units("oC")]
         public double GrowthToptimum { get; set; } = 20.0;
 
-
-
         /// <summary>Curve parameter for growth response to temperature (>0.0).</summary>
         [Units("-")]
         public double GrowthTEffectExponent { get; set; } = 1.7;
-
 
         /// <summary>Enable photosynthesis reduction due to heat damage (yes/no).</summary>
         [Units("yes/no")]
@@ -604,25 +590,17 @@
         [Units("oC")]
         public double HeatOnsetTemperature { get; set; } = 28.0;
 
-
-
         /// <summary>Temperature for full heat effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
         public double HeatFullTemperature { get; set; } = 35.0;
-
-
 
         /// <summary>Cumulative degrees-day for recovery from heat stress (oCd).</summary>
         [Units("oCd")]
         public double HeatRecoverySumDD { get; set; } = 30.0;
 
-
-
         /// <summary>Reference temperature for recovery from heat stress (oC).</summary>
         [Units("oC")]
         public double HeatRecoveryTReference { get; set; } = 25.0;
-
-
 
         /// <summary>Enable photosynthesis reduction due to cold damage is enabled (yes/no).</summary>
         [Units("yes/no")]
@@ -642,24 +620,17 @@
         [Units("oC")]
         public double ColdOnsetTemperature { get; set; } = 1.0;
 
-
-
         /// <summary>Temperature for full cold effect on photosynthesis, growth stops (oC).</summary>
         [Units("oC")]
         public double ColdFullTemperature { get; set; } = -5.0;
-
 
         /// <summary>Cumulative degrees for recovery from cold stress (oCd).</summary>
         [Units("oCd")]
         public double ColdRecoverySumDD { get; set; } = 25.0;
 
-
-
         /// <summary>Reference temperature for recovery from cold stress (oC).</summary>
         [Units("oC")]
         public double ColdRecoveryTReference { get; set; } = 0.0;
-
-
 
         ////- Respiration parameters >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -667,39 +638,28 @@
         [Units("0-1")]
         public double MaintenanceRespirationCoefficient { get; set; } = 0.03;
 
-
-
         /// <summary>Growth respiration coefficient (0-1).</summary>
         [Units("0-1")]
         public double GrowthRespirationCoefficient { get; set; } = 0.25;
-
-
 
         /// <summary>Reference temperature for maintenance respiration (oC).</summary>
         [Units("oC")]
         public double RespirationTReference { get; set; } = 20.0;
 
-
-
         /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
         [Units("-")]
         private double myRespirationExponent = 1.5;
-
 
         /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
         //[Description("optimum, minimum and maximum")]
         [Units("kg/kg")]
         public double[] NThresholdsForRoots { get; set; } = { 0.02, 0.006, 0.025 };
 
-
-
         ////- Germination and emergence >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
         [Units("oCd")]
         public double DegreesDayForGermination { get; set; } = 125;
-
-
 
         /// <summary>The fractions of DM for each plant part at emergence, for all plants (0-1).</summary>
         private double[] emergenceDMFractions = { 0.60, 0.25, 0.00, 0.00, 0.15, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 };
@@ -710,19 +670,13 @@
         [Units("-")]
         public double TargetShootRootRatio { get; set; } = 4.0;
 
-
-
         /// <summary>Maximum fraction of DM growth allocated to roots (0-1).</summary>
         [Units("0-1")]
         public double MaxRootAllocation { get; set; } = 0.25;
 
-
-
         /// <summary>Maximum effect that soil GLFs have on Shoot-Root ratio (0-1).</summary>
         [Units("0-1")]
         public double ShootRootGlfFactor { get; set; } = 0.50;
-
-
 
         // - Effect of reproductive season ....................................
         /// <summary>
@@ -745,13 +699,9 @@
         [Units("degrees")]
         public double ReproSeasonReferenceLatitude { get; set; } = 41.0;
 
-
-
         /// <summary>Coefficient controlling the time to start the reproductive season as function of latitude (-).</summary>
         [Units("-")]
         public double ReproSeasonTimingCoeff { get; set; } = 0.14;
-
-
 
         /// <summary>Coefficient controlling the duration of the reproductive season as function of latitude (-).</summary>
         [Units("-")]
@@ -769,47 +719,33 @@
         [Units("0-1")]
         public double ReproSeasonMaxAllocationIncrease { get; set; } = 0.50;
 
-
         /// <summary>Coefficient controlling the increase in shoot allocation during reproductive growth as function of latitude (-).</summary>
         [Units("-")]
         public double ReproSeasonAllocationCoeff { get; set; } = 0.10;
-
-
 
         /// <summary>Maximum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
         public double FractionLeafMaximum { get; set; } = 0.7;
 
-
-
         /// <summary>Minimum target allocation of new growth to leaves (0-1).</summary>
         [Units("0-1")]
         public double FractionLeafMinimum { get; set; } = 0.7;
-
 
         /// <summary>Shoot DM at which allocation of new growth to leaves start to decrease (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double FractionLeafDMThreshold { get; set; } = 500;
 
-
-
         /// <summary>Shoot DM when allocation to leaves is midway maximum and minimum (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double FractionLeafDMFactor { get; set; } = 2000;
-
-
 
         /// <summary>Exponent of the function controlling the DM allocation to leaves (>0.0).</summary>
         [Units(">0.0")]
         public double FractionLeafExponent { get; set; } = 3.0;
 
-
-
         /// <summary>Fraction of new shoot growth to be allocated to stolons (0-1).</summary>
         [Units("0-1")]
         public double FractionToStolon { get; set; } = 0.0;
-
-
 
         /// <summary>Specific leaf area (m^2/kgDM).</summary>
         [Units("m^2/kg")]
@@ -823,13 +759,9 @@
         [Units("kg/ha")]
         public double ShootMaxEffectOnLAI { get; set; } = 1000;
 
-
-
         /// <summary>Maximum fraction of stem tissue used when computing green LAI (0-1).</summary>
         [Units("0-1")]
         public double MaxStemEffectOnLAI { get; set; } = 1.0;
-
-
 
         ////- Tissue turnover and senescence >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -837,20 +769,14 @@
         [Units("-")]
         public double LiveLeavesPerTiller { get; set; } = 3.0;
 
-
-
         /// <summary>Reference daily DM turnover rate for shoot tissues (0-1).</summary>
         /// <remarks>This is closely related to the leaf appearance rate.</remarks>
         [Units("0-1")]
         public double TissueTurnoverRateShoot { get; set; } = 0.05;
 
-
-
         /// <summary>Reference daily DM turnover rate for root tissues (0-1).</summary>
         [Units("0-1")]
         public double TissueTurnoverRateRoot { get; set; } = 0.02;
-
-
 
         /// <summary>Relative turnover rate for emerging tissues (>0.0).</summary>
         [Units("-")]
@@ -860,37 +786,25 @@
         [Units("0-1")]
         public double DetachmentRateShoot { get; set; } = 0.08;
 
-
-
         /// <summary>Minimum temperature for tissue turnover (oC).</summary>
         [Units("oC")]
         public double TurnoverTemperatureMin { get; set; } = 2.0;
-
-
 
         /// <summary>Reference temperature for tissue turnover (oC).</summary>
         [Units("oC")]
         public double TurnoverTemperatureRef { get; set; } = 20.0;
 
-
-
         /// <summary>Exponent of function for temperature effect on tissue turnover (>0.0).</summary>
         [Units("-")]
         public double TurnoverTemperatureExponent { get; set; } = 1.0;
-
-
 
         /// <summary>Maximum increase in tissue turnover due to water deficit (>0.0).</summary>
         [Units("-")]
         public double TurnoverDroughtEffectMax { get; set; } = 1.0;
 
-
-
         /// <summary>Minimum GLFwater without effect on tissue turnover (0-1).</summary>
         [Units("0-1")]
         public double TurnoverDroughtThreshold { get; set; } = 0.5;
-
-
 
         /// <summary>Coefficient controlling detachment rate as function of moisture (>0.0).</summary>
         [Units("-")]
@@ -900,7 +814,6 @@
         [Units("0-1")]
         public double DetachmentDroughtEffectMin { get; set; } = 0.1;
 
-
         /// <summary>Factor increasing tissue turnover rate due to stock trampling (>0.0).</summary>
         [Units("-")]
         public double TurnoverStockFactor { get; set; } = 0.01;
@@ -908,8 +821,6 @@
         /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
         [Units("-")]
         public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
-
-
 
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
@@ -925,25 +836,17 @@
         [Units("0-1")]
         public double MinimumNFixation { get; set; }  = 0.0;
 
-        
-
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
         public double MaximumNFixation { get; set; } = 0.0;
-
-        
 
         /// <summary>Respiration cost factor due to the presence of symbiont bacteria (kgC/kgC in roots).</summary>
         [Units("kg/kg")]
         public double SymbiontCostFactor { get; set; } = 0.0;
 
-        
-
         /// <summary>Respiration cost factor due to the activity of symbiont bacteria (kgC/kgN fixed).</summary>
         [Units("kg/kg")]
         public double NFixingCostFactor { get; set; } = 0.0;
-
-        
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -951,40 +854,28 @@
         [Units("0-1")]
         public double SoilSaturationEffectMax { get; set; } = 0.1;
 
-        
-
         /// <summary>Minimum water-free pore space for growth with no limitations (0-1).</summary>
         /// <remarks>A negative value indicates that porosity at DUL will be used.</remarks>
         [Units("0-1")]
         public double MinimumWaterFreePorosity { get; set; } = -1.0;
 
-        
-
         /// <summary>Maximum daily recovery rate from water logging (0-1).</summary>
         [Units("0-1")]
         public double SoilSaturationRecoveryFactor { get; set; } = 0.25;
 
-        
-
         /// <summary>Exponent to modify the effect of N deficiency on plant growth (>0.0).</summary>
         [Units("-")]
         public double NDillutionCoefficient { get; set; } = 0.5;
-
-
 
         /// <summary>Generic growth limiting factor that represents an arbitrary limitation to potential growth (0-1).</summary>
         /// <remarks> This factor can be used to describe the effects of drivers such as disease, etc.</remarks>
         [Units("0-1")]
         public double GlfGeneric { get; set; } = 1.0;
 
-
-
         /// <summary>Generic growth limiting factor that represents an arbitrary soil limitation (0-1).</summary>
         /// <remarks> This factor can be used to describe the effect of limitation in nutrients other than N.</remarks>
         [Units("0-1")]
         public double GlfSoilFertility { get; set; } = 1.0;
-
-        
 
         ////- Plant height >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -992,19 +883,13 @@
         [Units("mm")]
         public double PlantHeightMinimum { get; set; } = 25.0;
 
-        
-
         /// <summary>Maximum plant height (mm).</summary>
         [Units("mm")]
         public double PlantHeightMaximum { get; set; } = 600.0;
 
-        
-
         /// <summary>DM weight above ground for maximum plant height (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double PlantHeightMassForMax { get; set; } = 10000;
-
-        
 
         /// <summary>Exponent controlling shoot height as function of DM weight (>1.0).</summary>
         [Units(">1.0")]
@@ -1022,8 +907,6 @@
         /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
         [Units("kg/ha")]
         public double MinimumGreenWt { get; set; } = 100.0;
-
-       
 
         /// <summary>Leaf proportion in the minimum green Wt (0-1).</summary>
         [Units("0-1")]
@@ -1449,19 +1332,6 @@
             C4
         }
 
-        /// <summary>List of valid methods to compute plant available water.</summary>
-        public enum PlantAvailableWaterMethod
-        {
-            /// <summary>APSIM default method, using kL.</summary>
-            DefaultAPSIM,
-
-            /// <summary>Alternative method, using root length and modified kL.</summary>
-            AlternativeKL,
-
-            /// <summary>Alternative method, using root length and relative Ksat.</summary>
-            AlternativeKS
-        }
-
         #endregion  --------------------------------------------------------------------------------------------------------
 
         #region Model outputs  ---------------------------------------------------------------------------------------------
@@ -1802,7 +1672,6 @@
         {
             get { return MathUtilities.Divide(AboveGroundN, AboveGroundWt, 0.0); }
         }
-
 
         /// <summary>Gets the average N concentration in plant's leaves (kgN/kgDM).</summary>
         //[Description("Average N concentration in plant's leaves")]
@@ -2600,15 +2469,11 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
-            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
-            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
-            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
-
-            // get the number of layers in the soil profile
+            // get the number of layers in the soil and initialise water and N variables
             nLayers = soilPhysical.Thickness.Length;
+            InitiliaseSoilArrays();
 
-            // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
+            // initialise the base, or main, root zone; more zones can be added by user
             roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
                                MinimumGreenWt * MinimumGreenRootProp);
 
@@ -2628,10 +2493,7 @@
                 roots.Add(newRootOrgan);
             }
 
-            // initialise soil water and N variables
-            InitiliaseSoilArrays();
-
-            // Set the minimum green DM
+            // initialise the base aboveground organs (set minimum DM)
             Leaf.Initialise(MinimumGreenWt * MinimumGreenLeafProp);
             Stem.Initialise(MinimumGreenWt * (1.0 - MinimumGreenLeafProp));
             Stolon.Initialise(0.0);
@@ -2641,6 +2503,12 @@
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
+
+            // initialise helper variables, group organs by tissue type
+            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
+            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
+            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
+            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
