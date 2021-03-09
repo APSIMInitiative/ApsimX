@@ -56,10 +56,8 @@
 
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
-        /// <param name="initialDM">Initial dry matter weight</param>
-        /// <param name="initialDepth">Initial root depth</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        public void Initialise(Zone zone, double initialDM, double initialDepth, double minLiveDM)
+        public void Initialise(Zone zone, double minLiveDM)
         {
             soil = zone.FindInScope<Soil>();
             if (soil == null)
@@ -96,24 +94,15 @@
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
 
-            // save the parameters for this organ
-            minimumLiveDM = minLiveDM;
-
             // initialise tissues
             Live = tissue[0];
             Dead = tissue[1];
+            Live.InitialiseLayeredVariables();
+            Dead.InitialiseLayeredVariables();
 
-            // Initialise root DM, N, depth, and distribution
-            Depth = initialDepth;
-            CalculateRootZoneBottomLayer();
+            // save minimum DM and get target root distribution
+            minimumLiveDM = minLiveDM;
             TargetDistribution = RootDistributionTarget();
-
-            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
-            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
-
-            // Initialise the live tissue.
-            Live.Initialise(initialDMByLayer, initialNByLayer);
-            Dead.Initialise(null, null);
         }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
@@ -364,6 +353,7 @@
             var rootBiomass = MathUtilities.Multiply_Value(rootFractions, rootWt);
             var rootNContents = MathUtilities.Multiply_Value(rootBiomass, NConcOptimum);
             Live.Reset(rootBiomass, rootNContents);
+            Dead.Reset(new double[nLayers], new double[nLayers]);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>

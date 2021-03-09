@@ -2474,8 +2474,7 @@
             InitiliaseSoilArrays();
 
             // initialise the base, or main, root zone; more zones can be added by user
-            roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
-                               MinimumGreenWt * MinimumGreenRootProp);
+            roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2487,9 +2486,7 @@
 
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
-                newRootOrgan.Initialise(zone, 
-                                        rootZone.RootDM, rootZone.RootDepth,
-                                        MinimumGreenWt * MinimumGreenRootProp);
+                newRootOrgan.Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
                 roots.Add(newRootOrgan);
             }
 
