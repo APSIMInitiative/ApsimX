@@ -296,7 +296,7 @@
                 IModel currentNode = explorerPresenter.CurrentNode as IModel;
                 if (currentNode != null)
                 {
-                    ICommand command = new AddModelCommand(currentNode, text);
+                    ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
                     explorerPresenter.CommandHistory.Add(command, true);
                     // todo: test this
                     // explorerPresenter.Refresh();
@@ -361,7 +361,7 @@
         {
             try
             {
-                IModel model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as IModel;
+                IModel model = explorerPresenter.CurrentNode;
                 if (model != null && model.GetType().Name != "Simulations")
                     this.explorerPresenter.MoveDown(model);
             }

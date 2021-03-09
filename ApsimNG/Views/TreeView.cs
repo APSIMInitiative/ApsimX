@@ -154,14 +154,21 @@ namespace UserInterface.Views
                 else
                     return string.Empty;
             }
-
             set
             {
                 if (SelectedNode != value && value != string.Empty)
                 {
-                    TreePath pathToSelect = treemodel.GetPath(FindNode(value));
-                    if (pathToSelect != null)
-                        treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    TreeIter iter = FindNode(value);
+                    if (!iter.Equals(TreeIter.Zero))
+                    {
+                        TreePath pathToSelect = treemodel.GetPath(iter);
+                        if (pathToSelect != null)
+                            treeview1.SetCursor(pathToSelect, null, false);
+                        // Scroll to the newly-selected cell (if necessary; in theory, setting
+                        // use_align to false should cause the tree to perform the minimum amount
+                        // of scrolling necessary to bring the cell onscreen).
+                        treeview1.ScrollToCell(pathToSelect, null, false, 0, 0);
+                    }
                 }
             }
         }
@@ -278,9 +285,14 @@ namespace UserInterface.Views
                 if (!pathToSelect.Prev())         // If there's a "previous" sibling, use that
                     pathToSelect.Up();            // and if that didn't work, use the parent
             }
-            treemodel.Remove(ref node);
+
+            // Note: gtk_tree_store_remove() seems quite slow if the node being
+            // deleted is selected. Therefore, we select the next node *before*
+            // deleting the specified node.
             if (pathToSelect != null)
                 treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+
+            treemodel.Remove(ref node);
         }
 
         /// <summary>Adds a child node.</summary>
@@ -373,7 +385,21 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Refresh the node at the given data..
+        /// Add a node as a child of the model specified by path.
+        /// </summary>
+        /// <param name="path">Path of the node to which the model will be added.</param>
+        /// <param name="description">Model to be added.</param>
+        public void AddNode(string path, TreeViewNode description)
+        {
+            TreeIter parent = FindNode(path);
+            if (parent.Equals(TreeIter.Zero))
+                throw new Exception($"Unable to add node at path '{path}' - path is invalid");
+            TreeIter child = treemodel.AppendNode(parent);
+            RefreshNode(child, description);
+        }
+
+        /// <summary>
+        /// Refresh the node at the given data.
         /// </summary>
         /// <param name="path">The node to refresh.</param>
         /// <param name="description">Data to use to refresh the node.</param>
@@ -382,25 +408,7 @@ namespace UserInterface.Views
             TreeIter iter = FindNode(path);
             if (iter.Equals(TreeIter.Zero))
                 throw new Exception($"Unable to refresh node - invalid path '{path}'");
-            
-            // The recursive calls to RefreshNode() will add in all of its children - so
-            // we need to first remove any existing children. Afterwards, we want any
-            // previously-expanded nodes to still be expanded, so we first need to record
-            // which rows are expanded.
-            List<string> expandedRows = new List<string>();
-            treeview1.MapExpandedRows(new TreeViewMappingFunc((tree, path) => expandedRows.Add(path.ToString())));
-
-            while (treemodel.IterChildren(out TreeIter child, iter))
-                treemodel.Remove(ref child);
-
-            RefreshNode(iter, description);
-
-            foreach (string row in expandedRows)
-            {
-                // treemodel.GetIter(out TreeIter rowIter, rowPath);
-                // if (IsAncestor(iter, rowIter))
-                    treeview1.ExpandRow(new TreePath(row), false);
-            }
+            RefreshNode(iter, description, false);
         }
 
         /// <summary>
@@ -428,7 +436,8 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="node">The node.</param>
         /// <param name="description">The description.</param>
-        private void RefreshNode(TreeIter node, TreeViewNode description)
+        /// <param name="replace">Should any existing nodes be replaced?</param>
+        private void RefreshNode(TreeIter node, TreeViewNode description, bool replace = true)
         {
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
@@ -436,10 +445,19 @@ namespace UserInterface.Views
             string tick = description.Checked ? "✓" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
-            for (int i = 0; i < description.Children.Count; i++)
+            foreach (TreeViewNode child in description.Children)
             {
-                TreeIter iter = treemodel.AppendNode(node);
-                RefreshNode(iter, description.Children[i]);
+                TreeIter iter;
+                if (replace)
+                    iter = treemodel.AppendNode(node);
+                else
+                {
+                    // Need a better way of finding the path of a treeviewnode.
+                    TreePath treePath = treemodel.GetPath(node);
+                    string path = GetFullPath(treePath);
+                    iter = FindNode($"{path}.{child.Name}");
+                }
+                RefreshNode(iter, child, replace);
             }
         }
 

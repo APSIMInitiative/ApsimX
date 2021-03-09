@@ -38,6 +38,11 @@
         /// <summary>Presenter for the component</summary>
         private IPresenter currentRightHandPresenter;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ITreeView Tree => view.Tree;
+
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
@@ -140,14 +145,11 @@
         /// <param name="explorerPresenter">The presenter for this object</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.CommandHistory = new CommandHistory();
             // When the user undoes/redoes something we want to select the affected
             // model. Therefore we can use the same callback for both events.
-            this.CommandHistory.OnDo += OnUndoRedo;
-            this.CommandHistory.OnUndo += OnUndoRedo;
-            this.CommandHistory.OnRedo += OnUndoRedo;
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
+            this.CommandHistory = new CommandHistory(this.view.Tree);
             this.mainMenu = new MainMenu(this);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
@@ -165,53 +167,6 @@
                 this.view.Tree.ExpandNodes(file.ExpandedNodes);
 
             this.PopulateMainMenu();
-        }
-
-        /// <summary>
-        /// Called after undoing/redoing a command.
-        /// Selects the model which was affected by the command.
-        /// </summary>
-        /// <param name="command">The command which has been executed.</param>
-        /// <remarks>
-        /// When the user undoes/redoes something we want to select the affected
-        /// model. Therefore this callback is used for both undo and redo operations.
-        /// </remarks>
-        public void OnUndoRedo(ICommand command)
-        {
-            // Refresh();
-            if (command.AffectedModel != null)
-            {
-                IModel modelToSelect;
-                IModel modelToRefresh;
-                bool expandChildren = false;
-                if (command is AddModelCommand)
-                {
-                    modelToSelect = modelToRefresh = command.AffectedModel.Parent;
-                    expandChildren = true;
-                }
-                else if (command is DeleteModelCommand delete)
-                {
-                    modelToRefresh = command.AffectedModel.Parent;
-                    // After deleting a model, we want to select its nearest sibling.
-                    if (modelToRefresh.Children.Any())
-                        modelToSelect = modelToRefresh.Children[Math.Min(modelToRefresh.Children.Count - 1, delete.Pos)];
-                    else
-                        modelToSelect = modelToRefresh;
-                }
-                else if (command is MoveModelUpDownCommand || command is MoveModelCommand)
-                {
-                    modelToRefresh = command.AffectedModel.Parent;
-                    modelToSelect = command.AffectedModel;
-                }
-                else
-                    modelToSelect = modelToRefresh = command.AffectedModel;
-
-                RefreshNode(modelToRefresh);
-                SelectNode(modelToSelect);
-
-                if (expandChildren)
-                    view.Tree.ExpandChildren(modelToRefresh.FullPath, true);
-            }
         }
 
         /// <summary>
@@ -239,9 +194,6 @@
             {
                 if (File.Exists(ApsimXFile.FileName))
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
-                CommandHistory.OnDo -= OnUndoRedo;
-                CommandHistory.OnRedo -= OnUndoRedo;
-                CommandHistory.OnUndo -= OnUndoRedo;
             }
             catch
             {
@@ -396,11 +348,6 @@
         public void SelectNode(IModel node, bool refreshRightHandPanel = true)
         {
             SelectNode(node.FullPath, refreshRightHandPanel);
-            if (refreshRightHandPanel)
-            {
-                this.HideRightHandPanel();
-                this.ShowRightHandPanel();
-            }
         }
 
         /// <summary>Select a node in the view.</summary>
@@ -541,7 +488,7 @@
         {
             try
             {
-                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model), this.view);
+                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -556,7 +503,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -571,7 +518,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -1006,7 +953,7 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(toParent, modelString);
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
                         CommandHistory.Add(command, true);
                         // RefreshNode(toParent);
                     }
@@ -1017,7 +964,7 @@
                             Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
                             if (fromModel != null)
                             {
-                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
+                                cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
                                 CommandHistory.Add(cmd);
                                 // RefreshNode(toParent);
                                 RefreshNode(fromModel.Parent);
@@ -1049,7 +996,7 @@
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
-                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName, this.view);
+                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
                             this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
@@ -1082,7 +1029,7 @@
                     IModel firstModel = model.Parent.Children[0];
                     if (model != firstModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, true, view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, true));
                     }
                 }
             }
@@ -1106,7 +1053,7 @@
                     IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                     if (model != lastModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, false, this.view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, false));
                     }
                 }
             }
@@ -1136,20 +1083,11 @@
 
             description.Children = new List<TreeViewNode>();
             foreach (Model child in model.Children)
-            {
                 if (!child.IsHidden)
-                {
-                    description.Children.Add(this.GetNodeDescription(child));
-                }
-            }
+                    description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
             description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
             description.Colour = System.Drawing.Color.Empty;
-            /*
-            // Set the colour here
-            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
-            description.Colour = colour;
-            */
             return description;
         }
 

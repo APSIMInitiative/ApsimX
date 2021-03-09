@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Models.Core;
 using UserInterface.Commands;
-using UserInterface.Presenters;
+using UserInterface.Interfaces;
 
 namespace UserInterface
 {
@@ -22,42 +22,25 @@ namespace UserInterface
         private int lastExecuted = -1;
         private int lastSaved = -1;
         private bool inUndoRedo = false;
+        private ITreeView tree;
 
-        public event Changed OnChanged = (h) => { };
         public event ModelChangedDelegate ModelChanged;
         public event ModelStructureChangedDelegate OnUndo;
         public event ModelStructureChangedDelegate OnRedo;
         public event ModelStructureChangedDelegate OnDo;
+
+        public CommandHistory(ITreeView tree) => this.tree = tree;
 
         public void Clear()
         {
             commands.Clear();
             lastExecuted = -1;
             lastSaved = -1;
-
-            OnChanged(false);
         }
 
         public void Save()
         {
             lastSaved = lastExecuted;
-
-            OnChanged(false);
-        }
-
-        public bool Modified
-        {
-            get { return lastSaved != lastExecuted; }
-        }
-
-        public int Size
-        {
-            get { return commands.Count; }
-        }
-
-        public int LastExecuted
-        {
-            get { return lastExecuted; }
         }
 
         public void Limit(int numCommands)
@@ -93,12 +76,10 @@ namespace UserInterface
             lastExecuted = commands.Count - 1; 
 
             if (execute)
-            {
-                command.Do(this);
-            }
+                command.Do(tree, InvokeModelChanged);
 
-            OnChanged(true);
-            OnDo(command);
+            if (OnDo != null)
+                OnDo(command);
         }
 
         public void Undo()
@@ -110,10 +91,10 @@ namespace UserInterface
                     inUndoRedo = true;
                     try
                     {
-                        commands[lastExecuted].Undo(this);
+                        commands[lastExecuted].Undo(tree, InvokeModelChanged);
                         lastExecuted--;
-                        OnChanged(lastExecuted != lastSaved);
-                        OnUndo(commands[lastExecuted + 1]);
+                        if (OnUndo != null)
+                            OnUndo(commands[lastExecuted + 1]);
                     }
                     finally
                     {
@@ -130,10 +111,10 @@ namespace UserInterface
                 inUndoRedo = true;
                 try
                 {
-                    commands[lastExecuted + 1].Do(this);
+                    commands[lastExecuted + 1].Do(tree, InvokeModelChanged);
                     lastExecuted++;
-                    OnChanged(lastExecuted != lastSaved);
-                    OnRedo(commands[lastExecuted]);
+                    if (OnRedo != null)
+                        OnRedo(commands[lastExecuted]);
                 }
                 finally
                 {
@@ -142,7 +123,7 @@ namespace UserInterface
             }
         }
 
-        public void InvokeModelChanged(object model)
+        private void InvokeModelChanged(object model)
         {
             if (ModelChanged != null && model != null)
                 ModelChanged(model);
