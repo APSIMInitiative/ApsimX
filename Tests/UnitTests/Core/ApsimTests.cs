@@ -214,11 +214,12 @@
         [Test]
         public void MoveUpDown()
         {
-            CommandHistory commandHistory = new CommandHistory();
+            var tree = new MockTreeView();
+            CommandHistory commandHistory = new CommandHistory(tree);
             Model modelToMove = simulations.FindByPath("APS14.Factors.Permutation.NRate")?.Value as Model;
 
-            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true, null);
-            moveCommand.Do(commandHistory);
+            MoveModelUpDownCommand moveCommand = new MoveModelUpDownCommand(modelToMove, true);
+            moveCommand.Do(tree, _ => {});
 
             Model modelToMove2 = simulations.FindByPath("APS14.Factors.NRate")?.Value as Model;
 
