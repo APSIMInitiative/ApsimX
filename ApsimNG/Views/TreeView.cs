@@ -511,9 +511,6 @@ namespace UserInterface.Views
                 if (nodeName == pathBit)
                 {
                     result = iter;
-                    TreePath path = treemodel.GetPath(iter);
-                    if (!treeview1.GetRowExpanded(path))
-                        treeview1.ExpandRow(path, false);
                     treemodel.IterChildren(out iter, iter);
                 }
                 else
