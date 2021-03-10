@@ -182,8 +182,6 @@
 
                     var command = new AddModelCommand(this.model, child, explorerPresenter.GetNodeDescription);
                     explorerPresenter.CommandHistory.Add(command, true);
-                    // testme
-                    // explorerPresenter.Refresh();
                 }
             }
             finally
