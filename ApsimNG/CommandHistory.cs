@@ -6,9 +6,7 @@ using UserInterface.Interfaces;
 
 namespace UserInterface
 {
-    public delegate void Changed(bool haveUnsavedChanges);
     public delegate void ModelChangedDelegate(object changedModel);
-    public delegate void ModelStructureChangedDelegate(ICommand command);
 
     /// <summary>
     /// Simple Command history class.
@@ -25,9 +23,6 @@ namespace UserInterface
         private ITreeView tree;
 
         public event ModelChangedDelegate ModelChanged;
-        public event ModelStructureChangedDelegate OnUndo;
-        public event ModelStructureChangedDelegate OnRedo;
-        public event ModelStructureChangedDelegate OnDo;
 
         public CommandHistory(ITreeView tree) => this.tree = tree;
 
@@ -42,6 +37,8 @@ namespace UserInterface
         {
             lastSaved = lastExecuted;
         }
+
+        public bool Modified => lastSaved != lastExecuted;
 
         public void Limit(int numCommands)
         {
@@ -77,9 +74,6 @@ namespace UserInterface
 
             if (execute)
                 command.Do(tree, InvokeModelChanged);
-
-            if (OnDo != null)
-                OnDo(command);
         }
 
         public void Undo()
@@ -93,8 +87,6 @@ namespace UserInterface
                     {
                         commands[lastExecuted].Undo(tree, InvokeModelChanged);
                         lastExecuted--;
-                        if (OnUndo != null)
-                            OnUndo(commands[lastExecuted + 1]);
                     }
                     finally
                     {
@@ -113,8 +105,6 @@ namespace UserInterface
                 {
                     commands[lastExecuted + 1].Do(tree, InvokeModelChanged);
                     lastExecuted++;
-                    if (OnRedo != null)
-                        OnRedo(commands[lastExecuted]);
                 }
                 finally
                 {

@@ -236,6 +236,31 @@
             this.ApsimXFile = null;
         }
 
+        public bool FileHasPendingChanges()
+        {
+            try
+            {
+                // Need to hide the right hand panel because some views may not save
+                // their contents until they get a 'Detach' call.
+                this.HideRightHandPanel();
+
+                // Check the command history (beta feature - see comment in the
+                // property description for more details).
+                if (Configuration.Settings.UseFastFileClose)
+                    return CommandHistory.Modified;
+
+                // The fallback is to write the file to json then compare to the
+                // file on disk.
+                string newSim = FileFormat.WriteToString(ApsimXFile);
+                string origSim = File.ReadAllText(ApsimXFile.FileName);
+                return string.Compare(newSim, origSim) != 0;
+            }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
+        }
+
         /// <summary>
         /// Called by TabbedExplorerPresenter to do a save. Return true if all ok.
         /// </summary>
@@ -256,19 +281,7 @@
                     }
                     else
                     {
-                        // Need to hide the right hand panel because some views may not save
-                        // their contents until they get a 'Detach' call.
-                        this.HideRightHandPanel();
-
-                        // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                        // serialise ApsimXFile to buffer
-                        string newSim = FileFormat.WriteToString(ApsimXFile);
-
-                        StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
-                        string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                        simStream.Close();
-
-                        if (string.Compare(newSim, origSim) != 0)
+                        if (FileHasPendingChanges())
                         {
                             choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
                         }
@@ -290,7 +303,6 @@
             catch (Exception err)
             {
                 MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
-                this.ShowRightHandPanel();
                 result = false;
             }
 
