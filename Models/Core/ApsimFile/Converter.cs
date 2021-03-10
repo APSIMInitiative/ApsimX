@@ -3409,7 +3409,7 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(organ, "Photosynthesis", "0");
 
                 // Add an initial nconc which points to minimum NConc.
-                JsonUtilities.AddVariableReferenceIfNotExists(organ, "initialNConcFunction", "[minimumNConc]");
+                JsonUtilities.AddVariableReferenceIfNotExists(organ, "initialNConcFunction", $"[{organ["Name"]}].MinimumNConc");
 
                 // Add a BiomassDemand with 3 child constants (structural, metabolic, storage)
                 // each with a value of 1.
