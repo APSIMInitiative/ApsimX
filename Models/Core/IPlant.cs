@@ -5,7 +5,7 @@
     /// crops must have. In effect this interface describes the interactions
     /// between a crop and the other models in APSIM.
     /// </summary>
-    public interface IPlant
+    public interface IPlant : IModel
     {
         /// <summary>The plant type.</summary>
         /// <remarks>A substitute for the old Leguminosity.</remarks>
