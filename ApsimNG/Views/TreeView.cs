@@ -280,7 +280,9 @@ namespace UserInterface.Views
             TreePath pathToSelect = treemodel.GetPath(node);
             if (pathToSelect.Compare(cursorPath) != 0)
                 pathToSelect = null;
-            else if (!treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+            else if (treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+                pathToSelect = treemodel.GetPath(nextSel);
+            else
             {                                     // Otherwise
                 if (!pathToSelect.Prev())         // If there's a "previous" sibling, use that
                     pathToSelect.Up();            // and if that didn't work, use the parent
