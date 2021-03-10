@@ -63,8 +63,7 @@
             set
             {
                 showDocumentationStatus = value;
-                throw new NotImplementedException();
-                // Refresh();
+                RefreshNode(ApsimXFile);
             }
         }
 
@@ -172,6 +171,18 @@
         /// <summary>
         /// Refresh the specified model and its descendants in the tree control.
         /// </summary>
+        /// <remarks>
+        /// This does not fully account for changes in the model structure. It will
+        /// not remove any nodes which have been removed from the simulations object,
+        /// and although it will add in new nodes which have been added to the
+        /// simulations object, their position among their siblings will be incorrect
+        /// if the model wasn't appended to the end of the simulations list (ie if it
+        /// was inserted somewhere in the middle).
+        /// 
+        /// That being said, this is much faster than refreshing the entire simulations
+        /// tree and it has other advantages such as maintaining the position of the
+        /// scrollbar.
+        /// </remarks>
         /// <param name="model">Model to be refreshed.</param>
         public void RefreshNode(IModel model)
         {
@@ -180,11 +191,17 @@
         }
 
         /// <summary>
-        /// Refresh the view.
+        /// Fully populate/refresh the view.
         /// </summary>
+        /// <remarks>
+        /// This will remove all nodes from the tree and rebuild it from scratch.
+        /// This will be slower than calling RefreshNode() and passing in the
+        /// top-level node, and it may also cause other unexpected behaviour such
+        /// as changing the scrollbar position. Any expanded nodes will remain expanded.
+        /// </remarks>
         public void Populate()
         {
-            view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
+            view.Tree.Populate(GetNodeDescription(ApsimXFile));
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -955,7 +972,6 @@
                     {
                         var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
                         CommandHistory.Add(command, true);
-                        // RefreshNode(toParent);
                     }
                     else if (e.Moved)
                     {
@@ -966,8 +982,6 @@
                             {
                                 cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
                                 CommandHistory.Add(cmd);
-                                // RefreshNode(toParent);
-                                RefreshNode(fromModel.Parent);
                             }
                         }
                     }
@@ -1082,7 +1096,7 @@
             description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
-            foreach (Model child in model.Children)
+            foreach (IModel child in model.Children)
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;

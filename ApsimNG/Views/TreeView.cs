@@ -405,41 +405,31 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="path">The node to refresh.</param>
         /// <param name="description">Data to use to refresh the node.</param>
+        /// <remarks>
+        /// This will not remove any existing children - but it will append new ones.
+        /// If any children already exist, they must be removed before calling this function.
+        /// </remarks>
         public void RefreshNode(string path, TreeViewNode description)
         {
             TreeIter iter = FindNode(path);
             if (iter.Equals(TreeIter.Zero))
                 throw new Exception($"Unable to refresh node - invalid path '{path}'");
-            RefreshNode(iter, description, false);
-        }
-
-        /// <summary>
-        /// Check if a TreeIter is an ancestor of another TreeIter.
-        /// </summary>
-        /// <param name="ancestor"></param>
-        /// <param name="child"></param>
-        /// <returns></returns>
-        private bool IsAncestor(TreeIter ancestor, TreeIter child)
-        {
-            if (ancestor.Equals(TreeIter.Zero) || child.Equals(TreeIter.Zero) || ancestor.Equals(child))
-                return false;
-            while (treemodel.IterParent(out TreeIter parent, child))
-            {
-                if (parent.Equals(ancestor))
-                    return true;
-                child = parent;
-            }
-            return false;
+            RefreshNode(iter, description);
         }
 
         /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
         /// Recursively descends through all child nodes as well.
         /// </summary>
+        /// <remarks>
+        /// If any models have been deleted, calls to this function will not
+        /// cause those models to be removed from the tree. When child models are
+        /// updated, this function will attempt to update any existing tree nodes
+        /// representing the children - if none exist, they will be added.
+        /// </remarks>
         /// <param name="node">The node.</param>
         /// <param name="description">The description.</param>
-        /// <param name="replace">Should any existing nodes be replaced?</param>
-        private void RefreshNode(TreeIter node, TreeViewNode description, bool replace = true)
+        private void RefreshNode(TreeIter node, TreeViewNode description)
         {
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
@@ -449,17 +439,11 @@ namespace UserInterface.Views
 
             foreach (TreeViewNode child in description.Children)
             {
-                TreeIter iter;
-                if (replace)
+                string path = GetFullPath(treemodel.GetPath(node));
+                TreeIter iter = FindNode($"{path}.{child.Name}");
+                if (iter.Equals(TreeIter.Zero))
                     iter = treemodel.AppendNode(node);
-                else
-                {
-                    // Need a better way of finding the path of a treeviewnode.
-                    TreePath treePath = treemodel.GetPath(node);
-                    string path = GetFullPath(treePath);
-                    iter = FindNode($"{path}.{child.Name}");
-                }
-                RefreshNode(iter, child, replace);
+                RefreshNode(iter, child);
             }
         }
 
@@ -501,22 +485,29 @@ namespace UserInterface.Views
 
             TreeIter result = TreeIter.Zero;
             TreeIter iter;
-            treemodel.GetIterFirst(out iter);
-
-            foreach (string pathBit in namePathBits)
+            if (!treemodel.GetIterFirst(out iter))
+                // The tree is empty.
+                return TreeIter.Zero;
+            for (int i = 0; i < namePathBits.Length; i++)
             {
+                string pathBit = namePathBits[i];
                 string nodeName = (string)treemodel.GetValue(iter, 0);
                 while (nodeName != pathBit && treemodel.IterNext(ref iter))
+                {
                     nodeName = (string)treemodel.GetValue(iter, 0);
+                }
                 if (nodeName == pathBit)
                 {
                     result = iter;
-                    treemodel.IterChildren(out iter, iter);
+                    if (!treemodel.IterChildren(out iter, iter) && i != namePathBits.Length - 1)
+                        // We've found an ancestor but it has no children.
+                        return TreeIter.Zero;
                 }
                 else
+                    // Unable to locate an ancestor at this level.
                     return TreeIter.Zero;
             }
-            return result;         
+            return result;
         }
 
         /// <summary>

@@ -298,11 +298,6 @@
                 {
                     ICommand command = new AddModelCommand(currentNode, text, explorerPresenter.GetNodeDescription);
                     explorerPresenter.CommandHistory.Add(command, true);
-                    // todo: test this
-                    // explorerPresenter.Refresh();
-                    // if (currentNode.Children.Count == 1)
-                    //     explorerPresenter.ExpandChildren(currentNode.FullPath, true);
-                    // explorerPresenter.SelectNode(currentNode, false);
                 }
             }
             catch (Exception err)
@@ -723,9 +718,11 @@
                 {
                     foreach (IModel child in model.FindAllDescendants())
                         child.IsHidden = !child.IsHidden;
-                    // todo: test this
-                    explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                    explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
+                    foreach (IModel child in model.Children)
+                        if (child.IsHidden)
+                            explorerPresenter.Tree.Delete(child.FullPath);
+                    explorerPresenter.PopulateContextMenu(model.FullPath);
+                    explorerPresenter.RefreshNode(model);
                 }
             }
             catch (Exception err)
@@ -769,12 +766,14 @@
                         model.OnCreated();
                         foreach (IModel descendant in model.FindAllDescendants().ToList())
                             descendant.OnCreated();
+                        if (model is ModelCollectionFromResource)
+                            foreach (IModel child in model.Children)
+                                if (child.IsHidden)
+                                    explorerPresenter.Tree.Delete(child.FullPath);
                     }
 
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                    // testme
-                    // explorerPresenter.Refresh();
-                    explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
+                    explorerPresenter.RefreshNode(model);
                 }
             }
             catch (Exception err)
@@ -813,8 +812,6 @@
 
                 // Refresh the context menu.
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                // testme
-                // explorerPresenter.Refresh();
                 explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
             }
             catch (Exception err)
