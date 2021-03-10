@@ -778,9 +778,9 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        if(Double.IsNaN(LightProfile[i].amount)) 
+                        if(Double.IsNaN(LightProfile[i].AmountOnGreen)) 
                             TotalRadn += 0;
-                    else TotalRadn += LightProfile[i].amount;
+                    else TotalRadn += LightProfile[i].AmountOnGreen;
                     return TotalRadn;                    
                 }
                 else

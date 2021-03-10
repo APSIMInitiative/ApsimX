@@ -188,7 +188,7 @@
         /// <returns>Full path to the image.</returns>
         public static string GetImagePath(string imageName, string imageDirectory)
         {
-            string path = Path.Combine(imageDirectory, imageName);
+            string path = Path.Combine(imageDirectory, $"{Path.GetFileNameWithoutExtension(imageName)}-{Guid.NewGuid()}.png");
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 GetImageResource(imageName).CopyTo(file);
