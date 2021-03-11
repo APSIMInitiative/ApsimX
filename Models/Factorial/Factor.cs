@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
+            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -49,11 +49,18 @@
             {
                 List<CompositeFactor> factorValues = new List<CompositeFactor>();
 
-                if (Specification.Contains(" to ") &&
-                    Specification.Contains(" step "))
+                if (Specification.Contains(" to ") && Specification.Contains(" step "))
+                {
+                    if (childCompositeFactors.Any())
+                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                     factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
+                }
                 else if (Specification.Contains('='))
+                {
+                    if (childCompositeFactors.Any())
+                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                     factorValues.AddRange(SetSpecificationToFactorValues(Specification));
+                }
                 else
                     factorValues.AddRange(ModelReplacementToFactorValues(Specification));
 
