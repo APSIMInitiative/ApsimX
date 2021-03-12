@@ -160,7 +160,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line;
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line + 1;
             }
         }
 
