@@ -20360,7 +20360,7 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[SowingRule].Script.Cultivar = CSH13R",
+                        "[SowingRule].Script.Cultivar = Buster",
                         "[SowingRule].Script.Ftn = 0",
                         "[Weather].FullFileName = Met\\HE6.met",
                         "[Soil].Chemical.NO3N = 1.493, 1.633, 1.233, 0.9, 1.1, 1.4670000000000005, 2.516, 3.0670000000000006, 3.0120000000000005, 2.975999999999999",
