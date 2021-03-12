@@ -19958,6 +19958,15 @@
               "Name": "Hermitage1997",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "|SimulationName              |Fertiliser |Irrigation |Cultivar  |\n|----------------------------|-----------|-----------|----------|\n|FertHighIrrigHighCvBuster   |High       |High       |Buster    |\n|FertHighIrrigHighCvM351     |High       |High       |M35-1     |\n|FertHighIrrigHighCvCSH13R   |High       |High       |CSH13R    |\n|FertLowIrrigHighCvBuster    |Low        |High       |Buster    |\n|FertLowIrrigHighCvM351      |Low        |High       |M35-1     |\n|FertLowIrrigHighCvCSH13R    |Low        |High       |CSH13R    |\n|FertHighIrrigLowCvBuster    |High       |Low        |Buster    |\n|FertHighIrrigLowCvM351      |High       |Low        |M35-1     |\n|FertHighIrrigLowCvCSH13R    |High       |Low        |CSH13R    |\n|FertLowIrrigLowCvBuster     |Low        |Low        |Buster    |\n|FertLowIrrigLowCvM351       |Low        |Low        |M35-1     |\n|FertLowIrrigLowCvCSH13R     |Low        |Low        |CSH13R    |",
+                  "Name": "Hermitage1997 Description",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Factors, Models",
                   "Name": "Factors",
                   "Children": [
