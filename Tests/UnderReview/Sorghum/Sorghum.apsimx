@@ -11036,6 +11036,7 @@
                       "Specifications": [
                         "[SowingRule].Script.Cultivar = Buster",
                         "[SowingRule].Script.Ftn = 0.2",
+                        "[Clock].EndDate = 1997-06-30",
                         "[FertiliserSchedule]",
                         "[IrrigationSchedule]"
                       ],
@@ -11163,6 +11164,7 @@
                       "Specifications": [
                         "[SowingRule].Script.Cultivar = M35-1",
                         "[SowingRule].Script.Ftn = 0",
+                        "[Clock].EndDate = 1997-06-30",
                         "[FertiliserSchedule]",
                         "[IrrigationSchedule]"
                       ],
