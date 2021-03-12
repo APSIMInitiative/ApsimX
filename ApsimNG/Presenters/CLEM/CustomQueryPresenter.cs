@@ -1,11 +1,11 @@
-﻿using ApsimNG.Views.CLEM;
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM.Reporting;
 using System;
 using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models.Storage;
+using Userinterface.Views;
 
 namespace ApsimNG.Presenters.CLEM
 {
@@ -60,12 +60,15 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         public void Detach()
         {
-            view.RunQuery -= OnRunQuery;
-            view.LoadFile -= OnLoadFile;
-            view.WriteTable -= OnWriteTable;
-            view.Grid.Dispose();
-            view.Detach();
-            TrackChanges();
+            if (!(view is null))
+            {
+                view.RunQuery -= OnRunQuery;
+                view.LoadFile -= OnLoadFile;
+                view.WriteTable -= OnWriteTable;
+                view.Grid.Dispose();
+                view.Detach();
+                TrackChanges();
+            }
         }
 
         /// <summary>

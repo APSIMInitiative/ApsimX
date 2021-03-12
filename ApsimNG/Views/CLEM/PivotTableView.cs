@@ -1,13 +1,12 @@
-﻿using Models.Core;
-using Models.CLEM;
-using Models.CLEM.Reporting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Gtk;
+using Models.CLEM;
+using Models.CLEM.Reporting;
 using UserInterface.Views;
 using UserInterface.Extensions;
 
-namespace ApsimNG.Views.CLEM
+namespace Userinterface.Views
 {
     public interface IPivotTableView
     {

@@ -1,5 +1,4 @@
-﻿using ApsimNG.Views.CLEM;
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM.Reporting;
 using Models.Storage;
 using System;
@@ -8,6 +7,7 @@ using System.Data;
 using System.Linq;
 using UserInterface.Commands;
 using UserInterface.Presenters;
+using Userinterface.Views;
 
 namespace ApsimNG.Presenters.CLEM
 {

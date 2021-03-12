@@ -5,11 +5,11 @@ namespace UserInterface.Views
     using Gtk;
     using System.Data;
     using System;
-    using Models.Core;
     using System.Drawing;
     using System.IO;
     using System.Drawing.Imaging;
     using System.Collections.Generic;
+    using Models.Core;
     using Extensions;
 
     public interface IActivityLedgerGridView
@@ -58,7 +58,6 @@ namespace UserInterface.Views
         /// The splitter between the fixed and non-fixed grids.
         /// </summary>
         private HPaned splitter = null;
-
 
         private Gdk.Pixbuf imagePixbuf = null;
 
@@ -356,7 +355,7 @@ namespace UserInterface.Views
                     fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
                 }
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
-                fixedColumn.Visible = false;
+                fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
             }
 
@@ -388,6 +387,7 @@ namespace UserInterface.Views
 
             Grid.Show();
 
+            Fixedcolview.WidthRequest = 150;
             if (MasterView.MainWindow != null)
             {
                 MasterView.MainWindow.Cursor = null;
@@ -501,12 +501,12 @@ namespace UserInterface.Views
                 }
 
                 newLabel.UseMarkup = true;
+                newLabel.Text = System.Security.SecurityElement.Escape(Grid.Columns[i].Title);
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
                 {
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 }
-
                 newLabel.Show();
             }
         }
