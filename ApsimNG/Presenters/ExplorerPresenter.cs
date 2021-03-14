@@ -450,7 +450,7 @@
             }
 
             // Select the next node.
-            this.view.Tree.SelectedNode = (allModels[index + 1]).FullPath;
+            this.view.Tree.SelectedNode = allModels[index + 1].FullPath;
             return true;
         }
 

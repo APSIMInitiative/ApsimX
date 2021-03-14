@@ -163,7 +163,10 @@ namespace UserInterface.Views
                     {
                         TreePath pathToSelect = treemodel.GetPath(iter);
                         if (pathToSelect != null)
-                            treeview1.SetCursor(pathToSelect, null, false);
+                        {
+                            treeview1.ExpandToPath(pathToSelect);
+                            treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                        }
                         // Scroll to the newly-selected cell (if necessary; in theory, setting
                         // use_align to false should cause the tree to perform the minimum amount
                         // of scrolling necessary to bring the cell onscreen).
