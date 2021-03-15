@@ -185,9 +185,8 @@ namespace Utility
                     {
                         Weather newWeather = new Weather();
                         newWeather.FullFileName = newWeatherPath;
-                        var command = new AddModelCommand(replaceNode, newWeather);
+                        var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
                         explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.Refresh();
                     }
                 }
                 dialog1.Cleanup();
