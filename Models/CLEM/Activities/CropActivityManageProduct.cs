@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This activity is used within a crop management activity to obtain production values from the crop file.")]
+    [Description("This activity is used within a crop management activity to obtain production values from the crop file for crop(s) grown")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Crop file")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of crop file required")]
-        [Models.Core.Display(Type = DisplayType.CLEMCropFileReader)]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLiteCrop) } })]
         public string ModelNameFileCrop { get; set; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
         /// Store to put crop growth into
         /// </summary>
         [Description("Store for crop product")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(GrazeFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required]
         public string StoreItemName { get; set; }
 

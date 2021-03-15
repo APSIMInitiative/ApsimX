@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(GrazeFoodStore) } })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
