@@ -7,9 +7,9 @@ using System.Data;
 using System.Linq;
 using UserInterface.Commands;
 using UserInterface.Presenters;
-using Userinterface.Views;
+using UserInterface.Views;
 
-namespace ApsimNG.Presenters.CLEM
+namespace UserInterface.Presenters
 {
     /// <summary>
     /// Connects the PivotTableView and the PivotTable model together

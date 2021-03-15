@@ -5,9 +5,9 @@ using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models.Storage;
-using Userinterface.Views;
+using UserInterface.Views;
 
-namespace ApsimNG.Presenters.CLEM
+namespace UserInterface.Presenters
 {
     class CustomQueryPresenter : IPresenter
     {
