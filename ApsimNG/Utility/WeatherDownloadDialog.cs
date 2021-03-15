@@ -96,8 +96,16 @@ namespace Utility
             {
                 if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
                 {
-                    dialog1.DefaultHeight = vbox1.Allocation.Height + dialogVBox.Allocation.Height;
-                    dialog1.DefaultWidth = vbox1.Allocation.Width + 20;
+#if NETFRAMEWORK
+            int xres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Width;
+            int yres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Height;
+#else
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)ViewBase.MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+#endif
+                    dialog1.DefaultHeight = Math.Min(yres - dialogVBox.Allocation.Height, vbox1.Allocation.Height + dialogVBox.Allocation.Height);
+                    dialog1.DefaultWidth = Math.Min(xres - dialogVBox.Allocation.Width, vbox1.Allocation.Width + 20);
                     scroller.SizeAllocated -= OnSizeAllocated;
                 }
             }
