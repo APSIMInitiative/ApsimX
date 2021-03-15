@@ -10,8 +10,8 @@ namespace Models.CLEM.Reporting
     /// A class for custom SQL queries
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Views.CLEM.CustomQueryView")]
-    [PresenterName("ApsimNG.Presenters.CLEM.CustomQueryPresenter")]
+    [ViewName("UserInterface.Views.CustomQueryView")]
+    [PresenterName("UserInterface.Presenters.CustomQueryPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(CLEMFolder))]

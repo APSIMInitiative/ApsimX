@@ -1,7 +1,10 @@
 ﻿namespace UserInterface.Commands
 {
+    using Presenters;
     using Models.Core;
     using Models.Core.ApsimFile;
+    using Interfaces;
+    using System;
 
     /// <summary>
     /// A command for renaming a model.
@@ -10,7 +13,6 @@
     {
         private Model modelToRename;
         private string newName;
-        Interfaces.IExplorerView explorerView;
         private string originalName;
 
         /// <summary>
@@ -24,19 +26,18 @@
         /// </summary>
         /// <param name="modelToRename">The model to rename.</param>
         /// <param name="newName">The new name.</param>
-        /// <param name="explorerView">The explorer view.</param>
-        public RenameModelCommand(Model modelToRename, string newName, Interfaces.IExplorerView explorerView)
+        public RenameModelCommand(Model modelToRename, string newName)
         {
             if (modelToRename.ReadOnly)
                 throw new ApsimXException(modelToRename, string.Format("Unable to rename {0} - it is read-only.", modelToRename.Name));
             this.modelToRename = modelToRename;
             this.newName = newName.Trim();
-            this.explorerView = explorerView;
         }
 
         /// <summary>Performs the command.</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             string originalPath = this.modelToRename.FullPath;
 
@@ -45,15 +46,20 @@
 
             // Set the new name.
             Structure.Rename(modelToRename, newName);
-            explorerView.Tree.Rename(originalPath, this.modelToRename.Name);
+            tree.Rename(originalPath, this.modelToRename.Name);
+            modelChanged(modelToRename);
+            tree.SelectedNode = modelToRename.FullPath;
         }
 
         /// <summary>Undoes the command.</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
-            explorerView.Tree.Rename(modelToRename.FullPath, originalName);
+            tree.Rename(modelToRename.FullPath, originalName);
             modelToRename.Name = originalName;
+            modelChanged(modelToRename);
+            tree.SelectedNode = modelToRename.FullPath;
         }
     }
 }

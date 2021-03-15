@@ -201,7 +201,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", " ");
+                return Regex.Replace(rawSummary, @"\n\s+", "\n");
             }
             return null;
         }
@@ -258,7 +258,7 @@
             {
                 // Need to fix multiline remarks - trim newlines and consecutive spaces.
                 string remarks = summaryNode.InnerXml.Trim();
-                return Regex.Replace(remarks, @"\n\s+", " ");
+                return Regex.Replace(remarks, @"\n\s+", "\n");
             }
             return null;
         }

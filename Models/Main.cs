@@ -77,6 +77,11 @@
                 else if (options.ListSimulationNames)
                     foreach (string file in files)
                         ListSimulationNames(file, options.SimulationNameRegex);
+                else if (options.ListReferencedFileNames)
+                {
+                    foreach (string file in files)
+                        ListReferencedFileNames(file);
+                }
                 else if (options.MergeDBFiles)
                 {
                     string[] dbFiles = files.Select(f => Path.ChangeExtension(f, ".db")).ToArray();
@@ -178,6 +183,16 @@
             SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
             jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
 
+        }
+
+        private static void ListReferencedFileNames(string fileName)
+        {
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+
+            foreach (var referencedFileName in file.FindAllReferencedFiles())
+                Console.WriteLine(referencedFileName);
         }
 
         /// <summary>Job has completed</summary>
