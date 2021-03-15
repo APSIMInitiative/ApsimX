@@ -53,7 +53,7 @@ namespace UserInterface.Views
         public Gtk.TreeView Grid { get; set; }
         public Gtk.TreeView Fixedcolview { get; set; }
         private HBox hbox1 = null;
-        private Gtk.Image image1 = null;
+        private Gtk.Image image1 = new Gtk.Image();
         /// <summary>
         /// The splitter between the fixed and non-fixed grids.
         /// </summary>
@@ -75,7 +75,7 @@ namespace UserInterface.Views
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             Fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
-            image1 = (Gtk.Image)builder.GetObject("image1");
+            image1 = new Gtk.Image();
             mainWidget = hbox1;
             Grid.Model = gridmodel;
             Grid.Selection.Mode = SelectionMode.Multiple;

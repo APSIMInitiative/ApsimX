@@ -5,7 +5,7 @@ using UserInterface.Interfaces;
 using UserInterface.Views;
 using Utility;
 
-namespace Userinterface.Views
+namespace UserInterface.Views
 {
     /// <summary>
     /// Displays the result of a Custom SQL Query on a DataTable

@@ -8,8 +8,8 @@ namespace Models.CLEM.Reporting
     /// A class for performing basic pivot operations on a resource ledger
     /// </summary>
     [Serializable]
-    [ViewName("ApsimNG.Views.CLEM.PivotTableView")]
-    [PresenterName("ApsimNG.Presenters.CLEM.PivotTablePresenter")]
+    [ViewName("UserInterface.Views.PivotTableView")]
+    [PresenterName("UserInterface.Presenters.PivotTablePresenter")]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
     [Description("[DEPRECATED] - Please use the newer ReportPivot model.\n" +

@@ -6,7 +6,7 @@ using Models.CLEM.Reporting;
 using UserInterface.Views;
 using UserInterface.Extensions;
 
-namespace Userinterface.Views
+namespace UserInterface.Views
 {
     public interface IPivotTableView
     {
