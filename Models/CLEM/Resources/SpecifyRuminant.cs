@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         /// The type of ruminant
         /// </summary>
         [Description("Type of Ruminant")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(RuminantHerd) })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(RuminantHerd) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant type required")]
         public string RuminantTypeName { get; set; }
 
