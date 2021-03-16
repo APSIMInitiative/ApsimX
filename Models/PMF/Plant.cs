@@ -42,19 +42,19 @@
         public IPhenology Phenology = null;
 
         /// <summary>The arbitrator</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         public IArbitrator Arbitrator = null;
 
         /// <summary>The structure</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         public IStructure structure = null;
 
         /// <summary>The leaf</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         public ICanopy Leaf = null;
 
         /// <summary>The root</summary>
-        [Link(IsOptional = true)]
+        [Link(Type = LinkType.Child, IsOptional = true)]
         public IRoot Root = null;
 
         /// <summary>Above ground weight</summary>
