@@ -185,13 +185,13 @@ namespace UserInterface.Views
             graphViewSummary = new GraphView(this);
             alignSummary.Add(graphViewSummary.MainWidget);
             graphViewRainfall = new GraphView(this);
-            vboxRainChart.PackEnd(graphViewRainfall.MainWidget);
+            vboxRainChart.PackEnd(graphViewRainfall.MainWidget, true, true, 0);
             graphViewMonthlyRainfall = new GraphView(this);
-            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget);
+            vboxRainMonthly.PackEnd(graphViewMonthlyRainfall.MainWidget, true, true, 0);
             graphViewTemperature = new GraphView(this);
-            vboxTemp.PackEnd(graphViewTemperature.MainWidget);
+            vboxTemp.PackEnd(graphViewTemperature.MainWidget, true, true, 0);
             graphViewRadiation = new GraphView(this);
-            vboxRadn.PackEnd(graphViewRadiation.MainWidget);
+            vboxRadn.PackEnd(graphViewRadiation.MainWidget, true, true, 0);
             gridViewData = new GridView(this);
             gridViewData.ReadOnly = true;
             alignData.Add(gridViewData.MainWidget);
@@ -363,7 +363,7 @@ namespace UserInterface.Views
         }
 
         /// <summary>Populates the data.</summary>
-        /// <param name="Data">The data.</param>
+        /// <param name="data">The data.</param>
         public void PopulateData(DataTable data)
         {
             //fill the grid with data
@@ -472,28 +472,40 @@ namespace UserInterface.Views
                     case 2:
                         if (hboxOptions.Parent != alignRainChart)
                         {
-                            hboxOptions.Reparent(alignRainChart);
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignRainChart.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 3:
                         if (hboxOptions.Parent != alignRainMonthly)
                         {
-                            hboxOptions.Reparent(alignRainMonthly);
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignRainMonthly.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 4:
                         if (hboxOptions.Parent != alignTemp)
                         {
-                            hboxOptions.Reparent(alignTemp);
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignTemp.Add(hboxOptions);
                             moved = true;
                         }
                         break;
                     case 5:
                         if (hboxOptions.Parent != alignRadn)
                         {
-                            hboxOptions.Reparent(alignRadn);
+                            if (hboxOptions.Parent is Container container)
+                                container.Remove(hboxOptions);
+
+                            alignRadn.Add(hboxOptions);
                             moved = true;
                         }
                         break;
@@ -505,12 +517,19 @@ namespace UserInterface.Views
                     // On Windows, at least, these controls don't move correctly with the reparented HBox.
                     // They think they're parented correctly, but are drawn at 0,0 of the main window.
                     // We can hack around this by reparenting them somewhere else, then moving them back.
-                    Widget pa = spinStartYear.Parent;
-                    spinStartYear.Reparent(MainWidget);
-                    spinStartYear.Reparent(pa);
-                    pa = spinNYears.Parent;
-                    spinNYears.Reparent(MainWidget);
-                    spinNYears.Reparent(pa);
+                    Container pa = spinStartYear.Parent as Container;
+
+                    if (spinStartYear.Parent is Container container)
+                        container.Remove(spinStartYear);
+
+                    vbox1.Add(spinStartYear);
+                    vbox1.Remove(spinStartYear);
+                    pa.Add(spinStartYear);
+
+                    pa = spinNYears.Parent as Container;
+                    vbox1.Add(spinNYears);
+                    vbox1.Remove(spinNYears);
+                    pa.Add(spinNYears);
                 }
                 if (GraphRefreshClicked != null)
                     GraphRefreshClicked.Invoke(notebook1.CurrentPage, spinStartYear.ValueAsInt, spinNYears.ValueAsInt);

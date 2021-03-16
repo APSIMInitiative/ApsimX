@@ -5,6 +5,7 @@ namespace Utility
     using Gtk;
     using UserInterface.Views;
     using UserInterface.Presenters;
+    using UserInterface.Extensions;
 
     public class StringEntryForm
     {
@@ -19,16 +20,16 @@ namespace Utility
             Entry entryBox = (Entry)builder.GetObject("entryBox");
 
             dialog.TransientFor = topLevelWindow;
-            dialog.SetDefaultSize(600, 620);
-            dialog.Parent = topLevelWindow;
             dialog.Title = caption;
-            prompt.Text = labelText;
-            entryBox.Text = defaultText;
+            if (labelText != null)
+                prompt.Text = labelText;
+            if (defaultText != null)
+                entryBox.Text = defaultText;
             entryBox.GrabFocus();
             dialog.ShowAll();
             int response = dialog.Run();
             string text = entryBox.Text;
-            dialog.Destroy();
+            dialog.Cleanup();
 
             if (response == 1)
                 return text;

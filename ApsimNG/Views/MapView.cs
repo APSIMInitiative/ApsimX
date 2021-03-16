@@ -1,71 +1,90 @@
 ﻿namespace UserInterface.Views
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
-    using Models;
-    using SharpMap.Styles;
-    using SharpMap.Layers;
-    using SharpMap.Data.Providers;
-    using System.Drawing.Imaging;
+    using Extensions;
     using GeoAPI.Geometries;
-    using GeoAPI;
+    using Gtk;
+    using Interfaces;
+    using Models;
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
+    using SharpMap.Data.Providers;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Interfaces;
-    using Gtk;
     using Utility;
-    using SharpMap.Data;
-    using SharpMap.Rendering;
 
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface IMapView
-    {
-        /// <summary>
-        /// Invoked when the zoom level or map center is changed
-        /// </summary>
-        event EventHandler ViewChanged;
+#if NETCOREAPP
+    using ExposeEventArgs = Gtk.DrawnArgs;
+    using StateType = Gtk.StateFlags;
+#endif
 
-        /// <summary>Show the map</summary>
-        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
-
-        /// <summary>Export the map to an image.</summary>
-        System.Drawing.Image Export();
-
-        /// <summary>
-        /// Get or set the zoom factor of the map
-        /// </summary>
-        double Zoom { get; set; }
-
-        /// <summary>
-        /// Get or set the center position of the map
-        /// </summary>
-        Models.Map.Coordinate Center { get; set; }
-
-        /// <summary>
-        /// Store current position and zoom settings
-        /// </summary>
-        void StoreSettings();
-
-        /// <summary>
-        /// Hide zoom controls.
-        /// </summary>
-        void HideZoomControls();
-
-        IGridView Grid { get; }
-    }
-
+    /// <remarks>
+    /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
+    /// and room for improvement. 
+    /// 
+    /// Probably the main flaw is that maps are often very slow to render, as the basemap needs
+    /// to be downloaded. SharpMap does allow map tiles to be loaded async, but when trying that approach I found
+    /// it difficult to know when to update the map, and when it had been fully loaded (which is required when 
+    /// generating auto-docs).
+    /// 
+    /// Another flaw (a problem with SharpMap) is that it doesn't know how to "wrap" the map at the antimeridion 
+    /// (International Date Line). This makes it impossible to produce a Pacific-centered map.
+    /// 
+    /// One enhancement that should be fairly easy to implement would be to allow the user to select the basemap.
+    /// Currently it's just using OpenStreetMaps, but Bing maps and several others are readily available. The user
+    /// could be presented with a drop-down list of alternative.
+    /// 
+    /// There is a little quirk I don't understand at all - the location marker simply disappears from the map
+    /// at high resolutions. For our purposes, this generally shouldn't be a problem, but it would be nice to 
+    /// know why it happens.
+    /// 
+    /// </remarks>
     public class MapView : ViewBase, IMapView
     {
-        private const double scrollIncrement = 60;
+        /// <summary>
+        /// Indicates the ratio between steps when zooming.
+        /// </summary>
+        private const double zoomStepFactor = 1.5;
+
+        /// <remarks>
+        /// The world of mapping and GIS is a rather specialised and complex sub-field. Our needs here
+        /// are fairly simple: we just want to be able to plot locations on a base map. But how are locations
+        /// specified? Where do we get the map? What projection do we use? These remarks are intended to 
+        /// (slightly) clarify what is going on.
+        /// 
+        /// We are using SharpMap to do the map rendering, and BruTile to fetch a suitable base map. The basemap 
+        /// tiles use a "projected" coordinate system, specifically EPSG 3857 (also known as Web Mercator); 
+        /// the units in this system are (perhaps surpisingly) metres. However, the point data we wish to plot
+        /// is expressed as latitude and longitude (using a "geographic" coordinate system, specifically EPSG 4326),
+        /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
+        /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
+        /// below handle coordinate transformation.
+        /// </remarks>
+        ///  
+        /// <summary>
+        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+
+        /// <summary>
+        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -81,6 +100,23 @@
         private Map.Coordinate mouseAtDragStart;
 
         /// <summary>
+        /// Static constructor to perform 1-time initialisation.
+        /// </summary>
+        static MapView()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
+            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+        }
+
+        /// <summary>
         /// Zoom level of the map.
         /// </summary>
         public double Zoom
@@ -89,15 +125,18 @@
             {
                 if (map == null)
                     return 0;
-                return map.Zoom;
+                return Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0;
             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
-                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
+                if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
-                    map.Zoom = value;
+                    double setValue = value - 1.0;
+                    if (value >= 60.0) // Convert any "old" zoom levels into whole-world maps
+                        setValue = 0.0;
+                    map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
                     RefreshMap();
                 }
             }
@@ -112,17 +151,19 @@
             {
                 if (map == null)
                     return null;
-                return new Map.Coordinate(map.Center.Y, map.Center.X);
+                Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
+                return new Map.Coordinate(centerLatLon.Y, centerLatLon.X);
             }
             set
             {
+                Coordinate centerMetric = LatLonToMetres.MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
-                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
+                    (!MathUtilities.FloatsAreEqual(centerMetric.X, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, map.Center.Y)) )
                 {
-                    map.Center = new Coordinate(value.Longitude, value.Latitude);
+                    map.Center = centerMetric;
                     RefreshMap();
                 }
             }
@@ -131,12 +172,13 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IGridView Grid { get; private set; }
+        public IPropertyView PropertiesGrid { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
         /// </summary>
         public event EventHandler ViewChanged;
+
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world
@@ -145,15 +187,13 @@
         /// <param name="owner">Owner view.</param>
         public MapView(ViewBase owner) : base(owner)
         {
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
-
             image = new Gtk.Image();
             var container = new Gtk.EventBox();
             container.Add(image);
 
             VPaned box = new VPaned();
-            Grid = new GridView(this);
-            box.Pack1(((ViewBase)Grid).MainWidget, true, false);
+            PropertiesGrid = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesGrid).MainWidget, true, false);
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -163,7 +203,11 @@
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
             image.SizeAllocated += OnSizeAllocated;
+#if NETFRAMEWORK
             image.ExposeEvent += OnImageExposed;
+#else
+            image.Drawn += OnImageExposed;
+#endif
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
@@ -177,11 +221,16 @@
         private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            result.MaximumZoom = 720;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
-            result.Zoom = result.MaximumZoom;
-            
+            result.SRID = 3857;
+
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap), "Open Street Map");
+            result.BackgroundLayer.Add(baseLayer);
+            result.MaximumZoom = baseLayer.Envelope.Width;
+
+            // This layer as a sort of backup in case the BruTile download times out. 
+            // It should normally be invisible, as it will be covered by another layer.
             VectorLayer layWorld = new VectorLayer("Countries");
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
@@ -189,30 +238,13 @@
             layWorld.DataSource = new ShapeFile(shapeFileName, true);
             layWorld.Style = new VectorStyle();
             layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
+            Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
+            Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
             layWorld.Style.Fill = new SolidBrush(background);
             layWorld.Style.Outline.Color = foreground;
-            result.Layers.Add(layWorld);
+            layWorld.CoordinateTransformation = LatLonToMetres;
+            result.BackgroundLayer.Insert(0, layWorld);
 
-            // Show country names.
-            // Note this doesn't appear to work under mono for now.
-            LabelLayer countryNames = new LabelLayer("Country labels");
-			countryNames.DataSource = layWorld.DataSource;
-            //countryNames.Enabled = true;
-            countryNames.LabelColumn = "Name";
-            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
-            countryNames.Style = new LabelStyle();
-            countryNames.Style.CollisionDetection = true;
-            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
-            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
-            //^countryNames.Style.BackColor = new SolidBrush(foreground);
-            countryNames.Style.ForeColor = foreground;
-            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
-            //countryNames.MaxVisible = 90;
-            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
-            result.Layers.Add(countryNames);
-            
             return result;
         }
 
@@ -247,14 +279,18 @@
                 map.Dispose();
             map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
             markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
+            markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
             markerLayer.DataSource = new GeometryProvider(locations);
+            markerLayer.CoordinateTransformation = LatLonToMetres;
+
             map.Layers.Add(markerLayer);
-            map.Zoom = zoom;
-            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            Zoom = zoom;
+            Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
+            map.Center = location;
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -267,7 +303,8 @@
         /// </remarks>
         private void RefreshMap()
         {
-            image.Pixbuf = ImageToPixbuf(map.GetMap());
+            if (map != null)
+                image.Pixbuf = ImageToPixbuf(map.GetMap());
         }
 
         /// <summary>
@@ -305,9 +342,9 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Envelope viewport = map.Envelope;
-            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
+            lat = coord.Y;
+            lon = coord.X;
         }
     
         /// <summary>
@@ -327,7 +364,11 @@
             try
             {
                 RefreshMap();
+#if NETFRAMEWORK
                 image.ExposeEvent -= OnImageExposed;
+#else
+                image.Drawn -= OnImageExposed;
+#endif
             }
             catch (Exception err)
             {
@@ -401,8 +442,8 @@
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
                     // Adjust zoom level on map.
-                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
-                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? 1 : -1;
+                    Zoom = MathUtilities.Bound(Zoom + sign, 1.0, 25.0);
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.
@@ -435,12 +476,13 @@
             {
                 // Update the map size iff the allocated width and height are both > 0,
                 // and width or height have changed.
-                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
+                if (image != null && map != null &&
+                    image.Allocation.Width > 0 && image.Allocation.Height > 0
                  && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
                 {
                     image.SizeAllocated -= OnSizeAllocated;
                     map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    //RefreshMap();
+                    RefreshMap();
                     image.WidthRequest = image.Allocation.Width;
                     image.HeightRequest = image.Allocation.Height;
                     image.SizeAllocated += OnSizeAllocated;

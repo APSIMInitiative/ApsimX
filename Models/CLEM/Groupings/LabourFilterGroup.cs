@@ -75,7 +75,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -90,7 +90,7 @@ namespace Models.CLEM.Groupings
             {
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\r\n<div class=\"filterborder clearfix\">";
             if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";

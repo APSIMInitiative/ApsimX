@@ -670,10 +670,30 @@
 
                 double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    totalRadn += LightProfile[i].amount;
+                    totalRadn += LightProfile[i].AmountOnGreen;
                 return totalRadn;
             }
         }
+
+        /// <summary>
+        /// Radiation intercepted by the dead components of the canopy.
+        /// </summary>
+        [Units("MJ/m^2/day")]
+        public double RadiationInterceptedByDead
+        {
+            get
+            {
+                if (LightProfile == null)
+                    return 0;
+
+                double totalRadn = 0;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    totalRadn += LightProfile[i].AmountOnDead;
+                return totalRadn;
+            }
+        }
+
+
 
         /// <summary>
         /// Daily maximum stomatal conductance.
@@ -1181,7 +1201,7 @@
                     if ((NReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
                     else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " can reallocate up to " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day if required by the plant arbitrator to meet N demands.", indent));
                 }
                 else
                 {
@@ -1194,7 +1214,7 @@
                     if ((NRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
                     else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " can retranslocate up to " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day if required by the plant arbitrator to meet N demands.", indent));
                 }
                 else
                 {
@@ -1220,6 +1240,14 @@
                 AutoDocumentation.DocumentModel(exctF, tags, headingLevel + 2, indent);
                 IModel heightF = this.FindChild("Tallness");
                 AutoDocumentation.DocumentModel(heightF, tags, headingLevel + 2, indent);
+
+                tags.Add(new AutoDocumentation.Heading("StomatalConductance", headingLevel + 1));
+                tags.Add(new AutoDocumentation.Paragraph("Stomatal Conductance (gs) is calculated for use within the micromet model by adjusting a value provided for an atmospheric CO2 concentration of 350 ppm. The impact of other stresses  (e.g. Temperature, N) are captured through the modifier, Frgr.", indent));
+                tags.Add(new AutoDocumentation.Paragraph("  gs = Gsmax350 x FRGR x stomatalConductanceCO2Modifier", indent));
+                IModel SCCM = this.FindChild("StomatalConductanceCO2Modifier");
+                tags.Add(new AutoDocumentation.Heading("StomatalConductanceCO2Modifier", headingLevel + 2));
+                AutoDocumentation.DocumentModel(SCCM, tags, headingLevel + 2, indent);
+
 
                 // document senescence and detachment
                 tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));

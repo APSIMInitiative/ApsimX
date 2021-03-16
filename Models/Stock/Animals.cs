@@ -26,11 +26,13 @@
 
         [Description("Animal type")]
         [Display(Values = "GetAnimalTypes")]
+        [Units("-")]
         public string AnimalType { get; set; }
 
         /// <summary>Genotype of this group of animals.</summary>
         [Description("Genotype of this group of animals.")]
-        [Display(Values = "GetGenotypeNames")] 
+        [Display(Values = "GetGenotypeNames")]
+        [Units("-")]
         public string Genotype { get; set; }
 
         // ------------------ Properties for adult animals ------------------
@@ -39,10 +41,12 @@
         [Separator("Adult animals")]
 
         [Description("Number of animals")]
+        [Units("-")]
         public int Number { get; set; }
 
         /// <summary>Reproductive status of animals</summary>
         [Description("Reproductive status of animals")]
+        [Units("-")]
         public GrazType.ReproType Sex { get; set; }
 
         /// <summary>Age (days)</summary>
@@ -68,13 +72,14 @@
 
         /// <summary>Average wool fibre diameter of the animals.</summary>
         [Description("Average wool fibre diameter of the animals")]
-        [Units("u")]
+        [Units("um")]
         [Display(EnabledCallback = "IsSheepSelected")]
         public double FibreDiam { get; set; }
 
         /// <summary>Genotype of the bulls/rams to which pregnant or lactating animals were mated.</summary>
         [Description("Genotype of the bulls/rams to which pregnant or lactating animals were mated")]
         [Display(Values = "GetGenotypeNames")]
+        [Units("-")]
         public string MatedTo { get; set; }
 
         /// <summary>Days lactating. 1 or more denotes the time since parturition.</summary>
@@ -84,21 +89,24 @@
 
         /// <summary>Days pregnant. Zero denotes not pregnant.</summary>
         [Description("Days pregnant. Zero denotes not pregnant")]
-        [Units("days")]
+        [Units("d")]
         public int Pregnant { get; set; }
 
         /// <summary>Number of foetuses or suckling lambs.</summary>
         [Description("Number of foetuses or suckling lambs")]
         [Display(EnabledCallback = "ArePregnant")]
+        [Units("-")]
         public int NumFoetuses { get; set; }
 
         /// <summary>Paddock occupied by the animals.</summary>
         [Description("Paddock occupied by the animals")]
         [Display(Values = "GetFieldNames")]
+        [Units("-")]
         public string Paddock { get; set; }
 
         /// <summary>Initial tag value for the animal group.</summary>
         [Description("Initial tag value for the animal group")]
+        [Units("-")]
         public int Tag { get; set; }
 
         // ------------------ Properties for young animals ------------------
@@ -108,6 +116,7 @@
         [Separator("Young animals")]
 
         [Description("Number of suckling young")]
+        [Units("-")]
         public int NumSuckling { get; set; }
 
         /// <summary>Unfasted live weight of suckling calves/lambs.</summary>
@@ -119,6 +128,7 @@
         /// <summary>Birth Condition score.</summary>
         [Description("Birth Condition score")]
         [Display(EnabledCallback = "AreYoungPresent")]
+        [Units("-")]
         public double BirthCS { get; set; }
 
         /// <summary>Greasy fleece weight of suckling lambs.</summary>
@@ -143,12 +153,15 @@
         }
 
         /// <summary>Is the animal type sheep?</summary>
+        [Units("-")]
         public bool IsSheepSelected {  get { return AnimalType == "Sheep"; } }
 
         /// <summary>Is the animal type sheep?</summary>
+        [Units("-")]
         public bool AreYoungPresent { get { return NumSuckling > 0; } }
 
         /// <summary>Are the animals pregnant?</summary>
+        [Units("-")]
         public bool ArePregnant { get { return Pregnant > 0; } }
 
         /// <summary>Get the names of all fields.</summary>

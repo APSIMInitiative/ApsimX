@@ -1,5 +1,7 @@
-﻿using APSIM.Shared.Utilities;
+﻿#if NETFRAMEWORK
+using APSIM.Shared.Utilities;
 using ApsimNG.ApsoilWeb;
+using UserInterface.Extensions;
 using ApsimNG.Cloud;
 using ISO3166;
 using Models.Core;
@@ -80,9 +82,9 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Attach the view to this presenter.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="view"></param>
-        /// <param name="explorerPresenter"></param>
+        /// <param name="zoneModel"></param>
+        /// <param name="viewBase"></param>
+        /// <param name="explorerPresent"></param>
         public void Attach(object zoneModel, object viewBase, ExplorerPresenter explorerPresent)
         {
             view = (ViewBase)viewBase;
@@ -116,7 +118,7 @@ namespace UserInterface.Presenters
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;
-            view.MainWidget.Destroy();
+            view.MainWidget.Cleanup();
         }
 
         /// <summary>Populate the controls.</summary>
@@ -235,10 +237,10 @@ namespace UserInterface.Presenters
 
                 if (!matchingSoil.Children.Any(c => c is INutrient))
                     matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
-                ICommand addSoil = new AddModelCommand(model, matchingSoil);
+                ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
-            explorerPresenter.Refresh();
+            explorerPresenter.Populate();
         }
 
         /// <summary>User has clicked the APSOIL help button.</summary>
@@ -260,6 +262,9 @@ namespace UserInterface.Presenters
         /// <summary>Return zero or more APSOIL soils.</summary>
         private IEnumerable<SoilFromDataSource> GetApsoilSoils()
         {
+#if NETCOREAPP
+            throw new NotImplementedException();
+#else
             var soils = new List<SoilFromDataSource>();
             try
             {
@@ -291,6 +296,7 @@ namespace UserInterface.Presenters
             }
 
             return soils;
+#endif
         }
 
         /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
@@ -597,33 +603,17 @@ namespace UserInterface.Presenters
                 WaterBalance soilWater = new WaterBalance();
                 InitialWater initialWater = new InitialWater();
                 Sample initialNitrogen = new Sample();
-                SoilNitrogen soilN = new SoilNitrogen();
+                Nutrient nutrient = new Nutrient();
+                nutrient.ResourceName = "Nutrient";
 
                 SoilCrop wheat = new SoilCrop();
                 waterNode.Children.Add(wheat);
                 wheat.Name = "WheatSoil";
                 waterNode.ParentAllDescendants();
 
-                Model nh4 = new SoilNitrogenNH4();
-                nh4.Name = "NH4";
-                soilN.Children.Add(nh4);
-                Model no3 = new SoilNitrogenNO3();
-                no3.Name = "NO3";
-                soilN.Children.Add(no3);
-                Model urea = new SoilNitrogenUrea();
-                urea.Name = "Urea";
-                soilN.Children.Add(urea);
-                Model plantAvailNH4 = new SoilNitrogenPlantAvailableNH4();
-                plantAvailNH4.Name = "PlantAvailableNH4";
-                soilN.Children.Add(plantAvailNH4);
-                Model plantAvailNO3 = new SoilNitrogenPlantAvailableNO3();
-                plantAvailNO3.Name = "PlantAvailableNO3";
-                soilN.Children.Add(plantAvailNO3);
-                soilN.ParentAllDescendants();
-
                 newSoil.Children.Add(waterNode);
                 newSoil.Children.Add(soilWater);
-                newSoil.Children.Add(soilN);
+                newSoil.Children.Add(nutrient);
                 newSoil.Children.Add(organicMatter);
                 newSoil.Children.Add(analysis);
                 newSoil.Children.Add(initialWater);
@@ -794,6 +784,7 @@ namespace UserInterface.Presenters
         /// Converts data for 7 input levels to layerCount (up to 10) depth ranges
         /// </summary>
         /// <param name="inputs"></param>
+        /// /// <param name="layerCount"></param>
         /// <returns></returns>
         private static double[] ConvertLayers(double[] inputs, int layerCount)
         {
@@ -910,3 +901,4 @@ namespace UserInterface.Presenters
 
     }
 }
+#endif

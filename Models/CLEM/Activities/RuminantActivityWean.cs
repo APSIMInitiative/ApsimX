@@ -10,6 +10,7 @@ using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -54,7 +55,8 @@ namespace Models.CLEM.Activities
         /// Name of GrazeFoodStore (paddock) to place weaners (leave blank for general yards)
         /// </summary>
         [Description("Name of GrazeFoodStore (paddock) to place weaners in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
         
         private string grazeStore; 
@@ -86,7 +88,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
+                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
                 }
             }
         }
@@ -263,34 +265,36 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Individuals are weaned at ";
-            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months";
-                if (Style == WeaningStyle.AgeOrWeight)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals are weaned at ");
+                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.AgeOnly)
                 {
-                    html += " or  ";
+                    htmlWriter.Write("<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months");
+                    if (Style == WeaningStyle.AgeOrWeight)
+                    {
+                        htmlWriter.Write(" or  ");
+                    }
                 }
-            }
-            if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
-            {
-                html += "<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">Weaned individuals will be placed in ";
-            if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-            {
-                html += "<span class=\"resourcelink\">Not specified - general yards</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
-            }
-            html += "</div>";
-            // warn if natural weaning will take place
+                if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + WeaningWeight.ToString("##0.##") + "</span> kg");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will be placed in ");
+                if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">Not specified - general yards</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                // warn if natural weaning will take place
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
     }

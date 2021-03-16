@@ -3,6 +3,8 @@
     using Models.Core;
     using Interfaces;
     using Models.Core.ApsimFile;
+    using Presenters;
+    using System;
 
     /// <summary>This command deletes a model</summary>
     public class DeleteModelCommand : ICommand
@@ -16,14 +18,11 @@
         /// <summary>The parent model.</summary>
         private IModel parent;
 
-        /// <summary>The explorer view</summary>
-        private IExplorerView explorerView;
-
         /// <summary>Indicates whether the model was deleted successfully</summary>
         private bool modelWasRemoved;
 
         /// <summary>The position of the model in the list of child models.</summary>
-        private int pos;
+        public int Pos { get; private set; }
 
         /// <summary>
         /// The model which was changed by the command. This will be selected
@@ -33,35 +32,38 @@
 
         /// <summary>The constructor</summary>
         /// <param name="modelToDelete">The model to delete</param>
+        /// <param name="nodeDescription">The node description. This is used for the undo operation when we need to re-add the model.</param>
         /// <param name="explorerView">The explorer view.</param>
-        public DeleteModelCommand(IModel modelToDelete, TreeViewNode nodeDescription, IExplorerView explorerView)
+        public DeleteModelCommand(IModel modelToDelete, TreeViewNode nodeDescription)
         {
             if (modelToDelete.ReadOnly)
                 throw new ApsimXException(modelToDelete, string.Format("Unable to delete {0} - it is read-only.", modelToDelete.Name));
             this.modelToDelete = modelToDelete;
             this.nodeDescription = nodeDescription;
-            this.explorerView = explorerView;
             this.parent = modelToDelete.Parent;
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history instance</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
-            this.explorerView.Tree.Delete(this.modelToDelete.FullPath);
-            pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
+            tree.Delete(this.modelToDelete.FullPath);
+            Pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="commandHistory">The command history instance</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
-            if (this.modelWasRemoved)
+            if (modelWasRemoved)
             {
-                this.parent.Children.Insert(pos, this.modelToDelete as Model);
-                this.explorerView.Tree.AddChild(this.parent.FullPath, nodeDescription, pos);
+                parent.Children.Insert(Pos, this.modelToDelete as Model);
                 Apsim.ClearCaches(this.modelToDelete);
+                tree.AddChild(this.parent.FullPath, nodeDescription, Pos);
+                tree.SelectedNode = modelToDelete.FullPath;
             }
         }
     }

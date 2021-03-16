@@ -15,8 +15,8 @@ namespace Models.CLEM.Resources
     /// User entry of Animal prices
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This component holds all Animal Price Entries that define the value of individuals in the breed/herd.")]
     [Version(1, 0, 1, "Beta build")]
@@ -48,12 +48,12 @@ namespace Models.CLEM.Resources
             if (this.FindAllChildren<AnimalPriceGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
+                results.Add(new ValidationResult("No [AnimalPriceGroups] have been provided for [r=" + this.Name + "].\r\nAdd [AnimalPriceGroups] to include animal pricing.", memberNames));
             }
             else if (this.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.Value == 0).Count() > 0)
             {
                 string[] memberNames = new string[] { "Animal pricing" };
-                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\nThese will not result in price calculations and can be deleted.", memberNames));
+                results.Add(new ValidationResult("No price [Value] has been set for some of the [AnimalPriceGroup] in [r=" + this.Name + "]\r\nThese will not result in price calculations and can be deleted.", memberNames));
             }
             return results;
         }
@@ -69,8 +69,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            return html;
+            return "";
         }
 
         /// <summary>

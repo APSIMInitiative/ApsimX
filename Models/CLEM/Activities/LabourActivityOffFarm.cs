@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -33,7 +34,7 @@ namespace Models.CLEM.Activities
         /// Bank account name to pay to
         /// </summary>
         [Description("Bank account to pay to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -149,7 +150,7 @@ namespace Models.CLEM.Activities
             if (labourRequired == null)
             {
                 string[] memberNames = new string[] { "Labour requirement" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourRequirement] component to set the labour needed.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
             }
             else
             {
@@ -165,7 +166,7 @@ namespace Models.CLEM.Activities
             if (!Resources.Labour().PricingAvailable)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
-                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\nThis activity will be ignored without this component.", this.Name), memberNames));
+                results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", this.Name), memberNames));
             }
             return results;
         } 
@@ -180,21 +181,23 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Earn ";
-            html += "Earnings will be paid to ";
-            if (BankAccountName == null || BankAccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + BankAccountName + "</span>";
-            }
-            html += " based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>";
-            html += "</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
+                htmlWriter.Write("Earnings will be paid to ");
+                if (BankAccountName == null || BankAccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span>");
+                }
+                htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
+                htmlWriter.Write("</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 

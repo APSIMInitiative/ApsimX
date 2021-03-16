@@ -66,6 +66,28 @@
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
         }
+
+        /// <summary>
+        /// Ensure we can reference another report variabel in a report calculation.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariable()
+        {
+            report.VariableNames = new string[]
+            {
+                "[Clock].Today.DayOfYear as n",
+                "2 * n as 2n"
+            };
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            double[] actual = storage.Get<double>("2n");
+            double[] expected = new double[10] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
         /// 
@@ -106,7 +128,6 @@
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
             };
             foreach (Runner runner in runners)
             {
@@ -383,9 +404,9 @@
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
             Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
-               "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
-               "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
-               "          exp1,          sim1,         F,         N,          0\r\n");
+               $"ExperimentName,SimulationName,FolderName,FactorName,FactorValue{Environment.NewLine}" +
+               $"          exp1,          sim1,         F,  Cultivar,      cult1{Environment.NewLine}" +
+               $"          exp1,          sim1,         F,         N,          0{Environment.NewLine}");
         }
 
         /// <summary>

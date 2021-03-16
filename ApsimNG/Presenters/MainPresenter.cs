@@ -119,20 +119,42 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
+            for (int i = 0; i < Presenters1.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (Presenters1[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, true);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, true);
+                    i--;
+                }
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
+            for (int i = 0; i < presenters2.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (presenters2[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, false);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, false);
+                    i--;
+                }
             }
 
             return ok;
@@ -164,7 +186,11 @@
             };
 
             var compiler = new ScriptCompiler();
+#if NETFRAMEWORK
             var results = compiler.Compile(code, new Model(), assemblies);
+#else
+            var results = compiler.Compile(code, new Model());
+#endif
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
@@ -194,7 +220,7 @@
         /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
-        /// <param name="errorLevel">The error level value</param>
+        /// <param name="messageType">The error level value</param>
         public void ShowMessage(string message, Simulation.MessageType messageType)
         {
             Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
@@ -319,6 +345,7 @@
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
+        /// <param name="showStopButton">Should a stop button be displayed as well?</param>
         public void ShowProgress(int percent, bool showStopButton = true)
         {
             this.view.ShowProgress(percent, showStopButton);
@@ -1089,7 +1116,7 @@
             }
             catch (Exception err)
             {
-                ShowError(err);
+                throw new Exception("Error during Import: " + err.Message);
             }
         }
 

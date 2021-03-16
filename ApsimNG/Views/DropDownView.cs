@@ -106,7 +106,7 @@
             {
                 combobox1.Changed -= OnSelectionChanged;
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -210,7 +210,6 @@
             {
                 return combobox1.Visible;
             }
-
             set
             {
                 combobox1.Visible = value;

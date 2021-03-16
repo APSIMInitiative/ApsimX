@@ -7,6 +7,7 @@
     using Models;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Map with a 
@@ -29,7 +30,7 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        private PropertyPresenter propertyPresenter;
+        private SimplePropertyPresenter propertyPresenter;
 
         /// <summary>
         /// Attach the specified Model and View.
@@ -40,11 +41,11 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as MapView;
+            this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
 
-            propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, this.view.Grid, this.explorerPresenter);
+            propertyPresenter = new SimplePropertyPresenter();
+            propertyPresenter.Attach(model, this.view.PropertiesGrid, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -60,8 +61,11 @@
         public void Detach()
         {
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            this.view.StoreSettings();
-            this.view.ViewChanged -= this.OnViewChanged;
+            if (view != null)
+            {
+                this.view.StoreSettings();
+                this.view.ViewChanged -= this.OnViewChanged;
+            }
         }
 
         /// <summary>Export the map to PDF</summary>
@@ -130,7 +134,7 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.map)
+            if (view != null && changedModel == this.map)
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

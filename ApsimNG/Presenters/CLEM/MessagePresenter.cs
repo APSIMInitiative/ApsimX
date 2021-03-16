@@ -6,9 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UserInterface.Interfaces;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -16,7 +18,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// Presenter for displaying simulation html formatted messages
     /// </summary>
-    public class MessagePresenter : IPresenter
+    public class MessagePresenter : IPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The model
@@ -27,13 +29,6 @@ namespace UserInterface.Presenters
         /// The view to use
         /// </summary>
         private IMarkdownView genericView;
-        //private IHTMLView genericView;
-
-        /// <summary>
-        /// The explorer
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
 
         /// <summary>
         /// Attach the view
@@ -45,7 +40,6 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
-            this.explorerPresenter = explorerPresenter;
         }
 
         public void Refresh()
@@ -56,167 +50,172 @@ namespace UserInterface.Presenters
         private string CreateMarkdown()
         {
             int maxErrors = 100;
-            string markdownString = "";
-
-            // find IStorageReader of simulation
-            IModel simulation = model.FindAncestor<Simulation>();
-            IModel simulations = simulation.FindAncestor<Simulations>();
-            IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
-            if (ds == null)
+            using (StringWriter markdownWriter = new StringWriter())
             {
-                return markdownString;
-            }
-            if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
-            {
-                return markdownString;
-            }
-            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
-            if (dataRows.Count() > 0)
-            {
-                int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-                int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
-
-                foreach (DataRow dr in dataRows)
+                // find IStorageReader of simulation
+                IModel simulation = model.FindAncestor<Simulation>();
+                IModel simulations = simulation.FindAncestor<Simulations>();
+                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
+                if (ds == null)
                 {
-                    // convert invalid parameter warnings to errors
-                    if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                    {
-                        dr[errorCol] = "0";
-                    }
+                    return markdownWriter.ToString();
                 }
-
-                foreach (DataRow dr in dataRows.Take(maxErrors))
+                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
                 {
-                    bool ignore = false;
-                    string msgStr = dr[msgCol].ToString();
-                    if (msgStr.Contains("@i:"))
+                    return markdownWriter.ToString();
+                }
+                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+                if (dataRows.Count() > 0)
+                {
+                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
+                    foreach (DataRow dr in dataRows)
                     {
-                        ignore = true;
+                        // convert invalid parameter warnings to errors
+                        if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
+                        {
+                            dr[errorCol] = "0";
+                        }
                     }
 
-                    if (!ignore)
+                    foreach (DataRow dr in dataRows.Take(maxErrors))
                     {
-                        // trim first two rows of error reporting file and simulation.
-                        List<string> parts = new List<string>(msgStr.Split('\n'));
-                        if (parts[0].Contains("ERROR in file:"))
+                        bool ignore = false;
+                        string msgStr = dr[msgCol].ToString();
+                        if (msgStr.Contains("@i:"))
                         {
-                            parts.RemoveAt(0);
+                            ignore = true;
                         }
-                        if (parts[0].Contains("ERRORS in file:"))
-                        {
-                            parts.RemoveAt(0);
-                        }
-                        if (parts[0].Contains("Simulation name:"))
-                        {
-                            parts.RemoveAt(0);
-                        }
-                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
 
-                        // remove starter text
-                        string[] starters = new string[]
+                        if (!ignore)
                         {
+                            // trim first two rows of error reporting file and simulation.
+                            List<string> parts = new List<string>(msgStr.Split('\n'));
+                            if (parts[0].Contains("ERROR in file:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            if (parts[0].Contains("ERRORS in file:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            if (parts[0].Contains("Simulation name:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                            // remove starter text
+                            string[] starters = new string[]
+                            {
                             "System.Exception: ",
                             "Models.Core.ApsimXException: "
-                        };
+                            };
 
-                        foreach (string start in starters)
-                        {
-                            if (msgStr.Contains(start))
+                            foreach (string start in starters)
                             {
-                                msgStr = msgStr.Substring(start.Length);
-                            }
-                        }
-
-                        string type = "Message";
-                        string title = "Message";
-                        switch (dr[errorCol].ToString())
-                        {
-                            case "2":
-                                type = "Error";
-                                title = "Error";
-                                break;
-                            case "1":
-                                type = "Warning";
-                                title = "Warning";
-                                break;
-                            default:
-                                break;
-                        }
-                        if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                        {
-                            switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                            {
-                                case "@error":
-                                    type = "Error";
-                                    title = "Error";
-                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                    break;
-                                case "@validation":
-                                    type = "Error";
-                                    title = "Validation error";
-                                    msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                    msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                    msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
-                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                    break;
-                            }
-                        }
-                        if (msgStr.Contains("terminated normally"))
-                        {
-                            type = "Ok";
-                            title = "Success";
-                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
-                            int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
-                            msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
-
-                            // check for resource shortfall and adjust information accordingly
-                            // if table exists
-                            if (ds.Reader.TableNames.Contains("ReportResourceShortfalls"))
-                            {
-                                // if rows in table
-                                DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
-                                if (dataRowsShortfalls.Rows.Count > 0)
+                                if (msgStr.Contains(start))
                                 {
-                                    type = "warning";
-                                    title = "Resource shortfalls occurred";
-                                    msgStr += "\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                    msgStr = msgStr.Substring(start.Length);
                                 }
                             }
-                        }
 
-                        markdownString += "\n###" + title;
-                        msgStr = msgStr.Replace("]", "**");
-                        msgStr = msgStr.Replace("[r=", "(resource)**");
-                        msgStr = msgStr.Replace("[a=", "(activity)**");
-                        msgStr = msgStr.Replace("[f=", "(filter)**");
-                        msgStr = msgStr.Replace("[x=", "**");
-                        msgStr = msgStr.Replace("[o=", "**");
-                        msgStr = msgStr.Replace("[m=", "(market)**");
-                        msgStr = msgStr.Replace("[", "**");
-                        msgStr = msgStr.Replace("\n", "  \n");
-                        msgStr = msgStr.Replace("<b>", "**");
-                        msgStr = msgStr.Replace("</b>", "**");
-                        markdownString += "\n"+msgStr;
+                            string type = "Message";
+                            string title = "Message";
+                            switch (dr[errorCol].ToString())
+                            {
+                                case "2":
+                                    type = "Error";
+                                    title = "Error";
+                                    break;
+                                case "1":
+                                    type = "Warning";
+                                    title = "Warning";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
+                            {
+                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
+                                {
+                                    case "@error":
+                                        type = "Error";
+                                        title = "Error";
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        break;
+                                    case "@validation":
+                                        type = "Error";
+                                        title = "Validation error";
+                                        msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
+                                        msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
+                                        msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        break;
+                                }
+                            }
+                            if (msgStr.Contains("terminated normally"))
+                            {
+                                type = "Ok";
+                                title = "Success";
+                                DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
+                                int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
+                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
+                                msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
+
+                                // check for resource shortfall and adjust information accordingly
+                                // if table exists
+                                if (ds.Reader.TableNames.Contains("ReportResourceShortfalls"))
+                                {
+                                    // if rows in table
+                                    DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
+                                    if (dataRowsShortfalls.Rows.Count > 0)
+                                    {
+                                        type = "warning";
+                                        title = "Resource shortfalls occurred";
+                                        msgStr += "  \r\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                    }
+                                }
+                            }
+
+                            markdownWriter.Write("  \r\n### ");
+                            markdownWriter.Write(title);
+                            msgStr = msgStr.Replace("]", "**");
+                            msgStr = msgStr.Replace("[r=", @".resource-**");
+                            msgStr = msgStr.Replace("[a=", @".activity-**");
+                            msgStr = msgStr.Replace("[f=", @".filter-**");
+                            msgStr = msgStr.Replace("[x=", "**");
+                            msgStr = msgStr.Replace("[o=", "**");
+                            msgStr = msgStr.Replace("[m=", @".market-**");
+                            msgStr = msgStr.Replace("[", "**");
+                            msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
+                            msgStr = msgStr.Replace("<b>", "**");
+                            msgStr = msgStr.Replace("</b>", "**");
+                            markdownWriter.Write("  \r\n");
+                            markdownWriter.Write(msgStr);
+                        }
+                    }
+                    if (dataRows.Count() > maxErrors)
+                    {
+                        markdownWriter.Write("## Warning limit reached");
+                        markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
                     }
                 }
-                if (dataRows.Count() > maxErrors)
+                else
                 {
-                    markdownString += "##Warning limit reached";
-                    markdownString += "\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.";
+                    markdownWriter.Write("\r\n### Message");
+                    markdownWriter.Write("  \r\n  \r\nThis simulation has not been performed");
                 }
+                return markdownWriter.ToString(); 
             }
-            else
-            {
-                markdownString += "\n Message";
-                markdownString += "\n  This simulation has not been performed";
-            }
-            return markdownString;
         }
 
         private string CreateHTML()
         {
+            // kept in case we want to report messages with full simulation summary in html
+
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
@@ -272,175 +271,180 @@ namespace UserInterface.Presenters
 
             }
 
-            // find IStorageReader of simulation
-            IModel simulation = model.FindAncestor<Simulation>();
-            IModel simulations = simulation.FindAncestor<Simulations>();
-            IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
-            if (ds == null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                return htmlString;
-            }
-            if(ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
-            {
-                return htmlString;
-            }
-            DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
-            if (dataRows.Count() > 0)
-            {
-                int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-                int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                htmlWriter.WriteLine(htmlString);
 
-                foreach (DataRow dr in dataRows)
+                // find IStorageReader of simulation
+                IModel simulation = model.FindAncestor<Simulation>();
+                IModel simulations = simulation.FindAncestor<Simulations>();
+                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
+                if (ds == null)
                 {
-                    // convert invalid parameter warnings to errors
-                    if(dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                    {
-                        dr[errorCol] = "0";
-                    }
+                    return htmlWriter.ToString();
                 }
-
-                foreach (DataRow dr in dataRows.Take(maxErrors))
+                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
                 {
-                    bool ignore = false;
-                    string msgStr = dr[msgCol].ToString();
-                    if (msgStr.Contains("@i:"))
+                    return htmlWriter.ToString();
+                }
+                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+                if (dataRows.Count() > 0)
+                {
+                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
+                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
+                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+
+                    foreach (DataRow dr in dataRows)
                     {
-                        ignore = true;
+                        // convert invalid parameter warnings to errors
+                        if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
+                        {
+                            dr[errorCol] = "0";
+                        }
                     }
 
-                    if (!ignore)
+                    foreach (DataRow dr in dataRows.Take(maxErrors))
                     {
-                        // trim first two rows of error reporting file and simulation.
-                        List<string> parts = new List<string>( msgStr.Split('\n'));
-                        if(parts[0].Contains("ERROR in file:"))
+                        bool ignore = false;
+                        string msgStr = dr[msgCol].ToString();
+                        if (msgStr.Contains("@i:"))
                         {
-                            parts.RemoveAt(0);
+                            ignore = true;
                         }
-                        if (parts[0].Contains("ERRORS in file:"))
-                        {
-                            parts.RemoveAt(0);
-                        }
-                        if (parts[0].Contains("Simulation name:"))
-                        {
-                            parts.RemoveAt(0);
-                        }
-                        msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
 
-                        // remove starter text
-                        string[] starters = new string[]
+                        if (!ignore)
                         {
+                            // trim first two rows of error reporting file and simulation.
+                            List<string> parts = new List<string>(msgStr.Split('\n'));
+                            if (parts[0].Contains("ERROR in file:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            if (parts[0].Contains("ERRORS in file:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            if (parts[0].Contains("Simulation name:"))
+                            {
+                                parts.RemoveAt(0);
+                            }
+                            msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
+
+                            // remove starter text
+                            string[] starters = new string[]
+                            {
                             "System.Exception: ",
                             "Models.Core.ApsimXException: "
-                        };
+                            };
 
-                        foreach (string start in starters)
-                        {
-                            if (msgStr.Contains(start))
+                            foreach (string start in starters)
                             {
-                                msgStr = msgStr.Substring(start.Length);
-                            }
-                        }
-
-                        string type = "Message";
-                        string title = "Message";
-                        switch (dr[errorCol].ToString())
-                        {
-                            case "2":
-                                type = "Error";
-                                title = "Error";
-                                break;
-                            case "1":
-                                type = "Warning";
-                                title = "Warning";
-                                break;
-                            default:
-                                break;
-                        }
-                        if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                        {
-                            switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                            {
-                                case "@error":
-                                    type = "Error";
-                                    title = "Error";
-                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                    break;
-                                case "@validation":
-                                    type = "Error";
-                                    title = "Validation error";
-                                    msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                    msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                    msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
-                                    msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                    break;
-                            }
-                        }
-                        if (msgStr.Contains("terminated normally"))
-                        {
-                            type = "Ok";
-                            title = "Success";
-                            DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
-                            int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                            DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
-                            msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
-
-                            // check for resource shortfall and adjust information accordingly
-                            // if table exists
-                            if (ds.Reader.TableNames.Contains("ReportResourceShortfalls"))
-                            {
-                                // if rows in table
-                                DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
-                                if(dataRowsShortfalls.Rows.Count > 0)
+                                if (msgStr.Contains(start))
                                 {
-                                    type = "warning";
-                                    title = "Resource shortfalls occurred";
-                                    msgStr += "\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                    msgStr = msgStr.Substring(start.Length);
                                 }
                             }
-                        }
 
-                        htmlString += "\n<div class=\"holdermain\">";
-                        htmlString += "\n<div class=\"" + type.ToLower() + "banner\">" + title + "</div>";
-                        htmlString += "\n<div class=\"" + type.ToLower() + "content\">";
-                        msgStr = msgStr.Replace("\n", "<br />");
-                        msgStr = msgStr.Replace("]", "</span>");
-                        msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
-                        msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
-                        msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
-                        msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
-                        msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
-                        msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
-                        msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
-                        htmlString += "\n<div class=\"messageentry\">" + msgStr;
-                        htmlString += "\n</div>";
-                        htmlString += "\n</div>";
-                        htmlString += "\n</div>";
+                            string type = "Message";
+                            string title = "Message";
+                            switch (dr[errorCol].ToString())
+                            {
+                                case "2":
+                                    type = "Error";
+                                    title = "Error";
+                                    break;
+                                case "1":
+                                    type = "Warning";
+                                    title = "Warning";
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
+                            {
+                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
+                                {
+                                    case "@error":
+                                        type = "Error";
+                                        title = "Error";
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        break;
+                                    case "@validation":
+                                        type = "Error";
+                                        title = "Validation error";
+                                        msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
+                                        msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
+                                        msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        break;
+                                }
+                            }
+                            if (msgStr.Contains("terminated normally"))
+                            {
+                                type = "Ok";
+                                title = "Success";
+                                DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
+                                int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
+                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
+                                msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
+
+                                // check for resource shortfall and adjust information accordingly
+                                // if table exists
+                                if (ds.Reader.TableNames.Contains("ReportResourceShortfalls"))
+                                {
+                                    // if rows in table
+                                    DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
+                                    if (dataRowsShortfalls.Rows.Count > 0)
+                                    {
+                                        type = "warning";
+                                        title = "Resource shortfalls occurred";
+                                        msgStr += "\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
+                                    }
+                                }
+                            }
+
+                            htmlWriter.Write("\n<div class=\"holdermain\">");
+                            htmlWriter.Write("\n<div class=\"" + type.ToLower() + "banner\">" + title + "</div>");
+                            htmlWriter.Write("\n<div class=\"" + type.ToLower() + "content\">");
+                            msgStr = msgStr.Replace("\n", "<br />");
+                            msgStr = msgStr.Replace("]", "</span>");
+                            msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
+                            msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
+                            msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
+                            msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
+                            msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
+                            msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
+                            msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
+                            htmlWriter.Write("\n<div class=\"messageentry\">" + msgStr);
+                            htmlWriter.Write("\n</div>");
+                            htmlWriter.Write("\n</div>");
+                            htmlWriter.Write("\n</div>");
+                        }
+                    }
+                    if (dataRows.Count() > maxErrors)
+                    {
+                        htmlWriter.Write("\n<div class=\"holdermain\">");
+                        htmlWriter.Write("\n <div class=\"warningbanner\">Warning limit reached</div>");
+                        htmlWriter.Write("\n <div class=\"warningcontent\">");
+                        htmlWriter.Write("\n  <div class=\"activityentry\">In excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
+                        htmlWriter.Write("\n  </div>");
+                        htmlWriter.Write("\n </div>");
+                        htmlWriter.Write("\n</div>");
                     }
                 }
-                if(dataRows.Count() > maxErrors)
+                else
                 {
-                    htmlString += "\n<div class=\"holdermain\">";
-                    htmlString += "\n <div class=\"warningbanner\">Warning limit reached</div>";
-                    htmlString += "\n <div class=\"warningcontent\">";
-                    htmlString += "\n  <div class=\"activityentry\">In excess of "+maxErrors+" errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.";
-                    htmlString += "\n  </div>";
-                    htmlString += "\n </div>";
-                    htmlString += "\n</div>";
+                    htmlWriter.Write("\n<div class=\"holdermain\">");
+                    htmlWriter.Write("\n <div class=\"messagebanner\">Message</div>");
+                    htmlWriter.Write("\n <div class=\"messagecontent\">");
+                    htmlWriter.Write("\n  <div class=\"activityentry\">This simulation has not been performed");
+                    htmlWriter.Write("\n  </div>");
+                    htmlWriter.Write("\n </div>");
+                    htmlWriter.Write("\n</div>");
                 }
+                htmlWriter.Write("\n</body>\n</html>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                htmlString += "\n<div class=\"holdermain\">";
-                htmlString += "\n <div class=\"messagebanner\">Message</div>";
-                htmlString += "\n <div class=\"messagecontent\">";
-                htmlString += "\n  <div class=\"activityentry\">This simulation has not been performed";
-                htmlString += "\n  </div>";
-                htmlString += "\n </div>";
-                htmlString += "\n</div>";
-            }
-            htmlString += "\n</body>\n</html>";
-            return htmlString;
         }
 
         /// <summary>

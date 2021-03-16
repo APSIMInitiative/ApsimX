@@ -918,7 +918,7 @@ namespace Models.PMF.Organs
                     Senesced.StorageWt += storageWtSenescing;
 
                     double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max(slnToday, 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 

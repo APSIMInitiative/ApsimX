@@ -35,11 +35,13 @@
         /// <summary>
         /// Gets or sets the summed green mass
         /// </summary>
+        [Units("kg/ha")]
         public double SummedGreenMass { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock name
         /// </summary>
+        [Units("-")]
         public string Name { get { if (zone == null) return string.Empty; else return zone.Name; } }
 
         /// <summary>
@@ -61,11 +63,13 @@
         public ISolute AddUrineObj;
 
         /// <summary>The soil layer thickness</summary>
+        [Units("mm")]
         public double[] SoilLayerThickness { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock area (ha)
         /// </summary>
+        [Units("ha")]
         public double Area
         {
             get
@@ -80,21 +84,25 @@
         /// <summary>
         /// Gets or sets the waterlogging index (0-1)
         /// </summary>
+        [Units("0-1")]
         public double Waterlog { get; set; }
 
         /// <summary>
         /// Gets or sets the total pot. intake
         /// </summary>
+        [Units("kg")]
         public double SummedPotIntake { get; set; }
 
         /// <summary>
         /// Gets or sets the supplement removal amount
         /// </summary>
+        [Units("kg")]
         public double SuppRemovalKG { get; set; }
 
         /// <summary>
         /// Gets or sets the paddock slope
         /// </summary>
+        [Units("deg")]
         public double Slope
         {
             get
@@ -109,6 +117,7 @@
         /// <summary>
         /// Gets the steepness code (1-2)
         /// </summary>
+        [Units("1-2")]
         public double Steepness
         {
             get { return 1.0 + Math.Min(1.0, Math.Sqrt(Math.Sin(Slope * Math.PI / 180) / Math.Cos(Slope * Math.PI / 180))); }

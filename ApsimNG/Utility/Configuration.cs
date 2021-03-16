@@ -12,6 +12,7 @@ namespace Utility
     internal class InputAttribute : Attribute
     {
         public string Name { get; set; }
+        public string OnChanged { get; set; }
         public InputAttribute(string name)
         {
             Name = name;
@@ -28,6 +29,7 @@ namespace Utility
         /// <summary>
         /// Constructor to provide recommended file extensions.
         /// </summary>
+        /// <param name="name">Property name.</param>
         /// <param name="extensions">Recommended file extensions.</param>
         public FileInput(string name, params string[] extensions) : base(name)
         {
@@ -82,7 +84,7 @@ namespace Utility
         public int ReportSplitterPosition { get; set; }
 
         /// <summary>Keeps track of whether the dark theme is enabled.</summary>
-        [Input("Dark theme enabled")]
+        [Input("Dark theme enabled", OnChanged = nameof(OnDarkThemeToggled))]
         public bool DarkTheme { get; set; }
 
         /// <summary>Should the file be automatically saved to disk before running simulations?</summary>
@@ -95,8 +97,19 @@ namespace Utility
         public bool Muted { get; set; }
 
         /// <summary>Use the new property presenter?</summary>
-        [Input("Use new/beta property presenter")]
+        [Separator("Beta Features")]
+        [Input("Use new property presenter")]
         public bool UseNewPropertyPresenter { get; set; }
+
+        /// <summary>
+        /// In theory, if there are any commands in the command history,
+        /// then the file has been modified. In practice, there may be
+        /// some faulty presenters which make changes to the model without
+        /// using the command history.
+        /// </summary>
+        [Input("Use faster file closing algorithm")]
+        [Tooltip("This will mostly eliminate the pause when closing a file, but it may cause apsim to fail to prompt to save the file in some cases.")]
+        public bool UseFastFileClose { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -199,7 +212,7 @@ namespace Utility
         }
 
         /// <summary>Add a filename to the list.</summary>
-        /// <param name="filename">File path</param>
+        /// <param name="file">File metadata.</param>
         public void AddMruFile(ApsimFileMetadata file)
         {
             if (file.FileName.Length > 0) // Do we really need this check?
@@ -366,9 +379,20 @@ namespace Utility
             if (!Directory.Exists(configPath))
                 Directory.CreateDirectory(configPath);
             StreamWriter filewriter = new StreamWriter(configurationFile);
-            System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
+            System.Xml.Serialization.XmlSerializer xmlwriter = new System.Xml.Serialization.XmlSerializer(typeof(Configuration), typeof(Configuration).GetNestedTypes());
             xmlwriter.Serialize(filewriter, Settings);
             filewriter.Close();
+        }
+    
+        /// <summary>
+        /// This will be called whenever the 'dark mode' option is toggled.
+        /// It will change the default editor style to something.
+        /// </summary>
+        private void OnDarkThemeToggled()
+        {
+#if NETCOREAPP
+            EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
+#endif
         }
     }
 }

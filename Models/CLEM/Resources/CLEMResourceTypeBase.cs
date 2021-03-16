@@ -112,7 +112,7 @@ namespace Models.CLEM.Resources
                     {
                         warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
                     }
-                    warn += "\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
+                    warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
@@ -180,7 +180,7 @@ namespace Models.CLEM.Resources
                         }
                         string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
-                        warn += $"\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
+                        warn += $"\r\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
                         if (!Warnings.Exists(warn) & Summary != null)
                         {
                             Summary.WriteWarning(this, warn);
@@ -259,7 +259,7 @@ namespace Models.CLEM.Resources
                 case "ProductStoreType":
                     break;
                 default:
-                    throw new NotImplementedException($"\n[r={this.Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources with the [m=Market]\nPlease contact developers for assistance.");
+                    throw new NotImplementedException($"\r\n[r={this.Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\r\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources with the [m=Market]\r\nPlease contact developers for assistance.");
             }
 
             // if not already checked

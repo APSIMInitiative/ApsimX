@@ -20,7 +20,7 @@
             var analysisNode = soil.FindChild<Chemical>();
             var layerStructure = soil.FindChild<LayerStructure>();
             var weirdo = soil.FindChild<WEIRDO>();
-            var organic = soil.FindChild<Organic>();
+            var organicNode = soil.FindChild<Organic>();
             var waterBalance = soil.FindChild<ISoilWater>();
 
             // Determine the target layer structure.
@@ -34,20 +34,18 @@
             if (waterBalance is WaterModel.WaterBalance)
                 SetSoilWaterThickness(waterBalance as WaterModel.WaterBalance, targetThickness);
             if (weirdo != null)
-            {
-                weirdo.LayerThickness = targetThickness;
-                weirdo.MapVariables(physicalNode, targetThickness);
-            }
+                weirdo.SetLayerThickness(targetThickness);
+
             SetAnalysisThickness(analysisNode, targetThickness);
-            SetSoilOrganicMatterThickness(organic, targetThickness);
-            SetWaterThickness(physicalNode, targetThickness, soil);
+            SetSoilOrganicMatterThickness(organicNode, targetThickness);
+            SetPhysicalPropertiesThickness(physicalNode, targetThickness, soil);
         }
 
         /// <summary>Sets the water thickness.</summary>
         /// <param name="physical">The water.</param>
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">Soil</param>
-        private static void SetWaterThickness(IPhysical physical, double[] toThickness, Soil soil)
+        private static void SetPhysicalPropertiesThickness(IPhysical physical, double[] toThickness, Soil soil)
         {
             if (!MathUtilities.AreEqual(toThickness, physical.Thickness))
             {
@@ -95,7 +93,6 @@
                     soilWater.SWCON = MapConcentration(soilWater.SWCON, soilWater.Thickness, thickness, 0.0);
 
                     soilWater.Thickness = thickness;
-                    soilWater.LayerThickness = thickness;
                 }
                 if (soilWater.SWCON == null)
                     soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);

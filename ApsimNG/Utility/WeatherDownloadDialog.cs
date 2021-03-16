@@ -13,6 +13,7 @@ namespace Utility
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
+    using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
 
@@ -44,7 +45,7 @@ namespace Utility
         private ExplorerPresenter explorerPresenter;
         private ScrolledWindow scroller;
         private VBox vbox1;
-        VBox dialogVBox;
+        Box dialogVBox;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -59,7 +60,7 @@ namespace Utility
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
             vbox1 = (VBox)builder.GetObject("vbox1");
-            dialogVBox = (VBox)builder.GetObject("dialog-vbox1");
+            dialogVBox = (Box)builder.GetObject("dialog-vbox1");
             scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
@@ -95,8 +96,16 @@ namespace Utility
             {
                 if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
                 {
-                    dialog1.DefaultHeight = vbox1.Allocation.Height + dialogVBox.Allocation.Height;
-                    dialog1.DefaultWidth = vbox1.Allocation.Width + 20;
+#if NETFRAMEWORK
+            int xres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Width;
+            int yres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Height;
+#else
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)ViewBase.MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+#endif
+                    dialog1.DefaultHeight = Math.Min(yres - dialogVBox.Allocation.Height, vbox1.Allocation.Height + dialogVBox.Allocation.Height);
+                    dialog1.DefaultWidth = Math.Min(xres - dialogVBox.Allocation.Width, vbox1.Allocation.Width + 20);
                     scroller.SizeAllocated -= OnSizeAllocated;
                 }
             }
@@ -127,7 +136,7 @@ namespace Utility
             MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Destroy();
+            md.Cleanup();
         }
 
         /// <summary>
@@ -184,12 +193,11 @@ namespace Utility
                     {
                         Weather newWeather = new Weather();
                         newWeather.FullFileName = newWeatherPath;
-                        var command = new AddModelCommand(replaceNode, newWeather);
+                        var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
                         explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.Refresh();
                     }
-                    dialog1.Destroy();
                 }
+                dialog1.Cleanup();
             }
             catch (Exception err)
             {
@@ -313,7 +321,7 @@ namespace Utility
         {
             try
             {
-                dialog1.Destroy();
+                dialog1.Cleanup();
             }
             catch (Exception err)
             {
@@ -560,8 +568,14 @@ namespace Utility
                     }
                     tree.Model = list;
                     tree.RowActivated += OnPatchPointSoilSelected;
-                    md.VBox.PackStart(tree, true, true, 5);
-                    md.VBox.ShowAll();
+#if NETFRAMEWORK
+                    Box box = md.VBox;
+#else
+                    Box box = md.ContentArea;
+#endif
+                    box.PackStart(tree, true, true, 5);
+                    box.ShowAll();
+
                     ResponseType result = (ResponseType)md.Run();
                     if (result == ResponseType.Ok)
                     {
@@ -570,7 +584,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Destroy();
+                    md.Cleanup();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -667,9 +681,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GdkWindow != null)
+                if (dialog1.Toplevel.GetGdkWindow() != null)
                 {
-                    dialog1.Toplevel.GdkWindow.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }
