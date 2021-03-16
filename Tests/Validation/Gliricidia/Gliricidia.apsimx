@@ -693,10 +693,10 @@
                           ],
                           "FOM": [
                             188.08483233636247,
-                            99.344660632090424,
+                            99.34466063209042,
                             56.831149735840256,
                             25.590271144116507,
-                            16.632542734899669,
+                            16.63254273489967,
                             13.516543416690684
                           ],
                           "CarbonMetadata": null,
@@ -2061,8 +2061,8 @@
                           ],
                           "FOM": [
                             170.39591055281855,
-                            126.23239526718019,
-                            93.515258454223726,
+                            126.2323952671802,
+                            93.51525845422373,
                             9.85643572577751
                           ],
                           "CarbonMetadata": null,
@@ -6820,9 +6820,9 @@
                             20.206690331807074,
                             14.969484377475792,
                             11.089666781044386,
-                            8.2154272126864569,
-                            6.0861381698425472,
-                            4.5087220498058436,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
                             3.3401434464855906,
                             2.4744391248471564,
                             1.833109589654498
@@ -10428,9 +10428,9 @@
                             20.206690331807074,
                             14.969484377475792,
                             11.089666781044386,
-                            8.2154272126864569,
-                            6.0861381698425472,
-                            4.5087220498058436,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
                             3.3401434464855906,
                             2.4744391248471564,
                             1.833109589654498
@@ -10474,7 +10474,7 @@
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
-                            0.059306569343065621,
+                            0.05930656934306562,
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
@@ -10482,7 +10482,7 @@
                             1.0
                           ],
                           "NH4N": [
-                            0.84507042253521125,
+                            0.8450704225352113,
                             0.10948905109489047,
                             0.10948905109489047,
                             0.10948905109489061,
@@ -10988,9 +10988,9 @@
                             20.206690331807074,
                             14.969484377475792,
                             11.089666781044386,
-                            8.2154272126864569,
-                            6.0861381698425472,
-                            4.5087220498058436,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
                             3.3401434464855906,
                             2.4744391248471564,
                             1.833109589654498
@@ -11034,7 +11034,7 @@
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
-                            0.059306569343065621,
+                            0.05930656934306562,
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
@@ -11042,7 +11042,7 @@
                             1.0
                           ],
                           "NH4N": [
-                            0.84507042253521125,
+                            0.8450704225352113,
                             0.10948905109489047,
                             0.10948905109489047,
                             0.10948905109489061,
@@ -11760,9 +11760,9 @@
                             20.206690331807074,
                             14.969484377475792,
                             11.089666781044386,
-                            8.2154272126864569,
-                            6.0861381698425472,
-                            4.5087220498058436,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
                             3.3401434464855906,
                             2.4744391248471564,
                             1.833109589654498
@@ -11806,7 +11806,7 @@
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
-                            0.059306569343065621,
+                            0.05930656934306562,
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
@@ -11814,7 +11814,7 @@
                             1.0
                           ],
                           "NH4N": [
-                            0.84507042253521125,
+                            0.8450704225352113,
                             0.10948905109489047,
                             0.10948905109489047,
                             0.10948905109489061,
@@ -12518,9 +12518,9 @@
                             20.206690331807074,
                             14.969484377475792,
                             11.089666781044386,
-                            8.2154272126864569,
-                            6.0861381698425472,
-                            4.5087220498058436,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
                             3.3401434464855906,
                             2.4744391248471564,
                             1.833109589654498
@@ -12564,7 +12564,7 @@
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
-                            0.059306569343065621,
+                            0.05930656934306562,
                             0.05930656934306569,
                             0.05930656934306569,
                             0.05930656934306569,
@@ -12572,7 +12572,7 @@
                             1.0
                           ],
                           "NH4N": [
-                            0.84507042253521125,
+                            0.8450704225352113,
                             0.10948905109489047,
                             0.10948905109489047,
                             0.10948905109489061,
@@ -14482,13 +14482,13 @@
                                       ],
                                       "FOM": [
                                         24.257598896319994,
-                                        19.370086146871081,
+                                        19.37008614687108,
                                         15.467327947042886,
                                         12.350912226583924,
-                                        9.1497808194939729,
-                                        6.7783243463252374,
-                                        5.0215061814482311,
-                                        3.7200232744827271,
+                                        9.149780819493973,
+                                        6.778324346325237,
+                                        5.021506181448231,
+                                        3.720023274482727,
                                         2.3719915644983973,
                                         1.512448596933551
                                       ],
@@ -16270,16 +16270,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        72.772796688959986,
-                                        58.110258440613237,
+                                        72.77279668895999,
+                                        58.11025844061324,
                                         46.401983841128654,
                                         37.052736679751774,
-                                        27.449342458481919,
-                                        20.334973038975711,
+                                        27.44934245848192,
+                                        20.33497303897571,
                                         15.064518544344693,
-                                        11.160069823448181,
-                                        7.1159746934951924,
-                                        4.5373457908006536
+                                        11.16006982344818,
+                                        7.115974693495192,
+                                        4.537345790800654
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -18061,11 +18061,11 @@
                                       "FOM": [
                                         133.41679392975996,
                                         106.53547380779094,
-                                        85.070303708735878,
-                                        67.930017246211577,
-                                        50.323794507216853,
+                                        85.07030370873588,
+                                        67.93001724621158,
+                                        50.32379450721685,
                                         37.280783904788805,
-                                        27.618283997965271,
+                                        27.61828399796527,
                                         20.460128009654998,
                                         13.045953604741186,
                                         8.318467283134531
@@ -19850,11 +19850,11 @@
                                       "FOM": [
                                         133.41679392975996,
                                         106.53547380779094,
-                                        85.070303708735878,
-                                        67.930017246211577,
-                                        50.323794507216853,
+                                        85.07030370873588,
+                                        67.93001724621158,
+                                        50.32379450721685,
                                         37.280783904788805,
-                                        27.618283997965271,
+                                        27.61828399796527,
                                         20.460128009654998,
                                         13.045953604741186,
                                         8.318467283134531
@@ -21639,11 +21639,11 @@
                                       "FOM": [
                                         133.41679392975996,
                                         106.53547380779094,
-                                        85.070303708735878,
-                                        67.930017246211577,
-                                        50.323794507216853,
+                                        85.07030370873588,
+                                        67.93001724621158,
+                                        50.32379450721685,
                                         37.280783904788805,
-                                        27.618283997965271,
+                                        27.61828399796527,
                                         20.460128009654998,
                                         13.045953604741186,
                                         8.318467283134531
@@ -23428,11 +23428,11 @@
                                       "FOM": [
                                         133.41679392975996,
                                         106.53547380779094,
-                                        85.070303708735878,
-                                        67.930017246211577,
-                                        50.323794507216853,
+                                        85.07030370873588,
+                                        67.93001724621158,
+                                        50.32379450721685,
                                         37.280783904788805,
-                                        27.618283997965271,
+                                        27.61828399796527,
                                         20.460128009654998,
                                         13.045953604741186,
                                         8.318467283134531
@@ -25217,11 +25217,11 @@
                                       "FOM": [
                                         133.41679392975996,
                                         106.53547380779094,
-                                        85.070303708735878,
-                                        67.930017246211577,
-                                        50.323794507216853,
+                                        85.07030370873588,
+                                        67.93001724621158,
+                                        50.32379450721685,
                                         37.280783904788805,
-                                        27.618283997965271,
+                                        27.61828399796527,
                                         20.460128009654998,
                                         13.045953604741186,
                                         8.318467283134531
@@ -27006,14 +27006,14 @@
                                       "FOM": [
                                         145.54559337791997,
                                         116.22051688122647,
-                                        92.803967682257309,
-                                        74.105473359503549,
-                                        54.898684916963838,
-                                        40.669946077951423,
+                                        92.80396768225731,
+                                        74.10547335950355,
+                                        54.89868491696384,
+                                        40.66994607795142,
                                         30.129037088689387,
-                                        22.320139646896362,
+                                        22.32013964689636,
                                         14.231949386990385,
-                                        9.0746915816013072
+                                        9.074691581601307
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -28932,16 +28932,16 @@
                                 0.99
                               ],
                               "FOM": [
-                                36.386398344479993,
-                                29.055129220306618,
+                                36.38639834447999,
+                                29.05512922030662,
                                 23.200991920564327,
                                 18.526368339875887,
-                                13.724671229240959,
+                                13.72467122924096,
                                 10.167486519487856,
-                                7.5322592721723467,
+                                7.532259272172347,
                                 5.58003491172409,
-                                3.5579873467475962,
-                                2.2686728954003268
+                                3.557987346747596,
+                                2.268672895400327
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -30794,16 +30794,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        36.386398344479993,
-                                        29.055129220306618,
+                                        36.38639834447999,
+                                        29.05512922030662,
                                         23.200991920564327,
                                         18.526368339875887,
-                                        13.724671229240959,
+                                        13.72467122924096,
                                         10.167486519487856,
-                                        7.5322592721723467,
+                                        7.532259272172347,
                                         5.58003491172409,
-                                        3.5579873467475962,
-                                        2.2686728954003268
+                                        3.557987346747596,
+                                        2.268672895400327
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -32608,16 +32608,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        60.643997240799983,
+                                        60.64399724079998,
                                         48.4252153671777,
-                                        38.668319867607217,
+                                        38.66831986760722,
                                         30.87728056645981,
                                         22.874452048734934,
                                         16.945810865813094,
                                         12.553765453620578,
                                         9.300058186206817,
                                         5.9299789112459935,
-                                        3.7811214923338778
+                                        3.781121492333878
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -34422,16 +34422,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        60.643997240799983,
+                                        60.64399724079998,
                                         48.4252153671777,
-                                        38.668319867607217,
+                                        38.66831986760722,
                                         30.87728056645981,
                                         22.874452048734934,
                                         16.945810865813094,
                                         12.553765453620578,
                                         9.300058186206817,
                                         5.9299789112459935,
-                                        3.7811214923338778
+                                        3.781121492333878
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -36236,16 +36236,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        60.643997240799983,
+                                        60.64399724079998,
                                         48.4252153671777,
-                                        38.668319867607217,
+                                        38.66831986760722,
                                         30.87728056645981,
                                         22.874452048734934,
                                         16.945810865813094,
                                         12.553765453620578,
                                         9.300058186206817,
                                         5.9299789112459935,
-                                        3.7811214923338778
+                                        3.781121492333878
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -38050,16 +38050,16 @@
                                         0.973
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -39864,16 +39864,16 @@
                                         0.973
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -41678,16 +41678,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -43492,16 +43492,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -45306,16 +45306,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -47120,16 +47120,16 @@
                                         0.99
                                       ],
                                       "FOM": [
-                                        84.901596137119981,
-                                        67.795301514048774,
+                                        84.90159613711998,
+                                        67.79530151404877,
                                         54.1356478146501,
-                                        43.228192793043732,
-                                        32.024232868228907,
+                                        43.22819279304373,
+                                        32.02423286822891,
                                         23.724135212138332,
-                                        17.575271635068809,
+                                        17.57527163506881,
                                         13.020081460689545,
                                         8.30197047574439,
-                                        5.2935700892674289
+                                        5.293570089267429
                                       ],
                                       "CarbonMetadata": null,
                                       "FOMMetadata": null,
@@ -49048,16 +49048,16 @@
                                 0.99
                               ],
                               "FOM": [
-                                36.386398344479993,
-                                29.055129220306618,
+                                36.38639834447999,
+                                29.05512922030662,
                                 23.200991920564327,
                                 18.526368339875887,
-                                13.724671229240959,
+                                13.72467122924096,
                                 10.167486519487856,
-                                7.5322592721723467,
+                                7.532259272172347,
                                 5.58003491172409,
-                                3.5579873467475962,
-                                2.2686728954003268
+                                3.557987346747596,
+                                2.268672895400327
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -50821,9 +50821,9 @@
                                 20.206690331807074,
                                 14.969484377475792,
                                 11.089666781044386,
-                                8.2154272126864569,
-                                6.0861381698425472,
-                                4.5087220498058436,
+                                8.215427212686457,
+                                6.086138169842547,
+                                4.508722049805844,
                                 3.3401434464855906,
                                 2.4744391248471564,
                                 1.833109589654498
@@ -51734,6 +51734,1017 @@
                   "CumulativeX": false,
                   "Filter": null,
                   "Name": "Predicted",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowPageOfGraphs": true,
+          "Name": "StockMassBalance",
+          "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This sensibility test performs a livestock grazing mass balance check. \n\nThe MassBalanceCalculations script is intentionally before Stock in the simulation tree so that it will be called\nbefore the STOCK model does its calculations for the day AND after the plant model has updated its biomass for the day. The script then\nstores the plant biomass before and after stock calculations its daily variables. It then calculates the amount of plant biomass removed:\n\n\n```PlantBiomassRemoved = PlantBiomassBeforeStock - PlantBiomassAfterStock;```\n\nIt then subtracts the animal intake.\n\n```Lost = PlantBiomassRemoved - Intake;```\n\nThe Lost variable (which is output) should always be zero. The script will throw an exception if this isn't the case.\n\n\nThe graph below shows the biomass removed from the plant is the same as the plant biomass consumed by the animal which results in a\nmass balance variable equal to zero.\n\n",
+              "Name": "Memo",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
+              "Name": "MakokaDugumaStock",
+              "Children": [
+                {
+                  "$type": "Models.Clock, Models",
+                  "Start": "2003-12-01T00:00:00",
+                  "End": "2004-06-30T00:00:00",
+                  "Name": "Clock",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Summary, Models",
+                  "CaptureErrors": true,
+                  "CaptureWarnings": true,
+                  "CaptureSummaryText": true,
+                  "Name": "SummaryFile",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
+                  "FileName": "Makoka.met",
+                  "ExcelWorkSheetName": "",
+                  "Name": "Weather",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                  "Name": "Soil Arbitrator",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models;\r\nusing Models.Core;\r\nusing Models.Utilities;\r\nusing Models.Interfaces;\r\nusing Models.GrazPlan;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.PMF.Organs;\r\nusing Models.Soils;\r\nusing System.Collections;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\nusing Models.AgPasture;\r\nusing System.Diagnostics;\r\nusing Models.PMF.Interfaces;\r\nusing Models.Surface;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] IOrganDamage[] forages;\r\n        [Link] Stock animals;\r\n        [Link] Plant plant;\r\n        [Link] ISummary summary;\r\n\n\t\tprivate bool stockInPaddock; \n\r\n        public Biomass PlantBiomassBeforeStock { get; set; }\n        public Biomass PlantBiomassAfterStock { get; set; }\n        public Biomass PlantBiomassRemoved { get; set; }\n        public Biomass Intake { get; set; }\n        public Biomass Lost { get; set; }\n        public List<string> ForageNames { get;set;}\r\n\n\t\t// Calculate total above ground forage.\n\t\tprivate Biomass TotalForage\n\t\t{\n\t\t\tget\n\t\t\t{\n\t\t\t\tBiomass totalForage = new Biomass();\n            \tforeach (var forage in forages)\n            \tif (forage.IsAboveGround && !(forage is SurfaceOrganicMatter))\n        \t\t\ttotalForage += forage.Live + forage.Dead;\n            \treturn totalForage;\n\t\t\t}\n\t\t}\n\t\t\r\n        // Start of simulation\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStart(object sender, EventArgs e)\r\n        {\r\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\n            ForageNames = forages.Select(f=>f.Name).ToList();\n            PlantBiomassBeforeStock = new Biomass();\n            PlantBiomassAfterStock = new Biomass();\n            PlantBiomassRemoved = new Biomass();\n            Intake = new Biomass();\n            Lost = new Biomass();\r\n        }\r\n\r\n        // Because this script is before Stock in the simulation tree, this will be called\n        // before the STOCK model does its calculations for the day AND after the plant\n        // model has updated its biomass for the day.\r\n        [EventSubscribe(\"DoStock\")]\r\n        private void OnDoStock(object sender, EventArgs e)\r\n        {\n        \tstockInPaddock = animals.IntakeAll.Weight > 0;\n        \tif (stockInPaddock)\n        \t{\n            \tPlantBiomassBeforeStock = TotalForage;\n        \t}\n        }\r\n\r\n        // Called after all models have performed their calculations for the day.\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\n        \tif (stockInPaddock)\n        \t{\r\n\t\t        PlantBiomassAfterStock = TotalForage;\n\t\t        Intake = new Biomass()\r\n\t\t        {\r\n\t\t            StructuralWt = animals.IntakeAll.Weight / 10,  // kg/ha to g/m2\r\n\t\t            StructuralN = animals.IntakeAll.N / 10,        // kg/ha to g/m2\r\n\t\t        };\r\n\r\n\t            PlantBiomassRemoved = PlantBiomassBeforeStock - PlantBiomassAfterStock;\r\n\r\n\t\t        // balance calculations\r\n\t\t        Lost = PlantBiomassRemoved - Intake; \r\n\t\t        \r\n\t\t        if (!MathUtilities.FloatsAreEqual(Lost.Wt, 0))\r\n\t\t            throw new Exception(\"Mass balance error: Forage mass removed is not equal to animal intake.\");\r\n\t\t        if (!MathUtilities.FloatsAreEqual(Lost.N, 0))\r\n\t\t            throw new Exception(\"Mass balance error: N balance error.\");\r\n\n\t\t\t}\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "PlantBiomassBeforeStock",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "PlantBiomassAfterStock",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "PlantBiomassRemoved",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "Intake",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "Lost",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "ForageNames",
+                      "Value": ""
+                    }
+                  ],
+                  "Name": "MassBalanceCalculations",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Stock, Models",
+                  "randFactory": {
+                    "$type": "StdUnits.MyRandom, Models"
+                  },
+                  "RandSeed": 9999,
+                  "StockModel": null,
+                  "Name": "Stock",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.GrazPlan.Supplement, Models",
+                  "SpoilageTime": 0.0,
+                  "Stores": [
+                    {
+                      "$type": "Models.GrazPlan.StoreType, Models",
+                      "Name": "fodder",
+                      "Stored": 0.0,
+                      "IsRoughage": true,
+                      "DMContent": 0.85,
+                      "DMD": 0.0,
+                      "MEContent": 0.0,
+                      "CPConc": 0.0,
+                      "ProtDg": 0.0,
+                      "PConc": 0.0,
+                      "SConc": 0.0,
+                      "EEConc": 0.0,
+                      "ADIP2CP": 0.0,
+                      "AshAlk": 0.0,
+                      "MaxPassage": 0.0
+                    }
+                  ],
+                  "PaddockList": [],
+                  "Name": "Supplement",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.PMF.Interfaces;\r\nusing System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] Supplement supplement;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n        [Link] List<IPlantDamage> forages = null;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        [Display(Values=\"GetGenotypes\")]\r\n        public string Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing event information\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Don't move the stock onto the crop unless there is approx. X days of grazable forage available: \")] \r\n        public int MinGrazingDays { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n        [Separator(\"Supplementary feeding\")]\r\n\r\n        [Description(\"Name of the supplement to feed: \")] \r\n        public string SupplementName { get; set; }\r\n\r\n        [Description(\"Feed the supplement first (i.e. before the new forage is available to the stock)?: \")] \r\n        public bool SupplementFirst { get; set; }\r\n\r\n        [Description(\"Amount of supplementary feeding offered every day (kg DM /head /day): \")] \r\n        public double SupplementEveryDay { get; set; }\r\n\r\n        [Description(\"Additional amount of supplement offered when available biomass is low (kg DM /head /day): \")] \r\n        public double SupplementOnPastureMass { get; set; }\r\n\r\n        [Description(\"Trigger biomass for above rule (kg DM /ha): \")] \r\n        public double TriggerPastureMass { get; set; }\r\n\r\n        public int NumStock { get; set; }\r\n        public bool GrazingSeasonIsOpen { get; set; } // number of cows on the whole farm\r\n        public double HarvestableBiomass { get; set; }\r\n\r\n        // Return a list of genotypes to the properties tab.\r\n        public string[] GetGenotypes()\r\n        {\r\n            if (stock != null)\r\n                return stock.Genotypes.Names.ToArray();\r\n            return null;\r\n        }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if ((CurrentLocation.ToLower() != \"away\") && (NumStock > 0))\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentLocation);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            // Calculate forage mass in the paddock\r\n            HarvestableBiomass = 0.0;\r\n            foreach (var forage in forages)\r\n                foreach (var forageOrgan in forage.Organs)\r\n                    if (forageOrgan.IsAboveGround)\r\n                        HarvestableBiomass += forageOrgan.Live.Wt + forageOrgan.Dead.Wt;\r\n            HarvestableBiomass *= 10;  // Convert to kg/ha\r\n\r\n            if (HarvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentLocation == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            double minFodder = 0.03 * MinGrazingDays * NumStock * Weight; // The 0.03 is the propostion of body mass that the stock might eat\r\n            if (CurrentLocation == \"Away\" && NumStock > 0 && (HarvestableBiomass >= PreGrazingDM) && HarvestableBiomass >= (PostGrazingDM + minFodder) && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentLocation = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentLocation);\r\n                summary.WriteMessage(this, \"     Buying stock \");\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentLocation = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \");\r\n            }\r\n\r\n            if (CurrentLocation != \"Away\")\r\n            {\r\n                if (SupplementEveryDay > 0)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementEveryDay * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementEveryDay * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementEveryDay: Buying \" + SupplementName + \" of total amount : \" + (SupplementEveryDay * 90 * stock.NumberAll) + \" kg DM\");\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementEveryDay * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n                }\r\n\r\n                if (SupplementOnPastureMass > 0 && HarvestableBiomass <= TriggerPastureMass)\r\n                {\r\n                    double silageOnHand = supplement.Stores[2 - 1].Stored;\r\n                    if (silageOnHand < SupplementOnPastureMass * stock.NumberAll)\r\n                    {\r\n                        supplement.Buy(SupplementOnPastureMass * 30.0 * stock.NumberAll, SupplementName);  // i.e. 1 months worth\r\n                        summary.WriteMessage(this, \"SupplementOnBiomass: Buying \" + SupplementName + \" of total amount : \" + (SupplementOnPastureMass * 90 * stock.NumberAll) + \" kg DM\");\r\n                    }\r\n                    supplement.Feed(SupplementName, SupplementOnPastureMass * stock.NumberAll, CurrentLocation, SupplementFirst);\r\n                }\r\n            }\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = Genotype;\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            for (int gg = 1; gg <= NumGroups; gg++)\r\n            {\r\n                stock.Sell(stock.Number[gg - 1]);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "Genotype",
+                      "Value": "Friesian"
+                    },
+                    {
+                      "Key": "Sex",
+                      "Value": "Female"
+                    },
+                    {
+                      "Key": "Age",
+                      "Value": "6"
+                    },
+                    {
+                      "Key": "Weight",
+                      "Value": "100"
+                    },
+                    {
+                      "Key": "Pregnant",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "Lactating",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "YoungNumber",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "YoungWt",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "StockingRate",
+                      "Value": "1"
+                    },
+                    {
+                      "Key": "CurrentLocation",
+                      "Value": "Zone"
+                    },
+                    {
+                      "Key": "PreGrazingDM",
+                      "Value": "2800"
+                    },
+                    {
+                      "Key": "PostGrazingDM",
+                      "Value": "50"
+                    },
+                    {
+                      "Key": "MinGrazingDays",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "DoNoGrazingWindow",
+                      "Value": "False"
+                    },
+                    {
+                      "Key": "NoGrazeStart",
+                      "Value": "15-jun"
+                    },
+                    {
+                      "Key": "NoGrazeEnd",
+                      "Value": "31-jul"
+                    },
+                    {
+                      "Key": "SupplementName",
+                      "Value": ""
+                    },
+                    {
+                      "Key": "SupplementFirst",
+                      "Value": "False"
+                    },
+                    {
+                      "Key": "SupplementEveryDay",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "SupplementOnPastureMass",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "TriggerPastureMass",
+                      "Value": "2100"
+                    },
+                    {
+                      "Key": "NumStock",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "GrazingSeasonIsOpen",
+                      "Value": "False"
+                    },
+                    {
+                      "Key": "HarvestableBiomass",
+                      "Value": "0"
+                    }
+                  ],
+                  "Name": "GrazeForageCrop",
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "Zone",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Soil, Models",
+                      "RecordNumber": 0,
+                      "ASCOrder": null,
+                      "ASCSubOrder": null,
+                      "SoilType": "sand",
+                      "LocalName": null,
+                      "Site": null,
+                      "NearestTown": "Makoka",
+                      "Region": null,
+                      "State": null,
+                      "Country": "Malawi",
+                      "NaturalVegetation": null,
+                      "ApsoilNumber": null,
+                      "Latitude": -15.25,
+                      "Longitude": 37.25,
+                      "LocationAccuracy": null,
+                      "YearOfSampling": null,
+                      "DataSource": null,
+                      "Comments": null,
+                      "Name": "Makoka Soil",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-250",
+                            "250-300"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            500.0,
+                            500.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.42,
+                            1.45,
+                            1.47,
+                            1.31,
+                            1.42,
+                            1.38,
+                            1.32,
+                            1.3,
+                            1.31,
+                            1.31,
+                            1.31,
+                            1.31
+                          ],
+                          "AirDry": [
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05
+                          ],
+                          "LL15": [
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08,
+                            0.08
+                          ],
+                          "DUL": [
+                            0.35,
+                            0.35,
+                            0.33,
+                            0.33,
+                            0.33,
+                            0.32,
+                            0.31,
+                            0.3,
+                            0.3,
+                            0.29,
+                            0.29,
+                            0.29
+                          ],
+                          "SAT": [
+                            0.45,
+                            0.45,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44,
+                            0.44
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.15,
+                                0.15,
+                                0.15,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2,
+                                0.2
+                              ],
+                              "KL": [
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.06,
+                                0.04,
+                                0.03,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.0,
+                                0.0
+                              ],
+                              "XF": [
+                                1.0,
+                                0.9,
+                                0.8,
+                                0.7,
+                                0.6,
+                                0.6,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "MaizeSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05,
+                                0.05
+                              ],
+                              "KL": [
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.08,
+                                0.06,
+                                0.04,
+                                0.03,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02,
+                                0.02
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "GliricidiaSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.WaterModel.WaterBalance, Models",
+                          "SummerDate": "1-Nov",
+                          "SummerU": 9.0,
+                          "SummerCona": 2.5,
+                          "WinterDate": "1-Apr",
+                          "WinterU": 9.0,
+                          "WinterCona": 2.5,
+                          "DiffusConst": 40.0,
+                          "DiffusSlope": 16.0,
+                          "Salb": 0.13,
+                          "CN2Bare": 65.0,
+                          "CNRed": 20.0,
+                          "CNCov": 0.8,
+                          "DischargeWidth": "NaN",
+                          "CatchmentArea": "NaN",
+                          "Thickness": [
+                            200.0,
+                            1800.0,
+                            1000.0
+                          ],
+                          "SWCON": [
+                            0.2,
+                            0.1,
+                            0.0
+                          ],
+                          "KLAT": null,
+                          "ResourceName": "WaterBalance",
+                          "Name": "SoilWater",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Organic, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200"
+                          ],
+                          "FOMCNRatio": 15.0,
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "Carbon": [
+                            0.8,
+                            0.6,
+                            0.4,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05
+                          ],
+                          "SoilCNRatio": [
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3,
+                            14.3
+                          ],
+                          "FBiom": [
+                            0.02,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01,
+                            0.01
+                          ],
+                          "FInert": [
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7,
+                            0.7
+                          ],
+                          "FOM": [
+                            27.276178916350652,
+                            20.206690331807074,
+                            14.969484377475792,
+                            11.089666781044386,
+                            8.215427212686457,
+                            6.086138169842547,
+                            4.508722049805844,
+                            3.3401434464855906,
+                            2.4744391248471564,
+                            1.833109589654498
+                          ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
+                          "Name": "Organic",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0
+                          ],
+                          "NO3N": [
+                            1.0,
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
+                          "NH4N": [
+                            0.5,
+                            0.2,
+                            0.2,
+                            0.2,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
+                          ],
+                          "PH": [
+                            5.9,
+                            5.6,
+                            5.8,
+                            5.9,
+                            6.1,
+                            6.3,
+                            6.2,
+                            6.4,
+                            6.3,
+                            5.9
+                          ],
+                          "CL": null,
+                          "EC": null,
+                          "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
+                          "Name": "Chemical",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-80",
+                            "80-100",
+                            "100-120",
+                            "120-140",
+                            "140-160",
+                            "160-180",
+                            "180-200",
+                            "200-300"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            1000.0
+                          ],
+                          "NO3": null,
+                          "NH4": null,
+                          "SW": [
+                            0.18,
+                            0.18,
+                            0.18,
+                            0.2,
+                            0.23,
+                            0.23,
+                            0.26,
+                            0.26,
+                            0.27,
+                            0.27,
+                            0.27
+                          ],
+                          "OC": null,
+                          "EC": null,
+                          "CL": null,
+                          "ESP": null,
+                          "PH": null,
+                          "SWUnits": 0,
+                          "OCUnits": 0,
+                          "PHUnits": 0,
+                          "Name": "Sample",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "ResourceName": "Nutrient",
+                          "Name": "Nutrient",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.MicroClimate, Models",
+                      "a_interception": 0.0,
+                      "b_interception": 0.0,
+                      "c_interception": 0.0,
+                      "d_interception": 0.0,
+                      "soil_albedo": 0.23,
+                      "SoilHeatFluxFraction": 0.4,
+                      "MinimumHeightDiffForNewLayer": 0.0,
+                      "NightInterceptionFraction": 0.5,
+                      "ReferenceHeight": 2.0,
+                      "Name": "MicroClimate",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today as Date",
+                        "[Stock].Paddock",
+                        "[Stock].NumberAll",
+                        "[Stock].WeightAll",
+                        "[Stock].IntakeAll.Weight",
+                        "[MassBalanceCalculations].Script.PlantBiomassBeforeStock.Wt",
+                        "[MassBalanceCalculations].Script.PlantBiomassAfterStock.Wt",
+                        "[MassBalanceCalculations].Script.PlantBiomassRemoved.Wt",
+                        "[MassBalanceCalculations].Script.Intake.Wt",
+                        "[MassBalanceCalculations].Script.Lost.Wt",
+                        "[MassBalanceCalculations].Script.ForageNames"
+                      ],
+                      "EventNames": [
+                        "[Clock].DoReport"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "MassBalance",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
+                      "Name": "Fertiliser",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "InitialResidueName": "maize_stubble",
+                      "InitialResidueType": "maize",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 400.0,
+                      "InitialCNR": 60.0,
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Name": "SurfaceOrganicMatter",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.Plant, Models",
+                      "ResourceName": "Gliricidia",
+                      "Name": "Gliricidia",
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2003-12-15",
+                          "Action": "[Gliricidia].Sow(population: 0.74, cultivar: GliricidiaYoung,depth: 100, rowSpacing: 1500);",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "Operations",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": 38000.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": true,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Stock Plant Mass balance",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "MassBalance",
+                  "XFieldName": "Date",
+                  "YFieldName": "MassBalanceCalculations.Script.Intake.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Intake",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -11094807,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "MassBalance",
+                  "XFieldName": "Date",
+                  "YFieldName": "MassBalanceCalculations.Script.PlantBiomassRemoved.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Plant biomass removed",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "MassBalance",
+                  "XFieldName": "Date",
+                  "YFieldName": "MassBalanceCalculations.Script.Lost.Wt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Biomass mass balance check",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
