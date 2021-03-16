@@ -30,7 +30,8 @@ namespace Models.CLEM.Activities
         /// Managed pasture to move to
         /// </summary>
         [Description("Managed pasture to move to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string ManagedPastureName { get; set; }
 
         private string pastureName = "";

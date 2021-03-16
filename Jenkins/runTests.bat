@@ -62,7 +62,7 @@ if "%1"=="%examplessyntax%" (
 if "%1"=="%validationsyntax%" (
 	set "testdir=%apsimx%\Tests\Simulation\*.apsimx %apsimx%\Tests\UnderReview\*.apsimx %apsimx%\Tests\Validation\*.apsimx"
 	rem Extract restricted soybean dataset
-	set soybean=%apsimx%\Tests\UnderReview\Soybean
+	set soybean=%apsimx%\Tests\Validation\Soybean
 	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
 	rem Extract restricted NPI wheat dataset
 	set wheat=%apsimx%\Tests\Validation\Wheat

@@ -17,8 +17,8 @@ namespace Models.CLEM.Resources
     /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreeTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]

@@ -120,6 +120,36 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// return a list of components available given the specified types
+        /// </summary>
+        /// <param name="typesToFind">the list of types to locate</param>
+        /// <returns>A list of names of components</returns>
+        public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
+        {
+            List<string> results = new List<string>();
+            Zone zone = this.FindAncestor<Zone>();
+            if (!(zone is null))
+            {
+                ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
+                if (!(resources is null))
+                {
+                    foreach (object type in typesToFind)
+                    {
+                        if (type is string)
+                        {
+                            results.Add(type as string);
+                        }
+                        else if (type is Type)
+                        {
+                            results.AddRange(resources.GetCLEMResourceNames(type as Type));
+                        }
+                    }
+                }
+            }
+            return results.AsEnumerable();
+        }
+
+        /// <summary>
         /// Returns the opacity value for this component in the summary display
         /// </summary>
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);

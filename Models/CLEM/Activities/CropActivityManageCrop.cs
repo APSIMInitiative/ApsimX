@@ -13,14 +13,14 @@ using System.IO;
 namespace Models.CLEM.Activities
 {
     /// <summary>Grow management activity</summary>
-    /// <summary>This activity sets aside land for the crop</summary>
+    /// <summary>This activity sets aside land for the crop(s)</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages a crop by assigning land to be used for child activities.")]
+    [Description("This activity manages a crop(s) by assigning land to be used for child activities.")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Rotational cropping implemented")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
@@ -33,7 +33,7 @@ namespace Models.CLEM.Activities
         /// Land type where crop is to be grown
         /// </summary>
         [Description("Land type where crop is to be grown")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Land) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land resource type required")]
         public string LandItemNameToUse { get; set; }
 

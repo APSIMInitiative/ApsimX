@@ -31,12 +31,6 @@ namespace UserInterface.Presenters
         private IMarkdownView genericView;
 
         /// <summary>
-        /// The explorer
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
-
-        /// <summary>
         /// Attach the view
         /// </summary>
         /// <param name="model">The model</param>
@@ -46,7 +40,6 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
-            this.explorerPresenter = explorerPresenter;
         }
 
         public void Refresh()
@@ -221,6 +214,8 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
+            // kept in case we want to report messages with full simulation summary in html
+
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +

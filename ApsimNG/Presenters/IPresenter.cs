@@ -11,7 +11,7 @@
         /// <param name="model">The model</param>
         /// <param name="view">The view</param>
         /// <param name="explorerPresenter">The explorer</param>
-        void Attach(object model, object view, ExplorerPresenter explorerPresenter);
+        public void Attach(object model, object view, ExplorerPresenter explorerPresenter);
 
         /// <summary>
         /// Detach the objects

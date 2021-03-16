@@ -45,7 +45,7 @@ namespace Utility
         private ExplorerPresenter explorerPresenter;
         private ScrolledWindow scroller;
         private VBox vbox1;
-        VBox dialogVBox;
+        Box dialogVBox;
 
         /// <summary>
         /// URI for accessing the Google geocoding API. I know the key shouldn't be placed on Github, but I'm not overly concerned.
@@ -60,7 +60,7 @@ namespace Utility
             Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.WeatherDownload.glade");
             dialog1 = (Dialog)builder.GetObject("dialog1");
             vbox1 = (VBox)builder.GetObject("vbox1");
-            dialogVBox = (VBox)builder.GetObject("dialog-vbox1");
+            dialogVBox = (Box)builder.GetObject("dialog-vbox1");
             scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
@@ -96,8 +96,16 @@ namespace Utility
             {
                 if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
                 {
-                    dialog1.DefaultHeight = vbox1.Allocation.Height + dialogVBox.Allocation.Height;
-                    dialog1.DefaultWidth = vbox1.Allocation.Width + 20;
+#if NETFRAMEWORK
+            int xres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Width;
+            int yres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Height;
+#else
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)ViewBase.MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+#endif
+                    dialog1.DefaultHeight = Math.Min(yres - dialogVBox.Allocation.Height, vbox1.Allocation.Height + dialogVBox.Allocation.Height);
+                    dialog1.DefaultWidth = Math.Min(xres - dialogVBox.Allocation.Width, vbox1.Allocation.Width + 20);
                     scroller.SizeAllocated -= OnSizeAllocated;
                 }
             }
@@ -185,9 +193,8 @@ namespace Utility
                     {
                         Weather newWeather = new Weather();
                         newWeather.FullFileName = newWeatherPath;
-                        var command = new AddModelCommand(replaceNode, newWeather);
+                        var command = new AddModelCommand(replaceNode, newWeather, explorerPresenter.GetNodeDescription);
                         explorerPresenter.CommandHistory.Add(command, true);
-                        explorerPresenter.Refresh();
                     }
                 }
                 dialog1.Cleanup();

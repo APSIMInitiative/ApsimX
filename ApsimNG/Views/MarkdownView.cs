@@ -207,7 +207,7 @@ namespace UserInterface.Views
             {
                 if (block is HeadingBlock header)
                 {
-                    ProcessMarkdownInlines(header.Inline, ref insertPos, textView, indent, GetTags($"Heading{header.Level}", indent).Union(tags).ToArray());
+                    ProcessMarkdownInlines(header.Inline, ref insertPos, textView, indent, GetTags(textView, $"Heading{header.Level}", indent).Union(tags).ToArray());
                 }
                 else if (block is ParagraphBlock paragraph)
                 {
@@ -224,11 +224,11 @@ namespace UserInterface.Views
                     {
                         if (list.IsOrdered)
                         {
-                            textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ", GetTags("Normal", indent + 1));
+                            textView.Buffer.InsertWithTags(ref insertPos, $"{itemNumber}. ", GetTags(textView, "Normal", indent + 1));
                         }
                         else
                         {
-                            textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags("Normal", indent + 1));
+                            textView.Buffer.InsertWithTags(ref insertPos, "• ", GetTags(textView, "Normal", indent + 1));
                         }
                         ProcessMarkdownBlocks(new[] { listBlock }, ref insertPos, textView, indent + 1, false, tags);
                         if (itemNumber != list.Count)
@@ -243,7 +243,7 @@ namespace UserInterface.Views
                 else if (block is CodeBlock code)
                 {
                     string text = code.Lines.ToString().TrimEnd(Environment.NewLine.ToCharArray());
-                    textView.Buffer.InsertWithTags(ref insertPos, text, GetTags("Code", indent + 1).Union(tags).ToArray());
+                    textView.Buffer.InsertWithTags(ref insertPos, text, GetTags(textView, "Code", indent + 1).Union(tags).ToArray());
                 }
                 else if (block is Table table)
                 {
@@ -276,7 +276,7 @@ namespace UserInterface.Views
             foreach (var inline in inlines)
             {
                 if (inline is LiteralInline textInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, textInline.Content.ToString(), tags.Union(GetTags(null, indent)).ToArray());
+                    textView.Buffer.InsertWithTags(ref insertPos, textInline.Content.ToString(), tags.Union(GetTags(textView, null, indent)).ToArray());
                 else if (inline is EmphasisInline italicInline)
                 {
                     string style;
@@ -292,7 +292,7 @@ namespace UserInterface.Views
                             style = italicInline.DelimiterCount == 1 ? "Italic" : "Bold";
                             break;
                     }
-                    ProcessMarkdownInlines(italicInline, ref insertPos, textView, indent, tags.Union(GetTags(style, indent)).ToArray());
+                    ProcessMarkdownInlines(italicInline, ref insertPos, textView, indent, tags.Union(GetTags(textView, style, indent)).ToArray());
                 }
                 else if (inline is LinkInline link)
                 {
@@ -300,12 +300,12 @@ namespace UserInterface.Views
                     if (link.IsImage)
                         DisplayImage(link.Url, link.Label, ref insertPos);
                     else
-                        ProcessMarkdownInlines(link, ref insertPos, textView, indent, tags.Union(GetTags("Link", indent, link.Url)).ToArray());
+                        ProcessMarkdownInlines(link, ref insertPos, textView, indent, tags.Union(GetTags(textView, "Link", indent, link.Url)).ToArray());
                 }
                 //else if (inline is MarkdownLinkInline markdownLinkInline)
                 //    textView.Buffer.InsertWithTags(ref insertPos, markdownLinkInline.Inlines[0].ToString(), GetTags("Link", indent, markdownLinkInline.Url));
                 else if (inline is CodeInline codeInline)
-                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, tags.Union(GetTags(null, indent + 1)).ToArray());
+                    textView.Buffer.InsertWithTags(ref insertPos, codeInline.Content, tags.Union(GetTags(textView, null, indent + 1)).ToArray());
                 else if (inline is LineBreakInline br)
                     textView.Buffer.InsertWithTags(ref insertPos, br.IsHard ? "\n" : " ", tags);
                 else
@@ -497,11 +497,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Get markdown 'tags' for a given style.
         /// </summary>
+        /// <param name="textView">The textview whose tag table should be searched.</param>
         /// <param name="styleName">The name of the style.</param>
         /// <param name="indent">The indent level.</param>
         /// <param name="url">The link url.</param>
         /// <returns></returns>
-        private TextTag[] GetTags(string styleName, int indent, string url = null)
+        private TextTag[] GetTags(TextView textView, string styleName, int indent, string url = null)
         {
             var tags = new List<TextTag>();
             if (!string.IsNullOrEmpty(styleName))

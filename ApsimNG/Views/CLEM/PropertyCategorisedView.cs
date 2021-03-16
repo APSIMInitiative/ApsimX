@@ -1,11 +1,3 @@
-
-// The basics are all here, but there are still a few things to be implemented:
-// Drag and drop is pinning an object so we can pass its address around as data. Is there a better way?
-// (Probably not really, as we go through a native layer, unless we can get by with the serialized XML).
-// Shortcuts (accelerators in Gtk terminology) haven't yet been implemented.
-// Link doesn't work, but it appears that move and link aren't working in the Windows.Forms implementation either.
-// Actually, Move "works" here but doesn't undo correctly
-
 namespace UserInterface.Views
 {
     using EventArguments;
@@ -20,17 +12,15 @@ namespace UserInterface.Views
     using global::UserInterface.Extensions;
 
     /// <summary>
-    /// A cut down version of the ExplorerView.
-    /// Does not allow for adding, deleting or moving of nodes in the tree.
-    /// Only displays the tree and allows the user to select different nodes.
-    /// No toolbar and context menus either.
+    /// GTK# based view of the PropertyCategorisedPresenter to display a tree view of categories and sub-categories to assit filtering properties
+    /// Uses Category attribute of property (Category and SubCategory values) to define list and modify SimplePropertyPresenter filter rule on selection
+    /// A right hand panel is used to display the property presenter
     /// </summary>
-    public class PropertyTreeView : ViewBase, IPropertyTreeView
+    public class PropertyCategorisedView : ViewBase, IPropertyCategorisedView
     {
         /// <summary>The previously selected node path.</summary>
         private string previouslySelectedNodePath;
 
-        private VBox vbox1 = null;
         private Gtk.TreeView treeview1 = null;
         private Viewport rightHandView = null;
 
@@ -45,14 +35,18 @@ namespace UserInterface.Views
         System.Timers.Timer timer = new System.Timers.Timer();
 
         /// <summary>Default constructor for ExplorerView</summary>
-        public PropertyTreeView(ViewBase owner) : base(owner)
+        public PropertyCategorisedView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.ExplorerView.glade");
-            vbox1 = (VBox)builder.GetObject("vbox1");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.PropertyTreeView.glade");
+            VBox vbox1 = (VBox)builder.GetObject("vbox1");
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             rightHandView = (Viewport)builder.GetObject("RightHandView");
             mainWidget = vbox1;
-            rightHandView.ShadowType = ShadowType.EtchedOut;
+
+#if NETFRAMEWORK
+            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
+            rightHandView.ShadowType = ShadowType.None ;
+#endif
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -171,16 +165,7 @@ namespace UserInterface.Views
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
 #if NETFRAMEWORK
-            // Create a Bitmap and draw the panel
-            int width;
-            int height;
-            Gdk.Window panelWindow = rightHandView.Child.GdkWindow;
-            panelWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            return bitmap;
+            throw new NotImplementedException("This view does not support the saving of right hand to image");
 #else
             throw new NotImplementedException("tbi - gtk3 equivalent");
 #endif

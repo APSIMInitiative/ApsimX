@@ -11,7 +11,7 @@ namespace UserInterface.Interfaces
     /// NB: All node paths are compatible with XmlHelper node paths.
     /// e.g.  /simulations/test/clock
     /// </summary>
-    public interface IPropertyTreeView
+    public interface IPropertyCategorisedView
     {
         /// <summary>
         /// This event will be invoked when a node is selected not by the user

@@ -1010,7 +1010,17 @@
                                 }
                               ],
                               "Name": "Irrig",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1157,15 +1167,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
-                              "Name": "Memo",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -8674,7 +8675,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Nit",
                           "Children": [
                             {
@@ -8723,7 +8724,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Irr",
                           "Children": [
                             {
