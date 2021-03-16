@@ -85,6 +85,12 @@ namespace Models.CLEM.Activities
         public double AeDestocked { get; private set; }
 
         /// <summary>
+        /// AE destock shortfall
+        /// </summary>
+        [field: NonSerialized]
+        public double AeShortfall { get { return AeToDestock - AeDestocked; } }
+
+        /// <summary>
         /// AE to restock
         /// </summary>
         [field: NonSerialized]
