@@ -599,21 +599,21 @@ namespace Models.CLEM.Resources
         /// Lactating Potential intake modifier Coefficient A
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient A")]
+        [Description("Lactating potential intake modifier coefficient A")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantA { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient B")]
+        [Description("Lactating potential intake modifier coefficient B")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantB { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient C")]
+        [Description("Lactating potential intake modifier coefficient C")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; }
         /// <summary>
