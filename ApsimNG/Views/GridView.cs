@@ -1659,7 +1659,9 @@
 
                 colLookup.Add(textRender, i);
 
+#if NETFRAMEWORK
                 textRender.FixedHeightFromFont = 1; // 1 line high
+#endif
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.EditingCanceled += TextRenderEditingCanceled;
