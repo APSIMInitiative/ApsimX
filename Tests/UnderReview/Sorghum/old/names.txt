@@ -55,9 +55,9 @@ Sorghum_LE13_M35-1+I+N=Lawes1995FertHighIrrigOnCvM351
 Sorghum_LE14_Buster=Lawes1996EarlyCvBuster
 Sorghum_LE14_M35-1=Lawes1996EarlyCvM351
 Sorghum_LE14_QL41xQL36=Lawes1996EarlyCvQL41xQL36
-Sorghum_LE15_Buster
-Sorghum_LE15_M35-1
-Sorghum_LE15_QL41xQL36
+Sorghum_LE15_Buster=Lawes1996LateCvBuster
+Sorghum_LE15_M35-1=Lawes1996LateCvM351
+Sorghum_LE15_QL41xQL36=Lawes1996LateCvQL41xQL36
 Sorghum_LE17_T1
 Sorghum_LE17_T2
 Sorghum_LE17_T3
