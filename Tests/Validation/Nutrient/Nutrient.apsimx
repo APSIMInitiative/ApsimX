@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 119,
+  "Version": 129,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -1231,7 +1231,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].RadIntTot",
+                      "VariableName": "[Leaf].RadiationIntercepted",
                       "Name": "RadnInt",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -1701,11 +1701,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1736,11 +1747,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2388,11 +2410,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "Old",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
@@ -2957,11 +2990,11 @@
                   "n": 148,
                   "Slope": 0.787353619259872,
                   "Intercept": 3559.0853580548883,
-                  "SEslope": 0.032531059342936951,
+                  "SEslope": 0.03253105934293695,
                   "SEintercept": 504.25563118673233,
-                  "R2": 0.80048968611759386,
+                  "R2": 0.8004896861175939,
                   "RMSE": 1698.1925894166807,
-                  "NSE": 0.79093489414595974,
+                  "NSE": 0.7909348941459597,
                   "ME": 358.92331324390614,
                   "MAE": 1263.111417408868,
                   "RSR": 0.45568904286526235
@@ -2970,11 +3003,11 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "TOC0_30cm",
                   "n": 199,
-                  "Slope": 0.68075679581449278,
-                  "Intercept": 12300.345036422161,
-                  "SEslope": 0.023002575389828389,
-                  "SEintercept": 866.01658705959483,
-                  "R2": 0.81637739249348951,
+                  "Slope": 0.6807567958144928,
+                  "Intercept": 12300.34503642216,
+                  "SEslope": 0.02300257538982839,
+                  "SEintercept": 866.0165870595948,
+                  "R2": 0.8163773924934895,
                   "RMSE": 3501.0636414472756,
                   "NSE": 0.7890095860854921,
                   "ME": 530.145266168517,
@@ -2988,10 +3021,10 @@
                   "Slope": 0.15696385099964427,
                   "Intercept": 15969.76826422369,
                   "SEslope": 0.024549023531696686,
-                  "SEintercept": 435.91636256646711,
+                  "SEintercept": 435.9163625664671,
                   "R2": 0.26226190691040285,
                   "RMSE": 2737.834734214412,
-                  "NSE": 0.039636989140940937,
+                  "NSE": 0.03963698914094094,
                   "ME": 1186.4376695340413,
                   "MAE": 2282.7428399119617,
                   "RSR": 0.975784187203818
@@ -3000,46 +3033,46 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "TOC30_60cm",
                   "n": 171,
-                  "Slope": 0.85573884552142765,
+                  "Slope": 0.8557388455214276,
                   "Intercept": 4048.0582290969323,
                   "SEslope": 0.028401662774927866,
-                  "SEintercept": 626.79409265875461,
-                  "R2": 0.84305494878999276,
+                  "SEintercept": 626.7940926587546,
+                  "R2": 0.8430549487899928,
                   "RMSE": 3367.5566078708075,
-                  "NSE": 0.82472369654401145,
+                  "NSE": 0.8247236965440115,
                   "ME": 1083.3704433010537,
-                  "MAE": 2640.7942729867518,
-                  "RSR": 0.41743418143874961
+                  "MAE": 2640.794272986752,
+                  "RSR": 0.4174341814387496
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "TON0_10cm",
                   "n": 9,
                   "Slope": 0.43853101802139133,
-                  "Intercept": 768.36073122151492,
-                  "SEslope": 0.070190905999468589,
+                  "Intercept": 768.3607312215149,
+                  "SEslope": 0.07019090599946859,
                   "SEintercept": 128.2448289633947,
-                  "R2": 0.84793725710612555,
+                  "R2": 0.8479372571061256,
                   "RMSE": 381.81227980388974,
                   "NSE": 0.49388223783938867,
                   "ME": -212.23591333170552,
-                  "MAE": 328.68798396056991,
+                  "MAE": 328.6879839605699,
                   "RSR": 0.6707327748469406
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "TON0_30cm",
                   "n": 61,
-                  "Slope": 0.76288443908545789,
+                  "Slope": 0.7628844390854579,
                   "Intercept": 714.7758236559057,
-                  "SEslope": 0.082874457102653648,
-                  "SEintercept": 292.81264028014192,
-                  "R2": 0.58952978795620969,
+                  "SEslope": 0.08287445710265365,
+                  "SEintercept": 292.8126402801419,
+                  "R2": 0.5895297879562097,
                   "RMSE": 283.45943767693274,
                   "NSE": 0.44150604118650827,
                   "ME": -118.16110508150018,
                   "MAE": 173.65761521444057,
-                  "RSR": 0.74117360998919679
+                  "RSR": 0.7411736099891968
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -3047,11 +3080,11 @@
                   "n": 54,
                   "Slope": 0.8753985784135655,
                   "Intercept": 21.446926389309738,
-                  "SEslope": 0.084575633320103052,
+                  "SEslope": 0.08457563332010305,
                   "SEintercept": 240.52177171698287,
-                  "R2": 0.67322824274327964,
-                  "RMSE": 343.85151701602842,
-                  "NSE": -4.9503008639615986,
+                  "R2": 0.6732282427432796,
+                  "RMSE": 343.8515170160284,
+                  "NSE": -4.950300863961599,
                   "ME": -332.46725959082573,
                   "MAE": 332.46725959082573,
                   "RSR": 2.416631975957773
@@ -3091,12 +3124,12 @@
         },
         {
           "$type": "Models.Map, Models",
+          "Zoom": 360.0,
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
-            "Latitude": 26.431228064506438,
-            "Longitude": 17.578125000000004
+            "Latitude": 0.0,
+            "Longitude": 0.0
           },
-          "Zoom": 1.0,
           "Name": "Map",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -3713,6 +3746,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Tarlee.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -4111,7 +4145,6 @@
                                   "CN2Bare": 73.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -4222,16 +4255,16 @@
                                   "NO3N": [
                                     0.35637918745545266,
                                     0.35637918745545255,
-                                    0.35637918745545261,
-                                    0.35637918745545261,
-                                    0.35637918745545272
+                                    0.3563791874554526,
+                                    0.3563791874554526,
+                                    0.3563791874554527
                                   ],
                                   "NH4N": [
-                                    0.035637918745545262,
+                                    0.03563791874554526,
                                     0.035637918745545255,
-                                    0.035637918745545262,
+                                    0.03563791874554526,
                                     0.035637918745545276,
-                                    0.035637918745545248
+                                    0.03563791874554525
                                   ],
                                   "PH": [
                                     7.0,
@@ -4268,35 +4301,8 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-180"
-                                  ],
-                                  "Thickness": [
-                                    1800.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "LabileP": null,
-                                  "UnavailableP": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial conditions",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
+                                  "Name": "Temperature",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4327,8 +4333,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5624,6 +5630,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Hudson.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -6009,7 +6016,6 @@
                                   "CN2Bare": 72.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -6349,63 +6355,6 @@
                                   "NH4": null,
                                   "LabileP": null,
                                   "UnavailableP": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-30",
-                                    "30-50",
-                                    "50-70",
-                                    "70-90",
-                                    "90-110",
-                                    "110-130",
-                                    "130-150",
-                                    "150-170",
-                                    "170-190",
-                                    "190-210",
-                                    "210-230",
-                                    "230-250",
-                                    "250-270",
-                                    "270-290",
-                                    "290-310"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "LabileP": null,
-                                  "UnavailableP": null,
                                   "SW": [
                                     0.43,
                                     0.43,
@@ -6440,7 +6389,7 @@
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
+                                  "Name": "Temperature",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -6484,8 +6433,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -6648,6 +6597,10 @@
                             },
                             {
                               "$type": "Models.PMF.Plant, Models",
+                              "PlantType": null,
+                              "IsAlive": false,
+                              "IsEnding": false,
+                              "DaysAfterEnding": 0,
                               "ResourceName": null,
                               "Name": "Bambatsi",
                               "Children": [],
@@ -7562,6 +7515,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Brigalow.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -8546,7 +8500,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Soil Soil;\r\n        \r\n        public double CumRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n/*\r\n                CumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Year > 1983)\r\n                CumRunoff += Soil.SoilWater.Runoff;\r\n                \r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n            TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
+                                  "Code": "using Models.Interfaces;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        \r\n        public double CumRunoff { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n/*\r\n                CumRunoff = 0\r\nPOC = 0\r\nHOC = 0\r\nTOC = 0\r\nsw40 = 0\r\nsw80 = 0\r\nsw120 = 0\r\nsw200 = 0\r\nNexport = 0\r\nc10 = 0\r\nc20 = 0\r\nc30 = 0\r\n            */\r\n        }\r\n        [EventSubscribe(\"DoCalculations\")]\r\n        private void OnDoCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Year > 1983)\r\n                CumRunoff += waterBalance.Runoff;\r\n                \r\n \r\n/*\r\nPOC = (fom_c(1) + fom_c(2) + fom_c(3) + biom_c(1) + biom_c(2) + biom_c(3))/1000.\r\nHOC = (hum_c(1) + hum_c(2) + hum_c(3))/1000\r\n            TOC = (carbon_tot(1) + carbon_tot(2) + carbon_tot(3)) /1000\r\n\r\n!sw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\n!sw80 = sw40 + sw_dep(5) + sw_dep(6)\r\n!sw120 = sw80 + sw_dep(7) + sw_dep(8)\r\n!sw200 = sw120 + sw_dep(9) + sw_dep(10)\r\n\r\nsw40 = sw_dep(1) + sw_dep(2) +sw_dep(3) + sw_dep(4)\r\nsw80 = sw_dep(5) + sw_dep(6)\r\nsw120 = sw_dep(7) + sw_dep(8)\r\nsw200 = sw_dep(9) + sw_dep(10) + sw_dep(11) + sw_dep(12)\r\n\r\nc10 = carbon_tot(1) + 7590\r\nc20 = carbon_tot(2) + 2460\r\nc30 = carbon_tot(3) + 2600\r\n\r\n            */\r\n        }\r\n    }\r\n}\r\n",
                                   "Parameters": [
                                     {
                                       "Key": "CumRunoff",
@@ -8934,7 +8888,6 @@
                                   "CN2Bare": 72.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -9131,7 +9084,7 @@
                                     1.7010071772837796,
                                     1.7010071772837796,
                                     1.7010071772837796,
-                                    0.10000049622402229
+                                    0.1000004962240223
                                   ],
                                   "NH4N": [
                                     0.599107736105583,
@@ -9210,55 +9163,6 @@
                                   "NH4": null,
                                   "LabileP": null,
                                   "UnavailableP": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-20",
-                                    "20-30",
-                                    "30-40",
-                                    "40-60",
-                                    "60-80",
-                                    "80-100",
-                                    "100-120",
-                                    "120-140",
-                                    "140-160",
-                                    "160-180",
-                                    "180-200"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    100.0,
-                                    100.0,
-                                    100.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "LabileP": null,
-                                  "UnavailableP": null,
                                   "SW": [
                                     0.1,
                                     0.15,
@@ -9289,7 +9193,7 @@
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
+                                  "Name": "Temperature",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -9908,6 +9812,7 @@
                         },
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "Hudson.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -10286,7 +10191,6 @@
                                   "CN2Bare": 72.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -10626,63 +10530,6 @@
                                   "NH4": null,
                                   "LabileP": null,
                                   "UnavailableP": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial nitrogen",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-30",
-                                    "30-50",
-                                    "50-70",
-                                    "70-90",
-                                    "90-110",
-                                    "110-130",
-                                    "130-150",
-                                    "150-170",
-                                    "170-190",
-                                    "190-210",
-                                    "210-230",
-                                    "230-250",
-                                    "250-270",
-                                    "270-290",
-                                    "290-310"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0,
-                                    200.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "LabileP": null,
-                                  "UnavailableP": null,
                                   "SW": [
                                     0.43,
                                     0.43,
@@ -10717,7 +10564,7 @@
                                 },
                                 {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
+                                  "Name": "Temperature",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -10744,8 +10591,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -14960,6 +14807,7 @@
                       "Children": [
                         {
                           "$type": "Models.Climate.Weather, Models",
+                          "ConstantsFile": null,
                           "FileName": "pendletonAPSIMtav.met",
                           "ExcelWorkSheetName": null,
                           "Name": "Weather",
@@ -15342,8 +15190,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -15519,7 +15367,6 @@
                                   "CN2Bare": 73.0,
                                   "CNRed": 20.0,
                                   "CNCov": 0.8,
-                                  "Slope": "NaN",
                                   "DischargeWidth": "NaN",
                                   "CatchmentArea": "NaN",
                                   "Thickness": [
@@ -15646,9 +15493,9 @@
                                     300.0
                                   ],
                                   "NO3N": [
-                                    8.1425216023444751,
-                                    7.9759519038076148,
-                                    5.0264550264550261,
+                                    8.142521602344475,
+                                    7.975951903807615,
+                                    5.026455026455026,
                                     4.00516795865633,
                                     5.41025641025641,
                                     4.5384615384615365,
@@ -15700,47 +15547,8 @@
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Soils.Sample, Models",
-                                  "Depth": [
-                                    "0-10",
-                                    "10-30",
-                                    "30-60",
-                                    "60-90",
-                                    "90-120",
-                                    "120-150",
-                                    "150-180"
-                                  ],
-                                  "Thickness": [
-                                    100.0,
-                                    200.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0,
-                                    300.0
-                                  ],
-                                  "NO3": null,
-                                  "NH4": null,
-                                  "LabileP": null,
-                                  "UnavailableP": null,
-                                  "SW": null,
-                                  "OC": null,
-                                  "EC": null,
-                                  "CL": null,
-                                  "ESP": null,
-                                  "PH": null,
-                                  "SWUnits": 0,
-                                  "OCUnits": 0,
-                                  "PHUnits": 0,
-                                  "Name": "Initial conditions",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
                                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                                  "Name": "CERESSoilTemperature",
+                                  "Name": "Temperature",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -17047,6 +16855,7 @@
                               "Wind": 0.0,
                               "CO2": 350.0,
                               "AirPressure": 1010.0,
+                              "DiffuseFraction": 0.0,
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "DayLength": 12.0,
@@ -17069,6 +16878,7 @@
                               "Wind": 0.0,
                               "CO2": 350.0,
                               "AirPressure": 1010.0,
+                              "DiffuseFraction": 0.0,
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "DayLength": 12.0,
@@ -17091,6 +16901,7 @@
                               "Wind": 0.0,
                               "CO2": 350.0,
                               "AirPressure": 1010.0,
+                              "DiffuseFraction": 0.0,
                               "Latitude": 0.0,
                               "Longitude": 0.0,
                               "DayLength": 12.0,
@@ -17164,6 +16975,7 @@
                       "Wind": 0.0,
                       "CO2": 350.0,
                       "AirPressure": 1010.0,
+                      "DiffuseFraction": 0.0,
                       "Latitude": 0.0,
                       "Longitude": 0.0,
                       "DayLength": 12.0,
@@ -17219,7 +17031,7 @@
                             "sum([Soil].Nutrient.NH4.kgha) as NH4N",
                             "sum([Soil].Nutrient.LabileP.kgha) as LabileP",
                             "sum([Soil].Nutrient.UnavailableP.kgha) as UnavailableP",
-                            "[Soil].Temperature",
+                            "//[Soil].Temperature",
                             "[Soil].SoilWater.SW",
                             "[Nutrient].LabileP.PFlow.Value",
                             "[Nutrient].UnavailableP.PFlow.Value"
@@ -17236,8 +17048,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -17355,7 +17167,6 @@
                               "CN2Bare": 73.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": "NaN",
                               "DischargeWidth": "NaN",
                               "CatchmentArea": "NaN",
                               "Thickness": [
@@ -17420,7 +17231,9 @@
                               "LabileP": [
                                 1.0
                               ],
-                              "UnavailableP": null,
+                              "UnavailableP": [
+                                10.0
+                              ],
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -17453,7 +17266,7 @@
                                 0.4
                               ],
                               "FOM": [
-                                347.12903231275641
+                                347.1290323127564
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
