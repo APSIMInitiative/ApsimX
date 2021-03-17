@@ -220,7 +220,6 @@
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             scrollingWindow2 = (ScrolledWindow)builder.GetObject("scrolledwindow2");
-            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
@@ -255,30 +254,8 @@
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
             mainWidget.Destroyed += MainWidgetDestroyed;
-        }
-
-        /// <summary>
-        /// We hide the scrollbar in the fixed column view to disguise
-        /// the fact that it's a separate treeview. This means that it
-        /// doesn't scroll via the mouse wheel. Here we trap the scroll
-        /// event (which still seems to be fired but is ignored) and
-        /// manually tell the fixed col view to scroll up or down.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        /// <remarks>
-        /// This doesn't seem to scroll very far. Is
-        /// Vadjustment.StepIncrement the wrong value to be using here?
-        /// </remarks>
-        private void OnFixedColViewScroll(object sender, ScrollEventArgs args)
-        {
-            if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
-            {
-                double increment = fixedColView.Vadjustment.StepIncrement;
-                if (args.Event.Direction == Gdk.ScrollDirection.Up)
-                    increment *= -1;
-                fixedColView.Vadjustment.Value += increment;
-            }
+            scrollingWindow2.Vadjustment = scrollingWindow.Vadjustment;
+            fixedColView.Vadjustment = Grid.Vadjustment;
         }
 
         /// <summary>
@@ -938,12 +915,9 @@
             {
                 if (!splitter.Child1.Visible)
                 {
-                    Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
                     Grid.Selection.Changed += GridviewCursorChanged;
-                    fixedColView.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
                     fixedColView.Selection.Changed += FixedcolviewCursorChanged;
                     GridviewCursorChanged(this, EventArgs.Empty);
-                    GridviewVadjustmentChanged(this, EventArgs.Empty);
                 }
                 fixedColView.Model = gridModel;
                 fixedColView.Visible = true;
@@ -963,9 +937,7 @@
             }
             else
             {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
                 Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
@@ -1052,9 +1024,7 @@
         {
             if (splitter.Child1.Visible)
             {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
                 Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
             }
             Grid.ButtonPressEvent -= OnButtonDown;
@@ -1073,7 +1043,6 @@
 #else
             Grid.Drawn -= GridviewExposed;
 #endif
-            scrollingWindow2.ScrollEvent -= OnFixedColViewScroll;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -2032,40 +2001,6 @@
                 (editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
                 (editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
                 editControl = null;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="e">The event arguments.</param>
-        private void FixedcolviewVadjustmentChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                Grid.Vadjustment.Value = fixedColView.Vadjustment.Value;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="e">The event arguments.</param>
-        private void GridviewVadjustmentChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                fixedColView.Vadjustment.Value = Grid.Vadjustment.Value;
             }
             catch (Exception err)
             {
