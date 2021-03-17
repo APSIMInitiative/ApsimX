@@ -425,7 +425,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Natural weaning age
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
         [Required]
         public double NaturalWeaningAge { get; set; }
