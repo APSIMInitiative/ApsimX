@@ -58,9 +58,9 @@ Sorghum_LE14_QL41xQL36=Lawes1996EarlyCvQL41xQL36
 Sorghum_LE15_Buster=Lawes1996LateCvBuster
 Sorghum_LE15_M35-1=Lawes1996LateCvM351
 Sorghum_LE15_QL41xQL36=Lawes1996LateCvQL41xQL36
-Sorghum_LE17_T1
-Sorghum_LE17_T2
-Sorghum_LE17_T3
+Sorghum_LE17_T1=Lawes1997LateCvBuster
+Sorghum_LE17_T2=Lawes1997LateCvM351
+Sorghum_LE17_T3=Lawes1997LateCvCSH13R
 Sorghum_LE19_T1
 Sorghum_LE19_T2
 Sorghum_LE19_T3
