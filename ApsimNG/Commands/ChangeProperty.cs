@@ -68,11 +68,6 @@
 
             foreach (object obj in objectsChanged)
                 modelChanged(obj);
-
-            // Should we refresh the changed models in the treeview?
-            IModel firstModel = objectsChanged.OfType<IModel>().FirstOrDefault();
-            if (firstModel != null)
-                tree.SelectedNode = firstModel.FullPath;
         }
 
         /// <summary>
