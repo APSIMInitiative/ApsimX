@@ -5,8 +5,10 @@
     using System.Data;
     using System.Drawing;
     using System.Globalization;
+    using System.IO;
     using System.Text;
     using APSIM.Shared.Utilities;
+    using Commands;
     using Models;
     using Models.Climate;
     using Models.Core;
@@ -62,8 +64,10 @@
 
             this.weatherDataView.BrowseClicked += this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked += this.GraphRefreshValueChanged;
+            this.weatherDataView.ConstantsFileSelected += OnConstantsFileSelected;
             this.weatherDataView.ExcelSheetChangeClicked += this.ExcelSheetValueChanged;
 
+            this.weatherDataView.ShowConstantsFile(Path.GetExtension(weatherData.FullFileName) == ".csv");
             this.WriteTableAndSummary(this.weatherData.FullFileName, this.weatherData.ExcelWorkSheetName);
             this.weatherDataView.TabIndex = this.weatherData.ActiveTabIndex;
             if (this.weatherData.StartYear >= 0)
@@ -80,12 +84,15 @@
             this.weatherDataView.BrowseClicked -= this.OnBrowse;
             this.weatherDataView.GraphRefreshClicked -= this.GraphRefreshValueChanged;
             this.weatherDataView.ExcelSheetChangeClicked -= this.ExcelSheetValueChanged;
+            this.weatherDataView.ConstantsFileSelected -= OnConstantsFileSelected;
         }
 
         /// <summary>Called after the user has selected a new met file.</summary>
         /// <param name="fileName">Name of the file.</param>
         public void OnBrowse(string fileName)
         {
+            bool isCsv = Path.GetExtension(fileName) == ".csv";
+            this.weatherDataView.ShowConstantsFile(isCsv);
             if (this.weatherData.FullFileName != PathUtilities.GetAbsolutePath(fileName, this.explorerPresenter.ApsimXFile.FileName))
             {
                 if (ExcelUtilities.IsExcelFile(fileName))
@@ -109,6 +116,13 @@
                     this.WriteTableAndSummary(fileName);
                 }
             }
+        }
+
+        private void OnConstantsFileSelected(string fileName)
+        {
+            ICommand changeConstantsFile = new ChangeProperty(weatherData, nameof(weatherData.ConstantsFile), fileName);
+            explorerPresenter.CommandHistory.Add(changeConstantsFile);
+            WriteTableAndSummary(weatherData.FileName);
         }
 
         /// <summary>
@@ -206,8 +220,18 @@
                     try
                     {
                         this.weatherData.ExcelWorkSheetName = sheetName;
-                        explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(weatherData, "FullFileName", PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName)));
-
+                        string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+                        var changes = new List<ChangeProperty.Property>();
+                        if (weatherData.FullFileName != newFileName)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        // Set constants file name to null iff the new file name is not a csv file.
+                        if (Path.GetExtension(newFileName) != ".csv" && weatherData.ConstantsFile != null)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));
+                        if (changes.Count > 0)
+                        {
+                            ICommand changeFileName = new ChangeProperty(changes);
+                            explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
+                        }
                         using (DataTable data = this.weatherData.GetAllData())
                         {
                             this.dataStartDate = this.weatherData.StartDate;
@@ -239,6 +263,7 @@
 
             // this.weatherDataView.Filename = PathUtilities.GetRelativePath(filename, this.explorerPresenter.ApsimXFile.FileName);
             this.weatherDataView.Filename = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
+            this.weatherDataView.ConstantsFileName = weatherData.ConstantsFile;
             this.weatherDataView.ExcelWorkSheetName = sheetName;
         }
 
@@ -324,6 +349,7 @@
             }
 
             summary.AppendLine("Latitude  : " + this.weatherData.Latitude.ToString());
+            summary.AppendLine("Longitude : " + this.weatherData.Longitude.ToString());
             summary.AppendLine("TAV       : " + string.Format("{0, 2:f2}", this.weatherData.Tav));
             summary.AppendLine("AMP       : " + string.Format("{0, 2:f2}", this.weatherData.Amp));
             summary.AppendLine("Start     : " + this.dataStartDate.ToShortDateString());
@@ -355,10 +381,10 @@
                     }
                 }
 
-                double[] yearlyRainfall = MathUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMaxT = MathUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
-                double[] monthlyMinT = MathUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
+                double[] yearlyRainfall = DataTableUtilities.YearlyTotals(table, "Rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMaxT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "maxt", this.dataFirstDate, this.dataLastDate);
+                double[] monthlyMinT = DataTableUtilities.AverageDailyTotalsForEachMonth(table, "mint", this.dataFirstDate, this.dataLastDate);
 
                 // what do we do if the date range is less than 1 year.
                 // modlmc - 15/03/2016 - modified to pass in the "Month" values, and they may/may not contain a full year.
@@ -492,11 +518,11 @@
             {
                 if (table != null && table.Rows.Count > 0)
                 {
-                    double[] monthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
+                    double[] monthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", startDate, endDate);
 
                     if (monthlyRainfall.Length != 0)
                     {
-                        double[] avgMonthlyRainfall = MathUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
+                        double[] avgMonthlyRainfall = DataTableUtilities.AverageMonthlyTotals(table, "rain", this.dataFirstDate, this.dataLastDate);
                         this.PopulateMonthlyRainfallGraph(
                                                        "Monthly Rainfall",
                                                         this.monthsToDisplay, 

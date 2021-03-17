@@ -24,11 +24,11 @@ namespace Models.Agroforestry
     /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
-    /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
+    /// * Tree root length density at various depths and distances from the trees (cm/cm^3^)
     /// * Tree daily nitrogen demand (g/m2/day for tree zone area)
     /// 
     /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
-    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
+    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm^3^ and spatial water uptake is scales using this value and the user-input of tree root length density.
     /// 
     /// </summary>
     [Serializable]
@@ -428,11 +428,13 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
@@ -440,7 +442,7 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
@@ -500,11 +502,13 @@ namespace Models.Agroforestry
                         ZoneWaterAndN Uptake = new ZoneWaterAndN(ZI);
                         //Find the soil for this zone
                         Soils.Soil ThisSoil = null;
+                        Soils.IPhysical soilPhysical = null;
 
                         foreach (Zone SearchZ in forestryZones)
                             if (SearchZ.Name == Z.Zone.Name)
                             {
                                 ThisSoil = SearchZ.FindInScope<Soils.Soil>();
+                                soilPhysical = ThisSoil.FindChild<Soils.IPhysical>();
                                 break;
                             }
 
@@ -513,13 +517,13 @@ namespace Models.Agroforestry
                         Uptake.NO3N = new double[SW.Length];
                         Uptake.NH4N = new double[SW.Length];
                         Uptake.Water = new double[SW.Length];
-                        double[] LL15mm = MathUtilities.Multiply(ThisSoil.LL15, ThisSoil.Thickness);
-                        double[] BD = ThisSoil.BD;
+                        double[] LL15mm = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);
+                        double[] BD = soilPhysical.BD;
                         double[] RLD = GetRLD(ZI);
 
                         for (int i = 0; i <= SW.Length - 1; i++)
                         {
-                            Uptake.NO3N[i] = PotentialNO3Uptake(ThisSoil.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
+                            Uptake.NO3N[i] = PotentialNO3Uptake(soilPhysical.Thickness[i], Z.NO3N[i], Z.Water[i], RLD[i], RootRadius, BD[i], Kd);
                             Uptake.NO3N[i] *= 10; // convert from g/m2 to kg/ha
                             PotNO3Supply += Uptake.NO3N[i] * ZI.Area;
                         }
@@ -586,11 +590,10 @@ namespace Models.Agroforestry
             {
                 foreach (ZoneWaterAndN ZI in info)
                 {
-                    Soils.Soil ThisSoil = null;
                     if (SearchZ.Name == ZI.Zone.Name)
                     {
-                        ThisSoil = SearchZ.FindInScope<Soils.Soil>();
-                        ThisSoil.SoilWater.RemoveWater(ZI.Water);
+                        var thisSoil = SearchZ.FindInScope<ISoilWater>();
+                        thisSoil.RemoveWater(ZI.Water);
                         TreeWaterUptake[i] = MathUtilities.Sum(ZI.Water);
                         if (TreeWaterUptake[i] < 0)
                         { }

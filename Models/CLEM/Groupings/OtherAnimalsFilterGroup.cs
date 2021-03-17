@@ -69,8 +69,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().GetByName(AnimalType) as OtherAnimalsType;
-            if(SelectedOtherAnimalsType == null)
+            SelectedOtherAnimalsType = Resources.OtherAnimalsStore().FindChild(AnimalType) as OtherAnimalsType;
+            if (SelectedOtherAnimalsType == null)
             {
                 throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
             }

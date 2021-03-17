@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Commands;
+    using Extensions;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -37,6 +38,11 @@
         /// <summary>Presenter for the component</summary>
         private IPresenter currentRightHandPresenter;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ITreeView Tree => view.Tree;
+
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
@@ -57,7 +63,7 @@
             set
             {
                 showDocumentationStatus = value;
-                Refresh();
+                RefreshNode(ApsimXFile);
             }
         }
 
@@ -96,6 +102,21 @@
         /// </summary>
         public ViewBase CurrentRightHandView { get; private set; }
 
+        /// <summary>
+        /// Convenience function - controls the currently-selected model.
+        /// </summary>
+        public IModel CurrentNode
+        {
+            get
+            {
+                return (IModel)ApsimXFile.FindByPath(CurrentNodePath)?.Value;
+            }
+            set
+            {
+                SelectNode(value.FullPath);
+            }
+        }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -123,9 +144,11 @@
         /// <param name="explorerPresenter">The presenter for this object</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.CommandHistory = new CommandHistory();
+            // When the user undoes/redoes something we want to select the affected
+            // model. Therefore we can use the same callback for both events.
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
+            this.CommandHistory = new CommandHistory(this.view.Tree);
             this.mainMenu = new MainMenu(this);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
@@ -136,7 +159,7 @@
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
 
-            Refresh();
+            Populate();
 
             ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
             if (file != null && file.ExpandedNodes != null)
@@ -146,11 +169,39 @@
         }
 
         /// <summary>
-        /// Refresh the view.
+        /// Refresh the specified model and its descendants in the tree control.
         /// </summary>
-        public void Refresh()
+        /// <remarks>
+        /// This does not fully account for changes in the model structure. It will
+        /// not remove any nodes which have been removed from the simulations object,
+        /// and although it will add in new nodes which have been added to the
+        /// simulations object, their position among their siblings will be incorrect
+        /// if the model wasn't appended to the end of the simulations list (ie if it
+        /// was inserted somewhere in the middle).
+        /// 
+        /// That being said, this is much faster than refreshing the entire simulations
+        /// tree and it has other advantages such as maintaining the position of the
+        /// scrollbar.
+        /// </remarks>
+        /// <param name="model">Model to be refreshed.</param>
+        public void RefreshNode(IModel model)
         {
-            view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
+            if (model != null)
+                view.Tree.RefreshNode(model.FullPath, GetNodeDescription(model));
+        }
+
+        /// <summary>
+        /// Fully populate/refresh the view.
+        /// </summary>
+        /// <remarks>
+        /// This will remove all nodes from the tree and rebuild it from scratch.
+        /// This will be slower than calling RefreshNode() and passing in the
+        /// top-level node, and it may also cause other unexpected behaviour such
+        /// as changing the scrollbar position. Any expanded nodes will remain expanded.
+        /// </remarks>
+        public void Populate()
+        {
+            view.Tree.Populate(GetNodeDescription(ApsimXFile));
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -175,7 +226,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Destroy();
+                (this.view as Views.ExplorerView).MainWidget.Cleanup();
             }
 
             this.ContextMenu = null;
@@ -183,6 +234,31 @@
             this.CommandHistory.Clear();
             this.ApsimXFile.ClearSimulationReferences();
             this.ApsimXFile = null;
+        }
+
+        public bool FileHasPendingChanges()
+        {
+            try
+            {
+                // Need to hide the right hand panel because some views may not save
+                // their contents until they get a 'Detach' call.
+                this.HideRightHandPanel();
+
+                // Check the command history (beta feature - see comment in the
+                // property description for more details).
+                if (Configuration.Settings.UseFastFileClose)
+                    return CommandHistory.Modified;
+
+                // The fallback is to write the file to json then compare to the
+                // file on disk.
+                string newSim = FileFormat.WriteToString(ApsimXFile);
+                string origSim = File.ReadAllText(ApsimXFile.FileName);
+                return string.Compare(newSim, origSim) != 0;
+            }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
         }
 
         /// <summary>
@@ -205,19 +281,7 @@
                     }
                     else
                     {
-                        // Need to hide the right hand panel because some views may not save
-                        // their contents until they get a 'Detach' call.
-                        this.HideRightHandPanel();
-
-                        // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                        // serialise ApsimXFile to buffer
-                        string newSim = FileFormat.WriteToString(ApsimXFile);
-
-                        StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
-                        string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                        simStream.Close();
-
-                        if (string.Compare(newSim, origSim) != 0)
+                        if (FileHasPendingChanges())
                         {
                             choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
                         }
@@ -239,7 +303,6 @@
             catch (Exception err)
             {
                 MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
-                this.ShowRightHandPanel();
                 result = false;
             }
 
@@ -255,29 +318,19 @@
             try
             {
                 HideRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
-            }
+                if (string.IsNullOrEmpty(ApsimXFile.FileName))
+                    SaveAs();
 
-            if (string.IsNullOrEmpty(ApsimXFile.FileName))
-                SaveAs();
-
-            if (!string.IsNullOrEmpty(ApsimXFile.FileName))
-            {
-                ApsimXFile.Write(ApsimXFile.FileName);
-                MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
-                return true;
+                if (!string.IsNullOrEmpty(ApsimXFile.FileName))
+                {
+                    ApsimXFile.Write(ApsimXFile.FileName);
+                    MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
+                    return true;
+                }
             }
-
-            try
+            finally
             {
                 ShowRightHandPanel();
-            }
-            catch (Exception err)
-            {
-                MainPresenter.ShowError(err);
             }
 
             return false;
@@ -319,21 +372,25 @@
         }
 
         /// <summary>Select a node in the view.</summary>
-        /// <param name="nodePath">Node to be selected.</param>
-        public void SelectNode(IModel node)
+        /// <param name="node">Node to be selected.</param>
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(IModel node, bool refreshRightHandPanel = true)
         {
-            SelectNode(node.FullPath);
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            SelectNode(node.FullPath, refreshRightHandPanel);
         }
 
         /// <summary>Select a node in the view.</summary>
         /// <param name="nodePath">Path to node</param>
-        public void SelectNode(string nodePath)
+        /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
+        public void SelectNode(string nodePath, bool refreshRightHandPanel = true)
         {
             this.view.Tree.SelectedNode = nodePath;
-            this.HideRightHandPanel();
-            this.ShowRightHandPanel();
+            while (GLib.MainContext.Iteration());
+            if (refreshRightHandPanel)
+            {
+                this.HideRightHandPanel();
+                this.ShowRightHandPanel();
+            }
         }
 
         internal void CollapseChildren(string path)
@@ -341,9 +398,9 @@
             view.Tree.CollapseChildren(path);
         }
 
-        internal void ExpandChildren(string path)
+        internal void ExpandChildren(string path, bool recursive = true)
         {
-            view.Tree.ExpandChildren(path);
+            view.Tree.ExpandChildren(path, recursive);
         }
 
         /// <summary>
@@ -393,7 +450,7 @@
             }
 
             // Select the next node.
-            this.view.Tree.SelectedNode = (allModels[index + 1]).FullPath;
+            this.view.Tree.SelectedNode = allModels[index + 1].FullPath;
             return true;
         }
 
@@ -446,10 +503,9 @@
         }
 
         /// <summary>
-        /// Adds a model to a parent model.
+        /// Delete a model from the tree.
         /// </summary>
-        /// <param name="child">The string representation (JSON or XML) of a model.</param>
-        /// <param name="parentPath">Path to the parent</param>
+        /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
         public void DeleteFromTree(string pathToNodeToDelete)
         {
             view.Tree.Delete(pathToNodeToDelete);
@@ -461,7 +517,7 @@
         {
             try
             {
-                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model), this.view);
+                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -476,7 +532,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -491,7 +547,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -512,7 +568,7 @@
         /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>
-        /// <returns>Clipboard text</returns>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
             return ViewBase.MasterView.GetClipboardText(clipboardName);
@@ -522,6 +578,7 @@
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
             ViewBase.MasterView.SetClipboardText(text, clipboardName);
@@ -597,7 +654,7 @@
                         MethodInfo checkMethod = typeof(ContextMenu).GetMethod(method.Name + "Checked");
                         if (checkMethod != null)
                         {
-                            desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
+                                desc.Checked = (bool)checkMethod.Invoke(this.ContextMenu, null);
                         }
                         else
                         {
@@ -698,6 +755,20 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
 
+                    if (Configuration.Settings.UseNewPropertyPresenter && presenterName != null)
+                    {
+                        if (presenterName.ToString().Contains(".PropertyPresenter"))
+                        {
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
+                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
+                        }
+                        else if (presenterName.ToString().Contains(".BiomassRemovalPresenter"))
+                        {
+                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.CompositePropertyPresenter");
+                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
+                        }
+                    }
+
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
                     if (!model.GetType().Namespace.Contains("CLEM"))
                     {
@@ -712,7 +783,7 @@
                         ShowInRightHandPanel(model, viewName.ToString(), presenterName.ToString());
                     else
                     {
-                        var view = new HTMLView(this.view as ViewBase);
+                        var view = new MarkdownView(this.view as ViewBase);
                         var presenter = new DocumentationPresenter();
                         ShowInRightHandPanel(model, view, presenter);
                     }
@@ -733,8 +804,8 @@
 
         /// <summary>Show a view in the right hand panel.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="viewName">The view name.</param>
-        /// <param name="presenterName">The presenter name.</param>
+        /// <param name="gladeResourceName">Name of the glade resource file.</param>
+        /// <param name="presenter">The presenter to be used.</param>
         public void ShowInRightHandPanel(object model, string gladeResourceName, IPresenter presenter)
         {
             ShowInRightHandPanel(model,
@@ -810,7 +881,8 @@
             if (model != null)
             {
                 Utility.WeatherDownloadDialog dlg = new Utility.WeatherDownloadDialog();
-                dlg.ShowFor(model, (view as ExplorerView), this.view.Tree.SelectedNode, this);
+                IModel currentNode = ApsimXFile.FindByPath(CurrentNodePath)?.Value as IModel;
+                dlg.ShowFor(model, (view as ExplorerView), currentNode, this);
             }
         }
 
@@ -870,9 +942,6 @@
             // If an exception is thrown while loding the view, this
             // shouldn't interfere with the context menu.
             this.PopulateContextMenu(e.NewNodePath);
-
-            Commands.SelectNodeCommand selectCommand = new SelectNodeCommand(e.OldNodePath, e.NewNodePath, this.view);
-            CommandHistory.Add(selectCommand, false);
         }
 
         /// <summary>A node has begun to be dragged.</summary>
@@ -913,9 +982,7 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(toParentPath,
-                                                          modelString,
-                                                          this);
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
                         CommandHistory.Add(command, true);
                     }
                     else if (e.Moved)
@@ -925,11 +992,12 @@
                             Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
                             if (fromModel != null)
                             {
-                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
+                                cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
                                 CommandHistory.Add(cmd);
                             }
                         }
                     }
+                    view.Tree.ExpandChildren(toParent.FullPath, false);
                 }
             }
             catch (Exception err)
@@ -954,7 +1022,7 @@
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
-                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName, this.view);
+                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
                             this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
@@ -987,7 +1055,7 @@
                     IModel firstModel = model.Parent.Children[0];
                     if (model != firstModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, true, view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, true));
                     }
                 }
             }
@@ -1011,7 +1079,7 @@
                     IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                     if (model != lastModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, false, this.view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, false));
                     }
                 }
             }
@@ -1040,21 +1108,12 @@
             description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
-            foreach (Model child in model.Children)
-            {
+            foreach (IModel child in model.Children)
                 if (!child.IsHidden)
-                {
-                    description.Children.Add(this.GetNodeDescription(child));
-                }
-            }
+                    description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
             description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
             description.Colour = System.Drawing.Color.Empty;
-            /*
-            // Set the colour here
-            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
-            description.Colour = colour;
-            */
             return description;
         }
 

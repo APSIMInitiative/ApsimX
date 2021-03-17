@@ -399,7 +399,7 @@ namespace Models.CLEM.Activities
                         Number = 1,
                         SaleFlag = HerdChangeReason.RestockPurchase,
                         Breed = exampleRuminant.Breed,
-                        IsSire = false,
+                        Sire = false,
                         IsDraught = false,
                         Location = paddockName,
                     }
@@ -467,7 +467,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

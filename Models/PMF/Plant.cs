@@ -6,7 +6,6 @@
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using Models.PMF.Phen;
-    using Models.PMF.Struct;
     using System;
     using System.Linq;
     using System.Collections.Generic;
@@ -153,7 +152,7 @@
         {
             get
             {
-                return Phenology.CurrentPhase.Name == "ReadyForHarvesting";
+                return Phenology.CurrentPhase is EndPhase;
             }
         }
 
@@ -163,11 +162,13 @@
 
         /// <summary>Counter for the number of days after corp being ended.</summary>
         /// <remarks>USed to clean up data the day after an EndCrop, enabling some reporting.</remarks>
+        [Units("d")]
         public int DaysAfterEnding { get; set; }
 
         /// <summary>
         /// Number of days after sowing.
         /// </summary>
+        [Units("d")]
         public int DaysAfterSowing
         {
             get
@@ -183,6 +184,7 @@
         List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
 
         /// <summary>Leaf area index.</summary>
+        [Units("m^2/m^2")]
         public double LAI
         { 
             get

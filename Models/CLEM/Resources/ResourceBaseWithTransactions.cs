@@ -40,16 +40,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Get resource by name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public object GetByName(string name)
-        {
-            return this.Children.Where(a => a.Name == name).FirstOrDefault();
-        }
-
-        /// <summary>
         /// Add all events when a new child is added to this resource in run time
         /// </summary>
         /// <param name="child"></param>
@@ -67,5 +57,10 @@ namespace Models.CLEM.Resources
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Provie full name of resource StoreName.TypeName
+        /// </summary>
+        public string FullName => $"{CLEMParentName}.{Name}";
     }
 }

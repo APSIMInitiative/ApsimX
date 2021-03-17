@@ -4,6 +4,7 @@
     using Newtonsoft.Json.Serialization;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -383,6 +384,25 @@
             return StringToObject(dataType, newValue, CultureInfo.InvariantCulture);
         }
 
+        private static readonly HashSet<Type> numericTypes = new HashSet<Type>
+        {
+            typeof(decimal),
+            typeof(short), typeof(ushort),
+            typeof(int), typeof(uint),
+            typeof(long), typeof(ulong),
+            typeof(float), typeof(double)
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <returns></returns>
+        public static bool IsNumericType(Type dataType)
+        {
+            return numericTypes.Contains(dataType);
+        }
+
         /// <summary>
         /// Convert the specified 'stringValue' into an object of the specified 'type'.
         /// Will throw if cannot convert type.
@@ -414,13 +434,18 @@
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s, format)).ToArray();
+                //
+                // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
+                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
 
                 // An object array is not good enough. We need an array with correct element type.
                 Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
                 Array.Copy(arr, result, arr.Length);
                 return result;
             }
+
+            if (dataType == typeof(System.Drawing.Color) && int.TryParse(newValue, out int argb))
+                return System.Drawing.Color.FromArgb(argb);
 
             // Do we really want enums to be case-insensitive?
             if (dataType.IsEnum)
@@ -431,7 +456,14 @@
             if (underlyingType != null)
                 dataType = underlyingType;
 
-            return Convert.ChangeType(newValue, dataType, format);
+            try
+            {
+                return Convert.ChangeType(newValue, dataType, format);
+            }
+            catch (Exception err)
+            {
+                throw new FormatException($"Unable to convert {newValue} to type {dataType}", err);
+            }
         }
 
         /// <summary>
@@ -451,6 +483,9 @@
         /// <param name="format">Culture to use for the conversion.</param>
         public static string ObjectToString(object obj, IFormatProvider format)
         {
+            if (obj == null)
+                return null;
+
             if (obj.GetType().IsArray)
             {
                 string stringValue = "";
@@ -458,11 +493,13 @@
                 for (int j = 0; j < arr.Length; j++)
                 {
                     if (j > 0)
-                        stringValue += ",";
+                        stringValue += ", ";
                     stringValue += ObjectToString(arr.GetValue(j));
                 }
                 return stringValue;
             }
+            else if (obj.GetType() == typeof(System.Drawing.Color))
+                return ((System.Drawing.Color)obj).ToArgb().ToString();
             else
                 return Convert.ToString(obj, format);
         }

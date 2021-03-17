@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -20,6 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
+    [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
@@ -31,6 +33,7 @@ namespace Models.CLEM
         /// </summary>
         [Description("X values of relationship")]
         [Required]
+        [System.ComponentModel.DefaultValue(new double[] { 0 })]
         public double[] XValues { get; set; }
 
         /// <summary>
@@ -38,6 +41,7 @@ namespace Models.CLEM
         /// </summary>
         [Description("Y values of relationship")]
         [Required]
+        [System.ComponentModel.DefaultValue(new double[] { 0 })]
         public double[] YValues { get; set; }
 
         /// <summary>
@@ -58,6 +62,14 @@ namespace Models.CLEM
         /// </summary>
         [Description("Name of the y variable")]
         public string NameOfYVariable { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public Relationship()
+        {
+            this.SetDefaults();
+        }
 
         /// <summary>
         /// Solve equation for y given x
@@ -96,14 +108,7 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-        }
-
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -139,7 +144,9 @@ namespace Models.CLEM
             }
             return results;
         }
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -147,21 +154,22 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">";
-            // draw chart
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"width:400px;height:200px;\">");
+                // draw chart
 
-            if (XValues is null || XValues.Length == 0)
-            {
-                html += "<span class=\"errorlink\">No x values provided</span>";
-            }
-            else if (YValues is null || XValues.Length != YValues.Length)
-            {
-                html += "<span class=\"errorlink\">Number of x values does not equal number of y values</span>";
-            }
-            else
-            {
-                html += @"
+                if (XValues is null || XValues.Length == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
+                }
+                else if (YValues is null || XValues.Length != YValues.Length)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(@"
                 <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
                 <script>
                 var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
@@ -171,18 +179,18 @@ namespace Models.CLEM
                     type: 'scatter',
                     data: {
                         datasets: [{
-                            data: [";
-                string data = "";
-                for (int i = 0; i < XValues.Length; i++)
-                {
-                    if (YValues.Length > i)
+                            data: [");
+                    string data = "";
+                    for (int i = 0; i < XValues.Length; i++)
                     {
-                        data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                        if (YValues.Length > i)
+                        {
+                            data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                        }
                     }
-                }
-                data = data.TrimEnd(',');
-                html += data;
-                html += @"],
+                    data = data.TrimEnd(',');
+                    htmlWriter.Write(data);
+                    htmlWriter.Write(@"],
                      pointBackgroundColor: '[GraphPointColour]',
                      pointBorderColor: '[GraphPointColour]',
                      borderColor: '[GraphLineColour]', 
@@ -211,16 +219,16 @@ namespace Models.CLEM
                                     gridLines: {
                                        color: '[GraphGridLineColour]',
                                        drawOnChartArea: true
-                                    }";
-                if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                {
-                    html += @", 
+                                    }");
+                    if (this.NameOfXVariable != null && this.NameOfXVariable != "")
+                    {
+                        htmlWriter.Write(@", 
                                       scaleLabel: {
                                        display: true,
                                        labelString: '" + this.NameOfXVariable + @"'
-                                      }";
-                }
-                html += @"}],
+                                      }");
+                    }
+                    htmlWriter.Write(@"}],
                                 yAxes: [{
                                     type: 'linear',
                                     gridLines: {
@@ -234,23 +242,25 @@ namespace Models.CLEM
                                       fontColor: '[GraphLabelColour]',
                                       fontSize: 13,
                                       padding: 3
-                                    }";
-                if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                {
-                    html += @", scaleLabel: {
+                                    }");
+                    if (this.NameOfYVariable != null && this.NameOfYVariable != "")
+                    {
+                        htmlWriter.Write(@", scaleLabel: {
                                       display: true,
                                       labelString: '" + this.NameOfYVariable + @"'
-                                    }";
-                }
-                html += @"}],
+                                    }");
+                    }
+                    htmlWriter.Write(@"}],
                             }
                            }
                         });
-                </script>";
+                </script>");
+                }
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "\n</div>";
-            return html;
         }
 
+        #endregion
     }
 }

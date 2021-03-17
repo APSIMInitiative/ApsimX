@@ -148,19 +148,19 @@ namespace Models.Soils
         private void CheckParameters()
         {
             // Get the layering info and set the layer count
-            dlayer = Soil.Thickness;
+            dlayer = soilPhysical.Thickness;
             nLayers = dlayer.Length;
 
             // get the initial values 
-            oc = Soil.Initial.OC;
-            FBiom = Soil.FBiom;
-            FInert = Soil.FInert;
-            HumusCNr = Soil.InitialSoilCNR;
-            InitialFOMCNr = Soil.SoilOrganicMatter.FOMCNRatio;
-            ph = Soil.Initial.PH;
-            NO3ppm = Soil.kgha2ppm(Soil.Initial.NO3);
-            NH4ppm = Soil.kgha2ppm(Soil.Initial.NH4);
-            ureappm = new double[Soil.Thickness.Length];
+            oc = initial.OC;
+            FBiom = organic.FBiom;
+            FInert = organic.FInert;
+            HumusCNr = initial.OCNR;
+            InitialFOMCNr = organic.FOMCNRatio;
+            ph = initial.PH;
+            NO3ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NO3);
+            NH4ppm = SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, initial.NH4);
+            ureappm = new double[soilPhysical.Thickness.Length];
 
             // This is needed to initialise values in ApsimX, (they were done in xml file before)
             FOMDecomp_TOptimum = new double[] { 32.0, 32.0 };
@@ -255,7 +255,7 @@ namespace Models.Soils
             // Calculate conversion factor from kg/ha to ppm (mg/kg)
             convFactor = new double[nLayers];
             for (int layer = 0; layer < nLayers; ++layer)
-                convFactor[layer] = MathUtilities.Divide(100.0, Soil.BD[layer] * dlayer[layer], 0.0);
+                convFactor[layer] = MathUtilities.Divide(100.0, soilPhysical.BD[layer] * dlayer[layer], 0.0);
 
             // Check parameters for patches
             if (DepthToTestByLayer <= epsilon)
@@ -369,9 +369,9 @@ namespace Models.Soils
 
                 // distribute C over fom pools
                 double[] fomPool = new double[3];
-                fomPool[0] = Soil.InitialRootWt[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[1] = Soil.InitialRootWt[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
-                fomPool[2] = Soil.InitialRootWt[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[0] = organic.FOM[layer] * fract_carb[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[1] = organic.FOM[layer] * fract_cell[FOMtypeID_reset] * DefaultCarbonInFOM;
+                fomPool[2] = organic.FOM[layer] * fract_lign[FOMtypeID_reset] * DefaultCarbonInFOM;
 
                 // set the initial values across patches
                 for (int k = 0; k < Patch.Count; k++)

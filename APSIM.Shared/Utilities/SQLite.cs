@@ -1082,6 +1082,38 @@ namespace APSIM.Shared.Utilities
             ExecuteNonQuery(sql.ToString());
         }
 
+        /// <summary>Create a new table</summary>
+        public void CreateTable(DataTable table)
+        {
+            StringBuilder sql = new StringBuilder();
+
+            var columnNames = new List<string>();
+            foreach (DataColumn column in table.Columns)
+            {
+                columnNames.Add(column.ColumnName);
+                if (sql.Length > 0)
+                    sql.Append(',');
+
+                sql.Append("\"");
+                sql.Append(column.ColumnName);
+                sql.Append("\" ");
+                if (column.DataType == null)
+                    sql.Append("integer");
+                else
+                    sql.Append(GetDBDataTypeName(column.DataType));
+            }
+
+            sql.Insert(0, "CREATE TABLE [" + table.TableName + "] (");
+            sql.Append(')');
+            ExecuteNonQuery(sql.ToString());
+
+            List<object[]> rowValues = new List<object[]>();
+            foreach (DataRow row in table.Rows)
+                rowValues.Add(row.ItemArray);
+            InsertRows(table.TableName, columnNames, rowValues);
+        }
+
+
         /// <summary>
         /// Create an index.
         /// </summary>

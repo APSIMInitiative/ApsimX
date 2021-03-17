@@ -39,14 +39,14 @@ var
   ErrorCode: Integer;
 begin
     //check for the .net runtime. If it is not found then show a message.
-    if not IsDotNetInstalled(net462, 0) then 
+    if not IsDotNetInstalled(net472, 0) then 
     begin
         answer := MsgBox('The Microsoft .NET Framework 4.6 or above is required.' + #13#10 + #13#10 +
         'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
         result := false;
         if (answer = MROK) then
         begin
-          ShellExecAsOriginalUser('open', 'http://www.microsoft.com/en-au/download/details.aspx?id=48130', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+          ShellExecAsOriginalUser('open', 'https://go.microsoft.com/fwlink/?LinkID=863265', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
         end;
     end
     else
@@ -67,6 +67,7 @@ Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
 Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
+Source: ..\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 
 ;Sample files 
 Source: ..\Examples\*; DestDir: {app}\Examples; Flags: recursesubdirs
@@ -75,7 +76,7 @@ Source: ..\Tests\UnderReview\*; DestDir: {app}\UnderReview; Flags: recursesubdir
 Source: ..\Tests\UnderReview\*; DestDir: {autodocs}\Apsim\UnderReview; Flags: recursesubdirs
 
 [Tasks]
-Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:
+Name: desktopicon; Description: Create a &desktop icon; GroupDescription: Additional icons:; Flags: unchecked
 Name: associate; Description: &Associate .apsimx with Apsim Next Generation; GroupDescription: Other tasks:
 
 [UninstallDelete]

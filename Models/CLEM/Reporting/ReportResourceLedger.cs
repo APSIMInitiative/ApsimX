@@ -25,6 +25,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Version(1, 0, 3, "Now includes Category and RelatesTo fields for grouping in analysis.")]
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
@@ -75,13 +76,13 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
-                "[Clock].Today"
+                "[Clock].Today as Date"
             };
             if (VariableNames != null && VariableNames.Count() > 0)
             {
                 if(VariableNames.Count() > 1)
                 {
-                    Summary.WriteWarning(this, String.Format("Multiple resource groups not permitted in ReportResourceLedger [{0}]\nAdditional entries have been ignored", this.Name));
+                    Summary.WriteWarning(this, String.Format("Multiple resource groups not permitted in ReportResourceLedger [{0}]\r\nAdditional entries have been ignored", this.Name));
                 }
 
                 for (int i = 0; i < 1; i++)
@@ -94,7 +95,7 @@ namespace Models.CLEM.Reporting
                         CLEMModel model = Resources.GetResourceGroupByName(this.VariableNames[i]) as CLEMModel;
                         if (model == null)
                         {
-                            Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\nEntry has been ignored", this.VariableNames[i], this.Name));
+                            Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.VariableNames[i], this.Name));
                         }
                         else
                         {
@@ -105,12 +106,12 @@ namespace Models.CLEM.Reporting
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as Herd");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Gender as Sex");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Age as Age");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Weight as Weight");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlag as Reason");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlag as Category");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as RelatesTo");
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
 
                                 // ToDo: add pricing for ruminants including buy and sell pricing
@@ -136,8 +137,8 @@ namespace Models.CLEM.Reporting
                                 // add pricing
                                 if (pricingIncluded)
                                 {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"gain\") as Price_Gain");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$\",\"loss\") as Price_Loss");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$gain\",\"gain\") as Price_Gain");
+                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(\"$loss\",\"loss\") as Price_Loss");
                                 }
 
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
@@ -147,7 +148,8 @@ namespace Models.CLEM.Reporting
                                     variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.CLEMParentName as Source");
                                 }
                                 variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Reason as Reason");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.RelatesToResource as RelatesTo");
+                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Category as Category");
                             }
                         }
                     }
@@ -260,7 +262,7 @@ namespace Models.CLEM.Reporting
                     {
                         valuesToWrite.Add(columns[i].GetValue(groupIndex));
                     }
-                    catch// (Exception err)
+                    catch
                     {
                         // Should we include exception message?
                         invalidVariables.Add(columns[i].Name);
@@ -268,7 +270,7 @@ namespace Models.CLEM.Reporting
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
                 {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
                 }
 
                 // Add row to our table that will be written to the db file

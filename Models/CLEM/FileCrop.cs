@@ -27,14 +27,14 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This model holds a crop data file for the CLEM simulation.")]
+    [Description("This component specifies a crop data file for the CLEM simulation")]
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]
-    [Version(1, 0, 2, "Added customisable column names.\nDelete and recreate old FileCrop components to set default values as previously used.")]
+    [Version(1, 0, 2, "Added customisable column names.\r\nDelete and recreate old FileCrop components to set default values as previously used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReader.htm")]
-    public class FileCrop : CLEMModel, IFileCrop, IValidatableObject
+    public class FileCrop : CLEMModel, IFileCrop
     {
         /// <summary>
         /// A reference to the text file reader object
@@ -71,6 +71,11 @@ namespace Models.CLEM
         /// The character spacing index for the Npct column
         /// </summary>
         private int nitrogenPercentIndex;
+
+        /// <summary>
+        /// The character spacing index for the harvest type column
+        /// </summary>
+        private int harvestTypeIndex;
 
         /// <summary>
         /// The entire Crop File read in as a DataTable with Primary Keys assigned.
@@ -145,6 +150,12 @@ namespace Models.CLEM
         [Description("Column name for percent nitrogen")]
         public string PercentNitrogenColumnName { get; set; }
 
+        /// <summary>
+        /// Name of column holding harvest details
+        /// </summary>
+        [Summary]
+        [Description("Column name for harvest type")]
+        public string HarvestTypeColumnName { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -200,6 +211,7 @@ namespace Models.CLEM
             this.monthIndex = 0;
             this.amountKgIndex = 0;
             this.nitrogenPercentIndex = 0;
+            this.harvestTypeIndex = 0;
             this.forageFileAsTable = GetAllData();
         }
 
@@ -276,7 +288,10 @@ namespace Models.CLEM
                 {
                     cropProps.Add(PercentNitrogenColumnName);
                 }
-
+                if (harvestTypeIndex != -1)
+                {
+                    cropProps.Add(HarvestTypeColumnName);
+                }
                 DataTable table = this.reader.ToTable(cropProps);
 
                 DataColumn[] primarykeys = new DataColumn[5];
@@ -326,14 +341,14 @@ namespace Models.CLEM
             {
                 if(!System.Single.TryParse(landId, out Single val))
                 {
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{landId}] specified for column [{SoilTypeColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Land Id [{landId}] assigned to the Land type used is present in column [{SoilTypeColumnName}] of the production data provided.");
                 }
             }
             if (forageFileAsTable.Columns[CropNameColumnName].DataType == typeof(System.Single))
             {
                 if (!System.Single.TryParse(cropName, out Single val))
                 {
-                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
+                    throw new ApsimXException(this, $"[o={this.Parent.Name}.{this.Name}] encountered a problem reading data\r\nCause: The value [{cropName}] specified for column [{CropNameColumnName}] is not a [Single] type as expected by the data provided.\r\nFix: Ensure the Crop name [{cropName}] required is present in column [{CropNameColumnName}] of the production data provided.");
                 }
             }
 
@@ -380,6 +395,24 @@ namespace Models.CLEM
                 cropdata.Npct = double.NaN;
             }
 
+            //HarvestType column is optional 
+            //Only try to read it in if it exists in the file.
+            if (harvestTypeIndex != -1)
+            {
+                if ("first:last".Contains(dr[HarvestTypeColumnName].ToString().ToLower()))
+                {
+                    cropdata.HarvestType = dr[HarvestTypeColumnName].ToString().ToLower();
+                }
+                else
+                {
+                    cropdata.HarvestType = "";
+                }
+            }
+            else
+            {
+                cropdata.HarvestType = "";
+            }
+
             cropdata.HarvestDate = new DateTime(cropdata.Year, cropdata.Month, 1);
 
             return cropdata;
@@ -401,7 +434,7 @@ namespace Models.CLEM
                     if (this.reader.Headings == null)
                     {
                         string fileType = "Text file";
-                        string extra = "\nExpecting Header row followed by units row in brackets.\nHeading1      Heading2      Heading3\n( )         ( )        ( )";
+                        string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if(reader.IsCSVFile)
                         {
                             fileType = "Comma delimited text file (csv)";
@@ -420,6 +453,7 @@ namespace Models.CLEM
                     this.monthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName);
                     this.amountKgIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName);
                     this.nitrogenPercentIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, PercentNitrogenColumnName);
+                    this.harvestTypeIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, HarvestTypeColumnName);
 
                     if (this.soilNumIndex == -1)
                     {
@@ -486,6 +520,7 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -493,106 +528,108 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            if (FileName == null || FileName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "Using <span class=\"errorlink\">FILE NOT SET</span>";
-            }
-            else if (!this.FileExists)
-            {
-                html += "The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found";
-            }
-            else
-            {
-                html += "Using <span class=\"filelink\">" + FileName + "</span>";
-            }
-
-            if (FileName != null && FileName.Contains(".xls"))
-            {
-                if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (FileName == null || FileName == "")
                 {
-                    html += " with <span class=\"errorlink\">WORKSHEET NOT SET</span>";
+                    htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
+                }
+                else if (!this.FileExists)
+                {
+                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
                 }
                 else
                 {
-                    html += " with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>";
+                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
                 }
-            }
 
-            html += "\n<div class=\"activityentry\">";
-            html += "\n<div class=\"activityentry\" style=\"Margin-left:15px;\">";
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ";
-            if (SoilTypeColumnName is null || SoilTypeColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ";
-            if (CropNameColumnName is null || CropNameColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + CropNameColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ";
-            if (YearColumnName is null || YearColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + YearColumnName + "</span></div>";
-            }
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ";
-            if (MonthColumnName is null || MonthColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + MonthColumnName + "</span></div>";
-            }
+                if (FileName != null && FileName.Contains(".xls"))
+                {
+                    if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
+                    {
+                        htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
+                    }
+                }
+                htmlWriter.Write("\r\n</div>");
 
-            html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ";
-            if (AmountColumnName is null || AmountColumnName == "")
-            {
-                html += "<span class=\"errorlink\">NOT SET</span></div>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + AmountColumnName + "</span></div>";
-            }
-            if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
-            {
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>";
-            }
-            html += "\n</div>";
- 
-            html += "\n</div>";
-            return html;
-        }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+                if (SoilTypeColumnName is null || SoilTypeColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + SoilTypeColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Crop name</span> is ");
+                if (CropNameColumnName is null || CropNameColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + CropNameColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                if (YearColumnName is null || YearColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                if (MonthColumnName is null || MonthColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                }
 
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> grown/harvested is ");
+                if (AmountColumnName is null || AmountColumnName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + AmountColumnName + "</span></div>");
+                }
+                if (PercentNitrogenColumnName is null || PercentNitrogenColumnName == "")
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Nitrogen</span> is <span class=\"setvalue\">" + PercentNitrogenColumnName + "</span></div>");
+                }
+                if (HarvestTypeColumnName is null || HarvestTypeColumnName == "")
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">NOT NEEDED</span></div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Harvest</span> is <span class=\"setvalue\">" + HarvestTypeColumnName + "</span></div>");
+                }
 
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
+                htmlWriter.Write("\r\n</div>");
+
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
+
     }
 
     /// <summary>
@@ -636,5 +673,10 @@ namespace Models.CLEM
         /// Day is set to the 1st of the month.
         /// </summary>
         public DateTime HarvestDate;
+
+        /// <summary>
+        /// Harvest type identifier
+        /// </summary>
+        public string HarvestType;
     }
 }

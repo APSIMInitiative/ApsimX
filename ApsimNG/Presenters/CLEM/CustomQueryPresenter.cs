@@ -1,13 +1,13 @@
-﻿using ApsimNG.Views.CLEM;
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM.Reporting;
 using System;
 using System.Data;
 using UserInterface.Commands;
 using UserInterface.Presenters;
 using Models.Storage;
+using UserInterface.Views;
 
-namespace ApsimNG.Presenters.CLEM
+namespace UserInterface.Presenters
 {
     class CustomQueryPresenter : IPresenter
     {
@@ -60,12 +60,15 @@ namespace ApsimNG.Presenters.CLEM
         /// </summary>
         public void Detach()
         {
-            view.RunQuery -= OnRunQuery;
-            view.LoadFile -= OnLoadFile;
-            view.WriteTable -= OnWriteTable;
-            view.Grid.Dispose();
-            view.Detach();
-            TrackChanges();
+            if (!(view is null))
+            {
+                view.RunQuery -= OnRunQuery;
+                view.LoadFile -= OnLoadFile;
+                view.WriteTable -= OnWriteTable;
+                view.Grid.Dispose();
+                view.Detach();
+                TrackChanges();
+            }
         }
 
         /// <summary>
@@ -99,8 +102,8 @@ namespace ApsimNG.Presenters.CLEM
         /// <summary>
         /// Overwrites a table in the data store
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="args"></param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         private void OnWriteTable(object sender, EventArgs e)
         {
             DataTable data = view.Grid.DataSource;

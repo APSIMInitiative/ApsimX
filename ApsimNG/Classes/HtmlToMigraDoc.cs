@@ -1,8 +1,18 @@
 ﻿namespace UserInterface.Classes
 {
+    using APSIM.Shared.Utilities;
+    using Extensions;
     using HtmlAgilityPack;
+#if NETCOREAPP
+    using MigraDocCore.DocumentObjectModel;
+    using MigraDocCore.DocumentObjectModel.Tables;
+    using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
+    using PdfSharpCore.Drawing;
+#else
     using MigraDoc.DocumentObjectModel;
     using MigraDoc.DocumentObjectModel.Tables;
+    using PdfSharp.Drawing;
+#endif
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -10,6 +20,9 @@
     using System.Net;
     using System.Reflection;
 
+    /// <summary>
+    /// 
+    /// </summary>
     public class HtmlToMigraDoc
     {
         private static bool foundCode = false;
@@ -25,13 +38,14 @@
         /// <param name="html">The HTML to parse.</param>
         /// <param name="section">To section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
-        public static void Convert(string html, DocumentObject section, string imagePath)
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
+        public static void Convert(string html, DocumentObject section, string imagePath, string relativePath)
         {
             if (!string.IsNullOrEmpty(html) && section != null)
             {
                 var doc = new HtmlDocument();
                 doc.LoadHtml(html);
-                ConvertNodes(doc.DocumentNode.ChildNodes, section, imagePath);
+                ConvertNodes(doc.DocumentNode.ChildNodes, section, imagePath, relativePath);
                 AddStylesToDoc(section.Document);
             }
         }
@@ -42,13 +56,43 @@
         /// <param name="nodes">The HTML nodes.</param>
         /// <param name="section">The section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
-        private static void ConvertNodes(HtmlNodeCollection nodes, DocumentObject section, string imagePath)
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
+        private static void ConvertNodes(HtmlNodeCollection nodes, DocumentObject section, string imagePath, string relativePath)
         {
             foreach (var node in nodes)
             {
-                DocumentObject result = ParseNode(node, section, imagePath);
+                DocumentObject result = ParseNode(node, section, imagePath, relativePath);
                 if (node.HasChildNodes)
-                    ConvertNodes(node.ChildNodes, result ?? section, imagePath);
+                    ConvertNodes(node.ChildNodes, result ?? section, imagePath, relativePath);
+                if (node.Name == "table" && result is Table table)
+                    FixTableSize(table);
+            }
+        }
+
+        private static void FixTableSize(Table table)
+        {
+            XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+            var fontSize = table.Document.Styles["Table"].Font.Size.Value;
+            var gdiFont = new XFont("Arial", fontSize);
+
+            for (int j = 0; j < table.Columns.Count; j++)
+            {
+                double columnWidth = 0;
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    foreach (Paragraph paragraph in table[i, j].Elements.OfType<Paragraph>())
+                    {
+                        string contents = string.Empty;
+                        foreach (DocumentObject paragraphElement in paragraph.Elements)
+                            if (paragraphElement is Text)
+                                contents += (paragraphElement as Text).Content;
+                            else if (paragraphElement is Hyperlink)
+                                contents += (paragraphElement as Hyperlink).Name;
+                        XSize size = graphics.MeasureString(contents, gdiFont);
+                        columnWidth = Math.Max(columnWidth, size.Width);
+                    }
+                }
+                table.Columns[j].Width = Unit.FromPoint(columnWidth) + 5;
             }
         }
 
@@ -58,8 +102,9 @@
         /// <param name="node">The HTML node to examine.</param>
         /// <param name="section">The section to store the elements in.</param>
         /// <param name="imagePath">Path for images.</param>
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
         /// <returns>The newly created MigraDoc section. Can be null.</returns>
-        private static DocumentObject ParseNode(HtmlNode node, DocumentObject section, string imagePath)
+        private static DocumentObject ParseNode(HtmlNode node, DocumentObject section, string imagePath, string relativePath)
         {
             switch (node.Name)
             {
@@ -85,7 +130,7 @@
                 case "th": return AddTableHeading(node, section);
                 case "tr": return AddTableRow(node, section);
                 case "td": return AddTableColumn(node, section);
-                case "img": return AddImage(node, section, imagePath);
+                case "img": return AddImage(node, section, imagePath, relativePath);
                 case "pre": foundCode = true; return null;
                 case "code": if (!foundCode) { FormattedText txt = AddFormattedText(section); txt.FontName = "Courier New"; return txt; } else return null;
             }
@@ -111,23 +156,26 @@
         /// <param name="node"></param>
         /// <param name="section"></param>
         /// <param name="imagePath">Path for images.</param>
+        /// <param name="relativePath">If images are provided as a relative path name, the full path name will be resolved relative to this path.</param>
         /// <returns></returns>
-        private static DocumentObject AddImage(HtmlNode node, DocumentObject section, string imagePath)
+        private static DocumentObject AddImage(HtmlNode node, DocumentObject section, string imagePath, string relativePath)
         {
             HtmlAttribute srcAttribute = node.Attributes["src"];
             if (srcAttribute != null)
             {
+                string absolutePath = PathUtilities.GetAbsolutePath(srcAttribute.Value, relativePath);
                 string fullPath;
                 if (String.IsNullOrEmpty(imagePath))
+                    fullPath = srcAttribute.Value;
+                else if (File.Exists(absolutePath))
+                    fullPath = absolutePath;
+                else if (File.Exists(srcAttribute.Value))
                     fullPath = srcAttribute.Value;
                 else
                     fullPath = GetImagePath(srcAttribute.Value, imagePath);
 
                 if (File.Exists(fullPath))
-                {
-                    Paragraph para = section.Section.AddParagraph();
-                    para.AddImage(fullPath);
-                }
+                    section.AddResizeImage(fullPath);
             }
             return section;
         }
@@ -140,7 +188,7 @@
         /// <returns>Full path to the image.</returns>
         public static string GetImagePath(string imageName, string imageDirectory)
         {
-            string path = Path.Combine(imageDirectory, imageName);
+            string path = Path.Combine(imageDirectory, $"{Path.GetFileNameWithoutExtension(imageName)}-{Guid.NewGuid()}.png");
             using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
                 GetImageResource(imageName).CopyTo(file);
@@ -248,16 +296,25 @@
             {
                 if (sibling == node)
                 {
-                    Paragraph tableText = row.Cells[index].AddParagraph(node.InnerText);
-                    if (node.Attributes.Contains("align"))
+                    // If there is whitespace at the end of the row, sometimes the HTML parser
+                    // will consider that whitespace to be an empty cell. This would normally
+                    // cause an argument out of range exception due to the row having more cells
+                    // than the table has columns. In such a scenario, we simply ignore the extra
+                    // cell.
+                    if (row.Table.Columns.Count > index)
                     {
-                        string alignment = node.Attributes["align"].Value;
-                        if (String.Compare(alignment, "right", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Right;
-                        else if (String.Compare(alignment, "center", true) == 0)
-                            tableText.Format.Alignment = ParagraphAlignment.Center;
+                        string text = node.InnerText == "&nbsp;" ? "" : node.InnerText;
+                        Paragraph tableText = row.Cells[index].AddParagraph(text);
+                        if (node.Attributes.Contains("align"))
+                        {
+                            string alignment = node.Attributes["align"].Value;
+                            if (String.Compare(alignment, "right", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Right;
+                            else if (String.Compare(alignment, "center", true) == 0)
+                                tableText.Format.Alignment = ParagraphAlignment.Center;
+                        }
+                        tableText.Style = "TableText";
                     }
-                    tableText.Style = "TableText";
                     return section;
                 }
                 else if (sibling.Name == "td")
@@ -488,10 +545,10 @@
         /// Add MigraDoc styles.
         /// </summary>
         /// <param name="doc">The document to add the styles to.</param>
-        private static void AddStylesToDoc(MigraDoc.DocumentObjectModel.Document doc)
+        private static void AddStylesToDoc(Document doc)
         {
             var body = doc.Styles["Normal"];
-            body.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(10);
+            body.Font.Size = Unit.FromPoint(10);
 
             if (doc.Styles["TableText"] == null)
             {
@@ -500,46 +557,46 @@
                 tableTextStyle.ParagraphFormat.SpaceAfter = 5;
             }
 
-            body.ParagraphFormat.LineSpacingRule = MigraDoc.DocumentObjectModel.LineSpacingRule.Multiple;
+            body.ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
             body.ParagraphFormat.LineSpacing = 1.0;
             body.ParagraphFormat.SpaceAfter = 10;
 
             var footer = doc.Styles["Footer"];
-            footer.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            footer.Font.Size = Unit.FromPoint(9);
 
             var h1 = doc.Styles["Heading1"];
             h1.Font.Bold = true;
-            h1.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(15);
+            h1.Font.Size = Unit.FromPoint(15);
             h1.ParagraphFormat.SpaceBefore = 0;
 
             var h2 = doc.Styles["Heading2"];
             h2.Font.Bold = true;
-            h2.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(13);
+            h2.Font.Size = Unit.FromPoint(13);
             h2.ParagraphFormat.SpaceBefore = 0;
 
             var h3 = doc.Styles["Heading3"];
             h3.Font.Bold = true;
-            h3.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(11);
+            h3.Font.Size = Unit.FromPoint(11);
             h3.ParagraphFormat.SpaceBefore = 0;
 
             var h4 = doc.Styles["Heading4"];
             h4.Font.Bold = true;
-            h4.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(10);
+            h4.Font.Size = Unit.FromPoint(10);
             h4.ParagraphFormat.SpaceBefore = 0;
 
             var h5 = doc.Styles["Heading5"];
             h5.Font.Bold = true;
-            h5.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h5.Font.Size = Unit.FromPoint(9);
             h5.ParagraphFormat.SpaceBefore = 0;
 
             var h6 = doc.Styles["Heading6"];
             h6.Font.Bold = true;
-            h6.Font.Size = MigraDoc.DocumentObjectModel.Unit.FromPoint(9);
+            h6.Font.Size = Unit.FromPoint(9);
             h6.ParagraphFormat.SpaceBefore = 0;
 
 
             var links = doc.Styles["Hyperlink"];
-            links.Font.Color = MigraDoc.DocumentObjectModel.Colors.Blue;
+            links.Font.Color = Colors.Blue;
 
             if (doc.Styles["ListEnd"] == null)
             {
@@ -550,8 +607,8 @@
             if (doc.Styles["UnorderedList"] == null)
             {
                 var unorderedlist = doc.AddStyle("UnorderedList", "Normal");
-                var listInfo = new MigraDoc.DocumentObjectModel.ListInfo();
-                listInfo.ListType = MigraDoc.DocumentObjectModel.ListType.BulletList1;
+                var listInfo = new ListInfo();
+                listInfo.ListType = ListType.BulletList1;
                 unorderedlist.ParagraphFormat.ListInfo = listInfo;
                 unorderedlist.ParagraphFormat.LeftIndent = "1cm";
                 unorderedlist.ParagraphFormat.FirstLineIndent = "-0.5cm";
@@ -561,7 +618,7 @@
             if (doc.Styles["OrderedList"] == null)
             {
                 var orderedlist = doc.AddStyle("OrderedList", "UnorderedList");
-                orderedlist.ParagraphFormat.ListInfo.ListType = MigraDoc.DocumentObjectModel.ListType.NumberList1;
+                orderedlist.ParagraphFormat.ListInfo.ListType = ListType.NumberList1;
                 orderedlist.ParagraphFormat.LeftIndent = "1cm";
                 orderedlist.ParagraphFormat.FirstLineIndent = "-0.5cm";
                 orderedlist.ParagraphFormat.SpaceAfter = 0;
@@ -576,9 +633,9 @@
             if (doc.Styles["HorizontalRule"] == null)
             { 
                 var hr = doc.AddStyle("HorizontalRule", "Normal");
-                var border = new MigraDoc.DocumentObjectModel.Border();
+                var border = new Border();
                 border.Width = "1pt";
-                border.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+                border.Color = Colors.DarkGray;
                 hr.ParagraphFormat.Borders.Bottom = border;
                 hr.ParagraphFormat.LineSpacing = 0;
                 hr.ParagraphFormat.SpaceBefore = 15;
@@ -588,19 +645,20 @@
                 var style = doc.Styles.AddStyle("TableParagraph", "Normal");
                 style.Font.Size = 8;
                 style.ParagraphFormat.SpaceAfter = Unit.FromCentimeter(0);
-                style.Font = new MigraDoc.DocumentObjectModel.Font("Courier New");
+                style.Font = new Font("Courier New");
             }
         }
 
         /// <summary>
         /// Add a text frame.
         /// </summary>
-        /// <param name="section"></param>
+        /// <param name="section">Section to which the text will be added.</param>
+        /// <param name="text">Text to be added.</param>
         private static void AddCodeBlock(Section section, string text)
         {
             Table table = section.AddTable();
             table.Borders.Width = "0.5pt";
-            table.Borders.Color = MigraDoc.DocumentObjectModel.Colors.DarkGray;
+            table.Borders.Color = Colors.DarkGray;
             table.LeftPadding = "5mm";
             table.Rows.LeftIndent = "0cm";
             

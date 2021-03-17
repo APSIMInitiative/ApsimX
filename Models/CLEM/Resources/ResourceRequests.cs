@@ -39,9 +39,13 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public Guid ActivityID { get; set; }
         ///<summary>
-        /// Reason for requesting resource
+        /// Category for requesting resource
         ///</summary> 
-        public string Reason { get; set; }
+        public string Category { get; set; }
+        ///<summary>
+        /// Resource this transaction relates to (not uses)
+        ///</summary> 
+        public string RelatesToResource { get; set; }
         ///<summary>
         /// Amount required 
         ///</summary> 

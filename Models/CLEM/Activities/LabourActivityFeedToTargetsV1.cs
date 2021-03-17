@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(HumanFoodStore),
                         ResourceTypeName = foodtype.Name,
                         ActivityModel = this,
-                        Reason = "Consumption"
+                        Category = "Consumption"
                     }
                     );
                 }
@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
@@ -285,7 +285,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -434,12 +434,12 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"croprotationborder\">";
+            html += "\r\n<div class=\"croprotationborder\">";
             html += "<div class=\"croprotationlabel\">The people will eat to the following targets:</div>";
 
             if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
-                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "\r\n<div class=\"errorbanner clearfix\">";
                 html += "<div class=\"filtererror\">No Feed To Target component provided</div>";
                 html += "</div>";
             }

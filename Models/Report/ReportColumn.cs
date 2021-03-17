@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -293,7 +294,7 @@
                 // for a variableName of [3:], columnName = [3]
                 // for a variableName of [:5], columnNamne = [0]
 
-                Regex regex = new Regex("\\[([0-9]):*[0-9]*\\]");
+                Regex regex = new Regex("\\[([0-9]+):*[0-9]*\\]");
 
                 Name = regex.Replace(variableName.Replace("[:", "[1:"), "($1)");
 
@@ -336,7 +337,8 @@
                 {
                     // A from variable name  was specified.
                 }
-                else if (DateTime.TryParse(fromString, out DateTime date))
+                else if (DateTime.TryParseExact(fromString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                      || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
                     fromVariable = new VariableObject(date);
@@ -355,7 +357,8 @@
                 {
                     // A to variable name  was specified.
                 }
-                else if (DateTime.TryParse(toString, out DateTime date))
+                else if (DateTime.TryParseExact(toString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                      || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
                     toVariable = new VariableObject(date);

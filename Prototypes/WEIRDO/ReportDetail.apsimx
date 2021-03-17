@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 277,
-  "Version": 80,
-  "ApsimVersion": "Version 0.0.0.0, built 2020-03-06",
+  "Version": 119,
+  "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
     {
@@ -17,6 +17,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "DetailOutputs",
       "Children": [
         {
@@ -41,7 +43,7 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
           "FileName": "lincoln.met",
           "ExcelWorkSheetName": null,
           "Name": "Weather",
@@ -59,7 +61,7 @@
           "Name": "Field",
           "Children": [
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Soil].WEIRDO.TimeStep as TimeStep",
                 "[Clock].Today as Date",
@@ -67,9 +69,9 @@
                 "[Soil].WEIRDO.Hour as Hour",
                 "[Soil].WEIRDO.ReportLayer as Layer",
                 "[Soil].WEIRDO.PoreWater as PW",
-                "sum([Soil].SoilWater.SWmm) as ProfileWater",
-                "[Soil].SoilWater.SWmm as SWmm",
-                "[Soil].SoilWater.SW as SW",
+                "sum([Soil].WEIRDO.SWmm) as ProfileWater",
+                "[Soil].WEIRDO.SWmm as SWmm",
+                "[Soil].WEIRDO.SW as SW",
                 "[Soil].WEIRDO.Drainage as Drainage",
                 "[Soil].WEIRDO.Infiltration as Infiltration",
                 "[Soil].WEIRDO.pond as Pond",
@@ -79,6 +81,7 @@
               "EventNames": [
                 "[Soil].WEIRDO.ReportDetails"
               ],
+              "GroupByVariableName": null,
               "Name": "Report",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -95,14 +98,12 @@
             },
             {
               "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-              "Canopies": [],
               "InitialResidueName": "wheat_stubble",
               "InitialResidueType": "wheat",
               "InitialResidueMass": 0.0,
               "InitialStandingFraction": 0.0,
               "InitialCPR": 0.0,
               "InitialCNR": 100.0,
-              "FractionFaecesAdded": 1.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
               "IncludeInDocumentation": true,
@@ -136,7 +137,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Description(\"Date to irrigate\")]\r\n        public string IrrigateDate { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth of irrigation (mm)\")]\r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")]\r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")]\r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [Description(\"How may hours did it take to apply irrigation?\")]\r\n        public double Duration { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(IrrigateDate, Clock.Today, IrrigateDate))\r\n            {\r\n                Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff, duration: Duration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Irrigation Irrigation;\r\n        \r\n        [Description(\"Date to irrigate\")]\r\n        public string IrrigateDate { get; set; }\r\n        \r\n        [Description(\"Amount of irrigation to be applied (mm)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [Description(\"Depth of irrigation (mm)\")]\r\n        public double Depth { get; set; }\r\n        \r\n        [Description(\"Efficiency of irrigation (0-1)\")]\r\n        public double Efficiency { get; set; }\r\n        \r\n        [Description(\"Will the irrigation runoff?\")]\r\n        public bool WillRunoff { get; set; }\r\n        \r\n        [Description(\"How may hours did it take to apply irrigation?\")]\r\n        public double Duration { get; set; }\r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(IrrigateDate, Clock.Today, IrrigateDate))\r\n            {\r\n                Irrigation.Apply(amount: Amount, depth: Depth, efficiency: Efficiency, willRunoff: WillRunoff, duration: Duration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "IrrigateDate",
@@ -169,7 +170,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Report.Report, Models",
+              "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Soil].WEIRDO.Thickness as Thickness",
                 "[Soil].WEIRDO.PsiUpper as PsiUp",
@@ -178,6 +179,7 @@
               "EventNames": [
                 "[Clock].DoInitialSummary"
               ],
+              "GroupByVariableName": null,
               "Name": "Initial",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -186,7 +188,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\n\r\n\r\n\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start Date\")]\r\n        public DateTime StartDate { get; set; }\r\n        \r\n        [Description(\"End Date\")]\r\n        public DateTime EndDate { get; set; }\r\n \r\n    \r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\r\n                Met.Rain = 0;        \r\n        }\r\n    }\r\n}\r\n",
+              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start Date\")]\r\n        public DateTime StartDate { get; set; }\r\n        \r\n        [Description(\"End Date\")]\r\n        public DateTime EndDate { get; set; }\r\n \r\n    \r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\r\n                Met.Rain = 0;        \r\n        }\r\n    }\r\n}\r\n",
               "Parameters": [
                 {
                   "Key": "StartDate",
@@ -219,6 +221,7 @@
               "Latitude": -27.581836,
               "Longitude": 151.320206,
               "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
               "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
               "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
               "Name": "Soil",
@@ -228,6 +231,9 @@
                   "Pores": null,
                   "Hourly": null,
                   "SubHourly": null,
+                  "PrecipitationInterception": 0.0,
+                  "Salb": 0.15,
+                  "SWCON": null,
                   "Thickness": [
                     30.0,
                     170.0,
@@ -348,9 +354,6 @@
                     1.5,
                     1.6
                   ],
-                  "PrecipitationInterception": 0.0,
-                  "Salb": 0.15,
-                  "SWCON": null,
                   "SubProfileConductance": 20.0,
                   "WaterTableDepth": 10.0,
                   "CalculateInfiltration": true,
@@ -384,6 +387,8 @@
                   "RelativePoreVolume": null,
                   "Theta": null,
                   "Diffusion": null,
+                  "SoluteFluxEfficiency": null,
+                  "SoluteFlowEfficiency": null,
                   "Name": "WEIRDO",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -458,6 +463,7 @@
                     0.08,
                     0.9
                   ],
+                  "NPartitionApproach": 0,
                   "Name": "SoilNitrogen",
                   "Children": [
                     {
@@ -571,6 +577,8 @@
                     43.035489985642393,
                     28.034999036634055
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -627,6 +635,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -653,8 +665,8 @@
                     300.0,
                     300.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": null,
                   "OC": null,
                   "EC": null,
@@ -692,8 +704,8 @@
                     200.0,
                     200.0
                   ],
-                  "NO3N": null,
-                  "NH4N": null,
+                  "NO3": null,
+                  "NH4": null,
                   "SW": [
                     0.27,
                     0.27,
@@ -719,11 +731,11 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Graph, Models",
+                  "$type": "Models.Graph, Models",
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 0,
                       "Title": "Depth (mm)",
                       "Inverted": true,
@@ -734,7 +746,7 @@
                       "CrossesAtZero": false
                     },
                     {
-                      "$type": "Models.Graph.Axis, Models",
+                      "$type": "Models.Axis, Models",
                       "Type": 1,
                       "Title": "Volumetric water (mm/mm)",
                       "Inverted": false,
@@ -752,7 +764,7 @@
                   "Name": "Graph",
                   "Children": [
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 3,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -764,7 +776,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].LL15",
                       "YFieldName": "[Soil].DepthMidPoints",
@@ -782,7 +793,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -794,7 +805,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].LL15",
                       "YFieldName": "[Soil].DepthMidPoints",
@@ -812,7 +822,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -824,7 +834,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].LL15",
                       "YFieldName": "[Soil]l.DepthMidPoints",
@@ -842,7 +851,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -854,7 +863,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].AirDry",
                       "YFieldName": "[Soil].DepthMidPoints",
@@ -872,7 +880,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -884,7 +892,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].DUL",
                       "YFieldName": "[Soil].DepthMidPoints",
@@ -902,7 +909,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Graph.Series, Models",
+                      "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 1,
                       "YAxis": 0,
@@ -914,7 +921,6 @@
                       "MarkerSize": 0,
                       "Line": 0,
                       "LineThickness": 0,
-                      "Checkpoint": "Current",
                       "TableName": null,
                       "XFieldName": "[Soil].SAT",
                       "YFieldName": "[Soil].DepthMidPoints",
@@ -938,7 +944,7 @@
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -960,11 +966,11 @@
           "Name": "Graphs",
           "Children": [
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -975,7 +981,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -993,7 +999,7 @@
               "Name": "WaterBalance",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1005,7 +1011,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Infiltration",
@@ -1023,7 +1028,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 0,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1035,7 +1040,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Irrigation",
@@ -1053,7 +1057,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 0,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1065,7 +1069,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Drainage",
@@ -1083,7 +1086,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1095,7 +1098,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Pond",
@@ -1118,11 +1120,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1133,7 +1135,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1151,7 +1153,7 @@
               "Name": "SoilWaterContentLayers",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1163,7 +1165,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(1)",
@@ -1181,7 +1182,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1193,7 +1194,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(2)",
@@ -1211,7 +1211,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1223,7 +1223,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(3)",
@@ -1241,7 +1240,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1253,7 +1252,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(4)",
@@ -1271,7 +1269,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1283,7 +1281,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(5)",
@@ -1301,7 +1298,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1313,7 +1310,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(6)",
@@ -1331,7 +1327,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1343,7 +1339,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SWmm(7)",
@@ -1366,11 +1361,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1381,7 +1376,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1399,7 +1394,7 @@
               "Name": "SoilWaterFracLayers",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1411,7 +1406,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(1)",
@@ -1429,7 +1423,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1441,7 +1435,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(2)",
@@ -1459,7 +1452,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1471,7 +1464,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(3)",
@@ -1489,7 +1481,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1501,7 +1493,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(4)",
@@ -1519,7 +1510,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1531,7 +1522,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(5)",
@@ -1549,7 +1539,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1561,7 +1551,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(6)",
@@ -1579,7 +1568,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1591,7 +1580,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "SW(7)",
@@ -1614,11 +1602,11 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Graph.Graph, Models",
+              "$type": "Models.Graph, Models",
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 3,
                   "Title": null,
                   "Inverted": false,
@@ -1629,7 +1617,7 @@
                   "CrossesAtZero": false
                 },
                 {
-                  "$type": "Models.Graph.Axis, Models",
+                  "$type": "Models.Axis, Models",
                   "Type": 0,
                   "Title": null,
                   "Inverted": false,
@@ -1647,7 +1635,7 @@
               "Name": "Infiltration",
               "Children": [
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1659,7 +1647,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Infiltration",
@@ -1677,7 +1664,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1689,7 +1676,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Irrigation",
@@ -1707,7 +1693,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1719,7 +1705,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "IWeather.Rain",
@@ -1737,7 +1722,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1749,7 +1734,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Soil.MultiPoreWater.pond",
@@ -1767,7 +1751,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Graph.Series, Models",
+                  "$type": "Models.Series, Models",
                   "Type": 1,
                   "XAxis": 3,
                   "YAxis": 0,
@@ -1779,7 +1763,6 @@
                   "MarkerSize": 0,
                   "Line": 0,
                   "LineThickness": 0,
-                  "Checkpoint": "Current",
                   "TableName": "Report",
                   "XFieldName": "Date",
                   "YFieldName": "Soil.MultiPoreWater.Drainage",

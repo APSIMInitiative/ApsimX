@@ -23,7 +23,11 @@ namespace Models.Interfaces
         /// <summary>
         /// fixme - can this be refactored out?
         /// </summary>
-        /// <value></value>
         string InitialState { get; set; }
+
+        /// <summary>
+        /// fixme - can this be refactored out?
+        /// </summary>
+        bool Verbose { get; set; }
     }
 }

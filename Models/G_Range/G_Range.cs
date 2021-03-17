@@ -38,11 +38,11 @@ namespace Models
         //[Link]
         //private ISummary Summary = null;
 
-        [Link(IsOptional =true)]
-        Soils.Soil Soil = null;
+        [Link(IsOptional = true)]
+        Soils.IPhysical soilPhysical = null;
 
         [Link]
-        Soils.Physical Analysis = null;
+        Soils.Sample initial = null;
 
         [Link(IsOptional = true)]
         Soils.SoilCrop SoilCrop = null;
@@ -383,7 +383,7 @@ namespace Models
         /// <summary>
         /// Heat accumulation above a base temperature (e.g., 4.4 C in Boone (1999))
         /// </summary>
-        [Units("<sup>o</sup>Cd")]
+        [Units("^o^Cd")]
         [JsonIgnore]
         public double heatAccumulation { get; private set; }
 

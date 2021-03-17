@@ -26,8 +26,9 @@ namespace UserInterface.Interfaces
         void AddTab(string text, Image image, Widget control, bool onLeftTabControl);
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">The owner view.</param>
         /// <param name="newTabName">New text of the tab.</param>
+        /// <param name="tooltip">Tooltip to be shown on tab mouseover.</param>
         void ChangeTabText(object ownerView, string newTabName, string tooltip);
 
         /// <summary>
@@ -115,7 +116,11 @@ namespace UserInterface.Interfaces
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="msgType">Message type (info, warning, error, ...).</param>
+        /// <param name="buttonType">Type of buttons to be shown in the dialog.</param>
         /// <param name="errorLevel">The error level.</param>
+        /// <param name="masterWindow">The main window.</param>
         int ShowMsgDialog(string message, string title, MessageType msgType, ButtonsType buttonType, Window masterWindow = null);
 
         /// <summary>
@@ -128,7 +133,8 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent"></param>
+        /// <param name="percent">Progress (in %)</param>
+        /// <param name="showStopButton">Should a stop button be displayed as well?</param>
         void ShowProgress(int percent, bool showStopButton = true);
 
         /// <summary>

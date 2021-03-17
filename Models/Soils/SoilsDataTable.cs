@@ -121,6 +121,7 @@
 
                 // Add in some necessary models.
                 var soilTemp = new CERESSoilTemperature();
+                soilTemp.Name = "Temperature";
                 soil.Children.Add(soilTemp);
                 var nutrient = new Nutrients.Nutrient();
                 nutrient.ResourceName = "Nutrient";
@@ -284,7 +285,8 @@
                 SetDoubleValues(table, "ParticleSizeClay (%)", physical.ParticleSizeClay, startRow);
                 SetCodeValues(table, "ParticleSizeClayCode", physical.ParticleSizeClayMetadata, startRow);
 
-                foreach (var soilCrop in soil.Crops)
+                var crops = soil.FindAllDescendants<SoilCrop>();
+                foreach (var soilCrop in crops)
                     SetCropValues(table, soilCrop, startRow);
             }
 

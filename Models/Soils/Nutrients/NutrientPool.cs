@@ -20,8 +20,9 @@
     [ValidParent(ParentType = typeof(Nutrient))]
     public class NutrientPool : Model, INutrientPool
     {
-        [Link]
-        Soil soil = null;
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction InitialCarbon = null;
@@ -60,20 +61,20 @@
         /// </summary>
         public void Reset()
         {
-            C = new double[soil.Thickness.Length];
+            C = new double[soilPhysical.Thickness.Length];
             for (int i = 0; i < C.Length; i++)
                 C[i] = InitialCarbon.Value(i);
 
-            N = new double[soil.Thickness.Length];
+            N = new double[soilPhysical.Thickness.Length];
             for (int i = 0; i < N.Length; i++)
                 N[i] = InitialNitrogen.Value(i);
 
-            P = new double[soil.Thickness.Length];
+            P = new double[soilPhysical.Thickness.Length];
             for (int i = 0; i < P.Length; i++)
                 P[i] = InitialPhosphorus.Value(i);
 
             // Set fraction of the layer undertaking this flow to 1 - default unless changed by parent model
-            LayerFraction = new double[soil.Thickness.Length];
+            LayerFraction = new double[soilPhysical.Thickness.Length];
             for (int i = 0; i < LayerFraction.Length; i++)
                 LayerFraction[i] = 1.0;
         }

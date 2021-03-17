@@ -5,6 +5,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, CLEMExtraEntries = new string[] { "Not provided" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance), "Not provided" } })]
         public string AccountName { get; set; }
 
         /// <summary>
@@ -91,48 +92,6 @@ namespace Models.CLEM.Activities
             people = Resources.Labour();
             food = Resources.HumanFoodStore();
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
-        }
-
-        /// <summary>
-        /// Validate component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // if finances and not account provided throw error
-            if(SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
-            {
-                if(bankAccount is null)
-                {
-                    string[] memberNames = new string[] { "AccountName" };
-                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
-                }
-            }
-
-            if(Resources.FoundMarket != null & bankAccount is null)
-            {
-                string[] memberNames = new string[] { "AccountName" };
-                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a="+this.Name+"].", memberNames));
-            }
-
-            // check that at least one target has been provided. 
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
-                results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
-            }
-
-            // check purchases
-            if(this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
-            {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
-                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
-            }
-
-            return results;
         }
 
         /// <summary>
@@ -340,7 +299,7 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
-                            Reason = "Food purchase",
+                            Category = "Food purchase",
                             MarketTransactionMultiplier = 1
                         };
                         bankAccount.Remove(marketRequest);
@@ -354,7 +313,7 @@ namespace Models.CLEM.Activities
                         Required = amount * financeLimit,
                         ResourceTypeName = item.Key.Name,
                         ActivityModel = this,
-                        Reason = "Consumption"
+                        Category = "Consumption"
                     });
                 }
             }
@@ -407,7 +366,7 @@ namespace Models.CLEM.Activities
                                     Required = amountfood,
                                     ResourceTypeName = purchase.FoodStoreName.Split('.')[1],
                                     ActivityModel = this,
-                                    Reason = "Consumption"
+                                    Category = "Consumption"
                                 });
                             }
                             else
@@ -429,7 +388,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
@@ -469,7 +428,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
         }
 
         /// <summary>
@@ -628,7 +587,8 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
-                                Reason = "Sell excess",
+                                Category = "Sell excess",
+                                RelatesToResource = foodStore.NameWithParent,
                                 MarketTransactionMultiplier = this.FarmMultiplier
                             };
                             foodStore.Remove(purchaseRequest);
@@ -641,10 +601,11 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,
                                     AllowTransmutation = false,
-                                    Reason = $"Sales {foodStore.Name}",
+                                    Category = $"Sales",
+                                    RelatesToResource = foodStore.NameWithParent,
                                     MarketTransactionMultiplier = this.FarmMultiplier
                                 };
-                                bankAccount.Add(purchaseFinance, this, $"Sales {foodStore.Name}");
+                                bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, "Sales");
                             }
                         } 
                     }
@@ -689,6 +650,53 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region validation
+
+        /// <summary>
+        /// Validate component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // if finances and not account provided throw error
+            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            {
+                if (bankAccount is null)
+                {
+                    string[] memberNames = new string[] { "AccountName" };
+                    results.Add(new ValidationResult($"A valid bank account must be supplied as sales of excess food is enabled and [r=Finance] resources are available.", memberNames));
+                }
+            }
+
+            if (Resources.FoundMarket != null & bankAccount is null)
+            {
+                string[] memberNames = new string[] { "AccountName" };
+                results.Add(new ValidationResult($"A valid bank account must be supplied for purchases of food from the market used by [a=" + this.Name + "].", memberNames));
+            }
+
+            // check that at least one target has been provided. 
+            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
+                results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
+            }
+
+            // check purchases
+            if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
+            {
+                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
+                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
+            }
+
+            return results;
+        } 
+        #endregion
+
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -696,43 +704,45 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Each Adult Equivalent is able to consume ";
-            if(DailyIntakeLimit > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"setvalue\">";
-                html += DailyIntakeLimit.ToString("#,##0.##");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">NOT SET";
-            }
-            html += "</span> kg per day";
-            if(DailyIntakeOtherSources > 0)
-            {
-                html += "with <span class=\"setvalue\">";
-                html += DailyIntakeOtherSources.ToString("#,##0.##");
-                html += "</span> provided from non-modelled sources";
-            }
-            html += "</div>";
-            html += "<div class=\"activityentry\">";
-            html += "Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included";
-            html += "</div>";
-
-            // find a market place if present
-            Simulation sim = FindAncestor<Simulation>();
-            if (sim != null)
-            {
-                Market marketPlace = sim.FindChild<Market>();
-                if (marketPlace != null)
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Each Adult Equivalent is able to consume ");
+                if (DailyIntakeLimit > 0)
                 {
-                    html += "<div class=\"activityentry\">";
-                    html += "Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>";
-                    html += "</div>";
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(DailyIntakeLimit.ToString("#,##0.##"));
                 }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">NOT SET");
+                }
+                htmlWriter.Write("</span> kg per day");
+                if (DailyIntakeOtherSources > 0)
+                {
+                    htmlWriter.Write("with <span class=\"setvalue\">");
+                    htmlWriter.Write(DailyIntakeOtherSources.ToString("#,##0.##"));
+                    htmlWriter.Write("</span> provided from non-modelled sources");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Hired labour <span class=\"setvalue\">" + ((IncludeHiredLabour) ? "is" : "is not") + "</span> included");
+                htmlWriter.Write("</div>");
+
+                // find a market place if present
+                Simulation sim = FindAncestor<Simulation>();
+                if (sim != null)
+                {
+                    Market marketPlace = sim.FindChild<Market>();
+                    if (marketPlace != null)
+                    {
+                        htmlWriter.Write("<div class=\"activityentry\">");
+                        htmlWriter.Write("Food with be bought and sold through the market <span class=\"setvalue\">" + marketPlace.Name + "</span>");
+                        htmlWriter.Write("</div>");
+                    }
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
@@ -741,9 +751,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -752,25 +760,28 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"croprotationborder\">";
-            html += "<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>";
-
-            if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"errorbanner clearfix\">";
-                html += "<div class=\"filtererror\">No Feed To Target component provided</div>";
-                html += "</div>";
-            }
+                htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
+                htmlWriter.Write("<div class=\"croprotationlabel\">The following targets and purchases will be used:</div>");
 
-            if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
-            {
-                html += "\n<div class=\"errorbanner clearfix\">";
-                html += "<div class=\"filtererror\">No food items will be purchased above what is currently available</div>";
-                html += "</div>";
-            }
+                if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No Feed To Target component provided</div>");
+                    htmlWriter.Write("</div>");
+                }
 
-            return html;
-        }
+                if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Count() == 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"errorbanner clearfix\">");
+                    htmlWriter.Write("<div class=\"filtererror\">No food items will be purchased above what is currently available</div>");
+                    htmlWriter.Write("</div>");
+                }
+
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
 }

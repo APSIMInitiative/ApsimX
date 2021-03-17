@@ -17,11 +17,6 @@ namespace UserInterface.Interfaces
     public interface IBubbleChartView
     {
         /// <summary>
-        /// Invoked when the user changes the initial state list box.
-        /// </summary>
-        event EventHandler<InitialStateEventArgs> OnInitialStateChanged;
-
-        /// <summary>
         /// 
         /// </summary>
         event EventHandler<GraphChangedEventArgs> OnGraphChanged;
@@ -45,7 +40,6 @@ namespace UserInterface.Interfaces
         /// Invoked when the user adds a node to the chart
         /// </summary>
         event EventHandler<DelArcEventArgs> DelArc;
-
         /// <summary>
         /// Editor for inputting rules.
         /// </summary>
@@ -58,12 +52,6 @@ namespace UserInterface.Interfaces
         IEditorView ActionList { get; }
 
         /// <summary>
-        /// todo: refactor this
-        /// </summary>
-        /// <value></value>
-        string InitialState { get; set; }
-
-        /// <summary>
         /// 
         /// </summary>
         List<StateNode> Nodes { get; }
@@ -72,6 +60,11 @@ namespace UserInterface.Interfaces
         /// 
         /// </summary>
         List<RuleAction> Arcs { get; }
+
+        /// <summary>
+        /// Properties editor.
+        /// </summary>
+        IPropertyView PropertiesView { get; }
 
         /// <summary>
         /// Set the graph in the view.

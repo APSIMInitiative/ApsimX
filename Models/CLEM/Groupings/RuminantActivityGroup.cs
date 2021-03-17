@@ -37,6 +37,8 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public double Proportion { get; set; }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -74,7 +76,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -85,13 +87,14 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder filteractivityborder clearfix\">";
+            html += "\r\n<div class=\"filterborder filteractivityborder clearfix\">";
             if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

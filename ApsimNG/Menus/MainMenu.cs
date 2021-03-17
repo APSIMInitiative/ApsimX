@@ -70,7 +70,6 @@
             try
             {
                 this.explorerPresenter.CommandHistory.Undo();
-                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {
@@ -89,7 +88,6 @@
             try
             {
                 explorerPresenter.CommandHistory.Redo();
-                explorerPresenter.Refresh();
             }
             catch (Exception err)
             {

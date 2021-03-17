@@ -18,7 +18,7 @@ namespace Models.Functions
         [Link]
         ISoilWater soilwater = null;
         [Link]
-        Physical physical = null;
+        IPhysical physical = null;
 
    
         /// <summary>Gets the value.</summary>

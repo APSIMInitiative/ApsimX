@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 281,
-  "Version": 102,
+  "Version": 126,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -51,7 +51,7 @@
             "[Wheat].Leaf.SpecificArea",
             "[Wheat].Leaf.SpecificNitrogen",
             "[Wheat].Leaf.Transpiration",
-            "[Wheat].Phenology.CurrentPhaseName",
+            "[Wheat].Phenology.CurrentPhase.Name",
             "[Wheat].Phenology.CurrentStageName",
             "[Wheat].Phenology.Stage",
             "[Wheat].Phenology.Zadok.Stage",
@@ -92,7 +92,7 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Wheat].Phenology.CurrentPhaseName",
+            "[Wheat].Phenology.CurrentPhase.Name",
             "[Wheat].Phenology.CurrentStageName",
             "[Wheat].Phenology.FlagLeafDAS",
             "[Wheat].Phenology.FloweringDAS",
@@ -125,7 +125,7 @@
         },
         {
           "$type": "Models.PMF.Plant, Models",
-          "CropType": "Wheat",
+          "PlantType": "Wheat",
           "IsAlive": false,
           "IsEnding": false,
           "DaysAfterEnding": 0,
@@ -352,9 +352,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AirTemperatureFunction, Models",
-                  "SubDailyTemperatures": null,
-                  "SubDailyResponse": null,
+                  "$type": "Models.Functions.HourlyInterpolation, Models",
                   "agregationMethod": 0,
                   "Name": "ThermalTime",
                   "Children": [
@@ -370,7 +368,7 @@
                         26.0,
                         0.0
                       ],
-                      "Name": "TemperatureResponse",
+                      "Name": "Response",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -422,9 +420,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.AirTemperatureFunction, Models",
-                      "SubDailyTemperatures": null,
-                      "SubDailyResponse": null,
+                      "$type": "Models.Functions.HourlyInterpolation, Models",
                       "agregationMethod": 0,
                       "Name": "TempResponseProfile",
                       "Children": [
@@ -480,7 +476,7 @@
                             0.0,
                             -0.5
                           ],
-                          "Name": "TemperatureResponse",
+                          "Name": "Response",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1082,6 +1078,15 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].LeafTipsAppeared",
+                      "Name": "LeafTipNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -1137,6 +1142,42 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Phenology].ThermalTime",
                       "Name": "ThermalTime",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Structure].FinalLeafNumber",
+                      "Name": "FinalLeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ExpressionFunction, Models",
+                      "Expression": "[Leaf].ExpandedCohortNo + [Leaf].NextExpandingLeafProportion",
+                      "Name": "LeafNumber",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].ExpandedCohortNo",
+                      "Name": "FullyExpandedLeafNo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].InitialisedCohortNo",
+                      "Name": "InitialisedLeafNumber",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1460,7 +1501,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1499,7 +1540,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1538,7 +1579,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1577,7 +1618,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1616,7 +1657,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -1655,7 +1696,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].DaysAfterSowing",
+                      "VariableName": "[Plant].DaysAfterSowing",
                       "Name": "PostEventValue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -3048,11 +3089,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Germination",
                   "End": "Maturity",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3698,6 +3750,16 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "RootDepthStressFactor",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3843,6 +3905,11 @@
                 {
                   "$type": "Models.PMF.Organs.Leaf+LeafCohortParameters, Models",
                   "ExpansionStressValue": 0.0,
+                  "CellDivisionStressValue": 0.0,
+                  "DroughtInducedLagAccelerationValue": 0.0,
+                  "DroughtInducedSenAccelerationValue": 0.0,
+                  "ShadeInducedSenescenceRateValue": 0.0,
+                  "SenessingLeafRelativeSizeValue": 0.0,
                   "Name": "CohortParameters",
                   "Children": [
                     {
@@ -5026,7 +5093,7 @@
                     },
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].RadIntTot",
+                      "VariableName": "[Leaf].RadiationIntercepted",
                       "Name": "RadnInt",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -5585,11 +5652,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "StartGrainFill",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6266,11 +6344,22 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseBasedSwitch, Models",
+                  "$type": "Models.Functions.PhaseLookupValue, Models",
                   "Start": "Emergence",
                   "End": "StartGrainFill",
                   "Name": "NitrogenDemandSwitch",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Constant",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7524,8 +7613,8 @@
                         "[Phenology].PpSensitivity.FixedValue = 0",
                         "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4",
                         "[Structure].Phyllochron.BasePhyllochron.FixedValue = 100",
-                        "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.X = 0,1,8",
-                        "[Phenology].DailyVernalisation.TempResponseProfile.TemperatureResponse.Y = 0,1.204,0",
+                        "[Phenology].DailyVernalisation.TempResponseProfile.Response.X = 0,1,8",
+                        "[Phenology].DailyVernalisation.TempResponseProfile.Response.Y = 0,1.204,0",
                         "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                         "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                         "[Grain].MaximumPotentialGrainSize.FixedValue = 0.035",
@@ -9523,6 +9612,16 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "MortalityRate",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -9565,8 +9664,11 @@
       ],
       "PredictedTableName": "DailyReport",
       "ObservedTableName": "Observed",
-      "VariableName": "Wheat.Leaf.LAI",
+      "VariableNames": [
+        "Wheat.Leaf.LAI"
+      ],
       "OutputPath": null,
+      "RandomSeed": null,
       "OptimizationMethod": {
         "$type": "Models.Optimisation.Simplex, Models",
         "CriticalFunction": 0,
@@ -9713,6 +9815,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "RowSpace",
                   "Children": [
                     {
@@ -9737,7 +9840,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "%root%\\Prototypes\\CroptimizR\\Gatton2011.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -9823,6 +9927,7 @@
                           "Latitude": -27.537,
                           "Longitude": 152.336,
                           "LocationAccuracy": "+-20m",
+                          "YearOfSampling": null,
                           "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba",
                           "Comments": "Soil naming structure: \\State\\Region\\Classification-Local Name (Site/district and locator number); oc and ph estimated",
                           "Name": "Soil",
@@ -9850,6 +9955,8 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 1.32,
                                 1.3,
@@ -9902,6 +10009,11 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -9961,7 +10073,6 @@
                               "CN2Bare": 73.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": "NaN",
                               "DischargeWidth": "NaN",
                               "CatchmentArea": "NaN",
                               "Thickness": [
@@ -10055,6 +10166,8 @@
                                 36.587130828674873,
                                 22.1912165985086
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -10111,6 +10224,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -10130,35 +10247,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-20",
-                                "20-200"
-                              ],
-                              "Thickness": [
-                                200.0,
-                                1800.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -10218,7 +10308,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        public double FASW { get; set; }\r\n        public double WaterDeficit  { get; set; }\r\n    \r\n        [Link] Zone zone;\r\n        [Link] Irrigation irrigation;\r\n        [Link] Soil soil;\r\n        \r\n        [Description(\"Auto irrigation on?\")]\r\n        public bool AutoIrrigationOn { get; set; }\r\n\r\n        [Description(\"Threshold fraction available water (0-1)\")]\r\n        public double FASWThreshold { get; set; }\r\n\r\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\r\n        public double FASWDepth { get; set; }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            CalculateFASW();\r\n            if (AutoIrrigationOn)\r\n            {\r\n                if (FASW < FASWThreshold)\r\n                {\r\n                    double amount = 10;\r\n                    irrigation.Apply(WaterDeficit, depth: 0);\r\n                }\r\n            }\r\n        }\r\n        \r\n        private void CalculateFASW()\r\n        {\r\n            double[] LL15 = MathUtilities.Multiply(soil.LL15, soil.Thickness);\r\n            double[] DUL = MathUtilities.Multiply(soil.DUL, soil.Thickness);\r\n        \r\n            int nlayr = GetLayerIndex();\r\n            double cumdep = MathUtilities.Sum(soil.Thickness, 0, nlayr, 0.0);\r\n\r\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soil.Thickness[nlayr], 0.0);\r\n\r\n            // note that results may be strange if swdep < ll15\r\n            double avail_sw = (MathUtilities.Sum(soil.Water, 0, nlayr, 0.0)\r\n                              - excess_fr * soil.Water[nlayr])\r\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                              - excess_fr * LL15[nlayr]);\r\n\r\n\r\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\r\n                                  - excess_fr * DUL[nlayr])\r\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\r\n                                  - excess_fr * LL15[nlayr]);\r\n\r\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\r\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\r\n        }\r\n\r\n        private int GetLayerIndex()\r\n        {\r\n            double[] cumThickness = soil.ThicknessCumulative;\r\n            for (int i = 1; i < cumThickness.Length; i++)\r\n            {\r\n                if (FASWDepth < cumThickness[i])\r\n                    return i - 1;\r\n            }\r\n            \r\n            return cumThickness.Length - 1;\r\n        }\r\n\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.Interfaces;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private Soil soil;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CalculateFASW();\n            if (AutoIrrigationOn)\n            {\n                if (FASW < FASWThreshold)\n                {\n                    double amount = 10;\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                }\n            }\n        }\n        \n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex();\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\n\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\n                              - excess_fr * waterBalance.SWmm[nlayr])\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                              - excess_fr * LL15[nlayr]);\n\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\n                                  - excess_fr * DUL[nlayr])\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                                  - excess_fr * LL15[nlayr]);\n\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        private int GetLayerIndex()\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            for (int i = 1; i < cumThickness.Length; i++)\n            {\n                if (FASWDepth < cumThickness[i])\n                    return i - 1;\n            }\n            \n            return cumThickness.Length - 1;\n        }\n\n    }\n}\n       \n",
                           "Parameters": [
                             {
                               "Key": "FASW",
@@ -10288,7 +10378,7 @@
                             "[Wheat].Leaf.SpecificArea",
                             "[Wheat].Leaf.SpecificNitrogen",
                             "[Wheat].Leaf.Transpiration",
-                            "[Wheat].Phenology.CurrentPhaseName",
+                            "[Wheat].Phenology.CurrentPhase.Name",
                             "[Wheat].Phenology.CurrentStageName",
                             "[Wheat].Phenology.Stage",
                             "[Wheat].Phenology.Zadok.Stage",
@@ -10329,7 +10419,7 @@
                           "$type": "Models.Report, Models",
                           "VariableNames": [
                             "[Clock].Today",
-                            "[Wheat].Phenology.CurrentPhaseName",
+                            "[Wheat].Phenology.CurrentPhase.Name",
                             "[Wheat].Phenology.CurrentStageName",
                             "[Wheat].Phenology.FlagLeafDAS",
                             "[Wheat].Phenology.FloweringDAS",
@@ -10967,6 +11057,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "APS6Base",
                   "Children": [
                     {
@@ -10991,7 +11082,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
+                      "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
                       "FileName": "%root%\\Prototypes\\CroptimizR\\APS6.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
@@ -11041,6 +11133,7 @@
                           "Latitude": 0.0,
                           "Longitude": 0.0,
                           "LocationAccuracy": null,
+                          "YearOfSampling": null,
                           "DataSource": null,
                           "Comments": null,
                           "Name": "APS6Field",
@@ -11068,6 +11161,8 @@
                               "ParticleSizeClay": null,
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 1.38,
                                 1.34,
@@ -11120,6 +11215,11 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -11179,7 +11279,6 @@
                               "CN2Bare": 60.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -11281,6 +11380,8 @@
                                 73.174261657349746,
                                 44.3824331970172
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -11337,6 +11438,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -11363,8 +11468,8 @@
                                 300.0,
                                 300.0
                               ],
-                              "NO3N": null,
-                              "NH4N": null,
+                              "NO3": null,
+                              "NH4": null,
                               "SW": [
                                 0.326,
                                 0.326,
@@ -11389,45 +11494,8 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-60",
-                                "60-90",
-                                "90-120",
-                                "120-150",
-                                "150-180"
-                              ],
-                              "Thickness": [
-                                150.0,
-                                150.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0,
-                                300.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial Nitrogen",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -11627,7 +11695,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.Phenology.CurrentPhaseName == \"ReadyForHarvesting\")\r\n            {\r\n                Wheat.Harvest();\r\n                Wheat.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Plant Wheat;\n        [Link(Type = LinkType.Path, Path = \"[Wheat].Phenology\")]\n        private Phenology phenology;\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\n            {\n                Wheat.Harvest();\n                Wheat.EndCrop();\n            }\n        }\n    }\n}\n       \n",
                           "Parameters": [],
                           "Name": "Harvesting",
                           "IncludeInDocumentation": false,
@@ -13564,6 +13632,150 @@
           "Name": "Observed",
           "Children": [],
           "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Folder, Models",
+      "ShowPageOfGraphs": true,
+      "Name": "Graphs",
+      "Children": [
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "RUE",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Repetition",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "CroptimizR",
+              "XFieldName": "RUE Initial",
+              "YFieldName": "RUE Final",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 3,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 0,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "Vegetative Phase",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": 0,
+              "FactorToVaryColours": "Repetition",
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 4,
+              "LineThickness": 0,
+              "TableName": "CroptimizR",
+              "XFieldName": "VegetativePhase Initial",
+              "YFieldName": "VegetativePhase Final",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }

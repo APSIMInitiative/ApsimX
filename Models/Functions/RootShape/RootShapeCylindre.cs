@@ -19,11 +19,12 @@ namespace Models.Functions.RootShape
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
         {
+            var physical = zone.Soil.FindChild<Soils.IPhysical>();
             zone.RootArea = (zone.RightDist + zone.LeftDist) * zone.Depth / 1e6;
-            for (int layer = 0; layer < zone.soil.Thickness.Length; layer++)
+            for (int layer = 0; layer < physical.Thickness.Length; layer++)
             {
                 double prop;
-                double top = layer == 0 ? 0 : MathUtilities.Sum(zone.soil.Thickness, 0, layer - 1);
+                double top = layer == 0 ? 0 : MathUtilities.Sum(physical.Thickness, 0, layer - 1);
 
                 if (zone.Depth < top)
                 {
@@ -31,7 +32,7 @@ namespace Models.Functions.RootShape
                 } 
                 else
                 {
-                    prop = zone.soil.ProportionThroughLayer(layer, zone.Depth);
+                    prop = SoilUtilities.ProportionThroughLayer(physical.Thickness, layer, zone.Depth);
                 }
                 zone.RootProportions[layer] = prop;
             }

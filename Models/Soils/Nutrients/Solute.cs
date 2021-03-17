@@ -1,10 +1,12 @@
-﻿namespace Models.Soils.Nutrients
+﻿
+
+namespace Models.Soils.Nutrients
 {
     using Core;
+    using Interfaces;
     using System;
     using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
-    using Models.Functions;
 
     /// <summary>
     /// # [Name]
@@ -19,24 +21,22 @@
         [Link]
         Soil soil = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction initialValue = null;
+        /// <summary>Access the soil physical properties.</summary>
+        [Link] 
+        private IPhysical soilPhysical = null;
+
+        [Link]
+        Sample initial = null;
 
         /// <summary>Default constructor.</summary>
         public Solute() { }
 
-        /// <summary>Constructor.</summary>
+        /// <summary>Default constructor.</summary>
         public Solute(Soil soilModel, string soluteName, double[] value) 
         {
             soil = soilModel;
             kgha = value;
             Name = soluteName;
-
-            Constant i = new Constant
-            {
-                FixedValue = 0
-            };
-            initialValue = i;
         }
 
         /// <summary>Solute amount (kg/ha)</summary>
@@ -44,7 +44,7 @@
         public double[] kgha { get; set; }
 
         /// <summary>Solute amount (ppm)</summary>
-        public double[] ppm { get { return soil.kgha2ppm(kgha); } }
+        public double[] ppm { get { return SoilUtilities.kgha2ppm(soilPhysical.Thickness, soilPhysical.BD, kgha); } }
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -60,16 +60,11 @@
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = soil.Initial.FindByPath(Name)?.Value as double[];
-            if (initialkgha != null)
-                kgha = ReflectionUtilities.Clone(initialkgha) as double[];
+            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
+            if (initialkgha == null)
+                kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else
-            {
-                kgha = new double[soil.Thickness.Length];
-                if (initialValue != null)
-                    for (int i = 0; i < kgha.Length; i++)
-                        kgha[i] = initialValue.Value(i);
-            }
+                kgha = ReflectionUtilities.Clone(initialkgha) as double[];
         }
         /// <summary>Setter for kgha.</summary>
         /// <param name="callingModelType">Type of calling model.</param>

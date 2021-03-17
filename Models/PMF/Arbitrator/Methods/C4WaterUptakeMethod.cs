@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Interfaces;
+using Models.Soils;
 
 namespace Models.PMF.Arbitrator
 {
@@ -48,9 +49,6 @@ namespace Models.PMF.Arbitrator
         /// <value>The water uptake.</value>
         [JsonIgnore]
         public double WAllocated { get; protected set; }
-
-        ///TotalAvailable divided by TotalPotential - used to lookup PhenologyStress table
-        public double SWAvailRatio { get; set; }
 
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
         public double SDRatio { get; set; }
@@ -156,28 +154,34 @@ namespace Models.PMF.Arbitrator
             ZoneState myZone = root.Zones.Find(z => z.Name == zoneWater.Zone.Name);
             if (myZone != null)
             {
+                var soilPhysical = myZone.Soil.FindChild<Soils.IPhysical>();
+                var waterBalance = myZone.Soil.FindChild<ISoilWater>();
+
                 //store Water variables for N Uptake calculation
                 //Old sorghum doesn't do actualUptake of Water until end of day
-                myZone.StartWater = new double[myZone.soil.Thickness.Length];
-                myZone.AvailableSW = new double[myZone.soil.Thickness.Length];
-                myZone.PotentialAvailableSW = new double[myZone.soil.Thickness.Length];
-                myZone.Supply = new double[myZone.soil.Thickness.Length];
+                myZone.StartWater = new double[soilPhysical.Thickness.Length];
+                myZone.AvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.PotentialAvailableSW = new double[soilPhysical.Thickness.Length];
+                myZone.Supply = new double[soilPhysical.Thickness.Length];
 
-                var soilCrop = Soil.Crop(plant.Name);
+                var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
+                if (soilCrop == null)
+                    throw new Exception($"Cannot find a soil crop parameterisation called {plant.Name + "Soil"}");
+
                 double[] kl = soilCrop.KL;
 
-                double[] llDep = MathUtilities.Multiply(soilCrop.LL, myZone.soil.Thickness);
+                double[] llDep = MathUtilities.Multiply(soilCrop.LL, soilPhysical.Thickness);
 
                 if (root.Depth != myZone.Depth)
                     myZone.Depth += 0; // wtf??
 
-                var currentLayer = myZone.soil.LayerIndexOfDepth(myZone.Depth);
+                var currentLayer = SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth);
                 for (int layer = 0; layer <= currentLayer; ++layer)
                 {
-                    myZone.StartWater[layer] = myZone.soil.Water[layer];
+                    myZone.StartWater[layer] = waterBalance.SWmm[layer];
 
-                    myZone.AvailableSW[layer] = Math.Max(myZone.soil.Water[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
-                    myZone.PotentialAvailableSW[layer] = Math.Max(myZone.soil.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.AvailableSW[layer] = Math.Max(waterBalance.SWmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
+                    myZone.PotentialAvailableSW[layer] = Math.Max(soilPhysical.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
                     var proportion = myZone.RootProportions[layer];
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
@@ -187,18 +191,8 @@ namespace Models.PMF.Arbitrator
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply;
 
-                // Set reporting variables.
-                //Avail = myZone.AvailableSW;
-                //PotAvail = myZone.PotentialAvailableSW;
-
-                //used for SWDef PhenologyStress table lookup
-                SWAvailRatio = MathUtilities.Bound(MathUtilities.Divide(totalAvail, totalAvailPot, 1.0), 0.0, 10.0);
-
                 //used for SWDef ExpansionStress table lookup
                 SDRatio = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 10);
-
-                //used for SwDefPhoto Stress
-                //PhotoStress = MathUtilities.Bound(MathUtilities.Divide(totalSupply, WDemand, 1.0), 0.0, 1.0);
             }
         }
     }

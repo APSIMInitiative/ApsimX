@@ -56,7 +56,7 @@
             this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
 
             // Populate the graph.
-            this.graph = Utility.Graph.CreateGraphFromResource(model.GetType().Name + "Graph");
+            this.graph = Utility.Graph.CreateGraphFromResource("ApsimNG.Resources.InitialWaterGraph.xml");
             this.graph.Parent = this.initialWater.Parent;
             this.graphPresenter = new GraphPresenter();
             this.graphPresenter.Attach(this.graph, this.initialWaterView.Graph, this.explorerPresenter);

@@ -15,10 +15,11 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a ruminant Type
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
     [Version(1, 0, 1, "")]
@@ -151,7 +152,7 @@ namespace Models.CLEM.Resources
                             if (!WarningsMultipleEntry.Contains(criteria))
                             {
                                 WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
+                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
                         }
                     }
@@ -165,12 +166,12 @@ namespace Models.CLEM.Resources
                     if(matchIndividual != null)
                     {
                         // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
+                        warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
                         price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                     else
                     {
-                        warningString += "\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
+                        warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
                     if (!WarningsNotFound.Contains(criteria))
                     {
@@ -186,13 +187,55 @@ namespace Models.CLEM.Resources
             return price;
         }
 
+        #region validation
+
+        /// <summary>
+        /// Model Validation
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure at least one conception model is associated
+            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
+            if (conceptionModelCount > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
+                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
+            }
+
+            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
+            {
+                string[] memberNames = new string[] { "RuminantType.Pricing" };
+                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
+            }
+            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
+            {
+                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
+
+                if (price.FindAllChildren<AnimalPriceGroup>().Count() == 0)
+                {
+                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
+                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
+                }
+            }
+            return results;
+        }
+
+        #endregion
+
+        #region transactions
+
         /// <summary>
         /// Add resource
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
-        /// <param name="reason">Name of individual adding resource</param>
-        public new void Add(object resourceAmount, CLEMModel activity, string reason)
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             throw new NotImplementedException();
         }
@@ -223,40 +266,7 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Model Validation
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure at least one conception model is associated
-            int conceptionModelCount = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Count();
-            if (conceptionModelCount > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.IConceptionModel" };
-                results.Add(new ValidationResult(String.Format("Only one Conception component is permitted below the Ruminant Type [r={0}]", Name), memberNames));
-            }
-
-            if (this.FindAllChildren<AnimalPricing>().Count() > 1)
-            {
-                string[] memberNames = new string[] { "RuminantType.Pricing" };
-                results.Add(new ValidationResult(String.Format("Only one Animal pricing schedule is permitted within a Ruminant Type [{0}]", this.Name), memberNames));
-            }
-            else if (this.FindAllChildren<AnimalPricing>().Count() == 1)
-            {
-                AnimalPricing price = this.FindAllChildren<AnimalPricing>().FirstOrDefault() as AnimalPricing;
-
-                if (price.FindAllChildren<AnimalPriceGroup>().Count()==0)
-                {
-                    string[] memberNames = new string[] { "RuminantType.Pricing.RuminantPriceGroup" };
-                    results.Add(new ValidationResult(String.Format("At least one Ruminant Price Group is required under an animal pricing within Ruminant Type [{0}]", this.Name), memberNames));
-                }
-            }
-            return results;
-        }
+        #endregion
 
         /// <summary>
         /// Current number of individuals of this herd.
@@ -471,6 +481,14 @@ namespace Models.CLEM.Resources
         [Description("Intake intercept in relation to SRW")]
         [Required, GreaterThanValue(0)]
         public double IntakeIntercept { get; set; }
+        /// <summary>
+        /// Potential intake modifier for maximum intake possible when overfeeding
+        /// </summary>
+        [Category("Advanced", "Diet")]
+        [Description("Potential intake modifer for max overfeeding intake")]
+        [Required, GreaterThanEqualValue(1)]
+        [System.ComponentModel.DefaultValue(1)]
+        public double OverfeedPotentialIntakeModifier { get; set; }
         /// <summary>
         /// Protein requirement coeff (g/kg feed)
         /// </summary>
@@ -824,6 +842,8 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary 
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -834,9 +854,7 @@ namespace Models.CLEM.Resources
             string html = "";
             return html;
         }
+
+        #endregion
     }
-
-
-
-
 }

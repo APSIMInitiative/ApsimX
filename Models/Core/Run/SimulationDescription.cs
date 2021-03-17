@@ -84,7 +84,7 @@
         }
 
         /// <summary>Status message.</summary>
-        public string Status => SimulationToRun.Status;
+        public string Status => SimulationToRun?.Status;
 
         /// <summary>
         /// Add an override to replace an existing model, as specified by the

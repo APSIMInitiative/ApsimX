@@ -7,6 +7,7 @@
     using Models;
     using Models.Core;
     using Views;
+    using Interfaces;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Map with a 
@@ -29,6 +30,8 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
+        private SimplePropertyPresenter propertyPresenter;
+
         /// <summary>
         /// Attach the specified Model and View.
         /// </summary>
@@ -38,47 +41,18 @@
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.map = model as Map;
-            this.view = view as MapView;
+            this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
+
+            propertyPresenter = new SimplePropertyPresenter();
+            propertyPresenter.Attach(model, this.view.PropertiesGrid, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
             this.view.Zoom = this.map.Zoom;
             this.view.Center = this.map.Center;
             this.view.ViewChanged += this.OnViewChanged;
-            this.view.PreviewDocs += OnPreviewDocs;
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-        }
-
-        /// <summary>
-        /// Invoked when the user wants to preview the map as it will appear
-        /// in the autodocs.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnPreviewDocs(object sender, EventArgs e)
-        {
-            // Save any changes to the main map so that the preview
-            // map uses the current zoom/coordinates as the main map.
-            this.view.StoreSettings();
-
-            var newView = new MapView(null);
-            var newPresenter = new MapPresenter();
-
-            var window = new WindowView((ViewBase.MasterView as MainView), newView, "Map Documentation Preview");
-            window.Width = 800;
-            window.Height = 800;
-            window.Resizable = false;
-
-            newPresenter.Attach(map, newView, explorerPresenter);
-            newView.HideZoomControls();
-
-            // If the user moves/zooms the map in the popup window,
-            // changes will be saved to the map object when the presenter
-            // is detached, and will be propagated automatically to the
-            // master map via the OnModelChanged method below.
-            window.Closed += (_, __) => newPresenter.Detach();
-            window.Visible = true;
         }
 
         /// <summary>
@@ -86,10 +60,12 @@
         /// </summary>
         public void Detach()
         {
-            view.PreviewDocs -= OnPreviewDocs;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            this.view.StoreSettings();
-            this.view.ViewChanged -= this.OnViewChanged;
+            if (view != null)
+            {
+                this.view.StoreSettings();
+                this.view.ViewChanged -= this.OnViewChanged;
+            }
         }
 
         /// <summary>Export the map to PDF</summary>
@@ -158,7 +134,7 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (changedModel == this.map)
+            if (view != null && changedModel == this.map)
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

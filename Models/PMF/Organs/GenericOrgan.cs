@@ -55,10 +55,6 @@
         [Units("/d")]
         protected IFunction nReallocationFactor = null;
 
-        // NOT CURRENTLY USED /// <summary>The nitrogen demand switch</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-        //private IFunction nitrogenDemandSwitch = null;
-
         /// <summary>The DM retranslocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -91,7 +87,7 @@
 
         /// <summary>The initial N Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        [Units("g/m2")]
+        [Units("g/g")]
         private IFunction initialNConcFunction = null;
 
         /// <summary>The maximum N concentration</summary>
@@ -121,16 +117,16 @@
 
         /// <summary>The cost for remobilisation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("")]
+        [Units("g/m^2")]
         private IFunction remobilisationCost = null;
 
         /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
+        [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction CarbonConcentration = null;
 
         /// <summary>The photosynthesis</summary>
-        /// [Units("g/m2")]
+        [Units("g/m2")]
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         IFunction Photosynthesis = null;
 
@@ -200,10 +196,12 @@
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double MaintenanceRespiration { get; private set; }
 
         /// <summary>Growth Respiration</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double GrowthRespiration { get; set; }
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
@@ -211,30 +209,37 @@
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
+        [Units("g DM/g N")]
         public virtual double NFixationCost { get { return 0; } }
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double MaxNconc { get { return maximumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double MinNconc { get { return minimumNConc.Value(); } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double CritNconc { get { return criticalNConc.Value(); } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double Wt { get { return Live.Wt + Dead.Wt; } }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
+        [Units("g/m^2")]
         public double N { get { return Live.N + Dead.N; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
+        [Units("g/g")]
         public double Nconc
         {
             get
@@ -347,6 +352,11 @@
             potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
+        /// <summary>Gets the biomass retranslocation.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double RetranslocationWt { get; private set;}
+
         /// <summary>Sets the dry matter allocation.</summary>
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>
         public virtual void SetDryMatterAllocation(BiomassAllocationType dryMatter)
@@ -359,6 +369,8 @@
             // CO2 (44/12).
             double dMCE = DMConversionEfficiency.Value();
             double growthRespFactor = ((1.0 / dMCE) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
+
+            RetranslocationWt = dryMatter.Retranslocation;
 
             GrowthRespiration = 0.0;
             // allocate structural DM
@@ -642,7 +654,7 @@
                     if ((NReallocFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
                     else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " can reallocate up to " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day if required by the plant arbitrator to meet N demands.", indent));
                 }
                 else
                 {
@@ -655,7 +667,7 @@
                     if ((NRetransFac as Constant).Value() == 0)
                         tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
                     else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day.", indent));
+                        tags.Add(new AutoDocumentation.Paragraph(Name + " can retranslocate up to " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day if required by the plant arbitrator to meet N demands.", indent));
                 }
                 else
                 {

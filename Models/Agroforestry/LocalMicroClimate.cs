@@ -93,7 +93,13 @@ namespace Models.Agroforestry
         /// Gets or sets the atmospheric air pressure. If not specified in the weather file the default is 1010 hPa.
         /// </summary>
         [JsonIgnore]
-        public double AirPressure { get { return weather.AirPressure; } }
+        public double AirPressure { get { return weather.AirPressure; } set { weather.AirPressure = value; } }
+
+        /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [JsonIgnore]
+        public double DiffuseFraction { get { return weather.DiffuseFraction; } set { weather.DiffuseFraction = value; } }
 
         /// <summary>Gets the latitude</summary>
         [JsonIgnore]
@@ -110,6 +116,10 @@ namespace Models.Agroforestry
         /// <summary>Gets the temperature amplitude.</summary>
         [JsonIgnore]
         public double Amp { get { return weather.Amp; } }
+
+        /// <summary>Gets the temperature amplitude.</summary>
+        [JsonIgnore]
+        public string FileName { get { return weather.FileName; } }
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]

@@ -17,8 +17,8 @@ namespace Models.CLEM.Resources
     /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreeTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
@@ -91,7 +91,7 @@ namespace Models.CLEM.Resources
                         {
                             if (sucklingList.Count() > 0)
                             {
-                                Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                 break;
                             }
                         }
@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                    Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                     break;
                                 }
                             }
@@ -216,7 +216,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = female,
-                    Reason = "breeding stats"
+                    Category = "breeding stats"
                 };
                 OnFinalFemaleOccurred(args);
             }
@@ -240,8 +240,9 @@ namespace Models.CLEM.Resources
             {
                 Gain = 1,
                 Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
+                Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
+                RelatesToResource = ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -284,8 +285,9 @@ namespace Models.CLEM.Resources
             {
                 Loss = 1,
                 Activity = model as CLEMModel,
-                Reason = ind.SaleFlag.ToString(),
+                Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
+                RelatesToResource = ind.BreedParams.NameWithParent,
                 ExtraInformation = ind
             };
             LastTransaction = details;
@@ -298,7 +300,7 @@ namespace Models.CLEM.Resources
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = ind,
-                    Reason = "breeding stats"
+                    Category = "breeding stats"
                 };
                 OnFinalFemaleOccurred(args);
             }
@@ -416,6 +418,7 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -428,5 +431,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
+        #endregion
     }
 }

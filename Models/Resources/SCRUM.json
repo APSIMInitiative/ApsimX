@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 119,
+  "Version": 129,
   "Name": "Simulations",
   "Children": [
     {
@@ -2621,7 +2621,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
+                  "Text": "\nThis is important in SCRUM as it is set for each species to represent their differences in rooting patterns between crop species.  The values for  each crop type are calculated externally from APSIM using the root depth of the crop and an exponential of the form:  \n\n~~~\nfor (int layer = 0; layer lessthan  Soil.Physical.Thickness.Length; layer++)  \n{  \nif (layer.depth lessthan 305)  \n layer.KLModifier = 1;  \nelse if (layer.depth lessthan Crop.RootDepth)  \n layer.KLModifier = 1*exp(-.002*(1500/(Crop.RootDepth-300)*(layer.depth-300)));  \nelse:  \n layer.KLModifier = 0;  \n}  \n~~~\n\nThis gives KLModifiers that decline exponentially from 1 in the top 300mm of soil to 0 at the crops maximum rooting depth.  \n\nIt is important to note that these modifiers are applied to the kl value specified in the SCRUMSoil node under the soil in your field so the values on the soil node should be set to 0.1 throughout the depth of the profile to produce sensible kl values. ",
                   "Name": "Description",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -2693,11 +2693,22 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.PhaseBasedSwitch, Models",
+              "$type": "Models.Functions.PhaseLookupValue, Models",
               "Start": "Germination",
               "End": "Maturity",
               "Name": "NitrogenDemandSwitch",
-              "Children": [],
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "Constant",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false

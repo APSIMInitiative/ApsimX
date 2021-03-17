@@ -46,9 +46,7 @@ namespace UnitTests.UtilityTests
             string parent = Path.Combine(Directory.GetParent(bin).FullName, "a");
 
             Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", assembly));
-            // Passing in a directory name as relative path will give a different
-            // result to passing the name of a file inside that directory.
-            Assert.AreEqual(parent, PathUtilities.GetAbsolutePath("a", bin));
+            Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", bin));
 
             Assert.AreEqual("a", PathUtilities.GetAbsolutePath("a", null));
             Assert.AreEqual("a", PathUtilities.GetAbsolutePath("a", ""));

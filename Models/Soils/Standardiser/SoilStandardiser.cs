@@ -11,7 +11,6 @@
         /// <param name="soil">The soil.</param>
         public static void Standardise(Soil soil)
         {
-            soil.FindChildren();
             Layers.Standardise(soil);
             SoilUnits.Convert(soil);
             MergeSamplesIntoOne(soil);
@@ -63,29 +62,31 @@
         private static void CreateInitialSample(Soil soil)
         {
             var soilOrganicMatter = soil.Children.Find(child => child is Organic) as Organic;
-            var chemical = soil.Children.Find(child => child is Chemical) as Chemical;
+            var analysis = soil.Children.Find(child => child is Chemical) as Chemical;
             var initial = soil.Children.Find(child => child is Sample) as Sample;
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
+
             if (initial == null)
             {
-                initial = new Sample() { Thickness = soil.Thickness, Parent = soil };
+                initial = new Sample() { Thickness = soilPhysical.Thickness, Parent = soil };
                 soil.Children.Add(initial);
             }
             initial.Name = "Initial";
 
-            if (chemical.NO3N != null)
-                initial.NO3 = soil.ppm2kgha(chemical.NO3N);
-            if (chemical.NH4N != null)
-                initial.NH4 = soil.ppm2kgha(chemical.NH4N);
+            if (analysis.NO3N != null)
+                initial.NO3 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NO3N);
+            if (analysis.NH4N != null)
+                initial.NH4 = SoilUtilities.ppm2kgha(soilPhysical.Thickness, soilPhysical.BD, analysis.NH4N);
             if (chemical.LabileP != null)
                 initial.LabileP = soil.ppm2kgha(chemical.LabileP);
             if (chemical.UnavailableP != null)
                 initial.UnavailableP = soil.ppm2kgha(chemical.UnavailableP);
 
             initial.OC = MergeArrays(initial.OC, soilOrganicMatter.Carbon);
-            initial.PH = MergeArrays(initial.PH, chemical.PH);
-            initial.ESP = MergeArrays(initial.ESP, chemical.ESP);
-            initial.EC = MergeArrays(initial.EC, chemical.EC);
-            initial.CL = MergeArrays(initial.CL, chemical.CL);
+            initial.PH = MergeArrays(initial.PH, analysis.PH);
+            initial.ESP = MergeArrays(initial.ESP, analysis.ESP);
+            initial.EC = MergeArrays(initial.EC, analysis.EC);
+            initial.CL = MergeArrays(initial.CL, analysis.CL);
 
             soilOrganicMatter.Carbon = null;
             //soil.Children.Remove(analysis);
@@ -124,6 +125,7 @@
         /// <param name="soil">The soil.</param>
         private static void RemoveInitialWater(Soil soil)
         {
+            var soilPhysical = soil.FindChild<Soils.IPhysical>();
             var initialWater = soil.FindChild<InitialWater>();
             if (initialWater != null)
             {
@@ -131,12 +133,12 @@
                 if (sample == null)
                 {
                     sample = new Sample();
-                    sample.Thickness = soil.Thickness;
+                    sample.Thickness = soilPhysical.Thickness;
                     sample.Parent = soil;
                     soil.Children.Add(sample);
                 }
 
-                sample.SW = initialWater.SW(sample.Thickness, soil.LL15, soil.DUL, null);
+                sample.SW = initialWater.SW(sample.Thickness, soilPhysical.LL15, soilPhysical.DUL, null);
 
                 soil.Children.Remove(initialWater);
             }

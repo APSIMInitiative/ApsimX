@@ -119,20 +119,42 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
+            for (int i = 0; i < Presenters1.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (Presenters1[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, true);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, true);
+                    i--;
+                }
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
+            for (int i = 0; i < presenters2.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (presenters2[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, false);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, false);
+                    i--;
+                }
             }
 
             return ok;
@@ -164,7 +186,11 @@
             };
 
             var compiler = new ScriptCompiler();
+#if NETFRAMEWORK
             var results = compiler.Compile(code, new Model(), assemblies);
+#else
+            var results = compiler.Compile(code, new Model());
+#endif
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
@@ -194,7 +220,7 @@
         /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
-        /// <param name="errorLevel">The error level value</param>
+        /// <param name="messageType">The error level value</param>
         public void ShowMessage(string message, Simulation.MessageType messageType)
         {
             Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
@@ -319,6 +345,7 @@
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
+        /// <param name="showStopButton">Should a stop button be displayed as well?</param>
         public void ShowProgress(int percent, bool showStopButton = true)
         {
             this.view.ShowProgress(percent, showStopButton);
@@ -565,23 +592,10 @@
                                 this.OnShowConverter);
 #endif
 
-            // Settings menu
-            startPage.AddButtonWithMenu(
-                                        "Settings",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"));
-
-            startPage.AddButtonToMenu(
-                                      "Settings",
-                                      "Change Font",
-                                      new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
-                                      this.OnChooseFont);
-
-            startPage.AddButtonToMenu(
-                                      "Settings",
-                                      "Toggle Theme",
-                                      new Gtk.Image(null, Configuration.Settings.DarkTheme ? "ApsimNG.Resources.MenuImages.Sun.png" : "ApsimNG.Resources.MenuImages.Moon.png"),
-                                      OnToggleTheme);
-
+            startPage.AddButton(
+                                "Settings",
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"),
+                                OnShowSettingsDialog);
             startPage.AddButton(
                             "Help",
                             new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
@@ -590,6 +604,20 @@
             startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
 
             this.PopulatePopup(startPage);
+        }
+
+        private void OnShowSettingsDialog(object sender, EventArgs e)
+        {
+            try
+            {
+                SettingsDialog dialog = new SettingsDialog(((ViewBase)view).MainWidget as Gtk.Window);
+                dialog.ShowAll();
+                dialog.Run();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -1088,7 +1116,7 @@
             }
             catch (Exception err)
             {
-                ShowError(err);
+                throw new Exception("Error during Import: " + err.Message);
             }
         }
 

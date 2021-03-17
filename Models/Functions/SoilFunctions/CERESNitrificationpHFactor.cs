@@ -13,11 +13,10 @@ namespace Models.Functions
     [Description("Nitrification Water Factor from CERES-Maize")]
     public class CERESNitrificationpHFactor : Model, IFunction, ICustomDocumentation
     {
-
         [Link]
-        Soil soil = null;
+        Sample initial = null;
 
-   
+
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
@@ -26,14 +25,14 @@ namespace Models.Functions
                 throw new Exception("Layer number must be provided to CERES mineralisation water factor Model");
             double pHF = 0;
 
-            if (soil.Initial.PH[arrayIndex] < 4.5)
+            if (initial.PH[arrayIndex] < 4.5)
                 pHF = 0;
-            else if (soil.Initial.PH[arrayIndex] < 6)
-                pHF = MathUtilities.Divide(soil.Initial.PH[arrayIndex] - 4.5, 6.0 - 4.5, 0);
-            else if (soil.Initial.PH[arrayIndex] < 8)
+            else if (initial.PH[arrayIndex] < 6)
+                pHF = MathUtilities.Divide(initial.PH[arrayIndex] - 4.5, 6.0 - 4.5, 0);
+            else if (initial.PH[arrayIndex] < 8)
                 pHF = 1;
-            else if (soil.Initial.PH[arrayIndex] < 9)
-                pHF = 1 - MathUtilities.Divide(soil.Initial.PH[arrayIndex] - 8.0, 9.0 - 8.0, 0.0);
+            else if (initial.PH[arrayIndex] < 9)
+                pHF = 1 - MathUtilities.Divide(initial.PH[arrayIndex] - 8.0, 9.0 - 8.0, 0.0);
             else
                 pHF = 0;
 

@@ -5,7 +5,8 @@
     using System;
     using System.Drawing;
     using System.Collections.Generic;
-    using Classes.Intellisense;
+    using Intellisense;
+    using Extensions;
 
     /// <summary>
     /// View for a small intellisense window which displays the 
@@ -104,7 +105,7 @@
             mainWindow.Add(container);
             mainWindow.Resizable = false;
             mainWindow.Destroyed += OnDestroyed;
-            Window masterWindow = (MasterView as ViewBase).MainWidget.Toplevel as Window;
+            Window masterWindow = (MasterView as ViewBase)?.MainWidget?.Toplevel as Window;
             if (masterWindow != null)
             {
                 masterWindow.KeyPressEvent += OnKeyPress;
@@ -170,7 +171,7 @@
                 else
                 {
                     previousLocation = Location;
-                    mainWindow.HideAll();
+                    mainWindow.Hide();
                 }
             }
         }
@@ -192,7 +193,9 @@
                 if (Visible)
                 {
                     mainWindow.Move(value.X, value.Y);
-                    mainWindow.Resize(mainWindow.WidthRequest, mainWindow.HeightRequest);
+
+                    if (mainWindow.WidthRequest > 0 && mainWindow.HeightRequest > 0)
+                        mainWindow.Resize(mainWindow.WidthRequest, mainWindow.HeightRequest);
                 }
             }
         }
@@ -304,7 +307,7 @@
 
         public void Destroy()
         {
-            mainWindow.Destroy();
+            mainWindow.Cleanup();
         }
     }
 }
