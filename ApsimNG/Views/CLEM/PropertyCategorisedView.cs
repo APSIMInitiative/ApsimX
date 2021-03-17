@@ -37,11 +37,12 @@ namespace UserInterface.Views
         /// <summary>Default constructor for ExplorerView</summary>
         public PropertyCategorisedView(ViewBase owner) : base(owner)
         {
-            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.PropertyTreeView.glade");
-            VBox vbox1 = (VBox)builder.GetObject("vbox1");
+            Builder builder = ViewBase.BuilderFromResource("ApsimNG.Resources.Glade.PropertyCategoryView.glade");
+            Gtk.HPaned hpaned = (Gtk.HPaned)builder.GetObject("hpaned1"); 
             treeview1 = (Gtk.TreeView)builder.GetObject("treeview1");
             rightHandView = (Viewport)builder.GetObject("RightHandView");
-            mainWidget = vbox1;
+            mainWidget = hpaned;
+            rightHandView.BorderWidth = 7;
 
 #if NETFRAMEWORK
             rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
