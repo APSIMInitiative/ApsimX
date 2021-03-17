@@ -2554,11 +2554,7 @@
 
             Gtk.TreeView view = GetTreeView(column);
 
-#if NETFRAMEWORK
-            // In gtk3 this breaks everything. Can't remember why it's
-            // necessary in gtk2, but I'm not brave enough to remove it.
             view.GrabFocus();
-#endif
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);
