@@ -34,11 +34,12 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
     <OutputPath>..\NetCoreBin\</OutputPath>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <!-- Nothing under Resources directory should be included in compilation -->
     <None Remove="Resources\**\*" />
     <EmbeddedResource Include="Resources\**" />
+    <EmbeddedResource Include="../LICENSE.md" />
 	
     <!-- Shared project references -->
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
