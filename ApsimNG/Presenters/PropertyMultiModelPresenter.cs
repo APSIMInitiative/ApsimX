@@ -32,7 +32,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The view.
         /// </summary>
-        protected PropertyMultiModelView view;
+        protected new PropertyMultiModelView view;
 
         /// <summary>
         /// Attach the model to the view.

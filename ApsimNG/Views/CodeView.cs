@@ -54,7 +54,9 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
+#pragma warning disable 0067
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
+#pragma warning restore 0067
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.

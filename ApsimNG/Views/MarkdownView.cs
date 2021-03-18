@@ -483,8 +483,12 @@ namespace UserInterface.Views
             }
 
             if (image != null)
-            { 
+            {
+#if NETFRAMEWORK
                 image.SetAlignment(0, 0);
+#else
+                image.Halign = image.Valign = 0;
+#endif
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     image.TooltipText = tooltip;
 
@@ -701,7 +705,11 @@ namespace UserInterface.Views
         {
             try
             {
+#if NETFRAMEWORK
                 textView.GetPointer(out int wx, out int wy);
+#else
+                Gdk.Display.Default.GetPointer(out _, out int wx, out int wy, out _);
+#endif
                 textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
                                               out int bx, out int by);
                 SetCursorIfAppropriate(textView, bx, by);
