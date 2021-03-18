@@ -212,6 +212,7 @@
                 if (compilation == null || compilation.Code != code)
                 {
                     newlyCompiled = true;
+                    bool withDebug = System.Diagnostics.Debugger.IsAttached;
 
                     IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
@@ -219,22 +220,25 @@
                     string sourceName;
                     Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
 
-                    var encoding = System.Text.Encoding.UTF8;
+                    List<EmbeddedText> embeddedTexts = null;
+                    if (withDebug)
+                    {
+                        System.Text.Encoding encoding = System.Text.Encoding.UTF8;
 
-                    var buffer = encoding.GetBytes(code);
-                    var sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
-                    var embeddedTexts = new List<EmbeddedText>
+                        byte[] buffer = encoding.GetBytes(code);
+                        SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+                        embeddedTexts = new List<EmbeddedText>
                         {
                             EmbeddedText.FromSource(sourceName, sourceText),
                         };
-
+                    }
 
                     MemoryStream ms = new MemoryStream();
                     MemoryStream pdbStream = new MemoryStream();
                     {
                         EmitResult emitResult = compiled.Emit(
                             peStream: ms,
-                            pdbStream: pdbStream,
+                            pdbStream: withDebug ? pdbStream : null,
                             embeddedTexts: embeddedTexts
                             );
                         if (!emitResult.Success)
