@@ -67,7 +67,7 @@ the same character must be used to open and close an emphasis span.
 
 Emphasis can be used in the middle of a word:
 
-`un*frigging*believable` will appear as un*frigging*believable.
+`x*y*z` will appear as x*y*z.
 
 But if you surround an `*` or `_` with spaces, it'll be treated as a
 literal asterisk or underscore.
