@@ -54,9 +54,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Invoked when the editor needs context items (after user presses '.')
         /// </summary>
-#pragma warning disable 0067
         public event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
-#pragma warning restore 0067
 
         /// <summary>
         /// Invoked when the user changes the text in the editor.
@@ -472,7 +470,23 @@ namespace UserInterface.Views
                 }
                 char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
                 if (keyChar == '.' && !char.IsDigit(previousChar))
-                    GLib.Signal.Emit(textEditor, "show-completion");
+                {
+                    if (ContextItemsNeeded != null)
+                    {
+                        ContextItemsNeeded.Invoke(this, new NeedContextItemsArgs()
+                        {
+                            Coordinates = GetPositionOfCursor(),
+                            Code = Text,
+                            Offset = this.Offset,
+                            ControlSpace = false,
+                            ControlShiftSpace = false,
+                            LineNo = CurrentLineNumber,
+                            ColNo = CurrentColumnNumber
+                        });
+                    }
+                    else
+                        GLib.Signal.Emit(textEditor, "show-completion");
+                }
             }
             catch (Exception err)
             {

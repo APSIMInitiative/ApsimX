@@ -89,7 +89,11 @@
             }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
+#if NETFRAMEWORK
+            // In gtk3 builds, the gtksourceview completion infrastructure
+            // handles all of the completion functionality internally.
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
+#endif
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
