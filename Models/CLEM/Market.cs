@@ -67,7 +67,7 @@ namespace Models.CLEM
             {
                 if(resources == null)
                 {
-                    resources = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).FirstOrDefault() as ResourcesHolder;
+                    resources = this.FindAllChildren<ResourcesHolder>().FirstOrDefault();
                 }
                 return resources; 
             }
@@ -131,7 +131,7 @@ namespace Models.CLEM
         {
             var results = new List<ValidationResult>();
             // check that one resources and on activities are present.
-            int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
@@ -142,7 +142,7 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("A market place must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            holderCount = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
