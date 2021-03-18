@@ -544,4 +544,19 @@ namespace Models.CLEM
         Remove
     }
 
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum RuminantStockGroupStyle
+    {
+        /// <summary>
+        /// Animals to select
+        /// </summary>
+        Select = 0,
+        /// <summary>
+        /// Animals to destock
+        /// </summary>
+        Destock = 5,
+    }
+
 }
