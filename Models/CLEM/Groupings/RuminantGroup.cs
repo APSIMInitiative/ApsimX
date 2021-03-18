@@ -38,6 +38,14 @@ namespace Models.CLEM.Groupings
         public object CombinedRules { get; set; } = null;
 
         /// <summary>
+        /// The reason for this filter group
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Description("Reason")]
+        [Required]
+        public RuminantStockGroupStyle Reason { get; set; }
+
+        /// <summary>
         /// Proportion of group to use
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(1)]
