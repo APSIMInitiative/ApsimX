@@ -76,15 +76,13 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-
-            //this.genericView.Text = CreateMarkdown();
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
         }
 
         public void Refresh()
         {
-            this.genericView.Text = CreateMarkdown();
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            this.genericView.Text = CreateMarkdown();
         }
 
 
