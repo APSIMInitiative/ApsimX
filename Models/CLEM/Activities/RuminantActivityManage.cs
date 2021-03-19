@@ -850,7 +850,7 @@ namespace Models.CLEM.Activities
                         {
                             // can only remove those that will make breeder age in the next year before management
                             // includes suitable pre-breeders
-                            foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.SaleFlag != HerdChangeReason.AgeWeightSale && a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
+                            foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag != HerdChangeReason.MaxAgeSale & a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
                             {
                                 // keep by removing any tag for sale.
                                 female.SaleFlag = HerdChangeReason.None;

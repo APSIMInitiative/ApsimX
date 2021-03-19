@@ -937,20 +937,26 @@ namespace Models.GrazPlan
                         totalDM += organ.Live.Wt + organ.Dead.Wt;
                     }
                 }
-
+                double amountRemoved = 0;
+                double amountToRemove = propnRemoved * totalDM;
                 foreach (IOrganDamage organ in ForageObj.Organs)
                 {
                     if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
                     {
                         double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
-                        double prpnToRemove = propnRemoved * propnOfPlantDM;
-                        prpnToRemove = Math.Min(prpnToRemove, 1.0);
+                        double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
+                        double prpnOfOrganToRemove = amountOfOrganToRemove / (organ.Live.Wt + organ.Dead.Wt);
+                        prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
-                        removal.FractionDeadToRemove = prpnToRemove;
-                        removal.FractionLiveToRemove = prpnToRemove;
+                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
+                        removal.FractionLiveToRemove = prpnOfOrganToRemove;
                         ForageObj.RemoveBiomass(organ.Name, "Graze", removal);
+
+                        amountRemoved += amountOfOrganToRemove;
                     }
                 }
+                if (!APSIM.Shared.Utilities.MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
+                    throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
                 
                 forageIdx++;
                 forage = this.ForageByIndex(forageIdx);
