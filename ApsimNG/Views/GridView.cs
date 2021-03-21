@@ -923,14 +923,16 @@
                 fixedColView.Visible = true;
                 splitter.Child1.NoShowAll = false;
                 splitter.ShowAll();
+                if (!Grid.Columns.Any(c => c.Visible))
+                    Grid.Hide();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
 #if NETFRAMEWORK
-                    int width = fixedColView.SizeRequest().Width;
+                int width = fixedColView.SizeRequest().Width;
 #else
-                    fixedColView.GetPreferredWidth(out _, out int width);
+                fixedColView.GetPreferredWidth(out _, out int width);
 #endif
-                if (splitter.Allocation.Width > 1)
+                if (splitter.Allocation.Width > 1 && Grid.Visible)
                     splitter.Position = Math.Min(width + splitterWidth, splitter.Allocation.Width / 2);
                 else
                     splitter.Position = width + splitterWidth;
@@ -2557,6 +2559,18 @@
             Gtk.TreeView view = GetTreeView(column);
 
             view.GrabFocus();
+
+            // Need to ensure that the specified column both exists and is visible.
+            // This can sometimes be changed by the call to view.GrabFocus(), as this
+            // will cause the datastore column/row filters to be applied.
+            if (!view.Visible || column >= view.Columns.Length || row >= table.Rows.Count)
+            {
+                selectedCellRowIndex = -1;
+                selectedCellColumnIndex = -1;
+                selectionRowMax = -1;
+                selectionColMax = -1;
+                return;
+            }
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);
