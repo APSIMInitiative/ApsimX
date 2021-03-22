@@ -50,12 +50,14 @@ namespace UserInterface.Presenters
         /// </summary>
         private IEditorView currentEditor;
 
+        private SimplePropertyPresenter propertiesPresenter = new SimplePropertyPresenter();
+
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.
         /// </summary>
-        /// <param name="_model">The model</param>
-        /// <param name="_view">The view to attach</param>
-        /// <param name="_presenter">The explorer presenter being used</param>
+        /// <param name="model">The model</param>
+        /// <param name="view">The view to attach</param>
+        /// <param name="presenter">The explorer presenter being used</param>
         public void Attach(object model, object view, ExplorerPresenter presenter)
         {
             this.view = view as IBubbleChartView;
@@ -63,7 +65,6 @@ namespace UserInterface.Presenters
             this.model = model as IBubbleChart;
 
             this.view.OnGraphChanged += OnViewChanged;
-            this.view.OnInitialStateChanged += OnInitialStateChanged;
             this.view.AddNode += OnAddNode;
             this.view.DelNode += OnDelNode;
             this.view.AddArc += OnAddArc;
@@ -72,6 +73,8 @@ namespace UserInterface.Presenters
             this.view.RuleList.ContextItemsNeeded += OnNeedVariableNames;
             //view.RuleList.TextHasChangedByUser += OnVariableNamesChanged;
             this.view.ActionList.ContextItemsNeeded += OnNeedEventNames;
+
+            propertiesPresenter.Attach(this.model, this.view.PropertiesView, presenter);
             //view.ActionList.TextHasChangedByUser += OnEventNamesChanged;
 
             intellisense = new IntellisensePresenter(view as ViewBase);
@@ -81,13 +84,13 @@ namespace UserInterface.Presenters
 
             RefreshView();
         }
+
         /// <summary>
         /// Detach the model from the view.
         /// </summary>
         public void Detach()
         {
             view.OnGraphChanged -= OnViewChanged;
-            view.OnInitialStateChanged -= OnInitialStateChanged;
             view.AddNode -= OnAddNode;
             view.DelNode -= OnDelNode;
             view.AddArc -= OnAddArc;
@@ -97,6 +100,7 @@ namespace UserInterface.Presenters
             intellisense.Cleanup();
             view.RuleList.ContextItemsNeeded -= OnNeedVariableNames;
             view.ActionList.ContextItemsNeeded -= OnNeedEventNames;
+            propertiesPresenter.Detach();
 
             // Shouldn't need to manually update the model at this point.
             // All changes are applied immediately upon user input.
@@ -119,7 +123,7 @@ namespace UserInterface.Presenters
         private void RefreshView()
         {
             view.SetGraph(model.Nodes, model.Arcs);
-            view.InitialState = this.model.InitialState;
+            propertiesPresenter.RefreshView(model);
         }
 
         /// <summary>
@@ -227,17 +231,6 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>
-        /// The view has changed the initial state
-        /// </summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnInitialStateChanged(object sender, InitialStateEventArgs e)
-        {
-            ICommand changeProperty = new ChangeProperty(model, nameof(model.InitialState), e.initialState);
-            presenter.CommandHistory.Add(changeProperty);
-        }
-
-        /// <summary>
         /// The view is asking for variable names.
         /// </summary>
         /// <param name="sender">The sending object</param>
@@ -260,9 +253,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Editor that the user is typing in.</param>
         /// <param name="e">Event Arguments.</param>
-        /// <param name="properties">Whether or not property suggestions should be generated.</param>
-        /// <param name="methods">Whether or not method suggestions should be generated.</param>
-        /// <param name="events">Whether or not event suggestions should be generated.</param>
+        /// <param name="rules">Controls whether rules (events) will be shown in intellisense</param>
         private void GetCompletionOptions(object sender, NeedContextItemsArgs e, bool rules)
         {
             try

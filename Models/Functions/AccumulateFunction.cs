@@ -9,13 +9,14 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// A function that accumulates values from child functions
+    /// # [Name]
+    /// Accumulates [ChildFunctionList] between [Start] and [End]
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction, ICustomDocumentation
+    public class AccumulateFunction : Model, IFunction
     {
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -65,6 +66,15 @@ namespace Models.Functions
         /// <summary>The fraction removed on Prun event</summary>
         [Description("(optional) Fraction to remove on Prun")]
         public double FractionRemovedOnPrune { get; set; }
+
+        /// <summary>String list of child functions</summary>
+        public string ChildFunctionList
+        {
+            get
+            {
+                return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
+            }
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -157,25 +167,6 @@ namespace Models.Functions
         private void OnPlantEnding(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
-                                                            + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
         }
     }
 }

@@ -140,6 +140,8 @@ namespace Models.CLEM.Groupings
             return str;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -148,7 +150,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
-            if(!this.ValidParent())
+            if (!this.ValidParent())
             {
                 html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
             }
@@ -181,6 +183,10 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
+        #endregion
+
+        #region validation
+
         /// <summary>
         /// Validate this component
         /// </summary>
@@ -191,18 +197,19 @@ namespace Models.CLEM.Groupings
             var results = new List<ValidationResult>();
 
             // ensure parent is of the right type.
-            if(!this.ValidParent())
+            if (!this.ValidParent())
             {
                 string[] memberNames = new string[] { "RuminantFilter" };
-                results.Add(new ValidationResult("The RuminantFilter named "+this.Name+" does not have a valid RuminantGroup parent component", memberNames));
+                results.Add(new ValidationResult("The RuminantFilter named " + this.Name + " does not have a valid RuminantGroup parent component", memberNames));
             }
-            if((Value==null||Value=="")&&(Parameter.ToString()!="Location"))
+            if ((Value == null || Value == "") && (Parameter.ToString() != "Location"))
             {
                 string[] memberNames = new string[] { "Value" };
                 results.Add(new ValidationResult("Value must be specified", memberNames));
             }
             return results;
-        }
+        } 
+        #endregion
     }
 
     /// <summary>
@@ -239,13 +246,17 @@ namespace Models.CLEM.Groupings
         /// </summary>
         ID = 4,
         /// <summary>
-        /// Determines if withing breeding ages
+        /// Determines if within breeding ages
         /// </summary>
         IsBreeder = 17,
         /// <summary>
-        /// Is female a heifer (weaned, >= breed age and weight, no offspring)
+        /// Identified as a replacement breeder growing up
         /// </summary>
-        IsHeifer = 13,
+        ReplacementBreeder = 18,
+        /// <summary>
+        /// Is female a pre-breeder (weaned, less than set age, up to first birth)
+        /// </summary>
+        IsPreBreeder = 13,
         /// <summary>
         /// Is female lactating
         /// </summary>
@@ -283,6 +294,10 @@ namespace Models.CLEM.Groupings
         /// </summary>
         Weight = 5,
         /// <summary>
+        /// HealthScore
+        /// </summary>
+        HealthScore = 6,
+        /// <summary>
         /// Is individual a calf (not weaned)
         /// </summary>
         IsCalf = 18,
@@ -290,5 +305,9 @@ namespace Models.CLEM.Groupings
         /// Is individual castrated
         /// </summary>
         IsCastrate = 30,
+        /// <summary>
+        /// Stage cateogry
+        /// </summary>
+        Category = 40,
     }
 }

@@ -1,4 +1,5 @@
-﻿namespace UserInterface.Views
+﻿#if NETFRAMEWORK
+namespace UserInterface.Views
 {
     using System;
     using System.Reflection;
@@ -9,141 +10,14 @@
     using Cairo;
     using System.Globalization;
     using Mono.TextEditor.Highlighting;
-
-    /// <summary>
-    /// What sort of text is this editor displaying?
-    /// This is used to determine syntax highlighting rules.
-    /// We could potentially add more options here in future if, say,
-    /// we were to implement a python manager component.
-    /// </summary>
-    public enum EditorType
-    {
-        /// <summary>
-        /// C# manager script.
-        /// </summary>
-        ManagerScript,
-
-        /// <summary>
-        /// Report.
-        /// </summary>
-        Report,
-
-        /// <summary>
-        /// Anything else - this will disable syntax highlighting.
-        /// </summary>
-        Other
-    };
-
-    /// <summary>
-    /// This is IEditorView interface
-    /// </summary>
-    public interface IEditorView
-    {
-        /// <summary>
-        /// Invoked when the editor needs context items (after user presses '.')
-        /// </summary>
-        event EventHandler<NeedContextItemsArgs> ContextItemsNeeded;
-
-        /// <summary>
-        /// Invoked when the user changes the text in the editor.
-        /// </summary>
-        event EventHandler TextHasChangedByUser;
-
-        /// <summary>
-        /// Invoked when the user leaves the text editor.
-        /// </summary>
-        event EventHandler LeaveEditor;
-
-        /// <summary>
-        /// Invoked when the user changes the style.
-        /// </summary>
-        event EventHandler StyleChanged;
-
-        /// <summary>
-        /// Gets or sets the text property to get and set the content of the editor.
-        /// </summary>
-        string Text { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lines property to get and set the lines in the editor.
-        /// </summary>
-        string[] Lines { get; set; }
-
-        /// <summary>
-        /// Controls syntax highlighting mode.
-        /// </summary>
-        EditorType Mode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the characters that bring up the intellisense context menu.
-        /// </summary>
-        string IntelliSenseChars { get; set; }
-
-        /// <summary>
-        /// Gets the current line number
-        /// </summary>
-        int CurrentLineNumber { get; }
-
-        /// <summary>
-        /// Gets or sets the current location of the caret (column and line)
-        /// </summary>
-        System.Drawing.Rectangle Location { get; set; }
-        
-        /// <summary>
-        /// Add a separator line to the context menu
-        /// </summary>
-        MenuItem AddContextSeparator();
-
-        /// <summary>
-        /// Add an action (on context menu) on the series grid.
-        /// </summary>
-        /// <param name="menuItemText">The text of the menu item</param>
-        /// <param name="onClick">The event handler to call when menu is selected</param>
-        /// <param name="shortcut">Describes the key to use as the accelerator</param>
-        MenuItem AddContextActionWithAccel(string menuItemText, System.EventHandler onClick, string shortcut);
-
-        /// <summary>
-        /// Offset of the caret from the beginning of the text editor.
-        /// </summary>
-        int Offset { get; }
-
-        /// <summary>
-        /// Returns true iff this text editor has the focus
-        /// (ie it can receive keyboard input).
-        /// </summary>
-        bool HasFocus { get; }
-
-        /// <summary>
-        /// Inserts text at a given offset in the editor.
-        /// </summary>
-        /// <param name="text">Text to be inserted.</param>
-        void InsertAtCaret(string text);
-
-        /// <summary>
-        /// Inserts a new completion option at the caret, potentially overwriting a partially-completed word.
-        /// </summary>
-        /// <param name="triggerWord">
-        /// Word to be overwritten. May be empty.
-        /// This function will overwrite the last occurrence of this word before the caret.
-        /// </param>
-        /// <param name="completionOption">Completion option to be inserted.</param>
-        void InsertCompletionOption(string completionOption, string triggerWord);
-
-        /// <summary>
-        /// Gets the location (in screen coordinates) of the cursor.
-        /// </summary>
-        /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
-        System.Drawing.Point GetPositionOfCursor();
-
-        /// <summary>
-        /// Redraws the text editor.
-        /// </summary>
-        void Refresh();
-    }
+    using Interfaces;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
     /// </summary>
+    /// <remarks>
+    /// This is the .net framework/gtk2 version, which uses Mono.TextEditor.
+    /// </remarks>
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
@@ -170,6 +44,11 @@
         /// Menu accelerator group
         /// </summary>
         private AccelGroup accel = new AccelGroup();
+
+        /// <summary>
+        /// Dialog used to change the font.
+        /// </summary>
+        private FontSelectionDialog fontDialog;
 
         /// <summary>
         /// Horizontal scroll position
@@ -200,6 +79,19 @@
         /// Invoked when the user changes the style.
         /// </summary>
         public event EventHandler StyleChanged;
+
+        /// <summary>Constructor.</summary>
+        public EditorView() { }
+
+        /// <summary>
+        /// Default constructor that configures the Completion form.
+        /// </summary>
+        /// <param name="owner">The owner view</param>
+        public EditorView(ViewBase owner) : base(owner)
+        {
+            textEditor = new TextEditor();
+            InitialiseWidget();
+        }
 
         /// <summary>
         /// Gets or sets the text property to get and set the content of the editor.
@@ -340,24 +232,49 @@
             }
         }
 
-        /// <summary>
-        /// Default constructor that configures the Completion form.
-        /// </summary>
-        /// <param name="owner">The owner view</param>
-        public EditorView(ViewBase owner) : base(owner)
+        /// <summary>Gets or sets the visibility of the widget.</summary>
+        public bool Visible
+        {
+            get { return textEditor.Visible; }
+            set 
+            { 
+                textEditor.Visible = value;
+                textEditor.Parent.Visible = value;
+            }
+        }
+
+        /// <summary>Initialise widget.</summary>
+        /// <param name="owner">Owner of widget.</param>
+        /// <param name="gtkControl">GTK widget control.</param>
+        protected override void Initialise(ViewBase owner, GLib.Object gtkControl)
+        {
+            var parentContainer = (Container)gtkControl;
+            textEditor = new TextEditor();
+            textEditor.Options.FontName = Utility.Configuration.Settings.FontName;
+            parentContainer.Add(textEditor);
+            InitialiseWidget();
+        }
+
+        /// <summary>Initialise widget.</summary>
+        private void InitialiseWidget()
         {
             scroller = new ScrolledWindow();
-            textEditor = new TextEditor();
+            if (textEditor.Parent is Container container)
+            {
+                container.Remove(textEditor);
+                container.Add(scroller);
+            }
             scroller.Add(textEditor);
             mainWidget = scroller;
-            Mono.TextEditor.CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
-            Mono.TextEditor.TextEditorOptions options = new Mono.TextEditor.TextEditorOptions();
+            CodeSegmentPreviewWindow.CodeSegmentPreviewInformString = "";
+            TextEditorOptions options = new TextEditorOptions();
             options.EnableSyntaxHighlighting = true;
             options.ColorScheme = Configuration.Settings.EditorStyleName;
             options.Zoom = Configuration.Settings.EditorZoom;
             options.HighlightCaretLine = true;
             options.EnableSyntaxHighlighting = true;
             options.HighlightMatchingBracket = true;
+            options.FontName = Utility.Configuration.Settings.EditorFontName;
             textEditor.Options = options;
             textEditor.Options.Changed += EditorOptionsChanged;
             textEditor.Options.ColorScheme = Configuration.Settings.EditorStyleName;
@@ -367,6 +284,7 @@
             textEditor.TextArea.FocusInEvent += OnTextBoxEnter;
             textEditor.TextArea.FocusOutEvent += OnTextBoxLeave;
             textEditor.TextArea.KeyPressEvent += OnKeyPress;
+            textEditor.Text = "";
             scroller.Hadjustment.Changed += Hadjustment_Changed;
             scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
@@ -380,6 +298,7 @@
             AddContextActionWithAccel("Redo", OnRedo, "Ctrl+Y");
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Change Font", OnChangeFont, null);
             styleSeparator = AddContextSeparator();
             styleMenu = AddMenuItem("Use style", null);
             Menu styles = new Menu();
@@ -399,6 +318,87 @@
             styleMenu.Submenu = styles;
 
             IntelliSenseChars = ".";
+        }
+
+        private void OnChangeFont(object sender, EventArgs e)
+        {
+            try
+            {
+                if (fontDialog != null)
+                    fontDialog.Destroy();
+
+                fontDialog = new FontSelectionDialog("Select a font");
+
+                // Center the dialog on the main window.
+                fontDialog.TransientFor = MainWidget as Window;
+                fontDialog.WindowPosition = WindowPosition.CenterOnParent;
+
+                // Select the current font.
+                if (Utility.Configuration.Settings.FontName != null)
+                    fontDialog.SetFontName(Utility.Configuration.Settings.EditorFontName.ToString());
+
+                // Event handlers.
+                fontDialog.OkButton.Clicked += OnFontSelected;
+                fontDialog.OkButton.Clicked += OnDestroyFontDialog;
+                fontDialog.ApplyButton.Clicked += OnFontSelected;
+                fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+
+                // Show the dialog.
+                fontDialog.ShowAll();
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks OK or Apply in the font selection
+        /// dialog. Changes the font on all widgets and saves the new font
+        /// in the config file.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnFontSelected(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fontDialog != null)
+                {
+                    Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+                    Utility.Configuration.Settings.EditorFontName = newFont.ToString();
+                    textEditor.Options.FontName = Utility.Configuration.Settings.EditorFontName;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Invoked when the user clicks cancel in the font selection dialog.
+        /// Closes the dialog.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        private void OnDestroyFontDialog(object sender, EventArgs args)
+        {
+            try
+            {
+                if (fontDialog != null)
+                {
+                    fontDialog.OkButton.Clicked -= OnChangeFont;
+                    fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
+                    fontDialog.ApplyButton.Clicked -= OnChangeFont;
+                    fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
+                    fontDialog.Destroy();
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -707,8 +707,7 @@
         /// <summary>
         /// Insert the currently selected completion item into the text box.
         /// </summary>
-        /// <param name="sender">The sending object</param>
-        /// <param name="e">The event arguments</param>
+        /// <param name="text">Text to be inserted.</param>
         public void InsertAtCaret(string text)
         {
             textEditor.Document.ReadOnly = false;
@@ -1071,3 +1070,4 @@
         #endregion
     }
 }
+#endif

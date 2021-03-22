@@ -122,7 +122,10 @@
             {
                 get
                 {
-                    return LastName(Authors[0]);
+                    if (Authors.Length > 0)
+                        return LastName(Authors[0]);
+                    else
+                        return "";
                 }
             }
 
@@ -180,6 +183,9 @@
                     return text;
                 }
 
+                var match = System.Text.RegularExpressions.Regex.Match(contents, $@"{keyword}\s*=\s*{{([^}}]+)}}");
+                if (match.Groups.Count == 2)
+                    return match.Groups[1].ToString();
                 return string.Empty;
             }
 
@@ -238,7 +244,7 @@
 
         /// <summary>Prefix a string if it isn't already there.</summary>
         /// <param name="st">The original string.</param>
-        /// <param name="stringToAppend">The string to prefix.</param>
+        /// <param name="stringToPrefix">The string to prefix.</param>
         /// <returns>The new string.</returns>
         private static string PrefixString(string st, string stringToPrefix)
         {

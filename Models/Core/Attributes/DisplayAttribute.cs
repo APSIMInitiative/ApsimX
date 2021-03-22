@@ -79,19 +79,11 @@ namespace Models.Core
         SubModel,
 
         /// <summary>
-        /// A CLEM Resource.
+        /// Only valid on an array property. Uses an multi-line
+        /// text editor. Each line of input is treated as an
+        /// element in the array.
         /// </summary>
-        CLEMResource,
-
-        /// <summary>
-        /// A CLEM Crop data reader.
-        /// </summary>
-        CLEMCropFileReader,
-
-        /// <summary>
-        /// A CLEM pasture data reader.
-        /// </summary>
-        CLEMPastureFileReader
+        MultiLineText
     }
 
     /// <summary>
@@ -125,13 +117,6 @@ namespace Models.Core
         public Type[] CLEMResourceGroups { get; set; }
 
         /// <summary>
-        /// Gets or sets strings that are manually added to the Resource name editor.
-        /// eg. [Display(CLEMExtraEntries = new string[] {"None", "All"}  )]"
-        /// Will add these strings to the dropdown list created by CLEMResourceGroups. 
-        /// </summary>
-        public string[] CLEMExtraEntries { get; set; }
-
-        /// <summary>
         /// Gets or sets the display type. 
         /// </summary>
         public DisplayType Type { get; set; }
@@ -141,6 +126,12 @@ namespace Models.Core
         /// Methods pointed to by this property can return any generic IEnumerable and must accept no arguments.
         /// </summary>
         public string Values { get; set; }
+
+        /// <summary>
+        /// A list of objects to be passed to the values method allowing the user to further specify
+        /// functioanlity from the display attributes
+        /// </summary>
+        public object[] ValuesArgs { get; set; }
 
         /// <summary>
         /// Specifies a callback method that will be called by GUI to determine if this property is enabled.

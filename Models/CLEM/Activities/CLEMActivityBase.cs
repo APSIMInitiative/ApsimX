@@ -179,6 +179,25 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// return a list of components available given the specified types
+        /// </summary>
+        /// <param name="typesToFind">the list of types to locate</param>
+        /// <returns>A list of names of components</returns>
+        public IEnumerable<string> GetReadersAvailableByName(Type[] typesToFind)
+        {
+            List<string> results = new List<string>();
+            Simulation simulation = this.FindAncestor<Simulation>();
+            if (simulation != null)
+            {
+                foreach (Type type in typesToFind)
+                {
+                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name).ToList());
+                }
+            }
+            return results.AsEnumerable();
+        }
+
+        /// <summary>
         /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
         /// </summary>
         public virtual void ClearAllAllActivitiesPerformedStatus()
@@ -413,8 +432,8 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
             foreach (LabourRequirement item in Children.Where(a => a.GetType() == typeof(LabourRequirement) | a.GetType().IsSubclassOf(typeof(LabourRequirement))))
             {
-                double daysNeeded = GetDaysLabourRequired(item);
-                if (daysNeeded > 0)
+                GetDaysLabourRequiredReturnArgs daysResult = GetDaysLabourRequired(item);
+                if (daysResult.DaysNeeded > 0)
                 {
                     foreach (LabourFilterGroup fg in item.Children.OfType<LabourFilterGroup>())
                     {
@@ -429,13 +448,15 @@ namespace Models.CLEM.Activities
                             labourResourceRequestList.Add(new ResourceRequest()
                             {
                                 AllowTransmutation = true,
-                                Required = daysNeeded,
+                                Required = daysResult.DaysNeeded,
                                 ResourceType = typeof(Labour),
                                 ResourceTypeName = "",
                                 ActivityModel = this,
-                                FilterDetails = new List<object>() { fg }
+                                FilterDetails = new List<object>() { fg },
+                                Category = daysResult.Category,
+                                RelatesToResource = daysResult.RelatesToResource
                             }
-                            );
+                            ); ;
                         }
                     }
                 }
@@ -577,11 +598,12 @@ namespace Models.CLEM.Activities
                 Available = request.Available,
                 FilterDetails = request.FilterDetails,
                 Provided = request.Provided,
-                Reason = request.Reason,
+                Category = request.Category,
+                RelatesToResource = request.RelatesToResource,
                 Required = request.Required,
                 Resource = request.Resource,
                 ResourceType = request.ResourceType,
-                ResourceTypeName = request.ResourceTypeName
+                ResourceTypeName = (request.Resource is null? "":(request.Resource as CLEMModel).NameWithParent)
             };
 
             // start with top most LabourFilterGroup
@@ -604,7 +626,7 @@ namespace Models.CLEM.Activities
                     // limit to min per person to do activity
                     if (amount < lr.MinimumPerPerson)
                     {
-                        request.Reason = "Min labour limit";
+                        request.Category = "Min labour limit";
                         return amountProvided;
                     }
 
@@ -900,7 +922,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Abstract method to determine the number of days labour required based on Activity requirements and labour settings.
         /// </summary>
-        public abstract double GetDaysLabourRequired(LabourRequirement requirement);
+        public abstract GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement);
 
         /// <summary>
         /// Abstract method to determine list of resources and amounts needed. 
@@ -950,6 +972,40 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+    }
+
+    /// <summary>
+    /// Structure to return values form a labour days request
+    /// </summary>
+    public class GetDaysLabourRequiredReturnArgs
+    {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="daysNeeded"></param>
+        /// <param name="category"></param>
+        /// <param name="relatesToResource"></param>
+        public GetDaysLabourRequiredReturnArgs(double daysNeeded, string category, string relatesToResource)
+        {
+            DaysNeeded = daysNeeded;
+            Category = category;
+            RelatesToResource = relatesToResource;
+        }
+
+        /// <summary>
+        /// Calculated days needed
+        /// </summary>
+        public double DaysNeeded { get; set; }
+
+        /// <summary>
+        /// Transaction category
+        /// </summary>
+        public string Category { get; set; }
+
+        /// <summary>
+        /// Transacation relates to resource
+        /// </summary>
+        public string RelatesToResource { get; set; }
     }
 
     /// <summary>

@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using APSIM.Shared.Utilities;
+    using Presenters;
     using Models.Core;
+    using Interfaces;
 
     /// <summary>
     /// Perform one or more changes to properties in objects.
@@ -14,6 +17,12 @@
         /// The list of all properties that need changing
         /// </summary>
         private IEnumerable<Property> properties = null;
+
+        /// <summary>
+        /// The model which was changed by the command. This will be selected
+        /// in the user interface when the command is undone/redone.
+        /// </summary>
+        public IModel AffectedModel => properties.FirstOrDefault(p => p.Obj is IModel)?.Obj as IModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeProperty" /> class.
@@ -44,54 +53,46 @@
         /// <summary>
         /// Perform the change.
         /// </summary>
-        /// <param name="commandHistory">The parent command history object</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             // Maintain a list of objects that have been changed.
             List<object> objectsChanged = new List<object>();
 
             // Change all properties.
             foreach (Property property in this.properties)
-            {
                 if (property.Do())
-                {
                     if (!objectsChanged.Contains(property.Obj))
-                    {
                         objectsChanged.Add(property.Obj);
-                    }
-                }
-            }
-            
-            // Loop through all changed objects and invoke a model changed event for each.
+
             foreach (object obj in objectsChanged)
-            {
-                commandHistory.InvokeModelChanged(obj);
-            }
+                modelChanged(obj);
         }
 
         /// <summary>
         /// Undo all property changes
         /// </summary>
-        /// <param name="commandHistory">The parent command history object</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             // Maintain a list of objects that have been changed.
             List<object> objectsChanged = new List<object>();
 
             // Undo all property changes
             foreach (Property property in this.properties)
-            {
                 if (property.UnDo() && !objectsChanged.Contains(property.Obj))
-                {
                     objectsChanged.Add(property.Obj);
-                }
-            }
-
+            
             // Loop through all changed objects and invoke a model changed event for each.
             foreach (object obj in objectsChanged)
-            {
-                commandHistory.InvokeModelChanged(obj);
-            }
+                modelChanged(obj);
+
+            // Should we refresh the changed models in the treeview?
+            IModel firstModel = objectsChanged.OfType<IModel>().FirstOrDefault();
+            if (firstModel != null)
+                tree.SelectedNode = firstModel.FullPath;
         }
 
         /// <summary>

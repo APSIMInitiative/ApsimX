@@ -8,8 +8,13 @@
     using Models;
     using Models.Core;
     using Views;
-    using ICSharpCode.NRefactory.CSharp;
+    using Interfaces;
     using Utility;
+
+#if NETFRAMEWORK
+    // Used for the "code reformat option"..
+    using ICSharpCode.NRefactory.CSharp;
+#endif
 
     /// <summary>
     /// Presenter for the Manager component
@@ -74,7 +79,14 @@
                 propertyPresenter = new SimplePropertyPresenter();
             else
                 propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            try
+            {
+                propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
+            }
+            catch (Exception err)
+            {
+                explorerPresenter.MainPresenter.ShowError(err);
+            }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
@@ -111,10 +123,12 @@
         {
             try
             {
+#if NETFRAMEWORK
                 if (e.ControlShiftSpace)
                     intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
                 else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
                     intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+#endif
             }
             catch (Exception err)
             {
@@ -141,7 +155,10 @@
             if (propertyPresenter is SimplePropertyPresenter simplePresenter)
                 simplePresenter.RefreshView(scriptModel);
             else if (propertyPresenter is PropertyPresenter presenter)
+            {
+                presenter.UpdateModel(scriptModel);
                 presenter.Refresh();
+            }
         }
 
         /// <summary>
@@ -192,8 +209,6 @@
             {
                 // User could have added more inputs to manager script - therefore we update the property presenter.
                 scriptModel = manager.FindChild("Script") as Model;
-                if (scriptModel != null)
-                    RefreshProperties();
             }
             catch (Exception err)
             {
@@ -213,6 +228,8 @@
             try
             {
                 BuildScript();
+                if (scriptModel != null)
+                    RefreshProperties();
             }
             catch (Exception err)
             {
@@ -229,10 +246,14 @@
         {
             try
             {
+#if NETFRAMEWORK
                 CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
                 string newText = formatter.Format(managerView.Editor.Text);
                 managerView.Editor.Text = newText;
                 explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+#else
+                throw new NotImplementedException();
+#endif
             }
             catch (Exception err)
             {

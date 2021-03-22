@@ -1,10 +1,12 @@
 namespace UserInterface.Classes
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
+    using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.LifeCycle;
@@ -22,6 +24,8 @@ namespace UserInterface.Classes
         Files,
         Directory,
         //Directories,
+        Font,
+        Numeric
     }
 
     /// <summary>
@@ -56,7 +60,7 @@ namespace UserInterface.Classes
         {
             Name = name;
             Properties = properties;
-            SubModelProperties = subProperties;
+            SubModelProperties = subProperties ?? new PropertyGroup[0];
         }
 
         /// <summary>
@@ -64,7 +68,20 @@ namespace UserInterface.Classes
         /// </summary>
         public int Count()
         {
-            return Properties.Count() + SubModelProperties.Sum(p => p.Count());
+            return Properties.Count() + SubModelProperties?.Sum(p => p.Count()) ?? 0;
+        }
+
+        public Property Find(Guid id)
+        {
+            return GetAllProperties().FirstOrDefault(p => p.ID == id);
+        }
+
+        public IEnumerable<Property> GetAllProperties()
+        {
+            foreach (Property property in Properties)
+                yield return property;
+            foreach (Property property in SubModelProperties.SelectMany(g => g.GetAllProperties()))
+                yield return property;
         }
     }
 
@@ -116,6 +133,20 @@ namespace UserInterface.Classes
         public string[] DropDownOptions { get; private set; }
 
         /// <summary>
+        /// Constructor.
+        /// </summary>
+        public Property(string name, string tooltip, object value, PropertyType displayType, IEnumerable<string> dropDownOptions = null, IEnumerable<string> separators = null)
+        {
+            ID = Guid.NewGuid();
+            Name = name;
+            Tooltip = tooltip;
+            Value = value;
+            DisplayMethod = displayType;
+            DropDownOptions = dropDownOptions?.ToArray();
+            Separators = separators?.ToList();
+        }
+
+        /// <summary>
         /// Instantiates a Property object by reading metadata about
         /// the given property.
         /// </summary>
@@ -139,12 +170,20 @@ namespace UserInterface.Classes
             // ?else if property type isn't a struct?
             else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
                 Value = ((IModel)Value).Name;
+            else if (metadata.PropertyType.IsEnum)
+                Value = VariableProperty.GetEnumDescription((Enum)Enum.Parse(metadata.PropertyType, Value?.ToString()));
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
             // fixme - need to fix this unmaintainable mess brought across from the old PropertyPresenter
             DisplayAttribute attrib = metadata.GetCustomAttribute<DisplayAttribute>();
             DisplayType displayType = attrib?.Type ?? DisplayType.None;
+
+            // For compatibility with the old PropertyPresenter, assume a default of
+            // DisplayType.DropDown if the Values property is specified.
+            if (displayType == DisplayType.None && !string.IsNullOrEmpty(attrib?.Values))
+                displayType = DisplayType.DropDown;
+
             switch (displayType)
             {
                 case DisplayType.None:
@@ -184,8 +223,20 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
-                    MethodInfo method = model.GetType().GetMethod(methodName);
-                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                    if (methodName == null)
+                        throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
+                    BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
+                    MethodInfo method = model.GetType().GetMethod(methodName, flags);
+
+                    object[] args = metadata.GetCustomAttribute<DisplayAttribute>().ValuesArgs;
+
+                    // Attempt to resolve links - populating the dropdown may
+                    // require access to linked models.
+                    Simulations sims = model.FindAncestor<Simulations>();
+                    if (sims != null)
+                        sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
+
+                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, args))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
                 case DisplayType.CultivarName:
@@ -196,7 +247,8 @@ namespace UserInterface.Classes
                         plant = plantProperty.GetValue(model) as IPlant;
                     else
                         plant = model.FindInScope<IPlant>();
-                    DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    if (plant != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;
@@ -255,10 +307,29 @@ namespace UserInterface.Classes
                     }
                     else
                         throw new NotImplementedException($"Display type {displayType} is only supported on models of type {typeof(SurfaceOrganicMatter).Name}, but model is of type {model.GetType().Name}.");
+                case DisplayType.MultiLineText:
+                    DisplayMethod = PropertyType.MultiLineText;
+                    if (Value is IEnumerable enumerable && metadata.PropertyType != typeof(string))
+                        Value = string.Join(Environment.NewLine, ((IEnumerable)metadata.GetValue(obj)).ToGenericEnumerable());
+                    break;
                 // Should never happen - presenter should handle this(?)
                 //case DisplayType.SubModel:
                 default:
                     throw new NotImplementedException($"Unknown display type {displayType}");
+            }
+
+            // If the list of dropdown options doesn't contain the actual value of the
+            // property, add that value to the list of valid options.
+            if (DisplayMethod == PropertyType.DropDown && Value != null)
+            {
+                if (DropDownOptions == null)
+                    DropDownOptions = new string[1] { Value.ToString() };
+                else if (!DropDownOptions.Contains(Value.ToString()))
+                {
+                    List<string> values = DropDownOptions.ToList();
+                    values.Add(Value.ToString());
+                    DropDownOptions = values.ToArray();
+                }
             }
         }
     }

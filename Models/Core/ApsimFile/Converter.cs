@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 122; } }
+        public static int LatestVersion { get { return 129; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -1713,17 +1713,23 @@
             var dbFileName = Path.ChangeExtension(fileName, ".db");
             if (File.Exists(dbFileName))
             {
-                db.OpenDatabase(dbFileName, false);
-                if (db.TableExists("_Checkpoints"))
+                try
                 {
-                    if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                    db.OpenDatabase(dbFileName, false);
+                    if (db.TableExists("_Checkpoints"))
                     {
-                        db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                        if (!db.GetTableColumns("_Checkpoints").Contains("OnGraphs"))
+                        {
+                            db.AddColumn("_Checkpoints", "OnGraphs", "integer");
+                        }
                     }
+                }
+                finally
+                {
+                    db.CloseDatabase();
                 }
             }
         }
-
 
         /// <summary>
         /// Add new methods structure to OrganArbitrator.
@@ -3211,6 +3217,72 @@
         }
 
         /// <summary>
+        /// Remove all references to Arbitrator.WDemand, Arbitrator.WSupply, and Arbitrator.WAllocated.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion123(JObject root, string fileName)
+        {
+            string[] patterns = new[]
+            {
+                "Arbitrator.WSupply",
+                "[Arbitrator].WSupply",
+                "Arbitrator.WDemand",
+                "[Arbitrator].WDemand",
+                "Arbitrator.WAllocated",
+                "[Arbitrator].WAllocated",
+            };
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, typeof(Report).Name))
+            {
+                if (report["VariableNames"] is JArray variables)
+                {
+                    for (int i = variables.Count - 1; i >= 0; i--)
+                        if (patterns.Any(p => variables[i].ToString().Contains(p)))
+                            variables.RemoveAt(i);
+                    report["VariableNames"] = variables;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Rename RadIntTot to RadiationIntercepted.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion124(JObject root, string fileName)
+        {
+            Tuple<string, string>[] changes = new Tuple<string, string>[1]
+            {
+                new Tuple<string, string>("RadIntTot", "RadiationIntercepted")
+            };
+            JsonUtilities.RenameVariables(root, changes);
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = false;
+                foreach (Tuple<string, string> change in changes)
+                    changed |= manager.Replace(change.Item1, change.Item2, true);
+                if (changed)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Add a default value for Sobol's variable to aggregate.
+        /// This was previously assumed to be Clock.Today.Year but
+        /// has been extracted to a variable.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion125(JObject root, string fileName)
+        {
+            foreach (JObject sobol in JsonUtilities.ChildrenRecursively(root, "Sobol"))
+            {
+                sobol["TableName"] = "Report";
+                sobol["AggregationVariableName"] = "Clock.Today.Year";
+            }
+        }
+
+        /// <summary>
         /// Add progeny destination phase and mortality function.
         /// </summary>
         /// <param name="root"></param>
@@ -3226,6 +3298,94 @@
                     ProgDest["NameOfLifeCycleForProgeny"] = LC["Name"].ToString();
                     ProgDest["NameOfPhaseForProgeny"] = LP["NameOfPhaseForProgeny"].ToString();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Move physical properties off Weirdo class and use Physical class instead.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion126(JObject root, string fileName)
+        {
+
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                var weirdo = JsonUtilities.Children(soil).Find(child => JsonUtilities.Type(child) == "WEIRDO");
+                if (weirdo != null)
+                {
+                    Physical physical = new Physical();
+                    physical.Name = "Physical";
+                    if (weirdo["BD"].ToArray().Length > 0)
+                        physical.BD = weirdo["BD"].Values<double>().ToArray();
+                    if (weirdo["DUL"].ToArray().Length > 0)
+                        physical.DUL = weirdo["DUL"].Values<double>().ToArray();
+                    if (weirdo["LL15"].ToArray().Length > 0)
+                        physical.LL15 = weirdo["LL15"].Values<double>().ToArray();
+                    if (weirdo["SAT"].ToArray().Length > 0)
+                        physical.SAT = weirdo["SAT"].Values<double>().ToArray();
+                    if (weirdo["Thickness"].ToArray().Length > 0)
+                        physical.Thickness = weirdo["Thickness"].Values<double>().ToArray();
+                    JsonUtilities.AddModel(soil, physical);
+                }
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// Previously, we used a custom markdown extension to implement support
+        /// for markup superscript/subscripts, but given how slow this is, we've
+        /// decided to just stick with the built-in extensions, so we need to
+        /// change the syntax in all existing files.
+        /// </remarks>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion127(JObject root, string fileName)
+        {
+            foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
+            {
+                string text = memo["Text"]?.ToString();
+                text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
+                text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
+                memo["Text"] = text;
+            }
+        }
+		
+        /// <summary>
+        /// Upgrade to version 128. Add ResourceName property to Fertiliser models.
+        /// </summary>
+        /// <param name="root">The root json token.</param>
+        /// <param name="fileName">The name of the apsimx file.</param>
+        private static void UpgradeToVersion128(JObject root, string fileName)
+        {
+            foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
+                fertiliser["ResourceName"] = "Fertiliser";
+        }
+
+
+        /// <summary>
+        /// Add canopy width Function.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion129(JObject root, string fileName)
+        {
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "EnergyBalance"))
+            {
+                JsonUtilities.RenameChildModel(Root, "FRGRFunction", "FRGRer");
+                JsonUtilities.RenameChildModel(Root, "GAIFunction", "GreenAreaIndex");
+                JsonUtilities.RenameChildModel(Root, "ExtinctionCoefficientFunction", "GreenExtinctionCoefficient");
+                JsonUtilities.RenameChildModel(Root, "ExtinctionCoefficientDeadFunction", "DeadExtinctionCoefficient");
+                JsonUtilities.RenameChildModel(Root, "HeightFunction", "Tallness");
+                JsonUtilities.RenameChildModel(Root, "DepthFunction", "Deepness");
+                JsonUtilities.RenameChildModel(Root, "WidthFunction", "Wideness");
+                JsonUtilities.RenameChildModel(Root, "GAIDeadFunction", "DeadAreaIndex");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "Wideness", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadExtinctionCoefficient", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenExtinctionCoefficient", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenAreaIndex", "0");
+                JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadAreaIndex", "0");
             }
         }
 

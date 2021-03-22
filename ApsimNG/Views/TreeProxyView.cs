@@ -327,7 +327,7 @@
                     double[] data = new double[SpatialDataGrid.DataSource.Rows.Count - 4];
                     for (int j = 4; j < SpatialDataGrid.DataSource.Rows.Count; j++)
                     {
-                        data[j - 4] = Convert.ToDouble(SpatialDataGrid.DataSource.Rows[j].Field<string>(i), 
+                        data[j - 4] = Convert.ToDouble(SpatialDataGrid.DataSource.Rows[j].ItemArray[i], 
                                                        System.Globalization.CultureInfo.InvariantCulture);
                     }
 

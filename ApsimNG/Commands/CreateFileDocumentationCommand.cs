@@ -14,7 +14,7 @@
     /// <summary>
     /// This command creates documentation for a file. e.g. wheat validation or tutorial
     /// </summary>
-    public class CreateFileDocumentationCommand : ICommand
+    public class CreateFileDocumentationCommand
     {
         private ExplorerPresenter explorerPresenter;
 
@@ -28,6 +28,7 @@
         /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
         /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="destinationFolder">Destination directory.</param>
         public CreateFileDocumentationCommand(ExplorerPresenter explorerPresenter, string destinationFolder)
         {
             this.explorerPresenter = explorerPresenter;
@@ -39,18 +40,11 @@
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do(CommandHistory commandHistory)
+        public void Do()
         {
             CreatePDF(modelNameToDocument);
         }
 
-        /// <summary>
-        /// Undo the command
-        /// </summary>
-        public void Undo(CommandHistory commandHistory)
-        {
-        }
-        
         /// <summary>
         /// Export to PDF
         /// </summary>
@@ -59,9 +53,7 @@
             var pdfWriter = new PDFWriter(explorerPresenter, portraitOrientation: true);
 
             // write image files
-            Image banner;
-            banner = new Bitmap(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
-
+            Image banner = Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.AIBanner.png"));
             // Convert all models in file to tags.
             var tags = new List<AutoDocumentation.ITag>();
 

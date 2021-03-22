@@ -76,7 +76,6 @@
                     this.view.ModelTypeTextColour = "1785FF";
                 }
 
-
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
                 this.view.ModelHelpURL = "";
                 if (helpAtt!=null)
@@ -103,8 +102,14 @@
                 if (viewName != null && presenterName != null)
                 {
                     // if model CLEMModel
-                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market)
+                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market | model is RandomNumberGenerator)
                     {
+                        // all CLEMModels will handle this presenter
+                        ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
+                    }
+                    else if (typeof(ICLEMPresenter).IsAssignableFrom(Assembly.GetExecutingAssembly().GetType(presenterName.ToString())))
+                    {
+                        // apply this if the presenter has ICLEMPresenter interface and is ready to create presenters
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
                     }
                     else

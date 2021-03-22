@@ -5,6 +5,9 @@
     using EventArguments;
     using Models.PMF;
     using Views;
+    using Interfaces;
+    using Commands;
+    using System.Linq;
 
     /// <summary>
     /// A presenter class for showing a cultivar.
@@ -64,10 +67,13 @@
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    Commands.ChangeProperty command = new Commands.ChangeProperty(this.cultivar, "Command", this.view.Lines);
-                    this.explorerPresenter.CommandHistory.Add(command);
+                    if (!cultivar.Command.SequenceEqual(view.Lines))
+                    {
+                        ChangeProperty command = new ChangeProperty(cultivar, nameof(cultivar.Command), this.view.Lines);
+                        explorerPresenter.CommandHistory.Add(command);
+                    }
 
-                    this.explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
+                    explorerPresenter.CommandHistory.ModelChanged += this.OnModelChanged;
                 }
             }
             catch (Exception err)

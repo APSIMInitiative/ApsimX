@@ -8,6 +8,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -150,7 +151,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "").ToList();
 
@@ -184,7 +185,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Graze", this.PredictedHerdName);
         }
 
         /// <summary>
@@ -244,6 +245,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -251,21 +254,24 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
-            if(HoursGrazed <= 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
-            }
-            else
-            {
-                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+                if (HoursGrazed <= 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+                }
+                else
+                {
+                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
+                }
 
-            html += "the maximum 8 hours each day</span>";
-            html += "</div>";
-            return html;
-        }
+                htmlWriter.Write("the maximum 8 hours each day</span>");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
 
     }
 }

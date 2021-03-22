@@ -7,7 +7,11 @@ using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through a Vernalisation phase</summary>
+    /// <summary>
+    /// /// # [Name] Phase
+    /// The [Name] phase goes from [Start] stage to [End] stage and reaches [End] when
+    /// vernalisation saturation occurs
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

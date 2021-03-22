@@ -17,6 +17,7 @@ using Models.Functions;
 using Models.Soils.Standardiser;
 using Models.Climate;
 using System.Linq;
+using APSIM.Shared.APSoil;
 
 namespace Models.Soils
 {
@@ -28,7 +29,7 @@ namespace Models.Soils
     [ViewName("UserInterface.Views.ProfileView")]
     [PresenterName("UserInterface.Presenters.ProfilePresenter")]
     [ValidParent(ParentType = typeof(Soil))]
-    public class WEIRDO : Model, ISoilWater, IPhysical
+    public class WEIRDO : Model, ISoilWater
     {
         #region IsoilInterface
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
@@ -135,13 +136,35 @@ namespace Models.Soils
         public double[] LateralOutflow { get; set; }
         /// <summary> The Plant available water content of the soil layer /// </summary>
         [JsonIgnore]
-        public double[] PAWC { get; set; }
+        [Units("mm/mm")]
+        public double[] PAWC
+        {
+            get
+            {
+                return APSoilUtilities.CalcPAWC(soilPhysical.Thickness,  soilPhysical.LL15,  soilPhysical.DUL, null);
+            }
+        }
+
+        /// <summary>Depth strings. Wrapper around Thickness.</summary>
+        [Description("Depth")]
+        [Units("cm")]
+        public string[] Depth
+        {
+            get
+            {
+                return SoilUtilities.ToDepthStrings(Thickness);
+            }
+            set
+            {
+                Thickness = SoilUtilities.ToThickness(value);
+            }
+        }
 
         /// <summary>Plant available water CAPACITY (DUL-LL15).</summary>
         [Units("mm")]
         [Display(Format = "N0", ShowTotal = true)]
         [JsonIgnore] 
-        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, Thickness); } }
+        public double[] PAWCmm { get { return MathUtilities.Multiply(PAWC, soilPhysical.Thickness); } }
 
         /// <summary>Plant available water SW-LL15 (mm/mm).</summary>
         [Units("mm/mm")]
@@ -149,10 +172,7 @@ namespace Models.Soils
         {
             get
             {
-                return APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(Thickness,
-                                                                  LL15,
-                                                                  SW,
-                                                                  null);
+                return APSoilUtilities.CalcPAWC(soilPhysical.Thickness,  soilPhysical.LL15, SW, null);
             }
         }
 
@@ -162,7 +182,7 @@ namespace Models.Soils
         {
             get
             {
-                return MathUtilities.Multiply(PAW, Thickness);
+                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);
             }
         }
 
@@ -213,10 +233,11 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] SWmm { get; set; }
-        ///<summary> Who knows</summary>
+
+        ///<summary> this is the layer structure that parameters are entered against for this object</summary>
         public double[] Thickness { get; set; }
 
-        /// <summary>Return the soil layer cumulative thicknesses (mm)</summary>
+        /// <summary>Return the soil layer cumulative thickness (mm)</summary>
         public double[] ThicknessCumulative { get { return MathUtilities.Cumulative(Thickness).ToArray(); } }
 
         /// <summary>Gets the depth mid points (mm).</summary>
@@ -250,8 +271,7 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double WinterU { get; set; }
-        ///<summary> Who knows</summary>
-        public void RemoveWater(double[] NewSWmm) { }
+        
         ///<summary> Who knows</summary>
         public void SetWater_frac(double[] New_SW) { }
         ///<summary> Who knows</summary>
@@ -280,6 +300,9 @@ namespace Models.Soils
         private Clock Clock = null;
         [Link(IsOptional = true)]
         Plant Plant = null;
+        [Link]
+        private IPhysical soilPhysical = null;
+
         #endregion
 
         #region Class Events
@@ -303,27 +326,6 @@ namespace Models.Soils
         #endregion
 
         #region Parameters
-        /// <summary>Gets or sets the l L15.</summary>
-        /// <value>The l L15.</value>
-        [Summary]
-        [Description("LL15")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] LL15 { get; set; }
-        /// <summary>Gets or sets the dul.</summary>
-        /// <value>The dul.</value>
-        [Summary]
-        [Description("DUL")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] DUL { get; set; }
-        /// <summary>Gets or sets the sat.</summary>
-        /// <value>The sat.</value>
-        [Summary]
-        [Description("SAT")]
-        [Units("mm/mm")]
-        [Display(Format = "N2")]
-        public double[] SAT { get; set; }
         /// <summary>Parameter describing the volumetric flow of water through conducting pores of a certian radius</summary>
         [Description("ConductC (*e^-10")]
         [Display(Format = "N2")]
@@ -352,19 +354,6 @@ namespace Models.Soils
         [Display(Format = "N2")]
         [Description("Rupper")]
         public double[] UpperRepellentWC { get; set; }
-        /// <summary>Root extension factor</summary>
-        [Summary]
-        [Description("XF")]
-        [Units("0-1")]
-        [Display(Format = "N2")]
-        public double[] XF { get; set; }
-        /// <summary>Gets or sets the bd.</summary>
-        /// <value>The bd.</value>
-        [Summary]
-        [Description("BD")]
-        [Units("g/cc")]
-        [Display(Format = "N2")]
-        public double[] BD { get; set; }
         /// <summary>
         /// The maximum diameter of pore compartments
         /// </summary>
@@ -427,27 +416,6 @@ namespace Models.Soils
 
         #endregion
 
-        #region Mapped Soil Water Properties
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedSAT { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedDUL { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedLL15 { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedCFlow { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedXFlow { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedPsiBub { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedUpperRepellentWC { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedLowerRepellentWC { get; set; }
-        /// <summary>Mapped from parameter set onto Layer structure</summary>
-        public double[] MappedMinRepellancyFactor { get; set; }
-        #endregion
-
         #region Outputs
         /// <summary>
         /// The amount of water extracted from the soil by the crop
@@ -501,6 +469,7 @@ namespace Models.Soils
         [Summary]
         [Description("The Poiseuille conductivity of each pore")]
         [Display(Format = "N1")]
+        [JsonIgnore]
         public double[][] Capillarity { get; set; }
         /// <summary>
         /// Hydraulic concutivitiy out of each pore
@@ -509,6 +478,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("The Potential hydraulic conducitivity of water out of the pore")]
+        [JsonIgnore]
         public double[][] HydraulicConductivityOut { get; set; }
         /// <summary>
         /// The water potential when this pore space is full and larger pores are empty
@@ -517,6 +487,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("Layer water potential when these pore spaces are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] PsiUpper { get; set; }
         /// <summary>
         /// The relative water water filled porosity when this pore space if full and larger pores are empty
@@ -524,6 +495,7 @@ namespace Models.Soils
         [Units("0-1")]
         [Display(Format = "N1")]
         [Description("Layer relative water water filled porosity when these pores are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] RelativePoreVolume { get; set; }
         /// <summary>
         /// Layer volumetric water content when these pores are full and larger pores are empty
@@ -532,6 +504,7 @@ namespace Models.Soils
         [Summary]
         [Display(Format = "N1")]
         [Description("Layer volumetric water content when these pores are full and larger pores are empty")]
+        [JsonIgnore]
         public double[][] Theta { get; set; }
         /// <summary>
         /// Net diffusion Upward (+) or downwrd (-) from this layer
@@ -672,10 +645,10 @@ namespace Models.Soils
             //Check the soil water content initialisation is legit
             for (int l = 0; l < ProfileLayers; l++)
             {
-                if (initial.SWVolumetric[l] - MappedSAT[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is greater than the layers saturated water content of " + MappedSAT[l]);
-                if (MappedLL15[l] - initial.SWVolumetric[l] > 1e-10)
-                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is less than the layers lower limit water content of " + MappedLL15[l]);
+                if (initial.SWVolumetric[l] - soilPhysical.SAT[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is greater than the layers saturated water content of " + soilPhysical.SAT[l]);
+                if (soilPhysical.LL15[l] - initial.SWVolumetric[l] > 1e-10)
+                    throw new Exception("The initial Water content in mapped layer " + l + " of " + initial.SWVolumetric[l] + " is less than the layers lower limit water content of " + soilPhysical.LL15[l]);
             }
         }
 
@@ -760,7 +733,7 @@ namespace Models.Soils
                     if (CalculateDrainage)
                         doDrainage(h, TimeStepSplits, Subh);
                 }
-                doTranspiration();
+                //doTranspiration();  Use KL approach so it integrates with arbitrator for the time being
                 if(CalculateEvaporation)
                     doEvaporation();
                 if(CalculateDiffusion)
@@ -806,19 +779,17 @@ namespace Models.Soils
         #endregion
 
         #region Water Balance Methods
-        internal void MapVariables(double[] targetThickness)
-        {
-            double[] CflowScaled = MathUtilities.Multiply_Value(CFlow, 1e-10);
 
-            MappedSAT = Layers.MapConcentration(SAT, Thickness, targetThickness, SAT[SAT.Length-1]);
-            MappedDUL = Layers.MapConcentration(DUL, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedLL15 = Layers.MapConcentration(LL15, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedCFlow = Layers.MapConcentration(CflowScaled, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedXFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedPsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedUpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedLowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, SAT[SAT.Length - 1]);
-            MappedMinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, SAT[SAT.Length - 1]);
+        internal void SetLayerThickness(double[] targetThickness)
+        {
+            CFlow = MathUtilities.Multiply_Value(CFlow, 1e-10);
+            CFlow = Layers.MapConcentration(CFlow, Thickness, targetThickness, CFlow[CFlow.Length - 1]);
+            XFlow = Layers.MapConcentration(XFlow, Thickness, targetThickness, XFlow[XFlow.Length - 1]);
+            PsiBub = Layers.MapConcentration(PsiBub, Thickness, targetThickness, PsiBub[PsiBub.Length - 1]);
+            UpperRepellentWC = Layers.MapConcentration(UpperRepellentWC, Thickness, targetThickness, UpperRepellentWC[UpperRepellentWC.Length - 1]);
+            LowerRepellentWC = Layers.MapConcentration(LowerRepellentWC, Thickness, targetThickness, LowerRepellentWC[LowerRepellentWC.Length - 1]);
+            MinRepellancyFactor = Layers.MapConcentration(MinRepellancyFactor, Thickness, targetThickness, MinRepellancyFactor[MinRepellancyFactor.Length - 1]);
+            Thickness = targetThickness;
         }
 
         private void doPrecipitation()
@@ -827,10 +798,10 @@ namespace Models.Soils
             { //On days when irrigation is applied spread it out into hourly increments
                 if (IrrigationDuration > 24)
                     throw new Exception(this + " daily irrigation duration exceeds 24 hours.  There are only 24 hours in each day so it is not really possible to irrigate for longer that this");
-                int Irrighours = (int)Math.Ceiling(IrrigationDuration);
+                int irrigHours = (int)Math.Ceiling(IrrigationDuration);
                 double IrrigationRate = Math.Min(Irrigation / IrrigationDuration, Irrigation); //Constrain to Irrigation amount so doesn't multiply irrigation if duration is < 1
 
-                for (int h = 0; h < Irrighours; h++)
+                for (int h = 0; h < irrigHours; h++)
                 {
                     Hourly.Irrigation[h] = IrrigationRate;
                 }
@@ -1091,6 +1062,23 @@ namespace Models.Soils
                 }
             UpdateProfileValues();
         }
+
+        ///<summary> Who knows</summary>
+        public void RemoveWater(double[] AmountToRemove)
+        {
+            for (int l = 0; l < ProfileLayers; l++)
+            {
+                double remainingExtraction = AmountToRemove[l];
+                for (int c = 0; (c < PoreCompartments && remainingExtraction > 0); c++)
+                {
+                    double poreExtraction = Math.Min(remainingExtraction, Pores[l][c].WaterDepth);
+                    Pores[l][c].WaterDepth -= poreExtraction;
+                    remainingExtraction -= poreExtraction;
+                }
+            }
+            WaterExtraction = AmountToRemove.Sum();
+            UpdateProfileValues();
+        }
         /// <summary>
         /// Potential gradients moves water out of layers each time step
         /// </summary>
@@ -1177,29 +1165,6 @@ namespace Models.Soils
         /// <remarks>Not imlpemented</remarks>
         public double[] SoluteFlowEfficiency { get; set; }
 
-        /// <summary>Air dry (mm/mm).</summary>
-        [JsonIgnore]
-        public double[] AirDry { get { return new double[Thickness.Length]; }  set { } }
-
-        /// <summary>Particle size clay.</summary>
-        [JsonIgnore]
-        public double[] ParticleSizeClay { get { return new double[Thickness.Length]; } set { } }
-
-        /// <summary>Particle size sand.</summary>
-        [JsonIgnore]
-        public double[] ParticleSizeSand { get { return new double[Thickness.Length]; } set { } }
-
-        /// <summary>Particle size silt.</summary>
-        [JsonIgnore]
-        public double[] ParticleSizeSilt { get { return new double[Thickness.Length]; } set { } }
-
-        /// <summary>Rocks.</summary>
-        [JsonIgnore]
-        public double[] Rocks { get => throw new NotImplementedException(); }
-
-        /// <summary>Texture.</summary>
-        [JsonIgnore]
-        public string[] Texture { get => throw new NotImplementedException(); }
         #endregion
 
         #region Internal Properties and Methods
@@ -1212,7 +1177,7 @@ namespace Models.Soils
             for (int l = 0; l < ProfileLayers; l++)
             {
                 ProfileDepth += Thickness[l] / 1000;
-                SaturatedWaterDepth[l] = MappedSAT[l] * Thickness[l];
+                SaturatedWaterDepth[l] = soilPhysical.SAT[l] * Thickness[l];
             }
 
             MoistureRelease.SetHydraulicProperties();
@@ -1229,8 +1194,8 @@ namespace Models.Soils
                     Pores[l][c].Thickness = Thickness[l];
                     Pores[l][c].ThetaUpper = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiUpper);
                     Pores[l][c].ThetaLower = MoistureRelease.SimpleTheta(l, Pores[l][c].PsiLower);
-                    Pores[l][c].CFlow = MappedCFlow[l];
-                    Pores[l][c].XFlow = MappedXFlow[l];
+                    Pores[l][c].CFlow = CFlow[l];
+                    Pores[l][c].XFlow = XFlow[l];
                     double PoreWaterFilledVolume = Math.Min(Pores[l][c].Volume, initial.SWVolumetric[l] - AccumWaterVolume);
                     AccumWaterVolume += PoreWaterFilledVolume;
                     Pores[l][c].WaterDepth = PoreWaterFilledVolume * Thickness[l];
@@ -1241,10 +1206,10 @@ namespace Models.Soils
                 SWmm[l] = LayerSum(Pores[l], "WaterDepth");
                 SW[l] = LayerSum(Pores[l], "WaterDepth") / Thickness[l];
                 KS[l] = LayerSum(Pores[l], "PoiseuilleFlow");
-                DULmm[l] = MappedDUL[l] * Thickness[l];
-                LL15mm[l] = MappedLL15[l] * Thickness[l];
-                SATmm[l] = MappedSAT[l] * Thickness[l];
-                ProfileSaturation += MappedSAT[l] * Thickness[1];
+                DULmm[l] = soilPhysical.DUL[l] * Thickness[l];
+                LL15mm[l] = soilPhysical.LL15[l] * Thickness[l];
+                SATmm[l] = soilPhysical.SAT[l] * Thickness[l];
+                ProfileSaturation += soilPhysical.SAT[l] * Thickness[l];
             }
             doGravitionalPotential();
             for (int l = 0; l < ProfileLayers; l++)
@@ -1354,7 +1319,7 @@ namespace Models.Soils
             double WaterIn = InitialProfileWater + InitialPondDepth + InitialResidueWater 
                              + Rain + Irrig;
             double ProfileWaterAtCalcEnd = MathUtilities.Sum(SWmm);
-            double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
+            //double WaterExtraction = MathUtilities.Sum(HourlyWaterExtraction);
             double WaterOut = ProfileWaterAtCalcEnd + pond + ResidueWater + Drain;
             if (Math.Abs(WaterIn - WaterOut) > FloatingPointTolerance)
                 throw new Exception(this + " " + Process + " calculations are violating mass balance");           
@@ -1419,8 +1384,8 @@ namespace Models.Soils
         {
             for (int l = 0; l < ProfileLayers; l++)
             {
-                double[] X = { MappedLowerRepellentWC[l], MappedUpperRepellentWC[l] };
-                double[] Y = { MappedMinRepellancyFactor[l],1.0};
+                double[] X = { LowerRepellentWC[l], UpperRepellentWC[l] };
+                double[] Y = { MinRepellancyFactor[l],1.0};
 
                 bool DidInterpolate;
                 double Factor = MathUtilities.LinearInterpReal(Pores[l][5].RelativeWaterContent, X, Y, out DidInterpolate);

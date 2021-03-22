@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of Other Animal Type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string OtherAnimalType { get; set; }
 
         private OtherAnimalsType animalType { get; set; }
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

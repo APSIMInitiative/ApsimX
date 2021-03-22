@@ -13,6 +13,8 @@ using APSIM.Shared.Utilities;
 using Models.PMF;
 using Models.Functions;
 using Models.Soils;
+using Models.WaterModel;
+using Models.Surface;
 
 namespace UnitTests.Core.ApsimFile
 {
@@ -100,6 +102,8 @@ namespace Models
             physical.AirDry = new double[5];
             physical.LL15 = new double[5];
             Structure.Add(physical, paddock);
+            Structure.Add(new WaterBalance(), paddock);
+            Structure.Add(new SurfaceOrganicMatter(), paddock);
 
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
@@ -160,21 +164,7 @@ namespace Models
                 "[Physical].LL15[3:4] = 7",
             });
 
-            string models = typeof(IModel).Assembly.Location;
-            string args = $"{fileName} /Edit {configFile}";
-            
-            var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Path.GetTempPath(), true, writeToConsole: true);
-            proc.WaitForExit();
-
-            // Children of simulation are, in order:
-            // Clock, summary, zone, Weather, Weather2, w1, w2
-            Assert.AreEqual(null, proc.StdOut);
-            Assert.AreEqual(null, proc.StdErr);
-
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations file = EditFile.Do(fileName, configFile);
 
             var report = file.FindInScope<Models.Report>();
             string[] variableNames = new[] { "x", "y", "z" };

@@ -40,10 +40,7 @@
             SingleThreaded,
 
             /// <summary>Run using multiple cores - each job asynchronously.</summary>
-            MultiThreaded,
-
-            /// <summary>Run using multiple, separate processes - each job asynchronously.</summary>
-            MultiProcess
+            MultiThreaded
         }
 
         /// <summary>
@@ -103,6 +100,38 @@
         /// <param name="wait">Wait until all simulations are complete?</param>
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
+        public Runner(IEnumerable<IModel> relativeTo,
+                      bool runSimulations = true,
+                      bool runPostSimulationTools = true,
+                      bool runTests = true,
+                      IEnumerable<string> simulationNamesToRun = null,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
+                      bool wait = true,
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null)
+        {
+            this.runType = runType;
+            this.wait = wait;
+            this.numberOfProcessors = numberOfProcessors;
+
+            foreach (IModel model in relativeTo)
+            {
+                var simulationGroup = new SimulationGroup(model, runSimulations, runPostSimulationTools, runTests, simulationNamesToRun, simulationNamePatternMatch);
+                simulationGroup.Completed += OnSimulationGroupCompleted;
+                jobs.Add(simulationGroup);
+            }
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="relativeTo">The model to use to search for simulations to run.</param>
+        /// <param name="runSimulations">Run simulations?</param>
+        /// <param name="runPostSimulationTools">Run post simulation tools?</param>
+        /// <param name="runTests">Run tests?</param>
+        /// <param name="simulationNamesToRun">Only run these simulations.</param>
+        /// <param name="runType">How should the simulations be run?</param>
+        /// <param name="wait">Wait until all simulations are complete?</param>
+        /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(IModel relativeTo,
                       bool runSimulations = true,
                       bool runPostSimulationTools = true,
@@ -124,7 +153,6 @@
 
         /// <summary>Constructor</summary>
         /// <param name="pathAndFileSpec">Path and file specification for finding files.</param>
-        /// <param name="ignorePaths">Ignore these paths when looking for files to run.</param>
         /// <param name="recurse">Recurse into child folder?</param>
         /// <param name="runTests">Run tests?</param>
         /// <param name="runType">How should the simulations be run?</param>
@@ -132,8 +160,28 @@
         /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
         /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
         public Runner(string pathAndFileSpec,
-                      List<string> ignorePaths = null,
                       bool recurse = true,
+                      bool runTests = true,
+                      RunTypeEnum runType = RunTypeEnum.MultiThreaded,
+                      bool wait = true,
+                      int numberOfProcessors = -1,
+                      string simulationNamePatternMatch = null) : this(DirectoryUtilities.FindFiles(pathAndFileSpec, recurse),
+                                                                       runTests,
+                                                                       runType,
+                                                                       wait,
+                                                                       numberOfProcessors,
+                                                                       simulationNamePatternMatch)
+        {
+        }
+
+        /// <summary>Constructor</summary>
+        /// <param name="files">Files to be run.</param>
+        /// <param name="runTests">Run tests?</param>
+        /// <param name="runType">How should the simulations be run?</param>
+        /// <param name="wait">Wait until all simulations are complete?</param>
+        /// <param name="numberOfProcessors">Number of CPU processes to use. -1 indicates all processes.</param>
+        /// <param name="simulationNamePatternMatch">A regular expression used to match simulation names to run.</param>
+        public Runner(string[] files,
                       bool runTests = true,
                       RunTypeEnum runType = RunTypeEnum.MultiThreaded,
                       bool wait = true,
@@ -144,15 +192,11 @@
             this.wait = wait;
             this.numberOfProcessors = numberOfProcessors;
 
-            string[] files = DirectoryUtilities.FindFiles(pathAndFileSpec, recurse);
             foreach (string fileName in files)
             {
-                if (!DoIgnoreFile(fileName, ignorePaths))
-                {
-                    var simulationGroup = new SimulationGroup(fileName, runTests, simulationNamePatternMatch);
-                    simulationGroup.Completed += OnSimulationGroupCompleted;
-                    jobs.Add(simulationGroup);
-                }
+                var simulationGroup = new SimulationGroup(fileName, runTests, simulationNamePatternMatch);
+                simulationGroup.Completed += OnSimulationGroupCompleted;
+                jobs.Add(simulationGroup);
             }
         }
 
@@ -204,9 +248,6 @@
                     case RunTypeEnum.MultiThreaded:
                         jobRunner = new JobRunner(numberOfProcessors);
                         break;
-                    case RunTypeEnum.MultiProcess:
-                        jobRunner = new JobRunnerMultiProcess(numberOfProcessors);
-                        break;
                 }
 
                 jobRunner.JobCompleted += OnJobCompleted;
@@ -234,21 +275,6 @@
                 jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
             }
-        }
-
-        /// <summary>
-        /// Ignore the specified path when looking for files to run?
-        /// </summary>
-        /// <param name="fileNameToCheck">The filename to check.</param>
-        /// <param name="ignorePaths">The list of ignore paths.</param>
-        private bool DoIgnoreFile(string fileNameToCheck, List<string> ignorePaths)
-        {
-            if (ignorePaths != null)
-                foreach (var path in ignorePaths)
-                    if (fileNameToCheck.Contains(Path.DirectorySeparatorChar + path + Path.DirectorySeparatorChar))
-                        return true;
-
-            return false;
         }
 
         /// <summary>
@@ -315,6 +341,18 @@
 
             /// <summary>Amount of time all jobs took to run.</summary>
             public TimeSpan ElapsedTime { get; set; }
+        }
+
+        /// <summary>
+        /// Dispose (close) the Datastore. Use with caution!
+        /// This is intended to be used when running from the Models.exe command line
+        /// When we're running in the GUI, we normally want to keep the Datastore open when the run completes.
+        /// </summary>
+        public void DisposeStorage()
+        {
+            foreach (var job in jobs)
+                if (job is SimulationGroup)
+                    (job as SimulationGroup).DisposeStorage();
         }
     }
 }

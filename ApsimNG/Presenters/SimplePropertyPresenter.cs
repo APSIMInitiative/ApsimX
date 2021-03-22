@@ -1,6 +1,8 @@
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,6 +11,7 @@ using UserInterface.Classes;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -17,17 +20,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model whose properties are being displayed.
         /// </summary>
-        private IModel model;
+        protected IModel model;
 
         /// <summary>
         /// The view.
         /// </summary>
-        private IPropertyView view;
+        protected IPropertyView view;
 
         /// <summary>
         /// The explorer presenter instance.
         /// </summary>
-        private ExplorerPresenter presenter;
+        protected ExplorerPresenter presenter;
 
         /// <summary>
         /// A filter function which can be used to filter which properties
@@ -47,10 +50,8 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">An <see cref="ExplorerPresenter" /> instance.</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            if (model == null)
-                throw new ArgumentNullException(nameof(model));
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
             if (explorerPresenter == null)
@@ -60,11 +61,11 @@ namespace UserInterface.Presenters
             this.view = view as IPropertyView;
             this.presenter = explorerPresenter;
 
-            if (this.model == null)
+            if (this.model != null && !(this.model is IModel))
                 throw new ArgumentException($"The model must be an IModel instance");
             if (this.view == null)
                 throw new ArgumentException($"The view must be an IPropertyView instance");
-            
+
             RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.PropertyChanged += OnViewChanged;
@@ -73,11 +74,13 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Refresh the view with the model's current state.
         /// </summary>
-        public void RefreshView(IModel model)
+        public virtual void RefreshView(IModel model)
         {
-            this.model = model;
-            PropertyGroup properties = GetProperties(model);
-            view.DisplayProperties(properties);
+            if (model != null)
+            {
+                this.model = model;
+                view.DisplayProperties(GetProperties(this.model));
+            }
         }
 
         /// <summary>
@@ -131,7 +134,7 @@ namespace UserInterface.Presenters
         /// <param name="obj">Object whose members will be retrieved.</param>
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             return obj.GetType().GetProperties(flags);
         }
 
@@ -158,7 +161,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnViewChanged(object sender, PropertyChangedEventArgs args)
+        protected void OnViewChanged(object sender, PropertyChangedEventArgs args)
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.
@@ -168,18 +171,41 @@ namespace UserInterface.Presenters
             PropertyInfo property = propertyMap[args.ID].Property;
             object changedObject = propertyMap[args.ID].Model;
 
+            object newValue = args.NewValue;
+
+            // When using a multi-line text editor for an IEnumerable property, the
+            // new value returned from the view will contain the enumerable with one
+            // element per line. The 'canonical' form of an enumerable as recognised by
+            // the StringToObject function is csv. Therefore we need to convert from
+            // lf-separated elements to comma-separated elements. This should probably
+            // occur somewhere else.
+            DisplayAttribute attrib;
+            if (newValue is string str && property.PropertyType != typeof(string) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && (attrib = property.GetCustomAttribute<DisplayAttribute>()) != null && attrib.Type == DisplayType.MultiLineText)
+                newValue = string.Join(",", str.Split(Environment.NewLine.ToCharArray()));
+
+            if (property.PropertyType.IsEnum && newValue is string enumDescription)
+            {
+                foreach (Enum value in Enum.GetValues(property.PropertyType))
+                {
+                    if (VariableProperty.GetEnumDescription(value) == enumDescription)
+                    {
+                        newValue = Enum.GetName(property.PropertyType, value);
+                        break;
+                    }
+                }
+            }
+
             // In some cases, the new value passed back from the view may be
             // already of the correct type. For example a boolean property
             // is editable via a checkbutton, so the view will return a bool.
             // However, most numbers are just rendered using an entry widget,
             // so the value from the view will be a string (e.g. 1e-6).
-            object newValue = args.NewValue;
             if ((newValue == null || newValue is string) && property.PropertyType != typeof(string))
             {
                 if (newValue is string modelName && typeof(IModel).IsAssignableFrom(property.PropertyType))
                     newValue = model.FindAllInScope(modelName).FirstOrDefault(m => property.PropertyType.IsAssignableFrom(m.GetType()));
                 else
-                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)args.NewValue, CultureInfo.CurrentCulture);
+                    newValue = ReflectionUtilities.StringToObject(property.PropertyType, (string)newValue, CultureInfo.CurrentCulture);
             }
 
             // Update the model.

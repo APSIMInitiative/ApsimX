@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -47,7 +48,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Ruminant type to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Ruminant Type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(RuminantHerd) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(RuminantHerd) } })]
         public string RuminantTypeName { get; set; }
 
         /// <summary>
@@ -306,7 +307,8 @@ namespace Models.CLEM.Activities
                         {
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Reason = RuminantTypeModel.Name + " grazing",
+                            Category = "Grazing",
+                            RelatesToResource = RuminantTypeModel.NameWithParent,
                             Required = totalEaten,
                             Resource = GrazeFoodStoreModel as IResourceType
                         };
@@ -374,7 +376,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -424,6 +426,8 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -431,39 +435,42 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">All individuals of ";
-            if (RuminantTypeName == null || RuminantTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[HERD NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + RuminantTypeName + "</span>";
-            }
-            html += " in ";
-            if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[PASTURE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>";
-            }
-            html += " will graze for ";
-            html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
-            if (HoursGrazed <= 0)
-            {
-                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
-            }
-            else
-            {
-                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals of ");
+                if (RuminantTypeName == null || RuminantTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[HERD NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
+                }
+                htmlWriter.Write(" in ");
+                if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>");
+                }
+                htmlWriter.Write(" will graze for ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+                if (HoursGrazed <= 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+                }
+                else
+                {
+                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
+                }
 
-            html += "the maximum 8 hours each day</span>";
-            html += "</div>";
-            return html;
-        }
+                htmlWriter.Write("the maximum 8 hours each day</span>");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
+        } 
+        #endregion
     }
 }

@@ -12,8 +12,8 @@ namespace Models.CLEM.Resources
     /// Holder for all initial ruminant cohorts
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
     [Version(1, 0, 1, "")]
@@ -47,6 +47,8 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -64,8 +66,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "</table>";
+            string html = "</table>";
             if(WeightWarningOccurred)
             {
                 html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
@@ -79,12 +80,11 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            string html = "";
             WeightWarningOccurred = false;
-            html += "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
-            return html;
+            return "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
         }
 
+        #endregion
     }
 }
 

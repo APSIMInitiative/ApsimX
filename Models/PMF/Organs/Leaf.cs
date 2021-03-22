@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// # [Name]
     /// The leaves are modelled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
     ///   A cohort represents all the leaves of a given main- stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
-    ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    ///   The number of leaves in each cohort is the product of the number of plants per m^2^ and the number of branches per plant.  
     ///   The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
     ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
     /// 
@@ -770,7 +770,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets the RAD int tot.</summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadIntTot
+        public double RadiationIntercepted
         {
             get
             {
@@ -778,9 +778,9 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        if(Double.IsNaN(LightProfile[i].amount)) 
+                        if(Double.IsNaN(LightProfile[i].AmountOnGreen)) 
                             TotalRadn += 0;
-                    else TotalRadn += LightProfile[i].amount;
+                    else TotalRadn += LightProfile[i].AmountOnGreen;
                     return TotalRadn;                    
                 }
                 else
@@ -1163,13 +1163,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the transpiration.</summary>
         [Units("mm")]
         public double Transpiration { get { return WaterAllocation; } }
-        /// <summary>
-        /// The amount of mass lost to maintenance respiration
-        /// </summary>
-        public double MaintenanceRespiration
-        {
-            get { return Leaves.Sum(l => l.MaintenanceRespiration); }
-        }
+
+        /// <summary>Gets or sets the amount of mass lost each day from maintenance respiration</summary>
+        [JsonIgnore]
+        public double MaintenanceRespiration { get { return Leaves.Sum(l => l.MaintenanceRespiration); } }
 
         /// <summary>Gets the fw.</summary>
         [Units("0-1")]

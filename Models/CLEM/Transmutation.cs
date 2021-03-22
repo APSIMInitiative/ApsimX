@@ -40,6 +40,8 @@ namespace Models.CLEM
         [Required, GreaterThanEqualValue(0)]
         public double AmountPerUnitPurchase { get; set; }
 
+        #region validation
+
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -55,6 +57,9 @@ namespace Models.CLEM
             }
             return results;
         }
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -90,9 +95,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -102,13 +105,15 @@ namespace Models.CLEM
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"resourcecontentlight clearfix\">";
+            html += "\r\n<div class=\"resourcecontentlight clearfix\">";
             if (!(this.Children.Where(a => a.GetType().Name.Contains("TransmutationCost")).Count() >= 1))
             {
                 html += "<div class=\"errorlink\">No transmutation costs provided</div>";
             }
             return html;
-        }
+        } 
+
+        #endregion
     }
 
     ///<summary>
@@ -131,13 +136,14 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) } })]
         [Required]
         public string ResourceTypeName { get; set; }
 
@@ -155,6 +161,8 @@ namespace Models.CLEM
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
+
+        #region validation
 
         /// <summary>
         /// Validate this object
@@ -181,7 +189,7 @@ namespace Models.CLEM
                     }
                     else
                     {
-                        object resultType = Resources.GetResourceItem(this, ResourceTypeName,OnMissingResourceActionTypes.Ignore,OnMissingResourceActionTypes.Ignore);
+                        object resultType = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };
@@ -191,10 +199,8 @@ namespace Models.CLEM
                 }
             }
             return results;
-        }
-
-        // This was in commencing, but I don't think there is any reason it has to be
-        // could be a problem in future, thus this message.
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -210,6 +216,8 @@ namespace Models.CLEM
             }
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -221,8 +229,8 @@ namespace Models.CLEM
             if (CostPerUnit > 0)
             {
                 html += "<div class=\"activityentry\">";
-                html += "<span class=\"setvalue\">"+CostPerUnit.ToString("#,##0.##") + "</span> x ";
-                html += (ResourceTypeName!=null && ResourceTypeName!="")? "<span class=\"resourcelink\">" + ResourceTypeName+"</span>": "<span class=\"errorlink\">Unknown Resource</span>";
+                html += "<span class=\"setvalue\">" + CostPerUnit.ToString("#,##0.##") + "</span> x ";
+                html += (ResourceTypeName != null && ResourceTypeName != "") ? "<span class=\"resourcelink\">" + ResourceTypeName + "</span>" : "<span class=\"errorlink\">Unknown Resource</span>";
                 html += "</div>";
             }
             else
@@ -252,6 +260,7 @@ namespace Models.CLEM
             return "";
         }
 
+        #endregion
     }
 
     ///<summary>
@@ -264,7 +273,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
     [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
-    public class TransmutationCostLabour : CLEMModel, IValidatableObject, ITransmutationCost
+    public class TransmutationCostLabour : CLEMModel, ITransmutationCost
     {
         /// <summary>
         /// Type of resource to use
@@ -292,20 +301,6 @@ namespace Models.CLEM
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
-        /// <summary>
-        /// Validate this object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
-        // This was in commencing, but I don't think there is any reason it has to be
-        // could be a problem in future, thus this message.
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -314,6 +309,8 @@ namespace Models.CLEM
         {
             ResourceType = typeof(Labour);
         }
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -354,7 +351,9 @@ namespace Models.CLEM
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+
+        #endregion
 
     }
 
@@ -381,7 +380,7 @@ namespace Models.CLEM
         /// Name of resource type to use
         /// </summary>
         [Description("Name of Resource Type to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         [Required]
         public string ResourceTypeName { get; set; }
 
@@ -422,6 +421,16 @@ namespace Models.CLEM
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            ResourceType = typeof(Finance);
+        }
+
+        #region validation
         /// <summary>
         /// Validate this object
         /// </summary>
@@ -437,25 +446,16 @@ namespace Models.CLEM
             {
                 pricing = parentResource.Price(PurchaseOrSalePricingStyleType.Purchase);
             }
-            if(pricing is null)
+            if (pricing is null)
             {
                 string[] memberNames = new string[] { "Resource pricing" };
                 results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as IModel).Name}] required for a price based transmutation [{this.Name}]", memberNames));
             }
             return results;
         }
+        #endregion
 
-        // This was in commencing, but I don't think there is any reason it has to be
-        // could be a problem in future, thus this message.
-
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        private void OnStartOfSimulation(object sender, EventArgs e)
-        {
-            ResourceType = typeof(Finance);
-        }
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -501,7 +501,8 @@ namespace Models.CLEM
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
+        } 
+        #endregion
 
     }
 

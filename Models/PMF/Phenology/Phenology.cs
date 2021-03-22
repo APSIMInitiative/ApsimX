@@ -12,7 +12,9 @@ using Models.PMF.Interfaces;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// # [Name]
+    /// [Parent.Name]'s phenological development is simulated as the progression through a 
+    /// series of developmental phases, each bound by distinct growth <i>stages</i>. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -481,15 +483,18 @@ namespace Models.PMF.Phen
         {
             if (IncludeInDocumentation)
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
                 // write description of this class.
                 AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
 
-                // write children.
+                // write memos.
                 foreach (IModel child in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                // Document thermal time function
+                tags.Add(new AutoDocumentation.Heading("ThermalTime", headingLevel + 1));
+                IModel tt = thermalTime as IModel;
+                AutoDocumentation.DocumentModelSummary(tt, tags, headingLevel + 1, indent, true);
+
+                tags.Add(new AutoDocumentation.Heading("Phases", headingLevel));
 
                 // Write Phase Table
                 tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
@@ -516,17 +521,15 @@ namespace Models.PMF.Phen
                 }
                 tags.Add(new AutoDocumentation.Table(tableData, indent));
                 tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
-
-
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
+                
+                // Document Phases
                 foreach (IModel child in this.FindAllChildren<IPhase>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
+                    AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, true);
 
                 // write children.
                 foreach (IModel child in this.FindAllChildren<IModel>())
-                    if (child.GetType() != typeof(Memo) && !typeof(IPhase).IsAssignableFrom(child.GetType()))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                    if (child.GetType() != typeof(Memo) && child.Name != "ThermalTime" && !(child is IPhase) && child.IncludeInDocumentation)
+                        AutoDocumentation.DocumentModelSummary(child, tags, headingLevel + 1, indent, true);
             }
         }
     }

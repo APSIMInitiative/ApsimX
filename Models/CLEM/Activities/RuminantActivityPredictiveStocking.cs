@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -56,27 +57,34 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Predicted pasture at end of assessment period
         /// </summary>
+        [field: NonSerialized]
         public double PasturePredicted { get; private set; }
 
         /// <summary>
         /// Predicted pasture shortfall at end of assessment period
         /// </summary>
+        [field: NonSerialized]
         public double PastureShortfall { get {return Math.Max(0, FeedLowLimit - PasturePredicted); } }
 
         /// <summary>
         /// AE to destock
         /// </summary>
+        [field: NonSerialized]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
+        [field: NonSerialized]
         public double AeDestocked { get; private set; }
 
         /// <summary>
         /// AE destock shortfall
         /// </summary>
+        [field: NonSerialized]
         public double AeShortfall { get {return AeToDestock - AeDestocked; } }
+
+        #region validation
 
         /// <summary>
         /// Validate this model
@@ -87,28 +95,21 @@ namespace Models.CLEM.Activities
         {
             // check that this model contains children RuminantDestockGroups with filters
             var results = new List<ValidationResult>();
-            // check that this activity contains at least one RuminantDestockGroups group with filters
-            bool destockGroupFound = false;
-            foreach (RuminantGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
+            // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
+            if (this.FindAllChildren<RuminantGroup>().Count() == 0)
             {
-                foreach (RuminantFilter filter in item.Children.Where(a => a.GetType() == typeof(RuminantFilter)))
-                {
-                    destockGroupFound = true;
-                    break;
-                }
-                if (destockGroupFound)
-                {
-                    break;
-                }
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("At least one [f=RuminantGroup] with a [Destock] reason and a [f=RuminantFilter] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
+            }
+            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantStockGroupStyle.Destock).Count() > 0)
+            {
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("Only [f=RuminantGroup] with a [Destock] reason are permitted under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
             }
 
-            if (!destockGroupFound)
-            {
-                string[] memberNames = new string[] { "Ruminant destocking group" };
-                results.Add(new ValidationResult("At least one RuminantDestockGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
-            }
             return results;
-        }
+        } 
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -127,6 +128,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
+            AeToDestock = 0;
+            AeDestocked = 0;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == (int)AssessmentMonth)
             {
@@ -139,7 +142,7 @@ namespace Models.CLEM.Activities
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
                     {
-                        throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
+                        throw new ApsimXException(this, "Seasonal destocking paddocks containing multiple breeds is currently not supported\r\nActivity:"+this.Name+", Paddock: "+paddockGroup.Key);
                     }
 
                     // total adult equivalents not marked for sale of all breeds on pasture for utilisation
@@ -219,7 +222,7 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (IModel item in FindAllChildren<RuminantDestockGroup>())
+            foreach (IModel item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
@@ -244,15 +247,8 @@ namespace Models.CLEM.Activities
             }
             AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
-
-            // Idea of possible destock groups
-            // Steers, Male, Not BreedingSire, > Age
-            // Dry Cows, IsDryBreeder
-            // Breeders, IsBreeder, !IsPregnant, > Age
-            // Underweight ProportionOfMaxWeight < 0.6
             
             // handling of sucklings with sold female is in RuminantActivityBuySell
-
             // buy or sell is handled by the buy sell activity
         }
 
@@ -278,7 +274,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -342,6 +338,8 @@ namespace Models.CLEM.Activities
             ReportStatus?.Invoke(this, e);
         }
 
+        #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -349,35 +347,37 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pasture will be assessed in ";
-            if ((int)AssessmentMonth > 0 & (int)AssessmentMonth <= 12)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"setvalue\">";
-                html += AssessmentMonth.ToString();
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pasture will be assessed in ");
+                if ((int)AssessmentMonth > 0 & (int)AssessmentMonth <= 12)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(AssessmentMonth.ToString());
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No month set");
+                }
+                htmlWriter.Write("</span> for a dry season of ");
+                if (DrySeasonLength > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(DrySeasonLength.ToString("#0"));
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No length");
+                }
+                htmlWriter.Write("</span> months ");
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
+                htmlWriter.Write("<span class=\"setvalue\">");
+                htmlWriter.Write(FeedLowLimit.ToString("#,##0"));
+                htmlWriter.Write("</span> kg/ha at the end of this period");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">No month set";
-            }
-            html += "</span> for a dry season of ";
-            if (DrySeasonLength > 0)
-            {
-                html += "<span class=\"setvalue\">";
-                html += DrySeasonLength.ToString("#0");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">No length";
-            }
-            html += "</span> months ";
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">The herd will be sold to maintain ";
-            html += "<span class=\"setvalue\">";
-            html += FeedLowLimit.ToString("#,##0");
-            html += "</span> kg/ha at the end of this period";
-            html += "</div>";
-            return html;
         }
 
         /// <summary>
@@ -386,9 +386,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -398,15 +396,16 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"activitygroupsborder\">";
+            html += "\r\n<div class=\"activitygroupsborder\">";
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
-            if(FindAllChildren<RuminantGroup>().Count() == 0)
+            if (FindAllChildren<RuminantGroup>().Count() == 0)
             {
-                html += "\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
+                html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

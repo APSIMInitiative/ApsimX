@@ -11,7 +11,7 @@
         ///<summary>Remove water from the profile</summary>
         void RemoveWater(double[] amountToRemove);
 
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
+        ///<summary>Gets or sets soil thickness for each layer (mm) in the parameter grid(</summary>
         double[] Thickness { get; }
 
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>

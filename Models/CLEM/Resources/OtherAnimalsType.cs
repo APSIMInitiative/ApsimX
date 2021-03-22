@@ -87,7 +87,7 @@ namespace Models.CLEM.Resources
                 if (child is OtherAnimalsTypeCohort)
                 {
                     ((OtherAnimalsTypeCohort)child).SaleFlag = HerdChangeReason.InitialHerd;
-                    Add(child, this, "Setup");
+                    Add(child, this, "", "Setup");
                 }
             }
         }
@@ -125,10 +125,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add individuals to type based on cohort
         /// </summary>
-        /// <param name="addIndividuals"></param>
-        /// <param name="activity"></param>
-        /// <param name="reason"></param>
-        public new void Add(object addIndividuals, CLEMModel activity, string reason)
+        /// <param name="addIndividuals">OtherAnimalsTypeCohort Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
+        /// <param name="activity">Name of activity adding resource</param>
+        /// <param name="relatesToResource"></param>
+        /// <param name="category"></param>
+        public new void Add(object addIndividuals, CLEMModel activity, string relatesToResource, string category)
         {
             OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
@@ -149,11 +150,13 @@ namespace Models.CLEM.Resources
             {
                 Gain = cohortToAdd.Number,
                 Activity = activity,
-                Reason = reason,
+                RelatesToResource = relatesToResource,
+                Category = category,
                 ResourceType = this,
                 ExtraInformation = cohortToAdd
             };
             LastTransaction = details;
+            LastGain = cohortToAdd.Number;
             TransactionEventArgs eargs = new TransactionEventArgs
             {
                 Transaction = LastTransaction
@@ -188,7 +191,7 @@ namespace Models.CLEM.Resources
             {
                 Loss = cohortToRemove.Number,
                 Activity = activity,
-                Reason = reason,
+                Category = reason,
                 ResourceType = this,
                 ExtraInformation = cohortToRemove
             };

@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace Models.Functions
 {
     /// <summary>
-    /// Returns the value of the first child function divided by the
-    /// value of the seocond child function. Returns special values if
+    /// [DocumentMathFunction /]
+    /// Returns special values if
     /// the numerator is 0 or if the denominator is 0.
     /// </summary>
     /// <remarks>
@@ -21,7 +21,7 @@ namespace Models.Functions
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
-    public class ProtectedDivideFunction : Model, IFunction, ICustomDocumentation
+    public class ProtectedDivideFunction : Model, IFunction
     {
         /// <summary>Value to return if numerator is 0.</summary>
         [Description("Value to return if numerator is 0:")]
@@ -51,18 +51,6 @@ namespace Models.Functions
                 return DenominatorErrVal;
 
             return numerator / denominator;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
-            }
         }
     }
 }

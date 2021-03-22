@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityMuster))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
@@ -47,6 +47,8 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
+        #region validation
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -55,11 +57,13 @@ namespace Models.CLEM.Groupings
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            string[] memberNames = new string[] { "Ruminant destock filter group" };
-            results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantFilterGroup]", memberNames));
+            string[] memberNames = new string[] { "Ruminant destock group" };
+            results.Add(new ValidationResult("This component is no longer supported. Please change to a [f=RuminantGroup]", memberNames));
             return results;
         }
+        #endregion
 
+        #region descriptive summary
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -67,7 +71,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "NO LONGER SUPPORTED! Please change to [f=RuminantFilterGroup]";
+            string html = "NO LONGER SUPPORTED! Please change to [f=RuminantGroup]";
             return html;
         }
 
@@ -80,7 +84,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (this.FindAllChildren<RuminantFilter>().Count() >= 1)
             {
-                html += "\n</div>";
+                html += "\r\n</div>";
             }
             return html;
         }
@@ -92,13 +96,14 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\r\n<div class=\"filterborder clearfix\">";
             if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }
             return html;
-        }
+        } 
+        #endregion
 
     }
 }

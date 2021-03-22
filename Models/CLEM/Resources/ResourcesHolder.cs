@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
-                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
                 if (!Warnings.Exists(warn) & Summary != null)
                 {
                     Summary.WriteWarning(this, warn);
@@ -339,19 +339,16 @@ namespace Models.CLEM.Resources
             // TODO: if market and looking for finance only return or create "Bank"
 
             // find resource type in group
-            object resType = resGroup.GetByName((resourceType as IModel).Name) as IResourceWithTransactionType;
+            object resType = resGroup.FindChild< IResourceWithTransactionType >((resourceType as IModel).Name);
             if (resType is null)
             {
-                // clone resource
-                // too many problems with linked events to clone these objects and setup again
+                // clone resource: too many problems with linked events to clone these objects and setup again
                 // it will be the responsibility of the user to ensure the resources and details are in the market
-                // resType = Apsim.Clone(resourceType);
-
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
                     string zoneName = FindAncestor<Zone>().Name;
-                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\nAdd resource and associated components to the market to permit trading.";
+                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
@@ -368,6 +365,38 @@ namespace Models.CLEM.Resources
                 }
             }
             return resType as IResourceWithTransactionType;
+        }
+
+        /// <summary>
+        /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
+        /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
+        /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// 
+        /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
+        /// </summary>
+        /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
+        public string[] GetCLEMResourceNames(Type resourceGroupType)
+        {
+            List<string> resourseTypes = new List<string>();
+            if (resourceGroupType != null)
+            {
+                // resource groups specified (use them)
+                IModel resGroup = this.Children.Find(c => resourceGroupType.IsAssignableFrom(c.GetType()));
+                if (resGroup != null)  //see if this group type is included in this particular simulation.
+                {
+                    foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
+                    {
+                        if (item.GetType() != typeof(Memo))
+                        {
+                            resourseTypes.Add(resGroup.Name  + "." + item.Name);
+                        }
+                    }
+                }
+            }
+            return resourseTypes.ToArray();
         }
 
         /// <summary>
@@ -543,10 +572,11 @@ namespace Models.CLEM.Resources
                                     // create new request for this transmutation cost
                                     ResourceRequest transRequest = new ResourceRequest
                                     {
-                                        Reason = trans.Name + " " + trans.Parent.Name,
+                                        RelatesToResource = request.ResourceTypeName,
                                         Required = transmutationCost,
                                         ResourceType = transcost.ResourceType,
-                                        ActivityModel = request.ActivityModel
+                                        ActivityModel = request.ActivityModel,
+                                        Category = "Transmutation",
                                     };
 
                                     // used to pass request, but this is not the transmutation cost
@@ -575,7 +605,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, "Transmutation");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, request.ResourceTypeName, "Transmutation");
                             }
                         }
                     }
@@ -585,6 +615,8 @@ namespace Models.CLEM.Resources
             }
         }
 
+        #region validation
+
         /// <summary>
         /// Validate object
         /// </summary>
@@ -593,7 +625,7 @@ namespace Models.CLEM.Resources
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            
+
             var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
 
             // check that only one instance of each resource group is present
@@ -604,6 +636,11 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
+
+
+        #endregion
+
+        #region descriptive summary
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
@@ -621,7 +658,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>
@@ -630,7 +667,9 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
+
+        #endregion
     }
 }

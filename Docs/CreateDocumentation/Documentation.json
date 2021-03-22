@@ -28,7 +28,7 @@
                         },			
                         {
                             "Name": "Species parameters",
-                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx",
+                            "FileName": "Tests/Validation/AgPasture/SpeciesTable.apsimx"
                         }						
                     ]
                 },
@@ -135,11 +135,11 @@
                     ]
                 },
                 {
-                    "Name": "Gliricidia (Under Review)",
+                    "Name": "Gliricidia",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Gliricidia/Gliricidia.apsimx"
+                            "FileName": "Tests/Validation/Gliricidia/Gliricidia.apsimx"
                         },
                         {
                             "Name": "PDF",
@@ -173,6 +173,10 @@
                             "Name": "PDF",
                             "FileName": "Tests/Validation/MicroClimate/MicroClimate.apsimx",
                             "ModelNameToDocument": "MicroClimate"
+                        },
+                        {
+                            "Name": "Science Documentation",
+                            "URL": "https://www.apsim.info/wp-content/uploads/2019/09/Micromet.pdf"
                         }
                     ]
                 },
@@ -331,15 +335,15 @@
                     ]
                 },
                 {
-                    "Name": "Soybean (under review)",
+                    "Name": "Soybean",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx"
+                            "FileName": "Tests/Validation/Soybean/Soybean.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Soybean/Soybean.apsimx",
+                            "FileName": "Tests/Validation/Soybean/Soybean.apsimx",
                             "ModelNameToDocument": "Soybean"
                         }
                     ]
@@ -359,16 +363,22 @@
                     ]
                 },
                 {
-                    "Name": "Stock (under review)",
+                    "Name": "Stock",
                     "Documents": [
                         {
                             "Name": "Validation",
-                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx"
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx"
                         },
                         {
-                            "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Stock/Stock.apsimx",
+                            "Name": "Stock",
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx",
                             "ModelNameToDocument": "Stock"
+                        },
+                        {
+                            "Name": "Supplement",
+                            "FileName": "Tests/Validation/Stock/Stock.apsimx",
+                            "ModelNameToDocument": "Supplement",
+                            "OutputFileName": "Supplement.pdf"
                         },
                         {
                             "Name": "GRAZPLAN animal biology model",
@@ -492,7 +502,7 @@
                     "Documents": [
                         {
                             "Name": "Science documentation",
-                            "URL": "http://apsimdev.apsim.info/CLEM/Content/Home.htm"
+                            "URL": "https://www.apsim.info/clem"
                         },
                         {
                             "Name": "Cropping example",

@@ -65,7 +65,7 @@ namespace Models.CLEM.Groupings
                     case RuminantFilterParameters.IsBreeder:
                     case RuminantFilterParameters.IsPregnant:
                     case RuminantFilterParameters.IsLactating:
-                    case RuminantFilterParameters.IsHeifer:
+                    case RuminantFilterParameters.IsPreBreeder:
                     case RuminantFilterParameters.MonthsSinceLastBirth:
                         femaleProperties = true;
                         gender = "Female";

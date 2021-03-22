@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Name of Feed to use
         /// </summary>
         [Description("Feed store to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type to use required")]
         public string FeedTypeName { get; set; }
 
@@ -110,7 +110,8 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
-                        Reason = "Feed",
+                        Category = "Feed",
+                        RelatesToResource = "Other animals",
                         FilterDetails = null
                     }
                     );
@@ -169,7 +170,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">The details of how labour are to be provided</param>
         /// <returns></returns>
-        public override double GetDaysLabourRequired(LabourRequirement requirement)
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
             foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
@@ -194,7 +195,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return daysNeeded;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", "Other animals");
         }
 
         /// <summary>

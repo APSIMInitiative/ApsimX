@@ -170,8 +170,8 @@ namespace Models.PMF.Organs
             Zone zone = soil.FindAncestor<Zone>();
             if (zone == null)
                 throw new Exception("Soil " + soil + " is not in a zone.");
-            NO3 = zone.FindInScope("NO3") as ISolute;
-            NH4 = zone.FindInScope("NH4") as ISolute;
+            NO3 = zone.FindInScope<ISolute>("NO3");
+            NH4 = zone.FindInScope<ISolute>("NH4");
             Name = zone.Name;
             Initialise(depth, initialDM, population, maxNConc);
         }

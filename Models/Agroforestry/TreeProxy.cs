@@ -24,11 +24,11 @@ namespace Models.Agroforestry
     /// * Shade modifier with age (0-1)
     /// * Tree root radius (cm)
     /// * Shade at a range of distances from the trees (%)
-    /// * Tree root length density at various depths and distances from the trees (cm/cm<sup>3</sup>)
+    /// * Tree root length density at various depths and distances from the trees (cm/cm^3^)
     /// * Tree daily nitrogen demand (g/m2/day for tree zone area)
     /// 
     /// The model calculates diffusive nutrient uptake using the equations of [DeWilligen1994] as formulated in the model WANULCAS [WANULCAS2011] and modified to better represent nutrient buffering [smethurst1997paste;smethurst1999phase;van1990defining].
-    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm<sup>3</sup> and spatial water uptake is scales using this value and the user-input of tree root length density.
+    /// Water uptake is calculated using an adaptation of the approach of [Meinkeetal1993] where the extraction coefficient is assumed to be proportional to root length density [Peakeetal2013].  The user specifies a value of the uptake coefficient at a base root length density of 1 cm/cm^3^ and spatial water uptake is scales using this value and the user-input of tree root length density.
     /// 
     /// </summary>
     [Serializable]
