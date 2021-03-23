@@ -129,7 +129,7 @@ namespace Models.CLEM.Reporting
             // if auto create
             if(AutoCreateHTML)
             {
-                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
+//                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
             }
         }
 
@@ -433,7 +433,7 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    // System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }

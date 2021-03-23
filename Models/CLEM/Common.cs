@@ -559,4 +559,16 @@ namespace Models.CLEM
         Destock = 5,
     }
 
+
+    public enum TransactionStyle
+    {
+        /// <summary>
+        /// Loss of resource
+        /// </summary>
+        Loss = 0,
+        /// <summary>
+        /// Gain in resource
+        /// </summary>
+        Gain = 1
+    }
 }
