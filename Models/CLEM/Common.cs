@@ -560,6 +560,9 @@ namespace Models.CLEM
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
     public enum TransactionStyle
     {
         /// <summary>
