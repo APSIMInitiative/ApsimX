@@ -56,43 +56,16 @@ namespace Models.CLEM.Reporting
         public bool AutoCreateHTML { get; set; }
 
         /// <summary>
-        /// Gets or sets variable names for outputting
-        /// </summary>
-        [JsonIgnore]
-        public string[] VariableNames { get; set; }
-
-        /// <summary>
-        /// Gets or sets event names for outputting
-        /// </summary>
-        [JsonIgnore]
-        public string[] EventNames { get; set; }
-
-        /// <summary>
         /// 
         /// </summary>
         public string SelectedTab { get; set; }
 
-        /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
-        private List<IReportColumn> columns = null;
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
-
-        /// <summary>Link to a simulation</summary>
-        [Link]
-        private Simulation simulation = null;
-
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
 
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
-
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
