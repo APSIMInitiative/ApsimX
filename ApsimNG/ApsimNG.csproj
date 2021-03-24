@@ -15,6 +15,7 @@
     <NoWarn>CS1591,CS1572</NoWarn>
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

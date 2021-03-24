@@ -483,8 +483,12 @@ namespace UserInterface.Views
             }
 
             if (image != null)
-            { 
+            {
+#if NETFRAMEWORK
                 image.SetAlignment(0, 0);
+#else
+                image.Halign = image.Valign = 0;
+#endif
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     image.TooltipText = tooltip;
 
@@ -597,28 +601,24 @@ namespace UserInterface.Views
         private void SetCursorIfAppropriate(TextView textView, int x, int y)
         {
             TextIter iter = textView.GetIterAtLocation(x, y);
-            // fixme: When we remove gtk2 deps, we can eliminate this check
-            if (iter.Equals(TextIter.Zero))
-                return;
-
             var foundLink = false;
-            foreach (TextTag tag in iter.Tags)
+            // fixme: When we remove gtk2 deps, we can eliminate this check
+            if (!iter.Equals(TextIter.Zero))
             {
-                if (tag is LinkTag)
-                    foundLink = true;
+                foreach (TextTag tag in iter.Tags)
+                {
+                    if (tag is LinkTag)
+                        foundLink = true;
+                }
             }
 
-            Gdk.Window window = textView.GetWindow(Gtk.TextWindowType.Text);
+            Gdk.Window window = textView.GetWindow(TextWindowType.Text);
             if (window != null)
             {
-                if (foundLink/*hovering != hoveringOverLink*/)
+                if (foundLink)
                     window.Cursor = handCursor;
                 else
                     window.Cursor = regularCursor;
-            }
-            else
-            {
-
             }
         }
 
@@ -701,7 +701,11 @@ namespace UserInterface.Views
         {
             try
             {
+#if NETFRAMEWORK
                 textView.GetPointer(out int wx, out int wy);
+#else
+                Gdk.Display.Default.GetPointer(out _, out int wx, out int wy, out _);
+#endif
                 textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
                                               out int bx, out int by);
                 SetCursorIfAppropriate(textView, bx, by);
