@@ -54,8 +54,14 @@ namespace Models.CLEM
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public TransactionStyle Style { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public double Amount { get; set; }
 
         /// <summary>

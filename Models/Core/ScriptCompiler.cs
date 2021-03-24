@@ -349,6 +349,7 @@
         /// </summary>
         /// <param name="code">The code to compile.</param>
         /// <param name="referencedAssemblies">Any referenced assemblies.</param>
+        /// <param name="sourceName">Path to a file on disk containing the source.</param>
         /// <returns>Any compile errors or null if compile was successful.</returns>
         private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies, out string sourceName)
         {
