@@ -33,11 +33,11 @@
     public class LateralFlowModel : Model
     {
         /// <summary>The water movement model.</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private WaterBalance soilWater = null;
 
         /// <summary> The field. </summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Zone field = null;
         
         /// <summary>Access the soil physical properties.</summary>

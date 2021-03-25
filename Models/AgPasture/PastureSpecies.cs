@@ -34,7 +34,7 @@
         private Clock myClock = null;
 
         /// <summary>Link to the zone this pasture species resides in.</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Zone zone = null;
 
         /// <summary>Link to APSIM's WeatherFile (provides meteorological information).</summary>
