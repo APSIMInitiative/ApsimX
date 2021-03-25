@@ -122,6 +122,41 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Reasons link to herd change for use with manual mark for sale
+    /// </summary>
+    public enum MarkForSaleReason
+    {
+        /// <summary>
+        /// Individual sold as marked for sale
+        /// </summary>
+        MarkedSale = 4,
+        /// <summary>
+        /// Individual reached sale weight or age
+        /// </summary>
+        AgeWeightSale = 12,
+        /// <summary>
+        /// Individual consumed by household
+        /// </summary>
+        Consumed = 15,
+        /// <summary>
+        /// Destocking sale
+        /// </summary>
+        DestockSale = 16,
+        /// <summary>
+        /// Dry breeder sold
+        /// </summary>
+        DryBreederSale = 6,
+        /// <summary>
+        /// Individual reached maximim age and sold
+        /// </summary>
+        MaxAgeSale = 10,
+        /// <summary>
+        /// Trade individual sold weight/age
+        /// </summary>
+        TradeSale = 5 
+    }
+
+    /// <summary>
     /// Mustering timing type
     /// </summary>
     public enum MusterTimingType
