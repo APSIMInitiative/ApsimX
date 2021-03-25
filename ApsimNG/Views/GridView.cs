@@ -256,7 +256,44 @@
             mainWidget.Destroyed += MainWidgetDestroyed;
             scrollingWindow2.Vadjustment = scrollingWindow.Vadjustment;
             fixedColView.Vadjustment = Grid.Vadjustment;
+
+#if NETFRAMEWORK
+            scrollingWindow2.VscrollbarPolicy = PolicyType.Never;
+            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
+#endif
         }
+#if NETFRAMEWORK
+        /// <summary>
+        /// We hide the scrollbar in the fixed column view to disguise
+        /// the fact that it's a separate treeview. This means that it
+        /// doesn't scroll via the mouse wheel. Here we trap the scroll
+        /// event (which still seems to be fired but is ignored) and
+        /// manually tell the fixed col view to scroll up or down.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        /// <remarks>
+        /// This doesn't seem to scroll very far. Is
+        /// Vadjustment.StepIncrement the wrong value to be using here?
+        /// </remarks>
+        private void OnFixedColViewScroll(object sender, ScrollEventArgs args)
+        {
+            try
+            {
+                if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
+                {
+                    double increment = fixedColView.Vadjustment.StepIncrement;
+                    if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                        increment *= -1;
+                    fixedColView.Vadjustment.Value += increment;
+                }
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+         }
+#endif
 
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
@@ -923,14 +960,16 @@
                 fixedColView.Visible = true;
                 splitter.Child1.NoShowAll = false;
                 splitter.ShowAll();
+                if (!Grid.Columns.Any(c => c.Visible))
+                    Grid.Hide();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
 #if NETFRAMEWORK
-                    int width = fixedColView.SizeRequest().Width;
+                int width = fixedColView.SizeRequest().Width;
 #else
-                    fixedColView.GetPreferredWidth(out _, out int width);
+                fixedColView.GetPreferredWidth(out _, out int width);
 #endif
-                if (splitter.Allocation.Width > 1)
+                if (splitter.Allocation.Width > 1 && Grid.Visible)
                     splitter.Position = Math.Min(width + splitterWidth, splitter.Allocation.Width / 2);
                 else
                     splitter.Position = width + splitterWidth;
@@ -2557,6 +2596,18 @@
             Gtk.TreeView view = GetTreeView(column);
 
             view.GrabFocus();
+
+            // Need to ensure that the specified column both exists and is visible.
+            // This can sometimes be changed by the call to view.GrabFocus(), as this
+            // will cause the datastore column/row filters to be applied.
+            if (!view.Visible || column >= view.Columns.Length || row >= table.Rows.Count)
+            {
+                selectedCellRowIndex = -1;
+                selectedCellColumnIndex = -1;
+                selectionRowMax = -1;
+                selectionColMax = -1;
+                return;
+            }
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);

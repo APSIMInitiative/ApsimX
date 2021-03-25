@@ -470,7 +470,23 @@ namespace UserInterface.Views
                 }
                 char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
                 if (keyChar == '.' && !char.IsDigit(previousChar))
-                    GLib.Signal.Emit(textEditor, "show-completion");
+                {
+                    if (ContextItemsNeeded != null)
+                    {
+                        ContextItemsNeeded.Invoke(this, new NeedContextItemsArgs()
+                        {
+                            Coordinates = GetPositionOfCursor(),
+                            Code = Text,
+                            Offset = this.Offset,
+                            ControlSpace = false,
+                            ControlShiftSpace = false,
+                            LineNo = CurrentLineNumber,
+                            ColNo = CurrentColumnNumber
+                        });
+                    }
+                    else
+                        GLib.Signal.Emit(textEditor, "show-completion");
+                }
             }
             catch (Exception err)
             {

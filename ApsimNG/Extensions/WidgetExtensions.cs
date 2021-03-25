@@ -76,7 +76,9 @@ namespace UserInterface.Extensions
 #if NETFRAMEWORK
             return widget.Style.Background(state);
 #else
+#pragma warning disable 0612 // fixme
             return widget.StyleContext.GetBackgroundColor(state).ToGdkColor();
+#pragma warning restore 0612
 #endif
         }
 
