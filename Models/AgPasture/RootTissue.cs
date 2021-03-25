@@ -52,8 +52,8 @@
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
 
-        /// <summary>Nutrient model.</summary>
-        [Link]
+        /// <summary>The pasture species model.</summary>
+        [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
 
         /// <summary>Link to the soil physical properties.</summary>
