@@ -23,7 +23,7 @@ namespace Models.Core
         public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             tags.Add(new Heading(Name, headingLevel + 1));
-            tags.Add(new Paragraph($"An alias for {Parent.Name}", indent));
+            tags.Add(new Paragraph($"An alias for {Parent?.Name}", indent));
         }
     }
 }
