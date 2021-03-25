@@ -924,8 +924,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Pond depth (mm)</summary>
         [Units("mm")]
-        private double pond
+        public double pond
         {
             get
             {
