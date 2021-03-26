@@ -3598,12 +3598,12 @@
                           "Name": "StemSenescenceAge",
                           "Children": [],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
