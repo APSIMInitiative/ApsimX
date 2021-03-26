@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 129; } }
+        public static int LatestVersion { get { return 130; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3387,6 +3387,20 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenAreaIndex", "0");
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadAreaIndex", "0");
             }
+        }
+
+        /// <summary>
+        /// Search for all managers inside a zone, and change any scoped link to 
+        /// the zone into an ancestor link (using a regex).
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion130(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+                if (JsonUtilities.Ancestor(manager.Token, typeof(Zone)) != null)
+                    if (manager.ReplaceRegex($@"\[Link\](\s+((public|private|protected|internal|static|readonly)\s+)*)Zone", @"[Link(Type = LinkType.Ancestor)]$1Zone"))
+                        manager.Save();
         }
 
         /// <summary>
