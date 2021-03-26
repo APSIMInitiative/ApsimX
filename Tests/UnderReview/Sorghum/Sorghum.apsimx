@@ -26932,7 +26932,8 @@
                         {
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
-                            "[SowingRule].Script.Cultivar = Buster"
+                            "[SowingRule].Script.Cultivar = Buster",
+                            "[AutoIrrigation].Script.AutoIrrigationOn = false"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -26946,7 +26947,8 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = M35-1",
-                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35"
+                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35",
+                            "[AutoIrrigation].Script.AutoIrrigationOn = false"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -26960,7 +26962,8 @@
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
                             "[SowingRule].Script.Cultivar = CSH13R",
-                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35"
+                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35",
+                            "[AutoIrrigation].Script.AutoIrrigationOn = true"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -27234,28 +27237,6 @@
                           "ReferenceHeight": 2.0,
                           "Name": "MicroClimate",
                           "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.Plant, Models",
-                          "ResourceName": "Sorghum",
-                          "Name": "Sorghum",
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "InitialResidueName": "wheat_stubble",
-                          "InitialResidueType": "wheat",
-                          "InitialResidueMass": 0.0,
-                          "InitialStandingFraction": 0.0,
-                          "InitialCPR": 0.0,
-                          "InitialCNR": 80.0,
-                          "ResourceName": "SurfaceOrganicMatter",
-                          "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -27720,6 +27701,58 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.Plant, Models",
+                          "ResourceName": "Sorghum",
+                          "Name": "Sorghum",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private Soil soil;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CalculateFASW();\n            if (AutoIrrigationOn)\n            {\n                if (FASW < FASWThreshold)\n                {\n                    double amount = 10;\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                }\n            }\n        }\n        \n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex();\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\n\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\n                              - excess_fr * waterBalance.SWmm[nlayr])\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                              - excess_fr * LL15[nlayr]);\n\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\n                                  - excess_fr * DUL[nlayr])\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                                  - excess_fr * LL15[nlayr]);\n\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        private int GetLayerIndex()\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            for (int i = 1; i < cumThickness.Length; i++)\n            {\n                if (FASWDepth < cumThickness[i])\n                    return i - 1;\n            }\n            \n            return cumThickness.Length - 1;\n        }\n\n    }\n}\n       \n",
+                          "Parameters": [
+                            {
+                              "Key": "FASW",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "WaterDeficit",
+                              "Value": "0"
+                            },
+                            {
+                              "Key": "AutoIrrigationOn",
+                              "Value": "False"
+                            },
+                            {
+                              "Key": "FASWThreshold",
+                              "Value": "0.5"
+                            },
+                            {
+                              "Key": "FASWDepth",
+                              "Value": "600"
+                            }
+                          ],
+                          "Name": "AutoIrrigation",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "InitialResidueName": "wheat_stubble",
+                          "InitialResidueType": "wheat",
+                          "InitialResidueMass": 0.0,
+                          "InitialStandingFraction": 0.0,
+                          "InitialCPR": 0.0,
+                          "InitialCNR": 80.0,
+                          "ResourceName": "SurfaceOrganicMatter",
+                          "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
