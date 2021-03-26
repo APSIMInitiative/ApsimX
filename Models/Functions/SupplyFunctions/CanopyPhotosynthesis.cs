@@ -23,7 +23,7 @@ namespace Models.Functions.SupplyFunctions
     public class CanopyPhotosynthesis : Model, IFunction
     {
         /// <summary>The Plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         public Plant Plant = null;
         /// <summary>The Canopy</summary>
         [Link]

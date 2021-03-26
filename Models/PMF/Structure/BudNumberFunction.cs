@@ -17,7 +17,7 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(Structure))]
     public class BudNumberFunction : Model
     {
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         Plant Plant = null;
 
         [Link]

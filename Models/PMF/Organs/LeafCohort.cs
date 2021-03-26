@@ -49,7 +49,7 @@ namespace Models.PMF.Organs
         #region Paramater Input Classes
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant Plant = null;
 
         /// <summary>The structure</summary>

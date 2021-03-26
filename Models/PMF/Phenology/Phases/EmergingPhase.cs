@@ -27,13 +27,13 @@ namespace Models.PMF.Phen
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
 
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         Phenology phenology = null;
 
         [Link]
         Clock clock = null;
 
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         Plant plant = null;
 
         // 2. Public properties

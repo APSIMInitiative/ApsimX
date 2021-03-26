@@ -31,7 +31,7 @@ namespace Models.PMF.Struct
 		/// <summary>
 		/// Link to the plant model.
 		/// </summary>
-		[Link]
+		[Link(Type = LinkType.Ancestor)]
 		private Plant plant = null;
 
 		/// <summary>

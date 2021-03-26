@@ -50,7 +50,7 @@ namespace Models.Functions.SupplyFunctions
         private readonly IClock Clock = null;
 
         /// <summary>The Leaf organ</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private readonly Plant Plant = null;
 
         /// <summary>The Root organ</summary>

@@ -67,7 +67,7 @@
     [Serializable]
     public abstract class ApexBase : Model, IApex
     {
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         [Link]

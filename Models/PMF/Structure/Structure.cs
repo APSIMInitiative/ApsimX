@@ -72,7 +72,7 @@ namespace Models.PMF.Struct
     {
         // 1. Links
         //-------------------------------------------------------------------------------------------
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         [Link]

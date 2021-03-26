@@ -65,7 +65,7 @@ namespace Models.PMF.Organs
         public bool IsAboveGround { get { return true; } }
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         protected Plant Plant = null;
 
         /// <summary>The surface organic matter model</summary>
