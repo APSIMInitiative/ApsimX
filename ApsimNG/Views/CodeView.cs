@@ -144,7 +144,6 @@ namespace UserInterface.Views
                 // Initialise completion provider based on editor type.
                 if (value == EditorType.ManagerScript)
                     textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
-                // tbi: alternative syntax highlighting modes
             }
         }
 
@@ -446,113 +445,53 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
+        /// Preprocesses key strokes so and emits the show-completion signal on
+        /// the gtksourceview widget when the user presses the '.' key.
         /// </summary>
+        /// <remarks>
+        /// Our custom GtkSourceCompletionProvider uses the user-requested activation
+        /// mode, which means that by default it only activates when the user presses
+        /// control + space. In order to trigger a completion request at other times
+        /// (such as when the user presses '.' in this case), we need to emit the
+        /// show-completion signal on the GtkSourceView widget.
+        /// </remarks>
         /// <param name="sender">Sending object</param>
-        /// <param name="e">Key arguments</param>
+        /// <param name="args">Event data.</param>
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
-        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             try
             {
-                e.RetVal = false;
-                char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
-                Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                    //Mac window manager already uses control-scroll, so use command
-                    //Command might be either meta or mod1, depending on GTK version
-                    : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-                bool controlSpace = IsControlSpace(e.Event);
-                bool controlShiftSpace = IsControlShiftSpace(e.Event);
-                string textBeforePeriod = GetWordBeforePosition(Offset);
-                double x; // unused, but needed as an out parameter.
-                if (e.Event.Key == Gdk.Key.F3)
+                char previousChar = 'x';
+                if (textEditor.Buffer.CursorPosition > 0)
                 {
-                    //if (string.IsNullOrEmpty(findForm.LookFor))
-                    //    findForm.ShowFor(textEditor, false);
-                    //else
-                    //    findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
-                    e.RetVal = true;
+                    TextIter prevIter = textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition - 1);
+                    previousChar = prevIter.Char.ToCharArray().FirstOrDefault();
                 }
-                // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-                else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
+                char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
+                if (keyChar == '.' && !char.IsDigit(previousChar))
                 {
-                    // If the user entered a period, we need to take that into account when generating intellisense options.
-                    // To do this, we insert a period manually and stop the Gtk signal from propagating further.
-                    e.RetVal = true;
-                    if (keyChar == '.')
+                    if (ContextItemsNeeded != null)
                     {
-                        textEditor.Buffer.InsertAtCursor(keyChar.ToString());
-
-                        // Process all events in the main loop, so that the period is inserted into the text editor.
-                        while (GLib.MainContext.Iteration()) ;
+                        ContextItemsNeeded.Invoke(this, new NeedContextItemsArgs()
+                        {
+                            Coordinates = GetPositionOfCursor(),
+                            Code = Text,
+                            Offset = this.Offset,
+                            ControlSpace = false,
+                            ControlShiftSpace = false,
+                            LineNo = CurrentLineNumber,
+                            ColNo = CurrentColumnNumber
+                        });
                     }
-                    NeedContextItemsArgs args = new NeedContextItemsArgs
-                    {
-                        Coordinates = GetPositionOfCursor(),
-                        Code = Text,
-                        Offset = this.Offset,
-                        ControlSpace = controlSpace,
-                        ControlShiftSpace = controlShiftSpace,
-                        LineNo = CurrentLineNumber,
-                        ColNo = CurrentColumnNumber
-                    };
-
-                    ContextItemsNeeded?.Invoke(this, args);
-                }
-                else if ((e.Event.State & ctlModifier) != 0)
-                {
-                    switch (e.Event.Key)
-                    {
-                        // tbi
-                        //case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Add:
-                        //case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Subtract:
-                        //case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
-                        default:
-                            break;
-                    }
+                    else
+                        GLib.Signal.Emit(textEditor, "show-completion");
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Checks whether a keypress is a control+space event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        /// <returns>True iff the event represents a control+space click.</returns>
-        private bool IsControlSpace(Gdk.EventKey e)
-        {
-            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
-        }
-
-        /// <summary>
-        /// Checks whether a keypress is a control-shift-space event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        /// <returns>True iff the event represents a control + shift + space click.</returns>
-        private bool IsControlShiftSpace(Gdk.EventKey e)
-        {
-            return IsControlSpace(e) && (e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
-        }
-
-        /// <summary>
-        /// Retrieve the word before the specified character position. 
-        /// </summary>
-        /// <param name="pos">Position in the editor</param>
-        /// <returns>The position of the word</returns>
-        private string GetWordBeforePosition(int pos)
-        {
-            if (pos == 0)
-                return string.Empty;
-
-            int posDelimiter = Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-            return Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
         }
 
         /// <summary>

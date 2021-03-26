@@ -270,7 +270,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
+        public bool IsAboveGround { get { return false; } }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
