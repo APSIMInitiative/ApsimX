@@ -545,7 +545,7 @@
                   "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": false,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -561,7 +561,7 @@
                   "Name": "SoilTemperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
