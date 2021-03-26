@@ -27239,6 +27239,28 @@
                           "ReadOnly": false
                         },
                         {
+                          "$type": "Models.PMF.Plant, Models",
+                          "ResourceName": "Sorghum",
+                          "Name": "Sorghum",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                          "InitialResidueName": "wheat_stubble",
+                          "InitialResidueType": "wheat",
+                          "InitialResidueMass": 0.0,
+                          "InitialStandingFraction": 0.0,
+                          "InitialCPR": 0.0,
+                          "InitialCNR": 80.0,
+                          "ResourceName": "SurfaceOrganicMatter",
+                          "Name": "SurfaceOrganicMatter",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Soils.Soil, Models",
                           "RecordNumber": 0,
                           "ASCOrder": null,
@@ -27605,13 +27627,13 @@
                                 300.0
                               ],
                               "NO3N": [
-                                5.18717876249422,
-                                2.4132943640746705,
-                                6.500180585978769,
-                                6.34423361172192,
-                                6.814165777442331,
-                                6.703031152109858,
-                                3.0920520757826973
+                                17.363,
+                                8.078,
+                                21.757999999999996,
+                                21.235999999999997,
+                                22.809,
+                                22.43700000000001,
+                                10.35
                               ],
                               "NH4N": [
                                 0.1,
@@ -27698,28 +27720,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.Plant, Models",
-                          "ResourceName": "Sorghum",
-                          "Name": "Sorghum",
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                          "InitialResidueName": "wheat_stubble",
-                          "InitialResidueType": "wheat",
-                          "InitialResidueMass": 0.0,
-                          "InitialStandingFraction": 0.0,
-                          "InitialCPR": 0.0,
-                          "InitialCNR": 80.0,
-                          "ResourceName": "SurfaceOrganicMatter",
-                          "Name": "SurfaceOrganicMatter",
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -27916,7 +27916,7 @@
                         {
                           "$type": "Models.Operations, Models",
                           "Operation": null,
-                          "Name": "Operations",
+                          "Name": "FertiliserSchedule",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -27948,7 +27948,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "Operations",
+                          "Name": "FertiliserSchedule",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -27992,7 +27992,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "Operations",
+                          "Name": "FertiliserSchedule",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -28036,7 +28036,7 @@
                               "Enabled": true
                             }
                           ],
-                          "Name": "Operations",
+                          "Name": "FertiliserSchedule",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -28283,18 +28283,6 @@
                           "Comments": null,
                           "Name": "CooperLab",
                           "Children": [
-                            {
-                              "$type": "Models.Soils.InitialWater, Models",
-                              "PercentMethod": 0,
-                              "FractionFull": 100.0,
-                              "DepthWetSoil": "NaN",
-                              "RelativeTo": null,
-                              "Name": "Initial water",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
                             {
                               "$type": "Models.Soils.Physical, Models",
                               "Depth": [
@@ -28674,6 +28662,51 @@
                               "ESPMetadata": null,
                               "PHMetadata": null,
                               "Name": "Chemical",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.Sample, Models",
+                              "Depth": [
+                                "0-20",
+                                "20-40",
+                                "40-60",
+                                "60-90",
+                                "90-120",
+                                "120-150",
+                                "150-180"
+                              ],
+                              "Thickness": [
+                                200.0,
+                                200.0,
+                                200.0,
+                                300.0,
+                                300.0,
+                                300.0,
+                                300.0
+                              ],
+                              "NO3": null,
+                              "NH4": null,
+                              "SW": [
+                                0.293,
+                                0.388,
+                                0.371,
+                                0.315,
+                                0.307,
+                                0.35,
+                                0.374
+                              ],
+                              "OC": null,
+                              "EC": null,
+                              "CL": null,
+                              "ESP": null,
+                              "PH": null,
+                              "SWUnits": 0,
+                              "OCUnits": 0,
+                              "PHUnits": 0,
+                              "Name": "Initial water",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
