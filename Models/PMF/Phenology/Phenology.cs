@@ -24,7 +24,7 @@ namespace Models.PMF.Phen
         ///1. Links
         ///------------------------------------------------------------------------------------------------
         
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         /// <summary>The thermal time</summary>
