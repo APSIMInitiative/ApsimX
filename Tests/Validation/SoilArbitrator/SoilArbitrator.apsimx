@@ -3556,14 +3556,6 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Fertiliser, Models",
-              "Name": "Fertiliser1",
-              "Children": [],
-              "IncludeInDocumentation": false,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": false,
