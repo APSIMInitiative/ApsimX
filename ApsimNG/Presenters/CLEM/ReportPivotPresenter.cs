@@ -21,7 +21,6 @@ namespace UserInterface.Presenters
         /// </summary>
         private ReportPivot pivot;
 
-
         /// <summary>
         /// The CLEM view
         /// </summary>
