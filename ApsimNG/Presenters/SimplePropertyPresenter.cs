@@ -1,4 +1,5 @@
 using APSIM.Shared.Utilities;
+using Models;
 using Models.Core;
 using System;
 using System.Collections;
@@ -10,6 +11,7 @@ using UserInterface.Classes;
 using UserInterface.Commands;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
+using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
@@ -18,17 +20,17 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The model whose properties are being displayed.
         /// </summary>
-        private IModel model;
+        protected IModel model;
 
         /// <summary>
         /// The view.
         /// </summary>
-        private IPropertyView view;
+        protected IPropertyView view;
 
         /// <summary>
         /// The explorer presenter instance.
         /// </summary>
-        private ExplorerPresenter presenter;
+        protected ExplorerPresenter presenter;
 
         /// <summary>
         /// A filter function which can be used to filter which properties
@@ -48,7 +50,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">An <see cref="ExplorerPresenter" /> instance.</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
@@ -63,7 +65,7 @@ namespace UserInterface.Presenters
                 throw new ArgumentException($"The model must be an IModel instance");
             if (this.view == null)
                 throw new ArgumentException($"The view must be an IPropertyView instance");
-            
+
             RefreshView(this.model);
             presenter.CommandHistory.ModelChanged += OnModelChanged;
             this.view.PropertyChanged += OnViewChanged;
@@ -72,13 +74,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Refresh the view with the model's current state.
         /// </summary>
-        public void RefreshView(IModel model)
+        public virtual void RefreshView(IModel model)
         {
             if (model != null)
             {
                 this.model = model;
-                PropertyGroup properties = GetProperties(model);
-                view.DisplayProperties(properties);
+                view.DisplayProperties(GetProperties(this.model));
             }
         }
 
@@ -133,7 +134,7 @@ namespace UserInterface.Presenters
         /// <param name="obj">Object whose members will be retrieved.</param>
         private IEnumerable<PropertyInfo> GetAllProperties(object obj)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.FlattenHierarchy;
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
             return obj.GetType().GetProperties(flags);
         }
 
@@ -160,7 +161,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="sender">Sending object.</param>
         /// <param name="args">Event data.</param>
-        private void OnViewChanged(object sender, PropertyChangedEventArgs args)
+        protected void OnViewChanged(object sender, PropertyChangedEventArgs args)
         {
             // We don't want to refresh the entire view after applying the change
             // to the model, so we need to temporarily detach the ModelChanged handler.

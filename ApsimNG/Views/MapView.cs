@@ -225,7 +225,8 @@
             result.Center = new Coordinate(0, 0);
             result.SRID = 3857;
 
-            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap), "Open Street Map");
+            BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap, persistentCache: fileCache, userAgent: "APSIM Next Generation"), "OpenStreetMap");
             result.BackgroundLayer.Add(baseLayer);
             result.MaximumZoom = baseLayer.Envelope.Width;
 

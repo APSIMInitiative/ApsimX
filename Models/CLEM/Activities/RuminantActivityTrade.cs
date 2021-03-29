@@ -47,7 +47,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Pasture details")]
         [Description("GrazeFoodStore (paddock) to place purchases in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
         private string grazeStore = "";
@@ -77,22 +78,36 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
-            if (this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Count() == 0)
+            var specifyRuminants = this.FindAllChildren<SpecifyRuminant>();
+            if (specifyRuminants.Count() == 0)
             {
                 string[] memberNames = new string[] { "PurchaseDetails" };
-                results.Add(new ValidationResult("At least one trade pruchase description is required. Provide a RuminantTypeCohort model below this activity specifying the number, size and age of individuals to be purchased.", memberNames));
+                results.Add(new ValidationResult("At least one trade purchase description is required. Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
             }
-            foreach (RuminantTypeCohort item in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
+            else
             {
-                if (item.Suckling)
+                foreach (SpecifyRuminant specRumItem in specifyRuminants)
                 {
-                    string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
-                    results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                    // get Cohort
+                    var items = specRumItem.FindAllChildren<RuminantTypeCohort>();
+                    if(items.Count() > 1)
+                    {
+                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
+                        results.Add(new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames));
+                    }
+                    if (items.First().Suckling)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
+                        results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                    }
+                    if (items.First().Sire)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
+                        results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
+                    }
                 }
-                if (item.Sire)
+                foreach (RuminantTypeCohort specRumItem in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
                 {
-                    string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
-                    results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
                 }
             }
             return results;
@@ -155,8 +170,9 @@ namespace Models.CLEM.Activities
                 // remove any old potential sales from list as these will be updated here
                 Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
-                foreach (RuminantTypeCohort purchasetype in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
+                foreach (SpecifyRuminant purchaseSpecific in this.FindAllChildren<SpecifyRuminant>())
                 {
+                    RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
@@ -164,7 +180,9 @@ namespace Models.CLEM.Activities
                         number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
                     }
 
-                    for (int i = 0; i < number; i++)
+                    number *= purchaseSpecific.Proportion;
+
+                    for (int i = 0; i < Math.Ceiling(number); i++)
                     {
                         object ruminantBase = null;
 
@@ -185,8 +203,8 @@ namespace Models.CLEM.Activities
 
                         Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
-                        ruminant.Breed = this.PredictedHerdBreed;
-                        ruminant.HerdName = this.PredictedHerdName;
+                        ruminant.Breed = purchaseSpecific.BreedParams.Name;
+                        ruminant.HerdName = purchaseSpecific.BreedParams.Breed;
                         ruminant.PurchaseAge = purchasetype.Age;
                         ruminant.SaleFlag = HerdChangeReason.TradePurchase;
                         ruminant.Location = grazeStore;

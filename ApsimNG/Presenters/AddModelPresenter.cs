@@ -180,9 +180,8 @@
                             resource.ResourceName = selectedModelType.ResourceString;
                     }
 
-                    var command = new AddModelCommand(this.model, child);
+                    var command = new AddModelCommand(this.model, child, explorerPresenter.GetNodeDescription);
                     explorerPresenter.CommandHistory.Add(command, true);
-                    explorerPresenter.Refresh();
                 }
             }
             finally

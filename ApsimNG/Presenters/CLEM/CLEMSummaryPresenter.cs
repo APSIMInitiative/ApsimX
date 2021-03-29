@@ -63,7 +63,6 @@ namespace UserInterface.Presenters
         public void Refresh()
         {
             this.genericView.Text = CreateMarkdown(this.model);
-
             // save summary to disk
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, Utility.Configuration.Settings.DarkTheme));
         }

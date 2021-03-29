@@ -75,28 +75,35 @@ namespace UserInterface.Presenters
     }
 
     /// <summary>
-    /// This presenter class is responsible for populating the view
-    /// passed into the constructor and handling all user interaction of
-    /// the view. Humble Dialog pattern.
+    /// This presenter class is responsible for wrapping the SimplePropertyPresenter in a view that includes a 
+    /// tree view of category and sub-category property attributes that define the filter rule used and 
+    /// which properties are displayed. This was developed to hepl the user when a large number of properties are
+    /// provided with a model, you you want to distinguish general and advanced properties
+    /// This presenter uses the PropertyView and PropertyMultiModelView views.
     /// </summary>
-    public class PropertyTreePresenter : IPresenter
+    public class PropertyCategorisedPresenter : IPresenter
     {
         /// <summary>The visual instance</summary>
-        private IPropertyTreeView treeview;
-        private IGridView gridview;
+        protected IPropertyCategorisedView treeview;
+        protected IPropertyView propertyView;
 
         /// <summary>Presenter for the component</summary>
-        private PropertyPresenter propertyPresenter;
+        protected IPresenter propertyPresenter;
 
         /// <summary>
         /// The model we're going to examine for properties.
         /// </summary>
-        private Model model;
+        protected Model model;
 
-        /// <summary>Initializes a new instance of the <see cref="PropertyTreePresenter" /> class</summary>
-        public PropertyTreePresenter()
-        {
-        }
+        /// <summary>
+        /// The category name to filter for on the Category Attribute for the properties
+        /// </summary>
+        protected string selectedCategory { get; set; }
+
+        /// <summary>
+        /// The subcategory name to filter for on the Category Attribute for the properties
+        /// </summary>
+        protected string selectedSubCategory { get; set; }
 
         /// <summary>Gets or sets the width of the explorer tree panel</summary>
         /// <value>The width of the tree.</value>
@@ -109,11 +116,11 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The parent ExplorerPresenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        protected ExplorerPresenter explorerPresenter;
 
         /// <summary>Gets the current right hand presenter.</summary>
         /// <value>The current presenter.</value>
-        public PropertyPresenter PropertyPresenter
+        public IPresenter PropertyPresenter
         {
             get
             {
@@ -137,11 +144,13 @@ namespace UserInterface.Presenters
         /// <param name="model">The simulation model</param>
         /// <param name="view">The view used for display</param>
         /// <param name="explorerPresenter">The presenter for this object</param>
-        public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
+        public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
             this.model = model as Model;
-            this.treeview = view as IPropertyTreeView;
-            this.TreeWidth = 180; // explorerPresenter.TreeWidth;  //set the width of the PropertyTreeView to the same as the Explorer Tree.
+            this.treeview = view as IPropertyCategorisedView;
+            if(view is null)
+                throw new ArgumentException($"The view must be an PropertyCategorisedView instance");
+
             this.treeview.SelectedNodeChanged += this.OnNodeSelected;
             this.explorerPresenter = explorerPresenter;
 
@@ -149,7 +158,9 @@ namespace UserInterface.Presenters
             this.RefreshTreeView();
 
             //Initialise the Right Hand View
-            this.propertyPresenter = new PropertyPresenter();
+            this.propertyPresenter = new SimplePropertyPresenter();
+            this.propertyView = new PropertyView(this.treeview as ViewBase);
+
             this.ShowRightHandView();
         }
 
@@ -159,8 +170,7 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            if (treeview is ViewBase view)
-                view.MainWidget.Cleanup();
+            (treeview as ViewBase).MainWidget.Cleanup();
         }
 
         /// <summary>
@@ -196,8 +206,8 @@ namespace UserInterface.Presenters
                 }
             }
 
-            this.propertyPresenter.CategoryFilter = "";
-            this.propertyPresenter.SubcategoryFilter = "";
+            this.selectedCategory = "";
+            this.selectedSubCategory = "";
             this.treeview.AddRightHandView(null); //add an Empty right hand view
         }
 
@@ -237,32 +247,43 @@ namespace UserInterface.Presenters
                         subcategory = path[3];
                         break;
                 }
-
-                this.propertyPresenter.CategoryFilter = category;
-                this.propertyPresenter.SubcategoryFilter = subcategory;
+                this.selectedCategory = category;
+                this.selectedSubCategory = subcategory;
+                (this.propertyPresenter as SimplePropertyPresenter).Filter = IsPropertySelected;
             }
             else
             {
                 //this will show all the properties in the model 
                 //there will be no filtering on Category and Subcategory.
-                this.propertyPresenter.CategoryFilter = "";
-                this.propertyPresenter.SubcategoryFilter = "";
+                (this.propertyPresenter as SimplePropertyPresenter).Filter = null;
+                this.selectedCategory = "";
+                this.selectedSubCategory = "";
             }
 
+            CreateAndAttachRightPanel();
+        }
+
+        public virtual void CreateAndAttachRightPanel()
+        {
             //create a new grid view to be added as a RightHandView
             //nb. the grid view is owned by the tree view not by this presenter.
-            this.gridview = new GridView(this.treeview as ViewBase);
-            this.treeview.AddRightHandView(this.gridview);
-            this.propertyPresenter.Attach(this.model, this.gridview, this.explorerPresenter);            
+            this.propertyView = new PropertyView(this.treeview as ViewBase);
+            this.treeview.AddRightHandView(this.propertyView);
+            this.propertyPresenter.Attach(this.model, this.propertyView, this.explorerPresenter);
         }
 
         /// <summary>A node has been selected (whether by user or undo/redo)</summary>
         /// <param name="sender">Sending object</param>
         /// <param name="e">Node arguments</param>
-        private void OnNodeSelected(object sender, NodeSelectedArgs e)
+        protected void OnNodeSelected(object sender, NodeSelectedArgs e)
         {
             this.HideRightHandView();
             this.ShowRightHandView();
+        }
+
+        public virtual IModel ModelForProperties()
+        {
+            return this.model;
         }
 
         /// <summary>
@@ -273,9 +294,11 @@ namespace UserInterface.Presenters
         {
             CategoryTree categories = new CategoryTree();
 
-            if (this.model != null)
+            IModel modelToUse = ModelForProperties();
+
+            if (modelToUse != null)
             {
-                foreach (PropertyInfo property in this.model.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
+                foreach (PropertyInfo property in modelToUse.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy))
                 {
                     // Properties must have a [Description], not be called Name, and be read/write.
                     bool hasDescription = property.IsDefined(typeof(DescriptionAttribute), false);
@@ -300,7 +323,6 @@ namespace UserInterface.Presenters
                         {
                             //get the attribute data
                             CategoryAttribute catAtt = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
-
                             //add the category name to the list of category items
                             categories.AddCategoryToTree(catAtt.Category);
                             //add the subcategory name to the list of subcategories for the category
@@ -311,7 +333,6 @@ namespace UserInterface.Presenters
                         {
                             //If there is not [Category] attribute at all on the property in the model.
                             //Add it to the "Unspecified" Category, and "Unspecified" Subcategory
-
                             categories.AddCategoryToTree("Unspecified");
                             CategoryItem catItem = categories.FindCategoryInTree("Unspecified");
                             catItem.AddSubcategoryName("Unspecified");
@@ -368,6 +389,40 @@ namespace UserInterface.Presenters
                 root.Children.Add(description);
             }
             return root;
-        }    
+        }
+
+
+        protected bool IsPropertySelected(PropertyInfo property)
+        {
+            if ((this.selectedCategory??"") != "") // a category has been selected
+            {
+                if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
+                {
+                    CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
+                    if (catAtt.Category == this.selectedCategory)
+                    {
+                        if ((selectedSubCategory ?? "") != "") // a sub category has been selected
+                        {
+                            // The catAtt.Subcategory is by default given a value of 
+                            // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
+                            // so this line below will also handle "Unspecified" subcategories.
+                            return (catAtt.Subcategory == this.selectedSubCategory);
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    // if we are filtering on "Unspecified" category then there is no Category Attribute
+                    // just a Description Attribute on the property in the model.
+                    // So we still may need to include it in this case.
+                    return (this.selectedCategory == "Unspecified");
+                }
+            }
+            return true;
+        }
     }
 }

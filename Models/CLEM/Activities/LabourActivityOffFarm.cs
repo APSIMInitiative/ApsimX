@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// Bank account name to pay to
         /// </summary>
         [Description("Bank account to pay to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

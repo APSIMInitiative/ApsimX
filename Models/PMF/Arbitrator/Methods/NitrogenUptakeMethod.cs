@@ -63,6 +63,7 @@ namespace Models.PMF.Arbitrator
             }
 
             double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+            if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
 
             if (NSupply > NDemand)
             {
