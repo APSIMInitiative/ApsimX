@@ -665,8 +665,153 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Interfaces;\nusing Models.Soils.Nutrients;\nusing Models.PMF.Organs;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Weather Met;\n        [Link] private Fertiliser Fert;\n        [Link] private Irrigation Irrig;\n        [Link] private Plant Slurp;\n        [Link] private Zone zone;\n        [Link(ByName = true)]\n        private ISolute Urea;\n        [Link(ByName = true)]\n        private ISolute NO3;\n        [Link(ByName = true)]\n        private ISolute NH4;\n        [Link(ByName = true)]\n        private SoilNitrogen SoilNitrogen;\n        [Link] private Soils.Soil Soil;\n        [Link] private Models.Surface.SurfaceOrganicMatter SOM;\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double AccumPlantN { get; set; }\n        [XmlIgnore] public double AccumMineralisation { get; set; }\n        [XmlIgnore] public double AccumDenit { get; set; }\n        [XmlIgnore] public double AccumFert { get; set; }\n        [XmlIgnore] public double AccumLeach { get; set; }\n        [XmlIgnore] public double AccumDetach { get; set; }\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\n        \n        [XmlIgnore] public double AccumEO { get; set; }\n        [XmlIgnore] public double AccumEP { get; set; }\n        [XmlIgnore] public double AccumES { get; set; }\n        [XmlIgnore] public double AccumDrainage { get; set; }\n        [XmlIgnore] public double AccumRunoff { get; set; }\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\n        [XmlIgnore] public double AccumIrrigation { get; set; }\n        [XmlIgnore] public double AccumRainfall { get; set; }\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\n    \n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\n        [XmlIgnore] public double  InitialMineralN { get; set; }\n        \n        [XmlIgnore] public double SWC { get; set; }\n        [XmlIgnore] public double DUL { get; set; }\n        [XmlIgnore] public double OutFlowLat { get; set; }\n\n        [XmlIgnore] public double FomN { get; set; }\n        [XmlIgnore] public double BiomN { get; set; }\n        [XmlIgnore] public double HumN { get; set; }\n        [XmlIgnore] public double OrganicN { get; set; }\n        [XmlIgnore] public double NO3N { get; set; }\n        [XmlIgnore] public double NH4N { get; set; }\n        [XmlIgnore] public double UreaN { get; set; }\n        [XmlIgnore] public double MineralN { get; set; }\n        [XmlIgnore] public double DltNMinRes { get; set; }\n        [XmlIgnore] public double DltNMinTot { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //!!!!!! Nitrogen balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\n            OrganicN = FomN + HumN + BiomN;\n            NO3N = MathUtilities.Sum(NO3.kgha);\n            NH4N = MathUtilities.Sum(NH4.kgha);\n            UreaN = MathUtilities.Sum(Urea.kgha);\n            MineralN = NO3N + NH4N + UreaN; \n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            int layers = soilPhysical.Thickness.Length;\n            if (InitialDay == true)\n            {\n                InitialSurfaceOMN = SOM.N;\n                InitialSoilOMN = OrganicN;\n                InitialMineralN = MineralN;\n                InitialDay = false;\n            }\n            AccumFert += Fert.NitrogenApplied;\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\n            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\n            AccumPlantN -= (double)zone.Get(\"Slurp.Root.NUptake\");\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\n            DeltaSoilMineralN = MineralN - InitialMineralN;\n            SoilNitrogenContent = MineralN;\n            \n            //!!!!!! Water balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n\n            AccumIrrigation += Irrig.IrrigationApplied;\n            AccumRainfall += Met.Rain;\n            //AccumEP -= (double)zone.Get(\"[Slurp].Leaf.Transpiration\");\n            AccumEP -= (double)zone.Get(\"Slurp.Root.WaterUptake\");\n            SoilWaterDeficit = (SWC - DUL);\n            double OutFlowLat = MathUtilities.Sum(waterBalance.LateralOutflow);\n            AccumOutflowLat -= OutFlowLat;\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\n            \n            \n            AccumEO -= waterBalance.Eo;\n            AccumES -= waterBalance.Es; \n            AccumDrainage -= waterBalance.Drainage;\n            AccumRunoff -= waterBalance.Runoff;\n            SWC = MathUtilities.Sum(waterBalance.SWmm);\n            DUL = MathUtilities.Sum(soilPhysical.DULmm);\n        }\n    }\n}\n       \n",
-              "Parameters": null,
+              "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Interfaces;\nusing Models.Soils.Nutrients;\nusing Models.PMF.Organs;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Weather Met;\n        [Link] private Fertiliser Fert;\n        [Link] private Irrigation Irrig;\n        [Link] private Plant Slurp;\n        [Link] private Zone zone;\n        [Link(ByName = true)]\n        private ISolute Urea;\n        [Link(ByName = true)]\n        private ISolute NO3;\n        [Link(ByName = true)]\n        private ISolute NH4;\n        [Link(ByName = true)]\n        private INutrient nutrient;\n        [Link(Type = LinkType.Path, Path = \"[Nutrient].SurfaceResidue.Decomposition\")]\n        private CarbonFlow decomposition;\n        [Link] private Soils.Soil Soil;\n        [Link] private Models.Surface.SurfaceOrganicMatter SOM;\n        [Link(Type = LinkType.Path, Path = \"[Slurp].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double AccumPlantN { get; set; }\n        [XmlIgnore] public double AccumMineralisation { get; set; }\n        [XmlIgnore] public double AccumDenit { get; set; }\n        [XmlIgnore] public double AccumFert { get; set; }\n        [XmlIgnore] public double AccumLeach { get; set; }\n        [XmlIgnore] public double AccumDetach { get; set; }\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\n        [XmlIgnore] public double nutrientContent { get; set; }\n        \n        [XmlIgnore] public double AccumEO { get; set; }\n        [XmlIgnore] public double AccumEP { get; set; }\n        [XmlIgnore] public double AccumES { get; set; }\n        [XmlIgnore] public double AccumDrainage { get; set; }\n        [XmlIgnore] public double AccumRunoff { get; set; }\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\n        [XmlIgnore] public double AccumIrrigation { get; set; }\n        [XmlIgnore] public double AccumRainfall { get; set; }\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\n    \n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\n        [XmlIgnore] public double  InitialMineralN { get; set; }\n        \n        [XmlIgnore] public double SWC { get; set; }\n        [XmlIgnore] public double DUL { get; set; }\n        [XmlIgnore] public double OutFlowLat { get; set; }\n\n        [XmlIgnore] public double FomN { get; set; }\n        [XmlIgnore] public double BiomN { get; set; }\n        [XmlIgnore] public double HumN { get; set; }\n        [XmlIgnore] public double OrganicN { get; set; }\n        [XmlIgnore] public double NO3N { get; set; }\n        [XmlIgnore] public double NH4N { get; set; }\n        [XmlIgnore] public double UreaN { get; set; }\n        [XmlIgnore] public double MineralN { get; set; }\n        [XmlIgnore] public double DltNMinRes { get; set; }\n        [XmlIgnore] public double DltNMinTot { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //!!!!!! Nitrogen balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n            FomN = MathUtilities.Sum(nutrient.FOM.N);\n            HumN = MathUtilities.Sum(nutrient.Humic.N);\n            BiomN = MathUtilities.Sum(nutrient.Microbial.N);\n            OrganicN = FomN + HumN + BiomN;\n            NO3N = MathUtilities.Sum(NO3.kgha);\n            NH4N = MathUtilities.Sum(NH4.kgha);\n            UreaN = MathUtilities.Sum(Urea.kgha);\n            MineralN = NO3N + NH4N + UreaN; \n            DltNMinRes = MathUtilities.Sum(decomposition.MineralisedN);\n            DltNMinTot = MathUtilities.Sum(nutrient.MineralisedN);\n            int layers = soilPhysical.Thickness.Length;\n            if (InitialDay == true)\n            {\n                InitialSurfaceOMN = SOM.N;\n                InitialSoilOMN = OrganicN;\n                InitialMineralN = MineralN;\n                InitialDay = false;\n            }\n            AccumFert += Fert.NitrogenApplied;\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\n            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails\n            AccumMineralisation += MathUtilities.Sum(nutrient.MineralisedN);\n            AccumDenit -= MathUtilities.Sum(nutrient.DenitrifiedN);\n            AccumPlantN -= (double)zone.Get(\"Slurp.Root.NUptake\");\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\n            DeltaSoilMineralN = MineralN - InitialMineralN;\n            nutrientContent = MineralN;\n            \n            //!!!!!! Water balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n\n            AccumIrrigation += Irrig.IrrigationApplied;\n            AccumRainfall += Met.Rain;\n            //AccumEP -= (double)zone.Get(\"[Slurp].Leaf.Transpiration\");\n            AccumEP -= (double)zone.Get(\"Slurp.Root.WaterUptake\");\n            SoilWaterDeficit = (SWC - DUL);\n            double OutFlowLat = MathUtilities.Sum(waterBalance.LateralOutflow);\n            AccumOutflowLat -= OutFlowLat;\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            FomN = MathUtilities.Sum(nutrient.FOM.N);\n            HumN = MathUtilities.Sum(nutrient.Humic.N);\n            BiomN = MathUtilities.Sum(nutrient.Microbial.N);\n            \n            \n            AccumEO -= waterBalance.Eo;\n            AccumES -= waterBalance.Es; \n            AccumDrainage -= waterBalance.Drainage;\n            AccumRunoff -= waterBalance.Runoff;\n            SWC = MathUtilities.Sum(waterBalance.SWmm);\n            DUL = MathUtilities.Sum(soilPhysical.DULmm);\n        }\n    }\n}\n       \n",
+              "Parameters": [
+                {
+                  "Key": "InitialDay",
+                  "Value": "False"
+                },
+                {
+                  "Key": "AccumPlantN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumMineralisation",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumDenit",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumFert",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumLeach",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumDetach",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DeltaSoilOMN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DeltaSurfaceOMN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DeltaSoilMineralN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumEO",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumEP",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumES",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumDrainage",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumRunoff",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumOutflowLat",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumIrrigation",
+                  "Value": "0"
+                },
+                {
+                  "Key": "AccumRainfall",
+                  "Value": "0"
+                },
+                {
+                  "Key": "SoilWaterDeficit",
+                  "Value": "0"
+                },
+                {
+                  "Key": "InitialSoilOMN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "InitialSurfaceOMN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "InitialMineralN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "SWC",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DUL",
+                  "Value": "0"
+                },
+                {
+                  "Key": "OutFlowLat",
+                  "Value": "0"
+                },
+                {
+                  "Key": "FomN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "BiomN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "HumN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "OrganicN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "NO3N",
+                  "Value": "0"
+                },
+                {
+                  "Key": "NH4N",
+                  "Value": "0"
+                },
+                {
+                  "Key": "UreaN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "MineralN",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DltNMinRes",
+                  "Value": "0"
+                },
+                {
+                  "Key": "DltNMinTot",
+                  "Value": "0"
+                },
+                {
+                  "Key": "nutrientContent",
+                  "Value": "0"
+                }
+              ],
               "Name": "ExtraVariables",
               "IncludeInDocumentation": false,
               "Enabled": true,
