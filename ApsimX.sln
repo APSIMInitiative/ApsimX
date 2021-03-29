@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDocumentation", "Docs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{97EF667D-6600-49D3-BF0C-6935E7E4294D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Services", "APSIM.Services\APSIM.Services.csproj", "{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,18 @@ Global
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.ActiveCfg = Debug|Any CPU
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.Build.0 = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Debug|x86.Build.0 = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.DebugAnyCPU|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.DebugAnyCPU|Any CPU.Build.0 = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.DebugAnyCPU|x86.ActiveCfg = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.DebugAnyCPU|x86.Build.0 = Debug|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Release|x86.ActiveCfg = Release|Any CPU
+		{6AAB1B7B-8A67-4153-A730-9ECA35CB7350}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
