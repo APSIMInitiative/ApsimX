@@ -9,7 +9,7 @@ namespace UserInterface.Presenters
     /// Combines a <see cref="PropertyPresenter"/> and <see cref="GridView"/> to customise and display
     /// a pivot table for a report
     /// </summary>
-    class ReportPivotPresenter : IPresenter, ICLEMPresenter
+    class ReportPivotPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
     {
         /// <summary>
         /// The GridView
@@ -19,7 +19,8 @@ namespace UserInterface.Presenters
         /// <summary>
         /// The pivot model
         /// </summary>
-        private ReportPivot pivot;        
+        private ReportPivot pivot;
+
 
         /// <summary>
         /// The CLEM view
@@ -53,11 +54,12 @@ namespace UserInterface.Presenters
                 gridPresenter.Attach(null, gridView, clemPresenter.explorerPresenter);
 
                 // Attach the view to display data
+
                 clem = clemPresenter.view as CLEMView;
                 clem.AddTabView("Data", gridView);
-                clemPresenter.presenterList.Add("Data", gridPresenter);
+                clemPresenter.presenterList.Add("Data", this);
 
-                clem.TabSelected += Refresh;
+                //clem.TabSelected += Refresh;
             }
             catch (Exception err)
             {
@@ -67,13 +69,9 @@ namespace UserInterface.Presenters
 
         /// <inheritdoc/>
         public void Detach()
-        {
-            clem.TabSelected -= Refresh;
-        }
+        { }
 
-        /// <summary>
-        /// Updates the displayed data
-        /// </summary>
-        private void Refresh(object sender, EventArgs e) => gridView.DataSource = pivot.GenerateTable();
+        /// <inheritdoc/>
+        public void Refresh() => gridView.DataSource = pivot.GenerateTable();
     }
 }
