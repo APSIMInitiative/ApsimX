@@ -57,6 +57,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Predicted pasture at end of assessment period
         /// </summary>
+        [field: NonSerialized]
         public double PasturePredicted { get; private set; }
 
         /// <summary>
@@ -67,11 +68,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to destock
         /// </summary>
+        [field: NonSerialized]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
+        [field: NonSerialized]
         public double AeDestocked { get; private set; }
 
         /// <summary>
@@ -90,26 +93,18 @@ namespace Models.CLEM.Activities
         {
             // check that this model contains children RuminantDestockGroups with filters
             var results = new List<ValidationResult>();
-            // check that this activity contains at least one RuminantDestockGroups group with filters
-            bool destockGroupFound = false;
-            foreach (RuminantGroup item in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
-            {
-                foreach (RuminantFilter filter in item.Children.Where(a => a.GetType() == typeof(RuminantFilter)))
-                {
-                    destockGroupFound = true;
-                    break;
-                }
-                if (destockGroupFound)
-                {
-                    break;
-                }
-            }
-
-            if (!destockGroupFound)
+            // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
+            if (this.FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("At least one RuminantGroup with RuminantFilter must be present under this RuminantActivityPredictiveStocking activity", memberNames));
+                results.Add(new ValidationResult("At least one [f=RuminantGroup] with a [Destock] reason and a [f=RuminantFilter] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
             }
+            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantStockGroupStyle.Destock).Count() > 0)
+            {
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("Only [f=RuminantGroup] with a [Destock] reason are permitted under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
+            }
+
             return results;
         } 
         #endregion
@@ -131,6 +126,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalStock")]
         private void OnCLEMAnimalStock(object sender, EventArgs e)
         {
+            AeToDestock = 0;
+            AeDestocked = 0;
             // this event happens after management has marked individuals for purchase or sale.
             if (Clock.Today.Month == (int)AssessmentMonth)
             {
@@ -223,7 +220,7 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (IModel item in FindAllChildren<RuminantDestockGroup>())
+            foreach (IModel item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
                 List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
@@ -248,15 +245,8 @@ namespace Models.CLEM.Activities
             }
             AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
-
-            // Idea of possible destock groups
-            // Steers, Male, Not BreedingSire, > Age
-            // Dry Cows, IsDryBreeder
-            // Breeders, IsBreeder, !IsPregnant, > Age
-            // Underweight ProportionOfMaxWeight < 0.6
             
             // handling of sucklings with sold female is in RuminantActivityBuySell
-
             // buy or sell is handled by the buy sell activity
         }
 

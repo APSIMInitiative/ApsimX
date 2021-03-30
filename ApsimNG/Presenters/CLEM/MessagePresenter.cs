@@ -31,12 +31,6 @@ namespace UserInterface.Presenters
         private IMarkdownView genericView;
 
         /// <summary>
-        /// The explorer
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
-
-        /// <summary>
         /// Attach the view
         /// </summary>
         /// <param name="model">The model</param>
@@ -46,7 +40,6 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
-            this.explorerPresenter = explorerPresenter;
         }
 
         public void Refresh()
@@ -129,16 +122,13 @@ namespace UserInterface.Presenters
                                 }
                             }
 
-                            string type = "Message";
                             string title = "Message";
                             switch (dr[errorCol].ToString())
                             {
                                 case "2":
-                                    type = "Error";
                                     title = "Error";
                                     break;
                                 case "1":
-                                    type = "Warning";
                                     title = "Warning";
                                     break;
                                 default:
@@ -149,12 +139,10 @@ namespace UserInterface.Presenters
                                 switch (msgStr.Substring(0, msgStr.IndexOf(':')))
                                 {
                                     case "@error":
-                                        type = "Error";
                                         title = "Error";
                                         msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
                                         break;
                                     case "@validation":
-                                        type = "Error";
                                         title = "Validation error";
                                         msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
                                         msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
@@ -165,7 +153,6 @@ namespace UserInterface.Presenters
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
-                                type = "Ok";
                                 title = "Success";
                                 DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                                 int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
@@ -180,7 +167,6 @@ namespace UserInterface.Presenters
                                     DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
                                     if (dataRowsShortfalls.Rows.Count > 0)
                                     {
-                                        type = "warning";
                                         title = "Resource shortfalls occurred";
                                         msgStr += "  \r\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
                                     }
@@ -221,6 +207,8 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
+            // kept in case we want to report messages with full simulation summary in html
+
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +

@@ -334,11 +334,10 @@
             writer.Stop();
 
             // Now empty the datastore.
-            writer = new DataStoreWriter(database);
             writer.Empty();
             writer.Stop();
 
-            Assert.AreEqual(database.GetTableNames().Count, 0);
+            Assert.AreEqual(0, database.GetTableNames().Count);
         }
 
         /// <summary>Add a checkpoint</summary>

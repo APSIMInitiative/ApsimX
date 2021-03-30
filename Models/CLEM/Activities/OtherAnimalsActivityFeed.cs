@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
         /// Name of Feed to use
         /// </summary>
         [Description("Feed store to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type to use required")]
         public string FeedTypeName { get; set; }
 

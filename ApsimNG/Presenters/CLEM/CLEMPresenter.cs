@@ -6,10 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
-using UserInterface.Presenters;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
@@ -69,29 +66,34 @@ namespace UserInterface.Presenters
                 //Properties
                 try
                 {
+                    // user can set view to state it must be multiview so do not override value
                     presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     string propPresenterName = presenterName.ToString();
-                    if (!presenterName.ToString().Contains("Property"))
-                    {
-                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
-                    }
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     string viewName = viewAttribute.ToString();
-                    if (!viewName.ToString().Contains(".Property") & !viewName.ToString().Contains(".GridView"))
+                    if (propPresenterName == "UserInterface.Presenters.PropertyPresenter" | !propPresenterName.Contains("Property"))
                     {
-                        viewName = "UserInterface.Views.GridView";
+                        propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
+                        if(viewName != "UserInterface.Views.PropertyMultiModelView")
+                            viewName = "UserInterface.Views.PropertyView";
                     }
 
-                    string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
-                    bool isTablePresenter = childDisplayInParentPresenters.Contains(propPresenterName.Split('.').Last());
-
-                    // check if it has properties
-                    if (isTablePresenter ||
-                        (model.GetType().GetProperties(
+                    var props = model.GetType().GetProperties(
                         BindingFlags.Public |
                           BindingFlags.NonPublic |
                           BindingFlags.Instance
-                          ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
+                          );
+
+                    bool categoryAttributeFound = (props.Where(prop => prop.IsDefined(typeof(CategoryAttribute), false)).Count() > 0);
+                    if (categoryAttributeFound)
+                    {
+                        propPresenterName = "UserInterface.Presenters.PropertyCategorisedPresenter";
+                        // need to set view accordingly
+                    }
+
+                    // check if it has properties
+                    if ((viewName.Contains("PropertyMultiModelView") | propPresenterName.Contains("MultiModel")) ||
+                        (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
                     {
                         object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
                         IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
@@ -160,6 +162,14 @@ namespace UserInterface.Presenters
                     {
                         presenterList.TryGetValue("Summary", out IPresenter selectedPresenter);
                         (selectedPresenter as CLEMSummaryPresenter).Refresh();
+                    }
+                }
+
+                if(clemModel != null && clemModel.SelectedTab is null && presenterList.Count > 0)
+                {
+                    if (presenterList.FirstOrDefault().Value is IRefreshPresenter)
+                    {
+                        (presenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
                     }
                 }
             }

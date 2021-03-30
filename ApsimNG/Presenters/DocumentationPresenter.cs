@@ -45,19 +45,16 @@ namespace UserInterface.Presenters
         {
             StringBuilder markdown = new StringBuilder();
 
+            string summary = AutoDocumentation.GetSummary(model.GetType());
             markdown.AppendLine($"# {model.Name} Description");
             markdown.AppendLine();
-            markdown.AppendLine("## General Description");
-            markdown.AppendLine();
-            string summary = AutoDocumentation.GetSummary(model.GetType())?.Replace("            ", "");
-            
             markdown.AppendLine(summary);
             markdown.AppendLine();
 
             string remarks = AutoDocumentation.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
-                markdown.AppendLine("## Remarks");
+                markdown.AppendLine($"# Remarks");
                 markdown.AppendLine();
                 markdown.AppendLine(remarks);
                 markdown.AppendLine();
@@ -119,7 +116,7 @@ namespace UserInterface.Presenters
 
                 if (outputs.Rows.Count > 0)
                 {
-                    markdown.AppendLine("## Model Outputs");
+                    markdown.AppendLine("## Outputs");
                     markdown.AppendLine();
                     markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
                     markdown.AppendLine();

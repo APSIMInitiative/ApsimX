@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Food store type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food store required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(HumanFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(HumanFoodStore) } })]
         public string FoodStoreName { get; set; }
 
         /// <summary>
