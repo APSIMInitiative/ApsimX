@@ -2,10 +2,13 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core.ApsimFile;
+    using Newtonsoft.Json.Linq;
     using NUnit.Framework;
+    using System;
+    using System.Collections.Generic;
     using System.Data;
     using System.IO;
-    using System.Xml;
+    using System.Linq;
 
     /// <summary>This is a test class for the .apsimx file converter.</summary>
     [TestFixture]
@@ -362,5 +365,20 @@
             }
         }
 
+        /// <summary>
+        /// Arguably this doesn't even belong in the converter.
+        /// Nonetheless, it's not working properly at the moment so
+        /// I'm just going to fix the problem and add a test. See here:
+        /// https://github.com/APSIMInitiative/ApsimX/issues/6270.
+        /// </summary>
+        [Test]
+        public void TestAddingInitialWater()
+        {
+            string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.Soil.json");
+            ConverterReturnType result = Converter.DoConvert(json, Converter.LatestVersion);
+            IEnumerable<JObject> initialWaters = JsonUtilities.Children(result.Root).Where(c => string.Equals(c["Name"].ToString(), "Initial water", StringComparison.InvariantCultureIgnoreCase));
+            Assert.AreEqual(1, initialWaters.Count());
+            Assert.AreEqual("Models.Soils.Sample, Models", initialWaters.First()["$type"].ToString());
+        }
     }
 }
