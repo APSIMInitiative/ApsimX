@@ -393,7 +393,7 @@ namespace Models.Core.ApsimFile
         /// <param name="fixedValue">The fixed value of the constant function</param>
         public static void AddConstantFunctionIfNotExists(JObject modelToken, string name, string fixedValue)
         {
-            if (ChildWithName(modelToken, name) == null)
+            if (ChildWithName(modelToken, name, true) == null)
             {
                 JArray children = modelToken["Children"] as JArray;
                 if (children == null)
@@ -419,7 +419,7 @@ namespace Models.Core.ApsimFile
         /// <param name="variable">The variable to be referenced by the variable reference function.</param>
         public static void AddVariableReferenceIfNotExists(JObject modelToken, string name, string variable)
         {
-            if (ChildWithName(modelToken, name) == null)
+            if (ChildWithName(modelToken, name, true) == null)
             {
                 JArray children = modelToken["Children"] as JArray;
                 if (children == null)
