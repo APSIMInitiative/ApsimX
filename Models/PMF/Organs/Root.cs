@@ -84,7 +84,7 @@
         private double BiomassToleranceValue = 0.0000000001;
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         protected Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>

@@ -111,7 +111,7 @@ namespace Models.PMF.Organs
         public const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         public Plant Plant = null; //todo change back to private
 
         [Link]
@@ -950,7 +950,7 @@ namespace Models.PMF.Organs
         protected double BiomassToleranceValue = 0.0000000001;
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>

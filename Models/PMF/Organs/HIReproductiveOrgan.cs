@@ -20,7 +20,7 @@ namespace Models.PMF.Organs
         public ISurfaceOrganicMatter SurfaceOrganicMatter = null;
 
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         protected Plant parentPlant = null;
 
         /// <summary>Gets or sets the above ground.</summary>

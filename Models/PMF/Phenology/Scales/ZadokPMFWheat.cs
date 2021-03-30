@@ -52,7 +52,7 @@ namespace Models.PMF.Phen
         [Link]
         Structure Structure = null;
 
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private IPlant plant = null;
 
         /// <summary>Gets the stage.</summary>

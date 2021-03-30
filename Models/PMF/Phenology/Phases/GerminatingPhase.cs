@@ -32,10 +32,10 @@ namespace Models.PMF.Phen
         [Link]
         private ISoilWater waterBalance = null;
 
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Phenology phenology = null;
 
         [Link]

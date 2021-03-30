@@ -43,7 +43,7 @@
         /// <summary>
         /// The plant
         /// </summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         /// <summary>

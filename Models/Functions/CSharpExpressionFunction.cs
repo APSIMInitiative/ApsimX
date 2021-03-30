@@ -27,6 +27,13 @@ namespace Models.Functions
         [Description("C# expression")]
         public string Expression { get; set; }
 
+        /// <summary>
+        /// Specifies the parent model for the generated script. When this is set,
+        /// links in the generated script will be child link types rather than scoped
+        /// links.
+        /// </summary>
+        public IModel ParentForScript { get; set; }
+
         /// <summary>the script compiler.</summary>
         /// <param name="compiler"></param>
         public void SetCompiler(ScriptCompiler compiler)
@@ -98,9 +105,12 @@ namespace Models.Functions
             var namespaceList = new SortedSet<string>();
             foreach (var model in models)
             {
-                if (Expression.Contains(model.Name))
+                if (Expression.Contains(model.Name) && linkList.Find(l => l.EndsWith($" {model.Name};")) == null)
                 {
-                    linkList.Add($"        [Link(ByName=true)] {model.GetType().Name} {model.Name};");
+                    if (model.Parent == ParentForScript)
+                        linkList.Add($"        [Link(ByName=true, Path=\"{ParentForScript.Name}.{model.Name}\")] {model.GetType().Name} {model.Name};");
+                    else
+                        linkList.Add($"        [Link(ByName=true)] {model.GetType().Name} {model.Name};");
                     namespaceList.Add("using " + model.GetType().Namespace + ";");
                 }
             }
@@ -128,7 +138,10 @@ namespace Models.Functions
                 if (expressionFunction == null || result.WasCompiled)
                 {
                     expressionFunction = result.Instance as IFunction;
-                    (expressionFunction as IModel).Parent = this;
+                    if (ParentForScript == null)
+                        (expressionFunction as IModel).Parent = this;
+                    else
+                        (expressionFunction as IModel).Parent = ParentForScript;
 
                     // Resolve links
                     var linkResolver = new Links();

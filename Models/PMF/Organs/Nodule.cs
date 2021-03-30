@@ -150,7 +150,7 @@ namespace Models.PMF.Organs
         protected double BiomassToleranceValue = 0.0000000001;
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>

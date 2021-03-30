@@ -17,7 +17,7 @@
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
         /// <summary>The plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant Plant = null;
 
         /// <summary>The met data</summary>
@@ -25,7 +25,7 @@
         public IWeather MetData = null;
 
         /// <summary>The parent plant</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant parentPlant = null;
 
         /// <summary>The parent organ</summary>

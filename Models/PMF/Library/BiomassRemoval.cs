@@ -20,7 +20,7 @@ namespace Models.PMF.Library
     [PresenterName("UserInterface.Presenters.BiomassRemovalPresenter")]
     public class BiomassRemoval : Model, ICustomDocumentation
     {
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         Plant plant = null;
 
         [Link]

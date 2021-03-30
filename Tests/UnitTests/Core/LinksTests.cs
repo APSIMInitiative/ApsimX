@@ -217,10 +217,14 @@ namespace UnitTests.Core
             sim.ParentAllDescendants();
 
             var links = new Links();
+            // There are two zones - the link is ambiguous, which should cause this to throw.
+            Assert.Throws<Exception>(() => links.Resolve(sim, true));
+            // Remove the second zone and it should work.
+            sim.Children.RemoveAt(3);
             links.Resolve(sim, true);
 
             // Should find the closest match.
-            var model = sim.Children[4] as ModelWithScopedLink;
+            var model = sim.Children[3] as ModelWithScopedLink;
             Assert.AreEqual(model.zone2.Name, "zone1");
         }
 

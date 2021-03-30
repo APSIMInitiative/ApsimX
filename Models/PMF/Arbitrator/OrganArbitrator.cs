@@ -44,7 +44,7 @@ namespace Models.PMF
         ///------------------------------------------------------------------------------------------------
 
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private Plant plant = null;
 
         ///// <summary>The method used to arbitrate N allocations</summary>
