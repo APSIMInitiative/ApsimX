@@ -761,15 +761,21 @@
                     explorerPresenter.CommandHistory.Add(command);
 
                     // Now call OnCreated() for all changed models. Note ToList() to force greedy evaluation.
+                    bool showModelStructure = ShowModelStructureChecked();
                     if (model.Enabled)
                     {
                         model.OnCreated();
                         foreach (IModel descendant in model.FindAllDescendants().ToList())
                             descendant.OnCreated();
                         if (model is ModelCollectionFromResource)
+                        {
                             foreach (IModel child in model.Children)
-                                if (child.IsHidden)
+                            {
+                                child.IsHidden = !showModelStructure;
+                                if (!showModelStructure)
                                     explorerPresenter.Tree.Delete(child.FullPath);
+                            }
+                        }
                     }
 
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);

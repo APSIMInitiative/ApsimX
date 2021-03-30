@@ -28,15 +28,12 @@ namespace Models.CLEM.Activities
     {
         private LabourRequirement labourRequirement;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(true, true);
-        }
+        /// <summary>
+        /// Sale flag to use
+        /// </summary>
+        [Description("Sale reason to apply")]
+        [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
+        public MarkForSaleReason SaleFlagToUse { get; set; }
 
         /// <summary>
         /// Overwrite any currently recorded sale flag
@@ -48,6 +45,18 @@ namespace Models.CLEM.Activities
         private int filterGroupsCount = 0;
         private int numberToTag = 0;
         private bool labourShortfall = false;
+        private HerdChangeReason changeReason;
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            // get all ui tree herd filters that relate to this activity
+            this.InitialiseHerd(true, true);
+            changeReason = (HerdChangeReason)SaleFlagToUse;
+        }
 
         /// <summary>
         /// Method to determine resources required for this activity in the current month
@@ -143,7 +152,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            ind.SaleFlag = changeReason;
                             numberToTag--;
                         }
                     }
@@ -152,7 +161,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            ind.SaleFlag = changeReason;
                             numberToTag--;
                         }
                     }
@@ -222,7 +231,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\r\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
+            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as [{SaleFlagToUse}] in the following groups:</div>";
         } 
         #endregion
     }
