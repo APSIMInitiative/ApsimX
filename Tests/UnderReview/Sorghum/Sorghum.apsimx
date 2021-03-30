@@ -10889,7 +10889,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Hermitage1996",
+              "Name": "HE1-4",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -19955,7 +19955,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Hermitage1997",
+              "Name": "HE5-8",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -21912,7 +21912,7 @@
                 "IcrisatBW5CvAtx623xRTX430FertLowIrrigHigh",
                 "IcrisatBW5CvQL41xQL36FertLowIrrigHigh"
               ],
-              "Name": "IcrisatBW5",
+              "Name": "BW5",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -22975,7 +22975,7 @@
                 "IcrisatBW8CvATx623xRTx430FertLowIrrigOn",
                 "IcrisatBW8CvQL41xQL36FertLowIrrigOn"
               ],
-              "Name": "IcrisatBW8",
+              "Name": "BW8",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -23919,7 +23919,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1995",
+              "Name": "LE13",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -25195,7 +25195,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1996Early",
+              "Name": "LE14",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -26009,7 +26009,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1996Late",
+              "Name": "LE15",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -26909,7 +26909,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1997Late",
+              "Name": "LE17",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -27775,7 +27775,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1998",
+              "Name": "LE19",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -28798,7 +28798,7 @@
             {
               "$type": "Models.Factorial.Experiment, Models",
               "DisabledSimNames": null,
-              "Name": "Lawes1999",
+              "Name": "LE21",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
