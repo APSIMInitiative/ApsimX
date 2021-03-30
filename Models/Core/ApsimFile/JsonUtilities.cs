@@ -410,6 +410,13 @@ namespace Models.Core.ApsimFile
             }
         }
 
+        /// <summary>
+        /// Add a variable reference function to the specified JSON model token,
+        /// if a variable referenec with the given name doesn't already exist.
+        /// </summary>
+        /// <param name="modelToken">The JSON node to which the variable reference will be added.</param>
+        /// <param name="name">Name of the variabel reference to add.</param>
+        /// <param name="variable">The variable to be referenced by the variable reference function.</param>
         public static void AddVariableReferenceIfNotExists(JObject modelToken, string name, string variable)
         {
             if (ChildWithName(modelToken, name) == null)
