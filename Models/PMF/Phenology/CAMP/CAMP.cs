@@ -109,7 +109,10 @@ namespace Models.PMF.Phen
                 if (dX < DeVernalisationTemp.Value())
                     return UdVrn1 * dTt;
                 else
-                    return DeVernalisationRate.Value();
+                {
+                    dTt = (dX - DeVernalisationTemp.Value())/24;
+                    return DeVernalisationRate.Value() * dTt;
+                }
             }
             else return 0.0;
         }
@@ -186,20 +189,20 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Potential Upregulation of Vrn2 from long photoperiod.  Actual Vrn2 expression will be less than this because it is blocked by Vrn1
         /// </summary>
-        /// <param name="LPpBP">Long photoperiod Base Phyllochrons</param>
+        /// <param name="LPp">Long photoperiod hours</param>
         /// <param name="IpVrn2"> Initial potential Vrn2 at first experience of Pp > 8 (normally at emergence)</param>
         /// <param name="DpVrn2">Delta of potential Vrn2 in response to accumulation of LPpHS</param>
         /// <returns>delta ColdVrn1 representing the additional Vrn1 expression from cold upregulation</returns>
-        private double CalcpVrn2(double LPpBP, double IpVrn2, double DpVrn2)
+        private double CalcpVrn2(double LPp, double IpVrn2, double DpVrn2)
         {
             double InitPhaseLength = 100;
-            if (LPpBP < InitPhaseLength)
+            if (LPp < InitPhaseLength)
             {
                 double InitSlope = (IpVrn2 + DpVrn2) / InitPhaseLength;
-                return LPpBP * InitSlope;
+                return LPp * InitSlope;
             }
             else
-                return IpVrn2 + LPpBP * DpVrn2;
+                return IpVrn2 + LPp * DpVrn2;
         }
 
         /// <summary>
@@ -354,7 +357,7 @@ namespace Models.PMF.Phen
                 else
                 { // Crop emerged
                     dTt = tt.Value();
-                    // Calculate delta long photoperiod haunstage
+                    // Calculate delta long photoperiod thermal time
                     dLPp = dTt * PpResponse.Value() * PropnOfDay;
                 }
 
