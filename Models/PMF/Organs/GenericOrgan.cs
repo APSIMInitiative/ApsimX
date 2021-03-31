@@ -483,7 +483,7 @@
                 Live.MetabolicWt = InitialWt.Metabolic.Value();
                 Live.StorageWt = InitialWt.Storage.Value();
                 Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
-                Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
+                Live.StorageN = Live.StorageWt * initialNConcFunction.Value();
             }
         }
 
