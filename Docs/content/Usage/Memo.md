@@ -4,7 +4,7 @@ draft: false
 ---
 
 The *Memo* control uses ***MarkDown*** as its formatting language. The control contains two panes: 
-the upper one allows you to edit your text using Markdown, and the lower displays the resulting formatted text.
+the lower one allows you to edit your text using Markdown, and the upper displays the resulting formatted text.
 
 The tables immediately below give a brief description of the Markdown syntax. This is followed by a more detailed description,
 largely taken from the [website of John Gruber] [Gruber], the developer of Markdown.
