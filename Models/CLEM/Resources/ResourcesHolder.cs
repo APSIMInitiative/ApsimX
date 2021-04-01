@@ -368,6 +368,38 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
+        /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
+        /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// 
+        /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
+        /// </summary>
+        /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
+        public string[] GetCLEMResourceNames(Type resourceGroupType)
+        {
+            List<string> resourseTypes = new List<string>();
+            if (resourceGroupType != null)
+            {
+                // resource groups specified (use them)
+                IModel resGroup = this.Children.Find(c => resourceGroupType.IsAssignableFrom(c.GetType()));
+                if (resGroup != null)  //see if this group type is included in this particular simulation.
+                {
+                    foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
+                    {
+                        if (item.GetType() != typeof(Memo))
+                        {
+                            resourseTypes.Add(resGroup.Name  + "." + item.Name);
+                        }
+                    }
+                }
+            }
+            return resourseTypes.ToArray();
+        }
+
+        /// <summary>
         /// Get the Resource Group for Products
         /// </summary>
         /// <returns></returns>

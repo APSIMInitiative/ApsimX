@@ -201,7 +201,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", " ");
+                return Regex.Replace(rawSummary, @"\n\s+", "\n");
             }
             return null;
         }
@@ -258,7 +258,7 @@
             {
                 // Need to fix multiline remarks - trim newlines and consecutive spaces.
                 string remarks = summaryNode.InnerXml.Trim();
-                return Regex.Replace(remarks, @"\n\s+", " ");
+                return Regex.Replace(remarks, @"\n\s+", "\n");
             }
             return null;
         }
@@ -418,7 +418,7 @@
                         if (value != null)
                         {
                             if (value is Array)
-                                value = StringUtilities.Build(value as Array, Environment.NewLine);
+                                value = StringUtilities.Build(value as Array, $"{Environment.NewLine}{Environment.NewLine}");
 
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());

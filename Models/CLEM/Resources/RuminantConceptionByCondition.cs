@@ -38,13 +38,21 @@ namespace Models.CLEM.Resources
         public double ConditionCutOff { get; set; }
 
         /// <summary>
+        /// Maximum probability of conceiving given condition satisfied
+        /// </summary>
+        [Description("Maximum probability of conceiving")]
+        [Required, Proportion, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        public double MaximumConceptionProbability { get; set; }
+
+        /// <summary>
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
+            return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
         }
 
         #region descriptive summary 

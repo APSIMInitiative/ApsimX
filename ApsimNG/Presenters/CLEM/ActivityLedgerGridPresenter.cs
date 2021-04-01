@@ -2,17 +2,12 @@
 {
     using global::UserInterface.Interfaces;
     using Models;
-    using Models.CLEM;
     using Models.CLEM.Reporting;
     using Models.Core;
     using Models.Factorial;
     using Models.Storage;
     using System;
-    using System.Collections.Generic;
-    using System.Data;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>

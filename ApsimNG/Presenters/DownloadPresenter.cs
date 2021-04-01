@@ -237,10 +237,10 @@ namespace UserInterface.Presenters
 
                 if (!matchingSoil.Children.Any(c => c is INutrient))
                     matchingSoil.Children.Add(new Nutrient() { ResourceName = "Nutrient" });
-                ICommand addSoil = new AddModelCommand(model, matchingSoil);
+                ICommand addSoil = new AddModelCommand(model, matchingSoil, explorerPresenter.GetNodeDescription);
                 explorerPresenter.CommandHistory.Add(addSoil);
             }
-            explorerPresenter.Refresh();
+            explorerPresenter.Populate();
         }
 
         /// <summary>User has clicked the APSOIL help button.</summary>
