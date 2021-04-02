@@ -75,7 +75,6 @@
       "MinimumGreenWt": 100.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "WaterAvailableMethod": 0,
       "Name": "AGPRyegrass",
       "Children": [
         {

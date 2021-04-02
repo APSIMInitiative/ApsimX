@@ -75,7 +75,6 @@
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "WaterAvailableMethod": 0,
       "PhotosyntheticEfficiency": 0.01,
       "PhotosynthesisCurveFactor": 0.8,
       "FractionPAR": 0.5,
@@ -99,13 +98,6 @@
       "FractionNLuxuryRemobStage1": 0.1,
       "FractionNLuxuryRemobStage2": 0.1,
       "FractionNLuxuryRemobStage3": 0.1,
-      "SymbiontCostFactor": 0.0,
-      "NFixingCostFactor": 0.0,
-      "GenericGLF": 1.0,
-      "SoilFertilityGLF": 1.0,
-      "NuptakeSWFactor": 0.25,
-      "MaximumUptakeRateNH4": 0.5,
-      "MaximumUptakeRateNO3": 0.5,
       "Name": "AGPBrownTop",
       "Children": [
         {

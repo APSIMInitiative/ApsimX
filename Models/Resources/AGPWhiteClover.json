@@ -75,7 +75,6 @@
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "WaterAvailableMethod": 0,
       "Name": "AGPWhiteClover",
       "Children": [
         {

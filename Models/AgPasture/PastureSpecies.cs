@@ -924,17 +924,6 @@
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
-        ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
-        /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
-        [Units("0-1")]
-        public double MaximumFractionAvailable { get; set; } = 0.999;
-
-        /// <summary>Exponent of function determining soil extractable N.</summary>
-        [Units("-")]
-        public double NuptakeSWFactor { get; set; } = 0.25;
-
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets or sets the day of year when seeds are allowed to germinate.</summary>
