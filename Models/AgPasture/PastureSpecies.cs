@@ -650,11 +650,6 @@
         [Units("-")]
         private double myRespirationExponent = 1.5;
 
-        /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
-        //[Description("optimum, minimum and maximum")]
-        [Units("kg/kg")]
-        public double[] NThresholdsForRoots { get; set; } = { 0.02, 0.006, 0.025 };
-
         ////- Germination and emergence >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Cumulative degrees-day needed for seed germination (oCd).</summary>
