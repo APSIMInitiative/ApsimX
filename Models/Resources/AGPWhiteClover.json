@@ -75,6 +75,11 @@
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
+      "ReferenceCO2": 380.0,
+      "CO2EffectScaleFactor": 700.0,
+      "CO2EffectOffsetFactor": 600.0,
+      "CO2EffectMinimum": 0.7,
+      "CO2EffectExponent": 2.0,
       "Name": "AGPWhiteClover",
       "Children": [
         {
