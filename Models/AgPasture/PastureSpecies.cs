@@ -1044,9 +1044,6 @@
         /// <summary>Maintenance respiration rate (kg C/ha/day).</summary>
         private double respirationMaintenance;
 
-        /// <summary>N fixation costs (kg C/ha/day).</summary>
-        private double costNFixation;
-
         /// <summary>Amount of C remobilisable from senesced tissue (kg C/ha/day).</summary>
         private double remobilisableC;
 
@@ -2787,10 +2784,6 @@
             respirationMaintenance = DailyMaintenanceRespiration();
             respirationGrowth = DailyGrowthRespiration();
 
-            // Get N fixation costs (base)
-            if (isLegume)
-                costNFixation = DailyNFixationCosts();
-
             // Get C remobilisation (kgC/ha/day) (got from tissue turnover) - TODO: implement C remobilisation
             remobilisedC = remobilisableC;
 
@@ -3375,37 +3368,6 @@
                 if (Nstress < 0.99)
                     fixedN += (MaximumNFixation - MinimumNFixation) * (1.0 - Nstress) * adjNDemand;
             }
-        }
-
-        /// <summary>Calculates the costs of N fixation</summary>
-        /// <remarks>
-        /// This approach separates maintenance and activity costs, based roughly on results from:
-        ///   Rainbird RM, Hitz WD, Hardy RWF 1984. Experimental determination of the respiration associated with soybean/rhizobium 
-        ///     nitrogenase function, nodule maintenance, and total nodule nitrogen fixation. Plant Physiology 75(1): 49-53.
-        ///   Voisin AS, Salon C, Jeudy C, Warembourg FR 2003. Symbiotic N2 fixation activity in relation to C economy of Pisum sativum L.
-        ///     as a function of plant phenology. Journal of Experimental Botany 54(393): 2733-2744.
-        ///   Minchin FR, Witty JF 2005. Respiratory/carbon costs of symbiotic nitrogen fixation in legumes. In: Lambers H, Ribas-Carbo 
-        ///     M eds. Plant Respiration. Advances in Photosynthesis and Respiration, Springer Netherlands. Pp. 195-205.
-        /// NOTE: This procedure will use today's DM for maintenance costs, but yesterday's fixedN for activity (as today's fixation has 
-        ///  not been calculated yet).
-        /// </remarks>
-        /// <returns>The amount of carbon spent on N fixation (kg/ha)</returns>
-        private double DailyNFixationCosts()
-        {
-            double fixationCost = 0.0;
-            if ((SymbiontCostFactor > Epsilon) || (NFixingCostFactor > Epsilon))
-            {
-                //  respiration cost of symbiont (presence of rhizobia is assumed to be proportional to root mass)
-                double Tfactor = TemperatureEffectOnRespiration(Tmean(0.5));
-                double maintenanceCost = BelowGroundLiveWt * CarbonFractionInDM * SymbiontCostFactor * Tfactor;
-
-                //  respiration cost of actual N fixation (assumed as a simple linear function of N fixed)
-                double activityCost = fixedN * NFixingCostFactor;
-
-                fixationCost = maintenanceCost + activityCost;
-            }
-
-            return fixationCost;
         }
 
         /// <summary>Evaluates the use of remobilised nitrogen and computes soil nitrogen demand.</summary>
