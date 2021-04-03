@@ -1249,11 +1249,8 @@
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Fraction of standing DM harvested (0-1).</summary>
+        /// <summary>Fraction of standing DM that was harvested (0-1).</summary>
         private double defoliatedFraction;
-
-        /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
-        private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         private double defoliatedDigestibility;
@@ -3818,6 +3815,7 @@
             // Set outputs and check balance
             var defoliatedDM = preRemovalDMShoot - AboveGroundWt;
             var defoliatedN = preRemovalNShoot - AboveGroundN;
+            defoliatedFraction = MathUtilities.Divide(defoliatedDM, preRemovalDMShoot, 0.0);
             if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
@@ -4180,7 +4178,7 @@
         private double DefoliationEffectOnTissueTurnover()
         {
             double defoliationEffect = 0.0;
-            cumDefoliationFactor += myDefoliatedFraction;
+            cumDefoliationFactor = Math.Min(1.0, cumDefoliationFactor + defoliatedFraction);
             if (cumDefoliationFactor > 0.0)
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
@@ -4196,9 +4194,6 @@
                     cumDefoliationFactor = todaysFactor;
                 }
             }
-
-            // clear fraction defoliated after use
-            myDefoliatedFraction = 0.0;
 
             return defoliationEffect;
         }
