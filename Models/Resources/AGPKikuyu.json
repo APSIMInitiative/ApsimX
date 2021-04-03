@@ -134,7 +134,7 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.02,
+          "NConcOptimum": 0.015,
           "NConcMinimum": 0.006,
           "NConcMaximum": 0.025,
           "Name": "Stem",
@@ -235,9 +235,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-          "NConcOptimum": 0.02,
+          "NConcOptimum": 0.01,
           "NConcMinimum": 0.006,
-          "NConcMaximum": 0.025,
+          "NConcMaximum": 0.015,
           "RootDistributionDepthParam": 100.0,
           "RootDistributionExponent": 3.7,
           "RootBottomDistributionFactor": 1.05,

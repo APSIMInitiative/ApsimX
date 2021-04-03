@@ -235,9 +235,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-          "NConcOptimum": 0.0225,
+          "NConcOptimum": 0.015,
           "NConcMinimum": 0.01,
-          "NConcMaximum": 0.0275,
+          "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 70.0,
           "RootDistributionExponent": 2.5,
           "RootBottomDistributionFactor": 1.05,

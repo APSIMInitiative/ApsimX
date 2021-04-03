@@ -134,9 +134,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.006,
-          "NConcMaximum": 0.025,
+          "NConcOptimum": 0.0225,
+          "NConcMinimum": 0.01,
+          "NConcMaximum": 0.0275,
           "Name": "Stem",
           "Children": [
             {
@@ -184,10 +184,10 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "FractionStanding": 0.0,
-          "NConcOptimum": 0.0,
-          "NConcMinimum": 0.0,
-          "NConcMaximum": 0.0,
+          "FractionStanding": 0.75,
+          "NConcOptimum": 0.0225,
+          "NConcMinimum": 0.01,
+          "NConcMaximum": 0.0275,
           "Name": "Stolon",
           "Children": [
             {
@@ -235,8 +235,8 @@
         },
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.006,
+          "NConcOptimum": 0.015,
+          "NConcMinimum": 0.01,
           "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 100.0,
           "RootDistributionExponent": 3.7,
