@@ -45,7 +45,7 @@
       "FractionLeafDMFactor": 2000.0,
       "FractionLeafExponent": 3.0,
       "FractionToStolon": 0.2,
-      "SpecificLeafArea": 32.0,
+      "SpecificLeafArea": 30.0,
       "StolonEffectOnLAI": 0.0,
       "ShootMaxEffectOnLAI": 500.0,
       "MaxStemEffectOnLAI": 0.5,
