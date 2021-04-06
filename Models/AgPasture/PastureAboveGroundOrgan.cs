@@ -225,7 +225,7 @@
             EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
             DevelopingTissue.Reset(developingWt, developingWt * NConcOptimum);
             MatureTissue.Reset(matureWt, matureWt * NConcOptimum);
-            DeadTissue.Reset(deadWt, deadWt * NConcOptimum);
+            DeadTissue.Reset(deadWt, deadWt * NConcMinimum);
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();
