@@ -1455,7 +1455,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
+                      "FixedValue": 1.0,
                       "Units": "percentage",
                       "Name": "DMReallocationFactor",
                       "Children": [],
