@@ -95,9 +95,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n</div>";
-            return html;
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -107,7 +105,7 @@ namespace Models.CLEM
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"resourcecontentlight clearfix\">";
+            html += "\r\n<div class=\"resourcecontentlight clearfix\">";
             if (!(this.Children.Where(a => a.GetType().Name.Contains("TransmutationCost")).Count() >= 1))
             {
                 html += "<div class=\"errorlink\">No transmutation costs provided</div>";
@@ -138,6 +136,7 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>

@@ -2,6 +2,7 @@
 using Gdk;
 using Gtk;
 using UserInterface.EventArguments;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
@@ -190,8 +191,8 @@ namespace UserInterface.Views
                     if (IntellisenseItemsNeeded != null)
                     {
                         int x, y;
-                        textentry1.GdkWindow.GetOrigin(out x, out y);
-                        System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.SizeRequest().Height);
+                        textentry1.GetGdkWindow().GetOrigin(out x, out y);
+                        System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.HeightRequest);
                         NeedContextItemsArgs e = new NeedContextItemsArgs()
                         {
                             Coordinates = coordinates,

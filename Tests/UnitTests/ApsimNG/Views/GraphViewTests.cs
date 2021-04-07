@@ -23,6 +23,9 @@ using Utility;
 
 namespace UnitTests.ApsimNG.Views
 {
+    /// <summary>
+    /// Tests for the GraphView UI component.
+    /// </summary>
     [TestFixture]
     public class GraphViewTests
     {
@@ -205,7 +208,7 @@ namespace UnitTests.ApsimNG.Views
             // The legend view contains a combo box with the legend position options (top-right, bottom-left, etc).
             // This should really be refactored to use a public IDropDownView, which is much more convenient to use.
             // First, get a reference to the combo box via reflection.
-            ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", legendView) as ComboBox;
+            ComboBox combo = ReflectionUtilities.GetValueOfFieldOrProperty("combobox1", legendView.PositionDropDown) as ComboBox;
 
             // fixme - we should support all valid OxyPlot legend position types.
             foreach (Models.Graph.LegendPositionType legendPosition in Enum.GetValues(typeof(Models.Graph.LegendPositionType)))

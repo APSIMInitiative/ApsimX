@@ -114,6 +114,56 @@ namespace APSIM.Shared.Utilities
             }
         }
 
+        /// <summary>
+        /// Opens/runs a file/URI in the default application.
+        /// </summary>
+        /// <remarks>
+        /// Due to a bug in mono, opening files/URIs with Process.Start
+        /// doesn't work correctly. The following is a workaround used
+        /// in NetworkMiner, as suggested in the bug report on mono:
+        /// https://github.com/mono/mono/issues/17204#issuecomment-697329095
+        /// </remarks>
+        /// <param name="path">File or URI to be opened.</param>
+        public static void ProcessStart(string path)
+        {
+            if (!CurrentOS.IsWindows)
+            {
+                if (path.Contains(" ") && path[0] != '\'' && path[0]!='\"')
+                {
+                    path = "\"" + path + "\"";
+                }
+
+                foreach (string app in new[] { "xdg-open", "gnome-open", "kfmclient", "open", "explorer.exe" })
+                {
+                    System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo(app, path);
+                    psi.ErrorDialog = false;
+                    try
+                    {
+                        System.Diagnostics.Process.Start(psi);
+                    }
+                    catch (System.ComponentModel.Win32Exception)
+                    {
+                        continue;
+                    }
+                    break;
+                }
+            }
+            else
+            {
+                if (System.IO.File.Exists(path))
+                    System.Diagnostics.Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+                else if (System.IO.Directory.Exists(path))
+                {
+                    if (path.Contains(" ") && path[0] != '\"')
+                        path = "\"" + path + "\"";
+
+                    System.Diagnostics.Process.Start("explorer.exe", path);
+                }
+                else
+                    System.Diagnostics.Process.Start(path);
+            }
+        }
+
         /// <summary>A class for running an external process, redirecting all stdout and stderr.</summary>
         public class ProcessWithRedirectedOutput
         {

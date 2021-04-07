@@ -27,6 +27,9 @@
         /// <returns> Program exit code (0 for success)</returns>
         public static int Main(string[] args)
         {
+#if NETCOREAPP
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+#endif
             ReplaceObsoleteArguments(ref args);
             new Parser(config =>
             {
@@ -207,6 +210,9 @@
         /// <summary>All jobs have completed</summary>
         private static void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            if (sender is Runner runner)
+                (sender as Runner).DisposeStorage();
+
             if (e.AllExceptionsThrown == null)
                 return;
 

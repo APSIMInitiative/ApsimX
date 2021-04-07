@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -295,49 +296,51 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Sell ";
-            switch (SellStyle)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                case ResourceSellStyle.SpecifiedAmount:
-                    html += "<span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> of ";
-                    break;
-                case ResourceSellStyle.ProportionOfStore:
-                    html += "<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of ";
-                    break;
-                case ResourceSellStyle.ProportionOfLastGain:
-                    html += "<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of the last gain transaction recorded for ";
-                    break;
-                case ResourceSellStyle.ReserveAmount:
-                    html += "all but <span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> as reserve of ";
-                    break;
-                case ResourceSellStyle.ReserveProportion:
-                    html += "all but leaving <span class=\"resourcelink\">" + Value.ToString("##0%") + "</span> percent of store as reserve of ";
-                    break;
-                default:
-                    break;
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Sell ");
+                switch (SellStyle)
+                {
+                    case ResourceSellStyle.SpecifiedAmount:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> of ");
+                        break;
+                    case ResourceSellStyle.ProportionOfStore:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of ");
+                        break;
+                    case ResourceSellStyle.ProportionOfLastGain:
+                        htmlWriter.Write("<span class=\"resourcelink\">" + Value.ToString("#0%") + "</span> percent of the last gain transaction recorded for ");
+                        break;
+                    case ResourceSellStyle.ReserveAmount:
+                        htmlWriter.Write("all but <span class=\"resourcelink\">" + Value.ToString("#,##0") + "</span> as reserve of ");
+                        break;
+                    case ResourceSellStyle.ReserveProportion:
+                        htmlWriter.Write("all but leaving <span class=\"resourcelink\">" + Value.ToString("##0%") + "</span> percent of store as reserve of ");
+                        break;
+                    default:
+                        break;
+                }
 
-            if (ResourceTypeName == null || ResourceTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            }
-            html += " with sales placed in ";
-            if (AccountName == null || AccountName == "")
-            {
-                html += " <span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += " <span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
+                if (ResourceTypeName == null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
+                }
+                htmlWriter.Write(" with sales placed in ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write(" <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" <span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         }
 
         #endregion

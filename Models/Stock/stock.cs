@@ -14,7 +14,7 @@
     using System.Linq;
 
     /// <summary>
-    /// #GrazPlan Stock
+    /// # Stock
     /// The STOCK component encapsulates the GRAZPLAN animal biology model, as described in [FREER1997].
     /// 
     /// [The GrazPlan animal model technical description](https://grazplan.csiro.au/wp-content/uploads/2007/08/TechPaperMay12.pdf)
@@ -233,6 +233,7 @@
         /// <summary>
         /// Gets the consumption of supplementary feed by animals
         /// </summary>
+        [Units("-")]
         public SupplementEaten[] SuppEaten
         {
             get
@@ -246,6 +247,7 @@
         /// <summary>
         /// Gets the number of animal groups
         /// </summary>
+        [Units("-")]
         public int NoGroups
         {
             get
@@ -259,6 +261,7 @@
         /// <summary>
         /// Gets the number of animals in each group
         /// </summary>
+        [Units("-")]
         public int[] Number
         {
             get
@@ -272,6 +275,7 @@
         /// <summary>
         /// Gets the total number of animals
         /// </summary>
+        [Units("-")]
         public int NumberAll
         {
             get
@@ -285,6 +289,7 @@
         /// <summary>
         /// Gets the number of animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] NumberTag
         {
             get
@@ -300,6 +305,7 @@
         /// <summary>
         /// Gets the number of unweaned young animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NumberYng
         {
             get
@@ -313,6 +319,7 @@
         /// <summary>
         /// Gets the total number of unweaned young animals
         /// </summary>
+        [Units("-")]
         public int NumberYngAll
         {
             get
@@ -326,6 +333,7 @@
         /// <summary>
         /// Gets the number of unweaned young animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NumberYngTag
         {
             get
@@ -341,6 +349,7 @@
         /// <summary>
         /// Gets the number of female animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NoFemale
         {
             get
@@ -354,6 +363,7 @@
         /// <summary>
         /// Gets the total number of female animals
         /// </summary>
+        [Units("-")]
         public int NoFemaleAll
         {
             get
@@ -367,6 +377,7 @@
         /// <summary>
         /// Gets the number of female animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] NoFemaleTag
         {
             get
@@ -382,6 +393,7 @@
         /// <summary>
         /// Gets the number of unweaned female animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NoFemaleYng
         {
             get
@@ -395,6 +407,7 @@
         /// <summary>
         /// Gets the total number of unweaned female animals
         /// </summary>
+        [Units("-")]
         public int NoFemaleYngAll
         {
             get
@@ -408,6 +421,7 @@
         /// <summary>
         /// Gets the number of unweaned female animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] NoFemaleYngTag
         {
             get
@@ -423,6 +437,7 @@
         /// <summary>
         /// Gets the number of male animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NoMale
         {
             get
@@ -436,6 +451,7 @@
         /// <summary>
         /// Gets the total number of male animals
         /// </summary>
+        [Units("-")]
         public int NoMaleAll
         {
             get
@@ -449,6 +465,7 @@
         /// <summary>
         /// Gets the number of male animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] NoMaleTag
         {
             get
@@ -464,6 +481,7 @@
         /// <summary>
         /// Gets the number of unweaned male animals in each group
         /// </summary>
+        [Units("-")]
         public int[] NoMaleYng
         {
             get
@@ -477,6 +495,7 @@
         /// <summary>
         /// Gets the total number of unweaned male animals
         /// </summary>
+        [Units("-")]
         public int NoMaleYngAll
         {
             get
@@ -490,6 +509,7 @@
         /// <summary>
         /// Gets the number of unweaned male animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] NoMaleYngTag
         {
             get
@@ -505,6 +525,7 @@
         /// <summary>
         /// Gets the deaths of all non suckling animals
         /// </summary>
+        [Units("-")]
         public int DeathsAll
         {
             get
@@ -518,6 +539,7 @@
         /// <summary>
         /// Gets the deaths of non suckling animals in each group
         /// </summary>
+        [Units("-")]
         public int[] Deaths
         {
             get
@@ -531,6 +553,7 @@
         /// <summary>
         /// Gets the deaths of non suckling animals in each tag group
         /// </summary>
+        [Units("-")]
         public int[] DeathsTag
         {
             get
@@ -542,8 +565,9 @@
         }
 
         /// <summary>
-        /// Gets the sex field of the sheep and cattle initialisation variables
+        /// Gets the sex field of the sheep and cattle initialisation variables. [wether | ram | steer | bull | ewe | heifer | cow]
         /// </summary>
+        [Units("-")]
         public string[] Sex
         {
             get
@@ -648,6 +672,7 @@
         /// <summary>
         /// Gets the age of animals, in months by group
         /// </summary>
+        [Units("month")]
         public double[] AgeMonths
         {
             get
@@ -661,6 +686,7 @@
         /// <summary>
         /// Gets the age of animals, in months total
         /// </summary>
+        [Units("month")]
         public double AgeMonthsAll
         {
             get
@@ -674,6 +700,7 @@
         /// <summary>
         /// Gets the age of animals, in months by tag number
         /// </summary>
+        [Units("month")]
         public double[] AgeMonthsTag
         {
             get
@@ -689,6 +716,7 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months by group
         /// </summary>
+        [Units("month")]
         public double[] AgeMonthsYng
         {
             get
@@ -702,6 +730,7 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months total
         /// </summary>
+        [Units("month")]
         public double AgeMonthsYngAll
         {
             get
@@ -715,6 +744,7 @@
         /// <summary>
         /// Gets the age of unweaned young animals, in months by tag number
         /// </summary>
+        [Units("month")]
         public double[] AgeMonthsYngTag
         {
             get
@@ -906,6 +936,7 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) by group
         /// </summary>
+        [Units("-")]
         public double[] CondScore
         {
             get
@@ -919,6 +950,7 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) total
         /// </summary>
+        [Units("-")]
         public double CondScoreAll
         {
             get
@@ -932,6 +964,7 @@
         /// <summary>
         /// Gets the condition score of animals (1-5 scale) by tag number
         /// </summary>
+        [Units("-")]
         public double[] CondScoreTag
         {
             get
@@ -947,6 +980,7 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) by group
         /// </summary>
+        [Units("-")]
         public double[] CondScoreYng
         {
             get
@@ -960,6 +994,7 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) total
         /// </summary>
+        [Units("-")]
         public double CondScoreYngAll
         {
             get
@@ -973,6 +1008,7 @@
         /// <summary>
         /// Gets the condition score of unweaned young animals (1-5 scale) by tag number
         /// </summary>
+        [Units("-")]
         public double[] CondScoreYngTag
         {
             get
@@ -1428,6 +1464,7 @@
         /// <summary>
         /// Gets the number of foetuses per head by group
         /// </summary>
+        [Units("-")]
         public double[] NoFoetuses
         {
             get
@@ -1441,6 +1478,7 @@
         /// <summary>
         /// Gets the number of foetuses per head total
         /// </summary>
+        [Units("-")]
         public double NoFoetusesAll
         {
             get
@@ -1454,6 +1492,7 @@
         /// <summary>
         /// Gets the number of foetuses per head by tag number
         /// </summary>
+        [Units("-")]
         public double[] NoFoetusesTag
         {
             get
@@ -1470,6 +1509,7 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head by group
         /// </summary>
+        [Units("-")]
         public double[] NoSuckling
         {
             get
@@ -1483,6 +1523,7 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head total
         /// </summary>
+        [Units("-")]
         public double NoSucklingAll
         {
             get
@@ -1496,6 +1537,7 @@
         /// <summary>
         /// Gets the number of unweaned lambs or calves per head by tag number
         /// </summary>
+        [Units("-")]
         public double[] NoSucklingTag
         {
             get
@@ -1511,6 +1553,7 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, by group
         /// </summary>
+        [Units("-")]
         public double[] BirthCS
         {
             get
@@ -1524,6 +1567,7 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, total
         /// </summary>
+        [Units("-")]
         public double BirthCSAll
         {
             get
@@ -1537,6 +1581,7 @@
         /// <summary>
         /// Gets the condition score at last parturition; zero if lactating=0, by tag number
         /// </summary>
+        [Units("-")]
         public double[] BirthCSTag
         {
             get
@@ -1550,11 +1595,13 @@
         /// <summary>
         /// Gets the paddock occupied by each animal group
         /// </summary>
+        [Units("-")]
         public string[] Paddock { get { return StockModel.Paddocks.Skip(1).Select(p => p.Name).ToArray(); } }
 
         /// <summary>
         /// Gets the tag value assigned to each animal group
         /// </summary>
+        [Units("-")]
         public int[] TagNo { get { return StockModel.Animals.Skip(1).Select(p => p.Tag).ToArray(); } }
 
         // =========== Dry sheep equivalents, based on potential intake ==================
@@ -1562,6 +1609,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake by group
         /// </summary>
+        [Units("-")]
         public double[] DSE
         {
             get
@@ -1575,6 +1623,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake total
         /// </summary>
+        [Units("-")]
         public double DSEAll
         {
             get
@@ -1588,6 +1637,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake by tag number
         /// </summary>
+        [Units("-")]
         public double[] DSETag
         {
             get
@@ -1603,6 +1653,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by group
         /// </summary>
+        [Units("-")]
         public double[] DSEYng
         {
             get
@@ -1616,6 +1667,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals total
         /// </summary>
+        [Units("-")]
         public double DSEYngAll
         {
             get
@@ -1629,6 +1681,7 @@
         /// <summary>
         /// Gets the dry sheep equivalents, based on potential intake of unweaned young animals by tag number
         /// </summary>
+        [Units("-")]
         public double[] DSEYngTag
         {
             get
@@ -1733,6 +1786,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients by each animal group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] Intake
         {
             get
@@ -1746,6 +1800,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients
         /// </summary>
+        [Units("-")]
         public DMPoolHead IntakeAll
         {
             get
@@ -1759,6 +1814,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] IntakeTag
         {
             get
@@ -1774,6 +1830,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals by group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] IntakeYng
         {
             get
@@ -1787,6 +1844,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals
         /// </summary>
+        [Units("-")]
         public DMPoolHead IntakeYngAll
         {
             get
@@ -1800,6 +1858,7 @@
         /// <summary>
         /// Gets the total intake per head of dry matter and nutrients of unweaned animals by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] IntakeYngTag
         {
             get
@@ -1815,6 +1874,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients by each animal group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] PastIntake
         {
             get
@@ -1828,6 +1888,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients
         /// </summary>
+        [Units("-")]
         public DMPoolHead PastIntakeAll
         {
             get
@@ -1841,6 +1902,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] PastIntakeTag
         {
             get
@@ -1856,6 +1918,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] PastIntakeYng
         {
             get
@@ -1869,6 +1932,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals
         /// </summary>
+        [Units("-")]
         public DMPoolHead PastIntakeYngAll
         {
             get
@@ -1882,6 +1946,7 @@
         /// <summary>
         /// Gets the intake per head of pasture dry matter and nutrients of unweaned animals by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] PastIntakeYngTag
         {
             get
@@ -1897,6 +1962,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients by each animal group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] SuppIntake
         {
             get
@@ -1910,6 +1976,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients
         /// </summary>
+        [Units("-")]
         public DMPoolHead SuppIntakeAll
         {
             get
@@ -1923,6 +1990,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] SuppIntakeTag
         {
             get
@@ -1938,6 +2006,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] SuppIntakeYng
         {
             get
@@ -1951,6 +2020,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals
         /// </summary>
+        [Units("-")]
         public DMPoolHead SuppIntakeYngAll
         {
             get
@@ -1964,6 +2034,7 @@
         /// <summary>
         /// Gets the intake per head of supplement dry matter and nutrients of unweaned animals by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] SuppIntakeYngTag
         {
             get
@@ -2596,6 +2667,7 @@
         /// <summary>
         /// Gets the sulphur retained within the animals, on a per-head basis by group
         /// </summary>
+        [Units("kg/d")]
         public double[] RetainedS
         {
             get
@@ -2683,6 +2755,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head by each animal group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] Faeces
         {
             get
@@ -2696,6 +2769,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head
         /// </summary>
+        [Units("-")]
         public DMPoolHead FaecesAll
         {
             get
@@ -2709,6 +2783,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] FaecesTag
         {
             get
@@ -2724,6 +2799,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals by group
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] FaecesYng
         {
             get
@@ -2737,6 +2813,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals
         /// </summary>
+        [Units("-")]
         public DMPoolHead FaecesYngAll
         {
             get
@@ -2750,6 +2827,7 @@
         /// <summary>
         /// Gets the faecal dry matter and nutrients per head of unweaned animals by tag
         /// </summary>
+        [Units("-")]
         public DMPoolHead[] FaecesYngTag
         {
             get
@@ -2765,6 +2843,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head by each animal group
         /// </summary>
+        [Units("-")]
         public InorgFaeces[] FaecesInorg
         {
             get
@@ -2785,6 +2864,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head
         /// </summary>
+        [Units("-")]
         public InorgFaeces FaecesInorgAll
         {
             get
@@ -2802,6 +2882,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head by tag
         /// </summary>
+        [Units("-")]
         public InorgFaeces[] FaecesInorgTag
         {
             get
@@ -2824,6 +2905,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by group
         /// </summary>
+        [Units("-")]
         public InorgFaeces[] FaecesInorgYng
         {
             get
@@ -2844,6 +2926,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals
         /// </summary>
+        [Units("-")]
         public InorgFaeces FaecesInorgYngAll
         {
             get
@@ -2861,6 +2944,7 @@
         /// <summary>
         /// Gets the inorganic nutrients excreted in faeces, per head of unweaned animals by tag
         /// </summary>
+        [Units("-")]
         public InorgFaeces[] FaecesInorgYngTag
         {
             get
@@ -2881,6 +2965,7 @@
         /// <summary>
         /// Gets the metabolizable energy use for each animal group
         /// </summary>
+        [Units("-")]
         public EnergyUse[] EnergyUse
         {
             get
@@ -3424,6 +3509,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by group
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactor
         {
             get
@@ -3437,6 +3523,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) total
         /// </summary>
+        [Units("0-1")]
         public double RDPFactorAll
         {
             get
@@ -3450,6 +3537,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) by tag number
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactorTag
         {
             get
@@ -3465,6 +3553,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by group
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactorYng
         {
             get
@@ -3478,6 +3567,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals total
         /// </summary>
+        [Units("0-1")]
         public double RDPFactorYngAll
         {
             get
@@ -3491,6 +3581,7 @@
         /// <summary>
         /// Gets the effect of rumen-degradable protein availability on rate of intake (1 = no limitation to due lack of RDP) of unweaned young animals by tag number
         /// </summary>
+        [Units("0-1")]
         public double[] RDPFactorYngTag
         {
             get
@@ -3504,8 +3595,9 @@
         // =========== Externally-imposed scaling factor for potential intake ==================
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by group
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable by group
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifier
         {
             get
@@ -3517,8 +3609,9 @@
         }
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, total
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, total
         /// </summary>
+        [Units("-")]
         public double IntakeModifierAll
         {
             get
@@ -3530,8 +3623,9 @@
         }
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable by tag number
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable by tag number
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifierTag
         {
             get
@@ -3545,8 +3639,9 @@
         // =========== Externally-imposed scaling factor for potential intake of young ==================
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by group
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals by group
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifierYng
         {
             get
@@ -3558,8 +3653,9 @@
         }
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals total
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals total
         /// </summary>
+        [Units("-")]
         public double IntakeModifierYngAll
         {
             get
@@ -3571,8 +3667,9 @@
         }
 
         /// <summary>
-        /// Gets the externally-imposed scaling factor for potential intake. This property is resettable, of unweaned young animals by tag number
+        /// Gets the externally-imposed scaling factor for potential intake (0-1.0). This property is resettable, of unweaned young animals by tag number
         /// </summary>
+        [Units("-")]
         public double[] IntakeModifierYngTag
         {
             get

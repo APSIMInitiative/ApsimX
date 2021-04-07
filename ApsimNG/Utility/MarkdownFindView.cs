@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gtk;
-using Mono.TextEditor;
 using Cairo;
 using UserInterface.Views;
 using System.Linq;
+using UserInterface.Extensions;
 
 namespace Utility
 {
@@ -88,7 +88,7 @@ namespace Utility
 
         public void Destroy()
         {
-            window1.Destroy();
+            window1.Cleanup();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
@@ -109,7 +109,7 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(window1, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-            md.Destroy();
+            md.Cleanup();
         }
 
         private void UpdateTitleBar()
@@ -176,21 +176,20 @@ namespace Utility
         }
 
 
-        public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
+        public void FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
             if (string.IsNullOrEmpty(txtLookFor.Text))
             {
                 ShowMsg("No string specified to look for!");
-                return null;
+                return;
             }
 
             TextView[] editors = GetEditorsInView();
             if (currentView == null)
                 currentView = editors.FirstOrDefault(e => e.HasFocus) ?? editors.FirstOrDefault();
             if (currentView == null)
-                return null;
+                return;
 
-            SearchResult range = null;
             TextIter matchStart = TextIter.Zero;
             TextIter matchEnd = TextIter.Zero;
             bool matchFound = false;
@@ -236,9 +235,8 @@ namespace Utility
             {
                 if (messageIfNotFound != null)
                     ShowMsg(messageIfNotFound);
-                return null;
+                return;
             }
-            return range;
         }
 
         /// <summary>

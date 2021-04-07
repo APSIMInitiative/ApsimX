@@ -12,6 +12,9 @@ using UserInterface.Views;
 
 namespace UnitTests.ApsimNG.Presenters
 {
+    /// <summary>
+    /// Tests for the profile grid UI component.
+    /// </summary>
     [TestFixture]
     public class ProfileGridTests
     {

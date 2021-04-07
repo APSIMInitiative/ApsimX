@@ -30,8 +30,6 @@ namespace Models.PMF.Phen
         /// <summary>Maximum delta for upregulation of Vrn1 due to long Pp</summary>
         public double MaxDVrnX { get; set; }
         /// <summary> Base phyllochron</summary>
-        public double BasePhyllochron { get; set; }
-        /// <summary>Intercept of the realationship between FLN and TSHS</summary>
         public double IntFLNvsTSHS { get; set; }
         /// <summary>The maximum methalation of cold Vrn 1</summary>
         public double MaxMethColdVern1 { get; set; }
@@ -54,18 +52,38 @@ namespace Models.PMF.Phen
         /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
         Phenology phenology = null;
+        /// <summary>The ancestor CAMP model and some relations</summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        IFunction basePhyllochron = null;
+        
+        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.PhotoPeriodEffect.XYPairs")]
+        IIndexedFunction phylloPpSens = null;
 
-        ///<summary>Function to convert HaunStages to base phyllochrons</summary>
-        public double ConvertHStoBP(double HS)
-        {
-            double[] x = { 0, 2, 7, 30 };
-            double[] y = { 0, 1.5, 6.5, 38.7 };
-            bool DidInterpolate = false;
-            return MathUtilities.LinearInterpReal(HS,x,y, out DidInterpolate);
-        }
 
         /// <summary>
-        /// Takes observed (or estimated) final leaf numbers for genotype with (V) and without (N) vernalisation in long (L)
+        /// Calculates how much Tt has accumulated from emergence to the specified HaunStage
+        /// </summary>
+        /// <param name="HS"></param>
+        /// <param name="Pp"></param>
+        /// <param name="BasePhyllochron"></param>
+        /// <param name="PhylloPpSens"></param>
+        private double convertHStoTt(double HS, double Pp, double BasePhyllochron, double PhylloPpSens)
+        {
+            double PpFactor = 1.0;
+            if (Pp == 8)
+                PpFactor = PhylloPpSens;
+            double[] xHS = new double[]{0, 7, 30};
+            double[] yTt = new double[3];
+            yTt[0] = 0;
+            yTt[1] = (7 * BasePhyllochron * PpFactor);
+            yTt[2] = (yTt[1] + 23 * BasePhyllochron * PpFactor * 1.4);
+            bool DidInterpolate = false;
+            return MathUtilities.LinearInterpReal(HS, xHS, yTt, out DidInterpolate);
+        }
+    
+
+        /// <summary>
+        /// Takes observed (or estimated) final leaf numbers and phyllochron for genotype with (V) and without (N) vernalisation in long (L)
         /// and short (S) photoperiods and works through calculation scheme and assigns values for vrn expresson parameters
         /// </summary>
         /// <param name="FLNset">Set of Final leaf number observations (or estimations) for genotype</param>
@@ -83,59 +101,54 @@ namespace Models.PMF.Phen
             CultivarRateParams Params = new CultivarRateParams();
 
             // Get some other parameters from phenology
-            double maxLAR = phenology.FindChild<IFunction>("MaxLAR").Value();
-            double minLAR = phenology.FindChild<IFunction>("MinLAR").Value();
-            double PTQhf = phenology.FindChild<IFunction>("PTQhf").Value();
-            LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
-
-            //Calculate base phyllochron
-            Params.BasePhyllochron = 1.3 * (1 / LARmodel.CalculateLAR(1.0, maxLAR, minLAR, PTQhf));
-
+            double BasePhyllochron = basePhyllochron.Value();
+            double PhylloPpSens = phylloPpSens.ValueIndexed(8);
+            
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Base Phyllochrons)
             //////////////////////////////////////////////////////////////////////////////////////
 
-            // Base phyllochron duration of Emergence (EmergBP)
-            double EmergBP = EnvData.TtEmerge / Params.BasePhyllochron;
+            // ThermalTime duration of Emergence (EmergBP)
+            double TtEmerg = EnvData.TtEmerge;
 
-            //Haun stage duration of vernalisation treatment period
-            double VrnTreatTtDurat = EnvData.VrnTreatTemp * EnvData.VrnTreatDuration;
-            double VernTreatBP = VrnTreatTtDurat / Params.BasePhyllochron;
+            //ThermalTime duration of vernalisation treatment period
+            double TtVern = EnvData.VrnTreatTemp * EnvData.VrnTreatDuration;
 
             // The soonest a wheat plant may exhibit vern saturation
-            double MinVSBP = ConvertHStoBP(1.1);
+            double MinVS = convertHStoTt(1.1,16,BasePhyllochron,PhylloPpSens);
 
-            // Minimum Haun stage duration from vernalisation saturation to terminal spikelet under long day conditions (MinHSVsTs)
+            // Minimum Therval time duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that harve a high TSHS hit VS ~3HS prior to TS 
-            double MinBPVsTs = Math.Min(ConvertHStoBP(3.0), (ConvertHStoBP(FLNset.LV) - MinVSBP) / 2.0);
+            double MinVsTs = Math.Min(convertHStoTt(3.0, 16, BasePhyllochron, PhylloPpSens), 
+                                     (convertHStoTt(FLNset.LV, 16, BasePhyllochron, PhylloPpSens) - MinVS) / 2.0);
 
-            // The HS duratin from Vern sat to final leaf under long Pp vernalised treatment
-            double VSBP_FL_LV = ConvertHStoBP(FLNset.LV) - MinVSBP - MinBPVsTs;
+            // The Tt duration from Vern sat to final leaf under long Pp vernalised treatment
+            double VS_FL_LV = convertHStoTt(FLNset.LV, 16, BasePhyllochron, PhylloPpSens) - MinVS - MinVsTs;
 
             // The Intercept of the assumed relationship between FLN and TSHS for genotype (IntFLNvsTSHS)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Params.IntFLNvsTSHS = Math.Min(2.85, VSBP_FL_LV / 1.1);
+            Params.IntFLNvsTSHS = Math.Min(2.85, VS_FL_LV / 1.1);
 
             // Calculate Terminal spikelet duration (TSHS) for each treatment from FLNData
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double TSBP_LV = ConvertHStoBP(camp.calcTSHS(FLNset.LV, Params.IntFLNvsTSHS));
-            double TSBP_LN = ConvertHStoBP(camp.calcTSHS(FLNset.LN, Params.IntFLNvsTSHS));
-            double TSBP_SV = ConvertHStoBP(camp.calcTSHS(FLNset.SV, Params.IntFLNvsTSHS));
-            double TSBP_SN = ConvertHStoBP(camp.calcTSHS(FLNset.SN, Params.IntFLNvsTSHS));
+            double TS_LV = convertHStoTt(camp.calcTSHS(FLNset.LV, Params.IntFLNvsTSHS),16, BasePhyllochron, PhylloPpSens);
+            double TS_LN = convertHStoTt(camp.calcTSHS(FLNset.LN, Params.IntFLNvsTSHS),16,BasePhyllochron,PhylloPpSens);
+            double TS_SV = convertHStoTt(camp.calcTSHS(FLNset.SV, Params.IntFLNvsTSHS),8,BasePhyllochron,PhylloPpSens);
+            double TS_SN = convertHStoTt(camp.calcTSHS(FLNset.SN, Params.IntFLNvsTSHS),8,BasePhyllochron,PhylloPpSens);
                                                       
-            // Photoperiod sensitivity (PPS) is the difference between TSBP at 8 and 16 h pp under full vernalisation.
+            // Photoperiod sensitivity (PPS) is the Tt difference between TS at 8 and 16 h pp under full vernalisation.
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double PPS = Math.Max(0, TSBP_SV - TSBP_LV);
+            double PPS = Math.Max(0, TS_SV - TS_LV);
 
-            // Vernalisation Saturation duration (VSBP) for each environment from TSBP and photoperiod response
+            // Vernalisation Saturation duration (VS) for each environment from TS and photoperiod response
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Terminal spikelet duration less the minimum duration from VS to TS under long day treatment
-            double VSBP_LV = Math.Max(MinVSBP, TSBP_LV - MinBPVsTs);
-            double VSBP_LN = Math.Max(MinVSBP, TSBP_LN - MinBPVsTs);
+            double VS_LV = Math.Max(MinVS, TS_LV - MinVsTs);
+            double VS_LN = Math.Max(MinVS, TS_LN - MinVsTs);
             // Terminal spikelet duration less the minimum duration from VS to TS and the photoperiod extension of VS to TS under short day treatment
-            double VSBP_SV = Math.Max(MinVSBP, TSBP_SV - (MinBPVsTs + PPS));
-            double VSBP_SN = Math.Max(MinVSBP, TSBP_SN - (MinBPVsTs + PPS));
+            double VS_SV = Math.Max(MinVS, TS_SV - (MinVsTs + PPS));
+            double VS_SN = Math.Max(MinVS, TS_SN - (MinVsTs + PPS));
 
             ////////////////////////////////////////////////////////////////////////
             // Calculate Photoperiod sensitivities
@@ -145,14 +158,14 @@ namespace Models.PMF.Phen
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Occurs under long Pp conditions, Assuming Vrn3 increases from 0 - VernSatThreshold between VS to TS and this takes 
             // MinBPVsTs under long Pp conditions.
-            Params.MaxDVrn3 = camp.VrnSatThreshold / MinBPVsTs;
+            Params.MaxDVrn3 = camp.VrnSatThreshold / MinVsTs;
 
 
             // Base delta for upredulation of Vrn3 (BaseDVrn3)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Occurs under short Pp conditions, Assuming Vrn3 increases from 0 - VernSatThreshold from VS to TS 
             // and this take MinBPVSTs plus the additional BP from short Pp delay.
-            Params.BaseDVrn3 = camp.VrnSatThreshold / (MinBPVsTs + PPS);
+            Params.BaseDVrn3 = camp.VrnSatThreshold / (MinVsTs + PPS);
 
             //// Under long day conditions Vrn3 expresses at its maximum rate and plant moves quickley from VS to TS.
             //// Genotypic variation in MaxDVrn3 will contribute to differences in earlyness per se
@@ -172,7 +185,7 @@ namespace Models.PMF.Phen
             // Under non vernalising conditions Vrn1 expression will happen at the base rate.  
             // VrnX expression is absent in short days so baseVrn1 is the only contributor to the timing of VS
             // BaseVrn1 expression starts when the seed is imbibed so the duration of expression is emergence plus VS
-            Params.BaseDVrn1 = camp.VrnSatThreshold / (VSBP_SN + EmergBP);
+            Params.BaseDVrn1 = camp.VrnSatThreshold / (VS_SN + TtEmerg);
 
             // Genotypic variation in BaseDVrn1 contributes to intrinsic earlyness.
             // A genotype with high BaseDVrn1 will reach VS quickly regardless of vernalisation exposure
@@ -188,12 +201,12 @@ namespace Models.PMF.Phen
 
             // Vernalisation Sensitivity (VS) measured simply as the difference between SV and SN treatuemnts
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double VS = VSBP_SN - VSBP_SV;
+            double VS = VS_SN - VS_SV;
 
             // To determine the effects of vernalisation treatment on Vrn1 expression we need to seperate these from baseVrn1 expression
             // BaseVrn1 expression at VSBP ('BaseVrn1AtVSBP_SV')
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double BaseVrn1AtVSBP_SV = (VSBP_SV + EmergBP) * Params.BaseDVrn1;
+            double BaseVrn1AtVSBP_SV = (VS_SV + TtEmerg) * Params.BaseDVrn1;
 
             // Any accelleration in VS due to cold exposure under short Photoperiod will be due to methatalated Vrn1 expression
             // The amount of Vrn1 required for VS is given by the Vernalisation Threshold so the amount of methalated Vrn expression
@@ -213,7 +226,7 @@ namespace Models.PMF.Phen
             // treatment duration (VernTreatBP) and the BP when vernalisation occurs as cold exposure after this is irrelevent
             // Effective BP duration of cold treatment (EffectiveColdBP)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double EffectiveColdBP = Math.Min(VSBP_SV + EmergBP, VernTreatBP);
+            double EffectiveColdBP = Math.Min(VS_SV + TtEmerg, TtVern);
 
             // Then we calculate the rate as the amount divided by the duration
             // Rate of cold Vrn1 expression at the vernalisation treatment temperture ('DVrn1AtVrnTreatTemp')
@@ -245,7 +258,7 @@ namespace Models.PMF.Phen
 
             // Vernalisation photoperiod sensitivy parameter (VPPS) is calculated to determine what effect photoperiod will have.
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double VPPS = 1 - ((VSBP_LN + EmergBP) * Params.BaseDVrn1);
+            double VPPS = 1 - ((VS_LN + TtEmerg) * Params.BaseDVrn1);
 
             // Genotypes that have a negative VPPS demonstrate short day vernalisation.  Under long days vernalisation requirement is reduced
             // This is caused by the expression of Vrn2 which must be blocked by additional expression of Vrn1 meaning vernalisation takes longer.  
@@ -255,15 +268,15 @@ namespace Models.PMF.Phen
             // Firstly, under un-vernalised conditions we can calculate the potential Vrn2 expression simply from
             // the amount of BaseVrn1 expression up to VSBP
 
-            // Potential Vern2 expression at VS under long Pp UnVerrnalised treatment (pVrn2AtVSBP_LV)
+            // Potential Vern2 expression at VS under long Pp UnVerrnalised treatment (pVrn2AtVS_LV)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double pVrn2AtVSBP_LN = (VSBP_LN + EmergBP) * Params.BaseDVrn1;
+            double pVrn2AtVS_LN = (VS_LN + TtEmerg) * Params.BaseDVrn1;
 
             // Under full vernalised treatment Vrn2 expression must be less than or equal to VernalisationThreshold at the time of VS.
             // If we assume it is equal to VernalisationThreshold this provides us with another amount of pVrn2
-            // Potential Vern2 expression at VS under long Pp Vernalised treatment (pVrn2AtVSBP_LV)
+            // Potential Vern2 expression at VS under long Pp Vernalised treatment (pVrn2AtVS_LV)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double pVrn2AtVSBP_LV = camp.VrnSatThreshold;
+            double pVrn2AtVS_LV = camp.VrnSatThreshold;
 
             // If we regress these two potential Vrn2 amounts against their durations to VS the slope give us a rate of Vrn2 expression
             // The resulting rate needs to always be less than BaseDVrn1 so Vrn1 can catch up with Vrn2 to cause vernalisation
@@ -274,21 +287,21 @@ namespace Models.PMF.Phen
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             Params.MaxIpVrn2 = 0;
             Params.MaxDpVrn2 = 0;
-            double BaseVrn1AtVSBP_LV = Math.Min(camp.VrnSatThreshold, (VSBP_LV + EmergBP) * Params.BaseDVrn1);
+            double BaseVrn1AtVS_LV = Math.Min(camp.VrnSatThreshold, (VS_LV + TtEmerg) * Params.BaseDVrn1);
 
             //Vrn2 parameters only relevent for genotypes with nevaitve VPPS and a low BaseDVrn1.  Genotypes with a high base
             if (VPPS < 0) //and (BaseDVrn1 < 0.4): 
             {
-                if (VSBP_LN - VSBP_LV == 0)
-                    Params.MaxIpVrn2 = pVrn2AtVSBP_LN;
+                if (VS_LN - VS_LV == 0)
+                    Params.MaxIpVrn2 = pVrn2AtVS_LN;
                 else
                 {
-                    Params.MaxDpVrn2 = Math.Max(0, (pVrn2AtVSBP_LN - pVrn2AtVSBP_LV) / (VSBP_LN - VSBP_LV));
-                    Params.MaxIpVrn2 = (pVrn2AtVSBP_LV) - (VSBP_LV * Params.MaxDpVrn2);
+                    Params.MaxDpVrn2 = Math.Max(0, (pVrn2AtVS_LN - pVrn2AtVS_LV) / (VS_LN - VS_LV));
+                    Params.MaxIpVrn2 = (pVrn2AtVS_LV) - (VS_LV * Params.MaxDpVrn2);
                     if (Params.MaxDpVrn2 >= (Params.BaseDVrn1 * 0.99)) //If DpVrn2 exceeds baseVrn1 we need to do some forcing so it doesn't
                     {
-                        Params.MaxDpVrn2 = Math.Max(0, (pVrn2AtVSBP_LN - (BaseVrn1AtVSBP_LV * 1.2)) / (VSBP_LN - VSBP_LV));
-                        Params.MaxIpVrn2 = (pVrn2AtVSBP_LN) - (VSBP_LN * Params.MaxDpVrn2);
+                        Params.MaxDpVrn2 = Math.Max(0, (pVrn2AtVS_LN - (BaseVrn1AtVS_LV * 1.2)) / (VS_LN - VS_LV));
+                        Params.MaxIpVrn2 = (pVrn2AtVS_LN) - (VS_LN * Params.MaxDpVrn2);
                     }
                 }
             }
@@ -298,16 +311,16 @@ namespace Models.PMF.Phen
             // Under Long Pp unvernalised varieties will reach VS BP sooner than BaseVrn1 expresion determines.
             // BaseVrn1 expression at VS under long Pp unvernalised treatment (BaseVrn1AtVSBP_LN)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double BaseVrn1AtVSBP_LN = Math.Min(camp.VrnSatThreshold, (VSBP_LN + EmergBP) * Params.BaseDVrn1);
+            double BaseVrn1AtVS_LN = Math.Min(camp.VrnSatThreshold, (VS_LN + TtEmerg) * Params.BaseDVrn1);
 
             // If we assume the expression of VrnX upregulates Vrn1 an equivelent amount then the amount of VrnX expression can be
             // Estimated as the difference between Base Vrn1 at VS and the Vernalisation threshold.  The duration of expression is
             // VSBP assuming VrnX is expressed from emergence until VS.
             // Maximum rate of Vrnx Expression (MaxDVrnX)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Params.MaxDVrnX = (camp.VrnSatThreshold - BaseVrn1AtVSBP_LN) / (VSBP_LN);
+            Params.MaxDVrnX = (camp.VrnSatThreshold - BaseVrn1AtVS_LN) / (VS_LN);
                         
-            Params.MaxMethColdVern1 = 1 - BaseVrn1AtVSBP_LV;
+            Params.MaxMethColdVern1 = 1 - BaseVrn1AtVS_LV;
 
             return Params;
         }

@@ -26,8 +26,8 @@ namespace Models
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
-        private List<IReportColumn> columns = null;
+        [JsonIgnore]
+        public List<IReportColumn> Columns { get; private set; } = null;
 
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
@@ -207,29 +207,29 @@ namespace Models
                     FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
-                    ColumnNames = columns.Select(c => c.Name).ToList(),
-                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                    ColumnNames = Columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = Columns.Select(c => c.Units).ToList()
                 };
             }
 
             // Get number of groups.
-            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
+            var numGroups = Math.Max(1, Columns.Max(c => c.NumberOfGroups));
 
             for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {
                 // Create a row ready for writing.
                 List<object> valuesToWrite = new List<object>();
                 List<string> invalidVariables = new List<string>();
-                for (int i = 0; i < columns.Count; i++)
+                for (int i = 0; i < Columns.Count; i++)
                 {
                     try
                     {
-                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                        valuesToWrite.Add(Columns[i].GetValue(groupIndex));
                     }
                     catch (Exception err)
                     {
                         // Should we include exception message?
-                        invalidVariables.Add($"{columns[i].Name}: {err.Message}");
+                        invalidVariables.Add($"{Columns[i].Name}: {err.Message}");
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
@@ -300,7 +300,7 @@ namespace Models
         /// </summary>
         protected void FindVariableMembers()
         {
-            this.columns = new List<IReportColumn>();
+            this.Columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
@@ -317,7 +317,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {
@@ -354,7 +354,7 @@ namespace Models
             {
                 foreach (var descriptor in simulation.Descriptors)
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
-                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                        this.Columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
                 StoreFactorsInDataStore();
             }
         }
