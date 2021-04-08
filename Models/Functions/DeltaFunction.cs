@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Model, IFunction, ICustomDocumentation
+    public class DeltaFunction : Model, IFunction
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -73,11 +74,12 @@ namespace Models.Functions
         {
             YesterdaysValue = Integral.Value();
         }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

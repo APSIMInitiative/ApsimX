@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Phen;
@@ -13,7 +14,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LiveOnEventFunction : Model, IFunction, ICustomDocumentation
+    public class LiveOnEventFunction : Model, IFunction
     {
         /// <summary>The set event</summary>
         [Description("The event that triggers change from pre to post event value")]
@@ -72,11 +73,12 @@ namespace Models.Functions
             return preEvent ? PreEventValue.Value() : PostEventValue.Value();
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

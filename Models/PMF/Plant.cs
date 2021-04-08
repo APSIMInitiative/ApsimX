@@ -7,6 +7,7 @@
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using System;
+    using APSIM.Services.Documentation;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
@@ -21,7 +22,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
+    public class Plant : ModelCollectionFromResource, IPlant, IPlantDamage
     {
         /// <summary>The summary</summary>
         [Link]
@@ -442,11 +443,12 @@
             SowingDate = DateTime.MinValue;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

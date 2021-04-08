@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
@@ -13,7 +14,7 @@ namespace Models.Functions
     /// \retval Fraction of N denitrified which is N2O.
     [Serializable]
     [Description("Denitrification N2O fraction model from DayCent")]
-    public class DayCentN2OFractionModel : Model, IFunction, ICustomDocumentation
+    public class DayCentN2OFractionModel : Model, IFunction
     {
         [Link]
         IPhysical soilPhysical = null;
@@ -46,11 +47,12 @@ namespace Models.Functions
             return N2OFraction;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
 
         }

@@ -4,6 +4,7 @@
     using Models.Core;
     using Models.Core.Run;
     using System;
+    using APSIM.Services.Documentation;
     using System.Collections.Generic;
 
     /// <summary>
@@ -15,7 +16,7 @@
     [PresenterName("UserInterface.Presenters.ExperimentPresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
     [ScopedModel]
-    public class Experiment : Model, ISimulationDescriptionGenerator, ICustomDocumentation
+    public class Experiment : Model, ISimulationDescriptionGenerator
     {
         /// <summary>
         /// List of names of the disabled simulations. Any simulation name not in this list is assumed to be enabled.
@@ -128,11 +129,12 @@
                 return Name + permutationName + newName;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

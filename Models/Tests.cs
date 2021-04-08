@@ -20,7 +20,7 @@ namespace Models
     [ViewName("UserInterface.Views.DualGridView")]
     [PresenterName("UserInterface.Presenters.TablePresenter")]
     [ValidParent(ParentType = typeof(PostSimulationTools.PredictedObserved))]
-    public class Tests : Model, ITestable, IModelAsTable, ICustomDocumentation
+    public class Tests : Model, ITestable, IModelAsTable
     {
         /// <summary>
         /// data table

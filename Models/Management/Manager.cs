@@ -24,7 +24,7 @@
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
+    public class Manager : Model, IOptionallySerialiseChildren
     {
         [NonSerialized]
         [Link]

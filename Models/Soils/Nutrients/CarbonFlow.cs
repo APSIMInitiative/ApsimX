@@ -4,6 +4,7 @@ namespace Models.Soils.Nutrients
     using Core;
     using Models.Functions;
     using System;
+    using APSIM.Services.Documentation;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
     using Interfaces;
@@ -18,7 +19,7 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.GridView")]
-    public class CarbonFlow : Model, ICustomDocumentation
+    public class CarbonFlow : Model
     {
         private NutrientPool[] destinations;
         private double[] carbonFlowToDestination;
@@ -165,11 +166,12 @@ namespace Models.Soils.Nutrients
             }
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

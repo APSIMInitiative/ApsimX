@@ -13,7 +13,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the product of all children function values")]
-    public class MultiplyFunction : Model, IFunction//, ICustomDocumentation
+    public class MultiplyFunction : Model, IFunction//
     {
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;

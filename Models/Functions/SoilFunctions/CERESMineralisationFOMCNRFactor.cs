@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
@@ -11,7 +12,7 @@ namespace Models.Functions
     /// \retval C:N Ratio factor for daily FOM Mineralisation
     [Serializable]
     [Description("C:N Ratio factor for daily FOM Mineralisation from CERES-Maize")]
-    public class CERESMineralisationFOMCNRFactor : Model, IFunction, ICustomDocumentation
+    public class CERESMineralisationFOMCNRFactor : Model, IFunction
     {
 
         [Link]
@@ -28,11 +29,12 @@ namespace Models.Functions
             return MathUtilities.Bound(CNRF, 0, 1);
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
 
             // add a heading.

@@ -17,7 +17,7 @@
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Agroforestry.AgroforestrySystem))]
     [ScopedModel]
-    public class Zone : Model, IZone, ICustomDocumentation
+    public class Zone : Model, IZone
     {
         /// <summary>Area of the zone.</summary>
         [Description("Area of zone (ha)")]

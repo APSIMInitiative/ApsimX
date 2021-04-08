@@ -32,7 +32,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
+    public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, IOrganDamage
     {
         /// <summary>
         /// The met data

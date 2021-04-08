@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -10,7 +11,7 @@ namespace Models.Functions
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
     [Description("Tests if value of the first child is less than value of second child. Returns third child if true and forth if false")]
-    public class LessThanFunction : Model, IFunction, ICustomDocumentation
+    public class LessThanFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
@@ -46,11 +47,12 @@ namespace Models.Functions
                 return IfFalse;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             if (IncludeInDocumentation)
             {

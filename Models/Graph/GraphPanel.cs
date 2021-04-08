@@ -136,9 +136,11 @@ namespace Models
         }
 
         /// <summary>
-        /// Document the graph panel.
+        /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> Document()
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             // tbi
         }

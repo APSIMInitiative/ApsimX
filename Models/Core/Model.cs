@@ -3,10 +3,10 @@
     using APSIM.Shared.Utilities;
     using Models.Factorial;
     using System;
+    using APSIM.Services.Documentation;
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System.Linq;
-    using APSIM.Services.Documentation;
 
     /// <summary>
     /// Base class for all models

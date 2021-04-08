@@ -23,7 +23,7 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class AgroforestrySystem : Zone, ICustomDocumentation
+    public class AgroforestrySystem : Zone
     {
 
         /// <summary>

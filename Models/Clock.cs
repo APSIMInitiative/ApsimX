@@ -19,7 +19,7 @@
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    public class Clock : Model, IClock, ICustomDocumentation
+    public class Clock : Model, IClock
     {
         /// <summary>The arguments</summary>
         private EventArgs args = new EventArgs();

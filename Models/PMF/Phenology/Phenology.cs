@@ -18,7 +18,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model, IPhenology, ICustomDocumentation
+    public class Phenology : Model, IPhenology
     {
 
         ///1. Links
