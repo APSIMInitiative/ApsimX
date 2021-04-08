@@ -108,8 +108,8 @@
         /// </summary>
         public void Detach()
         {
-            BuildScript();  // compiles and saves the script
             propertyPresenter.Detach();
+            BuildScript();  // compiles and saves the script
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
