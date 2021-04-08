@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System.Linq;
+    using APSIM.Services.Documentation;
 
     /// <summary>
     /// Base class for all models
@@ -528,6 +529,22 @@
 
             // Simulation can be null if this model is not under a simulation e.g. DataStore.
             return new Locater();
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public IEnumerable<ITag> Document() => Document(0, 0);
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        protected virtual IEnumerable<ITag> Document(int indent, int headingLevel)
+        {
+            yield return new Heading(Name, indent, headingLevel);
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()), indent);
         }
     }
 }

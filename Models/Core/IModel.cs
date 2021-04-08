@@ -3,6 +3,7 @@ namespace Models.Core
 {
     using System;
     using System.Collections.Generic;
+    using APSIM.Services.Documentation;
 
     /// <summary>
     /// The IModel interface specifies the properties and methods that all
@@ -297,5 +298,10 @@ namespace Models.Core
         /// e.g. add / remove models.
         /// </summary>
         void OnPreLink();
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        IEnumerable<ITag> Document();
     }
 }
