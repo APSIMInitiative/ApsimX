@@ -71,6 +71,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\APSIM.Services\APSIM.Services.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
 

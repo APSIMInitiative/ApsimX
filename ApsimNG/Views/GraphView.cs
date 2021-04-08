@@ -20,6 +20,7 @@
     using System.Globalization;
     using MathNet.Numerics.Statistics;
     using Extensions;
+    using APSIM.Services.Graphing;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -58,7 +59,7 @@
         /// <summary>
         /// Marker size.
         /// </summary>
-        public MarkerSizeType MarkerSize
+        public MarkerSize MarkerSize
         {
             get
             {
@@ -396,8 +397,8 @@
              string yFieldName,
              IEnumerable xError,
              IEnumerable yError,
-             Models.Axis.AxisType xAxisType,
-             Models.Axis.AxisType yAxisType,
+             APSIM.Services.Graphing.AxisPosition xAxisType,
+             APSIM.Services.Graphing.AxisPosition yAxisType,
              Color colour,
              Models.LineType lineType,
              Models.MarkerType markerType,
@@ -484,18 +485,18 @@
 
         }
 
-        private double GetMarkerSizeNumericValue(MarkerSizeType markerSize)
+        private double GetMarkerSizeNumericValue(MarkerSize markerSize)
         {
-            if (markerSize == MarkerSizeType.Large)
+            if (markerSize == MarkerSize.Large)
                 return 9.0;
 
-            if (markerSize == MarkerSizeType.Normal)
+            if (markerSize == MarkerSize.Normal)
                 return 7.0;
 
-            if (markerSize == MarkerSizeType.Small)
+            if (markerSize == MarkerSize.Small)
                 return 5.0;
 
-            if (markerSize == MarkerSizeType.VerySmall)
+            if (markerSize == MarkerSize.VerySmall)
                 return 3.0;
 
             throw new NotImplementedException($"No supported marker size translation for {markerSize}");
@@ -516,8 +517,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -563,8 +564,8 @@
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -625,8 +626,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -655,8 +656,8 @@
             string title,
             object[] x,
             double[] y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -672,7 +673,7 @@
             }
 
             // Get x/y data from previous series
-            LineSeries previous = plot1.Model.Series.OfType<LineSeries>().Last();
+            var previous = plot1.Model.Series.OfType<OxyPlot.Series.LineSeries>().Last();
 
             // This will work if the previous series was an area series.
             double[] x1 = previous.Points.Select(p => p.X).ToArray();
@@ -753,8 +754,8 @@
             string title,
             object[] x,
             double[] y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend,
             Models.LineType lineType,
@@ -821,8 +822,8 @@
         }
 
         private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
-                                                  Models.Axis.AxisType xAxisType,
-                                                  Models.Axis.AxisType yAxisType)
+                                                  APSIM.Services.Graphing.AxisPosition xAxisType,
+                                                  APSIM.Services.Graphing.AxisPosition yAxisType)
         {
             data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
@@ -878,8 +879,8 @@
             object y,
             bool leftAlign,
             double textRotation,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour)
         {
             OxyPlot.Annotations.TextAnnotation annotation = new OxyPlot.Annotations.TextAnnotation();
@@ -952,9 +953,9 @@
                 x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
-                y1Position = AxisMinimum(Models.Axis.AxisType.Left);
+                y1Position = AxisMinimum(APSIM.Services.Graphing.AxisPosition.Left);
             else if ((double)y1 == double.MaxValue)
-                y1Position = AxisMaximum(Models.Axis.AxisType.Left);
+                y1Position = AxisMaximum(APSIM.Services.Graphing.AxisPosition.Left);
             else
                 y1Position = (double)y1;
             double x2Position = 0.0;
@@ -964,9 +965,9 @@
                 x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
-                y2Position = AxisMinimum(Models.Axis.AxisType.Left);
+                y2Position = AxisMinimum(APSIM.Services.Graphing.AxisPosition.Left);
             else if ((double)y2 == double.MaxValue)
-                y2Position = AxisMaximum(Models.Axis.AxisType.Left);
+                y2Position = AxisMaximum(APSIM.Services.Graphing.AxisPosition.Left);
             else
                 y2Position = (double)y2;
 
@@ -1016,7 +1017,7 @@
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
-            Models.Axis.AxisType axisType,
+            APSIM.Services.Graphing.AxisPosition axisType,
             string title,
             bool inverted,
             double minimum,
@@ -1397,8 +1398,8 @@
         private List<DataPoint> PopulateDataPointSeries(
             IEnumerable x,
             IEnumerable y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType)
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1434,8 +1435,8 @@
             IEnumerable y,
             IEnumerable xError,
             IEnumerable yError,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType)
+            APSIM.Services.Graphing.AxisPosition xAxisType,
+            APSIM.Services.Graphing.AxisPosition yAxisType)
         {
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
@@ -1484,7 +1485,7 @@
         /// <param name="enumerator">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, Models.Axis.AxisType axisType)
+        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Services.Graphing.AxisPosition axisType)
         {
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
@@ -1543,7 +1544,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to check</param>
         /// <param name="dataType">The data type of the axis</param>
-        private void EnsureAxisExists(Models.Axis.AxisType axisType, Type dataType)
+        private void EnsureAxisExists(APSIM.Services.Graphing.AxisPosition axisType, Type dataType)
         {
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
@@ -1574,7 +1575,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
+        private OxyPlot.Axes.Axis GetAxis(APSIM.Services.Graphing.AxisPosition axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1588,7 +1589,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private int GetAxisIndex(Models.Axis.AxisType axisType)
+        private int GetAxisIndex(APSIM.Services.Graphing.AxisPosition axisType)
         {
             AxisPosition position = this.AxisTypeToPosition(axisType);
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
@@ -1607,17 +1608,17 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private AxisPosition AxisTypeToPosition(Models.Axis.AxisType type)
+        private AxisPosition AxisTypeToPosition(APSIM.Services.Graphing.AxisPosition type)
         {
-            if (type == Models.Axis.AxisType.Bottom)
+            if (type == APSIM.Services.Graphing.AxisPosition.Bottom)
             {
                 return AxisPosition.Bottom;
             }
-            else if (type == Models.Axis.AxisType.Left)
+            else if (type == APSIM.Services.Graphing.AxisPosition.Left)
             {
                 return AxisPosition.Left;
             }
-            else if (type == Models.Axis.AxisType.Top)
+            else if (type == APSIM.Services.Graphing.AxisPosition.Top)
             {
                 return AxisPosition.Top;
             }
@@ -1630,16 +1631,16 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private Models.Axis.AxisType AxisPositionToType(AxisPosition type)
+        private APSIM.Services.Graphing.AxisPosition AxisPositionToType(OxyPlot.Axes.AxisPosition type)
         {
-            if (type == AxisPosition.Bottom)
-                return Models.Axis.AxisType.Bottom;
-            else if (type == AxisPosition.Left)
-                return Models.Axis.AxisType.Left;
-            else if (type == AxisPosition.Top)
-                return Models.Axis.AxisType.Top;
+            if (type == OxyPlot.Axes.AxisPosition.Bottom)
+                return APSIM.Services.Graphing.AxisPosition.Bottom;
+            else if (type == OxyPlot.Axes.AxisPosition.Left)
+                return APSIM.Services.Graphing.AxisPosition.Left;
+            else if (type == OxyPlot.Axes.AxisPosition.Top)
+                return APSIM.Services.Graphing.AxisPosition.Top;
 
-            return Models.Axis.AxisType.Right;
+            return APSIM.Services.Graphing.AxisPosition.Right;
         }
 
         /// <summary>
@@ -1683,7 +1684,7 @@
                     Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
                     Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
 
-                    if (this.GetAxis(Models.Axis.AxisType.Top) != null)
+                    if (this.GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
                     {
                         titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
                         topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
@@ -1701,21 +1702,21 @@
 
                     if (this.OnAxisClick != null)
                     {
-                        if (leftAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Left) != null)
+                        if (leftAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Left) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Left);
+                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Left);
                         }
-                        else if (topAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Top) != null)
+                        else if (topAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Top);
+                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Top);
                         }
-                        else if (rightAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Right) != null)
+                        else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Right) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Right);
+                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Right);
                         }
-                        else if (bottomAxisArea.Contains(location) && GetAxis(Models.Axis.AxisType.Bottom) != null)
+                        else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Bottom) != null)
                         {
-                            this.OnAxisClick.Invoke(Models.Axis.AxisType.Bottom);
+                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
                         }
                     }
                 }
@@ -1771,7 +1772,7 @@
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        public double AxisMaximum(Models.Axis.AxisType axisType)
+        public double AxisMaximum(APSIM.Services.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
@@ -1788,7 +1789,7 @@
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        public double AxisMinimum(Models.Axis.AxisType axisType)
+        public double AxisMinimum(APSIM.Services.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1806,7 +1807,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public string AxisTitle(Models.Axis.AxisType axisType)
+        public string AxisTitle(APSIM.Services.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1819,7 +1820,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public double AxisMajorStep(Models.Axis.AxisType axisType)
+        public double AxisMajorStep(APSIM.Services.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
