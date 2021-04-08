@@ -1474,50 +1474,31 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "MaxArea",
                       "Children": [
                         {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "MaxArea",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.2,
-                                1.0
-                              ],
-                              "Y": [
-                                12000.0,
-                                25000.0,
-                                25000.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].RelativeNodeApperance",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            5.0,
+                            25.0
                           ],
+                          "Y": [
+                            6000.0,
+                            12000.0,
+                            12000.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
-                          "Name": "Constant",
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].AppearedCohortNo",
+                          "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1536,10 +1517,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.3,
-                            0.5,
-                            1.0,
-                            1.1
+                            7.0,
+                            12.0,
+                            25.0,
+                            26.0
                           ],
                           "Y": [
                             16.0,
@@ -1549,82 +1530,14 @@
                             14.0
                           ],
                           "Name": "XYPairs",
-                          "Children": [
-                            {
-                              "$type": "Models.Graph, Models",
-                              "Caption": null,
-                              "Axis": [
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
-                                  "Title": "Y",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                },
-                                {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
-                                  "Title": "X",
-                                  "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
-                                  "DateTimeAxis": false,
-                                  "CrossesAtZero": false
-                                }
-                              ],
-                              "LegendPosition": 3,
-                              "LegendOrientation": 0,
-                              "DisabledSeries": [],
-                              "LegendOutsideGraph": false,
-                              "Name": "Graph",
-                              "Children": [
-                                {
-                                  "$type": "Models.Series, Models",
-                                  "Type": 1,
-                                  "XAxis": 3,
-                                  "YAxis": 0,
-                                  "ColourArgb": -65536,
-                                  "FactorToVaryColours": null,
-                                  "FactorToVaryMarkers": null,
-                                  "FactorToVaryLines": null,
-                                  "Marker": 11,
-                                  "MarkerSize": 0,
-                                  "Line": 0,
-                                  "LineThickness": 0,
-                                  "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Leaf.CohortParameters.GrowthDuration.XYPairs.Y",
-                                  "X2FieldName": "",
-                                  "Y2FieldName": "",
-                                  "ShowInLegend": false,
-                                  "IncludeSeriesNameInLegend": false,
-                                  "Cumulative": false,
-                                  "CumulativeX": false,
-                                  "Filter": null,
-                                  "Name": "Series",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "VariableName": "[Leaf].AppearedCohortNo",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1644,12 +1557,12 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.15,
-                            0.3,
-                            0.4,
-                            0.73,
-                            1.0,
-                            1.1
+                            3.0,
+                            7.0,
+                            10.0,
+                            15.0,
+                            25.0,
+                            26.0
                           ],
                           "Y": [
                             40.0,
@@ -1668,7 +1581,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "VariableName": "[Leaf].AppearedCohortNo",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1688,8 +1601,8 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            0.2,
-                            1.0
+                            5.0,
+                            25.0
                           ],
                           "Y": [
                             5.0,
@@ -1704,7 +1617,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "VariableName": "[Leaf].AppearedCohortNo",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1744,7 +1657,7 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            1.0
+                            25.0
                           ],
                           "Y": [
                             20000.0,
@@ -1758,7 +1671,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Structure].RelativeNodeApperance",
+                          "VariableName": "[Leaf].AppearedCohortNo",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -10890,7 +10803,7 @@
             {
               "$type": "Models.Clock, Models",
               "Start": "2003-02-25T00:00:00",
-              "End": "2020-05-01T00:00:00",
+              "End": "2006-05-01T00:00:00",
               "Name": "Clock",
               "Children": [],
               "IncludeInDocumentation": true,
