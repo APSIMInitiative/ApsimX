@@ -20,5 +20,10 @@ namespace UserInterface.Interfaces
         /// Called when a property is changed by the user.
         /// </summary>
         event EventHandler<PropertyChangedEventArgs> PropertyChanged;
+
+        /// <summary>
+        /// Fire off a PropertyChanged event for any outstanding changes.
+        /// </summary>
+        void SaveChanges();
     }
 }
