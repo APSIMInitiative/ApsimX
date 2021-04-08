@@ -56,8 +56,8 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
         
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.PhotoPeriodEffect.XYPairs")]
-        IIndexedFunction phylloPpSens = null;
+        [Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
+        IFunction phylloPpSens = null;
 
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Models.PMF.Phen
         {
             double PpFactor = 1.0;
             if (Pp == 8)
-                PpFactor = PhylloPpSens;
+                PpFactor = 1+PhylloPpSens;
             double[] xHS = new double[]{0, 7, 30};
             double[] yTt = new double[3];
             yTt[0] = 0;
@@ -102,7 +102,7 @@ namespace Models.PMF.Phen
 
             // Get some other parameters from phenology
             double BasePhyllochron = basePhyllochron.Value();
-            double PhylloPpSens = phylloPpSens.ValueIndexed(8);
+            double PhylloPpSens = phylloPpSens.Value();
             
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Base Phyllochrons)
