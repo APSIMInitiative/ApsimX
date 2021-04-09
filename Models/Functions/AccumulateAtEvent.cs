@@ -66,19 +66,10 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
-                                                            + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below between the {StartStageName} and {EndStageName} stages. Function values added to the accumulate total each day are:", indent);
         }
 
         ///7. Private methods

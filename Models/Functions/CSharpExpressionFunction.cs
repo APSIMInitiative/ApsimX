@@ -63,22 +63,11 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                string st = Expression?.Replace(".Value()", "");
-                tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
-
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            string st = Expression?.Replace(".Value()", "");
+            yield return new Paragraph($"{Name} = {st}", indent);
         }
 
         /// <summary>

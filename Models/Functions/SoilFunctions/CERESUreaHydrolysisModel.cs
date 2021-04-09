@@ -1,6 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Soils;
@@ -40,25 +38,6 @@ namespace Models.Functions
             double rateModifer = Math.Min(WF, TF);
 
             return potentialRate * rateModifer;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

@@ -1267,16 +1267,10 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            yield return new Paragraph($"Area = {Area}", indent);
         }
     }
 }

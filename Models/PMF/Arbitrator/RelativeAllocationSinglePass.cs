@@ -3,17 +3,17 @@ using Models.Core;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Models.PMF
 {
     /// <summary>
-    /// Single Pass Relative allocation rules used to determine partitioning
+    /// Single Pass Relative allocation rules used to determine partitioning.
+    /// 
+    /// Arbitration is performed in a single pass for each of the biomass supply
+    /// sources. Biomass is partitioned between organs based on their relative
+    /// demand in a single pass so non-structural demands compete dirrectly with
+    /// structural demands.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
@@ -45,31 +45,6 @@ namespace Models.PMF
                     NotAllocated -= (StructuralAllocation + MetabolicAllocation + StorageAllocation);
                     TotalAllocated += (StructuralAllocation + MetabolicAllocation + StorageAllocation);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                string SinglePassDocString = "Arbitration is performed in a single pass for each of the biomass supply sources.  Biomass is partitioned between organs based on their relative demand in a single pass so non-structural demands compete dirrectly with structural demands.";
-
-                tags.Add(new AutoDocumentation.Paragraph(SinglePassDocString, indent));
             }
         }
     }

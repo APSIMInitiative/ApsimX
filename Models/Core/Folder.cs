@@ -43,70 +43,54 @@
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
+            // Add a heading.
+            yield return new Heading(Name, indent, headingLevel);
+
+            if (ShowPageOfGraphs)
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                if (ShowPageOfGraphs)
+                if (FindAllChildren<Experiment>().Any())
                 {
-                    foreach (Memo memo in FindAllChildren<Memo>())
-                        memo.Document(tags, headingLevel, indent);
+                    // Write Phase Table.
+                    yield return new Paragraph("**List of experiments.**", indent);
+                    DataTable table = new DataTable();
+                    table.Columns.Add("Experiment Name", typeof(string));
+                    table.Columns.Add("Design (Number of Treatments)", typeof(string));
 
-                    if (FindAllChildren<Experiment>().Any())
+                    foreach (IModel child in FindAllChildren<Experiment>())
                     {
-                        // Write Phase Table
-                        tags.Add(new AutoDocumentation.Paragraph("**List of experiments.**", indent));
-                        DataTable tableData = new DataTable();
-                        tableData.Columns.Add("Experiment Name", typeof(string));
-                        tableData.Columns.Add("Design (Number of Treatments)", typeof(string));
+                        Factors Factors = child.FindChild<Factors>();
+                        string design = GetTreatmentDescription(Factors);
+                        foreach (Permutation permutation in Factors.FindAllChildren<Permutation>())
+                            design += GetTreatmentDescription(permutation);
 
-                        foreach (IModel child in FindAllChildren<Experiment>())
-                        {
-                            IModel Factors = child.FindChild<Factors>();
-                            string Design = GetTreatmentDescription(Factors);
-                            foreach (Permutation permutation in Factors.FindAllChildren<Permutation>())
-                                Design += GetTreatmentDescription(permutation);
+                        var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
+                        design += " (" + simulationNames.ToArray().Length + ")";
 
-                            var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
-                            Design += " (" + simulationNames.ToArray().Length + ")";
-
-                            DataRow row = tableData.NewRow();
-                            row[0] = child.Name;
-                            row[1] = Design;
-                            tableData.Rows.Add(row);
-                        }
-                        tags.Add(new AutoDocumentation.Table(tableData, indent));
-
+                        DataRow row = table.NewRow();
+                        row[0] = child.Name;
+                        row[1] = design;
+                        table.Rows.Add(row);
                     }
-                    int pageNumber = 1;
-                    int i = 0;
-                    List<Graph> children = FindAllChildren<Graph>().ToList();
-                    while (i < children.Count)
-                    {
-                        GraphPage page = new GraphPage();
-                        page.name = Name + pageNumber;
-                        for (int j = i; j < i + 6 && j < children.Count; j++)
-                            if (children[j].IncludeInDocumentation)
-                                page.graphs.Add(children[j] as Graph);
-                        if (page.graphs.Count > 0)
-                            tags.Add(page);
-                        i += 6;
-                        pageNumber++;
-                    }
+                    yield return new Table(table, indent);
 
-                    // Document everything else other than graphs
-                    foreach (IModel model in Children)
-                        if (!(model is Graph) && !(model is Memo))
-                            AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
                 }
-                else
+                var children = FindAllChildren<Models.Graph>().ToList();
+                int graphsPerPage = 6;
+                var graphs = new List<APSIM.Services.Documentation.Graph>();
+                for (int i = 0; i < children.Count; i++)
                 {
-                    foreach (IModel model in Children)
-                        AutoDocumentation.DocumentModel(model, tags, headingLevel + 1, indent);
+                    graphs.Add(children[i].ToGraph(indent));
+                    if (graphs.Count == graphsPerPage)
+                    {
+                        yield return new GraphPage(graphs, indent);
+                        graphs.Clear();
+                    }
                 }
+                if (graphs.Count > 0)
+                    yield return new GraphPage(graphs);
+                graphs.Clear();
             }
         }
 

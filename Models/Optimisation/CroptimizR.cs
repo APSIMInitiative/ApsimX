@@ -8,7 +8,6 @@ using Models.Storage;
 using Models.Utilities;
 using Newtonsoft.Json;
 using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -43,7 +42,6 @@ namespace Models.Optimisation
     }
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates CroptimizR: An R package for parameter estimation, uncertainty analysis and sensitivity analysis for Crop Models
     /// </summary>
     /// <remarks>
@@ -384,24 +382,6 @@ namespace Models.Optimisation
         private string GetTempFileName(string name, string extension)
         {
             return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                    if (!(child is Simulation) && !(child is Factors)) // why do we have this check?
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
 
         /// <summary>

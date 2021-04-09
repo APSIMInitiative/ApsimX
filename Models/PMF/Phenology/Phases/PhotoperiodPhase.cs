@@ -3,7 +3,6 @@ using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
-using System.IO;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
@@ -94,25 +93,15 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            // Add a heading.
+            yield return new Heading($"{Name} Phase", headingLevel);
 
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + 
-                    ". The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing).  "+
-                    "The base model uses a critical photoperiod of "+CricialPhotoperiod.ToString()+ " hours ("+PPDirection.ToString()+").", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start} to {End}. " +
+               $"The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing). " +
+               $"The base model uses a critical photoperiod of {CricialPhotoperiod} hours ({PPDirection}).", indent);
         }
     }
 }
-
-      
-      

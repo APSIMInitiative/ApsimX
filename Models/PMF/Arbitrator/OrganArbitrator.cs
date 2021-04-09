@@ -1,11 +1,9 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -306,27 +304,6 @@ namespace Models.PMF
         {
             DM = new BiomassArbitrationType("DM", Organs);
             N = new BiomassArbitrationType("N", Organs);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

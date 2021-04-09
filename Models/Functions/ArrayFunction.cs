@@ -1,5 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 
@@ -47,36 +46,6 @@ namespace Models.Functions
                 return str2dbl[str2dbl.Count - 1];
 
             return str2dbl[arrayIndex];
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            // get description and units.
-            string description = AutoDocumentation.GetDescription(Parent, Name);
-            string units = Units;
-            if (units == null)
-                units = AutoDocumentation.GetUnits(Parent, Name);
-            if (units != string.Empty)
-                units = " (" + units + ")";
-
-            if (!(Parent is IFunction) && headingLevel > 0)
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-            //TODO: Tidy up the printing -JF
-            tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + Values + units + "</i>", indent));
-
-            if (!String.IsNullOrEmpty(description))
-                tags.Add(new AutoDocumentation.Paragraph(description, indent));
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
         }
     }
 }

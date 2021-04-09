@@ -1,5 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
@@ -65,25 +64,6 @@ namespace Models.Functions
                 WF = 1 - 0.5 * MathUtilities.Divide(SW[arrayIndex] - DUL[arrayIndex], SAT[arrayIndex] - DUL[arrayIndex],0.0);
 
             return WF;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

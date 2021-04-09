@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using System.IO;
+using System.Text;
 
 namespace Models.PMF.Phen
 {
@@ -154,29 +155,24 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            // add a heading
+            yield return new Heading($"{Name} Phase", indent, headingLevel);
 
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + " and simulates time to "
-                    + "emergence as a function of sowing depth.  The <i>ThermalTime Target</i> for ending this phase is given by:<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
-                    + "Where:<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                    + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
+            // Write description of this class.
+            StringBuilder paragraph = new StringBuilder();
+            paragraph.AppendLine($"This phase goes from {Start} to {End} and simulates time to emergence as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
+            paragraph.AppendLine("    *Target = SowingDepth x ShootRate + ShootLag*");
+            paragraph.AppendLine("Where:");
+            paragraph.AppendLine($"    *ShootRate* = {ShootRate} (deg day/mm),");
+            paragraph.AppendLine($"    *ShootLag* = {ShootLag} (deg day), ");
+            paragraph.AppendLine($"and *SowingDepth* (mm) is sent from the manager with the sowing event.");
+            yield return new Paragraph(paragraph.ToString(), indent);
 
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write intro to children
-                tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:", indent));
-            }
+            // write intro to children
+            // ?
+            yield return new Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:", indent);
         }
     }
 }

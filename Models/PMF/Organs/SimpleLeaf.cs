@@ -1280,7 +1280,7 @@
                 }
 
                 if (biomassRemovalModel != null)
-                    biomassRemovalModel.Document(tags, headingLevel + 1, indent);
+                    biomassRemovalModel.Document(indent, headingLevel + 1);
             }
         }
     }

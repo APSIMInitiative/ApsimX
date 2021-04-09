@@ -1,6 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
 using APSIM.Shared.Utilities;
@@ -45,16 +43,6 @@ namespace Models.Functions
             double N2OFraction = 1 / (N2N2ORatio + 1);
 
             return N2OFraction;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-
         }
     }
 }

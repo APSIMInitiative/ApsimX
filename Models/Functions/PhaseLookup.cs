@@ -39,25 +39,10 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel+1, indent);
-
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel+1, indent + 1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            yield return new Paragraph($"{Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.", indent);
         }
     }
 }
-
-

@@ -7,7 +7,6 @@ namespace Models.Soils.Nutrients
     using APSIM.Services.Documentation;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
-    using Interfaces;
     using System.Data;
     using System.Linq;
 
@@ -171,40 +170,27 @@ namespace Models.Soils.Nutrients
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Add a heading.
+            yield return new Heading(Name, indent, headingLevel);
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // Write Phase Table
+            yield return new Paragraph($"**Destination of C from {Name}**", indent);
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Destination Pool", typeof(string));
+            tableData.Columns.Add("Carbon Fraction", typeof(string));
 
-                // Write Phase Table
-                tags.Add(new AutoDocumentation.Paragraph("**Destination of C from " + this.Name + "**", indent));
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Destination Pool", typeof(string));
-                tableData.Columns.Add("Carbon Fraction", typeof(string));
+            if (destinationNames != null)
+                for (int j = 0; j < destinationNames.Length; j++)
+                {
+                    DataRow row = tableData.NewRow();
+                    row[0] = destinationNames[j];
+                    row[1] = destinationFraction[j].ToString();
+                    tableData.Rows.Add(row);
+                }
 
-                if (destinationNames != null)
-                    for (int j = 0; j < destinationNames.Length; j++)
-                    {
-                        DataRow row = tableData.NewRow();
-                        row[0] = destinationNames[j];
-                        row[1] = destinationFraction[j].ToString();
-                        tableData.Rows.Add(row);
-                    }
-
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                // write remaining children
-                foreach (IModel memo in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-            }
+            yield return new Table(tableData, indent);
         }
-
     }
 }

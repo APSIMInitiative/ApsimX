@@ -1,5 +1,6 @@
 ﻿namespace Models
 {
+    using APSIM.Services.Graphing;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Storage;

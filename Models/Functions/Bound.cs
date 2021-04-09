@@ -40,26 +40,26 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
+            if (ChildFunctions == null)
+                ChildFunctions = FindAllChildren<IFunction>();
+            foreach (IFunction child in ChildFunctions)
             {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-                if (ChildFunctions == null)
-                    ChildFunctions = this.FindAllChildren<IFunction>();
-                foreach (IFunction child in ChildFunctions)
-                    if (child != Lower && child != Upper)
-                    {
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " is the value of " + (child as IModel).Name + " bound between a lower and upper bound where:", indent));
-                        AutoDocumentation.DocumentModel(child as IModel, tags, headingLevel + 1, indent + 1);
-                    }
-                if (Lower != null)
-                    AutoDocumentation.DocumentModel(Lower as IModel, tags, headingLevel + 1, indent + 1);
-                if (Upper != null)
-                    AutoDocumentation.DocumentModel(Upper as IModel, tags, headingLevel + 1, indent + 1);
+                if (child != Lower && child != Upper)
+                {
+                    yield return new Paragraph($"{Name} is the value of {child.Name} bound between a lower and upper bound where:", indent);
+                    foreach (ITag tag in child.Document(indent + 1, headingLevel + 1))
+                        yield return tag;
+                    break;
+                }
             }
+            if (Lower != null)
+                foreach (ITag tag in Lower.Document(indent + 1, headingLevel + 1))
+                    yield return tag;
+            if (Upper != null)
+                foreach (ITag tag in Upper.Document(indent + 1, headingLevel + 1))
+                    yield return tag;
         }
     }
 }

@@ -37,27 +37,12 @@ namespace Models.Functions.DemandFunctions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction � [Arbitrator].DM.TotalFixationSupply</i>", indent));
-
-                // write children
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent+1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            yield return new Paragraph($"*{Name} = PartitionFraction � [Arbitrator].DM.TotalFixationSupply*", indent);
+            yield return new Paragraph("Where:", indent);
         }
     }
 }
-
 

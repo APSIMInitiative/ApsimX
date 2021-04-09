@@ -4,7 +4,6 @@
     using Models.Core;
     using Models.Core.Run;
     using System;
-    using APSIM.Services.Documentation;
     using System.Collections.Generic;
 
     /// <summary>
@@ -128,26 +127,5 @@
             else
                 return Name + permutationName + newName;
         }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                {
-                    if (!(child is Simulation) && !(child is Factors))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
-        }
-
     }
 }

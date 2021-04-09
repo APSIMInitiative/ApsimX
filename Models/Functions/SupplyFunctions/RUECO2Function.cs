@@ -1,6 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 
@@ -82,31 +80,6 @@ namespace Models.Functions.SupplyFunctions
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

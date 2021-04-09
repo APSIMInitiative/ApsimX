@@ -1,5 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
@@ -27,25 +26,6 @@ namespace Models.Functions
 
             double CNRF = Math.Exp(-0.693 * (nutrient.FOMCNR(arrayIndex) - 25) / 25);
             return MathUtilities.Bound(CNRF, 0, 1);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

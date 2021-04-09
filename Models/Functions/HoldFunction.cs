@@ -65,21 +65,11 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                // Describe the function
-                if (ValueToHold != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is the same as " + (ValueToHold as IModel).Name + " until it reaches " + WhenToHold + " stage when it fixes its value", indent));
-                }
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            if (ValueToHold != null)
+                yield return new Paragraph($"{Name} is the same as {ValueToHold.Name} until it reaches {WhenToHold} stage when it fixes its value", indent);
         }
 
         /// <summary>Get value</summary>
@@ -94,7 +84,5 @@ namespace Models.Functions
 
             }
         }
-
     }
-
 }

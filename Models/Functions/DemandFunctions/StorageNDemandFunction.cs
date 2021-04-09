@@ -63,44 +63,14 @@ namespace Models.Functions.DemandFunctions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            foreach (ITag tag in base.Document(indent, headingLevel))
+                yield return tag;
 
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // find parent organ's name
-                if (Parent == null)
-                    return;
-                string organName = "";
-                bool seekingParentOrgan = true;
-                IModel parentClass = this.Parent;
-                while (seekingParentOrgan)
-                {
-                    if (parentClass is IOrgan)
-                    {
-                        seekingParentOrgan = false;
-                        organName = (parentClass as IOrgan).Name;
-                        if (parentClass is IPlant)
-                            throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
-                    }
-                    parentClass = parentClass.Parent;
-                }
-
-                // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
-                    + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
-                    + organName + "].NitrogenDemandSwitch.", indent));
-            }
+            string organName = FindAncestor<IOrgan>().Name;
+            yield return new Paragraph($"*{Name} = [{organName}].maximumNconc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*", indent);
+            yield return new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch.", indent);
         }
     }
 }

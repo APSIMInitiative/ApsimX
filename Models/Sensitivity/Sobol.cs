@@ -2,7 +2,6 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Core.ApsimFile;
     using Models.Core.Run;
     using Models.Factorial;
     using Models.Interfaces;
@@ -10,7 +9,6 @@
     using Models.Storage;
     using Newtonsoft.Json;
     using System;
-    using APSIM.Services.Documentation;
     using System.Collections.Generic;
     using System.Data;
     using System.Globalization;
@@ -20,7 +18,6 @@
     using Utilities;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a SOBOL parameter sensitivity analysis.
     /// </summary>
     [Serializable]
@@ -524,26 +521,6 @@
         private string GetTempFileName(string name, string extension)
         {
             return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                {
-                    if (!(child is Simulation) && !(child is Factors))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
         }
     }
 }

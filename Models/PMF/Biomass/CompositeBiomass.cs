@@ -4,6 +4,7 @@ using System.Collections;
 using Models.Core;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Models.PMF
 {
@@ -158,28 +159,15 @@ namespace Models.PMF
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
+            foreach (ITag tag in base.Document(indent, headingLevel))
+                yield return tag;
 
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            yield return new Paragraph($"{Name} summarises the following biomass objects:", indent);
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
-
-                string st = string.Empty;
-                if (Propertys != null)
-                    foreach (string PropertyName in Propertys)
-                        st += Environment.NewLine + "* " + PropertyName;
-                tags.Add(new AutoDocumentation.Paragraph(st, indent));
-            }
+            string st = string.Join(Environment.NewLine, Propertys.Select(p => $"* {p}"));
+            yield return new Paragraph(st, indent);
         }
     }
 }

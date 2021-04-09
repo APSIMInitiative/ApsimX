@@ -448,32 +448,27 @@
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
+            yield return new Paragraph($"The {Name} model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.", indent);
+
+            // Write Plant Model Table
+            yield return new Paragraph("**List of Plant Model Components.**", indent);
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Component Name", typeof(string));
+            tableData.Columns.Add("Component Type", typeof(string));
+
+            foreach (IModel child in Children)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the implementation and model parameterisation are provided in the following sections.", indent));
-                // Write Plant Model Table
-                tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Component Name", typeof(string));
-                tableData.Columns.Add("Component Type", typeof(string));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
                 {
-                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
-                    {
-                        DataRow row = tableData.NewRow();
-                        row[0] = child.Name;
-                        row[1] = child.GetType().ToString();
-                        tableData.Rows.Add(row);
-                    }
+                    DataRow row = tableData.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableData.Rows.Add(row);
                 }
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
+            yield return new Table(tableData, indent);
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>

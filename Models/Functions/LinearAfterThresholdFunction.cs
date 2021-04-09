@@ -87,22 +87,10 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // get description and units.
-                string description = AutoDocumentation.GetDescription(Parent, Name);
-
-                if (description != string.Empty)
-                    tags.Add(new AutoDocumentation.Paragraph(description, indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + "</i> is calculated as a function of <i>" + StringUtilities.RemoveTrailingString(XProperty, ".Value()") + "</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("<i>Trigger value" + XTrigger.ToString() + " Gradient " + Slope.ToString() + "</i>", indent));
-            }
+            yield return new Paragraph($"*{Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(XProperty, ".Value()")}*", indent);
+            yield return new Paragraph($"*Trigger value {XTrigger} Gradient {Slope}*", indent);
         }
     }
 }

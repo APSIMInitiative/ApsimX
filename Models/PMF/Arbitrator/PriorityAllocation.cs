@@ -1,19 +1,17 @@
-﻿using APSIM.Shared.Utilities;
-using Models.Core;
-using Models.PMF;
+﻿using Models.Core;
 using Models.PMF.Interfaces;
 using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Models.PMF
 {
     /// <summary>
-    /// Priority allocation rules used to determine partitioning
+    /// Priority allocation rules used to determine partitioning.
+    /// 
+    /// Arbitration is performed in two passes for each of the biomass supply sources.
+    /// On the first pass, structural and metabolic biomass is allocated to each organ
+    /// based on their order of priority with higher priority organs recieving their
+    /// full demand first.  On the second pass any remaining biomass is allocated to
+    /// non-structural demands based on the same order of priority.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
@@ -55,31 +53,6 @@ namespace Models.PMF
                     NotAllocated -= StorageAllocation;
                     TotalAllocated += StorageAllocation;
                 }
-            }
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                string PriorityDocString = "Arbitration is performed in two passes for each of the biomass supply sources.  On the first pass, structural and metabolic biomass is allocated to each organ based on their order of priority with higher priority organs recieving their full demand first.  On the second pass any remaining biomass is allocated to non-structural demands based on the same order of priority.";
-
-                tags.Add(new AutoDocumentation.Paragraph(PriorityDocString, indent));
             }
         }
     }

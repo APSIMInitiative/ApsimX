@@ -1,8 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 
 namespace Models.Functions
@@ -56,27 +52,6 @@ namespace Models.Functions
             catch (Exception)
             {
                 throw new Exception("Error with values to beta growth function");
-            }
-        }
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                Name = this.Name;
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                tags.Add(new AutoDocumentation.Paragraph(" a beta growth function of the form " +
-                                                         "y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, 0, indent+1);
             }
         }
     }

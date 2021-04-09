@@ -1,10 +1,7 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
-using Models.PMF;
 using Models.PMF.Organs;
 
 namespace Models.Functions.RootShape
@@ -94,28 +91,6 @@ namespace Models.Functions.RootShape
             double hDistNew = Math.Min(hDist, Math.Sqrt(MathUtilities.Bound(Math.Pow(zone.RootSpread, 2) * (1 - a), 0, 100000)));
             layerArea = layerThick * hDistNew;
             return layerArea;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // add graph and table.
-                //tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                //tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

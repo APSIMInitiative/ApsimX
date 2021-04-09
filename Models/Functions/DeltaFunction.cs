@@ -79,17 +79,9 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                //Write what the function is returning
-                tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
-
-                // write a description of the child it is returning the differential of.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Paragraph($"*{Name}* is the daily differential of", indent);
         }
     }
 }

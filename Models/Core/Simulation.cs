@@ -4,7 +4,6 @@ using Models.Factorial;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -307,21 +306,6 @@ namespace Models.Core
         {
             model.Children.RemoveAll(child => !child.Enabled);
             model.Children.ForEach(child => RemoveDisabledModels(child));
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
 
         /// <summary>

@@ -109,20 +109,11 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                Name = this.Name;
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                if (this.FindAllChildren<IFunction>().Count() ==1)
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " is calculated from a moving average of " + (ChildFunction as IModel).Name + " over a series of " + NumberOfDays.ToString() + " days.", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Heading(Name, indent, headingLevel);
+            if (FindAllChildren<IFunction>().Count() ==1)
+                yield return new Paragraph($"{Name} is calculated from a moving average of {ChildFunction.Name} over a series of {NumberOfDays} days.", indent);
         }
     }
 }

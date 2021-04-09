@@ -303,5 +303,12 @@ namespace Models.Core
         /// Document the model.
         /// </summary>
         IEnumerable<ITag> Document();
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        IEnumerable<ITag> Document(int indent, int headingLevel);
     }
 }

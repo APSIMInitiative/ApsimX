@@ -1,6 +1,4 @@
 ﻿using System;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
 using Models.Core;
 using Models.Soils.Nutrients;
 
@@ -40,16 +38,6 @@ namespace Models.Functions
             RateModifier = Math.Min(RateModifier, CERESpHF.Value(arrayIndex));
                        
             return PotentialRate * RateModifier;
-        }
-
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        protected override IEnumerable<ITag> Document(int indent, int headingLevel)
-        {
-
         }
     }
 }
