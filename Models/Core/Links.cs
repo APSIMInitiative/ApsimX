@@ -140,7 +140,15 @@
                         if (link.Type == LinkType.Ancestor)
                         {
                             matches = new List<object>();
-                            matches.Add(GetParent(obj, fieldType));
+                            if (obj is IModel model)
+                            {
+                                IModel ancestor = GetParent(model, fieldType);
+                                if (ancestor == null)
+                                    throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                matches.Add(ancestor);
+                            }
+                            else
+                                throw new Exception($"Unable to resolve ancestor link {field.Name} in object of type {obj.GetType()}: object is not a model");
                         }
                         else if (link.Type == LinkType.Path)
                         {
@@ -215,17 +223,12 @@
         /// <summary>
         /// Determine the type of an object and return its parent of the specified type.
         /// </summary>
-        /// <param name="obj">obj can be either a ModelWrapper or an IModel.</param>
+        /// <param name="model">A model.</param>
         /// <param name="type">The type of parent to find.</param>
         /// <returns>The matching parent</returns>
-        private object GetParent(object obj, Type type)
+        private IModel GetParent(IModel model, Type type)
         {
-            // fixme - 1. shouldn't be reimplementing model.FindAncestor<T>()
-            //         2. obj should be of type IModel
-            if (obj is IModel model)
-                return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
-            else
-                throw new NotImplementedException();
+            return model.FindAllAncestors().FirstOrDefault(m => type.IsAssignableFrom(m.GetType()));
         }
 
         /// <summary>
