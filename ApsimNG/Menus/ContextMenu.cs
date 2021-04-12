@@ -764,6 +764,14 @@
                     explorerPresenter.RefreshNode(model);
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowRightHandPanel();
+
+                    if (model.Enabled)
+                    {
+                        if (model is Manager manager)
+                            manager.RebuildScriptModel();
+                        foreach (Manager m in model.FindAllDescendants<Manager>())
+                            m.RebuildScriptModel();
+                    }
                 }
             }
             catch (Exception err)
