@@ -78,17 +78,13 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0-1.final" />
-    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
-    <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
-    <PackageReference Include="PdfSharpCore" Version="1.2.11" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>false</Private>
     </Reference>
-    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
-  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
