@@ -219,7 +219,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
-            int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
@@ -230,7 +230,7 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            holderCount = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };

@@ -7,8 +7,9 @@
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <OutputPath>..\..\Bin\</OutputPath>
 	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
-	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-	<NoWarn>CS1591,CS1572,CS1573</NoWarn>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

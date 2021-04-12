@@ -39,8 +39,11 @@
         [OneTimeSetUp]
         public void OneTimeInit()
         {
-            string sqliteSourceFileName = FindSqlite3DLL();
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+            if (ProcessUtilities.CurrentOS.IsWindows)
+            {
+                string sqliteSourceFileName = FindSqlite3DLL();
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(sqliteSourceFileName));
+            }
         }
 
         /// <summary>Initialisation code for all unit tests in this class</summary>
@@ -88,25 +91,25 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "_Simulations"),
-               "ID,Name,FolderName\r\n" +
-               " 1,Sim1,   Folder1\r\n" +
-               " 2,Sim2,   Folder2\r\n");
+               $"ID,Name,FolderName{Environment.NewLine}" +
+               $" 1,Sim1,   Folder1{Environment.NewLine}" +
+               $" 2,Sim2,   Folder2{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-               "ID,   Name,Version,OnGraphs\r\n" +
-               " 1,Current,       ,        \r\n");
+               $"ID,   Name,Version,OnGraphs{Environment.NewLine}" +
+               $" 1,Current,       ,        {Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
-               "TableName,ColumnHeading,Units\r\n" +
-               "   Report,         Col2,    g\r\n" +
-               "   Report,         Col3,kg/ha\r\n");
+               $"TableName,ColumnHeading,Units{Environment.NewLine}" +
+               $"   Report,         Col2,    g{Environment.NewLine}" +
+               $"   Report,         Col3,kg/ha{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           "CheckpointID,SimulationID, Col1,Col2,Col3\r\n" +
-                           "           1,           1,1.000,  11,    \r\n" +
-                           "           1,           1,2.000,  12,    \r\n" +
-                           "           1,           2,3.000,    ,  13\r\n" +
-                           "           1,           2,4.000,    ,  14\r\n");
+                           $"CheckpointID,SimulationID, Col1,Col2,Col3{Environment.NewLine}" +
+                           $"           1,           1,1.000,  11,    {Environment.NewLine}" +
+                           $"           1,           1,2.000,  12,    {Environment.NewLine}" +
+                           $"           1,           2,3.000,    ,  13{Environment.NewLine}" +
+                           $"           1,           2,4.000,    ,  14{Environment.NewLine}");
         }
 
         /// <summary>When writing simulation data to a table, ensure that old rows are removed.</summary>
@@ -143,8 +146,8 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM [Report] ORDER BY [Col]"),
-                           "CheckpointID,SimulationID,Col\r\n" +
-                           "           1,           1,  3\r\n");
+                           $"CheckpointID,SimulationID,Col{Environment.NewLine}" +
+                           $"           1,           1,  3{Environment.NewLine}");
         }
 
         /// <summary>Write a table of data with no simulation name.</summary>
@@ -169,14 +172,14 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                                        "CheckpointID,Col1,Col2\r\n" +
-                                        "           1,  10,  20\r\n" +
-                                        "           1,  11,  21\r\n");
+                                        $"CheckpointID,Col1,Col2{Environment.NewLine}" +
+                                        $"           1,  10,  20{Environment.NewLine}" +
+                                        $"           1,  11,  21{Environment.NewLine}");
 
             // Make sure units were extracted from the column names and written.
             Assert.AreEqual(Utilities.TableToString(database, "_Units"),
-               "TableName,ColumnHeading,Units\r\n" +
-               "   Report,         Col1,    g\r\n");
+               $"TableName,ColumnHeading,Units{Environment.NewLine}" +
+               $"   Report,         Col1,    g{Environment.NewLine}");
         }
 
 
@@ -215,11 +218,11 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           "CheckpointID,SimulationID, Col1\r\n" +
-                           "           1,           1,1.000\r\n" +
-                           "           1,           1,2.000\r\n" +
-                           "           1,           1,3.000\r\n" +
-                           "           1,           1,4.000\r\n");
+                           $"CheckpointID,SimulationID, Col1{Environment.NewLine}" +
+                           $"           1,           1,1.000{Environment.NewLine}" +
+                           $"           1,           1,2.000{Environment.NewLine}" +
+                           $"           1,           1,3.000{Environment.NewLine}" +
+                           $"           1,           1,4.000{Environment.NewLine}");
         }
 
         /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
@@ -255,9 +258,9 @@
 
             // Make sure the old data was removed and we only have new data.
             Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                                        "CheckpointID,Col1,Col2\r\n" +
-                                        "           1, 100, 200\r\n" +
-                                        "           1, 110, 210\r\n");
+                                        $"CheckpointID,Col1,Col2{Environment.NewLine}" +
+                                        $"           1, 100, 200{Environment.NewLine}" +
+                                        $"           1, 110, 210{Environment.NewLine}");
         }
 
         /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
@@ -292,8 +295,8 @@
 
             // Make sure the old data was removed and we only have new data.
             Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                                        "CheckpointID,Col1,Col3\r\n" +
-                                        "           1, 100, 200\r\n");
+                                        $"CheckpointID,Col1,Col3{Environment.NewLine}" +
+                                        $"           1, 100, 200{Environment.NewLine}");
         }
 
         /// <summary>Empty the datastore.</summary>
@@ -331,11 +334,10 @@
             writer.Stop();
 
             // Now empty the datastore.
-            writer = new DataStoreWriter(database);
             writer.Empty();
             writer.Stop();
 
-            Assert.AreEqual(database.GetTableNames().Count, 0);
+            Assert.AreEqual(0, database.GetTableNames().Count);
         }
 
         /// <summary>Add a checkpoint</summary>
@@ -353,29 +355,29 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
-                           "           1,           1,2017-01-01, 1.000\r\n" +
-                           "           1,           1,2017-01-02, 2.000\r\n" +
-                           "           1,           2,2017-01-01,21.000\r\n" +
-                           "           1,           2,2017-01-02,22.000\r\n" +
-                           "           2,           1,2017-01-01,11.000\r\n" +
-                           "           2,           1,2017-01-02,12.000\r\n" +
-                           "           2,           2,2017-01-01,31.000\r\n" +
-                           "           2,           2,2017-01-02,32.000\r\n" +
-                           "           3,           1,2017-01-01, 1.000\r\n" +
-                           "           3,           1,2017-01-02, 2.000\r\n" +
-                           "           3,           2,2017-01-01,21.000\r\n" +
-                           "           3,           2,2017-01-02,22.000\r\n");
+                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
+                           $"           1,           1,2017-01-01, 1.000{Environment.NewLine}" +
+                           $"           1,           1,2017-01-02, 2.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-01,21.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-02,22.000{Environment.NewLine}" +
+                           $"           2,           1,2017-01-01,11.000{Environment.NewLine}" +
+                           $"           2,           1,2017-01-02,12.000{Environment.NewLine}" +
+                           $"           2,           2,2017-01-01,31.000{Environment.NewLine}" +
+                           $"           2,           2,2017-01-02,32.000{Environment.NewLine}" +
+                           $"           3,           1,2017-01-01, 1.000{Environment.NewLine}" +
+                           $"           3,           1,2017-01-02, 2.000{Environment.NewLine}" +
+                           $"           3,           2,2017-01-01,21.000{Environment.NewLine}" +
+                           $"           3,           2,2017-01-02,22.000{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints", new string[] { "ID", "Name" }),
-                                        "ID,   Name\r\n" +
-                                        " 1,Current\r\n" +
-                                        " 2, Saved1\r\n" +
-                                        " 3, Saved2\r\n");
+                                        $"ID,   Name{Environment.NewLine}" +
+                                        $" 1,Current{Environment.NewLine}" +
+                                        $" 2, Saved1{Environment.NewLine}" +
+                                        $" 3, Saved2{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "_CheckpointFiles", new string[] { "CheckpointID", "FileName", "Contents" }),
-                                        "CheckpointID, FileName,     Contents\r\n" +
-                                        "           3,Dummy.txt,System.Byte[]\r\n");
+                                        $"CheckpointID, FileName,     Contents{Environment.NewLine}" +
+                                        $"           3,Dummy.txt,System.Byte[]{Environment.NewLine}");
         }
 
         /// <summary>Delete a checkpoint</summary>
@@ -392,14 +394,14 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
-                           "           1,           1,2017-01-01, 1.000\r\n" +
-                           "           1,           1,2017-01-02, 2.000\r\n" +
-                           "           1,           2,2017-01-01,21.000\r\n" +
-                           "           1,           2,2017-01-02,22.000\r\n");
+                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
+                           $"           1,           1,2017-01-01, 1.000{Environment.NewLine}" +
+                           $"           1,           1,2017-01-02, 2.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-01,21.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-02,22.000{Environment.NewLine}");
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-                "ID,   Name,Version,OnGraphs\r\n" +
-                " 1,Current,       ,        \r\n");
+                $"ID,   Name,Version,OnGraphs{Environment.NewLine}" +
+                $" 1,Current,       ,        {Environment.NewLine}");
         }
 
         /// <summary>Revert a checkpoint</summary>
@@ -427,20 +429,20 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           "CheckpointID,SimulationID,      Col1,  Col2\r\n" +
-                           "           1,           1,2017-01-01,11.000\r\n" +
-                           "           1,           1,2017-01-02,12.000\r\n" +
-                           "           1,           2,2017-01-01,31.000\r\n" +
-                           "           1,           2,2017-01-02,32.000\r\n" +
-                           "           2,           1,2017-01-01,11.000\r\n" +
-                           "           2,           1,2017-01-02,12.000\r\n" +
-                           "           2,           2,2017-01-01,31.000\r\n" +
-                           "           2,           2,2017-01-02,32.000\r\n");
+                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
+                           $"           1,           1,2017-01-01,11.000{Environment.NewLine}" +
+                           $"           1,           1,2017-01-02,12.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-01,31.000{Environment.NewLine}" +
+                           $"           1,           2,2017-01-02,32.000{Environment.NewLine}" +
+                           $"           2,           1,2017-01-01,11.000{Environment.NewLine}" +
+                           $"           2,           1,2017-01-02,12.000{Environment.NewLine}" +
+                           $"           2,           2,2017-01-01,31.000{Environment.NewLine}" +
+                           $"           2,           2,2017-01-02,32.000{Environment.NewLine}");
 
             Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints", new string[] { "ID", "Name" }),
-                            "ID,   Name\r\n" +
-                            " 1,Current\r\n" +
-                            " 2, Saved1\r\n");
+                            $"ID,   Name{Environment.NewLine}" +
+                            $" 1,Current{Environment.NewLine}" +
+                            $" 2, Saved1{Environment.NewLine}");
         }
 
         /// <summary>Overwrite an existing checkpoint</summary>
@@ -470,15 +472,15 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                            "CheckpointID,SimulationID,      Col1, Col2\r\n" +
-                            "           1,           1,2017-01-01,1.000\r\n" +
-                            "           1,           1,2017-01-02,2.000\r\n" +
-                            "           1,           2,2017-01-01,3.000\r\n" +
-                            "           1,           2,2017-01-02,4.000\r\n" +
-                            "           2,           1,2017-01-01,1.000\r\n" +
-                            "           2,           1,2017-01-02,2.000\r\n" +
-                            "           2,           2,2017-01-01,3.000\r\n" +
-                            "           2,           2,2017-01-02,4.000\r\n");
+                            $"CheckpointID,SimulationID,      Col1, Col2{Environment.NewLine}" +
+                            $"           1,           1,2017-01-01,1.000{Environment.NewLine}" +
+                            $"           1,           1,2017-01-02,2.000{Environment.NewLine}" +
+                            $"           1,           2,2017-01-01,3.000{Environment.NewLine}" +
+                            $"           1,           2,2017-01-02,4.000{Environment.NewLine}" +
+                            $"           2,           1,2017-01-01,1.000{Environment.NewLine}" +
+                            $"           2,           1,2017-01-02,2.000{Environment.NewLine}" +
+                            $"           2,           2,2017-01-01,3.000{Environment.NewLine}" +
+                            $"           2,           2,2017-01-02,4.000{Environment.NewLine}");
         }
 
         /// <summary>Tests if we can open a database with foreign characters in the path.</summary>
@@ -505,8 +507,8 @@
             writer.Stop();
 
             Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                "CheckpointID,SimulationID,Col1\r\n" +
-                "           1,           1,  10\r\n");
+                $"CheckpointID,SimulationID,Col1{Environment.NewLine}" +
+                $"           1,           1,  10{Environment.NewLine}");
 
             database.CloseDatabase();
             File.Delete(path);

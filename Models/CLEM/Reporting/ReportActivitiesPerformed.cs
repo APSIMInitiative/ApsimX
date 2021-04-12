@@ -14,6 +14,7 @@ using Models.Core.Run;
 using Models.Storage;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Reporting
 {
@@ -59,27 +60,12 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public string SelectedTab { get; set; }
 
-        /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
-        private List<IReportColumn> columns = null;
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
-
-        /// <summary>Link to a simulation</summary>
-        [Link]
-        private Simulation simulation = null;
-
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
 
         /// <summary>Link to a storage service.</summary>
         [Link]
         private IDataStore storage = null;
-
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
@@ -106,7 +92,7 @@ namespace Models.CLEM.Reporting
         {
             dataToWriteToDb = null;
 
-            VariableNames = new string[]
+            base.VariableNames = new string[]
             {
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
@@ -114,15 +100,15 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastActivityPerformed.UniqueID as UniqueID"
             };
 
-            EventNames = new string[] { "[Activities].ActivityPerformed" };
+            base.EventNames = new string[] { "[Activities].ActivityPerformed" };
 
             // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
-            this.FindVariableMembers();
+            base.VariableNames = TidyUpVariableNames();
+            base.EventNames = TidyUpEventNames();
+            base.FindVariableMembers();
 
             // Subscribe to events.
-            foreach (string eventName in EventNames)
+            foreach (string eventName in base.EventNames)
             {
                 if (eventName != string.Empty)
                 {
@@ -143,170 +129,7 @@ namespace Models.CLEM.Reporting
             // if auto create
             if(AutoCreateHTML)
             {
-                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
-            }
-        }
-
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
-        {
-            if (dataToWriteToDb == null)
-            {
-                string folderName = null;
-                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
-                if (folderDescriptor != null)
-                {
-                    folderName = folderDescriptor.Value;
-                }
-
-                dataToWriteToDb = new ReportData()
-                {
-                    FolderName = folderName,
-                    SimulationName = simulation.Name,
-                    TableName = Name,
-                    ColumnNames = columns.Select(c => c.Name).ToList(),
-                    ColumnUnits = columns.Select(c => c.Units).ToList()
-                };
-            }
-
-            // Get number of groups.
-            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
-
-            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
-            {
-                // Create a row ready for writing.
-                List<object> valuesToWrite = new List<object>();
-                List<string> invalidVariables = new List<string>();
-                for (int i = 0; i < columns.Count; i++)
-                {
-                    try
-                    {
-                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
-                    }
-                    catch// (Exception err)
-                    {
-                        // Should we include exception message?
-                        invalidVariables.Add(columns[i].Name);
-                    }
-                }
-                if (invalidVariables != null && invalidVariables.Count > 0)
-                {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
-                }
-
-                // Add row to our table that will be written to the db file
-                dataToWriteToDb.Rows.Add(valuesToWrite);
-            }
-
-            // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count >= 100)
-            {
-                storage.Writer.WriteTable(dataToWriteToDb);
-                dataToWriteToDb = null;
-            }
-
-            DayAfterLastOutput = clock.Today.AddDays(1);
-        }
-
-        /// <summary>Create a text report from tables in this data store.</summary>
-        /// <param name="storage">The data store.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IDataStore storage, string fileName)
-        {
-            // Write out each table for this simulation.
-            foreach (string tableName in storage.Reader.TableNames)
-            {
-                DataTable data = storage.Reader.GetData(tableName);
-                if (data != null && data.Rows.Count > 0)
-                {
-                    SortColumnsOfDataTable(data);
-                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                    report.Close();
-                }
-            }
-        }
-
-        /// <summary>Sort the columns alphabetically</summary>
-        /// <param name="table">The table to sort</param>
-        private static void SortColumnsOfDataTable(DataTable table)
-        {
-            var columnArray = new DataColumn[table.Columns.Count];
-            table.Columns.CopyTo(columnArray, 0);
-            var ordinal = -1;
-            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
-            {
-                orderedColumn.SetOrdinal(++ordinal);
-            }
-
-            ordinal = -1;
-            int i = table.Columns.IndexOf("SimulationName");
-            if (i != -1)
-            {
-                table.Columns[i].SetOrdinal(++ordinal);
-            }
-
-            i = table.Columns.IndexOf("SimulationID");
-            if (i != -1)
-            {
-                table.Columns[i].SetOrdinal(++ordinal);
-            }
-        }
-
-
-        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public new void DoOutputEvent(object sender, EventArgs e)
-        {
-            DoOutput();
-        }
-
-        /// <summary>
-        /// Fill the Members list with VariableMember objects for each variable.
-        /// </summary>
-        private new void FindVariableMembers()
-        {
-            this.columns = new List<IReportColumn>();
-
-            AddExperimentFactorLevels();
-
-            // If a group by variable was specified then all columns need to be aggregated
-            // columns. Find the first aggregated column so that we can, later, use its from and to
-            // variables to create an agregated column that doesn't have them.
-            string from = null;
-            string to = null;
-            if (!string.IsNullOrEmpty(GroupByVariableName))
-            {
-                FindFromTo(out from, out to);
-            }
-
-            foreach (string fullVariableName in this.VariableNames)
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(fullVariableName))
-                    {
-                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
-                    }
-                }
-                catch (Exception err)
-                {
-                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
-                }
-            }
-        }
-
-        /// <summary>Add the experiment factor levels as columns.</summary>
-        private void AddExperimentFactorLevels()
-        {
-            if (simulation.Descriptors != null)
-            {
-                foreach (var descriptor in simulation.Descriptors)
-                {
-                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
-                    {
-                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
-                    }
-                }
+//                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
             }
         }
 
@@ -485,7 +308,6 @@ namespace Models.CLEM.Reporting
                 ".r1 {grid-row: 1; }" +
                 ".r2 {grid-row: 2; }" +
                 ".r3 {grid-row: 3; }" +
- //               "*{box-sizing: border-box; padding: 0; margin: 0;}" +
                 "html {height 100%;}" +
                 "\r\n</style>\r\n<!-- graphscript --></ head>\r\n<body>";
 
@@ -611,7 +433,7 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    // System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }

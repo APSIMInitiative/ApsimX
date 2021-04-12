@@ -160,7 +160,14 @@ namespace APSIM.Shared.Utilities
                     System.Diagnostics.Process.Start("explorer.exe", path);
                 }
                 else
-                    System.Diagnostics.Process.Start(path);
+                {
+                    var ps = new System.Diagnostics.ProcessStartInfo(path)
+                    {
+                        UseShellExecute = true,
+                        Verb = "open"
+                    };
+                    System.Diagnostics.Process.Start(ps);
+                }
             }
         }
 

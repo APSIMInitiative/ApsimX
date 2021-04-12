@@ -128,7 +128,6 @@
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
             };
             foreach (Runner runner in runners)
             {
@@ -405,9 +404,9 @@
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
             Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
-               "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
-               "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
-               "          exp1,          sim1,         F,         N,          0\r\n");
+               $"ExperimentName,SimulationName,FolderName,FactorName,FactorValue{Environment.NewLine}" +
+               $"          exp1,          sim1,         F,  Cultivar,      cult1{Environment.NewLine}" +
+               $"          exp1,          sim1,         F,         N,          0{Environment.NewLine}");
         }
 
         /// <summary>

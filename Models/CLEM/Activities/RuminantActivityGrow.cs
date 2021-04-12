@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Metane if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named Methane if present")]
         public string MethaneStoreName { get; set; }
 

@@ -222,13 +222,16 @@
                         this.weatherData.ExcelWorkSheetName = sheetName;
                         string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                         var changes = new List<ChangeProperty.Property>();
-                        changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        if (weatherData.FullFileName != newFileName)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
                         // Set constants file name to null iff the new file name is not a csv file.
-                        if (Path.GetExtension(newFileName) != ".csv")
+                        if (Path.GetExtension(newFileName) != ".csv" && weatherData.ConstantsFile != null)
                             changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));
-                        ICommand changeFileName = new ChangeProperty(changes);
-                        explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
-
+                        if (changes.Count > 0)
+                        {
+                            ICommand changeFileName = new ChangeProperty(changes);
+                            explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
+                        }
                         using (DataTable data = this.weatherData.GetAllData())
                         {
                             this.dataStartDate = this.weatherData.StartDate;

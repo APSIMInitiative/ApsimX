@@ -1,0 +1,10 @@
+{
+  "$type": "Models.Soils.Soil, Models",
+  "Name": "Soil",
+  "Children": [
+    {
+      "$type": "Models.Soils.Sample, Models",
+      "Name": "Initial water"
+    }
+  ]
+}

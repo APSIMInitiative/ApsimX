@@ -8,6 +8,7 @@ namespace Models
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// A regression model.
@@ -16,6 +17,7 @@ namespace Models
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
+    [ValidParent(ParentType = typeof(Graph))]
     public class Regression : Model, ICachableGraphable
     {
         /// <summary>The stats from the regression</summary>
@@ -51,9 +53,16 @@ namespace Models
         public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationsFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
+            IEnumerable<SeriesDefinition> definitions;
             if (seriesAncestor == null)
-                throw new Exception("Regression model must be a descendant of a series");
-            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationsFilter);
+            {
+                Graph graph = FindAncestor<Graph>();
+                if (graph == null)
+                    throw new Exception("Regression model must be a descendant of a series");
+                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.GetSeriesDefinitions(storage, simulationsFilter));
+            }
+            else
+                definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationsFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationsFilter);
         }
@@ -192,12 +201,11 @@ namespace Models
                 {
                     // Add an equation annotation.
                     TextAnnotation equation = new TextAnnotation();
-                    equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                        "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
-                                                        "RSR = {7:F2}, RMSD = {8:F2}",
-                                                        new object[] {stats[i].Slope,   stats[i].Intercept,   stats[i].R2,
-                                                                  stats[i].n,   stats[i].NSE, stats[i].ME,
-                                                                  stats[i].MAE, stats[i].RSR, stats[i].RMSE});
+                    StringBuilder text = new StringBuilder();
+                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
+                    text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
+                    text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
+                    equation.text = text.ToString();
                     equation.colour = equationColours[i];
                     equation.leftAlign = true;
                     equation.textRotation = 0;

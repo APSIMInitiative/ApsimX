@@ -40,10 +40,7 @@
             SingleThreaded,
 
             /// <summary>Run using multiple cores - each job asynchronously.</summary>
-            MultiThreaded,
-
-            /// <summary>Run using multiple, separate processes - each job asynchronously.</summary>
-            MultiProcess
+            MultiThreaded
         }
 
         /// <summary>
@@ -250,9 +247,6 @@
                         break;
                     case RunTypeEnum.MultiThreaded:
                         jobRunner = new JobRunner(numberOfProcessors);
-                        break;
-                    case RunTypeEnum.MultiProcess:
-                        jobRunner = new JobRunnerMultiProcess(numberOfProcessors);
                         break;
                 }
 

@@ -585,65 +585,6 @@
                         cell.DropDownStrings = fieldNames;
                     }
                 }
-                else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMResource))
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    List<string> fieldNames = new List<string>();
-                    fieldNames.AddRange(this.GetCLEMResourceNames(this.properties[i].Display.CLEMResourceGroups));
-
-                    // add any extras elements provided to the list.
-                    if (this.properties[i].Display.CLEMExtraEntries != null)
-                    {
-                        fieldNames.AddRange(this.properties[i].Display.CLEMExtraEntries);
-                    }
-
-                    if (fieldNames.Count != 0)
-                    {
-                        cell.DropDownStrings = fieldNames.ToArray();
-                    }
-                }
-                else if (properties[i].Display != null && 
-					(properties[i].Display.Type == DisplayType.CLEMCropFileReader))
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    List<string> fieldNames = new List<string>();
-                    Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get crop file reader names
-                    fieldNames.AddRange(clemParent.FindAllDescendants<FileCrop>().Select(a => a.Name).ToList());
-                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLiteCrop>().Select(a => a.Name).ToList());
-                    if (fieldNames.Count != 0)
-                    {
-                        cell.DropDownStrings = fieldNames.ToArray();
-                    }
-                }
-                else if (properties[i].Display != null &&  
-					(properties[i].Display.Type == DisplayType.CLEMPastureFileReader))
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    List<string> fieldNames = new List<string>();
-                    Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get Pasture file reader names
-                    fieldNames.AddRange(clemParent.FindAllDescendants<FilePasture>().Select(a => a.Name).ToList());
-                    fieldNames.AddRange(clemParent.FindAllDescendants<FileSQLitePasture>().Select(a => a.Name).ToList());
-                    if (fieldNames.Count != 0)
-                    {
-                        cell.DropDownStrings = fieldNames.ToArray();
-                    }
-                }
-                else if (properties[i].Display != null &&
-                    (properties[i].Display.Type == DisplayType.CLEMResourceFileReader))
-                {
-                    cell.EditorType = EditorTypeEnum.DropDown;
-                    List<string> fieldNames = new List<string>();
-                    Simulation clemParent = model.FindAncestor<Simulation>();
-                    // get Resource file reader names
-                    fieldNames.AddRange(clemParent.FindAllDescendants<FileResource>().Select(a => a.Name).ToList());
-                    if (fieldNames.Count != 0)
-                    {
-                        cell.DropDownStrings = fieldNames.ToArray();
-                    }
-                }
                 else if (properties[i].Display != null && 
                          properties[i].Display.Type == DisplayType.Model)
                 {
@@ -693,7 +634,7 @@
                         explorerPresenter.ApsimXFile.Links.Resolve(model, allLinks: true, throwOnFail: false);
                         BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                         MethodInfo method = model.GetType().GetMethod(properties[i].Display.Values, flags);
-                        string[] values = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                        string[] values = ((IEnumerable<object>)method.Invoke(model, properties[i].Display.ValuesArgs))?.Select(v => v?.ToString())?.ToArray();
                         cell.EditorType = EditorTypeEnum.DropDown;
                         cell.DropDownStrings = values;
                     }

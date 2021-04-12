@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of resource data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource data reader required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResourceFileReader)]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
         public string ResourceDataReader { get; set; }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Bank account to use")]
         [System.ComponentModel.DefaultValue("No financial implications")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) }, CLEMExtraEntries = new string[] { "No financial implications" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No financial implications", typeof(Finance) } })]
         public string AccountName { get; set; }
 
         private FileResource fileResource = null;
