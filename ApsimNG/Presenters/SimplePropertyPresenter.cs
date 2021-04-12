@@ -143,6 +143,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            view.SaveChanges();
+            view.PropertyChanged -= OnViewChanged;
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
         }
     
