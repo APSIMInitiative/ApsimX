@@ -643,5 +643,18 @@ namespace UserInterface.Views
                 widget.DetachAllHandlers();
             }
         }
+
+        /// <summary>
+        /// Fire off a PropertyChanged event for any outstanding changes.
+        /// </summary>
+        public void SaveChanges()
+        {
+            // The only widget which can have outstanding changes is an entry,
+            // whose changes are applied when it loses focus. Therefore,
+            // grabbing focus on the main widget will cause any focused entries
+            // to lose focus and fire off a changed event.
+            mainWidget.CanFocus = true;
+            mainWidget.GrabFocus();
+        }
     }
 }
