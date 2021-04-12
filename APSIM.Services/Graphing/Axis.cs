@@ -44,6 +44,11 @@ namespace APSIM.Services.Graphing
         public double? Interval { get; private set; }
 
         /// <summary>
+        /// tbi
+        /// </summary>
+        public bool DateTimeAxis { get; set; }
+
+        /// <summary>
         /// Create an axis instance.
         /// </summary>
         /// <param name="title">Axis title.</param>

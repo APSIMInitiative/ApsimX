@@ -390,10 +390,10 @@
                     paragraph.text = paragraph.text.Replace("[FigureNumber]", figureNumber.ToString());
                     AddFormattedParagraphToSection(section, paragraph);
                 }
-                else if (tag is AutoDocumentation.GraphAndTable)
-                    CreateGraphPDF(section, tag as AutoDocumentation.GraphAndTable);
-                else if (tag is GraphPage)
-                    CreateGraphPage(section, tag as GraphPage);
+                // else if (tag is AutoDocumentation.GraphAndTable)
+                //     CreateGraphPDF(section, tag as AutoDocumentation.GraphAndTable);
+                // else if (tag is GraphPage)
+                //     CreateGraphPage(section, tag as GraphPage);
                 else if (tag is AutoDocumentation.NewPage)
                 {
                     section.AddPageBreak();
@@ -551,7 +551,7 @@
                 para.Format.FirstLineIndent = "-1cm";
             }
         }
-
+/*
         /// <summary>Creates the graph.</summary>
         /// <param name="section">The section.</param>
         /// <param name="graphAndTable">The graph and table to convert to html.</param>
@@ -714,7 +714,7 @@
                 sectionImage.Width = "19cm";
             }
         }
-
+*/
         /// <summary>Creates the table.</summary>
         /// <param name="section">The section.</param>
         /// <param name="tableObj">The table to convert to html.</param>

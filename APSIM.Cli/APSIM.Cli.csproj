@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <OutputPath>../NetCoreBin</OutputPath>
+    <AssemblyName>apsim</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../APSIM.Services/APSIM.Services.csproj" />
+    <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
+    <ProjectReference Include="../APSIM.Interop/APSIM.Interop.csproj" />
+    <ProjectReference Include="../Models/Models.csproj" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+  </ItemGroup>
+
+</Project>

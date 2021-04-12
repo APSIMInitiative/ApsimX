@@ -1,9 +1,9 @@
 ﻿namespace UserInterface.Presenters
 {
     using System;
-    using Models;
     using Views;
     using Interfaces;
+    using APSIM.Services.Graphing;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
@@ -80,9 +80,9 @@
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
-            view.SetMinimum(axis.Minimum, axis.DateTimeAxis);
-            view.SetMaximum(axis.Maximum, axis.DateTimeAxis);
-            view.SetInterval(axis.Interval, axis.DateTimeAxis);
+            view.SetMinimum(axis.Minimum ?? double.NaN, axis.DateTimeAxis);
+            view.SetMaximum(axis.Maximum ?? double.NaN, axis.DateTimeAxis);
+            view.SetInterval(axis.Interval ?? double.NaN, axis.DateTimeAxis);
         }
         
         /// <summary>

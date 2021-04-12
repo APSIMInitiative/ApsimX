@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
+using APSIM.Services.Graphing;
 
 namespace UserInterface.Presenters
 {
@@ -204,7 +205,7 @@ namespace UserInterface.Presenters
                     graph.LegendOutsideGraph = true;
 
                 if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
-                    graph.LegendOrientation = (Graph.LegendOrientationType)Enum.Parse(typeof(Graph.LegendOrientationType), panel.LegendOrientation.ToString());
+                    graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
 
                 if (graph != null && graph.Enabled)
                 {
@@ -212,7 +213,7 @@ namespace UserInterface.Presenters
                     panel.Script.TransformGraph(graph, sim);
 
                     if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
-                        graph.LegendPosition = (Graph.LegendPositionType)Enum.Parse(typeof(Graph.LegendPositionType), panel.LegendPosition.ToString());
+                        graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
 
                     // Create and fill cache entry if it doesn't exist.
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
@@ -265,8 +266,8 @@ namespace UserInterface.Presenters
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
-                Axis[] xAxes = axes.Where(a => a.Type == Axis.AxisType.Bottom || a.Type == Axis.AxisType.Top).ToArray();
-                Axis[] yAxes = axes.Where(a => a.Type == Axis.AxisType.Left|| a.Type == Axis.AxisType.Right).ToArray();
+                Axis[] xAxes = axes.Where(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top).ToArray();
+                Axis[] yAxes = axes.Where(a => a.Position == AxisPosition.Left|| a.Position == AxisPosition.Right).ToArray();
 
                 foreach (GraphTab tab in graphs)
                 {
@@ -290,12 +291,12 @@ namespace UserInterface.Presenters
         {
             foreach (Axis axis in axes)
             {
-                graphView.FormatAxis(axis.Type,
-                                     graphView.AxisTitle(axis.Type),
+                graphView.FormatAxis(axis.Position,
+                                     graphView.AxisTitle(axis.Position),
                                      axis.Inverted,
-                                     axis.Minimum,
-                                     axis.Maximum,
-                                     axis.Interval,
+                                     axis.Minimum ?? double.NaN,
+                                     axis.Maximum ?? double.NaN,
+                                     axis.Interval ?? double.NaN,
                                      axis.CrossesAtZero);
             }
         }

@@ -16,14 +16,16 @@
 
   <ItemGroup>
     <ProjectReference Include="../APSIM.Services/APSIM.Services.csproj" />
+    <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
-    <PackageReference Include="OxyPlot.Core" Version="2.0.0" />
+    <PackageReference Include="Markdig" Version="0.22.1" />
   </ItemGroup>
 
   <!-- .NET Core-specific references -->
   <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
     <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
     <PackageReference Include="PdfSharpCore" Version="1.2.11" />
+    <PackageReference Include="OxyPlot.Core" Version="2.0.0" />
   </ItemGroup>
 
   <!-- .NET Framework-specific references -->

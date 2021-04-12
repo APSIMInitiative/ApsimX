@@ -22,17 +22,16 @@ namespace UnitTests.Core
             Assembly models = typeof(IModel).Assembly;
             int successes = 0;
             int failures = 0;
-            List<AutoDocumentation.ITag> tags = new List<AutoDocumentation.ITag>();
             foreach (Type t in models.GetTypes())
             {
                 // Skip this type if it's not an implementation of ICustomDocumentation,
                 // or if it's an interface.
-                if (!typeof(ICustomDocumentation).IsAssignableFrom(t) || t.IsInterface)
+                if (!typeof(IModel).IsAssignableFrom(t) || t.GetMethod(nameof(IModel.Document)) == null)
                     continue;
-                ICustomDocumentation instance = models.CreateInstance(t.FullName) as ICustomDocumentation;
+                IModel instance = models.CreateInstance(t.FullName) as IModel;
                 try
                 {
-                    instance.Document(tags, 0, 0);
+                    var tags = instance.Document();
                     successes++;
                 }
                 catch (Exception err)

@@ -11,6 +11,8 @@
     using Models;
     using Models.Functions;
     using Views;
+    using APSIM.Services.Graphing;
+    using Series = Models.Series;
 
     /// <summary>
     /// The presenter class for populating an InitialWater view with an InitialWater model.
@@ -74,13 +76,13 @@
             string xAxisTitle = LookForXAxisTitle();
             if (xAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Bottom, xAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             string yAxisTitle = LookForYAxisTitle();
             if (yAxisTitle != null)
             {
-                xYPairsView.Graph.FormatAxis(Axis.AxisType.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
+                xYPairsView.Graph.FormatAxis(AxisPosition.Left, yAxisTitle, false, double.NaN, double.NaN, double.NaN, false);
             }
 
             xYPairsView.Graph.FormatTitle(xYPairs.Parent.Name);

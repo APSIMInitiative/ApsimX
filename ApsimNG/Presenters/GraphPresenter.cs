@@ -14,7 +14,8 @@
     using Models;
     using Models.Storage;
     using Views;
-    
+    using APSIM.Services.Graphing;
+
     /// <summary>
     /// A presenter for a graph.
     /// </summary>
@@ -130,7 +131,7 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (Models.Axis a in graph.Axis)
+                foreach (APSIM.Services.Graphing.Axis a in graph.Axis)
                     FormatAxis(a);
 
                 // Get a list of series annotations.
@@ -318,10 +319,10 @@
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
-            double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
-            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
-            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+            double minimumX = graphView.AxisMinimum(AxisPosition.Bottom) * 1.01;
+            double maximumX = graphView.AxisMaximum(AxisPosition.Bottom);
+            double minimumY = graphView.AxisMinimum(AxisPosition.Left);
+            double maximumY = graphView.AxisMaximum(AxisPosition.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
             for (int i = 0; i < annotations.Count(); i++)
@@ -340,8 +341,8 @@
                                             yPosition,
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
+                                            AxisPosition.Bottom, 
+                                            AxisPosition.Left,
                                             Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                     else
@@ -352,8 +353,8 @@
                                             textAnnotation.y,
                                             textAnnotation.leftAlign, 
                                             textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
+                                            AxisPosition.Bottom, 
+                                            AxisPosition.Left,
                                             Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                     }
                 }
@@ -377,7 +378,7 @@
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(Models.Axis axis)
+        private void FormatAxis(APSIM.Services.Graphing.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)
@@ -388,11 +389,11 @@
                 HashSet<string> variableNames = new HashSet<string>();
                 foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
-                    if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
+                    if (definition.X != null && definition.XAxis == axis.Position && definition.XFieldName != null)
                     {
                         IEnumerator enumerator = definition.X.GetEnumerator();
-                        if (enumerator.MoveNext())
-                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
+                        // if (enumerator.MoveNext())
+                        //     axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.XFieldName;
                         if (!variableNames.Contains(xName))
                         {
@@ -404,11 +405,11 @@
                         }
                     }
 
-                    if (definition.Y != null && definition.YAxis == axis.Type && definition.YFieldName != null)
+                    if (definition.Y != null && definition.YAxis == axis.Position && definition.YFieldName != null)
                     {
                         IEnumerator enumerator = definition.Y.GetEnumerator();
-                        if (enumerator.MoveNext())
-                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
+                        // if (enumerator.MoveNext())
+                        //     axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.YFieldName;
                         if (!variableNames.Contains(yName))
                         {
@@ -425,7 +426,7 @@
                 title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
-            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
+            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero);
         }
         
         /// <summary>The graph model has changed.</summary>
@@ -438,7 +439,7 @@
 
         /// <summary>User has clicked an axis.</summary>
         /// <param name="axisType">Type of the axis.</param>
-        private void OnAxisClick(Axis.AxisType axisType)
+        private void OnAxisClick(AxisPosition axisType)
         {
             if (CurrentPresenter != null)
             {
@@ -448,7 +449,7 @@
             AxisPresenter axisPresenter = new AxisPresenter();
             CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
-            string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
+            string dimension = (axisType == AxisPosition.Left || axisType == AxisPosition.Right) ? "Y" : "X";
             graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
             axisPresenter.Attach(GetAxis(axisType), a, explorerPresenter);
         }
@@ -473,20 +474,16 @@
         }
 
         /// <summary>Get an axis</summary>
-        /// <param name="axisType">Type of the axis.</param>
+        /// <param name="position">Type of the axis.</param>
         /// <returns>Return the axis</returns>
         /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
-        private object GetAxis(Axis.AxisType axisType)
+        private object GetAxis(AxisPosition position)
         {
             foreach (Axis a in graph.Axis)
-            {
-                if (a.Type.ToString() == axisType.ToString())
-                {
+                if (a.Position == position)
                     return a;
-                }
-            }
 
-            throw new Exception("Cannot find axis with type: " + axisType.ToString());
+            throw new Exception("Cannot find axis with type: " + position.ToString());
         }
 
         /// <summary>The axis has changed</summary>

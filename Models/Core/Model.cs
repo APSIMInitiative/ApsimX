@@ -534,7 +534,7 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        public IEnumerable<ITag> Document() => Document(0, 0);
+        public IEnumerable<ITag> Document() => Document(0, 1);
 
         /// <summary>
         /// Document the model.

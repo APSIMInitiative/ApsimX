@@ -54,7 +54,7 @@
             }
         }
 
-        private MarkerSizeType markerSize;
+        private MarkerSize markerSize;
 
         /// <summary>
         /// Marker size.
@@ -400,10 +400,10 @@
              APSIM.Services.Graphing.AxisPosition xAxisType,
              APSIM.Services.Graphing.AxisPosition yAxisType,
              Color colour,
-             Models.LineType lineType,
-             Models.MarkerType markerType,
-             Models.LineThicknessType lineThickness,
-             Models.MarkerSizeType markerSize,
+             LineType lineType,
+             APSIM.Services.Graphing.MarkerType markerType,
+             APSIM.Services.Graphing.LineThickness lineThickness,
+             APSIM.Services.Graphing.MarkerSize markerSize,
              double markerModifier,
              bool showOnLegend)
         {
@@ -451,7 +451,7 @@
                 }
 
                 // Line thickness
-                if (lineThickness == LineThicknessType.Thin)
+                if (lineThickness == APSIM.Services.Graphing.LineThickness.Thin)
                     series.StrokeThickness = 0.5;
 
                 // Marker type.
@@ -661,7 +661,7 @@
             Color colour,
             bool showOnLegend)
         {
-            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<LineSeries>().Count() < 1)
+            if (this.plot1.Model.Series.Count < 1 || plot1.Model.Series.OfType<OxyPlot.Series.LineSeries>().Count() < 1)
             {
                 // This is the first series to be added to the chart. Just use
                 // a region series (colours area between two curves), and use
@@ -758,9 +758,9 @@
             APSIM.Services.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend,
-            Models.LineType lineType,
-            Models.MarkerType markerType,
-            Models.LineThicknessType lineThickness)
+            LineType lineType,
+            APSIM.Services.Graphing.MarkerType markerType,
+            APSIM.Services.Graphing.LineThickness lineThickness)
         {
             if (x?.Length > 0 && y?.Length > 0)
             {
@@ -787,7 +787,7 @@
                     series.OutlierType = oxyMarkerType;
 
                 // Line thickness
-                if (lineThickness == LineThicknessType.Thin)
+                if (lineThickness == APSIM.Services.Graphing.LineThickness.Thin)
                 {
                     double thickness = 0.5;
                     series.StrokeThickness = thickness;
@@ -940,8 +940,8 @@
             object y1,
             object x2,
             object y2,
-            Models.LineType type,
-            Models.LineThicknessType thickness,
+            LineType type,
+            APSIM.Services.Graphing.LineThickness thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip)
@@ -984,7 +984,7 @@
                 lineAnnotation.MaximumY = y2Position;
                 lineAnnotation.Type = LineAnnotationType.Vertical;
                 lineAnnotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-                if (thickness == LineThicknessType.Thin)
+                if (thickness == APSIM.Services.Graphing.LineThickness.Thin)
                     lineAnnotation.StrokeThickness = 0.5;
                 annotation = lineAnnotation;
             }
@@ -1076,15 +1076,15 @@
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation)
+        public void FormatLegend(APSIM.Services.Graphing.LegendPosition legendPositionType, APSIM.Services.Graphing.LegendOrientation orientation)
         {
-            LegendPosition oxyLegendPosition;
+            OxyPlot.LegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
                 this.plot1.Model.LegendFont = Font;
                 this.plot1.Model.LegendFontSize = FontSize;
                 this.plot1.Model.LegendPosition = oxyLegendPosition;
-                if (Enum.TryParse(orientation.ToString(), out LegendOrientation legendOrientation))
+                if (Enum.TryParse(orientation.ToString(), out OxyPlot.LegendOrientation legendOrientation))
                     plot1.Model.LegendOrientation = legendOrientation;
             }
 
@@ -1093,33 +1093,33 @@
             // If 2 series have the same title then remove their titles (this will
             // remove them from the legend) and create a new series solely for the
             // legend that has line type and marker type combined.
-            var newSeriesToAdd = new List<LineSeries>();
+            var newSeriesToAdd = new List<OxyPlot.Series.LineSeries>();
             foreach (var series in plot1.Model.Series)
             {
-                if (series is LineSeries && !string.IsNullOrEmpty(series.Title))
+                if (series is OxyPlot.Series.LineSeries && !string.IsNullOrEmpty(series.Title))
                 {
                     var matchingSeries = FindMatchingSeries(series);
                     if (matchingSeries != null)
                     {
-                        var newFakeSeries = new LineSeries();
+                        var newFakeSeries = new OxyPlot.Series.LineSeries();
                         newFakeSeries.Title = series.Title;
-                        newFakeSeries.Color = (series as LineSeries).Color;
-                        newFakeSeries.LineStyle = (series as LineSeries).LineStyle;
+                        newFakeSeries.Color = (series as OxyPlot.Series.LineSeries).Color;
+                        newFakeSeries.LineStyle = (series as OxyPlot.Series.LineSeries).LineStyle;
                         if (newFakeSeries.LineStyle == LineStyle.None)
-                            (series as LineSeries).LineStyle = (matchingSeries as LineSeries).LineStyle;
-                        if ((series as LineSeries).MarkerType == OxyPlot.MarkerType.None)
+                            (series as OxyPlot.Series.LineSeries).LineStyle = (matchingSeries as OxyPlot.Series.LineSeries).LineStyle;
+                        if ((series as OxyPlot.Series.LineSeries).MarkerType == OxyPlot.MarkerType.None)
                         {
-                            newFakeSeries.MarkerType = (matchingSeries as LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (matchingSeries as LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (matchingSeries as LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (matchingSeries as LineSeries).MarkerSize;
+                            newFakeSeries.MarkerType = (matchingSeries as OxyPlot.Series.LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (matchingSeries as OxyPlot.Series.LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (matchingSeries as OxyPlot.Series.LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (matchingSeries as OxyPlot.Series.LineSeries).MarkerSize;
                         }
                         else
                         {
-                            newFakeSeries.MarkerType = (series as LineSeries).MarkerType;
-                            newFakeSeries.MarkerFill = (series as LineSeries).MarkerFill;
-                            newFakeSeries.MarkerOutline = (series as LineSeries).MarkerOutline;
-                            newFakeSeries.MarkerSize = (series as LineSeries).MarkerSize;
+                            newFakeSeries.MarkerType = (series as OxyPlot.Series.LineSeries).MarkerType;
+                            newFakeSeries.MarkerFill = (series as OxyPlot.Series.LineSeries).MarkerFill;
+                            newFakeSeries.MarkerOutline = (series as OxyPlot.Series.LineSeries).MarkerOutline;
+                            newFakeSeries.MarkerSize = (series as OxyPlot.Series.LineSeries).MarkerSize;
                         }
 
                         newSeriesToAdd.Add(newFakeSeries);
@@ -1375,7 +1375,7 @@
                 }
 
                 if (axis.PlotModel.Series[0] is BoxPlotSeries && 
-                    axis.Position == AxisPosition.Bottom && 
+                    axis.Position == OxyPlot.Axes.AxisPosition.Bottom && 
                     axis.PlotModel.Series?.Count > 0)
                 {
                     // Need to put a bit of extra space on the x axis.
@@ -1549,7 +1549,7 @@
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
             {
-                AxisPosition position = this.AxisTypeToPosition(axisType);
+                OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
                 OxyPlot.Axes.Axis axisToAdd;
                 if (dataType == typeof(DateTime))
                 {
@@ -1591,7 +1591,7 @@
         /// <returns>The axis</returns>
         private int GetAxisIndex(APSIM.Services.Graphing.AxisPosition axisType)
         {
-            AxisPosition position = this.AxisTypeToPosition(axisType);
+            OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
             {
                 if (this.plot1.Model.Axes[i].Position == position)
@@ -1608,22 +1608,22 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private AxisPosition AxisTypeToPosition(APSIM.Services.Graphing.AxisPosition type)
+        private OxyPlot.Axes.AxisPosition AxisTypeToPosition(APSIM.Services.Graphing.AxisPosition type)
         {
             if (type == APSIM.Services.Graphing.AxisPosition.Bottom)
             {
-                return AxisPosition.Bottom;
+                return OxyPlot.Axes.AxisPosition.Bottom;
             }
             else if (type == APSIM.Services.Graphing.AxisPosition.Left)
             {
-                return AxisPosition.Left;
+                return OxyPlot.Axes.AxisPosition.Left;
             }
             else if (type == APSIM.Services.Graphing.AxisPosition.Top)
             {
-                return AxisPosition.Top;
+                return OxyPlot.Axes.AxisPosition.Top;
             }
 
-            return AxisPosition.Right;
+            return OxyPlot.Axes.AxisPosition.Right;
         }
 
         /// <summary>
@@ -1745,27 +1745,19 @@
             }
         }
 
-        public Models.Axis[] Axes
+        public IEnumerable<APSIM.Services.Graphing.Axis> Axes
         {
             get
             {
-                List<Models.Axis> axes = new List<Models.Axis>();
-                foreach (var oxyAxis in plot1.Model.Axes)
-                {
-                    var axis = new Models.Axis();
-                    axis.CrossesAtZero = oxyAxis.PositionAtZeroCrossing;
-                    axis.DateTimeAxis = oxyAxis is DateTimeAxis;
-                    axis.Interval = oxyAxis.ActualMajorStep;
-                    axis.Inverted = MathUtilities.FloatsAreEqual(oxyAxis.StartPosition, 1);
-                    axis.Maximum = oxyAxis.ActualMaximum;
-                    axis.Minimum = oxyAxis.ActualMinimum;
-                    axis.Title = oxyAxis.Title;
-                    axis.Type = AxisPositionToType(oxyAxis.Position);
-
-                    axes.Add(axis);
-                }
-
-                return axes.ToArray();
+                return plot1.Model.Axes.Select(axis => new APSIM.Services.Graphing.Axis(
+                    axis.Title,
+                    AxisPositionToType(axis.Position),
+                    MathUtilities.FloatsAreEqual(axis.StartPosition, 1),
+                    axis.PositionAtZeroCrossing,
+                    axis.ActualMinimum,
+                    axis.ActualMaximum,
+                    axis.ActualMajorStep
+                ));
             }
         }
 

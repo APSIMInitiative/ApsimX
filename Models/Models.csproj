@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
     <ApplicationIcon />
     <StartupObject />
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
@@ -88,7 +88,6 @@
       <Private>false</Private>
     </Reference>
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
-	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 

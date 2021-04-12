@@ -20,7 +20,7 @@ namespace APSIM.Services.Documentation
             set
             {
                 if (value <= 0)
-                    throw new ArgumentException("Heading level must be greater than zero");
+                    throw new ArgumentException($"Heading level must be greater than zero (was {value})");
                 headingLevel = value;
             }
         }
