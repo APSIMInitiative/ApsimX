@@ -50,9 +50,6 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor,  ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Ancestor, ByName = true)]
-        Phenology phenology = null;
-        /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
         
