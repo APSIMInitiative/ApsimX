@@ -191,18 +191,11 @@
         {
             try
             {
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                {
-                    object model = explorerPresenter.CurrentNode;
-                    explorerPresenter.HideRightHandPanel();
-                    explorerPresenter.ShowInRightHandPanel(model,
-                                       "ApsimNG.Resources.Glade.RunOnCloudView.glade",
-                                       new RunOnCloudPresenter());
-                }
-                else
-                {
-                    explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
-                }
+                object model = explorerPresenter.CurrentNode;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                    "ApsimNG.Resources.Glade.RunOnCloudView.glade",
+                                    new RunOnCloudPresenter());
             }
             catch (Exception err)
             {

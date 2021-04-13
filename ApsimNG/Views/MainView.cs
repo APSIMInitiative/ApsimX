@@ -246,13 +246,14 @@
         {
             try
             {
-                Notebook control = sender as Notebook;
-
-                for (int i = 0; i < control.Children.Length; i++)
+                if (sender is Notebook control)
                 {
-                    // The top-level widget in the tab label is always an event box.
-                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
-                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    for (int i = 0; i < control.Children.Length; i++)
+                    {
+                        // The top-level widget in the tab label is always an event box.
+                        Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                        tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    }
                 }
             }
             catch (Exception err)
