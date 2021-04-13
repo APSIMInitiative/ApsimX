@@ -47,7 +47,7 @@ namespace UserInterface.Intellisense
         {
             get
             {
-                return CompletionActivation.Interactive | CompletionActivation.UserRequested;
+                return CompletionActivation.UserRequested;
             }
         }
 

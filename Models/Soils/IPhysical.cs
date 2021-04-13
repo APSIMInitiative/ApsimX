@@ -34,7 +34,7 @@
         double[] ParticleSizeSilt { get; set; }
 
         /// <summary>Rocks.</summary>
-        double[] Rocks { get; }
+        double[] Rocks { get; set; }
 
         /// <summary>Saturation (mm/mm).</summary>
         double[] SAT { get; set; }

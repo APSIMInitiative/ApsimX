@@ -31,14 +31,38 @@ namespace Models.CLEM
         /// Resource this transaction relates to for data analysis and summary
         /// </summary>
         public string RelatesToResource { get; set; }
-        /// <summary>
-        /// Amount removed
-        /// </summary>
-        public double Gain { get; set; }
+
         /// <summary>
         /// Amount added
         /// </summary>
-        public double Loss { get; set; }
+        public double Gain
+        {
+            get
+            {
+                return (Style == TransactionStyle.Gain) ? Amount : 0;
+            }
+        }
+            
+        /// <summary>
+        /// Amount removed
+        /// </summary>
+        public double Loss
+        {
+            get
+            {
+                return (Style == TransactionStyle.Loss) ? Amount * -1 : 0;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public TransactionStyle Style { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public double Amount { get; set; }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details

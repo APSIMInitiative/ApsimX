@@ -1116,7 +1116,7 @@
             }
             catch (Exception err)
             {
-                ShowError(err);
+                throw new Exception("Error during Import: " + err.Message);
             }
         }
 

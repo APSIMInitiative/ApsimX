@@ -15,8 +15,8 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a ruminant Type
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
     [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
@@ -425,7 +425,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Natural weaning age
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
         [Required]
         public double NaturalWeaningAge { get; set; }
@@ -599,21 +599,21 @@ namespace Models.CLEM.Resources
         /// Lactating Potential intake modifier Coefficient A
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient A")]
+        [Description("Lactating potential intake modifier coefficient A")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantA { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient B")]
+        [Description("Lactating potential intake modifier coefficient B")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantB { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient C")]
+        [Description("Lactating potential intake modifier coefficient C")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; }
         /// <summary>
