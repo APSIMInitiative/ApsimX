@@ -242,7 +242,6 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [GLib.ConnectBefore]
         private void OnChangeTab(object sender, SwitchPageArgs args)
         {
             try
