@@ -1,0 +1,6 @@
+error CS1705: Assembly 'APSIM.Services' with identity 'APSIM.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null'
+uses 'System.Drawing.Primitives, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
+which has a higher version than referenced assembly 'System.Drawing.Primitives' with identity 'System.Drawing.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
+[/home/drew/code/ApsimX/Models/Models.csproj]
+
+System.Drawing.Common.dll (v 4.0.2.0) comes from the nuget package System.Drawing.Common 4.7.0

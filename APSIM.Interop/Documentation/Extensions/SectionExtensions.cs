@@ -35,7 +35,10 @@ namespace APSIM.Interop.Documentation.Extensions
         /// <param name="tag">Tag to be added.</param>
         public static void Add(this Section section, ITag tag)
         {
-            throw new NotImplementedException($"Unknown tag type {tag.GetType()}");
+            if (tag is Heading heading)
+                section.Add(heading);
+            else if (tag is APSIM.Services.Documentation.Paragraph paragraph)
+                section.Add(paragraph);
         }
 
         /// <summary>
