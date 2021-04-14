@@ -61,15 +61,15 @@ namespace UnitTests
 
         public DataTable GetDataUsingSql(string sql) { throw new System.NotImplementedException(); }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null, bool distinct = false)
+        public DataTable GetData(string tableName, string checkpointName = null, IEnumerable<string> simulationNames = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, IEnumerable<string> orderBy = null, bool distinct = false)
         {
             string rowFilter = null;
             if (checkpointName != null)
                 rowFilter += "CheckpointName = '" + checkpointName + "'";
-            if (simulationName != null)
+            if (simulationNames != null)
             {
                 if (rowFilter != null) rowFilter += " AND ";
-                rowFilter += "SimulationName = '" + simulationName + "'";
+                rowFilter += $"SimulationName in ({simulationNames.Enclose("'","'").Join(",")})";
             }
             if (filter != null)
             {
