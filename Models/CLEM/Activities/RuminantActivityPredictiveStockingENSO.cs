@@ -395,7 +395,7 @@ namespace Models.CLEM.Activities
 
                     while (sumAE < limitAE && animalEquivalentsToBuy > 0)
                     {
-                        Ruminant newIndividual = item.Details.CreateIndividuals(1).FirstOrDefault();
+                        Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
                         newIndividual.Location = paddockName;
                         newIndividual.BreedParams = item.BreedParams;
                         newIndividual.HerdName = item.BreedParams.Name;

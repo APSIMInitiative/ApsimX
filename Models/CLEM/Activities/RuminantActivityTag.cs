@@ -81,11 +81,11 @@ namespace Models.CLEM.Activities
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
                     {
-                        numberToTag += herd.Filter(item).Where(a => !a.TagExists(TagLabel)).Count();
+                        numberToTag += herd.Filter(item).Where(a => !a.AttributeExists(TagLabel)).Count();
                     }
                     else
                     {
-                        numberToTag += herd.Filter(item).Where(a => a.TagExists(TagLabel)).Count();
+                        numberToTag += herd.Filter(item).Where(a => a.AttributeExists(TagLabel)).Count();
                     }
                 }
             }
@@ -149,16 +149,16 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        foreach (Ruminant ind in herd.Filter(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.TagExists(TagLabel): a.TagExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Filter(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.AttributeExists(TagLabel): a.AttributeExists(TagLabel)).Take(numberToTag))
                         {
                             this.Status = ActivityStatus.Success;
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.TagAdd(TagLabel);
+                                    ind.AddAttribute(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.TagRemove(TagLabel);
+                                    ind.RemoveAttribute(TagLabel);
                                     break;
                             }
                             numberToTag--;
@@ -166,16 +166,16 @@ namespace Models.CLEM.Activities
                     }
                     if(filterGroupsCount == 0)
                     {
-                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.TagExists(TagLabel) : a.TagExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.AttributeExists(TagLabel) : a.AttributeExists(TagLabel)).Take(numberToTag))
                         {
                             this.Status = ActivityStatus.Success;
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.TagAdd(TagLabel);
+                                    ind.AddAttribute(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.TagRemove(TagLabel);
+                                    ind.RemoveAttribute(TagLabel);
                                     break;
                             }
                             numberToTag--;
