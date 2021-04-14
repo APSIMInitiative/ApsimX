@@ -45,7 +45,7 @@
             this.explorerPresenter = explorerPresenter;
 
             propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(model, this.view.PropertiesGrid, this.explorerPresenter);
+            propertyPresenter.Attach(model, this.view.PropertiesView, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();

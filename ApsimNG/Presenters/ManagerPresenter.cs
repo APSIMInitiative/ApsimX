@@ -24,7 +24,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private IPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -75,10 +75,7 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
-            if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new PropertyPresenter();
-            else
-                propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             try
             {
                 propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
@@ -156,13 +153,7 @@
 
         private void RefreshProperties()
         {
-            if (propertyPresenter is PropertyPresenter simplePresenter)
-                simplePresenter.RefreshView(scriptModel);
-            else if (propertyPresenter is PropertyPresenter presenter)
-            {
-                presenter.UpdateModel(scriptModel);
-                presenter.Refresh();
-            }
+            propertyPresenter.RefreshView(scriptModel);
         }
 
         /// <summary>
