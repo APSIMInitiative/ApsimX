@@ -60,16 +60,16 @@ namespace UserInterface.Presenters
                 {
                     return markdownWriter.ToString();
                 }
-                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
+                if (ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages") == null)
                 {
                     return markdownWriter.ToString();
                 }
-                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+                DataRow[] dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select();
                 if (dataRows.Count() > 0)
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                    dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
 
                     foreach (DataRow dr in dataRows)
                     {
@@ -276,16 +276,16 @@ namespace UserInterface.Presenters
                 {
                     return htmlWriter.ToString();
                 }
-                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
+                if (ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages") == null)
                 {
                     return htmlWriter.ToString();
                 }
-                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+                DataRow[] dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select();
                 if (dataRows.Count() > 0)
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                    dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
 
                     foreach (DataRow dr in dataRows)
                     {
