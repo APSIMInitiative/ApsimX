@@ -889,7 +889,7 @@
             else
                 annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Center;
             annotation.TextVerticalAlignment = VerticalAlignment.Top;
-            annotation.Stroke = OxyColors.White;
+            annotation.Stroke = BackColor;
             annotation.Font = Font;
             annotation.TextRotation = textRotation;
 
