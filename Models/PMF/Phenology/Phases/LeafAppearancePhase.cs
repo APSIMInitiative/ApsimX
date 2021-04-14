@@ -15,7 +15,7 @@ namespace Models.PMF.Phen
     /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). 
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class LeafAppearancePhase : Model, IPhase

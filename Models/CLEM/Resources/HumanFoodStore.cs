@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     /// Store for all the food designated for Household to eat (eg. Grain, Tree Crops (nuts) etc.)
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all human food store types for the simulation.")]

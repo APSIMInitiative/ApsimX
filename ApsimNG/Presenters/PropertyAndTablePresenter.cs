@@ -47,10 +47,7 @@
             view.Grid2.ContextItemsNeeded += OnContextItemsNeeded;
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
-            if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new SimplePropertyPresenter();
-            else
-                propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);
             propertyPresenter.Attach(model, view.PropertiesView, parentPresenter);
             gridPresenter = new GridPresenter();
