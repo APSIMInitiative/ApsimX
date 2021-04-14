@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// <summary>Tracking settings for Ruminant purchases and sales</summary>
     /// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]

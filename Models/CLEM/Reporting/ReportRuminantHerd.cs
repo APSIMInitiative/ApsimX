@@ -15,7 +15,7 @@ namespace Models.CLEM.Reporting
     /// <summary>Ruminant reporting</summary>
     /// <summary>This activity writes individual ruminant details for reporting</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

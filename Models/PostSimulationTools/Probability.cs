@@ -14,7 +14,7 @@
     /// # [Name]
     /// A post processing model that creates a probability table.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
     [Serializable]

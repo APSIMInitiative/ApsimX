@@ -16,7 +16,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("A value is returned via Akima spline interpolation of a given set of XY pairs")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SplineInterpolationFunction : Model, IFunction
     {

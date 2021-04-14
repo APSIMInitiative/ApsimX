@@ -191,18 +191,11 @@
         {
             try
             {
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                {
-                    object model = explorerPresenter.CurrentNode;
-                    explorerPresenter.HideRightHandPanel();
-                    explorerPresenter.ShowInRightHandPanel(model,
-                                       "ApsimNG.Resources.Glade.RunOnCloudView.glade",
-                                       new RunOnCloudPresenter());
-                }
-                else
-                {
-                    explorerPresenter.MainPresenter.ShowError("Microsoft Azure functionality is currently only available under Windows.");
-                }
+                object model = explorerPresenter.CurrentNode;
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowInRightHandPanel(model,
+                                    "ApsimNG.Resources.Glade.RunOnCloudView.glade",
+                                    new RunOnCloudPresenter());
             }
             catch (Exception err)
             {
@@ -764,6 +757,14 @@
                     explorerPresenter.RefreshNode(model);
                     explorerPresenter.HideRightHandPanel();
                     explorerPresenter.ShowRightHandPanel();
+
+                    if (model.Enabled)
+                    {
+                        if (model is Manager manager)
+                            manager.RebuildScriptModel();
+                        foreach (Manager m in model.FindAllDescendants<Manager>())
+                            m.RebuildScriptModel();
+                    }
                 }
             }
             catch (Exception err)

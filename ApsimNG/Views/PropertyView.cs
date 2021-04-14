@@ -80,12 +80,16 @@ namespace UserInterface.Views
             box = new Frame();
             box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
+            ScrolledWindow scroller = new ScrolledWindow();
+            mainWidget = scroller;
 #if NETFRAMEWORK
-            mainWidget = box;
+            scroller.Add(box);
 #else
             Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(box, false, false, 0);
-            mainWidget = container;
+            scroller.Add(container);
+            scroller.PropagateNaturalHeight = true;
+            scroller.PropagateNaturalWidth = true;
 #endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }

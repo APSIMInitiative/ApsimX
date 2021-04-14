@@ -35,7 +35,7 @@ namespace Models.PMF
     /// </summary>
 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
     public class OrganArbitrator : Model, IUptake, IArbitrator, ICustomDocumentation

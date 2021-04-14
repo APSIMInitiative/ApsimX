@@ -12,7 +12,7 @@ namespace Models.PMF
     /// Process Retranslocation of BiomassType using Storage First and then Metabolic
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation

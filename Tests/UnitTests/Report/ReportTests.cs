@@ -529,6 +529,7 @@
 
             Assert.IsNull(runner.Run());
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -561,6 +562,7 @@
 
             Assert.IsNull(runner.Run());
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -592,6 +594,7 @@
 
             Assert.IsNull(runner.Run());
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);

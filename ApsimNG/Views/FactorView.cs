@@ -18,7 +18,7 @@
         public FactorView(ViewBase owner) : base(owner)
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.FactorView.glade");
-            mainWidget = (VBox)builder.GetObject("vbox");
+            mainWidget = (Widget)builder.GetObject("scrolledwindow1");
             mainWidget.Destroyed += OnMainWidgetDestroyed;
 
             Specification = new EditView(owner, 
