@@ -15,7 +15,7 @@ namespace Models.CLEM
     /// This determines a relationship
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("This model component specifies a relationship where the y value related to a change in running value as a function of x. This component tracks a value through time as modified by the specificed relationship.")]

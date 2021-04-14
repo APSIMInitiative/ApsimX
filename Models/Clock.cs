@@ -16,8 +16,8 @@
     /// date, publishing events that other models can subscribe to.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Clock : Model, IClock, ICustomDocumentation
     {

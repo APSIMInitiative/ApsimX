@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Labour activity task</summary>
     /// <summary>Defines a labour activity task with associated costs</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

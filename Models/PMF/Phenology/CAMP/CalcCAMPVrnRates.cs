@@ -42,7 +42,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CAMP))]
     public class CalcCAMPVrnRates : Model

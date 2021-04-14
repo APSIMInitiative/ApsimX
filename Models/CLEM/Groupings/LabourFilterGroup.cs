@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individuals able to undertake labour
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourRequirement))]
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]

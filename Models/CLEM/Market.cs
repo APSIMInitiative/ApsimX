@@ -18,7 +18,7 @@ namespace Models.CLEM
     /// CLEM Zone to control simulation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents a shared market place for CLEM farms")]

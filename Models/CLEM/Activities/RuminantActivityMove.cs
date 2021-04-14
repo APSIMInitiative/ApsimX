@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>This activity moves specified ruminants to a given pasture</summary>
     /// <version>1.0</version>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

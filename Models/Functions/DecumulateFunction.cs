@@ -8,7 +8,7 @@ namespace Models.Functions
     /// Starts with an initial value and subtracts the value of a child
     /// function each day.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
     public class DecumulateFunction : Model, IFunction

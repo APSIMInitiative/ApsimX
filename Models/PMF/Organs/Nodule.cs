@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     ///  N fixation supply and related costs.  It also calculates the growth, senescence and detachment of nodules.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {

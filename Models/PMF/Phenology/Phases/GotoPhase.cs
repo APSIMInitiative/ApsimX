@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
     /// When [Start] is reached phenology is rewound to [PhaseNameToGoTo]
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class GotoPhase : Model, IPhase

@@ -18,7 +18,7 @@ namespace Models.Functions
     /// in old apsim which return 10 if the denominator is 0 or 0 if
     /// the numerator is 0.
     /// </remarks>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
     public class ProtectedDivideFunction : Model, IFunction
