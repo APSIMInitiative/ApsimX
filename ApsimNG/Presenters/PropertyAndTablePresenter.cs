@@ -48,7 +48,7 @@
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new SimplePropertyPresenter();
+                propertyPresenter = new PropertyPresenter();
             else
                 propertyPresenter = new PropertyPresenter();
             explorerPresenter.ApsimXFile.Links.Resolve(propertyPresenter);

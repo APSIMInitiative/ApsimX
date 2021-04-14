@@ -76,7 +76,7 @@
             }
 
             if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new SimplePropertyPresenter();
+                propertyPresenter = new PropertyPresenter();
             else
                 propertyPresenter = new PropertyPresenter();
             try
@@ -156,7 +156,7 @@
 
         private void RefreshProperties()
         {
-            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
+            if (propertyPresenter is PropertyPresenter simplePresenter)
                 simplePresenter.RefreshView(scriptModel);
             else if (propertyPresenter is PropertyPresenter presenter)
             {

@@ -15,7 +15,7 @@ using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
-    public class SimplePropertyPresenter : IPresenter
+    public class PropertyPresenter : IPresenter
     {
         /// <summary>
         /// The model whose properties are being displayed.

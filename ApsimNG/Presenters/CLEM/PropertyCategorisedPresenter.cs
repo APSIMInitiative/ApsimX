@@ -158,7 +158,7 @@ namespace UserInterface.Presenters
             this.RefreshTreeView();
 
             //Initialise the Right Hand View
-            this.propertyPresenter = new SimplePropertyPresenter();
+            this.propertyPresenter = new PropertyPresenter();
             this.propertyView = new PropertyView(this.treeview as ViewBase);
 
             this.ShowRightHandView();
@@ -249,13 +249,13 @@ namespace UserInterface.Presenters
                 }
                 this.selectedCategory = category;
                 this.selectedSubCategory = subcategory;
-                (this.propertyPresenter as SimplePropertyPresenter).Filter = IsPropertySelected;
+                (this.propertyPresenter as PropertyPresenter).Filter = IsPropertySelected;
             }
             else
             {
                 //this will show all the properties in the model 
                 //there will be no filtering on Category and Subcategory.
-                (this.propertyPresenter as SimplePropertyPresenter).Filter = null;
+                (this.propertyPresenter as PropertyPresenter).Filter = null;
                 this.selectedCategory = "";
                 this.selectedSubCategory = "";
             }
