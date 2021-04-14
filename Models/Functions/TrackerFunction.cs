@@ -14,7 +14,7 @@
     /// </summary>
     [Serializable]
     [Description("Keeps track of a variable")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class TrackerFunction : Model, IFunction
     {

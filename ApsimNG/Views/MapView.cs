@@ -172,7 +172,7 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IPropertyView PropertiesGrid { get; private set; }
+        public IPropertyView PropertiesView { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
@@ -192,8 +192,8 @@
             container.Add(image);
 
             VPaned box = new VPaned();
-            PropertiesGrid = new PropertyView(this);
-            box.Pack1(((ViewBase)PropertiesGrid).MainWidget, true, false);
+            PropertiesView = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
             box.Pack2(container, true, true);
             
             container.AddEvents(

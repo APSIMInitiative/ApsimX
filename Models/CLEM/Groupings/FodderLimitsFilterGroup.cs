@@ -13,7 +13,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
     [Version(1, 0, 1, "")]

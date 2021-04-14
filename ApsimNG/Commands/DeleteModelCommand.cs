@@ -48,9 +48,9 @@
         /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
         public void Do(ITreeView tree, Action<object> modelChanged)
         {
-            tree.Delete(this.modelToDelete.FullPath);
             Pos = this.parent.Children.IndexOf(this.modelToDelete as Model);
             modelWasRemoved = Structure.Delete(this.modelToDelete as Model);
+            tree.Delete(this.modelToDelete.FullPath);
         }
 
         /// <summary>Undo the command</summary>

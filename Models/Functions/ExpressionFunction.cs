@@ -15,7 +15,7 @@ namespace Models.Functions
     /// A mathematical expression is evaluated using variables exposed within the Plant Modelling Framework.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExpressionFunction : Model, IFunction, ICustomDocumentation
     {

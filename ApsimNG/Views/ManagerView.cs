@@ -13,7 +13,7 @@ namespace UserInterface.Views
         /// <remarks>
         /// Change type to IProeprtyView when ready to release new property view.
         /// </remarks>
-        ViewBase PropertyEditor { get; }
+        IPropertyView PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -29,7 +29,7 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private ViewBase propertyEditor;
+        private PropertyView propertyEditor;
         private IEditorView scriptEditor;
         private Notebook notebook;
 
@@ -41,10 +41,7 @@ namespace UserInterface.Views
         {
             notebook = new Notebook();
             mainWidget = notebook;
-            if (Utility.Configuration.Settings.UseNewPropertyPresenter)
-                propertyEditor = new PropertyView(this);
-            else
-                propertyEditor = new GridView(this);
+            propertyEditor = new PropertyView(this);
             scriptEditor = new EditorView(this)
             {
 #if NETCOREAPP
@@ -83,8 +80,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public ViewBase PropertyEditor { get { return propertyEditor; } }
+        public IPropertyView PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
-       
     }
 }

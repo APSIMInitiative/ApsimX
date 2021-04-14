@@ -11,7 +11,7 @@ namespace Models.Functions.DemandFunctions
     /// Filling rate is calculated from grain number, a maximum mass to be filled and the duration of the filling process.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class BerryFillingRateFunction : Model, IFunction
     {

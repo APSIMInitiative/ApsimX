@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     /// Parent model of equipment stores.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all equipment store types (e.g. tractors, bores, harvester) for the simulation.")]

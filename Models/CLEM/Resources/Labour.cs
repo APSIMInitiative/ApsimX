@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     /// Parent model of Labour Person models.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]

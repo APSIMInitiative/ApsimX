@@ -68,7 +68,7 @@ namespace UserInterface.Presenters
             this.view.GraphViewCreated += ModifyGraphView;
 
             properties = new PropertyPresenter();
-            properties.Attach(panel, this.view.PropertiesGrid, presenter);
+            properties.Attach(panel, this.view.PropertiesView, presenter);
 
             processingThread = new BackgroundWorker();
             processingThread.DoWork += WorkerThread;

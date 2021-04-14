@@ -245,7 +245,7 @@ namespace UserInterface.Presenters
 
                     data = dataStore.Reader.GetData(tableName: tableDropDown.SelectedValue,
                                                     checkpointName: checkpointDropDown.SelectedValue,
-                                                    simulationName: SimulationFilter?.Name,
+                                                    simulationNames: new string[] { SimulationFilter?.Name },
                                                     filter: filter,
                                                     from: start,
                                                     count: count);
