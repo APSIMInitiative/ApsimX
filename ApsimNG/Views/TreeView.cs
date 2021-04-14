@@ -82,6 +82,7 @@ namespace UserInterface.Views
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
+            iconRender.StockSize = (uint)IconSize.Dialog;
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
             textRender.Editable = false;
@@ -438,7 +439,7 @@ namespace UserInterface.Views
         {
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
-                pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage);
+                pixbuf = new Gdk.Pixbuf(null, description.ResourceNameForImage, 16, 16);
             string tick = description.Checked ? "✓" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
