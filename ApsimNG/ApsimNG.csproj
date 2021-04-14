@@ -79,9 +79,6 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
     <Compile Remove="Classes\Intellisense\*" />
-    
-    <!-- Remove ApsoilWeb-related stuff. -->
-    <Compile Remove="Web References/ApsoilWeb/*" />
   </ItemGroup>
   
   <!-- .NET Framework-specific references -->
