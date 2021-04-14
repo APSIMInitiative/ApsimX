@@ -760,20 +760,18 @@
                     ChangeProperty command = new ChangeProperty(changes);
                     explorerPresenter.CommandHistory.Add(command);
 
-                    // Now call OnCreated() for all changed models. Note ToList() to force greedy evaluation.
-                    if (model.Enabled)
-                    {
-                        model.OnCreated();
-                        foreach (IModel descendant in model.FindAllDescendants().ToList())
-                            descendant.OnCreated();
-                        if (model is ModelCollectionFromResource)
-                            foreach (IModel child in model.Children)
-                                if (child.IsHidden)
-                                    explorerPresenter.Tree.Delete(child.FullPath);
-                    }
-
                     explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
                     explorerPresenter.RefreshNode(model);
+                    explorerPresenter.HideRightHandPanel();
+                    explorerPresenter.ShowRightHandPanel();
+
+                    if (model.Enabled)
+                    {
+                        if (model is Manager manager)
+                            manager.RebuildScriptModel();
+                        foreach (Manager m in model.FindAllDescendants<Manager>())
+                            m.RebuildScriptModel();
+                    }
                 }
             }
             catch (Exception err)

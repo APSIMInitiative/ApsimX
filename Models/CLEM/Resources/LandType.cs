@@ -156,7 +156,8 @@ namespace Models.CLEM.Resources
             }
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = amountAdded,
+                Style = TransactionStyle.Gain,
+                Amount = amountAdded,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -215,7 +216,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                Style = TransactionStyle.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

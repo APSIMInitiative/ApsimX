@@ -641,4 +641,18 @@ namespace Models.CLEM
         AsGeneticTrait = 45
     }
 
+    /// <summary>
+    /// Style of kedger transaction (gain or loss)
+    /// </summary>
+    public enum TransactionStyle
+    {
+        /// <summary>
+        /// Loss of resource
+        /// </summary>
+        Loss = 0,
+        /// <summary>
+        /// Gain in resource
+        /// </summary>
+        Gain = 1
+    }
 }

@@ -135,11 +135,11 @@
                     ]
                 },
                 {
-                    "Name": "Gliricidia (Under Review)",
+                    "Name": "Gliricidia",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Gliricidia/Gliricidia.apsimx"
+                            "FileName": "Tests/Validation/Gliricidia/Gliricidia.apsimx"
                         },
                         {
                             "Name": "PDF",

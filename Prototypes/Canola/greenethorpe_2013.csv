@@ -1,0 +1,29 @@
+SimulationName,site,exp,Cultivar,treat,canola.SowingDate,clock.today,clock.today.year,Canola.AboveGround.wt,Canola.stem.live.wt,Canola.leaf.live.wt,Canola.leaf.dead.wt,Canola.grain.total.wt,Harvest_index,Canola.grain.wt,canola.pod.number,Canola.grain.number,GrainsPerPod,Canola.leaf.LAI,Canola.density,canola.Leaf.SpecificArea,canola.Leaf.Live.Nconc,canola.stem.NConc,podwallNconc,canola.Leaf.Dead.NConc
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,7-May-13,2013,123.7843249,24.71496747,89.599,0,*,*,*,*,*,*,1.52, * ,169.28,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,19-Jun-13,2013,429.7149769,200.6307986,163.909,0,*,*,*,*,*,*,3.42, * ,207.81,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,24-Jul-13,2013,539.0717557,278.7403248,217.08,43.252,*,*,*,*,*,*,3.97,41,182.68,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,6-Aug-13,2013,720.4051731,398.9687899,213.771,107.665,*,*,*,*,*,*,4.44,43,206.06,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,11-Sep-13,2013,1325.831872,1037.226526,185.126,103.479,*,*,*,*,*,*,2.96,37,158.69,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,16-Oct-13,2013,961.0930852,674.6727703,9.253,0,*,*,*,*,*,*,0,42, * ,,,,
+Greenethorpe2013_Ex1CvHyola971_CL,Greenethorpe,_Ex1,Hyola971_CL,uncut,25/03/2013,4-Nov-13,2013,989.2505721,558.7950641,0,0,279.398,0.282,4.025,1360.933,69733.97,52.042,0,39, * ,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,15-Jul-13,2013,90.7046148,*,*,*,*,*,*,*,*,*,0, * , * ,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,24-Jul-13,2013,134.6281465,46.33188689,83.562,4.734,*,*,*,*,*,*,2.15,42,251.83,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,30-Jul-13,2013,212.239592,94.79492508,113.931,3.513,*,*,*,*,*,*,3.42,41,302.84,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,6-Aug-13,2013,353.1258593,186.5202618,158.361,8.245,*,*,*,*,*,*,4.51,38,286.22,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,29-Aug-13,2013,693.7904283,538.1530828,127.957,27.68,*,*,*,*,*,*,2.75,35,286.04,,,,
+Greenethorpe2013_Ex2CvHyola_575_CL_GT,Greenethorpe,_Ex2,Hyola_575_CL_GT,uncut,23/04/2013,23-Oct-13,2013,1067.927155,544.6942398,0,0,281.6,0.263,3.307,3101.594,85328.501,27.488,0,33, * ,,,,
+Greenethorpe2013_Ex3CvAV_Garnet,Greenethorpe,_Ex3,AV_Garnet,uncut,23/04/2013,24-Jul-13,2013,101.8525934,36.96221424,63.087,1.803,*,*,*,*,*,*,1.6,54,248.28, * , * , * , * 
+Greenethorpe2013_Ex3CvCrusher_TT,Greenethorpe,_Ex3,Crusher_TT,uncut,23/04/2013,24-Jul-13,2013,87.22635393,28.12593671,56.941,2.16,*,*,*,*,*,*,1.3,41,227.21, * , * , * , * 
+Greenethorpe2013_Ex3CvHyola_575_CL_GT,Greenethorpe,_Ex3,Hyola_575_CL_GT,uncut,23/04/2013,24-Jul-13,2013,155.5234554,58.557162,93.839,3.127,*,*,*,*,*,*,2.37,43,253.76, * , * , * , * 
+Greenethorpe2013_Ex3CvAV_Garnet,Greenethorpe,_Ex3,AV_Garnet,uncut,23/04/2013,30-Jul-13,2013,162.5087803,64.73605868,92.834,4.939,*,*,*,*,*,*,2.76,38,295.52,6.32,5.16, * , * 
+Greenethorpe2013_Ex3CvCrusher_TT,Greenethorpe,_Ex3,Crusher_TT,uncut,23/04/2013,30-Jul-13,2013,118.0327194,46.8280094,67.88,3.324,*,*,*,*,*,*,2.07,39,304.13,6.66,5.77, * , * 
+Greenethorpe2013_Ex3CvHyola_575_CL_GT,Greenethorpe,_Ex3,Hyola_575_CL_GT,uncut,23/04/2013,30-Jul-13,2013,222.0954266,98.73545435,117.597,5.763,*,*,*,*,*,*,3.57,50,306.03,6.53,5.43, * , * 
+Greenethorpe2013_Ex3CvAV_Garnet,Greenethorpe,_Ex3,AV_Garnet,uncut,23/04/2013,29-Aug-13,2013,598.0015702,469.363709,108.372,20.266,*,*,*,*,*,*,3.1,55,282.43,5.59,2.83, * ,3.24
+Greenethorpe2013_Ex3CvCrusher_TT,Greenethorpe,_Ex3,Crusher_TT,uncut,23/04/2013,29-Aug-13,2013,362.1031718,259.6462153,82.485,19.972,*,*,*,*,*,*,2.23,44,271.61,6.17,3.82, * ,3.8
+Greenethorpe2013_Ex3CvHyola_575_CL_GT,Greenethorpe,_Ex3,Hyola_575_CL_GT,uncut,23/04/2013,29-Aug-13,2013,673.6989112,523.5119799,119.642,30.544,*,*,*,*,*,*,3.15,51,257.76,5.54,2.88, * ,3.23
+Greenethorpe2013_Ex3CvAV_Garnet,Greenethorpe,_Ex3,AV_Garnet,uncut,23/04/2013,26-Sep-13,2013,1157.399476,666.0092,35.551,0,*,*,*,*,*,*,0,46, * , * , * , * , * 
+Greenethorpe2013_Ex3CvCrusher_TT,Greenethorpe,_Ex3,Crusher_TT,uncut,23/04/2013,26-Sep-13,2013,745.2438424,422.5383771,37.973,0,*,*,*,*,*,*,0,39, * , * , * , * , * 
+Greenethorpe2013_Ex3CvHyola_575_CL_GT,Greenethorpe,_Ex3,Hyola_575_CL_GT,uncut,23/04/2013,26-Sep-13,2013,1078.282701,642.6608099,55.206,0,*,*,*,*,*,*,0,44, * , * , * , * , * 
+Greenethorpe2013_Ex3CvAV_Garnet,Greenethorpe,_Ex3,AV_Garnet,uncut,23/04/2013,23-Oct-13,2013,1140.99733,457.0893487,0,0,335.266,0.291,3.171,3084.775,105966.668,34.64,0,41, * , * , * ,1.25, * 
+Greenethorpe2013_Ex3CvCrusher_TT,Greenethorpe,_Ex3,Crusher_TT,uncut,23/04/2013,23-Oct-13,2013,803.2112891,375.062717,0,0,209.849,0.262,2.79,2193.924493,76401.24049,35.32952357,0,36, * , * , * ,1.44, * 
+Greenethorpe2013_Ex3CvHyola_575_CL_GT,Greenethorpe,_Ex3,Hyola_575_CL_GT,uncut,23/04/2013,23-Oct-13,2013,1336.987986,657.7200105,0,0,329.7,0.245,3.42,4279.204,95862.459,22.439,0,41, * , * , * ,1.02, * 

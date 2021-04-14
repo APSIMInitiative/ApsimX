@@ -270,32 +270,26 @@
             bool result = true;
             try
             {
-                if (this.ApsimXFile != null && this.ApsimXFile.FileName != null)
+                if (!string.IsNullOrEmpty(ApsimXFile?.FileName))
                 {
                     QuestionResponseEnum choice = QuestionResponseEnum.No;
 
-                    if (!File.Exists(this.ApsimXFile.FileName))
+                    if (!File.Exists(ApsimXFile.FileName))
                     {
                         choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
-                    else
-                    {
-                        if (FileHasPendingChanges())
-                        {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
-                        }
-                    }
+                    else if (FileHasPendingChanges())
+                        choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
 
                     if (choice == QuestionResponseEnum.Cancel)
-                    {   // cancel
-                        this.ShowRightHandPanel();
+                    {
+                        ShowRightHandPanel();
                         result = false;
                     }
                     else if (choice == QuestionResponseEnum.Yes)
                     {
-                        // save
-                        this.WriteSimulation();
+                        WriteSimulation(ApsimXFile.FileName);
                         result = true;
                     }
                 }
@@ -323,7 +317,7 @@
 
                 if (!string.IsNullOrEmpty(ApsimXFile.FileName))
                 {
-                    ApsimXFile.Write(ApsimXFile.FileName);
+                    WriteSimulation(ApsimXFile.FileName);
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
@@ -345,10 +339,7 @@
             {
                 try
                 {
-                    /*if (this.ApsimXFile.FileName != null)
-                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName); */
-
-                    this.ApsimXFile.Write(newFileName);
+                    WriteSimulation(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
@@ -365,10 +356,12 @@
         }
 
         /// <summary>Do the actual write to the file</summary>
-        public void WriteSimulation()
+        /// <param name="fileName">Path to which the file will be saved.</param>
+        public void WriteSimulation(string fileName)
         {
-            this.ApsimXFile.ExplorerWidth = this.TreeWidth;
-            this.ApsimXFile.Write(this.ApsimXFile.FileName);
+            ApsimXFile.ExplorerWidth = TreeWidth;
+            ApsimXFile.Write(fileName);
+            CommandHistory.Save();
         }
 
         /// <summary>Select a node in the view.</summary>

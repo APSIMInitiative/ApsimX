@@ -87,7 +87,6 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE destock shortfall
         /// </summary>
-        [field: NonSerialized]
         public double AeShortfall { get { return AeToDestock - AeDestocked; } }
 
         /// <summary>
@@ -231,7 +230,6 @@ namespace Models.CLEM.Activities
                 foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
                 {
                     double aELocationNeeded = 0;
-                    double aELocationFound = 0;
 
                     // total adult equivalents of all breeds on pasture for utilisation
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
