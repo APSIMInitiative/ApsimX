@@ -160,7 +160,11 @@ namespace UserInterface.Views
             int nrow = 0;
 #endif
             AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
-            mainWidget.ShowAll();
+
+            if (nrow > 0)
+                mainWidget.ShowAll();
+            else
+                mainWidget.Hide();
 
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)
