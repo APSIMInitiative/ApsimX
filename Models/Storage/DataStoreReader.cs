@@ -383,10 +383,10 @@
         /// Return a simulation ID for the specified name.
         /// </summary>
         /// <param name="simulationName">The simulation name to look for.</param>
-        /// <returns></returns>
-        public int GetSimulationID(string simulationName)
+        /// <param name="simulationID">The simulation ID (if it exists).</param>
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
         {
-            return simulationIDs[simulationName];
+            return simulationIDs.TryGetValue(simulationName, out simulationID);
         }
 
         /// <summary>
@@ -397,7 +397,8 @@
         private IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
         {
             foreach (var simulationName in simulationNames)
-                yield return GetSimulationID(simulationName);
+                if (TryGetSimulationID(simulationName, out int simulationID))
+                    yield return simulationID;
         }
     }
 }

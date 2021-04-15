@@ -100,8 +100,8 @@ namespace Models.Storage
         /// Return a simulation ID for the specified name.
         /// </summary>
         /// <param name="simulationName">The simulation name to look for.</param>
-        /// <returns></returns>
-        int GetSimulationID(string simulationName);
+        /// <param name="simulationID">The simulation ID (if it exists).</param>
+        bool TryGetSimulationID(string simulationName, out int simulationID);
 
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         void Refresh();
