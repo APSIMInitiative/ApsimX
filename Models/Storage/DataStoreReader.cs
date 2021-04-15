@@ -207,6 +207,9 @@
                                  IEnumerable<string> orderByFieldNames = null,
                                  bool distinct = false)
         {
+            if (string.IsNullOrEmpty(tableName))
+                return null;
+
             // Get the field names in the table
             var table = tables.TryGetValue(tableName, out List<string> fieldNamesInTable);
 
