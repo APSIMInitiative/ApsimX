@@ -93,19 +93,8 @@ namespace UnitTests
             ReflectionUtilities.SetValueOfFieldOrProperty(linkFieldName, model, linkFieldValue);
         }
 
-
         /// <summary>Convert a SQLite table to a string.</summary>
-        public static string TableToString(string fileName, string tableName, IEnumerable<string> fieldNames = null)
-        {
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            var st = TableToString(database, tableName, fieldNames);
-            database.CloseDatabase();
-            return st;
-        }
-
-        /// <summary>Convert a SQLite table to a string.</summary>
-        public static string TableToString(IDatabaseConnection database, string tableName, IEnumerable<string> fieldNames = null)
+        public static DataTable GetTableFromDatabase(IDatabaseConnection database, string tableName, IEnumerable<string> fieldNames = null)
         {
             string sql = "SELECT ";
             if (fieldNames == null)
@@ -132,23 +121,7 @@ namespace UnitTests
                 orderByFieldNames.Add("[Clock.Today]");
             if (orderByFieldNames.Count > 0)
                 sql += " ORDER BY " + StringUtilities.BuildString(orderByFieldNames.ToArray(), ",");
-            DataTable data = database.ExecuteQuery(sql);
-            return TableToString(data);
-        }
-
-        /// <summary>Convert a SQLite query to a string.</summary>
-        public static string TableToStringUsingSQL(IDatabaseConnection database, string sql)
-        {
-            var data = database.ExecuteQuery(sql);
-            return TableToString(data);
-        }
-
-        /// <summary>Convert a DataTable to a string.</summary>
-        public static string TableToString(DataTable data)
-        {
-            StringWriter writer = new StringWriter();
-            DataTableUtilities.DataTableToText(data, 0, ",", true, writer);
-            return writer.ToString();
+            return database.ExecuteQuery(sql);
         }
 
         /// <summary>
