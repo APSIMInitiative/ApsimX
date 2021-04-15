@@ -48,8 +48,6 @@ namespace UnitTests
 
         public int GetCheckpointID(string checkpointName) { return 1; }
 
-        public int GetSimulationID(string simulationName) { return 1; }
-
         public string Units(string tableName, string columnHeading)
         {
             int index = headings.IndexOf(columnHeading);
@@ -168,6 +166,12 @@ namespace UnitTests
 
         public bool GetCheckpointShowOnGraphs(string checkpointName)
         {
+            return true;
+        }
+
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
+        {
+            simulationID = 0;
             return true;
         }
     }
