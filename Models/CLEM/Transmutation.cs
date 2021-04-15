@@ -136,7 +136,7 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public Type ResourceType { get; set; }
 
         /// <summary>

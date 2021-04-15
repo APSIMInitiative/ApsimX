@@ -2,6 +2,7 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -52,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// 
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public RuminantTypeCohort Details { get; private set; }
 
         private RuminantType ruminantType;
