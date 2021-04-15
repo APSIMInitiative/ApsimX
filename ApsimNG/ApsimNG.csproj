@@ -147,6 +147,11 @@
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\TreeViewImages\CLEM\SetRuminantAttributeWithValue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />

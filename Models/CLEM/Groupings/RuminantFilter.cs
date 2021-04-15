@@ -152,11 +152,11 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. RuminantGroup required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">FILTER NOT DEFINED</div>";
             }
             else
             {

@@ -33,6 +33,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Sale reason to apply")]
         [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
+        [GreaterThanEqualValue(4, ErrorMessage = "A sale reason must be provided")]
         public MarkForSaleReason SaleFlagToUse { get; set; }
 
         /// <summary>
@@ -64,7 +65,30 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
+            numberToTag = NumberToTag();
             return null;
+        }
+
+        private int NumberToTag()
+        {
+            List<Ruminant> herd = CurrentHerd(false);
+
+            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
+            int number = 0;
+            if (filterGroupsCount > 0)
+            {
+                number = 0;
+                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                {
+                    number += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                }
+            }
+            else
+            {
+                number = herd.Count();
+            }
+
+            return number;
         }
 
         /// <summary>
@@ -74,24 +98,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
-
-            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
-            if (filterGroupsCount > 0)
-            {
-                numberToTag = 0;
-                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
-                {
-                    numberToTag += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
-                }
-            }
-            else
-            {
-                numberToTag = herd.Count();
-            }
-
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-
+            //double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
             labourRequirement = requirement;
@@ -139,11 +146,18 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalStock")]
-        private void OnCLEMAnimalStock(object sender, EventArgs e)
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMAnimalMark(object sender, EventArgs e)
         {
             if (this.TimingOK)
             {
+                // recluculate numbers and ensure it is not less than number calculated
+                int updatedNumberToTag = NumberToTag(); 
+                if (updatedNumberToTag < numberToTag)
+                {
+                    numberToTag = updatedNumberToTag;
+                }
+
                 List<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
                 {
@@ -182,7 +196,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public override void DoActivity()
         {
-            // nothing to do. This is performed in the AnimalStock event.
+            // nothing to do. This is performed in the AnimalMark event.
         }
 
         /// <summary>
