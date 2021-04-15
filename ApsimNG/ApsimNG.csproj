@@ -16,6 +16,7 @@
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
