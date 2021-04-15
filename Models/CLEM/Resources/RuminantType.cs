@@ -101,7 +101,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
         /// </summary>
-        /// <param name="name">name of attribute</param>
+        /// <param name="ind">Individual ruminant to check</param>
+        /// <param name="model">Model adding individuals</param>
         public void CheckMandatoryAttributes(Ruminant ind, IModel model)
         {
             foreach (var attribute in mandatoryAttributes)

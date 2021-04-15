@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Interfaces
 {
+    /// <summary>
+    /// Interface for all Ruminant attribute models
+    /// </summary>
     public interface ISetRuminantAttribute
     {
         /// <summary>

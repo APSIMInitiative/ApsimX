@@ -110,77 +110,79 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Get the attribute inherited by an offspring given parent attrubutes
         /// </summary>
-        /// <param name="Mother">Mother's attribute</param>
-        /// <param name="Father">Father's attribute</param>
+        /// <param name="style">Style of inheritance</param>
+        /// <param name="mother">Mother's attribute</param>
+        /// <param name="father">Father's attribute</param>
         /// <returns>A ruminant attribute to supply the offspring</returns>
-        public static RuminantAttribute GetInheritedValue(RuminantAttributeInheritanceStyle Style, RuminantAttribute Mother, RuminantAttribute Father)
+        public static RuminantAttribute GetInheritedValue(RuminantAttributeInheritanceStyle style, RuminantAttribute mother, RuminantAttribute father)
         {
-            switch (Style)
+            switch (style)
             {
                 case RuminantAttributeInheritanceStyle.None:
                     return null;
                 case RuminantAttributeInheritanceStyle.Maternal:
-                    return Mother;
+                    return mother;
                 case RuminantAttributeInheritanceStyle.Paternal:
-                    return Father;
+                    return father;
                 case RuminantAttributeInheritanceStyle.LeastParentValue:
-                    if (Mother.Value <= Father.Value)
+                    if (mother.Value <= father.Value)
                     {
-                        return Mother;
+                        return mother;
                     }
                     else
                     {
-                        return Father;
+                        return father;
                     }
-                    break;
                 case RuminantAttributeInheritanceStyle.GreatestParentValue:
-                    if (Mother.Value >= Father.Value)
+                    if (mother.Value >= father.Value)
                     {
-                        return Mother;
+                        return mother;
                     }
                     else
                     {
-                        return Father;
+                        return father;
                     }
-                    break;
                 case RuminantAttributeInheritanceStyle.LeastBothParents:
-                    if (Mother != null & Father != null)
+                    if (mother != null & father != null)
                     {
-                        if (Mother.Value <= Father.Value)
+                        if (mother.Value <= father.Value)
                         {
-                            return Mother;
+                            return mother;
                         }
                         else
                         {
-                            return Father;
+                            return father;
                         }
                     }
                     else
+                    {
                         return null;
+                    }
                 case RuminantAttributeInheritanceStyle.GreatestBothParents:
-                    if (Mother != null & Father != null)
+                    if (mother != null & father != null)
                     {
-                        if (Mother.Value >= Father.Value)
+                        if (mother.Value >= father.Value)
                         {
-                            return Mother;
+                            return mother;
                         }
                         else
                         {
-                            return Father;
+                            return father;
                         }
                     }
                     else
+                    {
                         return null;
-                    break;
+                    }
                 case RuminantAttributeInheritanceStyle.MeanValueZeroAbsent:
                     float offSpringValue = 0;
-                    if (Mother != null)
+                    if (mother != null)
                     {
-                        offSpringValue += Mother.Value;
+                        offSpringValue += mother.Value;
                     }
-                    if (Father != null)
+                    if (father != null)
                     {
-                        offSpringValue += Father.Value;
+                        offSpringValue += father.Value;
                     }
                     return new RuminantAttribute()
                     {
@@ -190,14 +192,14 @@ namespace Models.CLEM.Resources
                 case RuminantAttributeInheritanceStyle.MeanValueIgnoreAbsent:
                     offSpringValue = 0;
                     int cnt = 0;
-                    if (Mother != null)
+                    if (mother != null)
                     {
-                        offSpringValue += Mother.Value;
+                        offSpringValue += mother.Value;
                         cnt++;
                     }
-                    if (Father != null)
+                    if (father != null)
                     {
-                        offSpringValue += Father.Value;
+                        offSpringValue += father.Value;
                         cnt++;
                     }
                     return new RuminantAttribute()
@@ -205,7 +207,6 @@ namespace Models.CLEM.Resources
                         InheritanceStyle = RuminantAttributeInheritanceStyle.MeanValueIgnoreAbsent,
                         storedValue = (offSpringValue / (float)cnt)
                     };
-                    break;
                 case RuminantAttributeInheritanceStyle.AsGeneticTrait:
                     throw new NotImplementedException();
                 default:
