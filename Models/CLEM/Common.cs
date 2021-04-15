@@ -127,6 +127,10 @@ namespace Models.CLEM
     public enum MarkForSaleReason
     {
         /// <summary>
+        /// Reason not provided
+        /// </summary>
+        NotProvided = 0,
+        /// <summary>
         /// Individual sold as marked for sale
         /// </summary>
         MarkedSale = 4,
