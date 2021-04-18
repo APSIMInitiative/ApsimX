@@ -28,9 +28,6 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
     <OutputPath>..\Bin\</OutputPath>
 	  <LangVersion>8.0</LangVersion>
-	  
-	  <!-- HTMLView requires WinForms -->
-	  <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
