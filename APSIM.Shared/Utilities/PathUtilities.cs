@@ -66,7 +66,8 @@
                 return path;
 
             // Remove any %root% macro (even if relative path is null).
-            string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            string apsimxDirectory = new DirectoryInfo(Path.Combine(bin, "..", "..", "..")).FullName;
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))

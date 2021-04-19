@@ -4,7 +4,7 @@
 ;APSIM setup script
 
 #include  "ISPPBuiltins.iss"
-#define AppVerNo GetStringFileInfo("..\Bin\Models.exe", PRODUCT_VERSION) 
+#define AppVerNo GetStringFileInfo("..\bin\Release\net472\Models.exe", PRODUCT_VERSION) 
 
 [Setup]
 AppName=APSIM
@@ -58,14 +58,14 @@ Name: {localappdata}\VirtualStore\Apsim\*.*; Type: filesandordirs
 Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 
 [Files]
-Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\Tools\*.*; DestDir: {app}\Bin\Tools; Flags: ignoreversion;
+Source: ..\bin\Release\net472\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\Tools\*.*; DestDir: {app}\Bin\Tools; Flags: ignoreversion;
 Source: ..\DeploymentSupport\Windows\Bin64\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; Check: Is64BitInstallMode
 Source: ..\DeploymentSupport\Windows\Bin64\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion; Check: Is64BitInstallMode
-Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
-Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
+Source: ..\bin\Release\net472\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 Source: ..\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 
