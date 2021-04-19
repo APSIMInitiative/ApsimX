@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// <summary>Crop cost</summary>
     /// <summary>This activity will arrange payment of a crop task expense</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [Description("This is a fee required to perform a crop management task.")]

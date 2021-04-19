@@ -42,7 +42,7 @@ namespace Models.PMF.Organs
     /// 
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafCohort : Model, ICustomDocumentation
     {

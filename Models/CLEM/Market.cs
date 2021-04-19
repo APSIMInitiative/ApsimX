@@ -18,7 +18,7 @@ namespace Models.CLEM
     /// CLEM Zone to control simulation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents a shared market place for CLEM farms")]
@@ -108,9 +108,9 @@ namespace Models.CLEM
                 // find IStorageReader of simulation
                 IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
-                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
+                if (ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages") != null)
                 {
-                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                    DataRow[] dataRows = ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
                     // all all current errors and validation problems to error string.
                     foreach (DataRow dr in dataRows)
                     {

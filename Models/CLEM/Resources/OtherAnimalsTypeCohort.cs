@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for a Cohort of a specific Other Animal Type.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimalsType))]
     [Description("This specifies an other animal cohort at the start of the simulation.")]

@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for bank account
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]

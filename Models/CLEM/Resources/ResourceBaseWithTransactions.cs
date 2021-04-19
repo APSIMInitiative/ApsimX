@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// Base resource model to implement transaction tracking
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]

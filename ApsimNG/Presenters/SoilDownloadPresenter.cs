@@ -1,8 +1,5 @@
-﻿#if NETFRAMEWORK
-using APSIM.Shared.Utilities;
-using ApsimNG.ApsoilWeb;
+﻿using APSIM.Shared.Utilities;
 using UserInterface.Extensions;
-using ApsimNG.Cloud;
 using ISO3166;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -24,10 +21,12 @@ using System.Xml;
 using UserInterface.Commands;
 using UserInterface.Views;
 using Utility;
+using System.Web;
+using System.Text;
 
 namespace UserInterface.Presenters
 {
-    public sealed class DownloadPresenter : IPresenter
+    public sealed class SoilDownloadPresenter : IPresenter
     {
         /// <summary>
         /// URI for accessing the Google geocoding API. I don't recall exactly who owns this key!
@@ -262,31 +261,44 @@ namespace UserInterface.Presenters
         /// <summary>Return zero or more APSOIL soils.</summary>
         private IEnumerable<SoilFromDataSource> GetApsoilSoils()
         {
-#if NETCOREAPP
-            throw new NotImplementedException();
-#else
             var soils = new List<SoilFromDataSource>();
             try
             {
-                using (var webService = new Service())
+                // fixme: Shouldn't this be using the current culture?
+                double latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                double longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                double radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture);
+                string url = $"http://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SearchSoilsReturnInfo?latitude={latitude}&longitude={longitude}&radius={radius}&SoilType=";
+                using (MemoryStream stream = WebUtilities.ExtractDataFromURL(url))
                 {
-                    var soilInfos = webService.SearchSoils(new SearchSoilsParams()
+                    stream.Position = 0;
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(stream);
+                    List<XmlNode> soilNodes = XmlUtilities.ChildNodesRecursively(doc, "SoilInfo");
+                    foreach (XmlNode node in soilNodes)
                     {
-                        Latitude = Convert.ToDouble(latitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                        Longitude = Convert.ToDouble(longitudeEditBox.Text, System.Globalization.CultureInfo.InvariantCulture),
-                        Radius = Convert.ToDouble(radiusEditBox.Text, System.Globalization.CultureInfo.InvariantCulture)
-                    });
-                    foreach (var soilInfo in soilInfos)
-                    {
-                        var xml = webService.SoilXML(soilInfo.Name);
-                        var soil = FileFormat.ReadFromString<Soil>(xml, out List<Exception> errors);
-                        soil.Children.Add(new CERESSoilTemperature());
-                        soil.OnCreated();
-                        soils.Add(new SoilFromDataSource()
+                        string name = node["Name"].InnerText;
+                        string infoUrl = $"https://apsimdev.apsim.info/ApsoilWebService/Service.asmx/SoilXML?Name={name}";
+                        using (MemoryStream infoStream = WebUtilities.ExtractDataFromURL(infoUrl))
                         {
-                            Soil = soil,
-                            DataSource = "APSOIL"
-                        });
+                            infoStream.Position = 0;
+                            string xml = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(infoStream.ToArray()));
+                            XmlDocument soilDoc = new XmlDocument();
+                            soilDoc.LoadXml(xml);
+                            foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
+                            {
+                                Soil soil = FileFormat.ReadFromString<Soil>(soilNode.OuterXml, out List<Exception> errors);
+                                if (errors != null && errors.Count > 0)
+                                    throw errors[0];
+                                // fixme: this should be handled by the converter or the importer.
+                                soil.Children.Add(new CERESSoilTemperature());
+                                soils.Add(new SoilFromDataSource()
+                                {
+                                    Soil = soil,
+                                    DataSource = "APSOIL"
+                                });
+                            }
+                        }
                     }
                 }
             }
@@ -296,7 +308,6 @@ namespace UserInterface.Presenters
             }
 
             return soils;
-#endif
         }
 
         /// <summary>Requests a "synthethic" Soil and Landscape grid soil from the ASRIS web service.</summary>
@@ -901,4 +912,3 @@ namespace UserInterface.Presenters
 
     }
 }
-#endif

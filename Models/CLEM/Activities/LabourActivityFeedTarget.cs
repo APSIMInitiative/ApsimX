@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// Target for feed activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
     [Description("This component defines a target to be achieved when trying to feed people to set targets")]

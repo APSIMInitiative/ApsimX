@@ -12,7 +12,7 @@ namespace Models.Functions
     /// This is then passed into the XY matrix as the x property and the function returns the y value
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class DailyMeanVPD : Model, IFunction, ICustomDocumentation
     {

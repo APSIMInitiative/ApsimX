@@ -20,7 +20,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(XValue-Xo)/b)")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : Model, IFunction, IIndexedFunction
     {

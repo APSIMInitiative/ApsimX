@@ -34,7 +34,7 @@ namespace Models.Functions.SupplyFunctions
     /// ΔDM<sub>t</sub> = (TR<sub>water-limited,t</sub> × TEC) / VPD<sub>t</sub>
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
 

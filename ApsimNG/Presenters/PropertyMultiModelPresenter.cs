@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
     /// This can be used to let the user see and update all child model entries of the parent model which generally does not have any properties
     /// This approach is used in CLEM where the tree structure defines the setp of the simulation.
     /// </remarks>
-    public class PropertyMultiModelPresenter: SimplePropertyPresenter
+    public class PropertyMultiModelPresenter: PropertyPresenter
     {
         /// <summary>
         /// The list of child models whose properties are being displayed.

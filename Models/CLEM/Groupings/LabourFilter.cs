@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for to identify individuals
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Individual filter term for to identify individuals. Multiple filters are additive and will further refine the criteria")]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
