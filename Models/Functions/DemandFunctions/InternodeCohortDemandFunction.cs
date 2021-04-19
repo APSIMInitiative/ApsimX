@@ -11,7 +11,7 @@ namespace Models.Functions.DemandFunctions
     /// Calculate individual internode demand base on age and maxSize
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Calculate individual internode demand base on age and maxSize.")]
     public class InternodeCohortDemandFunction : Model, IFunction

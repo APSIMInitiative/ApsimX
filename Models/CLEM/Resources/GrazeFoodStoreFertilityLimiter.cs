@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     /// Allows for soil fertility to be implied from pasture production data
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStoreType))]
     [Description("Allows for the reduction of new pasture nitrogen content (N%) based on annual yield or growth month")]

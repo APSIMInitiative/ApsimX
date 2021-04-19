@@ -175,7 +175,7 @@
                             if (property != null)
                             {
                                 object value;
-                                if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
+                                if ( (typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")) )
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = this.FindInScope(parameter.Value);

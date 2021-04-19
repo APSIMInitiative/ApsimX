@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for bank account
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
     [Description("This resource represents a finance type (e.g. General bank account).")]

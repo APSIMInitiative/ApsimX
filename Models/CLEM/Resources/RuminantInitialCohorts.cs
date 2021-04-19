@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -36,13 +37,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
         {
+            List<ISetRuminantAttribute> initialCohortAttributes = this.FindAllChildren<ISetRuminantAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
             {
-                individuals.AddRange(cohort.CreateIndividuals());
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes));
             }
             return individuals;
         }

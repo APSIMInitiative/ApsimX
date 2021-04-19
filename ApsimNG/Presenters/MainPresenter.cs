@@ -1132,10 +1132,7 @@
                 bool onLeftTabControl = view.IsControlOnLeft(sender);
                 // Clear the message window
                 view.ShowMessage(" ", Simulation.ErrorLevel.Information);
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-                else
-                    ShowError("Microsoft Azure functionality is currently only available under Windows.");
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
             }
             catch (Exception err)
             {

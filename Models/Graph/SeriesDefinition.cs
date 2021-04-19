@@ -23,7 +23,7 @@
         private Series series;
 
         /// <summary>Series definition filter.</summary>
-        private string scopeFilter;
+        private IEnumerable<string> inScopeSimulationNames;
 
         /// <summary>User specified filter.</summary>
         private string userFilter;
@@ -45,7 +45,7 @@
         /// <param name="checkpoint">The checkpoint name.</param>
         /// <param name="colModifier">The brightness modifier for colour in range  [-1, 1]. Negative means darker.</param>
         /// <param name="markerModifier">Marker size modifier in range [0, 1]. Larger value means smaller markers.</param>
-        /// <param name="whereClauseForInScopeData">A SQL where clause to specify data that is in scope.</param>
+        /// <param name="inScopeSimulationNames">A list of in scope simulation names.</param>
         /// <param name="filter">User specified filter.</param>
         /// <param name="descriptors">The descriptors for this series definition.</param>
         /// <param name="customTitle">The title to use for the definition.</param>
@@ -53,7 +53,7 @@
                                 string checkpoint,
                                 double colModifier,
                                 double markerModifier,
-                                string whereClauseForInScopeData = null,
+                                IEnumerable<string> inScopeSimulationNames = null,
                                 string filter = null,
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
@@ -96,7 +96,7 @@
             if (CheckpointName != "Current")
                 Title += " (" + CheckpointName + ")";
 
-            scopeFilter = whereClauseForInScopeData;
+            this.inScopeSimulationNames = inScopeSimulationNames;
             userFilter = filter;
         }
 
@@ -289,6 +289,7 @@
                 var fieldsThatExist = reader.ColumnNames(series.TableName);
 
                 // If we have descriptors, then use them to filter the data for this series.
+                List<string> simulationNameFilter = null;
                 string filter = null;
                 if (Descriptors != null)
                 {
@@ -297,15 +298,18 @@
                         if (fieldsThatExist.Contains(descriptor.Name))
                             filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                         else
-                            filter = AddSimulationNameClauseToFilter(filter, descriptor, simulationDescriptions);
+                        {
+                            simulationNameFilter = new List<string>();
+                            simulationNameFilter.AddRange(simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name));
+                        }
                     }
 
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (!filter.Contains("SimulationName IN"))
-                        filter = AddToFilter(filter, scopeFilter);
+                    if (simulationNameFilter == null && inScopeSimulationNames != null)
+                        simulationNameFilter = new List<string>(inScopeSimulationNames);
                 }
                 else
-                    filter = AddToFilter(filter, scopeFilter);
+                    simulationNameFilter = new List<string>(inScopeSimulationNames);
 
                 if (!string.IsNullOrEmpty(userFilter))
                     filter = AddToFilter(filter, userFilter);
@@ -342,14 +346,14 @@
                     localCheckpointName = null;
 
                 // Go get the data.
-                Data = reader.GetData(series.TableName, localCheckpointName, fieldNames: fieldsToRead.Distinct(), filter: filter);
+                Data = reader.GetData(series.TableName, localCheckpointName, simulationNameFilter, fieldNames: fieldsToRead.Distinct(), filter: filter);
 
                 // Get the units for our x and y variables.
                 XFieldUnits = reader.Units(series.TableName, XFieldName);
                 YFieldUnits = reader.Units(series.TableName, YFieldName);
 
                 // If data was found, populate our data (e.g. X and Y) properties.
-                if (Data.Rows.Count > 0)
+                if (Data?.Rows.Count > 0)
                 {
                     X = GetDataFromTable(Data, XFieldName);
                     Y = GetDataFromTable(Data, YFieldName);
@@ -363,18 +367,6 @@
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
                 }
             }
-        }
-
-        /// <summary>Add a 'SimulationName=' clause to filter using a descriptor.</summary>
-        /// <param name="filter">Filter to add to.</param>
-        /// <param name="descriptor">The descriptor to use to create the filter.</param>
-        /// <param name="simulationDescriptions">Complete list of simulation descriptions.</param>
-        private string AddSimulationNameClauseToFilter(string filter, SimulationDescription.Descriptor descriptor, List<SimulationDescription> simulationDescriptions)
-        {
-            var simulationNames = simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name);
-            return AddToFilter(filter, "SimulationName IN (" +
-                                StringUtilities.Build(simulationNames, ",", "'", "'") +
-                                ")");
         }
 
         /// <summary>Extract and return a list of field names from the filter.</summary>

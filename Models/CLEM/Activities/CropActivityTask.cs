@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Crop activity task</summary>
     /// <summary>This activity will perform costs and labour for a crop activity</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]

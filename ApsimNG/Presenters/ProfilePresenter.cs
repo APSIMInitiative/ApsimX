@@ -93,8 +93,9 @@
 
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
-            this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
-            propertyPresenter.ScalarsOnly = true;
+            // Don't show any array properties.
+            propertyPresenter.Filter = p => !p.PropertyType.IsArray;
+            this.propertyPresenter.Attach(this.model, this.view.ProperiesView, this.explorerPresenter);
             // Populate the grid
             this.PopulateGrid();
 
@@ -193,7 +194,7 @@
         {
             // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
             //propertyPresenter.RemoveProperties(propertiesInGrid.Select(property => property.PropertyName)); // fixme
-            view.ShowPropertyGrid(!propertyPresenter.IsEmpty);
+            view.ShowPropertyGrid(true);
         }
 
         /// <summary>

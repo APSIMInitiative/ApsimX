@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -393,7 +393,7 @@ namespace Models.CLEM.Activities
 
                     while (sumAE < limitAE && animalEquivalentsToBuy > 0)
                     {
-                        Ruminant newIndividual = item.Details.CreateIndividuals(1).FirstOrDefault();
+                        Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
                         newIndividual.Location = paddockName;
                         newIndividual.BreedParams = item.BreedParams;
                         newIndividual.HerdName = item.BreedParams.Name;

@@ -312,7 +312,7 @@
             }
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
+            DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: new string[] { simulationName }, tableName:"_InitialConditions");
             if (initialConditionsTable != null)
             {
                 // Convert the '_InitialConditions' table in the DataStore to a series of
@@ -376,7 +376,7 @@
         private static DataTable GetMessageTable(IDataStore storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = storage.Reader.GetData(simulationName: simulationName, tableName: "_Messages", orderBy: "T.[Date]");
+            DataTable messages = storage.Reader.GetData(simulationNames: new string[] { simulationName }, tableName: "_Messages", orderByFieldNames: new string[] { "Date" });
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));

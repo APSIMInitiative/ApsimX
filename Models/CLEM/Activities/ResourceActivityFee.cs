@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// <summary>Resource cost</summary>
     /// <summary>This activity will arrange payment of a resource activity expense</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourceActivityProcess))]
     [Description("This is a fee required to perform processing of a resource.")]

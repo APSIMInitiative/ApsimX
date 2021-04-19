@@ -21,9 +21,9 @@
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.BiomassRemovalPresenter")]
-    public class BiomassRemoval : Model
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.CompositePropertyPresenter")]
+    public class BiomassRemoval : Model, ICustomDocumentation
     {
         [Link]
         Plant plant = null;

@@ -62,7 +62,6 @@ namespace Utility
             vbox1 = (VBox)builder.GetObject("vbox1");
             dialogVBox = (Box)builder.GetObject("dialog-vbox1");
             scroller = (ScrolledWindow)builder.GetObject("scrolledwindow1");
-            scroller.SizeAllocated += OnSizeAllocated;
             radioAus = (RadioButton)builder.GetObject("radioAus");
             radioWorld = (RadioButton)builder.GetObject("radioWorld");
             entryLatitude = (Entry)builder.GetObject("entryLatitude");
@@ -80,6 +79,13 @@ namespace Utility
             entryFilePath = (Entry)builder.GetObject("entryFilePath");
             btnBrowse = (Button)builder.GetObject("btnBrowse");
             entryEmail = (Entry)builder.GetObject("entryEmail");
+
+            // fixme: once we move to gtk3, we can just use a scrolled
+            // window with natural height/width propagation to get a
+            // sensible initial size. Until then, we need to use this
+            // hack in the SizeAllocated event.
+            scroller.SizeAllocated += OnSizeAllocated;
+
             calendarEnd.Date = DateTime.Today.AddDays(-1.0);
             radioAus.Clicked += RadioAus_Clicked;
             radioWorld.Clicked += RadioAus_Clicked;

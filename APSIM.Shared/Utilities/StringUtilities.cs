@@ -9,7 +9,7 @@ namespace APSIM.Shared.Utilities
     /// <summary>
     /// Static functions for string manipulation
     /// </summary>
-    public class StringUtilities
+    public static class StringUtilities
     {
         /// <summary>
         /// This function converts a C string to a vb string by returning everything 

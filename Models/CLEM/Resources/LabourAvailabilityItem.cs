@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     /// An individual labour availability item with the same days available every month
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
     [Description("An individual labour availability with the same days available every month")]
