@@ -58,6 +58,7 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
+    <AzureFiles Include="../DeploymentSupport/global/**/*" />
   </ItemGroup>
   
   <!-- .NET Core-specific references -->
@@ -137,7 +138,10 @@
     <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+    <GtkFiles Include="..\DeploymentSupport\Windows\Bin64\*.dll" />
+    <WimpFiles Include="..\DeploymentSupport\Windows\Bin64\lib\**\*" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Resources\TreeViewImages\CLEM\SetRuminantAttributeWithValue.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -146,10 +150,9 @@
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <!-- Copy gtk-sharp dependencies (only used in .net framework (gtk2) builds) -->
-    <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\*.dll ..\Bin\* &gt;nul" />
-    <Exec Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ..\DeploymentSupport\Windows\Bin64\lib ..\lib\ &gt;nul" />
+    <Copy Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(GtkFiles)" DestinationFolder="$(OutputPath)" />
+    <Copy Condition="'$(OS)|$(TargetFramework)' == 'Windows_NT|net472'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(WimpFiles)" DestinationFiles="@(WimpFiles->'..\lib\%(RecursiveDir)%(FileName)%(Extension)')" />
 
-    <Exec Condition="'$(OS)' == 'Unix'" ContinueOnError="WarnAndContinue" command="cp -r ../DeploymentSupport/global/* $(OutputPath) &gt; /dev/null" />
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="xcopy /y /s /e ../DeploymentSupport/global $(OutputPath) &gt;nul" />
+    <Copy ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="@(AzureFiles)" DestinationFiles="@(AzureFiles->'$(OutputPath)%(RecursiveDir)%(FileName)%(Extension)')" />
   </Target>
 </Project>
