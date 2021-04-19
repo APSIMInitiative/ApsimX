@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
 
             this.model = model as IModel;
             this.view = view as PropertyMultiModelView;
+            base.view = view as IPropertyView;
             this.presenter = explorerPresenter;
 
             if (this.model != null && !(this.model is IModel))
@@ -97,6 +98,16 @@ namespace UserInterface.Presenters
             }
             return propertyGroupList;
         }
+
+        ///// <summary>
+        ///// Detach the presenter from the view. Perform misc cleanup.
+        ///// </summary>
+        //public override void Detach()
+        //{
+        //    view.SaveChanges();
+        //    view.PropertyChanged -= OnViewChanged;
+        //    presenter.CommandHistory.ModelChanged -= OnModelChanged;
+        //}
 
     }
 }
