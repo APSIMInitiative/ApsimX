@@ -7,6 +7,7 @@ namespace Models
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -178,12 +179,11 @@ namespace Models
         /// <param name="y">The y data.</param>
         private static SeriesDefinition Put1To1LineOnGraph(IEnumerable x, IEnumerable y)
         {
-            double minimumX = MathUtilities.Min(x);
-            double maximumX = MathUtilities.Max(x);
-            double minimumY = MathUtilities.Min(y);
-            double maximumY = MathUtilities.Max(y);
-            double lowestAxisScale = Math.Min(minimumX, minimumY);
-            double largestAxisScale = Math.Max(maximumX, maximumY);
+            IEnumerable<double> xValues = x.Cast<object>().Select(xi => xi is double ? (double)xi : Convert.ToDouble(xi, CultureInfo.InvariantCulture));
+            IEnumerable<double> yValues = y.Cast<object>().Select(yi => yi is double ? (double)yi : Convert.ToDouble(yi, CultureInfo.InvariantCulture));
+            MathUtilities.GetBounds(xValues, yValues, out double minX, out double maxX, out double minY, out double maxY);
+            double lowestAxisScale = Math.Min(minX, minY);
+            double largestAxisScale = Math.Max(maxX, maxY);
 
             return new SeriesDefinition
                 ("1:1 line", Color.Empty,
