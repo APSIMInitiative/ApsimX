@@ -252,7 +252,7 @@ namespace UserInterface.Presenters
                     else
                         simulationNames = new string[] { SimulationFilter.Name };
 
-                    string filter = null;
+                    string filter = GetFilter();
                     if (ZoneFilter != null)
                     {
                         // More assumptions about column names
@@ -291,7 +291,8 @@ namespace UserInterface.Presenters
                 filter = AppendToFilter(filter, exptFilter);
             }
 
-
+            if (filter == string.Empty)
+                return null;
             return filter;
         }
 
