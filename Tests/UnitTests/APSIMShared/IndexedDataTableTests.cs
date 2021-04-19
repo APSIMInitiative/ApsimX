@@ -5,6 +5,7 @@
     using Models;
     using NUnit.Framework;
     using System.Data;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Tests for <see cref="IndexedDataTable"/>.
@@ -21,8 +22,13 @@
             indexedTable.SetValues("A", new double[] { 1, 2, 3, 4 });  // vector
             indexedTable.Set("B", 1234);  // scalar
 
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMShared.IndexedDataTableTests.TestSetVectorThenScalar.Expected.txt");
-            Assert.AreEqual(Utilities.TableToString(indexedTable.ToTable()), expected);
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "Year",  "Name", "A",   "B" },
+                                          new List<object[]> { new object[] {   2000, "Name1",   1, 1234 },
+                                                               new object[] {   2000, "Name1",   2, 1234 },
+                                                               new object[] {   2000, "Name1",   3, 1234 },
+                                                               new object[] {   2000, "Name1",   4, 1234 } })
+                   .IsSame(indexedTable.ToTable()));
         }
 
         [Test]
@@ -34,8 +40,13 @@
             indexedTable.Set("A", 1234);  // scalar
             indexedTable.SetValues("B", new double[] { 1, 2, 3, 4 });  // vector
 
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMShared.TestSetScalarThenVector.Expected.txt");
-            Assert.AreEqual(Utilities.TableToString(indexedTable.ToTable()), expected);
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "Year",  "Name",  "A", "B" },
+                                          new List<object[]> { new object[] {   2000, "Name1", 1234, 1 },
+                                                               new object[] {   2000, "Name1", 1234, 2 },
+                                                               new object[] {   2000, "Name1", 1234, 3 },
+                                                               new object[] {   2000, "Name1", 1234, 4 } })
+                   .IsSame(indexedTable.ToTable()));
         }
 
         [Test]
@@ -46,8 +57,13 @@
             indexedTable.SetValues("A", new double[] { 1, 2, 3, 4 });  // vector
             indexedTable.Set("B", 1234);  // scalar
 
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMShared.TestNoIndexSetVectorThenScalar.Expected.txt");
-            Assert.AreEqual(Utilities.TableToString(indexedTable.ToTable()), expected);
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {   "A",   "B" },
+                                          new List<object[]> { new object[] {     1, 1234 },
+                                                               new object[] {     2, 1234 },
+                                                               new object[] {     3, 1234 },
+                                                               new object[] {     4, 1234 } })
+                   .IsSame(indexedTable.ToTable()));
         }
 
         [Test]
@@ -58,8 +74,13 @@
             indexedTable.Set("A", 1234);  // scalar
             indexedTable.SetValues("B", new double[] { 1, 2, 3, 4 });  // vector
 
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMShared.TestNoIndexSetScalarThenSetVector.Expected.txt");
-            Assert.AreEqual(Utilities.TableToString(indexedTable.ToTable()), expected);
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {  "A", "B" },
+                                          new List<object[]> { new object[] { 1234,  1 },
+                                                               new object[] { 1234,  2 },
+                                                               new object[] { 1234,  3 },
+                                                               new object[] { 1234,  4 } })
+                   .IsSame(indexedTable.ToTable()));
         }
 
         [Test]
@@ -74,8 +95,19 @@
             indexedTable.SetIndex(new object[] { 2001, "Name2" });
             indexedTable.SetValues("A", new double[] { 5, 6, 7, 8 });  // vector
             indexedTable.Set("B", 5678);  // scalar
-            string expected = ReflectionUtilities.GetResourceAsString("UnitTests.APSIMShared.TestChangeIndex.Expected.txt");
-            Assert.AreEqual(Utilities.TableToString(indexedTable.ToTable()), expected);
+
+
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "Year", "Name", "A",   "B" },
+                                          new List<object[]> { new object[] {   2000, "Name1",   1, 1234 },
+                                                               new object[] {   2000, "Name1",   2, 1234 },
+                                                               new object[] {   2000, "Name1",   3, 1234 },
+                                                               new object[] {   2000, "Name1",   4, 1234 },
+                                                               new object[] {   2001, "Name2",   5, 5678 },
+                                                               new object[] {   2001, "Name2",   6, 5678 },
+                                                               new object[] {   2001, "Name2",   7, 5678 },
+                                                               new object[] {   2001, "Name2",   8, 5678 } })
+                   .IsSame(indexedTable.ToTable()));
         }
 
         [Test]

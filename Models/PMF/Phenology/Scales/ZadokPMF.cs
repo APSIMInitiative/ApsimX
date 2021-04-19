@@ -37,7 +37,7 @@ namespace Models.PMF.Phen
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ZadokPMF: Model
     {

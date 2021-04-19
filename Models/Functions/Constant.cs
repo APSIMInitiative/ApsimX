@@ -8,7 +8,7 @@ namespace Models.Functions
     /// [Name] = [FixedValue] ([Units])
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Constant : Model, IFunction
     {

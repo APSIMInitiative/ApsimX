@@ -80,12 +80,16 @@ namespace UserInterface.Views
             box = new Frame();
             box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
+            ScrolledWindow scroller = new ScrolledWindow();
+            mainWidget = scroller;
 #if NETFRAMEWORK
-            mainWidget = box;
+            scroller.Add(box);
 #else
             Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(box, false, false, 0);
-            mainWidget = container;
+            scroller.Add(container);
+            scroller.PropagateNaturalHeight = true;
+            scroller.PropagateNaturalWidth = true;
 #endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
@@ -156,7 +160,11 @@ namespace UserInterface.Views
             int nrow = 0;
 #endif
             AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
-            mainWidget.ShowAll();
+
+            if (nrow > 0)
+                mainWidget.ShowAll();
+            else
+                mainWidget.Hide();
 
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)

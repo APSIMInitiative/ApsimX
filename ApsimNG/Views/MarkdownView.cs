@@ -62,7 +62,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new TextView());
+            Initialise(owner, new ScrolledWindow());
         }
 
         /// <summary>Constructor</summary>
@@ -82,7 +82,17 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            textView = (TextView)gtkControl;
+            if (gtkControl is ScrolledWindow scroller)
+            {
+                textView = new TextView();
+                scroller.Add(textView);
+                mainWidget = scroller;
+            }
+            else
+            {
+                textView = (TextView)gtkControl;
+                mainWidget = textView;
+            }
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -92,7 +102,6 @@ namespace UserInterface.Views
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = textView;
             mainWidget.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
 

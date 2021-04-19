@@ -11,7 +11,7 @@ namespace Models.Functions
     /// when phase changes. This function will always return the live value of the appropriate child.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LiveOnEventFunction : Model, IFunction, ICustomDocumentation
     {

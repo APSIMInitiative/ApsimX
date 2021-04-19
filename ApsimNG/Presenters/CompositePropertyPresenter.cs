@@ -12,7 +12,7 @@ namespace UserInterface.Presenters
     /// <summary>
     /// A property presenter which also displays properties for child models.
     /// </summary>
-    public class CompositePropertyPresenter : SimplePropertyPresenter
+    public class CompositePropertyPresenter : PropertyPresenter
     {
         /// <summary>
         /// Override the GetProperties method to return properties from child models as well.

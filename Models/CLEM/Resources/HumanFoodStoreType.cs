@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for a Home Food Store type.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]

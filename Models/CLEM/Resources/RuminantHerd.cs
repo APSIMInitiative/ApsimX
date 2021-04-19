@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.Globalization;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -235,6 +236,9 @@ namespace Models.CLEM.Resources
             }
             Herd.Add(ind);
             LastIndividualChanged = ind;
+
+            // check mandatory attributes
+            ind.BreedParams.CheckMandatoryAttributes(ind, model);
 
             ResourceTransaction details = new ResourceTransaction
             {
