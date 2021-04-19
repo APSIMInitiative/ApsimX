@@ -98,16 +98,5 @@ namespace UserInterface.Presenters
             }
             return propertyGroupList;
         }
-
-        ///// <summary>
-        ///// Detach the presenter from the view. Perform misc cleanup.
-        ///// </summary>
-        //public override void Detach()
-        //{
-        //    view.SaveChanges();
-        //    view.PropertyChanged -= OnViewChanged;
-        //    presenter.CommandHistory.ModelChanged -= OnModelChanged;
-        //}
-
     }
 }
