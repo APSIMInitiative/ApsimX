@@ -137,6 +137,7 @@ namespace Models.CLEM
         /// Type of resource to use
         /// </summary>
         [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>
@@ -278,6 +279,8 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>
@@ -374,6 +377,7 @@ namespace Models.CLEM
         /// Type of resource to use
         /// </summary>
         [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>

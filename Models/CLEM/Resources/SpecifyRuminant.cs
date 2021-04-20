@@ -51,7 +51,7 @@ namespace Models.CLEM.Resources
         public double Proportion { get; set; }
 
         /// <summary>
-        /// 
+        /// The local store of the first type Cohort provided as child of this component
         /// </summary>
         [JsonIgnore]
         public RuminantTypeCohort Details { get; private set; }
