@@ -53,6 +53,11 @@
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        event EventHandler OnAnnotationClick;
+
+        /// <summary>
         /// Left margin in pixels.
         /// </summary>
         int LeftRightPadding { get; set; }

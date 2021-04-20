@@ -208,6 +208,11 @@
         public event EventHandler OnCaptionClick;
 
         /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        public event EventHandler OnAnnotationClick;
+
+        /// <summary>
         /// Invoked when the user hovers over a series point.
         /// </summary>
         public event EventHandler<EventArguments.HoverPointArgs> OnHoverOverPoint;
@@ -1574,7 +1579,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
+        public OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1672,10 +1677,19 @@
                 }
                 else if (plotArea.Contains(location))
                 {
-                    if (this.OnPlotClick != null)
+                    bool userClickedOnAnnotation = false;
+                    foreach (var annotation in this.plot1.Model.Annotations)
                     {
-                        this.OnPlotClick.Invoke(sender, e);
+                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                        if (result != null)
+                        {
+                            userClickedOnAnnotation = true;
+                            OnAnnotationClick?.Invoke(this, new EventArgs());
+                        }
                     }
+
+                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                        this.OnPlotClick.Invoke(sender, e);
                 }
                 else
                 {
