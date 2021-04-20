@@ -336,6 +336,8 @@
                     double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
 
                     object x, y;
+                    bool leftAlign = textAnnotation.leftAlign;
+                    bool topAlign = textAnnotation.topAlign;
                     if (textAnnotation.Name != null && textAnnotation.Name.StartsWith("Regression"))
                     {
                         if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopLeft)
@@ -345,18 +347,22 @@
                         }
                         else if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopRight)
                         {
-                            x = minimumX + range * 0.8;
+                            x = minimumX + range * 0.95;
                             y = maximumY - i * interval;
+                            leftAlign = false;
                         }
                         else if (graph.AnnotationPosition == Graph.AnnotationPositionType.BottomRight)
                         {
-                            x = minimumX + range * 0.8;
-                            y = minimumY + (i+1) * interval;
+                            x = minimumX + range * 0.95;
+                            y = minimumY + i * interval;
+                            leftAlign = false;
+                            topAlign = false;
                         }
                         else
                         {
                             x = minimumX;
-                            y = minimumY + (i+1) * interval;
+                            y = minimumY + i * interval;
+                            topAlign = false;
                         }
 
                         //y = largestAxisScale - (i * interval);
@@ -370,7 +376,8 @@
                     graphView.DrawText( textAnnotation.text,
                                         x,
                                         y,
-                                        textAnnotation.leftAlign,
+                                        leftAlign,
+                                        topAlign,
                                         textAnnotation.textRotation,
                                         Axis.AxisType.Bottom,
                                         Axis.AxisType.Left,

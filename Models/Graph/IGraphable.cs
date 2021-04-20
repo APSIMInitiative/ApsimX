@@ -171,6 +171,9 @@
         /// <summary>Left align the text?</summary>
         public bool leftAlign;
 
+        /// <summary>Top align the text?</summary>
+        public bool topAlign = true;
+
         /// <summary>Text rotation angle</summary>
         public double textRotation;
     }
