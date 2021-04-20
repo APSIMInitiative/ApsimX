@@ -19,7 +19,7 @@ namespace Models.CLEM
     /// CLEM Zone to control simulation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents all CLEM farm resources and activities")]
@@ -219,7 +219,7 @@ namespace Models.CLEM
                 results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
-            int holderCount = this.Children.Where(a => a.GetType() == typeof(ResourcesHolder)).Count();
+            int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Resources" };
@@ -230,7 +230,7 @@ namespace Models.CLEM
                 string[] memberNames = new string[] { "CLEM.Resources" };
                 results.Add(new ValidationResult("CLEM must contain only one (1) Resources Holder to manage resources", memberNames));
             }
-            holderCount = this.Children.Where(a => a.GetType() == typeof(ActivitiesHolder)).Count();
+            holderCount = this.FindAllChildren<ActivitiesHolder>().Count();
             if (holderCount == 0)
             {
                 string[] memberNames = new string[] { "CLEM.Activities" };
@@ -263,9 +263,9 @@ namespace Models.CLEM
                 // find IStorageReader of simulation
                 IModel parentSimulation = FindAncestor<Simulation>();
                 IStorageReader ds = DataStore.Reader;
-                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
+                if (ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages") != null)
                 {
-                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
+                    DataRow[] dataRows = ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
                     // all all current errors and validation problems to error string.
                     foreach (DataRow dr in dataRows)
                     {

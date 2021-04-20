@@ -16,7 +16,7 @@ namespace Models.Functions.SupplyFunctions
     /// The daily gross photosynthesis is called in reponse to event DoPotentialPlantGrowth.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
 

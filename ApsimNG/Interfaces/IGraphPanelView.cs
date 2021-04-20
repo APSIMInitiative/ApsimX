@@ -12,7 +12,7 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Grid which displays the model's properties.
         /// </summary>
-        IGridView PropertiesGrid { get; }
+        IPropertyView PropertiesView { get; }
         
         /// <summary>
         /// Adds a new tab containing a page of graphs.

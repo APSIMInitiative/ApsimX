@@ -13,7 +13,7 @@ namespace Models.CLEM.Activities
     /// <summary>Other animals grow activity</summary>
     /// <summary>This activity grows other animals and includes aging</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of Other Animal Type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of Other Animal Type to use required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string OtherAnimalType { get; set; }
 
         private OtherAnimalsType animalType { get; set; }

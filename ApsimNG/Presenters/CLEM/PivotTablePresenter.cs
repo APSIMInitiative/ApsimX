@@ -1,5 +1,4 @@
-﻿using ApsimNG.Views.CLEM;
-using Models.Core;
+﻿using Models.Core;
 using Models.CLEM.Reporting;
 using Models.Storage;
 using System;
@@ -8,8 +7,9 @@ using System.Data;
 using System.Linq;
 using UserInterface.Commands;
 using UserInterface.Presenters;
+using UserInterface.Views;
 
-namespace ApsimNG.Presenters.CLEM
+namespace UserInterface.Presenters
 {
     /// <summary>
     /// Connects the PivotTableView and the PivotTable model together

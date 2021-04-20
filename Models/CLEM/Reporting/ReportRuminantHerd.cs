@@ -15,7 +15,7 @@ namespace Models.CLEM.Reporting
     /// <summary>Ruminant reporting</summary>
     /// <summary>This activity writes individual ruminant details for reporting</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -77,10 +77,11 @@ namespace Models.CLEM.Reporting
         {
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
-            if (this.Children.Where(a => a.GetType() == typeof(RuminantGroup)).Count() > 0)
+            var allRumGroups = this.FindAllChildren<RuminantGroup>();
+            if (allRumGroups.Count() > 0)
             {
                 // get all filter groups below.
-                foreach (var fgroup in this.Children.Where(a => a.GetType() == typeof(RuminantGroup)))
+                foreach (var fgroup in allRumGroups)
                 {
                     foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
                     {

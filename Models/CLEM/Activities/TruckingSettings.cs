@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// <summary>Tracking settings for Ruminant purchases and sales</summary>
     /// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
@@ -99,7 +99,7 @@ namespace Models.CLEM.Activities
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Methane if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named Methane if present")]
         public string MethaneStoreName { get; set; }
 
@@ -107,7 +107,7 @@ namespace Models.CLEM.Activities
         /// Carbon dioxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for carbon dioxide emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named CO2 if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named CO2 if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named CO2 if present")]
         public string CarbonDioxideStoreName { get; set; }
 
@@ -115,7 +115,7 @@ namespace Models.CLEM.Activities
         /// Nitrous oxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for nitrous oxide emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named N2O if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named N2O if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named N2O if present")]
         public string NitrousOxideStoreName { get; set; }
 

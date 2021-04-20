@@ -11,7 +11,7 @@ namespace Models.Functions.DemandFunctions
     /// </summary>
     [Serializable]
     [Description("This function calculates...")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StorageDMDemandFunction : Model, IFunction, ICustomDocumentation
     {

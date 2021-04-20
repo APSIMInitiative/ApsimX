@@ -11,7 +11,7 @@ namespace Models.Functions
     /// [DontDocument XValue]
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("A Y value is returned for the current vaule of the XValue child via linear interpolation of the XY pairs specified")]
     public class LinearInterpolationFunction : Model, IFunction
@@ -38,7 +38,7 @@ namespace Models.Functions
             XYPairs = new XYPairs() { X = x, Y = y };
         }
 
-        /// <summary>Return the name of the x variable. Used as graph x axis title. </summary>
+        /// <summary>Return the name of the x variable. Used as graph x axis title.</summary>
         public string XVariableName
         {
             get

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 250,
-  "Version": 106,
+  "ExplorerWidth": 300,
+  "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -27,6 +27,7 @@
     {
       "$type": "Models.Core.Simulation, Models",
       "IsRunning": false,
+      "Descriptors": null,
       "Name": "Base",
       "Children": [
         {
@@ -67,7 +68,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing System;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n\t/// <summary>\r\n\t/// The report is set up to report doy on start of simulation.\r\n\t/// The replacements node contains a clock which changes\r\n\t/// the start of simulation from 1-Jan to 2-Jan. However,\r\n\t/// the replacements node is disabled so the start date of\r\n\t/// the simulation should still be 1-Jan.\r\n\t///\r\n\t/// This test will ensure that the start date of the simulation\r\n\t/// is 1-Jan.\r\n\t/// </summary>\r\n\t[Serializable]\r\n\tpublic class DisabledReplacementsTest : Model, ITest\r\n\t{\r\n\t\tpublic void Run()\r\n\t\t{\r\n\t\t\tint actualDoy = ReportedDoy();\r\n\t\t\tif (actualDoy != 1)\r\n\t\t\t\tthrow new Exception(\"Clock.StartDate.DayOfYear is incorrect. Expected: 1, actual: \" + actualDoy);\r\n\t\t}\r\n\r\n\t\tprivate int ReportedDoy()\r\n\t\t{\r\n\t\t\tIDataStore dataStore = Apsim.Find(this, typeof(IDataStore)) as IDataStore;\r\n\t\t\tDataTable report = dataStore.Reader.GetData(\"Report\", \"Current\", \"Base\", new string[] { \"doy\" }, null);\r\n\t\t\treturn DataTableUtilities.GetColumnAsIntegers(report, \"doy\")[0];\r\n\t\t}\r\n\t}\r\n}",
+          "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Core;\r\nusing Models.Storage;\r\nusing System;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    /// <summary>\r\n    /// The report is set up to report doy on start of simulation.\r\n    /// The replacements node contains a clock which changes\r\n    /// the start of simulation from 1-Jan to 2-Jan. However,\r\n    /// the replacements node is disabled so the start date of\r\n    /// the simulation should still be 1-Jan.\r\n    ///\r\n    /// This test will ensure that the start date of the simulation\r\n    /// is 1-Jan.\r\n    /// </summary>\r\n    [Serializable]\r\n    public class DisabledReplacementsTest : Model, ITest\r\n    {\r\n        public void Run()\r\n        {\r\n            int actualDoy = ReportedDoy();\r\n            if (actualDoy != 1)\r\n                throw new Exception(\"Clock.StartDate.DayOfYear is incorrect. Expected: 1, actual: \" + actualDoy);\r\n        }\r\n\r\n        private int ReportedDoy()\r\n        {\r\n            IDataStore dataStore = this.FindInScope<IDataStore>() as IDataStore;\r\n            DataTable report = dataStore.Reader.GetData(\"Report\", \"Current\", new string[] { \"Base\" }, new string[] { \"doy\" }, null);\r\n            return DataTableUtilities.GetColumnAsIntegers(report, \"doy\")[0];\r\n        }\r\n    }\r\n}\r\n",
           "Parameters": [],
           "Name": "Manager",
           "IncludeInDocumentation": true,

@@ -220,7 +220,6 @@
 
             scrollingWindow = (ScrolledWindow)builder.GetObject("scrolledwindow1");
             scrollingWindow2 = (ScrolledWindow)builder.GetObject("scrolledwindow2");
-            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             fixedColView = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
@@ -255,8 +254,15 @@
             splitter.Child1.Hide();
             splitter.Child1.NoShowAll = true;
             mainWidget.Destroyed += MainWidgetDestroyed;
-        }
+            scrollingWindow2.Vadjustment = scrollingWindow.Vadjustment;
+            fixedColView.Vadjustment = Grid.Vadjustment;
 
+#if NETFRAMEWORK
+            scrollingWindow2.VscrollbarPolicy = PolicyType.Never;
+            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
+#endif
+        }
+#if NETFRAMEWORK
         /// <summary>
         /// We hide the scrollbar in the fixed column view to disguise
         /// the fact that it's a separate treeview. This means that it
@@ -272,14 +278,22 @@
         /// </remarks>
         private void OnFixedColViewScroll(object sender, ScrollEventArgs args)
         {
-            if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
+            try
             {
-                double increment = fixedColView.Vadjustment.StepIncrement;
-                if (args.Event.Direction == Gdk.ScrollDirection.Up)
-                    increment *= -1;
-                fixedColView.Vadjustment.Value += increment;
+                if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
+                {
+                    double increment = fixedColView.Vadjustment.StepIncrement;
+                    if (args.Event.Direction == Gdk.ScrollDirection.Up)
+                        increment *= -1;
+                    fixedColView.Vadjustment.Value += increment;
+                }
             }
-        }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+         }
+#endif
 
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
@@ -938,34 +952,31 @@
             {
                 if (!splitter.Child1.Visible)
                 {
-                    Grid.Vadjustment.ValueChanged += GridviewVadjustmentChanged;
                     Grid.Selection.Changed += GridviewCursorChanged;
-                    fixedColView.Vadjustment.ValueChanged += FixedcolviewVadjustmentChanged;
                     fixedColView.Selection.Changed += FixedcolviewCursorChanged;
                     GridviewCursorChanged(this, EventArgs.Empty);
-                    GridviewVadjustmentChanged(this, EventArgs.Empty);
                 }
                 fixedColView.Model = gridModel;
                 fixedColView.Visible = true;
                 splitter.Child1.NoShowAll = false;
                 splitter.ShowAll();
+                if (!Grid.Columns.Any(c => c.Visible))
+                    Grid.Hide();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
 #if NETFRAMEWORK
-                    int width = fixedColView.SizeRequest().Width;
+                int width = fixedColView.SizeRequest().Width;
 #else
-                    fixedColView.GetPreferredWidth(out _, out int width);
+                fixedColView.GetPreferredWidth(out _, out int width);
 #endif
-                if (splitter.Allocation.Width > 1)
+                if (splitter.Allocation.Width > 1 && Grid.Visible)
                     splitter.Position = Math.Min(width + splitterWidth, splitter.Allocation.Width / 2);
                 else
                     splitter.Position = width + splitterWidth;
             }
             else
             {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
                 Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
                 fixedColView.Visible = false;
                 splitter.Position = 0;
@@ -1052,9 +1063,7 @@
         {
             if (splitter.Child1.Visible)
             {
-                Grid.Vadjustment.ValueChanged -= GridviewVadjustmentChanged;
                 Grid.Selection.Changed -= GridviewCursorChanged;
-                fixedColView.Vadjustment.ValueChanged -= FixedcolviewVadjustmentChanged;
                 fixedColView.Selection.Changed -= FixedcolviewCursorChanged;
             }
             Grid.ButtonPressEvent -= OnButtonDown;
@@ -1073,7 +1082,6 @@
 #else
             Grid.Drawn -= GridviewExposed;
 #endif
-            scrollingWindow2.ScrollEvent -= OnFixedColViewScroll;
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -1690,7 +1698,9 @@
 
                 colLookup.Add(textRender, i);
 
+#if NETFRAMEWORK
                 textRender.FixedHeightFromFont = 1; // 1 line high
+#endif
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.EditingCanceled += TextRenderEditingCanceled;
@@ -2032,40 +2042,6 @@
                 (editControl as Widget).KeyPressEvent -= GridviewKeyPressEvent;
                 (editControl as Widget).FocusOutEvent -= GridViewCellFocusOutEvent;
                 editControl = null;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="e">The event arguments.</param>
-        private void FixedcolviewVadjustmentChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                Grid.Vadjustment.Value = fixedColView.Vadjustment.Value;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Handle vertical scrolling changes to keep the gridview and fixedcolview at the same scrolled position.
-        /// </summary>
-        /// <param name="sender">The sending object.</param>
-        /// <param name="e">The event arguments.</param>
-        private void GridviewVadjustmentChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                fixedColView.Vadjustment.Value = Grid.Vadjustment.Value;
             }
             catch (Exception err)
             {
@@ -2619,11 +2595,19 @@
 
             Gtk.TreeView view = GetTreeView(column);
 
-#if NETFRAMEWORK
-            // In gtk3 this breaks everything. Can't remember why it's
-            // necessary in gtk2, but I'm not brave enough to remove it.
             view.GrabFocus();
-#endif
+
+            // Need to ensure that the specified column both exists and is visible.
+            // This can sometimes be changed by the call to view.GrabFocus(), as this
+            // will cause the datastore column/row filters to be applied.
+            if (!view.Visible || column >= view.Columns.Length || row >= table.Rows.Count)
+            {
+                selectedCellRowIndex = -1;
+                selectedCellColumnIndex = -1;
+                selectionRowMax = -1;
+                selectionColMax = -1;
+                return;
+            }
 
             TreePath path = new TreePath(new int[1] { row });
             TreeViewColumn col = view.GetColumn(column);

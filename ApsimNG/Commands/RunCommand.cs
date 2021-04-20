@@ -97,7 +97,7 @@
                 else
                 {
                     if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
-                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWavFileName;
                     else
                         player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
                 }

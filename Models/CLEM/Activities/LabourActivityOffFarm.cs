@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// Off farm labour activities
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// Bank account name to pay to
         /// </summary>
         [Description("Bank account to pay to")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

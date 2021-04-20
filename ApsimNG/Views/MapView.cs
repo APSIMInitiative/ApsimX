@@ -172,7 +172,7 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IPropertyView PropertiesGrid { get; private set; }
+        public IPropertyView PropertiesView { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
@@ -192,8 +192,8 @@
             container.Add(image);
 
             VPaned box = new VPaned();
-            PropertiesGrid = new PropertyView(this);
-            box.Pack1(((ViewBase)PropertiesGrid).MainWidget, true, false);
+            PropertiesView = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -225,7 +225,8 @@
             result.Center = new Coordinate(0, 0);
             result.SRID = 3857;
 
-            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap), "Open Street Map");
+            BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap, persistentCache: fileCache, userAgent: "APSIM Next Generation"), "OpenStreetMap");
             result.BackgroundLayer.Add(baseLayer);
             result.MaximumZoom = baseLayer.Envelope.Width;
 
