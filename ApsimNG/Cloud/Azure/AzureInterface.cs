@@ -677,7 +677,7 @@ namespace ApsimNG.Cloud
         {
             try
             {
-                string bin = GetType().Assembly.Location;
+                string bin = Path.GetDirectoryName(GetType().Assembly.Location);
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))
