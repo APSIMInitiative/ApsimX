@@ -177,11 +177,9 @@ namespace Models
         /// <summary>Puts the 1:1 line on graph.</summary>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
-        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable x, IEnumerable y)
+        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable<double> x, IEnumerable<double> y)
         {
-            IEnumerable<double> xValues = x.Cast<object>().Select(xi => xi is double ? (double)xi : Convert.ToDouble(xi, CultureInfo.InvariantCulture));
-            IEnumerable<double> yValues = y.Cast<object>().Select(yi => yi is double ? (double)yi : Convert.ToDouble(yi, CultureInfo.InvariantCulture));
-            MathUtilities.GetBounds(xValues, yValues, out double minX, out double maxX, out double minY, out double maxY);
+            MathUtilities.GetBounds(x, y, out double minX, out double maxX, out double minY, out double maxY);
             double lowestAxisScale = Math.Min(minX, minY);
             double largestAxisScale = Math.Max(maxX, maxY);
 

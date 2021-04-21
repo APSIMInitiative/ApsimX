@@ -2,6 +2,7 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,9 +51,9 @@ namespace Models.CLEM.Resources
         public double Proportion { get; set; }
 
         /// <summary>
-        /// 
+        /// The local store of the first type Cohort provided as child of this component
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public RuminantTypeCohort Details { get; private set; }
 
         private RuminantType ruminantType;
