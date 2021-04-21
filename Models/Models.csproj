@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -30,7 +30,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <None Remove="Manager.cs.rej" />
     <None Remove="Resources\**" />
   </ItemGroup>
 
@@ -50,24 +49,12 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Remove="DataStore.cs" />
-    <Compile Remove="Functions\BoundFunction.cs" />
-    <Compile Remove="GRange.cs" />
-    <Compile Remove="Lifecycle\LifeStage.cs" />
-    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
-    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
-    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
-    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
-    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
-    <Compile Remove="Plant\BiomassSummariser.cs" />
-    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
-    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
-    <Compile Remove="Report\RowEnumerator.cs" />
     <Compile Remove="Resources\Scripts\*.cs" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
+    <ProjectReference Include="..\APSIM.Services\APSIM.Services.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
   </ItemGroup>
 
@@ -98,5 +85,6 @@
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
     <Copy Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="..\DeploymentSupport\Windows\Bin64\sqlite3.dll" DestinationFolder="$(OutputPath)" />
   </Target>
+
 
 </Project>

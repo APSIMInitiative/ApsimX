@@ -3,9 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <OutputPath>../bin</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>../NetCoreBin</OutputPath>
     <AssemblyName>apsim</AssemblyName>
   </PropertyGroup>
 

@@ -23,7 +23,7 @@
     [ValidParent(ParentType = typeof(IOrgan))]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.CompositePropertyPresenter")]
-    public class BiomassRemoval : Model, ICustomDocumentation
+    public class BiomassRemoval : Model
     {
         [Link]
         Plant plant = null;

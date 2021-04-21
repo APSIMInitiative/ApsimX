@@ -2,16 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <BaseOutputPath>../bin</BaseOutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
-    <OutputPath>../Bin</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
-    <OutputPath>../NetCoreBin</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

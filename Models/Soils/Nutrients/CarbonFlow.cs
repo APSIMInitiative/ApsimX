@@ -18,7 +18,7 @@ namespace Models.Soils.Nutrients
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ViewName("UserInterface.Views.PropertyView")]
-    public class CarbonFlow : Model, ICustomDocumentation
+    public class CarbonFlow : Model
     {
         private NutrientPool[] destinations;
         private double[] carbonFlowToDestination;
