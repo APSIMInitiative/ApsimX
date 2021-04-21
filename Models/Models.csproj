@@ -2,15 +2,14 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -18,12 +17,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-    <OutputPath>..\NetCoreBin\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
     <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-    <OutputPath>..\Bin\</OutputPath>
   </PropertyGroup>
   
   <ItemGroup>
@@ -33,6 +30,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <None Remove="Manager.cs.rej" />
     <None Remove="Resources\**" />
   </ItemGroup>
 
@@ -52,26 +50,42 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Compile Remove="DataStore.cs" />
+    <Compile Remove="Functions\BoundFunction.cs" />
+    <Compile Remove="GRange.cs" />
+    <Compile Remove="Lifecycle\LifeStage.cs" />
+    <Compile Remove="Lifecycle\LifeStageGrowth.cs" />
+    <Compile Remove="Lifecycle\LifeStageImmigration.cs" />
+    <Compile Remove="Lifecycle\LifeStageMortality.cs" />
+    <Compile Remove="Lifecycle\LifeStageReproduction.cs" />
+    <Compile Remove="Lifecycle\LifeStageTransfer.cs" />
+    <Compile Remove="Plant\BiomassSummariser.cs" />
+    <Compile Remove="Plant\Phenology\PhotoperiodEffect.cs" />
+    <Compile Remove="Plant\Phenology\VernalisationEffect.cs" />
+    <Compile Remove="Report\RowEnumerator.cs" />
     <Compile Remove="Resources\Scripts\*.cs" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
-    <ProjectReference Include="..\APSIM.Services\APSIM.Services.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.7.0-1.final" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="3.7.0-1.final" />
+    <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
+    <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
+    <PackageReference Include="PdfSharpCore" Version="1.2.11" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
     <Reference Include="System.ComponentModel.DataAnnotations">
       <Private>false</Private>
     </Reference>
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
+	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
+  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -82,7 +96,7 @@
   </ItemGroup>
 
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\sqlite3.dll $(OutputPath)\* &gt;nul" />
+    <Copy Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="..\DeploymentSupport\Windows\Bin64\sqlite3.dll" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>

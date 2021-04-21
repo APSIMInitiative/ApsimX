@@ -1142,6 +1142,34 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Get the min/max values of a list of x/y pairs. Ignores values
+        /// where the x or y value at a particular index is NaN.
+        /// </summary>
+        /// <param name="x">X values.</param>
+        /// <param name="y">Y values.</param>
+        /// <param name="minX">Smallest x value.</param>
+        /// <param name="maxX">Largest x value.</param>
+        /// <param name="minY">Smallest y value.</param>
+        /// <param name="maxY">Largest y value.</param>
+        public static void GetBounds(IEnumerable<double> x, IEnumerable<double> y, out double minX, out double maxX, out double minY, out double maxY)
+        {
+            if (!(x.Any() && y.Any()))
+                throw new ArgumentException("x is empty");
+            minX = minY = double.MaxValue;
+            maxX = maxY = double.MinValue;
+            foreach ((double xi, double yi) in x.Zip(y, (xi, yi) => (xi, yi)))
+            {
+                if (!double.IsNaN(xi) && !double.IsNaN(yi))
+                {
+                    minX = Math.Min(minX, xi);
+                    minY = Math.Min(minY, yi);
+                    maxX = Math.Max(maxX, xi);
+                    maxY = Math.Max(maxY, yi);
+                }
+            }
+        }
+
+        /// <summary>
         /// Create an array of values all containing 'Value'
         /// </summary>
         /// <param name="Value"></param>

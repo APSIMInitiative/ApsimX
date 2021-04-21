@@ -21,20 +21,9 @@
         public static string FindSqlite3DLL()
         {
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            while (directory != null)
-            {
-                string[] directories = Directory.GetDirectories(directory, "Bin", SearchOption.AllDirectories);
-                foreach (string dir in directories)
-                {
-                    string[] files = Directory.GetFiles(dir, "sqlite3.dll");
-                    if (files.Length == 1)
-                    {
-                        return files[0];
-                    }
-                }
-
-                directory = Path.GetDirectoryName(directory); // parent directory
-            }
+            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
+            if (files.Length == 1)
+                return files[0];
 
             throw new Exception("Cannot find sqlite3 dll directory");
         }
