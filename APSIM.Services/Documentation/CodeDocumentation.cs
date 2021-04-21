@@ -87,8 +87,8 @@ namespace APSIM.Services.Documentation
         {
             path = path.Replace("+", ".");
 
-            string nameToFindInSummary = $"members/{typeLetter}:{path}/{element}";
-            XmlNode summaryNode = document.SelectSingleNode(nameToFindInSummary);
+            string xpath = $"/doc/members/member[@name='{typeLetter}:{path}']/{element}";
+            XmlNode summaryNode = document.SelectSingleNode(xpath);
             if (summaryNode != null)
             {
                 string raw = summaryNode.InnerXml.Trim();
