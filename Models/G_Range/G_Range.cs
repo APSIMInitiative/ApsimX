@@ -15,7 +15,7 @@ namespace Models
     /// Currently this is just an empty stub
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public partial class G_Range : Model, IPlant, ICanopy, IUptake

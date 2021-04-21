@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for land
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
@@ -156,7 +156,8 @@ namespace Models.CLEM.Resources
             }
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = amountAdded,
+                Style = TransactionStyle.Gain,
+                Amount = amountAdded,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -215,7 +216,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                Style = TransactionStyle.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>First implementation of this activity using NABSA grazing processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -39,7 +39,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Land type where pasture is located")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Land) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Land) } })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Pasture to manage")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string FeedTypeName { get; set; }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of pasture data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
-        [Models.Core.Display(Type = DisplayType.CLEMPastureFileReader)]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
 
         /// <summary>

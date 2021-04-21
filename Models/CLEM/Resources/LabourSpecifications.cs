@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     /// This base class for monthly stores of labour information e.g. availability and hire rates.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("")]
     [Version(1, 0, 1, "")]

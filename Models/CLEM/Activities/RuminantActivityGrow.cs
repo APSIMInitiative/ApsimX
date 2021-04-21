@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     /// <version>1.1</version>
     /// <updates>First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Metane if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named Methane if present")]
         public string MethaneStoreName { get; set; }
 

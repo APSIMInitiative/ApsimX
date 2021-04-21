@@ -568,13 +568,24 @@
             List<Type> types = new List<Type>();
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type t in assembly.GetTypes())
-                {
-                    if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
-                        types.Add(t);
-                }
-            }
+                types.AddRange(GetTypesThatHaveInterface(assembly, interfaceType));
+
+            return types;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="interfaceType"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetTypesThatHaveInterface(Assembly assembly, Type interfaceType)
+        {
+            List<Type> types = new List<Type>();
+
+            foreach (Type t in assembly.GetTypes())
+                if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
+                    types.Add(t);
 
             return types;
         }

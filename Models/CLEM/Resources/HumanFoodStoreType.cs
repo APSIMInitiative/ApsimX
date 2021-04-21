@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for a Home Food Store type.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]
@@ -146,7 +146,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    Style = TransactionStyle.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -205,7 +206,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = amountRemoved,
+                    Style = TransactionStyle.Loss,
+                    Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -253,7 +255,8 @@ namespace Models.CLEM.Resources
                     ResourceTransaction details = new ResourceTransaction
                     {
                         ResourceType = this,
-                        Loss = spoiled,
+                        Style = TransactionStyle.Loss,
+                        Amount = spoiled,
                         Activity = this,
                         Category = "Spoiled"
                     };

@@ -12,7 +12,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class PTQPhyllochron : Model, IFunction
@@ -41,15 +41,15 @@ namespace Models.PMF.Phen
         private bool Phase1complete = false;
         private bool VernalisedInPhase1 = false;
         private bool Phase2complete = false;
-        private bool VernalisedInPhase2 = false;
-
+        
         private double HSFactor = 1.0;
+
         /// <summary>
         /// Name of event to swith Vernalisation Factor
         /// </summary>
         [Description("Name of event to swith Vernalisation Factor")]
         public string SetEvent { get; set; }
-
+        
         /// <summary>
         /// The value
         /// </summary>
@@ -80,7 +80,6 @@ namespace Models.PMF.Phen
                     Phase2complete = true;
                     if ((CropVernalised == true) && (VernalisedInPhase1 == false))
                     {
-                        VernalisedInPhase2 = true;
                     }
                     else 
                     {
@@ -110,7 +109,6 @@ namespace Models.PMF.Phen
             Phase1complete = false;
             VernalisedInPhase1 = false;
             Phase2complete = false;
-            VernalisedInPhase2 = false;
             HSFactor = 1.0;
         }
 

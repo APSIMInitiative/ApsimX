@@ -12,7 +12,7 @@ namespace Models.Functions
     /// A c# expression is evaluated.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class CSharpExpressionFunction : Model, IFunction, ICustomDocumentation
     {

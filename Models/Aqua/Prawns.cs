@@ -21,7 +21,7 @@ namespace Models.Aqua
     /// Simple prawn growth model.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Prawns : Model
         {

@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for bank account
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimals))]
     [Description("This resource represents an other animal group (e.g. Chickens).")]
@@ -148,7 +148,8 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = cohortToAdd.Number,
+                Style = TransactionStyle.Gain,
+                Amount = cohortToAdd.Number,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -189,7 +190,8 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction
             {
-                Loss = cohortToRemove.Number,
+                Style = TransactionStyle.Loss,
+                Amount = cohortToRemove.Number,
                 Activity = activity,
                 Category = reason,
                 ResourceType = this,

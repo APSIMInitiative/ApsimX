@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -40,7 +41,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CAMP))]
     public class CalcCAMPVrnRates : Model
@@ -50,35 +51,48 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor,  ByName = true)]
         private CAMP camp = null;
         /// <summary>The ancestor CAMP model and some relations</summary>
-        [Link(Type = LinkType.Ancestor, ByName = true)]
-        Phenology phenology = null;
-        /// <summary>The ancestor CAMP model and some relations</summary>
         [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
         IFunction basePhyllochron = null;
         
-        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.PhotoPeriodEffect.XYPairs")]
-        IIndexedFunction phylloPpSens = null;
-
+        [Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
+        IFunction phylloPpSens = null;
 
         /// <summary>
+        /// The phyllochron leaf stage factor break points
+        /// </summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.LeafStageFactor.XYPairs")]
+        XYPairs pLS = null;
+
+         /// <summary>
         /// Calculates how much Tt has accumulated from emergence to the specified HaunStage
         /// </summary>
         /// <param name="HS"></param>
         /// <param name="Pp"></param>
-        /// <param name="BasePhyllochron"></param>
-        /// <param name="PhylloPpSens"></param>
-        private double convertHStoTt(double HS, double Pp, double BasePhyllochron, double PhylloPpSens)
+        /// <param name="bP"></param>
+        /// <param name="pPpS"></param>
+        private double convertHStoTt(double HS, double Pp, double bP, double pPpS)
         {
             double PpFactor = 1.0;
             if (Pp == 8)
-                PpFactor = PhylloPpSens;
-            double[] xHS = new double[]{0, 7, 30};
-            double[] yTt = new double[3];
-            yTt[0] = 0;
-            yTt[1] = (7 * BasePhyllochron * PpFactor);
-            yTt[2] = (yTt[1] + 23 * BasePhyllochron * PpFactor * 1.4);
+                PpFactor = 1+pPpS;
+            List<double> xHS = new List<double>();
+            xHS.Add(0);
+            xHS.AddRange(pLS.X.ToList<double>());
+            xHS.Add(30);
+            List<double> yLSF = new List<double>();
+            yLSF.Add(pLS.Y[0]);
+            yLSF.AddRange(pLS.Y.ToList<double>());
+            yLSF.Add(pLS.Y.Last());
+            List<double> yTt = new List<double>();
+            yTt.Add(0);
+            for (int b = 1; b < xHS.Count; b++)
+            {
+                double dxHS = xHS[b] - xHS[b - 1];
+                double mLSF = (yLSF[b] + yLSF[b - 1]) / 2;
+                yTt.Add(yTt[b - 1] + dxHS * bP * mLSF * PpFactor);
+            }
             bool DidInterpolate = false;
-            return MathUtilities.LinearInterpReal(HS, xHS, yTt, out DidInterpolate);
+            return MathUtilities.LinearInterpReal(HS, xHS.ToArray<double>(), yTt.ToArray<double>(), out DidInterpolate);
         }
     
 
@@ -102,7 +116,7 @@ namespace Models.PMF.Phen
 
             // Get some other parameters from phenology
             double BasePhyllochron = basePhyllochron.Value();
-            double PhylloPpSens = phylloPpSens.ValueIndexed(8);
+            double PhylloPpSens = phylloPpSens.Value();
             
             //////////////////////////////////////////////////////////////////////////////////////
             // Calculate phase durations (in Base Phyllochrons)

@@ -121,6 +121,12 @@
                 paths.AddRange(Paths);
                 values.AddRange(Values);
             }
+
+            // If there are any child models which aren't being used as
+            // a factor value (e.g. as a model replacement), throw an exception.
+            IEnumerable<IModel> extraModels = Children.Except(values.OfType<IModel>());
+            if (extraModels.Any())
+                throw new InvalidOperationException($"Error in composite factor {Name}: Unused child models found: {string.Join(", ", extraModels.Select(m => m.Name))}");
         }
 
         /// <summary>
@@ -139,8 +145,8 @@
             if (path.Contains("="))
             {
                 value = StringUtilities.SplitOffAfterDelimiter(ref path, "=").Trim();
-                if (value == null)
-                    throw new Exception("Cannot find any values on the specification line: " + specification);
+                if (value == null || value as string == "")
+                    throw new Exception($"Error in composite factor {Name}: Unable to parse factor specification {specification}: No value was provided");
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value.ToString().Trim());
@@ -159,8 +165,10 @@
                 IEnumerable<IModel> possibleMatches = FindAllChildren().Where(c => modelToReplace.GetType().IsAssignableFrom(c.GetType()));
                 if (possibleMatches.Count() > 1)
                     value = possibleMatches.FirstOrDefault(m => m.Name == modelToReplace.Name);
-                else
+                else if (possibleMatches.Count() == 1)
                     value = possibleMatches.First();
+                else
+                    throw new NullReferenceException($"Error in composite factor {Name}: Unable to parse factor specification {specification}: No children are of type {modelToReplace.GetType().Name}, so model {modelToReplace.Name} cannot be overriden.");
 
                 allPaths.Add(path.Trim());
                 allValues.Add(value);

@@ -76,15 +76,13 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-
-            //this.genericView.Text = CreateMarkdown();
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
         }
 
         public void Refresh()
         {
-            this.genericView.Text = CreateMarkdown();
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            this.genericView.Text = CreateMarkdown();
         }
 
 
@@ -104,17 +102,9 @@ namespace UserInterface.Presenters
                 "tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
                 "tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
                 "td.fill {background-color: #c1946c !important;}" +
-                //"th,td {padding:5px;}" +
-                //"th,td {border: 1px dotted [GridColor]; }" +
-                //"table {border: 0px none #009999; border-collapse: collapse;}" +
                 "table.main {[TableBackground] }" +
                 "table.main tr td.disabled {color: [DisabledColour]; }" +
                 ".dot { margin:auto; display:block; height:20px; width:20px; line-height:20px; background-color:black; -moz-border-radius: 10px; border-radius: 10px; }" +
-                //".dot1 { background-color:lightgreen; }" +
-                //".dot2 { background-color:lightskyblue; }" +
-                //".dot4 { background-color:coral; }" +
-                //".dot3 { background-color:lightpink; }" +
-                // color blind corrected
                 ".dot1 { background-color:#62BB35; }" +
                 ".dot2 { background-color:#208EA3; }" +
                 ".dot4 { background-color:#E8384F; }" +

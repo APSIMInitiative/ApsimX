@@ -228,13 +228,15 @@ namespace UserInterface.Classes
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
 
+                    object[] args = metadata.GetCustomAttribute<DisplayAttribute>().ValuesArgs;
+
                     // Attempt to resolve links - populating the dropdown may
                     // require access to linked models.
                     Simulations sims = model.FindAncestor<Simulations>();
                     if (sims != null)
                         sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
 
-                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, args))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
                 case DisplayType.CultivarName:

@@ -65,6 +65,12 @@ namespace Models
         public bool ListSimulationNames { get; set; }
 
         /// <summary>
+        /// List all files that are referenced by an .apsimx file(s)
+        /// </summary>
+        [Option("list-referenced-filenames", HelpText = "List all files that are referenced by an .apsimx file(s).")]
+        public bool ListReferencedFileNames { get; set; }
+
+        /// <summary>
         /// Run all simulations sequentially on a single thread.
         /// </summary>
         /// <remarks>
@@ -72,15 +78,6 @@ namespace Models
         /// </remarks>
         [Option("single-threaded", HelpText = "Run all simulations sequentially on a single thread.", SetName = "singlethreaded")]
         public bool SingleThreaded { get; set; }
-
-        /// <summary>
-        /// Use the multi-process job runner.
-        /// </summary>
-        /// <remarks>
-        /// SetName specified to make it incompatible with single-threaded switch.
-        /// </remarks>
-        [Option("multi-process", HelpText = "Use the multi-process job runner.", SetName = "multithreaded")]
-        public bool MultiProcess { get; set; }
 
         /// <summary>
         /// Maximum number of threads/processes to spawn for running simulations.
@@ -104,8 +101,6 @@ namespace Models
             {
                 if (SingleThreaded)
                     return Models.Core.Run.Runner.RunTypeEnum.SingleThreaded;
-                if (MultiProcess)
-                    return Models.Core.Run.Runner.RunTypeEnum.MultiProcess;
                 return Models.Core.Run.Runner.RunTypeEnum.MultiThreaded;
             }
         }

@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// Target for feed activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
     [Description("This component defines a food type for purchase towards targeted feeding")]
@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Food store type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Food store required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(HumanFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(HumanFoodStore) } })]
         public string FoodStoreName { get; set; }
 
         /// <summary>

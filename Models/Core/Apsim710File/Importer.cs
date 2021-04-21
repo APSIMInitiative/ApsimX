@@ -137,8 +137,8 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    throw new Exception(e.Message);
+                    Console.WriteLine(e.Message + " " + e.InnerException.Message);
+                    throw new Exception(e.Message + " " + e.InnerException.Message);
                 }
             }
             else

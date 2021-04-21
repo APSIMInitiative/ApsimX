@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// CLEM Activity base model
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
@@ -176,6 +176,25 @@ namespace Models.CLEM.Activities
             {
                 Status = ActivityStatus.Success;
             }
+        }
+
+        /// <summary>
+        /// return a list of components available given the specified types
+        /// </summary>
+        /// <param name="typesToFind">the list of types to locate</param>
+        /// <returns>A list of names of components</returns>
+        public IEnumerable<string> GetReadersAvailableByName(Type[] typesToFind)
+        {
+            List<string> results = new List<string>();
+            Simulation simulation = this.FindAncestor<Simulation>();
+            if (simulation != null)
+            {
+                foreach (Type type in typesToFind)
+                {
+                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name).ToList());
+                }
+            }
+            return results.AsEnumerable();
         }
 
         /// <summary>

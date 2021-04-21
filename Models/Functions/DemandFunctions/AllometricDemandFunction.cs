@@ -14,7 +14,7 @@ namespace Models.Functions.DemandFunctions
     /// </summary>
     [Serializable]
     [Description("This function calculated dry matter demand using plant allometry which is described using a simple power function (y=kX^p).")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AllometricDemandFunction : Model, IFunction
     {

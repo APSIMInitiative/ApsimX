@@ -11,7 +11,7 @@ namespace UserInterface.Views
 {
     public class GraphPanelView : ViewBase, IGraphPanelView
     {
-        private GridView propertiesGrid;
+        private PropertyView propertiesView;
         private Notebook notebook;
 
         public GraphPanelView(ViewBase owner) : base(owner)
@@ -19,8 +19,8 @@ namespace UserInterface.Views
             notebook = new Notebook();
             notebook.Scrollable = true;
 
-            propertiesGrid = new GridView(this);
-            notebook.AppendPage(propertiesGrid.MainWidget, new Label("Properties"));
+            propertiesView = new PropertyView(this);
+            notebook.AppendPage(propertiesView.MainWidget, new Label("Properties"));
 
             mainWidget = notebook;
         }
@@ -28,7 +28,7 @@ namespace UserInterface.Views
         /// <summary>
         /// Grid which displays the model's properties.
         /// </summary>
-        public IGridView PropertiesGrid { get { return propertiesGrid; } }
+        public IPropertyView PropertiesView { get { return propertiesView; } }
 
         public event EventHandler<CustomDataEventArgs<IGraphView>> GraphViewCreated;
 

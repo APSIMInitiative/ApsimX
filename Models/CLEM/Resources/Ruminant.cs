@@ -394,41 +394,64 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// List of individual tags
+        /// List of individual attributes
         /// </summary>
-        private List<string> tags { get; set; }
+        private Dictionary<string, IRuminantAttribute> attributes { get; set; }
 
         /// <summary>
-        /// Check if the selected tag exists on this individual
+        /// Check if the selected attribute exists on this individual
         /// </summary>
-        /// <param name="tag">Tag label</param>
+        /// <param name="tag">Attribute label</param>
         /// <returns></returns>
-        public bool TagExists(string tag)
+        public bool AttributeExists(string tag)
         {
-            return tags.Contains(tag);
+            return attributes.ContainsKey(tag);
         }
 
         /// <summary>
-        /// Add the tag to this individual
+        /// Add an attribute to this individual
         /// </summary>
-        /// <param name="tag">Tag label</param>
-        public void TagAdd(string tag)
+        /// <param name="tag">Attribute label</param>
+        /// <param name="value">Value to set or change</param>
+        public void AddAttribute(string tag, IRuminantAttribute value = null)
         {
-            if (!tags.Contains(tag))
+            if (!attributes.ContainsKey(tag))
             {
-                tags.Add(tag); 
+                attributes.Add(tag, value); 
+            }
+            else
+            {
+                attributes[tag] = value;
             }
         }
 
         /// <summary>
-        /// Remove the tag from this individual
+        /// Return the value of the selected attribute on this individual else null if not provided
         /// </summary>
-        /// <param name="tag">Tag label</param>
-        public void TagRemove(string tag)
+        /// <param name="tag">Attribute label</param>
+        /// <returns>Value of attribute if found</returns>
+        public IRuminantAttribute GetAttributeValue(string tag)
         {
-            if (tags.Contains(tag))
+            if (!attributes.ContainsKey(tag))
             {
-                tags.Remove(tag);
+                return null;
+            }
+            else
+            {
+                return attributes[tag];
+            }
+        }
+
+
+        /// <summary>
+        /// Remove the attribute from this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        public void RemoveAttribute(string tag)
+        {
+            if (attributes.ContainsKey(tag))
+            {
+                attributes.Remove(tag);
             }
         }
 
@@ -692,7 +715,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.tags = new List<string>();
+            this.attributes = new Dictionary<string, IRuminantAttribute>();
         }
     }
 

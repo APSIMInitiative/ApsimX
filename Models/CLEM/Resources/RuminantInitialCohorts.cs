@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -12,8 +13,8 @@ namespace Models.CLEM.Resources
     /// Holder for all initial ruminant cohorts
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
     [Version(1, 0, 1, "")]
@@ -36,13 +37,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
         {
+            List<ISetRuminantAttribute> initialCohortAttributes = this.FindAllChildren<ISetRuminantAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
             {
-                individuals.AddRange(cohort.CreateIndividuals());
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes));
             }
             return individuals;
         }

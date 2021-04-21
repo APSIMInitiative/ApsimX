@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Commands
 {
+    using System;
     using Interfaces;
     using Models.Core;
 
@@ -8,17 +9,14 @@
     /// </summary>
     public class MoveModelUpDownCommand : ICommand
     {
-        /// <summary>The explorer view</summary>
-        private IExplorerView explorerView;
-
         /// <summary>The model to move</summary>
         private IModel modelToMove;
 
         /// <summary>The move up</summary>
-        private bool moveUp;
+        public bool MoveUp { get; private set; }
 
         /// <summary>The model was moved</summary>
-        private bool modelWasMoved;
+        public bool ModelWasMoved { get; private set; }
 
         /// <summary>
         /// The model which was changed by the command. This will be selected
@@ -27,80 +25,78 @@
         public IModel AffectedModel => modelToMove;
 
         /// <summary>Constructor.</summary>
-        /// <param name="explorerView">The explorer view.</param>
         /// <param name="modelToMove">The model to move.</param>
         /// <param name="up">if set to <c>true</c> [up].</param>
-        public MoveModelUpDownCommand(IModel modelToMove, bool up, IExplorerView explorerView)
+        public MoveModelUpDownCommand(IModel modelToMove, bool up)
         {
             if (modelToMove.ReadOnly)
                 throw new ApsimXException(modelToMove, string.Format("Unable to move {0} - it is read-only.", modelToMove.Name));
             this.modelToMove = modelToMove;
-            this.moveUp = up;
-            this.explorerView = explorerView;            
+            this.MoveUp = up;
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             IModel parent = modelToMove.Parent as IModel;
 
             int modelIndex = parent.Children.IndexOf(modelToMove as Model);
 
-            modelWasMoved = false;
-            if (moveUp)
+            ModelWasMoved = false;
+            if (MoveUp)
             {
                 if (modelIndex != 0)
-                    MoveModelUp(commandHistory, parent, modelIndex);
+                    MoveModelUp(parent, modelIndex, tree);
             }
             else
             {
                 if (modelIndex != parent.Children.Count - 1)
-                    MoveModelDown(commandHistory, parent, modelIndex);
+                    MoveModelDown(parent, modelIndex, tree);
             }
+            tree.SelectedNode = modelToMove.FullPath;
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
-            if (modelWasMoved)
+            if (ModelWasMoved)
             {
                 Model parent = modelToMove.Parent as Model;
                 int modelIndex = parent.Children.IndexOf(modelToMove as Model);
-                if (moveUp)
-                    MoveModelDown(commandHistory, parent, modelIndex);
+                if (MoveUp)
+                    MoveModelDown(parent, modelIndex, tree);
                 else
-                    MoveModelUp(commandHistory, parent, modelIndex);
+                    MoveModelUp(parent, modelIndex, tree);
+                tree.SelectedNode = modelToMove.FullPath;
             }
         }
 
-
         /// <summary>Moves the model down.</summary>
-        /// <param name="commandHistory">The command history.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="modelIndex">Index of the model.</param>
-        private void MoveModelDown(CommandHistory commandHistory, IModel parent, int modelIndex)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        private void MoveModelDown(IModel parent, int modelIndex, ITreeView tree)
         {
-            if (explorerView != null)
-                explorerView.Tree.MoveDown(modelToMove.FullPath);
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex + 1, modelToMove as Model);
-            modelWasMoved = true;
+            ModelWasMoved = true;
+            tree.MoveDown(modelToMove.FullPath);
         }
 
         /// <summary>Moves the model up.</summary>
-        /// <param name="commandHistory">The command history.</param>
         /// <param name="parent">The parent.</param>
         /// <param name="modelIndex">Index of the model.</param>
-        private void MoveModelUp(CommandHistory commandHistory, IModel parent, int modelIndex)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        private void MoveModelUp(IModel parent, int modelIndex, ITreeView tree)
         {
-            if (explorerView != null)
-                explorerView.Tree.MoveUp(modelToMove.FullPath);
             parent.Children.Remove(modelToMove as Model);
             parent.Children.Insert(modelIndex - 1, modelToMove as Model);
-            modelWasMoved = true;
+            ModelWasMoved = true;
+            tree.MoveUp(modelToMove.FullPath);
         }
-
     }
 }

@@ -62,7 +62,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new TextView());
+            Initialise(owner, new ScrolledWindow());
         }
 
         /// <summary>Constructor</summary>
@@ -82,7 +82,17 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            textView = (TextView)gtkControl;
+            if (gtkControl is ScrolledWindow scroller)
+            {
+                textView = new TextView();
+                scroller.Add(textView);
+                mainWidget = scroller;
+            }
+            else
+            {
+                textView = (TextView)gtkControl;
+                mainWidget = textView;
+            }
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -92,7 +102,6 @@ namespace UserInterface.Views
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = textView;
             mainWidget.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
 
@@ -483,8 +492,12 @@ namespace UserInterface.Views
             }
 
             if (image != null)
-            { 
+            {
+#if NETFRAMEWORK
                 image.SetAlignment(0, 0);
+#else
+                image.Halign = image.Valign = 0;
+#endif
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     image.TooltipText = tooltip;
 
@@ -597,28 +610,24 @@ namespace UserInterface.Views
         private void SetCursorIfAppropriate(TextView textView, int x, int y)
         {
             TextIter iter = textView.GetIterAtLocation(x, y);
-            // fixme: When we remove gtk2 deps, we can eliminate this check
-            if (iter.Equals(TextIter.Zero))
-                return;
-
             var foundLink = false;
-            foreach (TextTag tag in iter.Tags)
+            // fixme: When we remove gtk2 deps, we can eliminate this check
+            if (!iter.Equals(TextIter.Zero))
             {
-                if (tag is LinkTag)
-                    foundLink = true;
+                foreach (TextTag tag in iter.Tags)
+                {
+                    if (tag is LinkTag)
+                        foundLink = true;
+                }
             }
 
-            Gdk.Window window = textView.GetWindow(Gtk.TextWindowType.Text);
+            Gdk.Window window = textView.GetWindow(TextWindowType.Text);
             if (window != null)
             {
-                if (foundLink/*hovering != hoveringOverLink*/)
+                if (foundLink)
                     window.Cursor = handCursor;
                 else
                     window.Cursor = regularCursor;
-            }
-            else
-            {
-
             }
         }
 
@@ -701,7 +710,11 @@ namespace UserInterface.Views
         {
             try
             {
+#if NETFRAMEWORK
                 textView.GetPointer(out int wx, out int wy);
+#else
+                Gdk.Display.Default.GetPointer(out _, out int wx, out int wy, out _);
+#endif
                 textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
                                               out int bx, out int by);
                 SetCursorIfAppropriate(textView, bx, by);

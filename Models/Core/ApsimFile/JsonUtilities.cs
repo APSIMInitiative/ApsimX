@@ -393,7 +393,7 @@ namespace Models.Core.ApsimFile
         /// <param name="fixedValue">The fixed value of the constant function</param>
         public static void AddConstantFunctionIfNotExists(JObject modelToken, string name, string fixedValue)
         {
-            if (ChildWithName(modelToken, name) == null)
+            if (ChildWithName(modelToken, name, true) == null)
             {
                 JArray children = modelToken["Children"] as JArray;
                 if (children == null)
@@ -407,6 +407,32 @@ namespace Models.Core.ApsimFile
                 constantModel["Name"] = name;
                 constantModel["FixedValue"] = fixedValue;
                 children.Add(constantModel);
+            }
+        }
+
+        /// <summary>
+        /// Add a variable reference function to the specified JSON model token,
+        /// if a variable referenec with the given name doesn't already exist.
+        /// </summary>
+        /// <param name="modelToken">The JSON node to which the variable reference will be added.</param>
+        /// <param name="name">Name of the variabel reference to add.</param>
+        /// <param name="variable">The variable to be referenced by the variable reference function.</param>
+        public static void AddVariableReferenceIfNotExists(JObject modelToken, string name, string variable)
+        {
+            if (ChildWithName(modelToken, name, true) == null)
+            {
+                JArray children = modelToken["Children"] as JArray;
+                if (children == null)
+                {
+                    children = new JArray();
+                    modelToken["Children"] = children;
+                }
+
+                JObject variableReference = new JObject();
+                variableReference["$type"] = "Models.Functions.VariableReference, Models";
+                variableReference["Name"] = name;
+                variableReference["VariableName"] = variable;
+                children.Add(variableReference);
             }
         }
 

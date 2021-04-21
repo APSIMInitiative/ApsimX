@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     ///  N fixation supply and related costs.  It also calculates the growth, senescence and detachment of nodules.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
@@ -270,7 +270,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
+        public bool IsAboveGround { get { return false; } }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
