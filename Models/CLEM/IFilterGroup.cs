@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Resources;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Models.CLEM
     /// <summary>
     /// Interface for all filter groups
     /// </summary>
-    public interface IFilterGroup
+    public interface IFilterGroup : IModel
     {
         /// <summary>
         /// Holds the ML compiled ruleset for the LINQ expression tree

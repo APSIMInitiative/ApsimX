@@ -128,13 +128,13 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            var herd = CurrentHerd(false);
             feedEstimated = 0;
             feedToSatisfy = 0;
             feedToOverSatisfy = 0;
 
             // get list from filters
-            foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+            foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
                 var selectedIndividuals = herd.Filter(child);
 
@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+            foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
                 var subherd = herd.Filter(child).ToList();
                 head += subherd.Count();
@@ -387,7 +387,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // get list from filters
-                foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+                foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
                 {
                     double value = 0;
                     if (child is RuminantFeedGroup)

@@ -264,23 +264,13 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            // if not assign new value
+            // if still null report error
             if (labour.LabourAvailability == null)
             {
-                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
-                {
-                    if (checkList.Filter(availItem).Count > 0)
-                    {
-                        labour.LabourAvailability = availItem as LabourSpecificationItem;
-                        break;
-                    }
-                }
-                // if still null report error
-                if (labour.LabourAvailability == null)
-                {
-                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\r\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
-                }
-            }
+                string msg = $"Unable to find labour availability suitable for labour type {labour.Name} {labour.Gender} {labour.Age}" +
+                    $"\r\nAdd additional labour availability item to {availabilityList.Name} under {Name}";
+                throw new ApsimXException(this, msg);
+            }            
         }
 
         /// <summary>Age individuals</summary>

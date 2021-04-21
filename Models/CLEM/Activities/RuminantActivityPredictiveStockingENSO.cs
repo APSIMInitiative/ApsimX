@@ -341,8 +341,11 @@ namespace Models.CLEM.Activities
             foreach (RuminantGroup item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .Filter(item).Filter(item).Filter(item)
+                    .ToList();
+
                 int cnt = 0;
                 while (cnt < herd.Count() && animalEquivalentsForSale > 0)
                 {

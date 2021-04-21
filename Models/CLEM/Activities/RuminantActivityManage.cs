@@ -872,9 +872,9 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = herd.Filter(item);
+                        int sellNum = herd.Filter(item).Count();
                         int cnt = 0;
-                        while (cnt < herdToSell.Count() && excessBreeders > 0)
+                        while (cnt < sellNum && excessBreeders > 0)
                         {
                             if (herd[cnt] is RuminantFemale)
                             {
