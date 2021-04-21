@@ -58,7 +58,7 @@ namespace UnitTests.UtilityTests
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", bin));
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", null));
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", ""));
-            Assert.AreEqual(bin, PathUtilities.GetAbsolutePath("%root%\\bin\\Debug\\net472", ""));
+            Assert.AreEqual(Path.Combine(apsimxDir, "bin"), PathUtilities.GetAbsolutePath("%root%\\bin", ""));
         }
     }
 }
