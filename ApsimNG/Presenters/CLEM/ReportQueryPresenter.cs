@@ -12,17 +12,6 @@ namespace UserInterface.Presenters
     /// </summary>
     class ReportQueryPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
     {
-        private class TextInputPresenter : IPresenter
-        {
-            public void Attach(object model, object view, ExplorerPresenter explorerPresenter){}
-            public void Detach(){}
-        }
-
-        /// <summary>
-        /// The GridView
-        /// </summary>
-        private TextInputView sqlView;
-
         /// <summary>
         /// The GridView
         /// </summary>
@@ -60,25 +49,13 @@ namespace UserInterface.Presenters
 
                 var store = query.FindInScope<IDataStore>();
 
-                // Create the SQL presenter
-                sqlView = new TextInputView(clemPresenter.view as ViewBase);
-                sqlView.Text = query.SQL;
-                sqlView.WrapText = false;
-                sqlView.Changed += TextChanged;
-
-                var sqlPresenter = new TextInputPresenter();
-                sqlPresenter.Attach(null, sqlView, clemPresenter.explorerPresenter);
-
                 // Create the Data presenter
                 gridView = new GridView(clemPresenter.view as ViewBase);
 
                 var gridPresenter = new GridPresenter();
                 gridPresenter.Attach(null, gridView, clemPresenter.explorerPresenter);
 
-                // Attach the tabs
-                clem.AddTabView("SQL", sqlView);
-                clemPresenter.presenterList.Add("SQL", this);
-
+                // Attach the tab
                 clem.AddTabView("Data", gridView);
                 clemPresenter.presenterList.Add("Data", this);                
             }
@@ -90,17 +67,9 @@ namespace UserInterface.Presenters
 
         /// <inheritdoc/>
         public void Detach()
-        {
-            sqlView.Changed -= TextChanged;
-        }
-
-        private void TextChanged(object sender, EventArgs e) => query.SQL = sqlView.Text;
+        { }
 
         /// <inehritdoc/>
-        public void Refresh()
-        {
-            query.SQL = sqlView.Text;
-            gridView.DataSource = query.RunQuery();
-        }
+        public void Refresh() => gridView.DataSource = query.RunQuery();
     }
 }

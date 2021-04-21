@@ -2,9 +2,7 @@
 using Models.Core.Attributes;
 using Models.Storage;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -23,15 +21,16 @@ namespace Models.CLEM.Reporting
         private IDataStore dataStore = null;
 
         /// <summary>
-        /// Tracks the active selection in the value box
+        /// The line by line query, separated for display purposes
         /// </summary>
-        [Description("Save the results to the Datastore post simulation")]
-        public bool Save { get; set; }
-
+        [Description("SQL to run on parent report")]
+        [Display(Type = DisplayType.MultiLineText)]
+        public string[] Lines { get; set; }
+        
         /// <summary>
-        /// The query
+        /// The complete query
         /// </summary>
-        public string SQL { get; set; }
+        public string SQL => string.Join(" ", Lines);
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -39,19 +38,17 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Runs the query
         /// </summary>
-        /// <returns></returns>
-        public DataTable RunQuery() => FindInScope<DataStore>().Reader.GetDataUsingSql(SQL);
+        public DataTable RunQuery()
+        {
+            var storage = FindInScope<IDataStore>();
+            storage.AddView(Name, SQL);
+            return storage.Reader.GetDataUsingSql(SQL);
+        }
 
         /// <summary>
-        /// 
+        /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            if (Save)
-            {
-                dataStore.AddView(this.Name, SQL);
-            }
-        }
+        private void OnCompleted(object sender, EventArgs e) => dataStore.AddView(Name, SQL);
     }
 }
