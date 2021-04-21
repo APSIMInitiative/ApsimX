@@ -200,15 +200,19 @@ namespace Models
                     // Add an equation annotation.
                     TextAnnotation equation = new TextAnnotation();
                     StringBuilder text = new StringBuilder();
-                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
+                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r\u00B2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
                     text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
                     text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
+                    equation.Name = $"Regression{i}";
                     equation.text = text.ToString();
                     equation.colour = equationColours[i];
                     equation.leftAlign = true;
                     equation.textRotation = 0;
-                    equation.x = double.MinValue;
-                    equation.y = double.MinValue;
+                    if (stats.Count > 1)
+                    {
+                        equation.x = double.MinValue;  // More than one stats equation. Use default positioning
+                        equation.y = double.MinValue;
+                    }
                     yield return equation;
                 }
             }

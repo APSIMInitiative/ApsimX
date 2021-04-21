@@ -307,7 +307,7 @@
                     if (simulationNameFilter == null && inScopeSimulationNames != null)
                         simulationNameFilter = new List<string>(inScopeSimulationNames);
                 }
-                else
+                else if (inScopeSimulationNames != null)
                     simulationNameFilter = new List<string>(inScopeSimulationNames ?? Enumerable.Empty<string>());
 
                 if (!string.IsNullOrEmpty(userFilter))
