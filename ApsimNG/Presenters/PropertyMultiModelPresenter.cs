@@ -49,6 +49,7 @@ namespace UserInterface.Presenters
 
             this.model = model as IModel;
             this.view = view as PropertyMultiModelView;
+            base.view = view as IPropertyView;
             this.presenter = explorerPresenter;
 
             if (this.model != null && !(this.model is IModel))
@@ -97,6 +98,5 @@ namespace UserInterface.Presenters
             }
             return propertyGroupList;
         }
-
     }
 }

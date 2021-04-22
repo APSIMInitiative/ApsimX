@@ -139,6 +139,5 @@ namespace UserInterface.Views
                 }
             }
         }
-
     }
 }

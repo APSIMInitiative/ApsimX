@@ -100,6 +100,33 @@
         }
 
         /// <summary>
+        /// An enumeration for the position of the stats / equation annotation.
+        /// </summary>
+        public enum AnnotationPositionType
+        {
+
+            /// <summary>
+            /// Place the annotation box in the top-left corner.
+            /// </summary>
+            TopLeft = 0,
+
+            /// <summary>
+            ///     Place the annotation box in the top-right corner.
+            /// </summary>
+            TopRight = 1,
+
+            /// <summary>
+            /// Place the annotation box in the bottom-left corner.
+            /// </summary>
+            BottomLeft = 2,
+
+            /// <summary>
+            /// Place the annotation box in the bottom-right corner.
+            /// </summary>
+            BottomRight = 3,
+        }
+
+        /// <summary>
         /// An enumeration for the orientation of the legend items.
         /// </summary>
         public enum LegendOrientationType
@@ -140,6 +167,11 @@
         /// Controls the orientation of legend items.
         /// </summary>
         public LegendOrientationType LegendOrientation { get; set; }
+
+        /// <summary>
+        /// Gets or sets the location of the annotations - name/position map.
+        /// </summary>
+        public AnnotationPositionType AnnotationPosition { get; set; }
 
         /// <summary>
         /// Gets or sets a list of raw grpah series that should be disabled.

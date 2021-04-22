@@ -3348,9 +3348,12 @@
             foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
             {
                 string text = memo["Text"]?.ToString();
-                text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
-                text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
-                memo["Text"] = text;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
+                    text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
+                    memo["Text"] = text;
+                }
             }
         }
 		
