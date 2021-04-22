@@ -10,7 +10,7 @@
     /// # [Name]
     /// A generic system that can have children
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Serializable]
     [ValidParent(ParentType = typeof(Zone))]

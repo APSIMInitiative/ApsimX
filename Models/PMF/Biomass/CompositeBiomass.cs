@@ -10,7 +10,7 @@ namespace Models.PMF
     /// This is a composite biomass class, representing the sum of 1 or more biomass objects.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class CompositeBiomass : Biomass, ICustomDocumentation

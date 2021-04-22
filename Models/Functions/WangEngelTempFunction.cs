@@ -12,7 +12,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
 
     public class 

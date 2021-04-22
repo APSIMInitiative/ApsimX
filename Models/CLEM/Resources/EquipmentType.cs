@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for equipment type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Equipment))]
     [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]

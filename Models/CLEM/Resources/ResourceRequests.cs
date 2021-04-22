@@ -24,6 +24,7 @@ namespace Models.CLEM.Resources
         /// Type of resource being requested 
         ///</summary> 
         [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
         ///<summary>
         /// Name of resource type being requested 

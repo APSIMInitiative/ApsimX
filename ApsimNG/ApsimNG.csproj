@@ -16,6 +16,7 @@
     <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
@@ -27,9 +28,6 @@
   <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
     <OutputPath>..\Bin\</OutputPath>
 	  <LangVersion>8.0</LangVersion>
-	  
-	  <!-- HTMLView requires WinForms -->
-	  <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
@@ -79,9 +77,6 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
     <Compile Remove="Classes\Intellisense\*" />
-    
-    <!-- Remove ApsoilWeb-related stuff. -->
-    <Compile Remove="Web References/ApsoilWeb/*" />
   </ItemGroup>
   
   <!-- .NET Framework-specific references -->
@@ -148,6 +143,11 @@
     <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
     <PackageReference Include="HtmlAgilityPack" Version="1.6.17" />
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\TreeViewImages\CLEM\SetRuminantAttributeWithValue.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

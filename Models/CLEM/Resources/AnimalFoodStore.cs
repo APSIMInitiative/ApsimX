@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for all the food designated for animals to eat (eg. Forages and Supplements)
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all animal food store types for the simulation.")]

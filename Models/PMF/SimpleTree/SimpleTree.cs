@@ -17,7 +17,7 @@ namespace Models.PMF
     /// A model of a simple tree
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class SimpleTree : Model, IPlant, ICanopy, IUptake

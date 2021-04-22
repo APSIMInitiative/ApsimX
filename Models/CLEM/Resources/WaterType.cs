@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for water type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WaterStore))]
     [Description("This resource represents a water store type (e.g. dam, bore, tank).")]

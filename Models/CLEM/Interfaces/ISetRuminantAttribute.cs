@@ -1,0 +1,26 @@
+﻿using Models.CLEM.Resources;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Models.CLEM.Interfaces
+{
+    /// <summary>
+    /// Interface for all Ruminant attribute models
+    /// </summary>
+    public interface ISetRuminantAttribute
+    {
+        /// <summary>
+        /// Property to return a random assignment of the attribute
+        /// </summary>
+        RuminantAttribute GetRandomSetAttribute { get; }
+
+        /// <summary>
+        /// Name to apply to the attribute
+        /// </summary>
+        string AttributeName { get; set; }
+
+    }
+}

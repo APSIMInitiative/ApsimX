@@ -241,11 +241,27 @@ namespace UserInterface.Presenters
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
 
                     // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                    IEnumerable<string> simulationNames = null;
+                    if (ExperimentFilter != null)
+                    {
+                        // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                        simulationNames = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                    }
+                    else if (SimulationFilter == null)
+                        simulationNames = null;
+                    else
+                        simulationNames = new string[] { SimulationFilter.Name };
+
                     string filter = GetFilter();
+                    if (ZoneFilter != null)
+                    {
+                        // More assumptions about column names
+                        filter = AppendToFilter(filter, $"[Zone] = '{ZoneFilter.Name}'");
+                    }
 
                     data = dataStore.Reader.GetData(tableName: tableDropDown.SelectedValue,
                                                     checkpointName: checkpointDropDown.SelectedValue,
-                                                    simulationName: SimulationFilter?.Name,
+                                                    simulationNames: simulationNames,
                                                     filter: filter,
                                                     from: start,
                                                     count: count);
@@ -275,13 +291,8 @@ namespace UserInterface.Presenters
                 filter = AppendToFilter(filter, exptFilter);
             }
 
-            if (ZoneFilter != null)
-            {
-                // More assumptions about column names
-                string zoneFilter = $"T.[Zone] = '{ZoneFilter.Name}'";
-                filter = AppendToFilter(filter, zoneFilter);
-            }
-
+            if (filter == string.Empty)
+                return null;
             return filter;
         }
 

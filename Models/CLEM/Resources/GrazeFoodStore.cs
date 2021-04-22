@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This acts like an AnimalFoodStore but in reality the food is in a field
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all graze food store types (pastures) for the simulation.")]

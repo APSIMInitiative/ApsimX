@@ -10,7 +10,7 @@ namespace Models.Soils
     /// SWIM water table
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Swim3))]
     public class SwimWaterTable : Model
