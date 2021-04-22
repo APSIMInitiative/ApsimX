@@ -42,7 +42,14 @@ namespace APSIM.Interop.Documentation
         {
             Paragraph paragraph = document.LastSection.AddParagraph();
             foreach (TextTag tag in contents)
-                AddToParagraph(paragraph, tag);
+            {
+                // ugh...fixme. It's looking like a flat list of tags isn't
+                // a great idea after all.
+                if (tag is LinkTag link)
+                    link.Render(this);
+                else
+                    AddToParagraph(paragraph, tag);
+            }
         }
 
         public virtual void AddImage(Image image)
@@ -102,7 +109,9 @@ namespace APSIM.Interop.Documentation
 
         protected void AddLinkToParagraph(Paragraph paragraph, IEnumerable<TextTag> contents, string uri)
         {
-            Hyperlink link = paragraph.AddHyperlink(uri);
+            // fixme: could be local. Or could be a citation.
+            // fixme: Generated links don't have a link style (ie blue/underlined).
+            Hyperlink link = paragraph.AddHyperlink(uri, HyperlinkType.Web);
             foreach (TextTag tag in contents)
                 link.AddFormattedText(tag.Content, CreateStyle(tag.Style));
         }
