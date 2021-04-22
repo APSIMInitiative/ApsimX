@@ -1,8 +1,11 @@
-﻿#if NETFRAMEWORK
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Gtk;
+#if NETFRAMEWORK
 using Mono.TextEditor;
+#else
+using GtkSource;
+#endif
 using Cairo;
 using UserInterface.Views;
 
@@ -69,17 +72,37 @@ namespace Utility
 
         public void Destroy()
         {
+#if NETCOREAPP
+            window1.Dispose();
+#else
             window1.Destroy();
+#endif
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
         {
+#if NETCOREAPP
+            context.Highlight = false;
+#endif
             window1.Hide();
             args.RetVal = true;
         }
 
+#if NETCOREAPP
+        SearchContext context;
+        SearchContext Context
+        {
+            get { return context; }
+            set { context = value; }
+        }
+
+        SourceView editor;
+        SourceView Editor
+#else
+
         TextEditor editor;
         TextEditor Editor
+#endif
         {
             get { return editor; }
             set
@@ -88,6 +111,7 @@ namespace Utility
             }
         }
 
+
         /// <summary>
         /// Show an error message to caller.
         /// </summary>
@@ -95,19 +119,59 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(Editor.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
+#if NETCOREAPP
+            md.Dispose();
+#else
             md.Destroy();
+#endif
         }
 
         private void UpdateTitleBar()
         {
             string text = ReplaceMode ? "Find & replace" : "Find";
+#if NETFRAMEWORK
             if (editor != null && editor.FileName != null)
                 text += " - " + System.IO.Path.GetFileName(editor.FileName);
+#endif
             if (this.selectionOnly)
                 text += " (selection only)";
             window1.Title = text;
         }
 
+#if NETCOREAPP
+        public void ShowFor(SourceView sourceView, SearchContext theContext, bool replaceMode)
+        {
+            Editor = sourceView;
+            Context = theContext;
+            this.selectionOnly = false;
+            window1.TransientFor = Editor.Toplevel as Window;
+
+            TextIter start;
+            TextIter end;
+            if (context.Buffer.GetSelectionBounds(out start, out end))
+            {
+                if (start.Offset != end.Offset && start.LineIndex == end.LineIndex)
+                    txtLookFor.Text = context.Buffer.GetText(start, end, true);
+                else
+                {
+                    // Get the current word that the caret is on
+                    if (!start.StartsWord())
+                        start.BackwardWordStart();
+                    if (!end.EndsWord())
+                        end.ForwardWordEnd();
+                    txtLookFor.Text = context.Buffer.GetText(start, end, true);
+                }
+            }
+            ReplaceMode = replaceMode;
+            context.Highlight = true;
+
+            window1.Parent = editor.Toplevel;
+            UpdateTitleBar();
+            window1.WindowPosition = WindowPosition.CenterOnParent;
+            window1.Show();
+            txtLookFor.GrabFocus();
+        }
+#else
         public void ShowFor(TextEditor editor, bool replaceMode)
         {
             Editor = editor;
@@ -141,14 +205,14 @@ namespace Utility
             window1.Show();
             txtLookFor.GrabFocus();
         }
+#endif
 
         public bool ReplaceMode
         {
             get { return txtReplaceWith.Visible; }
             set
             {
-                window1.AllowGrow = value;
-                window1.AllowShrink = !value;
+                window1.Resizable = value;
                 btnReplace.Visible = btnReplaceAll.Visible = value;
                 lblReplaceWith.Visible = txtReplaceWith.Visible = value;
                 btnHighlightAll.Visible = false;  // !value;
@@ -165,7 +229,42 @@ namespace Utility
             FindNext(false, true, "Text not found");
         }
 
+#if NETCOREAPP
+        public bool FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
+        {
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
 
+            if (string.IsNullOrEmpty(txtLookFor.Text))
+            {
+                ShowMsg("No string specified to look for!");
+                return false;
+            }
+            TextIter iter = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter start, end;
+            context.Buffer.GetSelectionBounds(out start, out end);
+            // If we're already on a match, move the search iterator forward
+            // Otherwise we will just re-find our current position
+            if (searchForward && String.Equals(context.Buffer.GetText(start, end, true), txtLookFor.Text, 
+                    chkMatchCase.Active ? StringComparison.InvariantCulture : StringComparison.InvariantCultureIgnoreCase))
+                iter.ForwardChar();
+            bool wrapped;
+            bool result = false;
+            if (searchForward)
+                result = context.Forward(iter, ref start, ref end, out wrapped);
+            else
+                result = context.Backward(iter, ref start, ref end, out wrapped);
+            if (!result && messageIfNotFound != null)
+                ShowMsg(messageIfNotFound);
+            else
+            {
+                context.Buffer.SelectRange(start, end);
+                editor.ScrollToIter(start, 0.0, false, 0.0, 0.0);
+            }
+            return true;
+        }
+#else
         public SearchResult FindNext(bool viaF3, bool searchForward, string messageIfNotFound)
         {
             Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
@@ -188,17 +287,61 @@ namespace Utility
                 Editor.ScrollTo(range.Offset);
             return range;
         }
-
+#endif
         private void BtnHighlightAll_Click(object sender, EventArgs e)
         {
+#if NETCOREAPP
+            context.Highlight = true;
+#else
             editor.HighlightSearchPattern = true;
+#endif
             BtnFindNext_Click(sender, e);
         }
         private void BtnCancel_Click(object sender, EventArgs e)
         {
+#if NETCOREAPP
+            context.Highlight = false;
+#endif
             window1.Hide();
         }
 
+#if NETCOREAPP
+        private void BtnReplace_Click(object sender, EventArgs e)
+        {
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
+            TextIter iter = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter start = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            TextIter end = context.Buffer.GetIterAtOffset(context.Buffer.CursorPosition);
+            bool wrapped;
+            bool result = false;
+            bool searchForward = true;
+            if (searchForward)
+                result = context.Forward(iter, ref start, ref end, out wrapped);
+            else
+                result = context.Backward(iter, ref start, ref end, out wrapped);
+            if (result)
+            {
+                editor.ScrollToIter(start, 0.0, false, 0.0, 0.0);
+                context.Replace(start, end, txtReplaceWith.Text);
+            }
+            else
+                ShowMsg("Search text not found.");
+        }
+
+        private void BtnReplaceAll_Click(object sender, EventArgs e)
+        {
+            context.Settings.SearchText = txtLookFor.Text;
+            context.Settings.CaseSensitive = chkMatchCase.Active;
+            context.Settings.AtWordBoundaries = chkMatchWholeWord.Active;
+            uint count = context.ReplaceAll(txtReplaceWith.Text);
+            if (count == 0)
+                ShowMsg("No occurrences found.");
+            else
+                ShowMsg(string.Format("Replaced {0} occurrences.", count));
+        }
+#else
         private void BtnReplace_Click(object sender, EventArgs e)
         {
             Editor.SearchEngine.SearchRequest.SearchPattern = txtLookFor.Text;
@@ -219,9 +362,9 @@ namespace Utility
             else
                 ShowMsg(string.Format("Replaced {0} occurrences.", count));
         }
+#endif
 
         public string LookFor { get { return txtLookFor.Text; } }
     }
 
 }
-#endif
