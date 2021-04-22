@@ -11,28 +11,28 @@ namespace APSIM.Interop.Documentation.Helpers
     {
         public static byte[] Courier
         {
-            get { return LoadFontData("ApsimNG.Resources.Fonts.cour.ttf"); }
+            get { return LoadFontData("APSIM.Interop.Resources.Fonts.cour.ttf"); }
         }
 
         // Make sure the fonts have compile type "Embedded Resource". Names are case-sensitive.
         public static byte[] Arial
         {
-            get { return LoadFontData("ApsimNG.Resources.Fonts.arial.ttf"); }
+            get { return LoadFontData("APSIM.Interop.Resources.Fonts.arial.ttf"); }
         }
 
         public static byte[] ArialBold
         {
-            get { return LoadFontData("ApsimNG.Resources.Fonts.arialbd.ttf"); }
+            get { return LoadFontData("APSIM.Interop.Resources.Fonts.arialbd.ttf"); }
         }
 
         public static byte[] ArialItalic
         {
-            get { return LoadFontData("ApsimNG.Resources.Fonts.ariali.ttf"); }
+            get { return LoadFontData("APSIM.Interop.Resources.Fonts.ariali.ttf"); }
         }
 
         public static byte[] ArialBoldItalic
         {
-            get { return LoadFontData("ApsimNG.Resources.Fonts.arialbi.ttf"); }
+            get { return LoadFontData("APSIM.Interop.Resources.Fonts.arialbi.ttf"); }
         }
 
         /// <summary>

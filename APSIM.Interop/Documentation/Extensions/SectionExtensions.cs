@@ -1,5 +1,6 @@
 using System;
 using APSIM.Interop.Documentation.Helpers;
+using APSIM.Interop.Markdown;
 using APSIM.Services.Documentation;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
@@ -25,7 +26,7 @@ namespace APSIM.Interop.Documentation.Extensions
             // style.Name = $"CustomStyle{Guid.NewGuid().ToString().Replace("-", "")}";
             section.Document.Styles.Add(style);
             Paragraph paragraph = section.AddParagraph(style.Name);
-            paragraph.AddFormattedText(text, style.GetTextFormat());
+            // paragraph.AddFormattedText(text, style.GetTextFormat());
         }
 
         /// <summary>
@@ -33,12 +34,13 @@ namespace APSIM.Interop.Documentation.Extensions
         /// </summary>
         /// <param name="section">Section to which the tag will be added.</param>
         /// <param name="tag">Tag to be added.</param>
-        public static void Add(this Section section, ITag tag)
+        /// <param name="options">PDF Generation options.</param>
+        public static void Add(this Section section, ITag tag, PdfOptions options)
         {
             if (tag is Heading heading)
-                section.Add(heading);
+                section.Add(heading, options);
             else if (tag is APSIM.Services.Documentation.Paragraph paragraph)
-                section.Add(paragraph);
+                section.Add(paragraph, options);
         }
 
         /// <summary>
@@ -46,7 +48,8 @@ namespace APSIM.Interop.Documentation.Extensions
         /// </summary>
         /// <param name="section">Section to which the heading will be added.</param>
         /// <param name="heading">Heading to be added.</param>
-        public static void Add(this Section section, Heading heading)
+        /// <param name="options">PDF Generation options.</param>
+        public static void Add(this Section section, Heading heading, PdfOptions options)
         {
             var paragraph = section.AddParagraph(heading.Text, $"heading{heading.HeadingLevel}");
             paragraph.Format.KeepWithNext = true;
@@ -57,10 +60,13 @@ namespace APSIM.Interop.Documentation.Extensions
         /// </summary>
         /// <param name="section">Section to which the paragraph will be added.</param>
         /// <param name="paragraph">Paragraph to be added.</param>
-        public static void Add(this Section section, APSIM.Services.Documentation.Paragraph paragraph)
+        /// <param name="options">PDF Generation options.</param>
+        public static void Add(this Section section, APSIM.Services.Documentation.Paragraph paragraph, PdfOptions options)
         {
-            var renderer = new MarkdownPdfRenderer("");
-            renderer.Render(paragraph.Text, section);
+            MarkdownParser parser = new MarkdownParser(options.ImagePath);
+            IMarkdownRenderer renderer = new MarkdownPdfRenderer(section.Document);
+            foreach (IMarkdownTag tag in parser.Parse(paragraph.Text))
+                tag.Render(renderer);
         }
     }
 }

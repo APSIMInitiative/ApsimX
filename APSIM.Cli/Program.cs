@@ -19,15 +19,23 @@ namespace APSIM.Cli
 
         static int Main(string[] args)
         {
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            new Parser(config =>
+            try
             {
-                config.AutoHelp = true;
-                config.HelpWriter = Console.Out;
-            }).ParseArguments<RunOptions, DocumentOptions>(args)
-              .WithParsed<RunOptions>(Run)
-              .WithParsed<DocumentOptions>(Document)
-              .WithNotParsed(HandleParseError);
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                new Parser(config =>
+                {
+                    config.AutoHelp = true;
+                    config.HelpWriter = Console.Out;
+                }).ParseArguments<RunOptions, DocumentOptions>(args)
+                .WithParsed<RunOptions>(Run)
+                .WithParsed<DocumentOptions>(Document)
+                .WithNotParsed(HandleParseError);
+            }
+            catch (Exception err)
+            {
+                Console.Error.WriteLine(err.ToString());
+                exitCode = 1;
+            }
             return exitCode;
         }
 
@@ -56,7 +64,8 @@ namespace APSIM.Cli
             {
                 IModel model = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
-                PdfWriter.Write(pdfFile, GetTags(model));
+                string directory = Path.GetDirectoryName(file);
+                PdfWriter.Write(pdfFile, GetTags(model), new PdfOptions(directory));
             }
         }
 

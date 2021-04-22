@@ -7,10 +7,12 @@ namespace APSIM.Interop.Documentation.Extensions
     using System.Drawing.Imaging;
 #if NETFRAMEWORK
     using MigraDoc.DocumentObjectModel;
+    using MigraDoc.DocumentObjectModel.Tables;
 #else
     using MigraDocCore.DocumentObjectModel;
     using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
     using static MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes.ImageSource;
+    using MigraDocCore.DocumentObjectModel.Tables;
 #endif
     /// <summary>
     /// Extension methods for PdfSharp DOM objects.
@@ -31,7 +33,7 @@ namespace APSIM.Interop.Documentation.Extensions
             Section section = doc.Section ?? doc as Section;
             if (section == null)
                 return;
-            Paragraph paragraph = doc as Paragraph ?? section.AddParagraph();
+            Paragraph paragraph = doc as Paragraph ?? (doc as Cell)?.AddParagraph() ?? section.AddParagraph();
 
             // The image could potentially be too large. Therfore we read it,
             // adjust the size to fit the page better (if necessary), and add

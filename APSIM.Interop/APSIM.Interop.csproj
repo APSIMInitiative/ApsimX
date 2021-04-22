@@ -11,6 +11,7 @@
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
     <PackageReference Include="Markdig" Version="0.22.1" />
+    <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
 
   <!-- .NET Core-specific references -->

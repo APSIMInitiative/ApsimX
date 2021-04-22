@@ -6,8 +6,10 @@ using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Documentation.Helpers;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
+using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using MigraDocCore.Rendering;
 using PdfSharpCore.Fonts;
+using SixLabors.ImageSharp.PixelFormats;
 #else
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.Rendering;
@@ -21,7 +23,36 @@ namespace APSIM.Interop.Documentation
     /// </summary>
     public static class PdfWriter
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Static constructor to initialise PDFSharp ImageSource.
+        /// </summary>
+        static PdfWriter()
+        {
+            if (ImageSource.ImageSourceImpl == null)
+                ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<Rgba32>();
+        }
+#endif
+        /// <summary>
+        /// Convert a given list of tags into a PDF document and
+        /// save the document to the given path.
+        /// </summary>
+        /// <param name="fileName">File name of the generated pdf.</param>
+        /// <param name="tags">Tags to be converted to a PDF.</param>
+        /// <param name="options">PDF Generation options.</param>
         public static void Write(string fileName, IEnumerable<ITag> tags)
+        {
+            Write(fileName, tags, PdfOptions.Default);
+        }
+
+        /// <summary>
+        /// Convert a given list of tags into a PDF document and
+        /// save the document to the given path.
+        /// </summary>
+        /// <param name="fileName">File name of the generated pdf.</param>
+        /// <param name="tags">Tags to be converted to a PDF.</param>
+        /// <param name="options">PDF Generation options.</param>
+        public static void Write(string fileName, IEnumerable<ITag> tags, PdfOptions options)
         {
             // This is a bit tricky on non-Windows platforms. 
             // Normally PdfSharp tries to get a Windows DC for associated font information
@@ -30,19 +61,28 @@ namespace APSIM.Interop.Documentation
             // The work-around is to register our own fontresolver. We don't need to do this on Windows.
             if (!ProcessUtilities.CurrentOS.IsWindows && !(GlobalFontSettings.FontResolver is FontResolver))
                 GlobalFontSettings.FontResolver = new FontResolver();
-            
-            Document pdf = new Document();
+
+            Document pdf = CreateStandardDocument();
+            pdf.AddSection();
 
             foreach (ITag tag in tags)
-            {
-                Section section = pdf.AddSection();
-                section.Add(tag);
-            }
+                pdf.LastSection.Add(tag, options);
 
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
             renderer.Document = pdf;
             renderer.RenderDocument();
             renderer.Save(fileName);
+        }
+
+        private static Document CreateStandardDocument()
+        {
+            Document document = new Document();
+
+            document.DefaultPageSetup.LeftMargin = Unit.FromCentimeter(1);
+            document.DefaultPageSetup.TopMargin = Unit.FromCentimeter(1);
+            document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
+
+            return document;
         }
     }
 }
