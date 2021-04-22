@@ -44,12 +44,12 @@ namespace UserInterface.Views
         /// <summary>
         /// Settings for search and replace
         /// </summary>
-        SearchSettings searchSettings;
+        private SearchSettings searchSettings;
 
         /// <summary>
         /// Context for search and replace
         /// </summary>
-        SearchContext searchContext;
+        private SearchContext searchContext;
 
         /// <summary>
         /// Menu accelerator group

@@ -8,6 +8,7 @@ using GtkSource;
 #endif
 using Cairo;
 using UserInterface.Views;
+using UserInterface.Extensions;
 
 namespace Utility
 {
@@ -72,11 +73,7 @@ namespace Utility
 
         public void Destroy()
         {
-#if NETCOREAPP
-            window1.Dispose();
-#else
-            window1.Destroy();
-#endif
+            window1.Cleanup();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
@@ -89,19 +86,14 @@ namespace Utility
         }
 
 #if NETCOREAPP
-        SearchContext context;
-        SearchContext Context
-        {
-            get { return context; }
-            set { context = value; }
-        }
+        private SearchContext context;
 
-        SourceView editor;
-        SourceView Editor
+        private SourceView editor;
+        public SourceView Editor
 #else
 
-        TextEditor editor;
-        TextEditor Editor
+        private TextEditor editor;
+        public TextEditor Editor
 #endif
         {
             get { return editor; }
@@ -119,11 +111,7 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(Editor.Toplevel as Window, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-#if NETCOREAPP
-            md.Dispose();
-#else
-            md.Destroy();
-#endif
+            md.Cleanup();
         }
 
         private void UpdateTitleBar()
@@ -142,7 +130,7 @@ namespace Utility
         public void ShowFor(SourceView sourceView, SearchContext theContext, bool replaceMode)
         {
             Editor = sourceView;
-            Context = theContext;
+            this.context = theContext;
             this.selectionOnly = false;
             window1.TransientFor = Editor.Toplevel as Window;
 
