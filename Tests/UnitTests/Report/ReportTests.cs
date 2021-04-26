@@ -403,10 +403,13 @@
             events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
 
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
-            Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
-               $"ExperimentName,SimulationName,FolderName,FactorName,FactorValue{Environment.NewLine}" +
-               $"          exp1,          sim1,         F,  Cultivar,      cult1{Environment.NewLine}" +
-               $"          exp1,          sim1,         F,         N,          0{Environment.NewLine}");
+
+
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "ExperimentName", "SimulationName", "FolderName", "FactorName", "FactorValue" },
+                                          new List<object[]> { new object[] {           "exp1",           "sim1",          "F",   "Cultivar",       "cult1" },
+                                                               new object[] {           "exp1",           "sim1",          "F",          "N",            0 } })
+                   .IsSame(storage.tables[0]));
         }
 
         /// <summary>

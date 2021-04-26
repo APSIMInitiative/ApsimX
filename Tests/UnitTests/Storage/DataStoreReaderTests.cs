@@ -134,16 +134,19 @@
             DataStoreReader reader = new DataStoreReader(database);
             var data = reader.GetDataUsingSql("SELECT [Col1] FROM [Report]");
 
-            Assert.AreEqual(Utilities.TableToString(data),
-                                           $"      Col1{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(
+                    new string[]                      {                    "Col1" },
+                    new List<object[]> { new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) }})
+               .IsSame(data));
         }
 
         /// <summary>Get units for a column.</summary>

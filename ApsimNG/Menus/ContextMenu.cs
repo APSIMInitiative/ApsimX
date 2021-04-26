@@ -458,15 +458,11 @@
         {
             try
             {
-#if NETFRAMEWORK
                 object model = explorerPresenter.CurrentNode;
                 explorerPresenter.HideRightHandPanel();
                 explorerPresenter.ShowInRightHandPanel(model,
                                                        "ApsimNG.Resources.Glade.DownloadSoilView.glade",
-                                                       new DownloadPresenter());
-#else
-                throw new NotImplementedException();
-#endif
+                                                       new SoilDownloadPresenter());
             }
             catch (Exception err)
             {

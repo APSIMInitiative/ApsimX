@@ -10,6 +10,7 @@ using Models.CLEM.Activities;
 using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -93,18 +94,23 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals using the Cohort parameterisations.
         /// </summary>
+        /// <param name="initialAttributes">The initial attributes found from parent</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals()
+        public List<Ruminant> CreateIndividuals(List<ISetRuminantAttribute> initialAttributes)
         {
-            return CreateIndividuals(Convert.ToInt32(this.Number));
+            // Add any attributes defined at the cohort level
+            initialAttributes.AddRange(this.FindAllChildren<ISetRuminantAttribute>().ToList());
+
+            return CreateIndividuals(Convert.ToInt32(this.Number), initialAttributes);
         }
 
         /// <summary>
         /// Create the individual ruminant animals using the Cohort parameterisations.
         /// </summary>
         /// <param name="number">The number of individuals to create</param>
+        /// <param name="initialAttributes">The initial attributes found from parent and this cohort</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(int number)
+        public List<Ruminant> CreateIndividuals(int number, List<ISetRuminantAttribute> initialAttributes)
         {
             List<Ruminant> individuals = new List<Ruminant>();
 
@@ -171,6 +177,12 @@ namespace Models.CLEM.Resources
                         ruminantFemale.DryBreeder = true;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
+                    }
+
+                    // initialise attributes
+                    foreach (ISetRuminantAttribute item in initialAttributes)
+                    {
+                        ruminant.AddAttribute(item.AttributeName, item.GetRandomSetAttribute);
                     }
 
                     individuals.Add(ruminantBase as Ruminant);

@@ -10,6 +10,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
 using Models.CLEM.Groupings;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -75,13 +76,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to destock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>
@@ -92,13 +93,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to restock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToRestock { get; private set; }
 
         /// <summary>
         /// AE restocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeRestocked { get; private set; }
 
         private string fullFilename;
@@ -393,7 +394,7 @@ namespace Models.CLEM.Activities
 
                     while (sumAE < limitAE && animalEquivalentsToBuy > 0)
                     {
-                        Ruminant newIndividual = item.Details.CreateIndividuals(1).FirstOrDefault();
+                        Ruminant newIndividual = item.Details.CreateIndividuals(1, null).FirstOrDefault();
                         newIndividual.Location = paddockName;
                         newIndividual.BreedParams = item.BreedParams;
                         newIndividual.HerdName = item.BreedParams.Name;

@@ -115,11 +115,6 @@ namespace UnitTests.Storage
         {
         }
 
-        public int GetSimulationID(string simulationName, string folderName)
-        {
-            return 0;
-        }
-
         public void AllCompleted()
         {
         }
@@ -279,6 +274,17 @@ namespace UnitTests.Storage
         }
 
         public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
+        {
+            simulationID = 0;
+            return true;
+        }
+
+        public int GetSimulationID(string simulationName, string folderName)
         {
             throw new NotImplementedException();
         }
