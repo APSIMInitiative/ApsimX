@@ -27,6 +27,11 @@ namespace UserInterface.Views
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
+        /// The find-and-replace form
+        /// </summary>
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
+
+        /// <summary>
         /// Scrolled window
         /// </summary>
         private ScrolledWindow scroller;
@@ -35,6 +40,16 @@ namespace UserInterface.Views
         /// The main text editor
         /// </summary>
         private SourceView textEditor;
+
+        /// <summary>
+        /// Settings for search and replace
+        /// </summary>
+        private SearchSettings searchSettings;
+
+        /// <summary>
+        /// Context for search and replace
+        /// </summary>
+        private SearchContext searchContext;
 
         /// <summary>
         /// Menu accelerator group
@@ -84,7 +99,11 @@ namespace UserInterface.Views
             set
             {
                 if (value != null)
+                {
+                    textEditor.Buffer.BeginNotUndoableAction();
                     textEditor.Buffer.Text = value;
+                    textEditor.Buffer.EndNotUndoableAction();
+                }
                 //if (Mode == EditorType.ManagerScript)
                 //{
                 //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
@@ -285,6 +304,8 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
             textEditor = new SourceView();
+            searchSettings = new SearchSettings();
+            searchContext = new SearchContext(textEditor.Buffer, searchSettings);
             scroller.Add(textEditor);
             InitialiseWidget();
         }
@@ -337,8 +358,8 @@ namespace UserInterface.Views
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
 
-            // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
-            // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
+            AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
             AddMenuItem("Change Style", OnChangeStyle);
 
             IntelliSenseChars = ".";
@@ -462,6 +483,15 @@ namespace UserInterface.Views
         {
             try
             {
+                if (args.Event.Key == Gdk.Key.F3)
+                {
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, searchContext, false);
+                    else
+                        findForm.FindNext(true, (args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    args.RetVal = true;
+                    return;
+                }
                 char previousChar = 'x';
                 if (textEditor.Buffer.CursorPosition > 0)
                 {
@@ -874,7 +904,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, false);
+                findForm.ShowFor(textEditor, searchContext, false);
             }
             catch (Exception err)
             {
@@ -891,7 +921,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, true);
+                findForm.ShowFor(textEditor, searchContext, true);
             }
             catch (Exception err)
             {
