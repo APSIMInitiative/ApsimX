@@ -87,11 +87,16 @@ namespace Models
                 foreach (SeriesDefinition definition in definitions)
                 {
                     if (definition.CheckpointName == checkpointName)
-                        if (definition.X is double[] && definition.Y is double[])
+                    {
+                        if (definition.X != null && definition.Y != null)
                         {
-                            x.AddRange(definition.X as IEnumerable<double>);
-                            y.AddRange(definition.Y as IEnumerable<double>);
+                            if (ReflectionUtilities.IsNumericType(definition.X.GetType().GetElementType()) && ReflectionUtilities.IsNumericType(definition.Y.GetType().GetElementType()))
+                            {
+                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).ToArray());
+                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).ToArray());
+                            }
                         }
+                    }
                 }
 
                 if (ForEachSeries)
