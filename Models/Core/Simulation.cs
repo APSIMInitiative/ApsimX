@@ -275,14 +275,10 @@ namespace Models.Core
             catch (Exception err)
             {
                 // Exception occurred. Write error to summary.
-                string errorMessage = "ERROR in file: " + FileName + Environment.NewLine +
-                                      "Simulation name: " + Name + Environment.NewLine;
-                errorMessage += err.ToString();
-
-                summary?.WriteError(this, errorMessage);
+                simulationError = new SimulationException("", err, Name, FileName);
+                summary?.WriteError(this, simulationError.ToString());
 
                 // Rethrow exception
-                simulationError = new Exception(errorMessage, err);
                 throw simulationError;
             }
             finally
@@ -303,7 +299,7 @@ namespace Models.Core
                 catch (Exception error)
                 {
                     // If an exception was thrown at this point
-                    Exception cleanupError = new Exception($"Error while performing simulation cleanup", error);
+                    Exception cleanupError = new SimulationException($"Error while performing simulation cleanup", error, Name, FileName);
                     if (simulationError == null)
                         throw cleanupError;
                     throw new AggregateException(simulationError, cleanupError);
