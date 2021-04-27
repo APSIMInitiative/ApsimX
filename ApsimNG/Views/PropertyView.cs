@@ -83,7 +83,7 @@ namespace UserInterface.Views
             ScrolledWindow scroller = new ScrolledWindow();
             mainWidget = scroller;
 #if NETFRAMEWORK
-            scroller.Add(box);
+            scroller.AddWithViewport(box);
 #else
             Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(box, false, false, 0);
