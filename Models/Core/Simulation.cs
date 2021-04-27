@@ -254,6 +254,7 @@ namespace Models.Core
 
             var links = new Links(Services);
             var events = new Events(this);
+            Exception simulationError = null;
 
             try
             {
@@ -281,20 +282,32 @@ namespace Models.Core
                 summary?.WriteError(this, errorMessage);
 
                 // Rethrow exception
-                throw new Exception(errorMessage, err);
+                simulationError = new Exception(errorMessage, err);
+                throw simulationError;
             }
             finally
             {
-                // Signal that the simulation is complete.
-                Completed?.Invoke(this, new EventArgs());
+                try
+                {
+                    // Signal that the simulation is complete.
+                    Completed?.Invoke(this, new EventArgs());
 
-                // Disconnect our events.
-                events.DisconnectEvents();
+                    // Disconnect our events.
+                    events.DisconnectEvents();
 
-                // Unresolve all links.
-                links.Unresolve(this, true);
+                    // Unresolve all links.
+                    links.Unresolve(this, true);
 
-                IsRunning = false;
+                    IsRunning = false;
+                }
+                catch (Exception error)
+                {
+                    // If an exception was thrown at this point
+                    Exception cleanupError = new Exception($"Error while performing simulation cleanup", error);
+                    if (simulationError == null)
+                        throw cleanupError;
+                    throw new AggregateException(simulationError, cleanupError);
+                }
             }
         }
 
