@@ -838,24 +838,22 @@
         public void RefreshTheme()
         {
 #if NETFRAMEWORK
+            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
+            string rc = Utility.Configuration.Settings.DarkTheme ? "dark" : "light";
+            using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{rc}.gtkrc"))
+            {
+                using (StreamReader darkTheme = new StreamReader(rcStream))
+                    File.WriteAllText(tempFile, darkTheme.ReadToEnd());
+            }
+
+            Rc.Parse(tempFile);
+
+            // Remove black colour from colour pallete.
             if (Utility.Configuration.Settings.DarkTheme)
             {
-                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
-                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
-                {
-                    using (StreamReader darkTheme = new StreamReader(rcStream))
-                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
-                }
-
-                Rc.Parse(tempFile);
-                // Remove black colour from colour pallete.
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
-            else if (ProcessUtilities.CurrentOS.IsWindows)
-                // Apsim's default gtk theme uses the 'wimp' rendering engine,
-                // which doesn't play nicely on non-windows systems.
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
 #else
             // tbi
 #endif
