@@ -61,6 +61,17 @@
         }
 
         /// <summary>
+        /// Return all names by which this cultivar is known.
+        /// </summary>
+        public IEnumerable<string> GetNames()
+        {
+            List<string> names = new List<string>();
+            names.Add(Name);
+            names.AddRange(Alias);
+            return names;
+        }
+
+        /// <summary>
         /// Apply commands.
         /// </summary>
         /// <param name="model">The underlying model to apply the commands to</param>

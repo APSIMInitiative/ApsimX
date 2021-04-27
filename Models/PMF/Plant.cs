@@ -79,7 +79,7 @@
         {
             get
             {
-                return new SortedSet<string>(FindAllDescendants<Cultivar>().Select(c => c.Name)).ToArray();
+                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
             }
         }
 
