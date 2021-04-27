@@ -96,17 +96,6 @@ namespace Models.Functions
             endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
         }
 
-        /// <summary>
-        /// Invoked when simulation has completed.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            events.Unsubscribe(AccumulateEventName, OnCalcEvent);
-        }
-
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>
         /// <param name="sender">Plant.cs</param>
         /// <param name="e">Event arguments</param>
