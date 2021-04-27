@@ -10,6 +10,7 @@ namespace UserInterface.Views
     using Extensions;
     using System.Runtime.InteropServices;
     using APSIM.Shared.Utilities;
+    using System.Reflection;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
@@ -24,6 +25,7 @@ namespace UserInterface.Views
     {
         private HBox hbox = null;
         private VBox vbox1 = null;
+        private VBox labels = null;
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
@@ -36,15 +38,34 @@ namespace UserInterface.Views
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
         {
+            string css = "";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Style.clem.css"))
+            {
+                using (StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8))
+                {
+                    css = reader.ReadToEnd();
+                }
+            }
+
+#if NETCOREAPP3_1
+            Gtk.CssProvider css_provider = new CssProvider();
+            css_provider.LoadFromData(css);
+#endif
             hbox = new HBox();
             vbox1 = new VBox();
+            labels = new VBox();
 
             modelTypeLabel = new Label
             {
                 Xalign = 0.0f,
-                Xpad = 3,
-                UseMarkup = true
+                Xpad = 3
             };
+
+#if NETCOREAPP3_1
+            hbox.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
+            modelTypeLabel.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
+            modelTypeLabel.StyleContext.AddClass("wrapper_label_type");
+#endif
 
             modelDescriptionLabel = new Label()
             {
@@ -61,8 +82,8 @@ namespace UserInterface.Views
                 Xalign = 0.0f,
             };
             modelHelpLinkLabel.Clicked += ModelHelpLinkLabel_Clicked;
-#if NETFRAMEWORK
-            modelHelpLinkLabel.ModifyBase(StateType.Normal, new Gdk.Color(131, 0, 131));
+#if netframework
+            modelhelplinklabel.modifybase(statetype.normal, new gdk.color(131, 0, 131));
 #endif
             modelHelpLinkLabel.Visible = false;
 
@@ -86,6 +107,14 @@ namespace UserInterface.Views
             modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelVersionLabel.Wrap = true;
 
+#if NETFRAMEWORK
+            modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+            modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
+            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+#else
+            //labels.OverrideBackgroundColor(StateFlags.Normal, new Gdk.RGBA(131, 0, 131,0.5));
+#endif
+
             bottomView = new Viewport
             {
                 ShadowType = ShadowType.None
@@ -94,11 +123,23 @@ namespace UserInterface.Views
             hbox.PackStart(modelTypeLabel, false, true, 0);
             hbox.PackStart(modelHelpLinkLabel, false, false, 0);
 
-            vbox1.PackStart(hbox, false, true, 0);
-            vbox1.PackStart(modelDescriptionLabel, false, true, 0);
-            vbox1.PackStart(modelVersionLabel, false, true, 4);
+            labels.PackStart(hbox, false, true, 0);
+            labels.PackStart(modelDescriptionLabel, false, true, 0);
+            labels.PackStart(modelVersionLabel, false, true, 4);
 
-            vbox1.Add(bottomView);
+
+            vbox1.PackStart(labels, false, true, 0);
+
+            ScrolledWindow scroll = new ScrolledWindow();
+            scroll.ShadowType = ShadowType.EtchedIn;
+            scroll.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
+            scroll.AddWithViewport(bottomView);
+#else
+            scroll.Add(bottomView);
+#endif
+
+            vbox1.Add(scroll);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
             mainWidget = vbox1;
@@ -204,7 +245,11 @@ namespace UserInterface.Views
             {
                 modelTypeLabelText = value;
                 // update markup and include colour if supplied
+#if NETFRAMEWORK
                 modelTypeLabel.Markup = $"<span{(((modelTypeColour??"")!="")?$" foreground=\"#{modelTypeColour}\"":"")} size=\"15000\"><b>{value}</b></span>";
+#else
+                modelTypeLabel.Markup = value;
+#endif
             }
         }
 
@@ -236,6 +281,18 @@ namespace UserInterface.Views
                 modelHelpLinkLabel.Visible = (value.ToString() != "");
                 modelDescriptionLabel.Ypad = (value.ToString() != "") ? 0 : 4;
             }
+        }
+
+        public string ModelTypeTextStyle
+        {
+            get { return ModelTypeTextStyle; }
+            set
+            {
+#if NETCOREAPP3_1
+            modelTypeLabel.StyleContext.AddClass($"wrapper_label_type_{value}");
+#endif
+                ;
+            } 
         }
 
         public string ModelTypeTextColour

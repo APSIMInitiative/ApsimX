@@ -54,26 +54,32 @@
                 if (this.view.ModelTypeText.Contains(".Resources."))
                 {
                     this.view.ModelTypeTextColour = "996633";
+                    this.view.ModelTypeTextStyle = "resource";
                 }
                 else if (this.view.ModelTypeText.Contains(".Activities.LabourRequirement"))
                 {
                     this.view.ModelTypeTextColour = "cc33cc";
+                    this.view.ModelTypeTextStyle = "labourrequirement";
                 }
                 else if (this.view.ModelTypeText.Contains(".Activities."))
                 {
                     this.view.ModelTypeTextColour = "009999";
+                    this.view.ModelTypeTextStyle = "activity";
                 }
                 else if (this.view.ModelTypeText.Contains(".Groupings."))
                 {
                     this.view.ModelTypeTextColour = "cc33cc";
+                    this.view.ModelTypeTextStyle = "grouping";
                 }
                 else if (this.view.ModelTypeText.Contains(".File"))
                 {
                     this.view.ModelTypeTextColour = "008000";
+                    this.view.ModelTypeTextStyle = "file";
                 }
                 else if (this.view.ModelTypeText.Contains(".Market"))
                 {
                     this.view.ModelTypeTextColour = "1785FF";
+                    this.view.ModelTypeTextStyle = "market";
                 }
 
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
