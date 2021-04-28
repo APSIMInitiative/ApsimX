@@ -239,6 +239,8 @@
             if (fieldNamesInTable.Contains("CheckpointID"))
                 filter = AddToFilter(filter, $"CheckpointID={checkpointIDs[checkpointName].ID}");
 
+            filter = RemoveSimulationNameFromFilter(filter);
+
             if (filter != null && filter.Contains("SimulationName"))
                 throw new Exception("Internal error: Don't pass SimulationName in a filter to DataStoreReader.GetData. Use the SimulationNames argument instead.");
 
@@ -295,7 +297,13 @@
                 result.Columns["SimulationName"].SetOrdinal(2);
                 foreach (DataRow row in result.Rows)
                 {
-                    var simulationName = simulationIDs.FirstOrDefault(x => x.Value == Convert.ToInt32(row["SimulationID"])).Key;
+                    string simulationName = null;
+                    if (!Convert.IsDBNull(row["SimulationID"]) && Int32.TryParse(row["SimulationID"].ToString(), out int simulationID))
+                        simulationName = simulationIDs.FirstOrDefault(x => x.Value == simulationID).Key;
+                    else
+                    {
+                        throw new Exception($"In table {tableName}, SimulationID has a value of {row["SimulationID"].ToString()} which is not valid");
+                    }
 
                     row["CheckpointName"] = checkpointName;
                     row["SimulationName"] = simulationName;
@@ -318,6 +326,28 @@
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Remove 'Simulation = xxxx' from filter and replace with 'SimulationiD=xx'
+        /// </summary>
+        /// <param name="filter"></param>
+        private string RemoveSimulationNameFromFilter(string filter)
+        {
+            if (!string.IsNullOrEmpty(filter))
+            {
+                string pattern = "\\[*SimulationName\\]*\\W*(=|<>)\\W*[\"|'](\\w+)[\"|']";
+                return Regex.Replace(filter, pattern, delegate (Match m)
+                {
+                    var oper = m.Groups[1].Value;
+                    var simulationName = m.Groups[2].Value;
+                    if (TryGetSimulationID(simulationName, out int id))
+                        return $"SimulationID{oper}{id}";
+                    else
+                        return "";
+                });
+            }
+            return null;
         }
 
         /// <summary>Add a clause to the filter.</summary>

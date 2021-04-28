@@ -6,11 +6,11 @@ if "%apsimx%"=="" (
 	popd>nul
 )
 
-rem Delete all files from Windows' DeploymentSupport directory from Bin
+rem Delete all files from Windows' DeploymentSupport directory from bin
 for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
-	if exist %apsimx%\Bin\%%~nD%%~xD (
-		echo Deleting %apsimx%\Bin\%%~nD%%~xD...
-		del %apsimx%\Bin\%%~nD%%~xD
+	if exist %apsimx%\bin\Release\net472\%%~nD%%~xD (
+		echo Deleting %apsimx%\bin\Release\net472\%%~nD%%~xD...
+		del %apsimx%\bin\Release\net472\%%~nD%%~xD
 	)
 )
 
@@ -18,9 +18,9 @@ pushd %~dp0
 set "PATH=%PATH%;C:\tools\cygwin\bin;C:\Utilities"
 if Exist ApsimSetup.dmg Del ApsimSetup.dmg
 if Exist Version.tmp Del Version.tmp
-if not exist %apsimx%\Bin\Models.exe exit /B 1
+if not exist %apsimx%\bin\Release\net472\Models.exe exit /B 1
 
-sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %apsimx%\bin\Release\net472\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 set issuenumber=%APSIM_VERSION:~-4,4%
 del Version.tmp
@@ -30,7 +30,7 @@ mkdir .\MacBundle\APSIM%APSIM_VERSION%.app
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS
 mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources
-mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin
+mkdir .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin
 
 dos2unix .\Template\Contents\MacOS\ApsimNG>nul 2>&1
 copy .\Template\Contents\MacOS\ApsimNG .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\MacOS\ApsimNG>nul
@@ -38,11 +38,11 @@ copy .\Template\Contents\Resources\ApsimNG.icns .\MacBundle\APSIM%APSIM_VERSION%
 xcopy /S /I /Y /Q %apsimx%\Examples .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Examples>nul
 xcopy /S /I /Y /Q %apsimx%\ApsimNG\Resources\world .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\ApsimNG\Resources\world>nul
 xcopy /S /I /Y /Q %apsimx%\Tests\UnderReview .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\UnderReview>nul
-xcopy /I /Y /Q %apsimx%\Bin\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
-xcopy /I /Y /Q %apsimx%\Bin\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
-xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\Bin>nul
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\*.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\*.exe .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\Models.xml .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources\bin>nul
 xcopy /I /Y /Q %apsimx%\APSIM.bib .\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Resources>nul
 
 set PLIST_FILE=.\MacBundle\APSIM%APSIM_VERSION%.app\Contents\Info.plist

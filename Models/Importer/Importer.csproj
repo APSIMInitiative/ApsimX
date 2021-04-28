@@ -3,6 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <BaseOutputPath>../../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
   </PropertyGroup>
