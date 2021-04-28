@@ -362,7 +362,33 @@ namespace UserInterface.Views
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
             AddMenuItem("Change Style", OnChangeStyle);
 
+            textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
+        }
+
+        /// <summary>
+        /// Context menu items aren't actually added to the context menu until the
+        /// user requests the context menu (ie via right clicking). Keyboard shortcuts
+        /// (accelerators) won't work until this occurs. Therefore, we now manually
+        /// fire off a populate-popup signal to cause the context menu to be populated.
+        /// (This doesn't actually cause the context menu to be displayed.)
+        ///
+        /// We wait until the widget is realized so that the owner of the view has a
+        /// chance to add context menu items.
+        /// </summary>
+        /// <param name="sender">Sender object (the SourceView widget).</param>
+        /// <param name="args">Event data.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            try
+            {
+                textEditor.Realized -= OnRealized;
+                GLib.Signal.Emit(textEditor, "populate-popup", new Menu());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
