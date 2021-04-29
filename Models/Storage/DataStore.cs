@@ -70,6 +70,23 @@
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
         public IStorageWriter Writer { get { return dbWriter; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public override IModel Parent
+        {
+            get
+            {
+                return base.Parent;
+            }
+            set
+            {
+                base.Parent = value;
+                OnCreated();
+            }
+        }
+
         /// <summary>Constructor</summary>
         public DataStore()
         {
@@ -167,7 +184,7 @@
             if (connection == null)
                 Open();
         }
-        
+
         /// <summary>
         /// Updates the file name of the database file, based on the file name
         /// of the parent Simulations object.
@@ -207,6 +224,8 @@
             Exception caughtException = null;
             try
             {
+                if (dbReader == null)
+                    dbReader = new DataStoreReader();
                 dbReader.SetConnection(connection);
             }
             catch (Exception e)
@@ -215,6 +234,8 @@
             }
             try
             {
+                if (dbWriter == null)
+                    dbWriter = new DataStoreWriter();
                 dbWriter.SetConnection(connection);
             }
             catch (Exception e)
