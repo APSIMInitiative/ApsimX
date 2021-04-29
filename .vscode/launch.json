@@ -5,7 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (console)",
+            "name": ".NET Core Launch (APSIM Server)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/apsim-server.dll",
+            "args": [
+                "-vkf",
+                "Examples/sorghum.apsimx"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Launch (ApsimNG)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
