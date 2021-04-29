@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateDocumentation", "Docs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{97EF667D-6600-49D3-BF0C-6935E7E4294D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APSIM.Server", "APSIM.Server\APSIM.Server.csproj", "{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,18 @@ Global
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.ActiveCfg = Debug|Any CPU
 		{97EF667D-6600-49D3-BF0C-6935E7E4294D}.Release|x86.Build.0 = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.DebugAnyCPU|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.DebugAnyCPU|Any CPU.Build.0 = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.DebugAnyCPU|x86.ActiveCfg = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.DebugAnyCPU|x86.Build.0 = Debug|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD11D2F4-469D-4D43-AE6B-BD15FDE9BBAF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
