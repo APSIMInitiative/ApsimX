@@ -27,6 +27,7 @@
 
         /// <summary>List of all errors encountered</summary>
         private List<Exception> errors = new List<Exception>();
+        private System.Diagnostics.Stopwatch stopwatch;
 
         /// <summary>Constructor</summary>
         /// <param name="name">Name of the job to be displayed in the UI..</param>
@@ -50,7 +51,7 @@
         {
             IsRunning = true;
             jobRunner.Run();
-
+            stopwatch = System.Diagnostics.Stopwatch.StartNew();
             if (IsRunning)
             {
                 timer = new Timer();
@@ -64,6 +65,7 @@
         /// <summary>All jobs have completed</summary>
         private void OnAllJobsCompleted(object sender, Runner.AllJobsCompletedArgs e)
         {
+            stopwatch.Stop();
             IsRunning = false;
             if (timer != null)
                 timer.Elapsed -= OnTimerTick;
@@ -79,7 +81,7 @@
                 // We could display the error message, but we're about to display output to the user anyway.
             }
             if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec] ({2}ms)", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00"), stopwatch.ElapsedMilliseconds), Simulation.MessageType.Information);
             else
                 explorerPresenter.MainPresenter.ShowError(errors);
 
