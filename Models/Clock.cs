@@ -292,7 +292,8 @@
             if (CLEMValidate != null)
                 CLEMValidate.Invoke(this, args);
 
-            while (Today <= EndDate && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
+            DateTime end = EndDate;
+            while (Today <= end && (e.CancelToken == null || !e.CancelToken.IsCancellationRequested))
             {
                 if (DoWeather != null)
                     DoWeather.Invoke(this, args);
