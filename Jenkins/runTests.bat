@@ -8,7 +8,7 @@ if "%apsimx%"=="" (
 	set apsimx=!cd!
 	popd>nul
 )
-set "bin=%apsimx%\Bin"
+set "bin=%apsimx%\bin\Release\net472"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -22,7 +22,7 @@ if "%1"=="%unitsyntax%" (
 	call :numTempFiles
 	set count=!result!
 
-	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	nunit3-console "%bin%\UnitTests.dll"
 	if errorlevel 1 exit /b 1
 
 	call :numTempFiles
