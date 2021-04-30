@@ -202,18 +202,10 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Runs the simulation on the current thread and waits for the simulation
-        /// to complete before returning to caller. Simulation is NOT cloned before
-        /// running. Use instance of Runner to get more options for running a 
-        /// simulation or groups of simulations. 
+        /// Prepare the simulation for running.
         /// </summary>
-        /// <param name="cancelToken">Is cancellation pending?</param>
-        public void Run(CancellationTokenSource cancelToken = null)
+        public void Prepare()
         {
-            // If the cancelToken is null then give it a default one. This can happen 
-            // when called from the unit tests.
-            if (cancelToken == null)
-                cancelToken = new CancellationTokenSource();
 
             // Remove disabled models.
             RemoveDisabledModels(this);
@@ -254,7 +246,6 @@ namespace Models.Core
 
             var links = new Links(Services);
             var events = new Events(this);
-            Exception simulationError = null;
 
             try
             {
@@ -263,9 +254,32 @@ namespace Models.Core
 
                 // Resolve all links
                 links.Resolve(this, true);
+            }
+            catch (Exception err)
+            {
+                throw new SimulationException("", err, Name, FileName);
+            }
+        }
 
-                IsRunning = true;
+        /// <summary>
+        /// Runs the simulation on the current thread and waits for the simulation
+        /// to complete before returning to caller. Simulation is NOT cloned before
+        /// running. Use instance of Runner to get more options for running a 
+        /// simulation or groups of simulations. 
+        /// </summary>
+        /// <param name="cancelToken">Is cancellation pending?</param>
+        public void Run(CancellationTokenSource cancelToken = null)
+        {
+            IsRunning = true;
+            Exception simulationError = null;
 
+            // If the cancelToken is null then give it a default one. This can happen 
+            // when called from the unit tests.
+            if (cancelToken == null)
+                cancelToken = new CancellationTokenSource();
+
+            try
+            {
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
@@ -287,13 +301,6 @@ namespace Models.Core
                 {
                     // Signal that the simulation is complete.
                     Completed?.Invoke(this, new EventArgs());
-
-                    // Disconnect our events.
-                    events.DisconnectEvents();
-
-                    // Unresolve all links.
-                    links.Unresolve(this, true);
-
                     IsRunning = false;
                 }
                 catch (Exception error)

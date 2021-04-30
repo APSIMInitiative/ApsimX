@@ -403,6 +403,14 @@ namespace Models.Optimisation
         }
 
         /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Run the optimization (and wait for it to finish).
         /// </summary>
         /// <param name="cancelToken">Cancellation token.</param>

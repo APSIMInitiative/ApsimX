@@ -19,13 +19,13 @@ namespace APSIM.Server.Commands
         private bool runTests;
         private IEnumerable<string> simulationNamesToRun;
         private int numberOfProcessors;
-        private IEnumerable<CompositeFactor> changes;
+        private IEnumerable<IReplacement> changes;
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(IEnumerable<CompositeFactor> changes)
+        public RunCommand(IEnumerable<IReplacement> changes)
         {
             runPostSimulationTools = true;
             runTests = true;
@@ -42,7 +42,7 @@ namespace APSIM.Server.Commands
         /// <param name="numProcessors">Max number of processors to use.</param>
         /// <param name="simulationNames">Simulation names to run.</param>
         /// <param name="changes">Changes to be applied to the simulations before being run.</param>
-        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<CompositeFactor> changes, IEnumerable<string> simulationNames)
+        public RunCommand(bool runPostSimTools, bool runTests, int numProcessors, IEnumerable<IReplacement> changes, IEnumerable<string> simulationNames)
         {
             runPostSimulationTools = runPostSimTools;
             this.runTests = runTests;
@@ -54,23 +54,16 @@ namespace APSIM.Server.Commands
         /// <summary>
         /// Run the command.
         /// </summary>
-        public void Run(Simulations sims)
+        /// <param name="runner">Job runner.</param>
+        public void Run(Runner runner, ServerJobRunner jobRunner)
         {
-            if (changes != null && changes.Any())
-                sims = EditFile.ApplyChanges(sims, changes);
-
-            Runner runner = new Runner(sims,
-                                       runPostSimulationTools: runPostSimulationTools,
-                                       runSimulations: true,
-                                       runTests: runTests,
-                                       simulationNamesToRun: simulationNamesToRun,
-                                       numberOfProcessors: numberOfProcessors);
+            jobRunner.Replacements = changes;
             var timer = Stopwatch.StartNew();
             List<Exception> errors = runner.Run();
             timer.Stop();
             Console.WriteLine($"Raw job took {timer.ElapsedMilliseconds}ms");
             if (errors != null && errors.Count > 0)
-                throw new AggregateException($"{sims.FileName} ran with errors", errors);
+                throw new AggregateException("File ran with errors", errors);
         }
     }
 }

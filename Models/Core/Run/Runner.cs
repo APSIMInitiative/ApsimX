@@ -21,6 +21,11 @@
         /// <summary>The job runner being used.</summary>
         private JobRunner jobRunner = null;
 
+        /// <summary>
+        /// Use the pre-set job runner?
+        /// </summary>
+        private bool useFixedRunner;
+
         /// <summary>The stop watch we can use to time all runs.</summary>
         private DateTime startTime;
 
@@ -200,6 +205,19 @@
             }
         }
 
+        /// <summary>
+        /// Use the given job runner to run jobs.
+        /// </summary>
+        /// <param name="runner">The job runner to be used.</param>
+        public void UseRunner(JobRunner runner)
+        {
+            jobRunner = runner;
+            useFixedRunner = true;
+            jobRunner.JobCompleted += OnJobCompleted;
+            jobRunner.AllCompleted += OnAllCompleted;
+            jobs.ForEach(j => jobRunner.Add(j));
+        }
+
         /// <summary>Invoked every time a job has completed.</summary>
         public event EventHandler<JobCompleteArguments> SimulationCompleted;
 
@@ -235,26 +253,30 @@
         public List<Exception> Run()
         {
             startTime = DateTime.Now;
+            ExceptionsThrown = new List<Exception>();
 
             if (jobs.Count > 0)
             {
-                jobRunner = null;
-
-                switch (runType)
+                if (!useFixedRunner)
                 {
-                    case RunTypeEnum.SingleThreaded:
-                        jobRunner = new JobRunner(numProcessors:1);
-                        break;
-                    case RunTypeEnum.MultiThreaded:
-                        jobRunner = new JobRunner(numberOfProcessors);
-                        break;
+                    jobRunner = null;
+
+                    switch (runType)
+                    {
+                        case RunTypeEnum.SingleThreaded:
+                            jobRunner = new JobRunner(numProcessors:1);
+                            break;
+                        case RunTypeEnum.MultiThreaded:
+                            jobRunner = new JobRunner(numberOfProcessors);
+                            break;
+                    }
+
+                    jobRunner.JobCompleted += OnJobCompleted;
+                    jobRunner.AllCompleted += OnAllCompleted;
+
+                    // Run all simulations.
+                    jobs.ForEach(j => jobRunner.Add(j));
                 }
-
-                jobRunner.JobCompleted += OnJobCompleted;
-                jobRunner.AllCompleted += OnAllCompleted;
-
-                // Run all simulations.
-                jobs.ForEach(j => jobRunner.Add(j));
                 jobRunner.Run(wait);
             }
             else
@@ -272,7 +294,7 @@
             {
                 jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
-                jobRunner = null;
+                // jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
             }
         }

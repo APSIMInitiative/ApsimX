@@ -8,6 +8,7 @@ using APSIM.Server.Commands;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.Run;
 
 namespace APSIM.Server
 {
@@ -26,6 +27,9 @@ namespace APSIM.Server
         /// </summary>
         private Simulations sims;
 
+        private Runner runner;
+        private ServerJobRunner jobRunner;
+
         /// <summary>
         /// Create an <see cref="ApsimServer" /> instance.
         /// </summary>
@@ -36,6 +40,9 @@ namespace APSIM.Server
             sims = FileFormat.ReadFromFile<Simulations>(options.File, out List<Exception> errors);
             if (errors != null && errors.Count > 0)
                 throw new Exception($"Unable to read file {options.File}", errors[0]);
+            runner = new Runner(sims);
+            jobRunner = new ServerJobRunner();
+            runner.UseRunner(jobRunner);
         }
 
         /// <summary>
@@ -67,7 +74,7 @@ namespace APSIM.Server
                             {
                                 // Clone the simulations object before running the command.
                                 var timer = Stopwatch.StartNew();
-                                command.Run(sims.Clone());
+                                command.Run(runner, jobRunner);
                                 timer.Stop();
                                 if (options.Verbose)
                                     Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");

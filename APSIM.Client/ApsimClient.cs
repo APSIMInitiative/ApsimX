@@ -8,6 +8,7 @@ using Models.Factorial;
 using System.Linq;
 using System.Globalization;
 using System.Diagnostics;
+using Models.Core.Run;
 
 namespace APSIM.Client
 {
@@ -20,32 +21,29 @@ namespace APSIM.Client
                 Console.Write("Connecting to server...");
                 pipeClient.Connect();
                 Console.WriteLine("done.");
-                IEnumerable<CompositeFactor> changes;
+                IEnumerable<IReplacement> changes;
                 while ( (changes = GetChanges())?.Any() ?? false)
                 {
                     if (!pipeClient.IsConnected)
                         break;
                     for (int i = 0; i < 5; i++)
                     {
-                        double ftn = (double)changes.First().Values.First();
                         ICommand command = new RunCommand(changes);
                         var timer = Stopwatch.StartNew();
                         PipeUtilities.SendObjectToPipe(pipeClient, command);
                         object response = PipeUtilities.GetObjectFromPipe(pipeClient);
                         timer.Stop();
                         if (response is Exception error)
-                            throw new Exception($"Error running simulation with TT of {ftn}", error);
+                            throw new Exception($"Error running simulation", error);
                         else
                         {
                             if (response is string msg)
+                                Console.WriteLine($"Ran simulation in {timer.ElapsedMilliseconds}ms. Server response: {msg}");
+                            else
                             {
-                                if (msg == "fin")
-                                    Console.WriteLine($"Ran simulation with TT of {ftn} in {timer.ElapsedMilliseconds}ms");
-                                else
-                                {
-                                    Console.WriteLine($"Unexpected response from server: '{response}'");
-                                    break;
-                                }
+                                Console.WriteLine($"Unexpected response from server:");
+                                Console.WriteLine(response);
+                                break;
                             }
                         }
                     }
@@ -53,32 +51,32 @@ namespace APSIM.Client
             }
         }
 
-        private IEnumerable<CompositeFactor> GetChanges()
+        private IEnumerable<IReplacement> GetChanges()
         {
-            CompositeFactor factor = ChangeJuvTarget();
+            IReplacement factor = ChangeJuvTarget();
             if (factor == null)
                 return null;
             return new[] { factor };
         }
 
-        private CompositeFactor ChangeJuvTarget()
+        private IReplacement ChangeJuvTarget()
         {
             Console.Write("Enter Juvenile TT Target (default is 100): ");
             string input = Console.ReadLine();
             if (double.TryParse(input, NumberStyles.Float, CultureInfo.CurrentCulture, out double tt))
-                return new CompositeFactor("JuvTT", "[Sorghum].Phenology.Juvenile.Target.FixedValue", tt);
+                return new PropertyReplacement("[Sorghum].Phenology.Juvenile.Target.FixedValue", tt);
             else if (string.IsNullOrWhiteSpace(input))
                 return null;
             else
                 throw new FormatException($"Unable to parse {input}: input is not a number");
         }
 
-        private CompositeFactor ChangeFtn()
+        private IReplacement ChangeFtn()
         {
             Console.Write("Enter FTN: ");
             string input = Console.ReadLine();
             if (double.TryParse(input, NumberStyles.Float, CultureInfo.CurrentCulture, out double ftn))
-                return new CompositeFactor("ftn", "[SowingRule].Script.Ftn", ftn);
+                return new PropertyReplacement("[SowingRule].Script.Ftn", ftn);
             else if (string.IsNullOrWhiteSpace(input))
                 return null;
             else
