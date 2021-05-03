@@ -66,33 +66,37 @@ namespace Models.PMF.Phen
          /// <summary>
         /// Calculates how much Tt has accumulated from emergence to the specified HaunStage
         /// </summary>
-        /// <param name="HS"></param>
+        /// <param name="x"></param>
         /// <param name="Pp"></param>
         /// <param name="bP"></param>
         /// <param name="pPpS"></param>
-        private double convertHStoTt(double HS, double Pp, double bP, double pPpS)
+        /// <param name="invert"></param>
+        private double convertHStoTt(double x, double Pp, double bP, double pPpS, bool invert = false)
         {
             double PpFactor = 1.0;
             if (Pp == 8)
                 PpFactor = 1+pPpS;
-            List<double> xHS = new List<double>();
-            xHS.Add(0);
-            xHS.AddRange(pLS.X.ToList<double>());
-            xHS.Add(30);
+            List<double> HS = new List<double>();
+            HS.Add(0);
+            HS.AddRange(pLS.X.ToList<double>());
+            HS.Add(30);
             List<double> yLSF = new List<double>();
             yLSF.Add(pLS.Y[0]);
             yLSF.AddRange(pLS.Y.ToList<double>());
             yLSF.Add(pLS.Y.Last());
-            List<double> yTt = new List<double>();
-            yTt.Add(0);
-            for (int b = 1; b < xHS.Count; b++)
+            List<double> Tt = new List<double>();
+            Tt.Add(0);
+            for (int b = 1; b < HS.Count; b++)
             {
-                double dxHS = xHS[b] - xHS[b - 1];
+                double dxHS = HS[b] - HS[b - 1];
                 double mLSF = (yLSF[b] + yLSF[b - 1]) / 2;
-                yTt.Add(yTt[b - 1] + dxHS * bP * mLSF * PpFactor);
+                Tt.Add(Tt[b - 1] + dxHS * bP * mLSF * PpFactor);
             }
             bool DidInterpolate = false;
-            return MathUtilities.LinearInterpReal(HS, xHS.ToArray<double>(), yTt.ToArray<double>(), out DidInterpolate);
+            if (invert == false)
+                return MathUtilities.LinearInterpReal(x, HS.ToArray<double>(), Tt.ToArray<double>(), out DidInterpolate);
+            else
+                return MathUtilities.LinearInterpReal(x, Tt.ToArray<double>(), HS.ToArray<double>(), out DidInterpolate);
         }
     
 
@@ -134,23 +138,36 @@ namespace Models.PMF.Phen
             // Minimum Therval time duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that harve a high TSHS hit VS ~3HS prior to TS 
-            double MinVsTs = Math.Min(convertHStoTt(3.0, 16, BasePhyllochron, PhylloPpSens), 
-                                     (convertHStoTt(FLNset.LV, 16, BasePhyllochron, PhylloPpSens) - MinVS) / 2.0);
+            // The tt duraiton of this will depend on the HS at which VS occurs so need to calculate VSHS and TSHS then converty the
+            // difference in HS to a tt target at the given phyllochoron
+
+            double CalcMinVsTs(double FLN)
+            {
+                double MinVsTsHS = Math.Min(3.0,FLN / 2.0);
+                double TSHS = camp.calcTSHS(FLN, Params.IntFLNvsTSHS);
+                double VSHS = TSHS - MinVsTsHS;
+
+                return convertHStoTt(TSHS, 16, BasePhyllochron, PhylloPpSens) - convertHStoTt(VSHS, 16, BasePhyllochron, PhylloPpSens);
+            }
 
             // The Tt duration from Vern sat to final leaf under long Pp vernalised treatment
-            double VS_FL_LV = convertHStoTt(FLNset.LV, 16, BasePhyllochron, PhylloPpSens) - MinVS - MinVsTs;
+            double VS_FL_LV = convertHStoTt(FLNset.LV, 16, BasePhyllochron, PhylloPpSens) - MinVS - CalcMinVsTs(FLNset.LV);
 
             // The Intercept of the assumed relationship between FLN and TSHS for genotype (IntFLNvsTSHS)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Params.IntFLNvsTSHS = Math.Min(2.85, VS_FL_LV / 1.1);
+            Params.IntFLNvsTSHS = Math.Min(2.85, convertHStoTt(VS_FL_LV, 16, BasePhyllochron, PhylloPpSens, true) / 1.1);
 
             // Calculate Terminal spikelet duration (TSHS) for each treatment from FLNData
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            double TS_LV = convertHStoTt(camp.calcTSHS(FLNset.LV, Params.IntFLNvsTSHS),16, BasePhyllochron, PhylloPpSens);
-            double TS_LN = convertHStoTt(camp.calcTSHS(FLNset.LN, Params.IntFLNvsTSHS),16,BasePhyllochron,PhylloPpSens);
-            double TS_SV = convertHStoTt(camp.calcTSHS(FLNset.SV, Params.IntFLNvsTSHS),8,BasePhyllochron,PhylloPpSens);
-            double TS_SN = convertHStoTt(camp.calcTSHS(FLNset.SN, Params.IntFLNvsTSHS),8,BasePhyllochron,PhylloPpSens);
-                                                      
+            double TSHS_LV = camp.calcTSHS(FLNset.LV, Params.IntFLNvsTSHS);
+            double TSHS_LN = camp.calcTSHS(FLNset.LN, Params.IntFLNvsTSHS);
+            double TSHS_SV = camp.calcTSHS(FLNset.SV, Params.IntFLNvsTSHS);
+            double TSHS_SN = camp.calcTSHS(FLNset.SN, Params.IntFLNvsTSHS);
+            double TS_LV = convertHStoTt(TSHS_LV, 16, BasePhyllochron, PhylloPpSens);
+            double TS_LN = convertHStoTt(TSHS_LN, 16, BasePhyllochron, PhylloPpSens);
+            double TS_SV = convertHStoTt(TSHS_SV, 8, BasePhyllochron, PhylloPpSens);
+            double TS_SN = convertHStoTt(TSHS_SN, 8, BasePhyllochron, PhylloPpSens);
+
             // Photoperiod sensitivity (PPS) is the Tt difference between TS at 8 and 16 h pp under full vernalisation.
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             double PPS = Math.Max(0, TS_SV - TS_LV);
@@ -158,11 +175,12 @@ namespace Models.PMF.Phen
             // Vernalisation Saturation duration (VS) for each environment from TS and photoperiod response
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Terminal spikelet duration less the minimum duration from VS to TS under long day treatment
-            double VS_LV = Math.Max(MinVS, TS_LV - MinVsTs);
-            double VS_LN = Math.Max(MinVS, TS_LN - MinVsTs);
+            double VS_LV = Math.Max(MinVS, TS_LV - CalcMinVsTs(FLNset.LV));
+            double VSHS_LV = convertHStoTt(VS_LV, 16, BasePhyllochron, PhylloPpSens,true);
+            double VS_LN = Math.Max(MinVS, TS_LN - CalcMinVsTs(FLNset.LN));
             // Terminal spikelet duration less the minimum duration from VS to TS and the photoperiod extension of VS to TS under short day treatment
-            double VS_SV = Math.Max(MinVS, TS_SV - (MinVsTs + PPS));
-            double VS_SN = Math.Max(MinVS, TS_SN - (MinVsTs + PPS));
+            double VS_SV = Math.Max(MinVS, TS_SV - (CalcMinVsTs(FLNset.SV) + PPS));
+            double VS_SN = Math.Max(MinVS, TS_SN - (CalcMinVsTs(FLNset.SN) + PPS));
 
             ////////////////////////////////////////////////////////////////////////
             // Calculate Photoperiod sensitivities
@@ -172,14 +190,14 @@ namespace Models.PMF.Phen
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Occurs under long Pp conditions, Assuming Vrn3 increases from 0 - VernSatThreshold between VS to TS and this takes 
             // MinBPVsTs under long Pp conditions.
-            Params.MaxDVrn3 = camp.VrnSatThreshold / MinVsTs;
+            Params.MaxDVrn3 = camp.VrnSatThreshold / CalcMinVsTs(FLNset.LV);
 
 
             // Base delta for upredulation of Vrn3 (BaseDVrn3)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Occurs under short Pp conditions, Assuming Vrn3 increases from 0 - VernSatThreshold from VS to TS 
             // and this take MinBPVSTs plus the additional BP from short Pp delay.
-            Params.BaseDVrn3 = camp.VrnSatThreshold / (MinVsTs + PPS);
+            Params.BaseDVrn3 = camp.VrnSatThreshold / (CalcMinVsTs(FLNset.LV) + PPS);
 
             //// Under long day conditions Vrn3 expresses at its maximum rate and plant moves quickley from VS to TS.
             //// Genotypic variation in MaxDVrn3 will contribute to differences in earlyness per se

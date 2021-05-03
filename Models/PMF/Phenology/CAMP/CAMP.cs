@@ -218,16 +218,6 @@ namespace Models.PMF.Phen
             return (FLN - IntFLNvsTSHS) / 1.1;
         }
 
-        ///<summary>Calculate the daily Base Phyllochron increment</summary>
-        public double CalcdBP(double Tt, double PTQ)
-        {
-            double maxLAR = phenology.FindChild<IFunction>("MaxLAR").Value();
-            double minLAR = phenology.FindChild<IFunction>("MinLAR").Value();
-            double PTQhf = phenology.FindChild<IFunction>("PTQhf").Value();
-            LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
-            return 0.7 * (Tt * LARmodel.CalculateLAR(PTQ, maxLAR, minLAR, PTQhf));
-        }
-
         // Class constants, assumed the same for all cultivars
         /// <summary>Temperature response coefficient for vernalisation</summary>
         public double k { get { return -0.17; } }
