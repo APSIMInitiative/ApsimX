@@ -14,7 +14,7 @@ namespace Models.LifeCycle
     /// biomass removed
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantOrganConsumption : Model

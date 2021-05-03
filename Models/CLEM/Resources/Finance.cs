@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     /// Parent model of finance models.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all finance types (bank accounts) for the simulation.")]

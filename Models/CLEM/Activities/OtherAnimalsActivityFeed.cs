@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Other animals feed activity</summary>
     /// <summary>This activity provides food to specified other animals based on a feeding style</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

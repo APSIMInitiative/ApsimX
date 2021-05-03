@@ -109,7 +109,6 @@ namespace Models.CLEM
         {
             get
             {
-                Console.WriteLine(this.Name);
                 int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
 
                 var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));

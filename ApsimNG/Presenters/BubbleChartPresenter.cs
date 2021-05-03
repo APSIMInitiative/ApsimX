@@ -50,7 +50,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IEditorView currentEditor;
 
-        private SimplePropertyPresenter propertiesPresenter = new SimplePropertyPresenter();
+        private PropertyPresenter propertiesPresenter = new PropertyPresenter();
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.

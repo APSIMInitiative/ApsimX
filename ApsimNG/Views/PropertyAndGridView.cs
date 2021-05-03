@@ -27,10 +27,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public PropertyAndGridView(ViewBase owner) : base(owner)
         {
-            if (Configuration.Settings.UseNewPropertyPresenter)
-                PropertiesView = new PropertyView(owner);
-            else
-                PropertiesView = new GridView(this);
+            PropertiesView = new PropertyView(owner);
             Grid2 = new GridView(owner);
 
             VPaned panel = new VPaned();
