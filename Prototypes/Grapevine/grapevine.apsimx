@@ -1,8 +1,8 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 374,
-  "Version": 129,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 282,
+  "Version": 130,
+  "ApsimVersion": "2021.4.9.6309",
   "Name": "Simulations",
   "Children": [
     {
@@ -76,7 +76,7 @@
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "Endodormancy",
                   "End": "Ecodormancy",
-                  "Name": "EndoDormancy",
+                  "Name": "Dormancy",
                   "Children": [
                     {
                       "$type": "Models.Functions.SubtractFunction, Models",
@@ -172,7 +172,7 @@
                   "$type": "Models.Functions.AccumulateFunction, Models",
                   "StartStageName": "Veraison",
                   "EndStageName": "LeafFall",
-                  "ResetStageName": "Flowering",
+                  "ResetStageName": "FloweringTime",
                   "FractionRemovedOnCut": 0.0,
                   "FractionRemovedOnHarvest": 0.0,
                   "FractionRemovedOnGraze": 0.0,
@@ -251,7 +251,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].EndoDormancy.Progression",
+                                  "VariableName": "[Phenology].Dormancy.Progression",
                                   "Name": "ChillingUnit",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -392,8 +392,8 @@
                                   "Line": 0,
                                   "LineThickness": 0,
                                   "TableName": null,
-                                  "XFieldName": ".Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.X",
-                                  "YFieldName": ".Simulations.Replacements.Grapevine.Phenology.EndoDormancy.ThermalTime.XYPairs.Y",
+                                  "XFieldName": ".Simulations.Replacements.Grapevine.Phenology.Dormancy.ThermalTime.XYPairs.X",
+                                  "YFieldName": ".Simulations.Replacements.Grapevine.Phenology.Dormancy.ThermalTime.XYPairs.Y",
                                   "X2FieldName": "",
                                   "Y2FieldName": "",
                                   "ShowInLegend": false,
@@ -438,7 +438,7 @@
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
                   "Start": "BudBurst",
-                  "End": "Flowering",
+                  "End": "FloweringTime",
                   "Name": "Flowering",
                   "Children": [
                     {
@@ -467,9 +467,9 @@
                 },
                 {
                   "$type": "Models.PMF.Phen.GenericPhase, Models",
-                  "Start": "Flowering",
+                  "Start": "FloweringTime",
                   "End": "FruitSet",
-                  "Name": "FruitSet",
+                  "Name": "FruitSetting",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -558,8 +558,8 @@
                   "$type": "Models.PMF.Phen.GotoPhase, Models",
                   "Start": "LeafFall",
                   "End": "Unused",
-                  "PhaseNameToGoto": "EndoDormancy",
-                  "Name": "Dormancy",
+                  "PhaseNameToGoto": "Dormancy",
+                  "Name": "DormancyRewind",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
@@ -616,7 +616,7 @@
                 },
                 {
                   "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "Flowering",
+                  "SetEvent": "FloweringTime",
                   "ReSetEvent": null,
                   "Name": "FloweringDOY",
                   "Children": [
@@ -2164,7 +2164,7 @@
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "BudBurst",
-                          "End": "Flowering",
+                          "End": "FloweringTime",
                           "Name": "Vegetative",
                           "Children": [
                             {
@@ -2184,7 +2184,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
+                          "Start": "FloweringTime",
                           "End": "LeafFall",
                           "Name": "Reproductive",
                           "Children": [
@@ -2329,11 +2329,37 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
                       "Name": "FW",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0,
+                            1.5
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Fw",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -3182,44 +3208,53 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Functions.DeltaFunction, Models",
-                      "StartStageName": null,
+                      "$type": "Models.Functions.MaximumFunction, Models",
                       "Name": "Structural",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Integral",
+                          "$type": "Models.Functions.DeltaFunction, Models",
+                          "StartStageName": null,
+                          "Name": "Structural",
                           "Children": [
                             {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Structure].MainStemPopn",
-                              "Name": "ShootPopulation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 29.0,
-                              "te": 57.0,
-                              "Name": "BetaGrowthFunction",
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Integral",
                               "Children": [
                                 {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 30.0,
-                                  "Units": "g",
-                                  "Name": "Ymax",
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Structure].MainStemPopn",
+                                  "Name": "ShootPopulation",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                  "Name": "XValue",
-                                  "Children": [],
+                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                                  "tm": 29.0,
+                                  "te": 57.0,
+                                  "Name": "BetaGrowthFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 30.0,
+                                      "Units": "g",
+                                      "Name": "Ymax",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -3230,6 +3265,16 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -3452,6 +3497,25 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Shoot].MinimumNConc",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4282,6 +4346,16 @@
                   "FixedValue": 0.01,
                   "Units": null,
                   "Name": "MaximumNConc",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5143,6 +5217,16 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -5995,6 +6079,16 @@
                   "FixedValue": 0.01,
                   "Units": "g/g",
                   "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -6884,7 +6978,7 @@
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Veraison",
-                      "ReSetEvent": "Flowering",
+                      "ReSetEvent": "FloweringTime",
                       "Name": "BEN_TmaxIni1",
                       "Children": [
                         {
@@ -7350,7 +7444,7 @@
                     },
                     {
                       "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Flowering",
+                      "SetEvent": "FloweringTime",
                       "ReSetEvent": "BudBurst",
                       "Name": "BunchesPerVine",
                       "Children": [
@@ -8327,7 +8421,7 @@
                     },
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
+                      "Start": "FloweringTime",
                       "End": "LeafFall",
                       "Name": "AfterFlowering",
                       "Children": [
@@ -8416,7 +8510,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
+                          "Start": "FloweringTime",
                           "End": "LeafFall",
                           "Name": "AfterFruitSet",
                           "Children": [
@@ -8593,7 +8687,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
+                      "Start": "FloweringTime",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
                       "Children": [
@@ -8757,7 +8851,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookupValue, Models",
-                      "Start": "Flowering",
+                      "Start": "FloweringTime",
                       "End": "Veraison",
                       "Name": "BeforeVeraison",
                       "Children": [
@@ -8840,7 +8934,7 @@
                 },
                 {
                   "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "Flowering",
+                  "StartStageName": "FloweringTime",
                   "EndStageName": "LeafFall",
                   "ResetStageName": "Ecodormancy",
                   "FractionRemovedOnCut": 0.0,
@@ -9124,7 +9218,7 @@
                         },
                         {
                           "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Flowering",
+                          "Start": "FloweringTime",
                           "End": "LeafFall",
                           "Name": "AfterFruitSet",
                           "Children": [
@@ -10218,9 +10312,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 52.0647",
-                    "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 10.98",
-                    "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -25.5611",
+                    "[Phenology].Dormancy.Target.BaseTarget.FixedValue = 52.0647",
+                    "[Phenology].Dormancy.Progression.Response.Xo.FixedValue = 10.98",
+                    "[Phenology].Dormancy.Progression.Response.b.FixedValue = -25.5611",
                     "[Phenology].Budding.Target.FixedValue = 906.4065",
                     "[Phenology].Budding.Progression.Response.X = 0,0.27668,10.27668,20.27668",
                     "[Phenology].ThermalTime.Response.MinTemp = 0.239618",
@@ -10238,9 +10332,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 88.74292",
-                    "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 15.07995",
-                    "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -1.27593",
+                    "[Phenology].Dormancy.Target.BaseTarget.FixedValue = 88.74292",
+                    "[Phenology].Dormancy.Progression.Response.Xo.FixedValue = 15.07995",
+                    "[Phenology].Dormancy.Progression.Response.b.FixedValue = -1.27593",
                     "[Phenology].Budding.Target.FixedValue = 767.6113",
                     "[Phenology].Budding.Progression.Response.X = 0,0.353281,10.353281,20.353281",
                     "[Phenology].ThermalTime.Response.MinTemp = 2.51",
@@ -10258,9 +10352,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 72.1",
-                    "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue =7.95",
-                    "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -45.3083",
+                    "[Phenology].Dormancy.Target.BaseTarget.FixedValue = 72.1",
+                    "[Phenology].Dormancy.Progression.Response.Xo.FixedValue =7.95",
+                    "[Phenology].Dormancy.Progression.Response.b.FixedValue = -45.3083",
                     "[Phenology].Budding.Target.FixedValue = 627.0382",
                     "[Phenology].Budding.Progression.Response.X = 0,0.244,10.244,20.244",
                     "[Phenology].ThermalTime.Response.MinTemp = 1.514",
@@ -10278,9 +10372,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].EndoDormancy.Target.BaseTarget.FixedValue = 74.163",
-                    "[Phenology].EndoDormancy.Progression.Response.Xo.FixedValue = 12.53467",
-                    "[Phenology].EndoDormancy.Progression.Response.b.FixedValue = -66.5092",
+                    "[Phenology].Dormancy.Target.BaseTarget.FixedValue = 74.163",
+                    "[Phenology].Dormancy.Progression.Response.Xo.FixedValue = 12.53467",
+                    "[Phenology].Dormancy.Progression.Response.b.FixedValue = -66.5092",
                     "[Phenology].Budding.Target.FixedValue = 519.1688",
                     "[Phenology].Budding.Progression.Response.X = 0, 1.93454,11.93454,21.93454",
                     "[Phenology].ThermalTime.Response.MinTemp = 1.173588",
@@ -11604,7 +11698,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Functions;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            root.ZoneRootDepths.Add(2600);\r\nBiomassDemand InitialDM = new BiomassDemand();\r\nConstant InitStruct = new Constant();\r\nInitStruct.FixedValue = 10;\r\nInitialDM.Structural = InitStruct;\r\nConstant InitMetab = new Constant();\r\nInitMetab.FixedValue = 0;\r\nInitialDM.Metabolic = InitMetab;\r\nConstant InitStor = new Constant();\r\nInitStor.FixedValue = 0;\r\nInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
+                  "Code": "using Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Functions;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Grapevine;\r\n        [Link] private Clock Clock;\r\n        [Link] private Zone zone;\r\n        [Link(Type = LinkType.Path, Path = \"[Grapevine].Root\")]\r\n        private Root root;\r\n\r\n        [Description(\"Use extra root zone\")]\r\n        public bool UseExtraZone { get; set; }\r\n\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            if (UseExtraZone)\r\n            {\r\n            root.ZoneNamesToGrowRootsIn.Add(\"Alley\");\r\n            root.ZoneRootDepths.Add(2600);\r\n\t\t\tBiomassDemand InitialDM = new BiomassDemand();\r\n\t\t\tConstant InitStruct = new Constant();\r\n\t\t\tInitStruct.FixedValue = 10;\r\n\t\t\tInitialDM.Structural = InitStruct;\r\n\t\t\tConstant InitMetab = new Constant();\r\n\t\t\tInitMetab.FixedValue = 0;\r\n\t\t\tInitialDM.Metabolic = InitMetab;\r\n\t\t\tConstant InitStor = new Constant();\r\n\t\t\tInitStor.FixedValue = 0;\r\n\t\t\tInitialDM.Storage = InitStor;\r\n            root.ZoneInitialDM.Add(InitialDM);\r\n\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n\r\n",
                   "Parameters": [
                     {
                       "Key": "UseExtraZone",
