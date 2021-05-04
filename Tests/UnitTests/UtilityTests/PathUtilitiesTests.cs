@@ -41,9 +41,8 @@ namespace UnitTests.UtilityTests
             string assembly = Assembly.GetExecutingAssembly().Location;
             string bin = Path.GetDirectoryName(assembly);
             string subDir = Path.Combine(bin, "a");
-            string apsimxDir = Directory.GetParent(bin).FullName;
+            string apsimxDir = new DirectoryInfo(Path.Combine(bin, "..", "..", "..")).FullName;
             // string rel = "Bin/a";
-            string parent = Path.Combine(Directory.GetParent(bin).FullName, "a");
 
             Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", assembly));
             Assert.AreEqual(subDir, PathUtilities.GetAbsolutePath("a", bin));
@@ -59,7 +58,7 @@ namespace UnitTests.UtilityTests
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", bin));
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", null));
             Assert.AreEqual(apsimxDir, PathUtilities.GetAbsolutePath("%root%", ""));
-            Assert.AreEqual(bin, PathUtilities.GetAbsolutePath("%root%\\Bin", ""));
+            Assert.AreEqual(Path.Combine(apsimxDir, "bin"), PathUtilities.GetAbsolutePath("%root%\\bin", ""));
         }
     }
 }

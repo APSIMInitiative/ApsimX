@@ -6,6 +6,7 @@ using System.Xml;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Climate;
+using System.Linq;
 
 namespace Models
 {
@@ -52,7 +53,7 @@ namespace Models
             if (names != null)
                 names.Clear();
 
-            foreach (Weather weather in this.FindAllInScope<Weather>())
+            foreach (Weather weather in FindAllInScope<Weather>().Where(w => w.Enabled))
             {
                 weather.OpenDataFile();
                 double latitude = weather.Latitude;

@@ -7265,7 +7265,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "This is a spring wheat with a high grain number and later tillering\n",
+                      "Text": "This is a spring wheat with a high grain number and later tillering",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,

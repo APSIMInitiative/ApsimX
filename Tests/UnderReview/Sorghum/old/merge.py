@@ -2,6 +2,7 @@
 import glob
 import os.path as path
 import pandas
+import re
 
 # Get the indices of the header rows.
 def getHeaderRows(fileName):
@@ -31,6 +32,8 @@ def combineResults(directory):
     files = glob.glob(path.join(directory, '*.out'))
     simNames = getSimNameLookup('names.txt')
     data = []
+    date_rx = r'^(\d{2})/(\d{2})/(\d{4})'
+    date_repl = r'\3-\2-\1'
     for file in files:
         ignoredRows = getHeaderRows(file)
         df = pandas.read_csv(file, skiprows = ignoredRows)
@@ -38,6 +41,7 @@ def combineResults(directory):
         if simName in simNames:
             simName = simNames[simName]
         df['SimulationName'] = simName
+        df['Date'] = df['Date'].apply(lambda x: re.sub(date_rx, date_repl, x))
         data.append(df)
 
     # Concatenate all data frames into a single big dataframe

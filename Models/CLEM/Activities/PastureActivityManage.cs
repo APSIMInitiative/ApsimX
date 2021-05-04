@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>First implementation of this activity using NABSA grazing processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

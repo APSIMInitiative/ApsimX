@@ -55,6 +55,7 @@ namespace UserInterface.Views
         private Cursor handCursor;
 		private Cursor regularCursor;
         private MarkdownFindView findView;
+        private AccelGroup accelerators = new AccelGroup();
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -62,7 +63,7 @@ namespace UserInterface.Views
         /// <summary>Constructor</summary>
         public MarkdownView(ViewBase owner) : base(owner)
         {
-            Initialise(owner, new TextView());
+            Initialise(owner, new ScrolledWindow());
         }
 
         /// <summary>Constructor</summary>
@@ -82,7 +83,17 @@ namespace UserInterface.Views
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
             base.Initialise(ownerView, gtkControl);
-            textView = (TextView)gtkControl;
+            if (gtkControl is ScrolledWindow scroller)
+            {
+                textView = new TextView();
+                scroller.Add(textView);
+                mainWidget = scroller;
+            }
+            else
+            {
+                textView = (TextView)gtkControl;
+                mainWidget = textView;
+            }
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -92,14 +103,76 @@ namespace UserInterface.Views
             textView.MotionNotifyEvent += OnMotionNotify;
             textView.WidgetEventAfter += OnWidgetEventAfter;
             CreateStyles(textView);
-            mainWidget = textView;
             mainWidget.ShowAll();
             mainWidget.Destroyed += OnDestroyed;
+            mainWidget.Realized += OnRealized;
+            textView.FocusInEvent += OnGainFocus;
+            textView.FocusOutEvent += OnLoseFocus;
 
             handCursor = new Gdk.Cursor(Gdk.CursorType.Hand2);
             regularCursor = new Gdk.Cursor(Gdk.CursorType.Xterm);
             
             textView.KeyPressEvent += OnTextViewKeyPress;
+        }
+
+        /// <summary>
+        /// Called when the text editor loses keyboard focus.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnLoseFocus(object sender, FocusOutEventArgs args)
+        {
+            try
+            {
+                if (mainWidget.Toplevel is Gtk.Window window)
+                    window.RemoveAccelGroup(accelerators);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Called when the text editor gains keyboard focus.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnGainFocus(object sender, FocusInEventArgs args)
+        {
+            try
+            {
+                if (mainWidget.Toplevel is Gtk.Window window)
+                    window.AddAccelGroup(accelerators);
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
+        }
+
+        /// <summary>
+        /// Context menu items aren't actually added to the context menu until the
+        /// user requests the context menu (ie via right clicking). Keyboard shortcuts
+        /// (accelerators) won't work until this occurs. Therefore, we now manually
+        /// fire off a populate-popup signal to cause the context menu to be populated.
+        /// (This doesn't actually cause the context menu to be displayed.)
+        ///
+        /// We wait until the widget is realized so that the owner of the view has a
+        /// chance to add context menu items.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            try
+            {
+                GLib.Signal.Emit(textView, "populate-popup", new Menu());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -126,6 +199,7 @@ namespace UserInterface.Views
             try
             {
                 MenuItem option = new MenuItem("Find Text");
+                option.AddAccelerator("activate", accelerators, (uint)Gdk.Key.F, ModifierType.ControlMask, AccelFlags.Visible);
                 option.ShowAll();
                 option.Activated += OnFindText;
 #if NETFRAMEWORK
@@ -723,6 +797,7 @@ namespace UserInterface.Views
         {
             try
             {
+                accelerators.Dispose();
                 textView.KeyPressEvent -= OnTextViewKeyPress;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;

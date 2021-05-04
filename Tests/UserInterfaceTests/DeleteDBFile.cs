@@ -24,7 +24,7 @@ public class Script
 		
 		// Open the wheat example in a tab.
 		string bin = Path.GetDirectoryName(typeof(MainPresenter).Assembly.Location);
-        string apsimx = Path.Combine(bin, "..");
+        string apsimx = Path.Combine(bin, "..", "..", "..");
 		string wheatExample = Path.Combine(apsimx, "Examples", "Wheat.apsimx");
 		string tempFile = Path.GetTempFileName();
 		File.Copy(wheatExample, tempFile, true);

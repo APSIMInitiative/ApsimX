@@ -11,7 +11,7 @@
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand

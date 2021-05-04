@@ -62,6 +62,7 @@
             graphView.OnLegendClick += OnLegendClick;
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnHoverOverPoint += OnHoverOverPoint;
+            graphView.OnAnnotationClick += OnAnnotationClick;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
             this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
@@ -88,6 +89,7 @@
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
+            graphView.OnAnnotationClick -= OnAnnotationClick;
         }
 
         public void DrawGraph()
@@ -318,7 +320,9 @@
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
+            var range = graphView.AxisMaximum(Axis.AxisType.Bottom) - graphView.AxisMinimum(Axis.AxisType.Bottom);
+
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) + range * 0.03;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
@@ -329,33 +333,55 @@
                 IAnnotation annotation = annotations.ElementAt(i);
                 if (annotation is TextAnnotation textAnnotation)
                 {
-                    if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
-                    {
-                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
+                    double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
 
-                        double yPosition = largestAxisScale - (i * interval);
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            minimumX, 
-                                            yPosition,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                    object x, y;
+                    bool leftAlign = textAnnotation.leftAlign;
+                    bool topAlign = textAnnotation.topAlign;
+                    if (textAnnotation.Name != null && textAnnotation.Name.StartsWith("Regression"))
+                    {
+                        if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopLeft)
+                        {
+                            x = minimumX;
+                            y = maximumY - i * interval;
+                        }
+                        else if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = maximumY - i * interval;
+                            leftAlign = false;
+                        }
+                        else if (graph.AnnotationPosition == Graph.AnnotationPositionType.BottomRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = minimumY + i * interval;
+                            leftAlign = false;
+                            topAlign = false;
+                        }
+                        else
+                        {
+                            x = minimumX;
+                            y = minimumY + i * interval;
+                            topAlign = false;
+                        }
+
+                        //y = largestAxisScale - (i * interval);
                     }
                     else
                     {
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            textAnnotation.x, 
-                                            textAnnotation.y,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                        x = textAnnotation.x;
+                        y = textAnnotation.y;
                     }
+
+                    graphView.DrawText( textAnnotation.text,
+                                        x,
+                                        y,
+                                        leftAlign,
+                                        topAlign,
+                                        textAnnotation.textRotation,
+                                        Axis.AxisType.Bottom,
+                                        Axis.AxisType.Left,
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -374,6 +400,10 @@
                     throw new Exception($"Unknown annotation type {annotation.GetType()}");
             }
         }
+
+        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
+        {
+                   }
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
@@ -511,6 +541,25 @@
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");
+            presenter.Attach(graph, view, explorerPresenter);
+        }
+
+        /// <summary>
+        /// User has clicked on graph annotation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAnnotationClick(object sender, EventArgs e)
+        {
+            if (CurrentPresenter != null)
+                CurrentPresenter.Detach();
+
+            AnnotationPresenter presenter = new AnnotationPresenter();
+            CurrentPresenter = presenter;
+
+            //LegendView view = new LegendView(graphView as GraphView);
+            var view = new ViewBase(graphView as ViewBase, "ApsimNG.Resources.Glade.AnnotationView.glade");
+            graphView.ShowEditorPanel(view.MainWidget, "Stats / Equation options");
             presenter.Attach(graph, view, explorerPresenter);
         }
 

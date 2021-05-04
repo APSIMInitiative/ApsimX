@@ -16,7 +16,7 @@ namespace Models.CLEM
     /// <summary>This activity summarizes ruminant herds for reporting</summary>
     /// <summary>Remove if you do not need monthly herd summaries</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

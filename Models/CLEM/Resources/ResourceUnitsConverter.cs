@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// The component is used to store details to convert units of a resource type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStoreType))]
     [ValidParent(ParentType = typeof(EquipmentType))]

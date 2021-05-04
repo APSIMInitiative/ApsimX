@@ -10,7 +10,7 @@
         /// <summary>
         /// Allow direct access to the property grid.
         /// </summary>
-        IGridView PropertyGrid { get; }
+        IPropertyView ProperiesView { get; }
 
         /// <summary>
         /// Allow direct access to the profile grid.
@@ -41,7 +41,7 @@
     public class ProfileView : ViewBase, IProfileView
     {
         private GridView profileGrid;
-        private GridView propertyGrid;
+        private PropertyView properitesView;
         private GraphView graph;
         private VPaned vpaned1 = null;
         private VPaned vpaned2 = null;
@@ -54,8 +54,8 @@
             vpaned2 = (VPaned)builder.GetObject("vpaned2");
             vbox1 = (VBox)builder.GetObject("vbox1");
             mainWidget = vpaned1;
-            propertyGrid = new GridView(this);
-            vbox1.PackStart(propertyGrid.MainWidget, true, true, 0);
+            properitesView = new PropertyView(this);
+            vbox1.PackStart(properitesView.MainWidget, true, true, 0);
             //vpaned1.Pack1(PropertyGrid.MainWidget, true, true);
             profileGrid = new GridView(this);
             profileGrid.NumericFormat = "N3";
@@ -72,8 +72,8 @@
             {
                 profileGrid.MainWidget.Cleanup();
                 profileGrid = null;
-                propertyGrid.MainWidget.Cleanup();
-                propertyGrid = null;
+                properitesView.MainWidget.Cleanup();
+                properitesView = null;
                 graph.MainWidget.Cleanup();
                 graph = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -107,9 +107,9 @@
         /// <summary>
         /// Allow direct access to the property grid.
         /// </summary>
-        public IGridView PropertyGrid
+        public IPropertyView ProperiesView
         {
-            get { return propertyGrid; }
+            get { return properitesView; }
         }
 
         /// <summary>

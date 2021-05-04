@@ -12,7 +12,7 @@ namespace Models.PMF.Struct
     /// *[FractionOfBudBurst.Name]* * *SowingData.BudNumber* (from manager at establishment)
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Structure))]
     public class BudNumberFunction : Model

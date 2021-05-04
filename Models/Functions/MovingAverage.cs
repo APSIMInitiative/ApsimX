@@ -14,7 +14,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Maintains a moving average of a given value for a user-specified number of simulation days")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class MovingAverageFunction : Model, IFunction, ICustomDocumentation
     {

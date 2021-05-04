@@ -15,7 +15,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual other animals
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
     [Version(1, 0, 1, "")]

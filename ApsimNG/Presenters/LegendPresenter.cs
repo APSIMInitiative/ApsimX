@@ -97,6 +97,7 @@
             view.PositionDropDown.Values = positions;
             view.OrientationDropDown.SelectedValue = graph.LegendOrientation.ToString();
             view.PositionDropDown.SelectedValue = graph.LegendPosition.ToString();
+            view.LegendInsideGraph = !graph.LegendOutsideGraph;
 
             List<string> seriesNames = this.GetSeriesNames();
             this.view.SetSeriesNames(seriesNames.ToArray());

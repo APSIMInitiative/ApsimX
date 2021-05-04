@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Other animals breed activity</summary>
     /// <summary>This activity handles breeding in other animals types</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
