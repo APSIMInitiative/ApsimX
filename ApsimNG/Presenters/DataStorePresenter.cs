@@ -16,13 +16,17 @@ namespace UserInterface.Presenters
     using System.Collections.Generic;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
-    public class DataStorePresenter : GridPresenter, IPresenter
+    public class DataStorePresenter : IPresenter
     {
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
 
         /// <summary>The data store view to work with.</summary>
         private ViewBase view;
+
+        private SheetWidget grid;
+
+        private ContainerView container;
 
         /// <summary>
         /// The intellisense.
@@ -79,7 +83,7 @@ namespace UserInterface.Presenters
         /// <param name="model">The data store model to work with.</param>
         /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
-        public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
+        public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
             view = v as ViewBase;
@@ -92,14 +96,16 @@ namespace UserInterface.Presenters
             tableDropDown = view.GetControl<DropDownView>("tableDropDown");
             columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
-            grid = view.GetControl<GridView>("grid");
+
+            container = view.GetControl<ContainerView>("grid");
+                
             maxNumRecordsEditBox = view.GetControl<EditView>("maxNumRecordsEditBox");
 
-            base.Attach(model, grid, explorerPresenter);
+            //base.Attach(model, grid, explorerPresenter);
 
             tableDropDown.IsEditable = false;
-            grid.ReadOnly = true;
-            grid.NumericFormat = "N3";
+            //grid.ReadOnly = true;
+            //grid.NumericFormat = "N3";
             if (dataStore != null)
             {
                 tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
@@ -125,9 +131,9 @@ namespace UserInterface.Presenters
         }
 
         /// <summary>Detach the model from the view.</summary>
-        public override void Detach()
+        public void Detach()
         {
-            base.Detach();
+            //base.Detach();
             maxNumRecordsEditBox.EndEdit();
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
@@ -173,7 +179,7 @@ namespace UserInterface.Presenters
                         data.Columns.Remove("CheckpointID");
 
                     int simulationId = 0;
-         
+
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
                         if (data.Columns[i].ColumnName == "SimulationID")
@@ -199,31 +205,53 @@ namespace UserInterface.Presenters
                     }
 
                     // Convert the last dot to a CRLF so that the columns in the grid are narrower.
+                    //foreach (DataColumn column in data.Columns)
+                    //{
+                    //    string units = null;
+
+                    //    // Try to obtain units
+                    //    if (dataStore != null && simulationId != 0)
+                    //    {
+                    //        units = dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName);
+                    //    }
+
+                    //    int posLastDot = column.ColumnName.LastIndexOf('.');
+                    //    if (posLastDot != -1)
+                    //    {
+                    //        column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
+                    //    }
+
+                    //    // Add the units, if they're available
+                    //    if (units != null)
+                    //    {
+                    //        column.ColumnName = column.ColumnName + " (" + units + ")";
+                    //    }
+                    //}
+
+                    // Get units for all columns
+                    List<string> units = new List<string>();
                     foreach (DataColumn column in data.Columns)
                     {
-                        string units = null;
-
                         // Try to obtain units
                         if (dataStore != null && simulationId != 0)
-                        {
-                            units = dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName);
-                        }
-
-                        int posLastDot = column.ColumnName.LastIndexOf('.');
-                        if (posLastDot != -1)
-                        {
-                            column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
-                        }
-
-                        // Add the units, if they're available
-                        if (units != null)
-                        {
-                            column.ColumnName = column.ColumnName + " (" + units + ")";
-                        }
+                            units.Add(dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName));
+                        else
+                            units.Add(null);
                     }
 
-                    grid.DataSource = data;
-                    grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
+                    // Create sheet control
+                    if (data != null)
+                    {
+                        grid = new SheetWidget();
+                        grid.DataProvider = new DataTableProvider(data, units);
+                        grid.LeftJustify = false;
+                        grid.NumHeadingRows = 2;
+                        grid.NumFrozenColumns = numFrozenColumns;
+                        grid.Readonly = true;
+                        container.Add(grid);
+                    }
+
+                    //grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
                 }
             }
         }

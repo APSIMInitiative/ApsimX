@@ -37,6 +37,5 @@ namespace APSIM.Shared.Utilities
             return writer.ToString();
         }
 
-
     }
 }
