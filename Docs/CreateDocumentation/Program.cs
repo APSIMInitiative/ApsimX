@@ -26,7 +26,7 @@
             {
                 Gtk.Application.Init();
 
-                var apsimDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".."));
+                var apsimDirectory = PathUtilities.GetAbsolutePath("%root%", null);
 
                 // Set the current directory to the bin directory so that APSIM can find sqlite3.dll
                 var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
