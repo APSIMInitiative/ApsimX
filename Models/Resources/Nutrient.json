@@ -1441,7 +1441,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.01,
                   "Units": null,
                   "Name": "NLoss",
                   "Children": [],
@@ -1451,13 +1451,13 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "N2OFraction",
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Currently, no N2O is assumed to be produced during nitrification processes.",
+                      "Text": "Testing to see the carnage if N2O from nitrificaiton is enabled. Change here and in N loss aboe - Currently, no N2O is assumed to be produced during nitrification processes.",
                       "Name": "Memo",
                       "Children": [],
                       "IncludeInDocumentation": true,
