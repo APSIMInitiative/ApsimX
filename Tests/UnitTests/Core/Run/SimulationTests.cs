@@ -61,7 +61,7 @@
             };
 
             // Run simulation making sure it throws.
-            Assert.Throws<Exception>(() => simulation.Run());
+            Assert.Throws<SimulationException>(() => simulation.Run());
 
             // Make sure the error was sent to summary.
             Assert.IsTrue(MockSummary.messages[0].Contains("Intentional exception"));
