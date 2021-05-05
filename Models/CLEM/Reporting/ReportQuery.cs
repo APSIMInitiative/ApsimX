@@ -21,9 +21,9 @@ namespace Models.CLEM.Reporting
         private IDataStore dataStore = null;
 
         /// <summary>
-        /// The line by line query, separated for display purposes
+        /// The line by line SQL query, separated for display purposes
         /// </summary>
-        [Description("SQL to run on parent report")]
+        [Description("SQL statement")]
         [Display(Type = DisplayType.MultiLineText)]
         public string[] Lines { get; set; }
         
