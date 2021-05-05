@@ -64,7 +64,7 @@ namespace UnitTests
             string rowFilter = null;
             if (checkpointName != null)
                 rowFilter += "CheckpointName = '" + checkpointName + "'";
-            if (simulationNames != null)
+            if (simulationNames != null && simulationNames.Any())
             {
                 if (rowFilter != null) rowFilter += " AND ";
                 rowFilter += $"SimulationName in ({simulationNames.Enclose("'","'").Join(",")})";

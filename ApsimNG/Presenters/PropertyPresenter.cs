@@ -141,7 +141,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Detach the presenter from the view. Perform misc cleanup.
         /// </summary>
-        public void Detach()
+        public virtual void Detach()
         {
             view.SaveChanges();
             view.PropertyChanged -= OnViewChanged;

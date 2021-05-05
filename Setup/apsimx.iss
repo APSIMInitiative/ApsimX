@@ -4,7 +4,7 @@
 ;APSIM setup script
 
 #include  "ISPPBuiltins.iss"
-#define AppVerNo GetStringFileInfo("..\Bin\Models.exe", PRODUCT_VERSION) 
+#define AppVerNo GetStringFileInfo("..\bin\Release\net472\Models.exe", PRODUCT_VERSION) 
 
 [Setup]
 AppName=APSIM
@@ -20,7 +20,7 @@ AppVersion={#AppVerNo}
 AppID=APSIM{#AppVerNo}
 DefaultDirName={autopf}\APSIM{#AppVerNo}
 DefaultGroupName=APSIM{#AppVerNo}
-UninstallDisplayIcon={app}\Bin\ApsimNG.exe
+UninstallDisplayIcon={app}\bin\ApsimNG.exe
 Compression=lzma/Max
 ChangesAssociations=true
 WizardSmallImageFile=apsim_logo32.bmp
@@ -58,14 +58,13 @@ Name: {localappdata}\VirtualStore\Apsim\*.*; Type: filesandordirs
 Name: {localappdata}\VirtualStore\Apsim; Type: dirifempty
 
 [Files]
-Source: ..\Bin\*.exe; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\Tools\*.*; DestDir: {app}\Bin\Tools; Flags: ignoreversion;
-Source: ..\DeploymentSupport\Windows\Bin64\*.dll; DestDir: {app}\Bin; Flags: ignoreversion; Check: Is64BitInstallMode
+Source: ..\bin\Release\net472\*.exe; DestDir: {app}\bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\*.dll; DestDir: {app}\bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\Tools\*.*; DestDir: {app}\bin\Tools; Flags: ignoreversion;
+Source: ..\DeploymentSupport\Windows\Bin64\*.dll; DestDir: {app}\bin; Flags: ignoreversion; Check: Is64BitInstallMode
 Source: ..\DeploymentSupport\Windows\Bin64\lib\gtk-2.0\2.10.0\engines\*.dll; DestDir: {app}\lib\gtk-2.0\2.10.0\engines; Flags: ignoreversion; Check: Is64BitInstallMode
-Source: ..\Bin\.gtkrc; DestDir: {app}\Bin; Flags: ignoreversion;
-Source: ..\Bin\ApsimNG.exe.config; DestDir: {app}\Bin; Flags: ignoreversion; 
-Source: ..\Bin\Models.xml; DestDir: {app}\Bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\ApsimNG.exe.config; DestDir: {app}\bin; Flags: ignoreversion; 
+Source: ..\bin\Release\net472\Models.xml; DestDir: {app}\bin; Flags: ignoreversion; 
 Source: ..\APSIM.bib; DestDir: {app}; Flags: ignoreversion;
 Source: ..\ApsimNG\Resources\world\*; DestDir: {app}\ApsimNG\Resources\world; Flags: recursesubdirs
 
@@ -86,17 +85,17 @@ Type: files; Name: "{app}\apsim.url"
 Filename: "{app}\apsim.url"; Section: "InternetShortcut"; Key: "URL"; String: "https://apsimnextgeneration.netlify.com/" 
 
 [Icons]
-;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe
-Name: "{group}\APSIM User Interface"; Filename: {app}\Bin\ApsimNG.exe
+;Name: {autoprograms}\APSIM{#AppVerNo}; Filename: {app}\bin\ApsimNG.exe
+Name: "{group}\APSIM User Interface"; Filename: {app}\bin\ApsimNG.exe
 Name: "{group}\APSIM Next Generation home page"; Filename: "{app}\apsim.url";
-Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\Bin\ApsimNG.exe; Tasks: desktopicon
+Name: {autodesktop}\APSIM{#AppVerNo}; Filename: {app}\bin\ApsimNG.exe; Tasks: desktopicon
 
 [Registry]
 ;do the associations
 Root: HKA; Subkey: "Software\Classes\.apsimx"; ValueType: string; ValueName: ""; ValueData: APSIMXFile; Flags: uninsdeletevalue; Tasks: associate
 Root: HKA; Subkey: "Software\Classes\APSIMXFile"; ValueType: string; ValueName: ""; ValueData: APSIM Next Generation File; Flags: uninsdeletekey; Tasks: associate
-Root: HKA; Subkey: "Software\Classes\APSIMXFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: {app}\Bin\ApsimNG.exe,0; Tasks: associate
-Root: HKA; Subkey: "Software\Classes\APSIMXFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\Bin\ApsimNG.exe"" ""%1"""; Tasks: associate
+Root: HKA; Subkey: "Software\Classes\APSIMXFile\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: {app}\bin\ApsimNG.exe,0; Tasks: associate
+Root: HKA; Subkey: "Software\Classes\APSIMXFile\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\bin\ApsimNG.exe"" ""%1"""; Tasks: associate
 
 [Run]
-Filename: {app}\Bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent
+Filename: {app}\bin\ApsimNG.exe; Description: Launch APSIM; Flags: postinstall nowait skipifsilent

@@ -90,18 +90,6 @@
         /// </summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            events.Unsubscribe(StartEventName, OnStartEvent);
-            events.Unsubscribe(StartEventName, OnEndEvent);
-        }
-
-        /// <summary>
-        /// Invoked when simulation has completed.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
         [EventSubscribe("DoManagementCalculations")]
         private void OnDoDailyTracking(object sender, EventArgs e)
         {
