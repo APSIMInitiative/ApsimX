@@ -146,7 +146,7 @@ namespace Models.CLEM.Resources
             if (this.areaAvailable + addAmount > this.UsableArea)
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
-                string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
+                string message = $"Tried to add more available land to [r={this.Name}] than exists.";
                 Summary.WriteWarning(this, message);
                 this.areaAvailable = this.UsableArea;
             }
