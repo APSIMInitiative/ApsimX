@@ -25,12 +25,12 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("SQL statement")]
         [Display(Type = DisplayType.MultiLineText)]
-        public string[] Lines { get; set; }
-        
+        public string[] Lines { get; set; } = new string[1];
+
         /// <summary>
         /// The complete query
         /// </summary>
-        public string SQL => string.Join(" ", Lines);
+        public string SQL => ((Lines is null) ? "" : string.Join(" ", Lines));
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -40,15 +40,40 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = FindInScope<IDataStore>();
-            storage.AddView(Name, SQL);
-            return storage.Reader.GetDataUsingSql(SQL);
+            if (SQL != "")
+            {
+                var storage = FindInScope<IDataStore>();
+                AddView(storage, Name, SQL);
+                return storage.Reader.GetDataUsingSql(SQL);
+            }
+            else
+            {
+                return new DataTable();
+            }
+        }
+
+        private void AddView(IDataStore data, string name, string sql)
+        {
+            try
+            {
+                data.AddView(Name, SQL);
+            }
+            catch (Exception ex)
+            {
+                throw new ApsimXException(this, $"Error trying to execute SQL query for [{this.Name}]: {ex.Message}");
+            }
         }
 
         /// <summary>
         /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => dataStore.AddView(Name, SQL);
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (SQL != "")
+            {
+                AddView(dataStore, Name, SQL);
+            }
+        }
     }
 }
