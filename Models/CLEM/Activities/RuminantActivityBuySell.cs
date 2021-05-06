@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
                 {
                     if (BankAccountName == "")
                     {
-                        Summary.WriteWarning(this, "No bank account has been specified in [a={0}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
+                        Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
                     }
                 }
             }

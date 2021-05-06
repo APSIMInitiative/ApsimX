@@ -83,7 +83,7 @@ namespace Models.CLEM.Activities
                         this.Status = ActivityStatus.Warning;
                         if (!timingIssueReported)
                         {
-                            Summary.WriteWarning(this, String.Format("The harvest timer for crop task [a=" + this.Name + "] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", this.Name));
+                            Summary.WriteWarning(this, $"The harvest timer for crop task [a={this.Name}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.");
                             timingIssueReported = true;
                         }
                     }

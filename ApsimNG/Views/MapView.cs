@@ -230,21 +230,25 @@
             result.BackgroundLayer.Add(baseLayer);
             result.MaximumZoom = baseLayer.Envelope.Width;
 
-            // This layer as a sort of backup in case the BruTile download times out. 
-            // It should normally be invisible, as it will be covered by another layer.
-            VectorLayer layWorld = new VectorLayer("Countries");
+            // This layer is used only as a sort of backup in case the BruTile download times out
+            // or is otherwise unavailable.
+            // It should normally be invisible, as it will be covered by the BruTile tile layer.
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            layWorld.DataSource = new ShapeFile(shapeFileName, true);
-            layWorld.Style = new VectorStyle();
-            layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
-            layWorld.Style.Fill = new SolidBrush(background);
-            layWorld.Style.Outline.Color = foreground;
-            layWorld.CoordinateTransformation = LatLonToMetres;
-            result.BackgroundLayer.Insert(0, layWorld);
+            if (File.Exists(shapeFileName))
+            {
+                VectorLayer layWorld = new VectorLayer("Countries");
+                layWorld.DataSource = new ShapeFile(shapeFileName, true);
+                layWorld.Style = new VectorStyle();
+                layWorld.Style.EnableOutline = true;
+                Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
+                Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
+                layWorld.Style.Fill = new SolidBrush(background);
+                layWorld.Style.Outline.Color = foreground;
+                layWorld.CoordinateTransformation = LatLonToMetres;
+                result.BackgroundLayer.Insert(0, layWorld);
+            }
 
             return result;
         }
