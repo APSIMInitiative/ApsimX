@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Text;
 using APSIM.Server.Cli;
 using APSIM.Server.Commands;
 using APSIM.Shared.Utilities;
@@ -62,10 +63,13 @@ namespace APSIM.Server
                     if (options.Verbose)
                         Console.WriteLine("Client connected to server.");
                     object response;
-                    while ( (response = PipeUtilities.GetObjectFromPipe(pipeServer)) != null)
+                    while ( (response = ReadFromPipe(pipeServer)) != null)
                     {
                         if (response is string message)
+                        {
                             Console.WriteLine($"Message from client: '{message}'");
+                            SendToPipe(pipeServer, "Hello there");
+                        }
                         else if (response is ICommand command)
                         {
                             if (options.Verbose)
@@ -78,13 +82,13 @@ namespace APSIM.Server
                                 timer.Stop();
                                 if (options.Verbose)
                                     Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
-                                PipeUtilities.SendObjectToPipe(pipeServer, "fin");
+                                SendToPipe(pipeServer, "fin");
                             }
                             catch (Exception err)
                             {
                                 if (options.Verbose)
                                     Console.Error.WriteLine(err);
-                                PipeUtilities.SendObjectToPipe(pipeServer, err);
+                                SendToPipe(pipeServer, err);
                             }
                         }
                         else
@@ -102,6 +106,42 @@ namespace APSIM.Server
                         return;
                     pipeServer.Disconnect();
                 }
+            }
+        }
+
+        private void SendToPipe(NamedPipeServerStream pipe, object message)
+        {
+            byte[] buffer;
+            if (options.Mode == CommunicationMode.Managed)
+            {
+                buffer = ((MemoryStream)ReflectionUtilities.BinarySerialise(message)).ToArray();
+            }
+            else if (options.Mode == CommunicationMode.Native)
+            {
+                buffer = Encoding.Default.GetBytes(message.ToString());
+            }
+            else
+                throw new NotImplementedException();
+            PipeUtilities.SendObjectToPipe(pipe, buffer);
+        }
+
+        private object ReadFromPipe(NamedPipeServerStream pipe)
+        {
+            byte[] buffer = PipeUtilities.GetObjectFromPipe(pipe);
+            // Convert bytes to object.
+            if (options.Mode == CommunicationMode.Managed)
+            {
+                return ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
+            }
+            else if (options.Mode == CommunicationMode.Native)
+            {
+                if (buffer == null)
+                    return null;
+                return Encoding.Default.GetString(buffer);
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
     }

@@ -12,7 +12,9 @@
             "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/apsim-server.dll",
             "args": [
                 "-vkf",
-                "Examples/sorghum.apsimx"
+                "Examples/sorghum.apsimx",
+                "-m",
+                "Native"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
