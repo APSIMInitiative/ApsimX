@@ -11,7 +11,7 @@
     /// Sets and infestation event for Lifecycle model.  
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class Infestation : Model, IInfest

@@ -23,7 +23,7 @@
     /// source data table.
     /// This model matches dates so it assumes that there is a Clock.Today field.
     /// </remarks>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
     [Serializable]

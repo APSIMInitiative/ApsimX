@@ -9,7 +9,7 @@ namespace Models.GrazPlan
 
     /// <summary>Encapsulates a parameter set for an animal.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Stock))]
     public class Genotype : Model

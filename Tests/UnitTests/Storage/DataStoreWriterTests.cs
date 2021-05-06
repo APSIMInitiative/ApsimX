@@ -18,20 +18,9 @@
         public static string FindSqlite3DLL()
         {
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            while (directory != null)
-            {
-                string[] directories = Directory.GetDirectories(directory, "Bin", SearchOption.AllDirectories);
-                foreach (string dir in directories)
-                {
-                    string[] files = Directory.GetFiles(dir, "sqlite3.dll");
-                    if (files.Length == 1)
-                    {
-                        return files[0];
-                    }
-                }
-
-                directory = Path.GetDirectoryName(directory); // parent directory
-            }
+            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
+            if (files.Length == 1)
+                return files[0];
 
             throw new Exception("Cannot find sqlite3 dll directory");
         }
@@ -90,26 +79,31 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "_Simulations"),
-               $"ID,Name,FolderName{Environment.NewLine}" +
-               $" 1,Sim1,   Folder1{Environment.NewLine}" +
-               $" 2,Sim2,   Folder2{Environment.NewLine}");
 
-            Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-               $"ID,   Name,Version,OnGraphs{Environment.NewLine}" +
-               $" 1,Current,       ,        {Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                       "ID", "Name", "FolderName" },
+                                      new List<object[]> { new object[] {     1, "Sim1",    "Folder1" },
+                                                           new object[] {     2, "Sim2",    "Folder2" }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Simulations")));
 
-            Assert.AreEqual(Utilities.TableToString(database, "_Units"),
-               $"TableName,ColumnHeading,Units{Environment.NewLine}" +
-               $"   Report,         Col2,    g{Environment.NewLine}" +
-               $"   Report,         Col3,kg/ha{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                       "ID", "Name",         "Version",      "OnGraphs" },
+                                      new List<object[]> { new object[] {     1, "Current", Convert.DBNull, Convert.DBNull }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints")));
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           $"CheckpointID,SimulationID, Col1,Col2,Col3{Environment.NewLine}" +
-                           $"           1,           1,1.000,  11,    {Environment.NewLine}" +
-                           $"           1,           1,2.000,  12,    {Environment.NewLine}" +
-                           $"           1,           2,3.000,    ,  13{Environment.NewLine}" +
-                           $"           1,           2,4.000,    ,  14{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                    "TableName", "ColumnHeading", "Units" },
+                                      new List<object[]> { new object[] {  "Report",          "Col2",     "g" },
+                                                           new object[] {  "Report",          "Col3", "kg/ha" }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Units")));
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                 "CheckpointID", "SimulationID", "Col1",         "Col2",          "Col3" },
+                                      new List<object[]> { new object[] {         1,              1,      1,             11, Convert.DBNull },
+                                                           new object[] {         1,              1,      2,             12, Convert.DBNull },
+                                                           new object[] {         1,              2,      3, Convert.DBNull,             13 },
+                                                           new object[] {         1,              2,      4, Convert.DBNull,             14 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
         }
 
         /// <summary>When writing simulation data to a table, ensure that old rows are removed.</summary>
@@ -145,9 +139,11 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT * FROM [Report] ORDER BY [Col]"),
-                           $"CheckpointID,SimulationID,Col{Environment.NewLine}" +
-                           $"           1,           1,  3{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID", "Col" },
+                                      new List<object[]> { new object[] {              1,              1,    3 }})
+               .IsSame(database.ExecuteQuery("SELECT * FROM [Report] ORDER BY [Col]")));
         }
 
         /// <summary>Write a table of data with no simulation name.</summary>
@@ -171,15 +167,16 @@
             writer.AddUnits("Report", new string[] { "Col1" }, new string[] { "g" });
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                                        $"CheckpointID,Col1,Col2{Environment.NewLine}" +
-                                        $"           1,  10,  20{Environment.NewLine}" +
-                                        $"           1,  11,  21{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                 "CheckpointID", "Col1",         "Col2" },
+                                      new List<object[]> { new object[] {         1,     10,            20 },
+                                                           new object[] {         1,     11,            21 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
 
-            // Make sure units were extracted from the column names and written.
-            Assert.AreEqual(Utilities.TableToString(database, "_Units"),
-               $"TableName,ColumnHeading,Units{Environment.NewLine}" +
-               $"   Report,         Col1,    g{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                     "TableName", "ColumnHeading", "Units" },
+                                      new List<object[]> { new object[] {   "Report",          "Col1",     "g" }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Units")));
         }
 
 
@@ -217,12 +214,13 @@
             writer.WriteTable(data2);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           $"CheckpointID,SimulationID, Col1{Environment.NewLine}" +
-                           $"           1,           1,1.000{Environment.NewLine}" +
-                           $"           1,           1,2.000{Environment.NewLine}" +
-                           $"           1,           1,3.000{Environment.NewLine}" +
-                           $"           1,           1,4.000{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID", "Col1"},
+                                      new List<object[]> { new object[] {              1,              1,     1 },
+                                                           new object[] {              1,              1,     2 },
+                                                           new object[] {              1,              1,     3 },
+                                                           new object[] {              1,              1,     4 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
         }
 
         /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
@@ -257,10 +255,11 @@
             writer.Stop();
 
             // Make sure the old data was removed and we only have new data.
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                                        $"CheckpointID,Col1,Col2{Environment.NewLine}" +
-                                        $"           1, 100, 200{Environment.NewLine}" +
-                                        $"           1, 110, 210{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                      "CheckpointID", "Col1", "Col2" },
+                                      new List<object[]> { new object[] {              1,    100,   200 },
+                                                           new object[] {              1,    110,   210 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report1")));
         }
 
         /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
@@ -293,10 +292,10 @@
             writer.WriteTable(data);
             writer.Stop();
 
-            // Make sure the old data was removed and we only have new data.
-            Assert.AreEqual(Utilities.TableToString(database, "Report1"),
-                                        $"CheckpointID,Col1,Col3{Environment.NewLine}" +
-                                        $"           1, 100, 200{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                      "CheckpointID", "Col1", "Col3" },
+                                      new List<object[]> { new object[] {              1,    100,   200 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report1")));
         }
 
         /// <summary>Empty the datastore.</summary>
@@ -354,30 +353,34 @@
 
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
-                           $"           1,           1,2017-01-01, 1.000{Environment.NewLine}" +
-                           $"           1,           1,2017-01-02, 2.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-01,21.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-02,22.000{Environment.NewLine}" +
-                           $"           2,           1,2017-01-01,11.000{Environment.NewLine}" +
-                           $"           2,           1,2017-01-02,12.000{Environment.NewLine}" +
-                           $"           2,           2,2017-01-01,31.000{Environment.NewLine}" +
-                           $"           2,           2,2017-01-02,32.000{Environment.NewLine}" +
-                           $"           3,           1,2017-01-01, 1.000{Environment.NewLine}" +
-                           $"           3,           1,2017-01-02, 2.000{Environment.NewLine}" +
-                           $"           3,           2,2017-01-01,21.000{Environment.NewLine}" +
-                           $"           3,           2,2017-01-02,22.000{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID",                     "Col1", "Col2" },
+                                      new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),     1 },
+                                                           new object[] {              1,              1, new DateTime(2017, 01, 02),     2 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 01),    21 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 02),    22 },
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 01),    11},
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 02),    12 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 01),    31 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 02),    32 },
+                                                           new object[] {              3,              1, new DateTime(2017, 01, 01),     1 },
+                                                           new object[] {              3,              1, new DateTime(2017, 01, 02),     2 },
+                                                           new object[] {              3,              2, new DateTime(2017, 01, 01),    21 },
+                                                           new object[] {              3,              2, new DateTime(2017, 01, 02),    22 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
 
-            Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints", new string[] { "ID", "Name" }),
-                                        $"ID,   Name{Environment.NewLine}" +
-                                        $" 1,Current{Environment.NewLine}" +
-                                        $" 2, Saved1{Environment.NewLine}" +
-                                        $" 3, Saved2{Environment.NewLine}");
 
-            Assert.AreEqual(Utilities.TableToString(database, "_CheckpointFiles", new string[] { "CheckpointID", "FileName", "Contents" }),
-                                        $"CheckpointID, FileName,     Contents{Environment.NewLine}" +
-                                        $"           3,Dummy.txt,System.Byte[]{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "ID",    "Name" },
+                                      new List<object[]> { new object[] {    1, "Current" },
+                                                           new object[] {    2,  "Saved1" },
+                                                           new object[] {    3,  "Saved2" }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints", new string[] { "ID", "Name" })));
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID",  "FileName",      "Contents" },
+                                      new List<object[]> { new object[] {              3, "Dummy.txt", "System.Byte[]"}})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_CheckpointFiles")));
         }
 
         /// <summary>Delete a checkpoint</summary>
@@ -393,15 +396,19 @@
 
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
-                           $"           1,           1,2017-01-01, 1.000{Environment.NewLine}" +
-                           $"           1,           1,2017-01-02, 2.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-01,21.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-02,22.000{Environment.NewLine}");
-            Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints"),
-                $"ID,   Name,Version,OnGraphs{Environment.NewLine}" +
-                $" 1,Current,       ,        {Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID", "Col1", "Col2" },
+                                      new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),     1 },
+                                                           new object[] {              1,              1, new DateTime(2017, 01, 02),     2 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 01),    21 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 02),    22 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
+
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "ID", "Name",      "Version",     "OnGraphs"},
+                                      new List<object[]> { new object[] { 1, "Current", Convert.DBNull, Convert.DBNull } })
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints")));
         }
 
         /// <summary>Revert a checkpoint</summary>
@@ -428,21 +435,24 @@
             writer.RevertCheckpoint("Saved1");
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                           $"CheckpointID,SimulationID,      Col1,  Col2{Environment.NewLine}" +
-                           $"           1,           1,2017-01-01,11.000{Environment.NewLine}" +
-                           $"           1,           1,2017-01-02,12.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-01,31.000{Environment.NewLine}" +
-                           $"           1,           2,2017-01-02,32.000{Environment.NewLine}" +
-                           $"           2,           1,2017-01-01,11.000{Environment.NewLine}" +
-                           $"           2,           1,2017-01-02,12.000{Environment.NewLine}" +
-                           $"           2,           2,2017-01-01,31.000{Environment.NewLine}" +
-                           $"           2,           2,2017-01-02,32.000{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] { "CheckpointID", "SimulationID", "Col1", "Col2" },
+                                      new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),    11 },
+                                                           new object[] {              1,              1, new DateTime(2017, 01, 02),    12 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 01),    31 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 02),    32 },
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 01),    11 },
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 02),    12 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 01),    31 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 02),    32 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
 
-            Assert.AreEqual(Utilities.TableToString(database, "_Checkpoints", new string[] { "ID", "Name" }),
-                            $"ID,   Name{Environment.NewLine}" +
-                            $" 1,Current{Environment.NewLine}" +
-                            $" 2, Saved1{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "ID",    "Name" },
+                                      new List<object[]> { new object[] {    1, "Current" },
+                                                           new object[] {    2,  "Saved1"  }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints", new string[] { "ID", "Name" })));
         }
 
         /// <summary>Overwrite an existing checkpoint</summary>
@@ -471,16 +481,17 @@
             writer.AddCheckpoint("Saved1");
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                            $"CheckpointID,SimulationID,      Col1, Col2{Environment.NewLine}" +
-                            $"           1,           1,2017-01-01,1.000{Environment.NewLine}" +
-                            $"           1,           1,2017-01-02,2.000{Environment.NewLine}" +
-                            $"           1,           2,2017-01-01,3.000{Environment.NewLine}" +
-                            $"           1,           2,2017-01-02,4.000{Environment.NewLine}" +
-                            $"           2,           1,2017-01-01,1.000{Environment.NewLine}" +
-                            $"           2,           1,2017-01-02,2.000{Environment.NewLine}" +
-                            $"           2,           2,2017-01-01,3.000{Environment.NewLine}" +
-                            $"           2,           2,2017-01-02,4.000{Environment.NewLine}");
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID",                     "Col1", "Col2" },
+                                      new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),     1 },
+                                                           new object[] {              1,              1, new DateTime(2017, 01, 02),     2 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 01),     3 },
+                                                           new object[] {              1,              2, new DateTime(2017, 01, 02),     4 },
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 01),     1 },
+                                                           new object[] {              2,              1, new DateTime(2017, 01, 02),     2 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 01),     3 },
+                                                           new object[] {              2,              2, new DateTime(2017, 01, 02),     4 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
         }
 
         /// <summary>Tests if we can open a database with foreign characters in the path.</summary>
@@ -506,9 +517,11 @@
             writer.WriteTable(data);
             writer.Stop();
 
-            Assert.AreEqual(Utilities.TableToString(database, "Report"),
-                $"CheckpointID,SimulationID,Col1{Environment.NewLine}" +
-                $"           1,           1,  10{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID", "Col1" },
+                                      new List<object[]> { new object[] {              1,              1,    10 }})
+               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
 
             database.CloseDatabase();
             File.Delete(path);

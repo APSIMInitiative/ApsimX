@@ -3,14 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -18,12 +17,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-    <OutputPath>..\NetCoreBin\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
     <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-    <OutputPath>..\Bin\</OutputPath>
   </PropertyGroup>
   
   <ItemGroup>
@@ -99,7 +96,7 @@
   </ItemGroup>
 
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\sqlite3.dll $(OutputPath)\* &gt;nul" />
+    <Copy Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="..\DeploymentSupport\Windows\Bin64\sqlite3.dll" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>

@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This provides a common land store as GrazeFoodStoreType or AnimalFoodStoreType
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]

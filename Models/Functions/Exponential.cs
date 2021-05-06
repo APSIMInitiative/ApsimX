@@ -12,7 +12,7 @@ namespace Models.Functions
     /// An exponential function
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Takes the value of the child as the x value and returns the y value from a exponential of the form y = A + B * exp(x * C)")]
     public class ExponentialFunction : Model, IFunction

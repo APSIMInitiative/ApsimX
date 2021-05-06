@@ -24,7 +24,7 @@
         /// <summary>
         /// The view which displays the properties and graph.
         /// </summary>
-        private XYPairsView view;
+        private LinearAfterThresholdView view;
 
         /// <summary>
         /// The explorer presenter controlling this presenter.
@@ -43,15 +43,15 @@
             if (function == null)
                 throw new ArgumentException(string.Format("Attempted to display a model of type {0} using the LinearAfterThresholdPresenter.", model.GetType().ToString()));
 
-            view = viewObject as XYPairsView;
+            view = viewObject as LinearAfterThresholdView;
             if (view == null)
                 throw new ArgumentException(string.Format("Attempted to use a view of type {0} from the LinearAfterThresholdPresenter. View should be an XYPairsView.", viewObject.GetType().ToString()));
 
             presenter = parent;
             propertiesPresenter = new PropertyPresenter();
-            propertiesPresenter.Attach(function, view.VariablesGrid, presenter);
+            propertiesPresenter.Attach(function, view.Properties, presenter);
             DrawGraph();
-            view.VariablesGrid.CellsChanged += OnCellsChanged;
+            view.Properties.PropertyChanged += OnCellsChanged;
         }
 
         /// <summary>
@@ -59,8 +59,7 @@
         /// </summary>
         public void Detach()
         {
-            view.VariablesGrid.CellsChanged -= OnCellsChanged;
-            view.VariablesGrid.Dispose();
+            view.Properties.PropertyChanged -= OnCellsChanged;
         }
         
         /// <summary>

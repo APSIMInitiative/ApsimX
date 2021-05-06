@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Manage crop product activity</summary>
     /// <summary>This activity sets aside land for the crop</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]

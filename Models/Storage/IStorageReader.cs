@@ -17,18 +17,18 @@ namespace Models.Storage
         /// the all simulation data will be returned.
         /// </summary>
         /// <param name="checkpointName">Name of the checkpoint.</param>
-        /// <param name="simulationName">Name of the simulation.</param>
+        /// <param name="simulationNames">Name of the simulation.</param>
         /// <param name="tableName">Name of the table.</param>
         /// <param name="fieldNames">Optional column names to retrieve from storage</param>
         /// <param name="filter">Optional filter</param>
         /// <param name="from">Optional start index. Only used when 'count' specified. The record number to offset.</param>
         /// <param name="count">Optional number of records to return or all if 0.</param>
-        /// <param name="orderBy">Optional column name to order by</param>
+        /// <param name="orderByFieldNames">Optional column names to order by</param>
         /// <param name="distinct">Only return distinct values for field?</param>
-        DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null,
+        DataTable GetData(string tableName, string checkpointName = "Current", IEnumerable<string> simulationNames = null, IEnumerable<string> fieldNames = null,
                         string filter = null,
                         int from = 0, int count = 0,
-                        string orderBy = null,
+                        IEnumerable<string> orderByFieldNames = null,
                         bool distinct = false);
 
         /// <summary>Return all data from the specified simulation and table name.</summary>
@@ -100,8 +100,8 @@ namespace Models.Storage
         /// Return a simulation ID for the specified name.
         /// </summary>
         /// <param name="simulationName">The simulation name to look for.</param>
-        /// <returns></returns>
-        int GetSimulationID(string simulationName);
+        /// <param name="simulationID">The simulation ID (if it exists).</param>
+        bool TryGetSimulationID(string simulationName, out int simulationID);
 
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         void Refresh();

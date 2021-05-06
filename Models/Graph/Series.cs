@@ -157,25 +157,25 @@
                         if (simulationFilter == null)
                             simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
 
-                        var whereClauseForInScopeData = CreateInScopeWhereClause(reader, simulationFilter);
+                        var inScopeSimulationNames = CreateInScopeWhereClause(reader, simulationFilter);
 
                         if (varyByFieldNames.Count == 0 || varyByFieldNames.Contains("Graph series"))
                         {
                             // No vary by fields. Just plot the whole table in a single
                             // series with data that is in scope.
-                            seriesDefinitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, whereClauseForInScopeData, Filter));
+                            seriesDefinitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, inScopeSimulationNames, Filter));
                         }
                         else
                         {
                             // There are one or more vary by fields. Create series definitions
                             // for each combination of vary by fields.
-                            seriesDefinitions.AddRange(CreateDefinitionsUsingVaryBy(varyByFieldNames, checkpointName, colourModifier, markerModifier, simulationDescriptions, whereClauseForInScopeData));
+                            seriesDefinitions.AddRange(CreateDefinitionsUsingVaryBy(varyByFieldNames, checkpointName, colourModifier, markerModifier, simulationDescriptions, inScopeSimulationNames));
                         }   
 
                         // If we don't have any definitions then see if the vary by fields
                         // refer to string fields in the database table.
                         if (seriesDefinitions.Count == 0)
-                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, checkpointName, colourModifier, markerModifier, varyByFieldNames, whereClauseForInScopeData);
+                            seriesDefinitions = CreateDefinitionsFromFieldInTable(reader, checkpointName, colourModifier, markerModifier, varyByFieldNames, inScopeSimulationNames);
 
                         // Paint all definitions. 
                         var painter = GetSeriesPainter();
@@ -231,8 +231,8 @@
         /// <param name="colourModifier">Checkpoint colour modifer.</param>
         /// <param name="markerModifier">Checkpoint marker size modifier.</param>
         /// <param name="varyByFieldNames">The vary by fields.</param>
-        /// <param name="whereClauseForInScopeData">An SQL WHERE clause for rows that are in scope.</param>
-        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, string checkpointName, double colourModifier, double markerModifier, List<string> varyByFieldNames, string whereClauseForInScopeData)
+        /// <param name="inScopeSimulationNames">An SQL WHERE clause for rows that are in scope.</param>
+        private List<SeriesDefinition> CreateDefinitionsFromFieldInTable(IStorageReader reader, string checkpointName, double colourModifier, double markerModifier, List<string> varyByFieldNames, IEnumerable<string> inScopeSimulationNames)
         {
             List<SeriesDefinition> definitions = new List<SeriesDefinition>();
 
@@ -244,7 +244,7 @@
             {
                 var data = reader.GetData(TableName, 
                                             fieldNames: new string[] { varyByFieldName },
-                                            filter: whereClauseForInScopeData,
+                                            simulationNames: inScopeSimulationNames,
                                             distinct: true);
                 var values = DataTableUtilities.GetColumnAsStrings(data, varyByFieldName).Distinct().ToList();
                 validValuesForEachVaryByField.Add(values);
@@ -256,7 +256,7 @@
                 for (int i = 0; i < combination.Count; i++)
                     descriptors.Add(new SimulationDescription.Descriptor(varyByThatExistInTable[i], 
                                                                          combination[i]));
-                definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, whereClauseForInScopeData, Filter, descriptors));
+                definitions.Add(new SeriesDefinition(this, checkpointName, colourModifier, markerModifier, inScopeSimulationNames, Filter, descriptors));
             }
 
             return definitions;
@@ -267,21 +267,14 @@
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
         /// <param name="simulationFilter">The names of simulatiosn that are in scope.</param>
-        private string CreateInScopeWhereClause(IStorageReader reader, List<string> simulationFilter)
+        private IEnumerable<string> CreateInScopeWhereClause(IStorageReader reader, List<string> simulationFilter)
         {
             var fieldsThatExist = reader.ColumnNames(TableName);
             if (fieldsThatExist.Contains("SimulationID") || fieldsThatExist.Contains("SimulationName"))
             {
                 // Extract all the simulation names from all descriptions.
-                var simulationNames = simulationFilter.Distinct(); 
-
-                string whereClause =  "SimulationName IN (" +
-                                      StringUtilities.Build(simulationNames, ",", "'", "'") +
-                                      ")";
-                return whereClause;
+                return simulationFilter.Distinct(); 
             }
-            else if (Filter != string.Empty)
-                return Filter;
             else
                 return null;
         }
@@ -300,7 +293,7 @@
                                                                     double colourModifier,
                                                                     double markerModifier,
                                                                     List<SimulationDescription> simulationDescriptions,
-                                                                    string whereClauseForInScopeData)
+                                                                    IEnumerable<string> whereClauseForInScopeData)
         {
             SplitDescriptionsWithSameDescriptors(simulationDescriptions);
 

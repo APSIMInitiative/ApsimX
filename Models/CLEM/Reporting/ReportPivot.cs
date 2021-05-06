@@ -232,8 +232,9 @@ namespace Models.CLEM.Reporting
                         .Where(r => r[Column].ToString().Contains(col.ColumnName))
                         .Select(r => Convert.ToDouble(r[Value]));
 
-                    // Aggregate the data
-                    row[col] = AggregateValues(values);
+                    // Aggregate the data, leaving blank cells for missing values
+                    if (values.Any())
+                        row[col] = AggregateValues(values);
                 }
 
                 pivot.Rows.Add(row);

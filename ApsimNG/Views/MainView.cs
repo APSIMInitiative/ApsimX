@@ -242,18 +242,18 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [GLib.ConnectBefore]
         private void OnChangeTab(object sender, SwitchPageArgs args)
         {
             try
             {
-                Notebook control = sender as Notebook;
-
-                for (int i = 0; i < control.Children.Length; i++)
+                if (sender is Notebook control)
                 {
-                    // The top-level widget in the tab label is always an event box.
-                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
-                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    for (int i = 0; i < control.Children.Length; i++)
+                    {
+                        // The top-level widget in the tab label is always an event box.
+                        Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                        tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    }
                 }
             }
             catch (Exception err)
@@ -838,24 +838,22 @@
         public void RefreshTheme()
         {
 #if NETFRAMEWORK
+            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
+            string rc = Utility.Configuration.Settings.DarkTheme ? "dark" : "light";
+            using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{rc}.gtkrc"))
+            {
+                using (StreamReader darkTheme = new StreamReader(rcStream))
+                    File.WriteAllText(tempFile, darkTheme.ReadToEnd());
+            }
+
+            Rc.Parse(tempFile);
+
+            // Remove black colour from colour pallete.
             if (Utility.Configuration.Settings.DarkTheme)
             {
-                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
-                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
-                {
-                    using (StreamReader darkTheme = new StreamReader(rcStream))
-                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
-                }
-
-                Rc.Parse(tempFile);
-                // Remove black colour from colour pallete.
                 Color black = Color.FromArgb(0, 0, 0);
                 ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
             }
-            else if (ProcessUtilities.CurrentOS.IsWindows)
-                // Apsim's default gtk theme uses the 'wimp' rendering engine,
-                // which doesn't play nicely on non-windows systems.
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
 #else
             // tbi
 #endif

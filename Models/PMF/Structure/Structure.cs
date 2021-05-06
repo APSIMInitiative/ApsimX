@@ -66,7 +66,7 @@ namespace Models.PMF.Struct
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Structure : Model, IStructure
     {

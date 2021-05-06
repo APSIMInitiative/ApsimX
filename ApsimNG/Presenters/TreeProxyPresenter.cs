@@ -63,7 +63,7 @@
             presenter.CommandHistory.ModelChanged += OnModelChanged;
 
             propertyPresenter = new PropertyPresenter();
-            propertyPresenter.Attach(forestryModel, forestryViewer.ConstantsGrid, explorerPresenter);
+            propertyPresenter.Attach(forestryModel, forestryViewer.Constants, explorerPresenter);
             spatialGridPresenter.Attach(forestryModel, forestryViewer.SpatialDataGrid, explorerPresenter);
             temporalGridPresenter.Attach(forestryModel, forestryViewer.TemporalDataGrid, explorerPresenter);
         }
@@ -205,7 +205,7 @@
         /// <param name="changedModel">The model which has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            propertyPresenter.UpdateModel(forestryModel);
+            propertyPresenter.RefreshView(forestryModel);
             forestryViewer.SpatialData = forestryModel.Table;
             forestryViewer.SetupHeights(forestryModel.Dates, forestryModel.Heights, forestryModel.NDemands, forestryModel.ShadeModifiers);
         }

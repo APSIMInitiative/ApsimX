@@ -8,6 +8,7 @@ using System.Text;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -18,7 +19,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -57,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Predicted pasture at end of assessment period
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double PasturePredicted { get; private set; }
 
         /// <summary>
@@ -68,13 +69,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to destock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>

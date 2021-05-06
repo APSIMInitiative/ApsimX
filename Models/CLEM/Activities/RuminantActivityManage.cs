@@ -10,6 +10,7 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -352,21 +353,25 @@ namespace Models.CLEM.Activities
                 {
                     int numberAdded = 0;
                     RuminantType breedParams = rumHerd.FirstOrDefault().BreedParams;
-                    RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault() as RuminantInitialCohorts;
+                    RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault();
 
                     if (cohorts != null)
                     {
+                        List<ISetRuminantAttribute> initialCohortAttributes = cohorts.FindAllChildren<ISetRuminantAttribute>().ToList();
+
                         int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
                         List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         if (initialBreeders < (minBreeders-heifers))
                         {
+
+
                             double scaleFactor = (minBreeders-heifers) / Convert.ToDouble(initialBreeders);
                             // add new individuals
                             foreach (var item in cohortList)
                             {
                                 int numberToAdd = Convert.ToInt32(Math.Round(item.Number * scaleFactor) - item.Number);
-                                foreach (var newind in item.CreateIndividuals(numberToAdd))
+                                foreach (var newind in item.CreateIndividuals(numberToAdd, initialCohortAttributes))
                                 {
                                     newind.SaleFlag = HerdChangeReason.FillInitialHerd;
                                     herd.AddRuminant(newind, this);
@@ -565,7 +570,7 @@ namespace Models.CLEM.Activities
             // these are old purchases that were not made. This list will be regenerated in this method.
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed);
 
-            List<Ruminant> herd = this.CurrentHerd(true).Where(a => !a.TagExists("GrowOut")).ToList();
+            List<Ruminant> herd = this.CurrentHerd(true).Where(a => !a.AttributeExists("GrowOut")).ToList();
             List<Ruminant> growOutHerd = new List<Ruminant>();
 
             // can sell off males any month as per NABSA
@@ -579,13 +584,13 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
                 // tag all grow out and move to pasture specified
                 //var check = herd.Where(a => a.Weaned && (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.Tags.Contains("GrowOut"));
-                foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.TagExists("GrowOut")))
+                foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.AttributeExists("GrowOut")))
                 {
                     ind.Location = ((ind is RuminantFemale) ? grazeStoreGrowOutFemales : grazeStoreGrowOutMales);
-                    ind.TagAdd("GrowOut");
+                    ind.AddAttribute("GrowOut");
                 }
 
-                growOutHerd = this.CurrentHerd(true).Where(a => a.TagExists("GrowOut")).ToList();
+                growOutHerd = this.CurrentHerd(true).Where(a => a.AttributeExists("GrowOut")).ToList();
 
                 // identify those ready for sale
                 foreach (var ind in growOutHerd.Where(a => (a.Age >= ((a is RuminantMale)? MaleSellingAge: FemaleSellingAge) || a.Weight >= ((a is RuminantMale) ? MaleSellingWeight : FemaleSellingWeight)) ))
@@ -613,7 +618,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // check for maximum age if permitted
-                foreach (var ind in herd.Where(a => ((a.Gender == Sex.Female) ? MarkOldBreedersForSale : MarkOldSiresForSale) &&  a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumSireAge)) )
+                foreach (var ind in herd.Where(a => ((a.Gender == Sex.Female) ? MarkOldBreedersForSale : MarkOldSiresForSale) && a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumSireAge)) )
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
                     this.Status = ActivityStatus.Success;
@@ -645,7 +650,7 @@ namespace Models.CLEM.Activities
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                List<RuminantFemale> preBreeders = herd.Where(a => a.Gender == Sex.Female && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.TagExists("GrowOut")).Cast<RuminantFemale>().ToList();
+                List<RuminantFemale> preBreeders = herd.Where(a => a.Gender == Sex.Female && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.AttributeExists("GrowOut")).Cast<RuminantFemale>().ToList();
                 int numberFemaleHeifersInHerd = preBreeders.Count();
 
                 // adjust males sires
@@ -689,7 +694,7 @@ namespace Models.CLEM.Activities
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
-                                male.TagRemove("GrowOut");
+                                male.RemoveAttribute("GrowOut");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -701,7 +706,7 @@ namespace Models.CLEM.Activities
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
-                                male.TagRemove("GrowOut");
+                                male.RemoveAttribute("GrowOut");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -864,9 +869,9 @@ namespace Models.CLEM.Activities
                         // remove grow out heifers from grow out if of breeding in next year age
                         if (SellFemalesLikeMales & excessBreeders > 0)
                         {
-                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.TagExists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
+                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.AttributeExists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(excessBreeders))
                             {
-                                female.TagRemove("GrowOut");
+                                female.RemoveAttribute("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
                                 excessBreeders--;

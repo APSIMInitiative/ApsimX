@@ -8,7 +8,7 @@ namespace Models.Functions
     /// Returns the value at the given index. If the index is outside the array, the last value will be returned.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ArrayFunction : Model, IFunction, ICustomDocumentation
     {
