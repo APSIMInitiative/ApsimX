@@ -10,13 +10,13 @@ namespace UserInterface.Views
         private IList<string> units;
         private const int numHeadingRows = 2; // first row is number of heading rows. Second row is units.
 
-        public DataTableProvider(DataTable dataSource, IList<string> columnNnits)
+        public DataTableProvider(DataTable dataSource, IList<string> columnUnits)
         {
             if (dataSource == null)
                 data = new DataTable();
             else
                 data = dataSource;
-            units = columnNnits;
+            units = columnUnits;
         }
 
         public int ColumnCount => data.Columns.Count;
