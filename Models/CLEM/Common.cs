@@ -646,9 +646,9 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Style of kedger transaction (gain or loss)
+    /// Type of ledger transaction (gain or loss)
     /// </summary>
-    public enum TransactionStyle
+    public enum TransactionType
     {
         /// <summary>
         /// Loss of resource
@@ -658,5 +658,20 @@ namespace Models.CLEM
         /// Gain in resource
         /// </summary>
         Gain = 1
+    }
+
+    /// <summary>
+    /// Style transaction reporting in resource ledger (style and amount) or (gain and loss)
+    /// </summary>
+    public enum ReportTransactionStyle
+    {
+        /// <summary>
+        /// Reports transaction type and amount
+        /// </summary>
+        TypeAndAmountColumns = 1,
+        /// <summary>
+        /// Reports both gain and loss columns for transaction
+        /// </summary>
+        GainAndLossColumns = 0
     }
 }
