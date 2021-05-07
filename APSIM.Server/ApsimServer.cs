@@ -51,61 +51,68 @@ namespace APSIM.Server
         /// </summary>
         public void Run()
         {
-            if (options.Verbose)
-                Console.WriteLine($"Starting server...");
-            using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("testpipe", PipeDirection.InOut, 1))
+            try
             {
-                while (true)
+                if (options.Verbose)
+                    Console.WriteLine($"Starting server...");
+                using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("testpipe", PipeDirection.InOut, 1))
                 {
-                    if (options.Verbose)
-                        Console.WriteLine("Waiting for connections...");
-                    pipeServer.WaitForConnection();
-                    if (options.Verbose)
-                        Console.WriteLine("Client connected to server.");
-                    object response;
-                    while ( (response = ReadFromPipe(pipeServer)) != null)
+                    while (true)
                     {
-                        if (response is string message)
+                        if (options.Verbose)
+                            Console.WriteLine("Waiting for connections...");
+                        pipeServer.WaitForConnection();
+                        if (options.Verbose)
+                            Console.WriteLine("Client connected to server.");
+                        object response;
+                        while ( (response = ReadFromPipe(pipeServer)) != null)
                         {
-                            Console.WriteLine($"Message from client: '{message}'");
-                            SendToPipe(pipeServer, "Hello there");
-                        }
-                        else if (response is ICommand command)
-                        {
-                            if (options.Verbose)
-                                Console.WriteLine($"Received command {command.GetType().Name}. Running command...");
-                            try
+                            if (response is string message)
                             {
-                                // Clone the simulations object before running the command.
-                                var timer = Stopwatch.StartNew();
-                                command.Run(runner, jobRunner);
-                                timer.Stop();
-                                if (options.Verbose)
-                                    Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
-                                SendToPipe(pipeServer, "fin");
+                                Console.WriteLine($"Message from client: '{message}'");
+                                SendToPipe(pipeServer, "Hello there");
                             }
-                            catch (Exception err)
+                            else if (response is ICommand command)
                             {
                                 if (options.Verbose)
-                                    Console.Error.WriteLine(err);
-                                SendToPipe(pipeServer, err);
+                                    Console.WriteLine($"Received command {command.GetType().Name}. Running command...");
+                                try
+                                {
+                                    // Clone the simulations object before running the command.
+                                    var timer = Stopwatch.StartNew();
+                                    command.Run(runner, jobRunner);
+                                    timer.Stop();
+                                    if (options.Verbose)
+                                        Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
+                                    SendToPipe(pipeServer, "fin");
+                                }
+                                catch (Exception err)
+                                {
+                                    if (options.Verbose)
+                                        Console.Error.WriteLine(err);
+                                    SendToPipe(pipeServer, err);
+                                }
+                            }
+                            else
+                            {
+                                Console.Error.WriteLine($"Unknown response {response.GetType()}: {response}");
+                                break;
                             }
                         }
-                        else
-                        {
-                            Console.Error.WriteLine($"Unknown response {response.GetType()}: {response}");
-                            break;
-                        }
-                    }
-                    if (options.Verbose)
-                        Console.WriteLine($"Connection closed by client.");
+                        if (options.Verbose)
+                            Console.WriteLine($"Connection closed by client.");
 
-                    // If we don't want to keep the server alive we can exit now.
-                    // Otherwise we will go back and wait for another connection.
-                    if (!options.KeepAlive)
-                        return;
-                    pipeServer.Disconnect();
+                        // If we don't want to keep the server alive we can exit now.
+                        // Otherwise we will go back and wait for another connection.
+                        if (!options.KeepAlive)
+                            return;
+                        pipeServer.Disconnect();
+                    }
                 }
+            }
+            finally
+            {
+                sims.FindChild<Models.Storage.IDataStore>().Close();
             }
         }
 
@@ -127,10 +134,12 @@ namespace APSIM.Server
 
         private object ReadFromPipe(NamedPipeServerStream pipe)
         {
-            byte[] buffer = PipeUtilities.GetObjectFromPipe(pipe);
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
             // Convert bytes to object.
             if (options.Mode == CommunicationMode.Managed)
             {
+                if (buffer == null)
+                    return null;
                 return ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
             }
             else if (options.Mode == CommunicationMode.Native)
