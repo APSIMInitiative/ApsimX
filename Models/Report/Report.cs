@@ -104,7 +104,16 @@ namespace Models
             // Silently do nothing if no event names present.
             if (EventNames == null || EventNames.Length < 1)
                 return;
+        }
 
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
             // Subscribe to events.
             foreach (string eventName in EventNames)
                 events.Subscribe(eventName, DoOutputEvent);

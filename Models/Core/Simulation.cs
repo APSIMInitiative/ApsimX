@@ -254,6 +254,8 @@ namespace Models.Core
 
                 // Resolve all links
                 links.Resolve(this, true);
+
+                events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
             }
             catch (Exception err)
             {
