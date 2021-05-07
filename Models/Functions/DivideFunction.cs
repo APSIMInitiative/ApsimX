@@ -8,7 +8,7 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentMathFunction d]
+    /// [DocumentMathFunction /]
     /// </summary>
     [Serializable]
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
