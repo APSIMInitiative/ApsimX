@@ -118,7 +118,31 @@
         /// </summary>
         /// <param name="pipeReader">The pipe to read from.</param>
         /// <returns>The object or null if no object read.</returns>
-        public static byte[] GetObjectFromPipe(Stream pipeReader)
+        public static object GetObjectFromPipe(Stream pipeReader)
+        {
+            // Read number of bytes.
+            var intBuffer = new byte[4];
+            pipeReader.Read(intBuffer, 0, 4);
+            var numBytes = BitConverter.ToInt32(intBuffer, 0);
+
+            if (numBytes > 0)
+            {
+                // Read bytes for object.
+                var buffer = new byte[numBytes];
+                pipeReader.Read(buffer, 0, numBytes);
+
+                // Convert bytes to object.
+                return ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get an object from the specified anonymous in pipe.
+        /// </summary>
+        /// <param name="pipeReader">The pipe to read from.</param>
+        /// <returns>The object or null if no object read.</returns>
+        public static byte[] GetBytesFromPipe(Stream pipeReader)
         {
             // Read number of bytes.
             var intBuffer = new byte[4];

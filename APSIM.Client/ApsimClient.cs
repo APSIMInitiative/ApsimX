@@ -21,14 +21,16 @@ namespace APSIM.Client
                 Console.Write("Connecting to server...");
                 pipeClient.Connect();
                 Console.WriteLine("done.");
-                IEnumerable<IReplacement> changes;
-                while ( (changes = GetChanges())?.Any() ?? false)
+                // IEnumerable<IReplacement> changes;
+                // while ( (changes = GetChanges())?.Any() ?? false)
                 {
                     if (!pipeClient.IsConnected)
-                        break;
-                    for (int i = 0; i < 5; i++)
+                        return;
+                    for (int i = 0; i < 2; i++)
                     {
-                        ICommand command = new RunCommand(changes);
+                        ICommand command = new RunCommand(new IReplacement[0]);
+                        // ICommand command = new RunCommand(new[] { ChangeDebugFileName(i) });
+                        // ICommand command = new RunCommand(new[] { ChangeDbFileName(i) });
                         var timer = Stopwatch.StartNew();
                         PipeUtilities.SendObjectToPipe(pipeClient, command);
                         object response = PipeUtilities.GetObjectFromPipe(pipeClient);
@@ -57,6 +59,11 @@ namespace APSIM.Client
             if (factor == null)
                 return null;
             return new[] { factor };
+        }
+
+        private IReplacement ChangeDebugFileName(int rep)
+        {
+            return new PropertyReplacement("[DebugLogger].Suffix", rep.ToString());
         }
 
         private IReplacement ChangeJuvTarget()
