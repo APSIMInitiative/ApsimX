@@ -10,7 +10,7 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] has a non-zero value between [Start] and [End] calcualted as:
+    /// [Name] has a value between [Start] and [End] calculated as:
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
