@@ -13,6 +13,7 @@
     using Interfaces;
     using Models;
     using Models.CLEM;
+    using Models.CLEM.Reporting;
     using Models.Core;
     using Models.Core.Attributes;
     using Views;
@@ -108,7 +109,7 @@
                 if (viewName != null && presenterName != null)
                 {
                     // if model CLEMModel
-                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market | model is RandomNumberGenerator)
+                    if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market | model is RandomNumberGenerator | model is ReportResourceLedger)
                     {
                         // all CLEMModels will handle this presenter
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");

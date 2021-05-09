@@ -134,7 +134,7 @@ namespace Models.PMF.Phen
         }
         
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
-        public double Zadok {  get { return zadok.Stage; } }
+        public double Zadok {  get { return zadok?.Stage ?? 0; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------

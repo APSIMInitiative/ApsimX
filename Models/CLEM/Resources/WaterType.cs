@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Style = TransactionStyle.Gain,
+                    TransactionType = TransactionType.Gain,
                     Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
@@ -143,7 +143,7 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
