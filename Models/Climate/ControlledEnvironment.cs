@@ -11,7 +11,7 @@ namespace Models.Climate
     /// Reads in controlled environment weather data and makes it available to models.
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     public class ControlledEnvironment : Model, IWeather

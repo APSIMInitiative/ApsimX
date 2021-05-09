@@ -92,8 +92,8 @@
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
                         gview.ShowControls(false);
-#if NETFRAMEWORK
                         gview.MainWidget.SetSizeRequest(400, 400);
+#if NETFRAMEWORK
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
 #else
                         table.Attach(gview.MainWidget, col, row, 1, 1);

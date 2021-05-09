@@ -23,6 +23,11 @@
         string ModelTypeTextColour { get; set; }
 
         /// <summary>
+        /// Property to provide the text color for model based on class type given.
+        /// </summary>
+        string ModelTypeTextStyle { get; set; }
+
+        /// <summary>
         /// Property to provide access to the model help URL.
         /// </summary>
         string ModelHelpURL { get; set; }

@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 129; } }
+        public static int LatestVersion { get { return 130; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3348,9 +3348,12 @@
             foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
             {
                 string text = memo["Text"]?.ToString();
-                text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
-                text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
-                memo["Text"] = text;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    text = Regex.Replace(text, "<sup>([^<]+)</sup>", "^$1^");
+                    text = Regex.Replace(text, "<sub>([^<]+)</sub>", "~$1~");
+                    memo["Text"] = text;
+                }
             }
         }
 		
@@ -3364,7 +3367,6 @@
             foreach (JObject fertiliser in JsonUtilities.ChildrenRecursively(root, nameof(Fertiliser)))
                 fertiliser["ResourceName"] = "Fertiliser";
         }
-
 
         /// <summary>
         /// Add canopy width Function.
@@ -3388,6 +3390,44 @@
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenExtinctionCoefficient", "0");
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "GreenAreaIndex", "0");
                 JsonUtilities.AddConstantFunctionIfNotExists(Root, "DeadAreaIndex", "0");
+            }
+        }
+
+        /// <summary>
+        /// Add some extra constants to GenericOrgan to make 
+        /// optional functions non-optional.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion130(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenRecursively(root, "GenericOrgan"))
+            {
+                JArray organChildren = organ["Children"] as JArray;
+                if (organChildren == null)
+                {
+                    organChildren = new JArray();
+                    organ["Children"] = organChildren;
+                }
+
+                // Add a photosynthesis constant with a value of 0.
+                JsonUtilities.AddConstantFunctionIfNotExists(organ, "Photosynthesis", "0");
+
+                // Add an initial nconc which points to minimum NConc.
+                JsonUtilities.AddVariableReferenceIfNotExists(organ, "initialNConcFunction", $"[{organ["Name"]}].MinimumNConc");
+
+                // Add a BiomassDemand with 3 child constants (structural, metabolic, storage)
+                // each with a value of 1.
+                if (JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors", true) == null)
+                {
+                    JObject demand = new JObject();
+                    demand["$type"] = "Models.PMF.BiomassDemand, Models";
+                    demand["Name"] = "dmDemandPriorityFactors";
+                    JsonUtilities.AddConstantFunctionIfNotExists(demand, "Structural", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(demand, "Metabolic", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(demand, "Storage", "1");
+                    organChildren.Add(demand);
+                }
             }
         }
 

@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant herd cost </summary>
     /// <summary>This activity will arrange payment of a herd expense such as vet fees</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

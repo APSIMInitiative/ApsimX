@@ -11,7 +11,7 @@
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
@@ -34,7 +34,7 @@
  
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction FRGRer = null;  
+        IFunction FRGRer = null;
 
         /// <summary>The effect of CO2 on stomatal conductance</summary>
         [Link(Type = LinkType.Child, ByName = true)]

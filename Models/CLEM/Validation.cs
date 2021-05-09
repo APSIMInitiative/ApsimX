@@ -387,7 +387,7 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Tests if date greater than specified property name
+    /// Tests if the number of items in an array match specified value
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ArrayItemCountAttribute : ValidationAttribute

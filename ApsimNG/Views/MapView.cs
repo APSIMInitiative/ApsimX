@@ -66,6 +66,11 @@
         /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
         /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
         /// below handle coordinate transformation.
+        /// 
+        /// An earlier version of this unit made a call to SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems
+        /// to obtain the co-ordinate systems. That call then attempted to generate a 3 MByte file with almost 4000 different
+        /// systems in it; we only needed 2. We can generate thowe we need from their WKT descriptions. If additions reference
+        /// systems are needed, their WKT descriptions should be available for download from spatialreference.org.
         /// </remarks>
         ///  
         /// <summary>
@@ -106,10 +111,11 @@
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
-            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
-            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
-            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            var coordFactory = new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode);
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(coordFactory,
+                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory());
+            css.AddCoordinateSystem(3857, coordFactory.CreateFromWkt("PROJCS[\"WGS 84 / Pseudo-Mercator\", GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], PROJECTION[\"Mercator_1SP\"], PARAMETER[\"latitude_of_origin\", 0], PARAMETER[\"central_meridian\", 0], PARAMETER[\"scale_factor\", 1], PARAMETER[\"false_easting\", 0], PARAMETER[\"false_northing\", 0], AUTHORITY[\"EPSG\", \"3857\"]]"));
+            css.AddCoordinateSystem(4326, coordFactory.CreateFromWkt("GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]]"));
             SharpMap.Session.Instance
             .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
             .SetCoordinateSystemServices(css)
@@ -172,7 +178,7 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IPropertyView PropertiesGrid { get; private set; }
+        public IPropertyView PropertiesView { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
@@ -192,8 +198,8 @@
             container.Add(image);
 
             VPaned box = new VPaned();
-            PropertiesGrid = new PropertyView(this);
-            box.Pack1(((ViewBase)PropertiesGrid).MainWidget, true, false);
+            PropertiesView = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -230,21 +236,25 @@
             result.BackgroundLayer.Add(baseLayer);
             result.MaximumZoom = baseLayer.Envelope.Width;
 
-            // This layer as a sort of backup in case the BruTile download times out. 
-            // It should normally be invisible, as it will be covered by another layer.
-            VectorLayer layWorld = new VectorLayer("Countries");
+            // This layer is used only as a sort of backup in case the BruTile download times out
+            // or is otherwise unavailable.
+            // It should normally be invisible, as it will be covered by the BruTile tile layer.
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            layWorld.DataSource = new ShapeFile(shapeFileName, true);
-            layWorld.Style = new VectorStyle();
-            layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
-            layWorld.Style.Fill = new SolidBrush(background);
-            layWorld.Style.Outline.Color = foreground;
-            layWorld.CoordinateTransformation = LatLonToMetres;
-            result.BackgroundLayer.Insert(0, layWorld);
+            if (File.Exists(shapeFileName))
+            {
+                VectorLayer layWorld = new VectorLayer("Countries");
+                layWorld.DataSource = new ShapeFile(shapeFileName, true);
+                layWorld.Style = new VectorStyle();
+                layWorld.Style.EnableOutline = true;
+                Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
+                Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
+                layWorld.Style.Fill = new SolidBrush(background);
+                layWorld.Style.Outline.Color = foreground;
+                layWorld.CoordinateTransformation = LatLonToMetres;
+                result.BackgroundLayer.Insert(0, layWorld);
+            }
 
             return result;
         }

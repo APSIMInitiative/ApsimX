@@ -19,7 +19,7 @@ namespace Models.CLEM
     /// CLEM Zone to control simulation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents all CLEM farm resources and activities")]
@@ -32,11 +32,9 @@ namespace Models.CLEM
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
-        ISummary Summary = null;
+        Summary Summary = null;
         [Link]
         Clock Clock = null;
-        [Link]
-        IDataStore DataStore = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -258,21 +256,20 @@ namespace Models.CLEM
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
             if (!Validate(this, "", this, Summary))
             {
-                string error = "@i:Invalid parameters in model";
+                string error = ""; //"@i:Invalid parameters in model";
 
-                // find IStorageReader of simulation
-                IModel parentSimulation = FindAncestor<Simulation>();
-                IStorageReader ds = DataStore.Reader;
-                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
+                // get all validations 
+                if(Summary.Messages() != null)
                 {
-                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
-                    // all all current errors and validation problems to error string.
-                    foreach (DataRow dr in dataRows)
+                    foreach (DataRow item in Summary.Messages().Rows)
                     {
-                        error += "\r\n" + dr[6].ToString();
+                        if (item[3].ToString().StartsWith("Invalid"))
+                        {
+                            error += "\r\n" + item[3].ToString();
+                        }
                     }
                 }
-                throw new ApsimXException(this, error);
+                throw new ApsimXException(this, error.Replace("&shy;","."));
             }
 
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
@@ -308,14 +305,22 @@ namespace Models.CLEM
         /// <returns>Boolean indicating whether validation was successful</returns>
         public static bool Validate(IModel model, string modelPath, Model parentZone, ISummary summary)
         {
-            string starter = "[";
+            string starter = "[=";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
             {
                 starter = "[r=";
             }
-            if(model.GetType() == typeof(ResourcesHolder))
+            if (model.GetType() == typeof(ZoneCLEM))
             {
-                starter = "[r=";
+                starter = "[z=";
+            }
+            if (model.GetType() == typeof(ResourcesHolder))
+            {
+                starter = "[rs=";
+            }
+            if (model.GetType() == typeof(LabourRequirement))
+            {
+                starter = "[l=";
             }
             if (model.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
@@ -323,7 +328,7 @@ namespace Models.CLEM
             }
             if (model.GetType() == typeof(ActivitiesHolder))
             {
-                starter = "[a=";
+                starter = "[as=";
             }
             if (model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
             {
@@ -331,11 +336,11 @@ namespace Models.CLEM
             }
             if (model.GetType().Name.Contains("Group"))
             {
-                starter = "[f=";
+                starter = "[g=";
             }
             if (model.GetType().Name.Contains("Timer"))
             {
-                starter = "[f=";
+                starter = "[t=";
             }
             if (model.GetType().Name.Contains("Filter"))
             {
@@ -376,7 +381,8 @@ namespace Models.CLEM
                             text = description.ToString();
                         }
                     }
-                    string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    //string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
+                    string error = String.Format("Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
                     {
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );

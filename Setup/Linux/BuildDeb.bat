@@ -3,9 +3,9 @@ set "PATH=%PATH%;C:\Utilities"
 if Exist Apsim.deb Del Apsim.deb
 rem Get the current version number
 if Exist Version.tmp Del Version.tmp
-if not exist %apsimx%\Bin\Models.exe exit /B 1
+if not exist %apsimx%\bin\Release\net472\Models.exe exit /B 1
 cd %apsimx%\Setup\Linux
-sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %apsimx%\bin\Release\net472\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 for /F "tokens=1,2 delims=." %%a in ("%APSIM_VERSION%") do (set SHORT_VERSION=%%a.%%b)
 del Version.tmp
@@ -14,7 +14,7 @@ rem Create a clean set of output folders
 if Exist .\DebPackage rmdir /S /Q .\DebPackage
 mkdir .\DebPackage\DEBIAN
 mkdir .\DebPackage\data\usr\local\bin
-mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
 mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
 mkdir .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\UnderReview
 
@@ -29,14 +29,14 @@ move %tmp%\debian-binary .\
 
 (
 echo #!/bin/sh
-echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/ApsimNG.exe "$@"
+echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/bin/ApsimNG.exe "$@"
 )> %tmp%\apsim
 dos2unix %tmp%\apsim
 move %tmp%\apsim .\data\usr\local\bin\
 
 (
 echo #!/bin/sh
-echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/Bin/Models.exe "$@"
+echo exec /usr/bin/mono /usr/local/lib/apsim/%APSIM_VERSION%/bin/Models.exe "$@"
 )> %tmp%\Models
 dos2unix %tmp%\Models
 move %tmp%\Models .\data\usr\local\bin\
@@ -44,9 +44,9 @@ move %tmp%\Models .\data\usr\local\bin\
 cd %apsimx%\Setup\Linux
 rem Delete all files from Windows' DeploymentSupport directory from Bin
 for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
-	if exist %apsimx%\Bin\%%~nD%%~xD (
-		echo Deleting %apsimx%\Bin\%%~nD%%~xD...
-		del %apsimx%\Bin\%%~nD%%~xD
+	if exist %apsimx%\bin\Release\net472\%%~nD%%~xD (
+		echo Deleting %apsimx%\bin\Release\net472\%%~nD%%~xD...
+		del %apsimx%\bin\Release\net472\%%~nD%%~xD
 	)
 )
 
@@ -54,12 +54,12 @@ rem Copy the binaries and examples to their destinations
 xcopy /S /I /Y /Q %apsimx%\Examples .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Examples
 xcopy /S /I /Y /Q %apsimx%\ApsimNG\Resources\world .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\ApsimNG\Resources\world
 xcopy /S /I /Y /Q %apsimx%\Tests\UnderReview .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\UnderReview
-xcopy /I /Y /Q %apsimx%\Bin\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %apsimx%\Bin\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
-xcopy /I /Y /Q %apsimx%\Bin\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\Bin
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\*.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\*.exe .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\Mono.TextEditor.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
+xcopy /I /Y /Q %apsimx%\ApsimNG\Assemblies\webkit-sharp.dll.config .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
+xcopy /I /Y /Q %apsimx%\bin\Release\net472\Models.xml .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%\bin
 xcopy /I /Y /Q %apsimx%\APSIM.bib .\DebPackage\data\usr\local\lib\apsim\%APSIM_VERSION%
 
 rem Determine the approximate size of the package
@@ -89,8 +89,8 @@ rem Calculate the md5sums
 setlocal enabledelayedexpansion
 cd DebPackage/data
 fciv usr/local/bin/apsim | findstr /r /v "^//" >..\DEBIAN\md5sums
-for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Bin/*) do (
-for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/Bin/%%a >> ..\DEBIAN\md5sums
+for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/bin/*) do (
+for /F "tokens=1" %%i in ('md5sum "usr/local/lib/apsim/%APSIM_VERSION%/bin/%%a"') do echo %%i usr/local/lib/apsim/%APSIM_VERSION%/bin/%%a >> ..\DEBIAN\md5sums
 )
 
 for %%a in (usr/local/lib/apsim/%APSIM_VERSION%/Examples/*) do (

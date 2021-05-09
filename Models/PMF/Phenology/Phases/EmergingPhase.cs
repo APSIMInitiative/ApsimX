@@ -19,7 +19,7 @@ namespace Models.PMF.Phen
     /// Progress toward emergence is driven by Thermal time accumulation from Phenology.Thermaltime
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
@@ -124,6 +124,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
+            TTForTimeStep = 0;
             ProgressThroughPhase = 0;
             Target = 0;
             EmergenceDate = null;

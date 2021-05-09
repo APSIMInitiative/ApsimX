@@ -40,7 +40,7 @@ goto :end
 
 :getIssueNumber
 rem Get the issue number for the pull request which triggered this build.
-sigcheck64 -n -nobanner %apsimx%\Bin\Models.exe > Version.tmp
+sigcheck64 -n -nobanner %apsimx%\bin\Release\net472\Models.exe > Version.tmp
 set /p APSIM_VERSION=<Version.tmp
 set ISSUE_NUMBER=%APSIM_VERSION:~-4,4%
 set APSIM_VERSION=
@@ -49,7 +49,7 @@ exit /b
 
 :windows
 call :getIssueNumber
-if exist C:\signapsimx call C:\signapsimx\sign.bat "%apsimx%\Bin\Updater.exe"
+if exist C:\signapsimx call C:\signapsimx\sign.bat "%apsimx%\bin\Release\net472\Updater.exe"
 echo Generating installer...
 iscc /Q %setup%\apsimx.iss
 set "file_name=ApsimSetup%ISSUE_NUMBER%.exe"

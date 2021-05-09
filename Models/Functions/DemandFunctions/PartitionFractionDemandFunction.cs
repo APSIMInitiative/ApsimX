@@ -47,7 +47,7 @@ namespace Models.Functions.DemandFunctions
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
                 // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction � [Arbitrator].DM.TotalFixationSupply</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = PartitionFraction x [Arbitrator].DM.TotalFixationSupply</i>", indent));
 
                 // write children
                 tags.Add(new AutoDocumentation.Paragraph("Where:", indent));

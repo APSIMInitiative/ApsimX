@@ -12,7 +12,7 @@
     /// Encapsulates a cohort of Nutrient models i.e. patching.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class NutrientPatchManager : Model, INutrient, INutrientPatchManager

@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for emission type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a product store type (e.g. Cotton).")]
@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Style = TransactionStyle.Gain,
+                    TransactionType = TransactionType.Gain,
                     Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
@@ -155,7 +155,7 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Style = TransactionStyle.Loss,
+                    TransactionType = TransactionType.Loss,
                     Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     Category = request.Category,

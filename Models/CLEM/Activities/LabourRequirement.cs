@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// Defines the labour required for an activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [ValidParent(ParentType = typeof(CropActivityTask))]

@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
                 {
                     if (BankAccountName == "")
                     {
-                        Summary.WriteWarning(this, "No bank account has been specified in [a={0}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
+                        Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
                     }
                 }
             }

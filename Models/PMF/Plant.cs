@@ -79,25 +79,7 @@
         {
             get
             {
-                SortedSet<string> cultivarNames = new SortedSet<string>();
-                foreach (Cultivar cultivar in FindAllDescendants<Cultivar>())
-                {
-                    string name = cultivar.Name;
-                    IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
-                    foreach (IModel memo in memos)
-                    {
-                        name += '|' + ((Memo)memo).Text;
-                    }
-
-                    cultivarNames.Add(name);
-                    if (cultivar.Alias != null)
-                    {
-                        foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
-                    }
-                }
-
-                return new List<string>(cultivarNames).ToArray();
+                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
             }
         }
 

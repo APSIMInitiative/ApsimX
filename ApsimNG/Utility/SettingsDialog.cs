@@ -37,6 +37,8 @@ namespace UserInterface.Views
             Box box;
 #if NETFRAMEWORK
             box = VBox;
+            DefaultWidth = 640;
+            DefaultHeight = 480;
 #else
             box = ContentArea;
 #endif

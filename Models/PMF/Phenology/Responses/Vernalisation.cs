@@ -11,7 +11,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("Adds the number of vernalising minus devernalising days between start and end phases")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class Vernalisation : Model

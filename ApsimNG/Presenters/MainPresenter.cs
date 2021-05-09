@@ -235,7 +235,7 @@
         
         /// <summary>
         /// Displays several messages, with a separator between them. 
-        /// For error messages, use <see cref="ShowError(List{Exception})"/>.
+        /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
         /// <param name="messageType"></param>
@@ -295,7 +295,8 @@
         /// Displays several error messages in the status bar. Each error will have an associated 
         /// </summary>
         /// <param name="errors"></param>
-        public void ShowError(List<Exception> errors)
+        /// <param name="overwrite"></param>
+        public void ShowError(List<Exception> errors, bool overwrite = true)
         {
             // if the list contains at least 1 null exception, display none of them
             if (errors != null && !errors.Contains(null))
@@ -303,8 +304,11 @@
                 LastError = errors.Select(err => err.ToString()).ToList();
                 for (int i = 0; i < errors.Count; i++)
                 {
-                    // only overwrite other messages the first time through the loop
-                    view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, i == 0, true);
+                    if (errors[i] is AggregateException aggregate)
+                        ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
+                    else
+                        // only overwrite other messages the first time through the loop
+                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -1132,10 +1136,7 @@
                 bool onLeftTabControl = view.IsControlOnLeft(sender);
                 // Clear the message window
                 view.ShowMessage(" ", Simulation.ErrorLevel.Information);
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-                else
-                    ShowError("Microsoft Azure functionality is currently only available under Windows.");
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
             }
             catch (Exception err)
             {

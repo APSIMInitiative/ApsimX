@@ -15,7 +15,7 @@
     /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
@@ -71,7 +71,7 @@
         private BiomassDemand dmDemands = null;
 
         /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemandPriorityFactors = null;
 
@@ -86,7 +86,7 @@
         public BiomassDemand InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction initialNConcFunction = null;
 
@@ -127,7 +127,7 @@
 
         /// <summary>The photosynthesis</summary>
         [Units("g/m2")]
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
@@ -281,7 +281,7 @@
         {
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();         
-            DMSupply.Fixation = (Photosynthesis == null) ? 0: Photosynthesis.Value();
+            DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
 
@@ -320,18 +320,9 @@
                 DMDemand.Metabolic = 0;
             }
 
-            if (dmDemandPriorityFactors != null)
-            {
-                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-            }
-            else // Priorities will be equal
-            {
-                DMDemandPriorityFactor.Structural = 1.0;
-                DMDemandPriorityFactor.Metabolic = 1.0;
-                DMDemandPriorityFactor.Storage = 1.0;
-            }
+            DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
+            DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -491,15 +482,8 @@
                 Live.StructuralWt = InitialWt.Structural.Value();
                 Live.MetabolicWt = InitialWt.Metabolic.Value();
                 Live.StorageWt = InitialWt.Storage.Value();
-                if(initialNConcFunction != null)
-                {
-                    Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
-                }
-                else
-                {
-                    Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                    Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
-                }
+                Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
+                Live.StorageN = Live.StorageWt * initialNConcFunction.Value();
             }
         }
 

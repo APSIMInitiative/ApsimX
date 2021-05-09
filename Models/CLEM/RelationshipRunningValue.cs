@@ -15,7 +15,7 @@ namespace Models.CLEM
     /// This provides the ability to track a value based on an associated relationship of change in value provided by Y for a given X
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Relationship))]
     [Description("Tracks a bound running value based on a relationship where Y represents the change in this value for a given X")]
