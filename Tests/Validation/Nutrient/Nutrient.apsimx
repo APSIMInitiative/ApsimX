@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 436,
+  "ExplorerWidth": 300,
   "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -17496,6 +17496,7 @@
                         "[Clock].Today.Year",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
                         "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
                       ],
@@ -17727,6 +17728,86 @@
                       "Filter": null,
                       "Name": "Annual Nitrification N2O Emission",
                       "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": "Year",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": "N2O Emission (kg N/ha)",
+                      "Inverted": false,
+                      "Minimum": 0.0,
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "N2O Fraction of Emission",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "AnnualOutput",
+                      "XFieldName": "AnnualNatm",
+                      "YFieldName": "AnnualN2O",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -18372,6 +18453,7 @@
                         "[Clock].Today.Year",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
                         "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
                       ],
@@ -21623,6 +21705,7 @@
                         "[Clock].Today.Year",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
                         "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
                       ],
@@ -21802,7 +21885,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\ApsimX\\Tests\\Validation\\Gliricidia\\Makoka.met",
+                  "FileName": "%root%\\Tests\\Validation\\Gliricidia\\Makoka.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -22490,6 +22573,7 @@
                         "[Clock].Today.Year",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
                         "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O",
                         "sum([Soil].Nutrient.Humic.N)",
@@ -22769,6 +22853,86 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "N2O Fraction of Denitrification",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "AnnualOutput",
+                  "XFieldName": "AnnualDenitrification",
+                  "YFieldName": "AnnualDenitrificationN2O",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
