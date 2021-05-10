@@ -1441,7 +1441,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.002,
                   "Units": null,
                   "Name": "NLoss",
                   "Children": [],

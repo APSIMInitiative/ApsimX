@@ -17494,7 +17494,6 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
@@ -18451,7 +18450,6 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
@@ -18588,6 +18586,35 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Annual Nitrification N2O Emission",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -3376729,
+                      "FactorToVaryColours": null,
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "AnnualOutput",
+                      "XFieldName": "Clock.Today.Year",
+                      "YFieldName": "AnnualDenitrification",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Annual Denitrification",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -21703,7 +21730,6 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
@@ -22571,7 +22597,6 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualDenitrification",
                         "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
                         "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
                         "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
@@ -22909,7 +22934,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "TableName": "AnnualOutput",
-                  "XFieldName": "AnnualDenitrification",
+                  "XFieldName": "AnnualNatm",
                   "YFieldName": "AnnualDenitrificationN2O",
                   "X2FieldName": "",
                   "Y2FieldName": "",
@@ -22938,6 +22963,15 @@
                 }
               ],
               "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using System;\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link] DataStore store;\r\n\r\n        public void Run()\r\n        {\r\n            var data = store.Reader.GetData(\"AnnualOutput\");\n            var annualNatm = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualNatm\");\n            var annualDenitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualDenitrificationN2O\");\n            var annualNitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualNitrificationN2O\");\n            var stats = MathUtilities.CalcRegressionStats(\"Stats\", annualDenitrificationN2O, annualNatm);\n            \n            if (annualDenitrificationN2O.Max() > 25)\n            \tthrow new Exception(\"Annual N2O from denitrification is above maximum of 25 kg/ha\");\n            if (stats.Slope < 0.1 || stats.Slope > 0.25)\n                throw new Exception($\"Annual N2O from denitrification slope {stats.Slope} is not in the range 0.1  0.25\"); \n            if (stats.Intercept < -0.5 || stats.Intercept > 0.5)\n                throw new Exception($\"Annual N2O from denitrification intercept {stats.Intercept} is not in the range -0.5 to 0.5\"); \n            if (annualNitrificationN2O.Where(nitrification => nitrification > 3).Any())\n                throw new Exception($\"Annual N2O from nitrification values go above the allowed maximum of 3 kg/ha\"); \n        }\r\n    }\r\n}\r\n",
+              "Parameters": [],
+              "Name": "PostSimulationTests",
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
