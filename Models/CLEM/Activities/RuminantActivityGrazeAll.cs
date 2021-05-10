@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                Summary.WriteWarning(this, "No GrazeFoodStore is available for the ruminant grazing activity!");
+                Summary.WriteWarning(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!");
             }
         }
 

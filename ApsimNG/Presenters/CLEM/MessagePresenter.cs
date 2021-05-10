@@ -127,29 +127,30 @@ namespace UserInterface.Presenters
                             {
                                 case "2":
                                     title = "Error";
+                                    if (dr[msgCol].ToString().Contains("Invalid parameter value in"))
+                                    {
+                                        msgStr = "Invalid parameter values provided";
+                                    }
+                                    else
+                                    {
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                    }
                                     break;
                                 case "1":
-                                    title = "Warning";
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                            {
-                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                                {
-                                    case "@error":
-                                        title = "Error";
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                    case "@validation":
+                                    if (dr[msgCol].ToString().StartsWith("Invalid parameter value in"))
+                                    {
                                         title = "Validation error";
                                         msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
                                         msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
                                         msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                }
+                                    }
+                                    else
+                                    {
+                                        title = "Warning";
+                                    }
+                                    break;
+                                default:
+                                    break;
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
@@ -177,11 +178,17 @@ namespace UserInterface.Presenters
                             markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");
+                            msgStr = msgStr.Replace("[rs=", @".resources-**");
                             msgStr = msgStr.Replace("[a=", @".activity-**");
+                            msgStr = msgStr.Replace("[as=", @".activities-**");
                             msgStr = msgStr.Replace("[f=", @".filter-**");
+                            msgStr = msgStr.Replace("[g=", @".group-**");
+                            msgStr = msgStr.Replace("[t=", @".timer-**");
                             msgStr = msgStr.Replace("[x=", "**");
                             msgStr = msgStr.Replace("[o=", "**");
                             msgStr = msgStr.Replace("[m=", @".market-**");
+                            msgStr = msgStr.Replace("[z=", @"clem-**");
+                            msgStr = msgStr.Replace("[l=", @".labour-**");
                             msgStr = msgStr.Replace("[", "**");
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
@@ -338,39 +345,39 @@ namespace UserInterface.Presenters
                                 }
                             }
 
-                            string type = "Message";
                             string title = "Message";
+                            string type = "Message";
                             switch (dr[errorCol].ToString())
                             {
                                 case "2":
-                                    type = "Error";
                                     title = "Error";
+                                    type = "Error";
+                                    if (dr[msgCol].ToString().Contains("Invalid parameter value in"))
+                                    {
+                                        msgStr = "Invalid parameter values provided";
+                                    }
+                                    else
+                                    {
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                    }
                                     break;
                                 case "1":
-                                    type = "Warning";
-                                    title = "Warning";
+                                    if (dr[msgCol].ToString().StartsWith("Invalid parameter value in"))
+                                    {
+                                        title = "Validation error";
+                                        type = "Error";
+                                        msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
+                                        msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
+                                        msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
+                                    }
+                                    else
+                                    {
+                                        title = "Warning";
+                                        type = "Warning";
+                                    }
                                     break;
                                 default:
                                     break;
-                            }
-                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                            {
-                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                                {
-                                    case "@error":
-                                        type = "Error";
-                                        title = "Error";
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                    case "@validation":
-                                        type = "Error";
-                                        title = "Validation error";
-                                        msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                        msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                        msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                }
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
@@ -402,11 +409,17 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("\n", "<br />");
                             msgStr = msgStr.Replace("]", "</span>");
                             msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
+                            msgStr = msgStr.Replace("[rs=", "<span class=\"resourcelink\">");
                             msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
+                            msgStr = msgStr.Replace("[as=", "<span class=\"activitylink\">");
                             msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
+                            msgStr = msgStr.Replace("[g=", "<span class=\"filterlink\">");
+                            msgStr = msgStr.Replace("[t=", "<span class=\"filterlink\">");
                             msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
                             msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
                             msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
+                            msgStr = msgStr.Replace("[z=", "<span class=\"setvalue\">");
+                            msgStr = msgStr.Replace("[l=", "<span class=\"filterlink\">");
                             msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
                             htmlWriter.Write("\n<div class=\"messageentry\">" + msgStr);
                             htmlWriter.Write("\n</div>");

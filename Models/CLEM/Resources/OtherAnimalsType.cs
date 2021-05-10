@@ -148,7 +148,7 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = cohortToAdd.Number,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
@@ -190,7 +190,7 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = cohortToRemove.Number,
                 Activity = activity,
                 Category = reason,

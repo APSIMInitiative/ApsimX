@@ -578,6 +578,15 @@
         }
 
         /// <summary>
+        /// Perform the necessary initialisation at the start of simulation.
+        /// </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            First = true;
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
