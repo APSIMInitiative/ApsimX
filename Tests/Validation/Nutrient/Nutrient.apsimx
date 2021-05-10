@@ -2976,6 +2976,29 @@
           "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today",
+            "[Clock].Today.Year",
+            "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
+            "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
+            "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
+            "sum of sum([Soil].Nutrient.NO3.Denitrification.Natm) from 1-Jan to 31-Dec as AnnualDenitrificationNatm",
+            "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O",
+            "sum([Soil].Nutrient.Humic.N)",
+            "sum([Soil].Nutrient.Humic.C)"
+          ],
+          "EventNames": [
+            "[Clock].EndOfYear"
+          ],
+          "GroupByVariableName": null,
+          "Name": "AnnualOutput",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
         }
       ],
       "IncludeInDocumentation": false,
@@ -16915,6 +16938,30 @@
           "Name": "N2O",
           "Children": [
             {
+              "$type": "Models.Memo, Models",
+              "Text": "N2O emmisions are modelled by the APSIM Nutrient model.  Further work is encouraged to test and improve this part of the model.  Till then, sensibility tests are conducted to ensure that the results from the model meet basic expectations from previous studies.\n\nThis very simple sensibility test ensures that the following criteria hold for a range of different farming systems across different geographical locations:\na) Oil Palm in Papua New Guinea\nb) Wheat in Southern Queensland, Australia.\nc) Sugarcane in Northern Queensland, Australia\nd) Maize in Malawi, Africa.\n\nTests check that the following are maintained:\n1) Total annual N2O losses from denitrification are relatively low (less than 25 kg N/ha/y)\n2) N2O losses from denitrification lie within 10% and 25% of total N losses from denitrification\n3) Total annual N2O losses from nitrification are very low (less than 3 kg N/ha/y)\n\n",
+              "Name": "Memo",
+              "Children": [
+                {
+                  "$type": "Models.Map, Models",
+                  "Zoom": 360.0,
+                  "Center": {
+                    "$type": "Models.Map+Coordinate, Models",
+                    "Latitude": 0.0,
+                    "Longitude": 0.0
+                  },
+                  "Name": "Map",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
               "Descriptors": null,
@@ -16927,7 +16974,7 @@
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -16937,7 +16984,7 @@
                   "End": "2010-09-29T00:00:00",
                   "Name": "Clock",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -16954,7 +17001,7 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -16965,7 +17012,7 @@
                   "CaptureSummaryText": true,
                   "Name": "Summary",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -16981,7 +17028,7 @@
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -16995,7 +17042,7 @@
                       "InitialCNR": 0.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOM",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17189,12 +17236,12 @@
                               "XFMetadata": null,
                               "Name": "OilPalmSoil",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17258,7 +17305,7 @@
                           ],
                           "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17367,7 +17414,7 @@
                           "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17452,7 +17499,7 @@
                           "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17464,7 +17511,7 @@
                           "RelativeTo": null,
                           "Name": "InitialWater",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17472,7 +17519,7 @@
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -17480,24 +17527,19 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[Clock].Today",
-                        "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
-                        "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
-                        "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
+                        ""
                       ],
                       "EventNames": [
                         "[Clock].EndOfYear"
@@ -17505,7 +17547,7 @@
                       "GroupByVariableName": null,
                       "Name": "AnnualOutput",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17517,7 +17559,7 @@
                       "MaximumRootDepth": 5000.0,
                       "ResourceName": "OilPalm",
                       "Name": "OilPalm",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17525,7 +17567,7 @@
                       "$type": "Models.Irrigation, Models",
                       "Name": "Irrigation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17555,7 +17597,7 @@
                         }
                       ],
                       "Name": "Palm Management",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17601,12 +17643,12 @@
                         }
                       ],
                       "Name": "Calculations",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17669,7 +17711,7 @@
                       "Filter": null,
                       "Name": "Annual N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17698,7 +17740,7 @@
                       "Filter": null,
                       "Name": "Annual Denitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -17727,7 +17769,7 @@
                       "Filter": null,
                       "Name": "Annual Nitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -17802,12 +17844,12 @@
                           "showEquation": true,
                           "Name": "Regression",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -17817,7 +17859,7 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -17833,7 +17875,7 @@
                   "End": "2000-12-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17844,7 +17886,7 @@
                   "CaptureSummaryText": true,
                   "Name": "SummaryFile",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17855,7 +17897,7 @@
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17863,7 +17905,7 @@
                   "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                   "Name": "SoilArbitrator",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -17879,7 +17921,7 @@
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18031,12 +18073,12 @@
                               "XFMetadata": null,
                               "Name": "WheatSoil",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18077,7 +18119,7 @@
                           "KLAT": null,
                           "ResourceName": "WaterBalance",
                           "Name": "SoilWater",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18151,7 +18193,7 @@
                           "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18211,7 +18253,7 @@
                           "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18223,7 +18265,7 @@
                           "RelativeTo": null,
                           "Name": "InitialWater",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18308,7 +18350,7 @@
                           "PHUnits": 0,
                           "Name": "InitialN",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18316,7 +18358,7 @@
                           "$type": "Models.Soils.CERESSoilTemperature, Models",
                           "Name": "Temperature",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -18324,12 +18366,12 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18343,7 +18385,7 @@
                       "InitialCNR": 100.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18351,7 +18393,7 @@
                       "$type": "Models.PMF.Plant, Models",
                       "ResourceName": "Wheat",
                       "Name": "Wheat",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18368,7 +18410,7 @@
                       "ReferenceHeight": 2.0,
                       "Name": "MicroClimate",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18386,7 +18428,7 @@
                         }
                       ],
                       "Name": "SowingFertiliser",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18395,7 +18437,7 @@
                       "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Wheat;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Wheat.IsReadyForHarvesting)\r\n            {\r\n               Wheat.Harvest();\r\n               Wheat.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [],
                       "Name": "Harvest",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18441,19 +18483,14 @@
                         }
                       ],
                       "Name": "SowingRule1",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[Clock].Today",
-                        "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
-                        "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
-                        "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
+                        ""
                       ],
                       "EventNames": [
                         "[Clock].EndOfYear"
@@ -18461,12 +18498,12 @@
                       "GroupByVariableName": null,
                       "Name": "AnnualOutput",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -18529,7 +18566,7 @@
                       "Filter": null,
                       "Name": "Annual N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18558,7 +18595,7 @@
                       "Filter": null,
                       "Name": "Annual Denitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18587,7 +18624,7 @@
                       "Filter": null,
                       "Name": "Annual Nitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -18616,7 +18653,7 @@
                       "Filter": null,
                       "Name": "Annual Denitrification",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -18626,7 +18663,7 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -18643,7 +18680,7 @@
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -18653,7 +18690,7 @@
                   "End": "2000-12-31T00:00:00",
                   "Name": "clock",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -18664,7 +18701,7 @@
                   "CaptureSummaryText": true,
                   "Name": "summaryfile",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -18681,7 +18718,7 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -18694,594 +18731,10 @@
                   "Name": "Field",
                   "Children": [
                     {
-                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
-                      "InitialResidueName": "wheat_stubble",
-                      "InitialResidueType": "wheat",
-                      "InitialResidueMass": 0.0,
-                      "InitialStandingFraction": 0.0,
-                      "InitialCPR": 0.0,
-                      "InitialCNR": 80.0,
-                      "ResourceName": "SurfaceOrganicMatter",
-                      "Name": "SurfaceOrganicMatter",
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.Soil, Models",
-                      "RecordNumber": 0,
-                      "ASCOrder": null,
-                      "ASCSubOrder": null,
-                      "SoilType": "Black Vertosol",
-                      "LocalName": null,
-                      "Site": "Jimbour",
-                      "NearestTown": "Jimbour, Q 4352",
-                      "Region": "South East Queensland",
-                      "State": null,
-                      "Country": null,
-                      "NaturalVegetation": "Grassland, mainly Qld bluegrass",
-                      "ApsoilNumber": null,
-                      "Latitude": 0.0,
-                      "Longitude": 0.0,
-                      "LocationAccuracy": null,
-                      "YearOfSampling": null,
-                      "DataSource": null,
-                      "Comments": null,
-                      "Name": "Soil",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.InitialWater, Models",
-                          "PercentMethod": 0,
-                          "FractionFull": 0.0,
-                          "DepthWetSoil": "NaN",
-                          "RelativeTo": null,
-                          "Name": "Initial water",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180",
-                            "180-210",
-                            "210-240",
-                            "240-270",
-                            "270-300"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "ParticleSizeClay": null,
-                          "ParticleSizeSand": null,
-                          "ParticleSizeSilt": null,
-                          "Rocks": null,
-                          "Texture": null,
-                          "BD": [
-                            1.02,
-                            1.03,
-                            1.02,
-                            1.02,
-                            1.06,
-                            1.11,
-                            1.12,
-                            1.15,
-                            1.18,
-                            1.2,
-                            1.25
-                          ],
-                          "AirDry": [
-                            0.14,
-                            0.26,
-                            0.29,
-                            0.29,
-                            0.3,
-                            0.31,
-                            0.32,
-                            0.33,
-                            0.34,
-                            0.35,
-                            0.36
-                          ],
-                          "LL15": [
-                            0.29,
-                            0.29,
-                            0.29,
-                            0.29,
-                            0.3,
-                            0.31,
-                            0.32,
-                            0.33,
-                            0.34,
-                            0.35,
-                            0.36
-                          ],
-                          "DUL": [
-                            0.54,
-                            0.53,
-                            0.54,
-                            0.54,
-                            0.52,
-                            0.5,
-                            0.5,
-                            0.48,
-                            0.47,
-                            0.46,
-                            0.44
-                          ],
-                          "SAT": [
-                            0.59,
-                            0.58,
-                            0.59,
-                            0.58,
-                            0.57,
-                            0.55,
-                            0.55,
-                            0.53,
-                            0.52,
-                            0.51,
-                            0.49
-                          ],
-                          "KS": null,
-                          "BDMetadata": null,
-                          "AirDryMetadata": null,
-                          "LL15Metadata": null,
-                          "DULMetadata": null,
-                          "SATMetadata": null,
-                          "KSMetadata": null,
-                          "RocksMetadata": null,
-                          "TextureMetadata": null,
-                          "ParticleSizeSandMetadata": null,
-                          "ParticleSizeSiltMetadata": null,
-                          "ParticleSizeClayMetadata": null,
-                          "Name": "Physical",
-                          "Children": [
-                            {
-                              "$type": "Models.Soils.SoilCrop, Models",
-                              "LL": [
-                                0.29,
-                                0.29,
-                                0.32,
-                                0.32,
-                                0.35,
-                                0.38,
-                                0.41,
-                                0.48,
-                                0.47,
-                                0.46,
-                                0.44
-                              ],
-                              "KL": [
-                                0.1,
-                                0.1,
-                                0.08,
-                                0.06,
-                                0.04,
-                                0.02,
-                                0.01,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
-                              "XF": [
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                1.0,
-                                0.0,
-                                0.0,
-                                0.0,
-                                0.0
-                              ],
-                              "LLMetadata": null,
-                              "KLMetadata": null,
-                              "XFMetadata": null,
-                              "Name": "SugarcaneSoil",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.WaterModel.WaterBalance, Models",
-                          "SummerDate": "1-Nov",
-                          "SummerU": 6.0,
-                          "SummerCona": 3.5,
-                          "WinterDate": "1-Apr",
-                          "WinterU": 6.0,
-                          "WinterCona": 3.5,
-                          "DiffusConst": 40.0,
-                          "DiffusSlope": 16.0,
-                          "Salb": 0.13,
-                          "CN2Bare": 73.0,
-                          "CNRed": 20.0,
-                          "CNCov": 0.8,
-                          "DischargeWidth": 0.0,
-                          "CatchmentArea": 0.0,
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "SWCON": [
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3,
-                            0.3
-                          ],
-                          "KLAT": null,
-                          "ResourceName": "WaterBalance",
-                          "Name": "SoilWater",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180",
-                            "180-210",
-                            "210-240",
-                            "240-270",
-                            "270-300"
-                          ],
-                          "FOMCNRatio": 40.0,
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "Carbon": [
-                            1.04,
-                            0.89,
-                            0.89,
-                            0.89,
-                            0.77,
-                            0.45,
-                            0.27,
-                            0.22,
-                            0.16,
-                            0.13,
-                            0.12
-                          ],
-                          "SoilCNRatio": [
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5,
-                            12.5
-                          ],
-                          "FBiom": [
-                            0.025,
-                            0.02,
-                            0.015,
-                            0.01,
-                            0.01,
-                            0.01,
-                            0.01,
-                            0.01,
-                            0.01,
-                            0.01,
-                            0.01
-                          ],
-                          "FInert": [
-                            0.4,
-                            0.6,
-                            0.8,
-                            0.9,
-                            0.95,
-                            0.95,
-                            0.95,
-                            0.95,
-                            0.95,
-                            0.95,
-                            0.95
-                          ],
-                          "FOM": [
-                            48.12863958870089,
-                            41.424703988481674,
-                            30.688175501013852,
-                            22.734359570629373,
-                            16.842027805452027,
-                            12.476881071506991,
-                            9.243100835051218,
-                            6.847457514204344,
-                            5.072721291866518,
-                            3.75796436145482,
-                            2.7839684716382678
-                          ],
-                          "CarbonMetadata": null,
-                          "FOMMetadata": null,
-                          "Name": "Organic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180",
-                            "180-210",
-                            "210-240",
-                            "240-270",
-                            "270-300"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3N": [
-                            6.5,
-                            2.1,
-                            2.1,
-                            1.7,
-                            1.7,
-                            1.7,
-                            1.7,
-                            1.7,
-                            1.7,
-                            1.7,
-                            1.7
-                          ],
-                          "NH4N": [
-                            0.6,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
-                          ],
-                          "PH": [
-                            8.4,
-                            8.8,
-                            9.0,
-                            9.2,
-                            9.2,
-                            9.1,
-                            9.0,
-                            9.0,
-                            8.9,
-                            8.9,
-                            8.9
-                          ],
-                          "CL": null,
-                          "EC": null,
-                          "ESP": null,
-                          "ECMetadata": null,
-                          "CLMetadata": null,
-                          "ESPMetadata": null,
-                          "PHMetadata": null,
-                          "Name": "Chemical",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-15",
-                            "15-30",
-                            "30-60",
-                            "60-90",
-                            "90-120",
-                            "120-150",
-                            "150-180",
-                            "180-210",
-                            "210-240",
-                            "240-270",
-                            "270-300"
-                          ],
-                          "Thickness": [
-                            150.0,
-                            150.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0,
-                            300.0
-                          ],
-                          "NO3": null,
-                          "NH4": null,
-                          "SW": [
-                            81.0,
-                            79.4999,
-                            162.0,
-                            162.0,
-                            137.39999,
-                            93.0,
-                            96.0,
-                            99.0,
-                            102.0,
-                            105.0,
-                            108.0
-                          ],
-                          "OC": [
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN"
-                          ],
-                          "EC": [
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN"
-                          ],
-                          "CL": [
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN"
-                          ],
-                          "ESP": [
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN"
-                          ],
-                          "PH": [
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN",
-                            "NaN"
-                          ],
-                          "SWUnits": 0,
-                          "OCUnits": 0,
-                          "PHUnits": 0,
-                          "Name": "Initial nitrogen",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.CERESSoilTemperature, Models",
-                          "Name": "Temperature",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
-                          "ResourceName": "Nutrient",
-                          "Name": "Nutrient",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "fertiliser",
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21643,7 +21096,7 @@
                       ],
                       "Name": "Sugarcane",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21690,7 +21143,7 @@
                             }
                           ],
                           "Name": "SUGAR management",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -21716,24 +21169,19 @@
                             }
                           ],
                           "Name": "Fertilise on fixed date",
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[Clock].Today",
-                        "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
-                        "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
-                        "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O"
+                        ""
                       ],
                       "EventNames": [
                         "[Clock].EndOfYear"
@@ -21741,12 +21189,410 @@
                       "GroupByVariableName": null,
                       "Name": "AnnualOutput",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Soil, Models",
+                      "RecordNumber": 0,
+                      "ASCOrder": null,
+                      "ASCSubOrder": null,
+                      "SoilType": null,
+                      "LocalName": null,
+                      "Site": null,
+                      "NearestTown": null,
+                      "Region": null,
+                      "State": null,
+                      "Country": null,
+                      "NaturalVegetation": null,
+                      "ApsoilNumber": null,
+                      "Latitude": 0.0,
+                      "Longitude": 0.0,
+                      "LocationAccuracy": null,
+                      "YearOfSampling": null,
+                      "DataSource": null,
+                      "Comments": null,
+                      "Name": "Macknade 923 1R",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.InitialWater, Models",
+                          "PercentMethod": 0,
+                          "FractionFull": 1.0,
+                          "DepthWetSoil": "NaN",
+                          "RelativeTo": null,
+                          "Name": "Initial water",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "ParticleSizeClay": null,
+                          "ParticleSizeSand": null,
+                          "ParticleSizeSilt": null,
+                          "Rocks": null,
+                          "Texture": null,
+                          "BD": [
+                            1.15,
+                            1.35,
+                            1.4,
+                            1.45,
+                            1.45,
+                            1.5,
+                            1.5
+                          ],
+                          "AirDry": [
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05,
+                            0.05
+                          ],
+                          "LL15": [
+                            0.16,
+                            0.18,
+                            0.2,
+                            0.21,
+                            0.24,
+                            0.29,
+                            0.29
+                          ],
+                          "DUL": [
+                            0.28,
+                            0.3,
+                            0.32,
+                            0.33,
+                            0.36,
+                            0.41,
+                            0.41
+                          ],
+                          "SAT": [
+                            0.45,
+                            0.45,
+                            0.45,
+                            0.45,
+                            0.45,
+                            0.43,
+                            0.43
+                          ],
+                          "KS": null,
+                          "BDMetadata": null,
+                          "AirDryMetadata": null,
+                          "LL15Metadata": null,
+                          "DULMetadata": null,
+                          "SATMetadata": null,
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SoilCrop, Models",
+                              "LL": [
+                                0.16,
+                                0.18,
+                                0.2,
+                                0.21,
+                                0.24,
+                                0.29,
+                                0.29
+                              ],
+                              "KL": [
+                                0.1,
+                                0.1,
+                                0.1,
+                                0.08,
+                                0.08,
+                                0.04,
+                                0.04
+                              ],
+                              "XF": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "LLMetadata": null,
+                              "KLMetadata": null,
+                              "XFMetadata": null,
+                              "Name": "SugarcaneSoil",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.WaterModel.WaterBalance, Models",
+                          "SummerDate": "1-Nov",
+                          "SummerU": 4.0,
+                          "SummerCona": 3.0,
+                          "WinterDate": "1-Apr",
+                          "WinterU": 4.0,
+                          "WinterCona": 3.0,
+                          "DiffusConst": 40.0,
+                          "DiffusSlope": 16.0,
+                          "Salb": 0.1,
+                          "CN2Bare": 65.0,
+                          "CNRed": 20.0,
+                          "CNCov": 0.8,
+                          "DischargeWidth": "NaN",
+                          "CatchmentArea": "NaN",
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "SWCON": [
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4
+                          ],
+                          "KLAT": null,
+                          "ResourceName": "WaterBalance",
+                          "Name": "SoilWater",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Organic, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "FOMCNRatio": 70.0,
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "Carbon": [
+                            1.3,
+                            0.9,
+                            0.54,
+                            0.4,
+                            0.4,
+                            0.4,
+                            0.4
+                          ],
+                          "SoilCNRatio": [
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0,
+                            11.0
+                          ],
+                          "FBiom": [
+                            0.06,
+                            0.045,
+                            0.035,
+                            0.015,
+                            0.005,
+                            0.005,
+                            0.005
+                          ],
+                          "FInert": [
+                            0.3,
+                            0.45,
+                            0.85,
+                            0.95,
+                            0.95,
+                            0.99,
+                            0.99
+                          ],
+                          "FOM": [
+                            343.1391579615168,
+                            245.86995056335212,
+                            176.17351790787149,
+                            106.85464004055672,
+                            64.81061531715484,
+                            39.30962526469563,
+                            23.842492944852246
+                          ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
+                          "Name": "Organic",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Depth": [
+                            "0-20",
+                            "20-40",
+                            "40-60",
+                            "60-90",
+                            "90-120",
+                            "120-150",
+                            "150-180"
+                          ],
+                          "Thickness": [
+                            200.0,
+                            200.0,
+                            200.0,
+                            300.0,
+                            300.0,
+                            300.0,
+                            300.0
+                          ],
+                          "NO3N": [
+                            2.0,
+                            2.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "NH4N": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            0.5,
+                            0.5,
+                            0.5,
+                            0.5
+                          ],
+                          "PH": [
+                            6.0,
+                            6.0,
+                            6.0,
+                            6.0,
+                            6.0,
+                            6.0,
+                            6.0
+                          ],
+                          "CL": null,
+                          "EC": null,
+                          "ESP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": null,
+                          "Name": "Chemical",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.CERESSoilTemperature, Models",
+                          "Name": "Temperature",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "ResourceName": "Nutrient",
+                          "Name": "Nutrient",
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Sample, Models",
+                          "Depth": [
+                            "0-180"
+                          ],
+                          "Thickness": [
+                            1800.0
+                          ],
+                          "NO3": null,
+                          "NH4": [
+                            1.0
+                          ],
+                          "SW": null,
+                          "OC": null,
+                          "EC": null,
+                          "CL": null,
+                          "ESP": null,
+                          "PH": null,
+                          "SWUnits": 0,
+                          "OCUnits": 0,
+                          "PHUnits": 0,
+                          "Name": "Initial conditions",
+                          "Children": [],
+                          "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "InitialResidueName": "sugar_trash",
+                      "InitialResidueType": "Sugarcane",
+                      "InitialResidueMass": 1000.0,
+                      "InitialStandingFraction": 1.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 80.0,
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Name": "Surface Organic Matter",
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -21809,7 +21655,7 @@
                       "Filter": null,
                       "Name": "Annual N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21838,7 +21684,7 @@
                       "Filter": null,
                       "Name": "Annual Denitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -21867,7 +21713,7 @@
                       "Filter": null,
                       "Name": "Annual Nitrification N2O Emission",
                       "Children": [],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -21877,7 +21723,7 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
+              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -22595,14 +22441,7 @@
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[Clock].Today",
-                        "[Clock].Today.Year",
-                        "sum of sum([Soil].Nutrient.N2Oatm) from 1-Jan to 31-Dec as AnnualN2O",
-                        "sum of sum([Soil].Nutrient.Natm) from 1-Jan to 31-Dec as AnnualNatm",
-                        "sum of sum([Soil].Nutrient.NO3.Denitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualDenitrificationN2O",
-                        "sum of sum([Soil].Nutrient.NH4.Nitrification.N2Oatm) from 1-Jan to 31-Dec as AnnualNitrificationN2O",
-                        "sum([Soil].Nutrient.Humic.N)",
-                        "sum([Soil].Nutrient.Humic.C)"
+                        ""
                       ],
                       "EventNames": [
                         "[Clock].EndOfYear"
@@ -22934,7 +22773,7 @@
                   "Line": 4,
                   "LineThickness": 0,
                   "TableName": "AnnualOutput",
-                  "XFieldName": "AnnualNatm",
+                  "XFieldName": "AnnualDenitrificationNatm",
                   "YFieldName": "AnnualDenitrificationN2O",
                   "X2FieldName": "",
                   "Y2FieldName": "",
@@ -22962,15 +22801,95 @@
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link] DataStore store;\r\n\r\n        public void Run()\r\n        {\r\n            var data = store.Reader.GetData(\"AnnualOutput\");\n            var annualNatm = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualNatm\");\n            var annualDenitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualDenitrificationN2O\");\n            var annualNitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualNitrificationN2O\");\n            var stats = MathUtilities.CalcRegressionStats(\"Stats\", annualDenitrificationN2O, annualNatm);\n            \n            if (annualDenitrificationN2O.Max() > 25)\n            \tthrow new Exception(\"Annual N2O from denitrification is above maximum of 25 kg/ha\");\n            if (stats.Slope < 0.1 || stats.Slope > 0.25)\n                throw new Exception($\"Annual N2O from denitrification slope {stats.Slope} is not in the range 0.1  0.25\"); \n            if (stats.Intercept < -0.5 || stats.Intercept > 0.5)\n                throw new Exception($\"Annual N2O from denitrification intercept {stats.Intercept} is not in the range -0.5 to 0.5\"); \n            if (annualNitrificationN2O.Where(nitrification => nitrification > 3).Any())\n                throw new Exception($\"Annual N2O from nitrification values go above the allowed maximum of 3 kg/ha\"); \n        }\r\n    }\r\n}\r\n",
+              "Code": "using System;\nusing System.Linq;\r\nusing Models.Core;\r\nusing Models.Interfaces;\r\nusing Models.Storage;\r\nusing APSIM.Shared.Utilities;\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ITest\r\n    {\r\n        [Link] DataStore store;\r\n\r\n        public void Run()\r\n        {\r\n            var data = store.Reader.GetData(\"AnnualOutput\");\n            var annualDenitrificationNatm = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualDenitrificationNatm\");\n            var annualDenitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualDenitrificationN2O\");\n            var annualNitrificationN2O = DataTableUtilities.GetColumnAsDoubles(data, \"AnnualNitrificationN2O\");\n            var stats = MathUtilities.CalcRegressionStats(\"Stats\", annualDenitrificationN2O, annualDenitrificationNatm);\n            \n            if (annualDenitrificationN2O.Max() > 25)\n            \tthrow new Exception(\"Annual N2O from denitrification is above maximum of 25 kg/ha\");\n            if (stats.Slope < 0.1 || stats.Slope > 0.25)\n                throw new Exception($\"Annual N2O from denitrification slope {stats.Slope} is not in the range 0.1  0.25\"); \n            if (stats.Intercept < -0.5 || stats.Intercept > 0.5)\n                throw new Exception($\"Annual N2O from denitrification intercept {stats.Intercept} is not in the range -0.5 to 0.5\"); \n            if (annualNitrificationN2O.Where(nitrification => nitrification > 3).Any())\n                throw new Exception($\"Annual N2O from nitrification values go above the allowed maximum of 3 kg/ha\"); \n        }\r\n    }\r\n}\r\n",
               "Parameters": [],
               "Name": "PostSimulationTests",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 1,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "N2O Losses from Denitrification and Nitrification",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "AnnualOutput",
+                  "XFieldName": "AnnualDenitrificationN2O",
+                  "YFieldName": "AnnualNitrificationN2O",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
