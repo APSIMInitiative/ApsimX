@@ -1441,7 +1441,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 0.002,
                   "Units": null,
                   "Name": "NLoss",
                   "Children": [],
@@ -1451,7 +1451,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
+                  "FixedValue": 1,
                   "Units": null,
                   "Name": "N2OFraction",
                   "Children": [
