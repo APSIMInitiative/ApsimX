@@ -157,7 +157,7 @@
             {
                 double[] values = new double[FOMLignin.C.Length];
 
-                foreach (CarbonFlow f in FindAllChildren<CarbonFlow>())
+                foreach (CarbonFlow f in FindAllDescendants<CarbonFlow>())
                     values = MathUtilities.Add(values, f.Catm);
                 return values;
             }
@@ -173,7 +173,7 @@
             {
                 double[] values = new double[FOMLignin.C.Length];
 
-                foreach (NFlow f in FindAllChildren<NFlow>())
+                foreach (NFlow f in FindAllDescendants<NFlow>())
                     values = MathUtilities.Add(values, f.Natm);
                 return values;
             }
@@ -189,7 +189,7 @@
             {
                 double[] values = new double[FOMLignin.C.Length];
 
-                foreach (NFlow f in FindAllChildren<NFlow>())
+                foreach (NFlow f in FindAllDescendants<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
                 return values;
             }
