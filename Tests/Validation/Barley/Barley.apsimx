@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 370,
+  "ExplorerWidth": 300,
   "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -154,7 +154,8 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed.xlsx"
+            "Observed.xlsx",
+            "LaTrobeCE_Obs.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -44046,7 +44047,7 @@
                               "Type": 3,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
+                              "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
                               "DateTimeAxis": false,
@@ -44057,15 +44058,15 @@
                               "Type": 0,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
+                              "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
                               "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
+                          "LegendPosition": 4,
+                          "LegendOrientation": 1,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
@@ -44077,19 +44078,19 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": 0,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Experiment",
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Cv",
                               "FactorToVaryLines": null,
-                              "Marker": 11,
+                              "Marker": 0,
                               "MarkerSize": 0,
                               "Line": 4,
                               "LineThickness": 0,
                               "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
+                              "XFieldName": "Observed.Barley.Structure.FinalLeafNumber",
+                              "YFieldName": "Predicted.Barley.Structure.FinalLeafNumber",
                               "X2FieldName": "",
                               "Y2FieldName": "",
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
