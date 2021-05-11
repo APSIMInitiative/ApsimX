@@ -38,11 +38,6 @@
         private List<object> oldPropertyValues = new List<object>();
 
         /// <summary>
-        /// Gets or sets a collection of names this cultivar is known as.
-        /// </summary>
-        public string[] Alias { get => FindAllChildren<Alias>().Select(a => a.Name).ToArray(); }
-
-        /// <summary>
         /// Gets or sets a collection of commands that must be executed when applying this cultivar.
         /// </summary>
         public string[] Command { get; set; }
@@ -54,10 +49,17 @@
         /// <param name="name">The name.</param>
         public bool IsKnownAs(string name)
         {
-            if (string.Equals(Name, name, StringComparison.InvariantCultureIgnoreCase))
-                return true;
-            
-            return Alias.Any(a => string.Equals(a, name, StringComparison.InvariantCultureIgnoreCase));
+            return GetNames().Any(a => string.Equals(a, name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Return all names by which this cultivar is known.
+        /// </summary>
+        public IEnumerable<string> GetNames()
+        {
+            yield return Name;
+            foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
+                yield return name;
         }
 
         /// <summary>

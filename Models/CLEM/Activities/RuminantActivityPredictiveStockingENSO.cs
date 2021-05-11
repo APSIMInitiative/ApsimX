@@ -170,7 +170,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteWarning(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}[ for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);
@@ -403,7 +403,7 @@ namespace Models.CLEM.Activities
 
                         if(newIndividual.Weight == 0)
                         {
-                            throw new ApsimXException(this, "Specified individual added during restock cannot have no weight");
+                            throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);

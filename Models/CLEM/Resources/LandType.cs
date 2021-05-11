@@ -146,7 +146,7 @@ namespace Models.CLEM.Resources
             if (this.areaAvailable + addAmount > this.UsableArea)
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
-                string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
+                string message = $"Tried to add more available land to [r={this.Name}] than exists.";
                 Summary.WriteWarning(this, message);
                 this.areaAvailable = this.UsableArea;
             }
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
             }
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = amountAdded,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
@@ -216,7 +216,7 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
