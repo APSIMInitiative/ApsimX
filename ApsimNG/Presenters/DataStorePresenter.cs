@@ -24,7 +24,7 @@ namespace UserInterface.Presenters
         /// <summary>The data store view to work with.</summary>
         private ViewBase view;
 
-        private SheetWidget grid;
+        private SheetView grid;
 
         private ContainerView container;
 
@@ -242,13 +242,13 @@ namespace UserInterface.Presenters
                     // Create sheet control
                     if (data != null)
                     {
-                        grid = new SheetWidget();
+                        grid = new SheetView();
                         grid.DataProvider = new DataTableProvider(data, units);
-                        grid.LeftJustify = false;
-                        grid.NumHeadingRows = 2;
-                        grid.NumFrozenColumns = numFrozenColumns;
-                        grid.Readonly = true;
+                        grid.NumberFrozenRows = 2;
+                        grid.NumberFrozenColumns = numFrozenColumns;
                         container.Add(grid);
+                        var cellSelector = new SingleCellSelect(grid);
+                        grid.CellPainter = new DefaultCellPainter(grid, sheetSelection: cellSelector);
                     }
 
                     //grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
