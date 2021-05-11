@@ -249,6 +249,8 @@ namespace UserInterface.Presenters
                         container.Add(grid);
                         var cellSelector = new SingleCellSelect(grid);
                         grid.CellPainter = new DefaultCellPainter(grid, sheetSelection: cellSelector);
+                        var scrollbars = new SheetScrollBars(grid);
+
                     }
 
                     //grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.

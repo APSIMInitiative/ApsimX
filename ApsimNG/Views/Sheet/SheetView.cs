@@ -19,14 +19,8 @@ namespace UserInterface.Views
     /// </remarks>
     public class SheetView : EventBox
     {
+        /// <summary>The width of the grid lines in pixels.</summary>
         const double lineWidth = 0.2;
-        const bool showLines = true;
-        const int columnPadding = 10;   // The padding (in pixels) to go on the left and right size of a column.
-
-        //private HScrollbar horizontalScrollbar;
-        //private VScrollbar verticalScrollbar;
-        //private SheetView view;
-        //private const int scrollBarWidth = 20;
 
         /// <summary>Constructor</summary>
         public SheetView()
@@ -34,43 +28,74 @@ namespace UserInterface.Views
             CanFocus = true;
         }
 
-        public ISheetDataProvider DataProvider { get; set; }
-
-        public ISheetCellPainter CellPainter { get; set; }
-
-        public int[] ColumnWidths { get; set; }
-
-        public int RowHeight { get; set; } = 35;
-
-        public int NumberFrozenRows { get; set; }
-
-        public int NumberFrozenColumns { get; set; }
-
-        /// <summary>Number of hidden columns. Hidden columns are always after the frozen columns.</summary>        
-        public int NumberHiddenColumns { get; set; }
-
-        /// <summary>Number of hidden rows. Hidden rows are always after the heading rows.</summary>
-        public int NumberHiddenRows { get; set; }
-
-        public int MaximumNumberHiddenColumns { get; private set; }
-
-        public int MaximumNumberHiddenRows { get; private set; }
-
-        public int Width { get; set; }
-
-        public int Height { get; set; }
-
-        public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
-
-        public IEnumerable<int> VisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: false); } }
-        
-        public IEnumerable<int> FullyVisibleColumnIndexes { get { return DetermineVisibleColumnIndexes(fullyVisible: true); } }
-
-        public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
-
+        /// <summary>Invoked when a key is pressed.</summary>
         public event EventHandler<EventKey> KeyPress;
 
+        /// <summary>Invoked when a mouse button is clicked.</summary>
         public event EventHandler<EventButton> MouseClick;
+
+        /// <summary>Invoked when the sheet has been initialised.</summary>
+        public event EventHandler Initialised;
+
+        /// <summary>Invoked when the sheet has been scrolled horizontally.</summary>
+        public event EventHandler ScrolledHorizontally;
+
+        /// <summary>Invoked when the sheet has been scrolled vertically.</summary>
+        public event EventHandler ScrolledVertically;
+
+        /// <summary>The provider of data for the sheet.</summary>
+        public ISheetDataProvider DataProvider { get; set; }
+
+        /// <summary>The painter to use to get style a cell.</summary>
+        public ISheetCellPainter CellPainter { get; set; }
+
+        /// <summary>The widths (in pixels) of each column in the sheet. Can be null to auto-calculate.</summary>
+        public int[] ColumnWidths { get; set; }
+
+        /// <summary>The height in pixels of each row..</summary>
+        public int RowHeight { get; set; } = 35;
+
+        /// <summary>The number of columns that are frozen (can not be scrolled).</summary>
+        public int NumberFrozenColumns { get; set; }
+
+        /// <summary>The number of rows that are frozen (can not be scrolled).</summary>
+        public int NumberFrozenRows { get; set; }
+
+        /// <summary>Number of hidden columns - columns that have been scrolled off screen.</summary>        
+        public int NumberHiddenColumns { get; set; }
+
+        /// <summary>Number of hidden rows - rows that have been scrolled off screen.</summary>        
+        public int NumberHiddenRows { get; set; }
+
+        /// <summary>Maximum number of columns that can be hidden (scrolled).</summary>        
+        public int MaximumNumberHiddenColumns { get { return CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1); } }
+
+        /// <summary>Maximum number of rows that can be hidden (scrolled).</summary>        
+        public int MaximumNumberHiddenRows { get { return DataProvider.RowCount - FullyVisibleRowIndexes.Last(); } }
+
+        /// <summary>Width of the sheet in pixels.</summary>        
+        public int Width { get; set; }
+
+        /// <summary>Height of the sheet in pixels.</summary>        
+        public int Height { get; set; }
+
+        /// <summary>Show grid lines?</summary>
+        public bool ShowLines { get; set; } = true;
+
+        /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
+        public int ColumnPadding { get; set; } = 10;
+
+        /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
+        public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
+
+        /// <summary>A collection of row indexes that are currently visible or partially visible.</summary>        
+        public IEnumerable<int> VisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: false); } }
+
+        /// <summary>A collection of column indexes that are currently fully visible.</summary>        
+        public IEnumerable<int> FullyVisibleColumnIndexes { get { return DetermineVisibleColumnIndexes(fullyVisible: true); } }
+
+        /// <summary>A collection of row indexes that are currently fully visible.</summary>        
+        public IEnumerable<int> FullyVisibleRowIndexes { get { return DetermineVisibleRowIndexes(fullyVisible: true); } }
 
         /// <summary>Calculates the bounds of a cell if it is visible (wholly or partially) to the user.</summary>
         /// <param name="columnIndex">The cell column index.</param>
@@ -108,6 +133,7 @@ namespace UserInterface.Views
                 return null; // cell isn't visible.
         }
 
+        /// <summary>Scroll the sheet to the right one column.</summary>
         public void ScrollRight()
         {
             // Get the right most fully visible column.
@@ -116,45 +142,77 @@ namespace UserInterface.Views
             // Calculate the new right most column index.
             var newRightColumnIndex = Math.Min(rightColumnIndex + 1, DataProvider.ColumnCount-1);
 
-            NumberHiddenColumns = CalculateNumberOfHiddenColumnsToMakeColumnVisible(newRightColumnIndex);
+            var newNumberHiddenColumns = CalculateNumberOfHiddenColumnsToMakeColumnVisible(newRightColumnIndex);
+            var haveScrolled = newNumberHiddenColumns != NumberHiddenColumns;
+            NumberHiddenColumns = newNumberHiddenColumns;
+            if (haveScrolled)
+                ScrolledHorizontally?.Invoke(this, new EventArgs());
         }
 
+        /// <summary>Scroll the sheet to the left one column.</summary>
         public void ScrollLeft()
         {
             if (NumberHiddenColumns > 0)
+            {
                 NumberHiddenColumns--;
+                ScrolledHorizontally?.Invoke(this, new EventArgs());
+            }
         }
 
+        /// <summary>Scroll the sheet up one row.</summary>
         public void ScrollUp()
         {
             if (NumberHiddenRows > 0)
+            {
                 NumberHiddenRows--;
+                ScrolledVertically?.Invoke(this, new EventArgs());
+            }
         }
 
+        /// <summary>Scroll the sheet down one row.</summary>
         public void ScrollDown()
         {
             var bottomRowIndex = FullyVisibleRowIndexes.Last();
             if (bottomRowIndex < DataProvider.RowCount - 1)
+            {
                 NumberHiddenRows++;
+                ScrolledVertically?.Invoke(this, new EventArgs());
+            }
         }
 
+        /// <summary>Scroll the sheet down one page of rows.</summary>
         public void ScrollDownPage()
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
-            NumberHiddenRows = Math.Min(NumberHiddenRows + pageSize, DataProvider.RowCount - 1);
+            if (NumberHiddenRows + pageSize < DataProvider.RowCount - 1)
+            {
+                NumberHiddenRows += pageSize;
+                ScrolledVertically?.Invoke(this, new EventArgs());
+            }
         }
 
+        /// <summary>Scroll the sheet up one page of rows.</summary>
         public void ScrollUpPage()
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
-            NumberHiddenRows = Math.Max(NumberHiddenRows - pageSize, 0);
+            if (NumberHiddenRows - pageSize > 0)
+            {
+                NumberHiddenRows -= pageSize;
+                ScrolledVertically?.Invoke(this, new EventArgs());
+            }
         }
 
+        /// <summary>Refresh the sheet.</summary>
         public void Refresh()
         {
             QueueDraw();
         }
 
+        /// <summary>Return true if a xy pixel coordinates are in a specified cell.</summary>
+        /// <param name="pixelX">X pixel coordinate.</param>
+        /// <param name="pixelY">Y pixel coordinate.</param>
+        /// <param name="columnIndex">The column index of a cell.</param>
+        /// <param name="rowIndex">The row index of a cell.</param>
         public bool CellHitTest(int pixelX, int pixelY, out int columnIndex, out int rowIndex)
         {
             columnIndex = 0;
@@ -174,8 +232,8 @@ namespace UserInterface.Views
         }
 
 #if NETFRAMEWORK
-        /// <summary>Called by base class to draw the grid widget.</summary>
-        /// <param name="expose">The context to draw in.</param>
+        /// <summary>Called by base class to draw the sheet widget.</summary>
+        /// <param name="expose">The expose event arguments.</param>
         protected override bool OnExposeEvent(EventExpose expose)
         {
             Context cr = CairoHelper.Create(expose.Window);
@@ -199,7 +257,7 @@ namespace UserInterface.Views
             return true;
         }
 #else
-        /// <summary>Called by base class to draw the grid widget.</summary>
+        /// <summary>Called by base class to draw the sheet widget.</summary>
         /// <param name="cr">The context to draw in.</param>
         protected override bool OnDrawn(Context cr)
         {
@@ -221,6 +279,7 @@ namespace UserInterface.Views
 #endif
 
         /// <summary>Initialise the widget.</summary>
+        /// <param name="cr">The drawing context.</param>
         private void Initialise(Context cr)
         {
 #if NETFRAMEWORK
@@ -231,6 +290,7 @@ namespace UserInterface.Views
             Height = Parent.AllocatedHeight;
 #endif
             CalculateColumnWidths(cr);
+            Initialised?.Invoke(this, new EventArgs());
         }
 
         /// <summary>Invoked when the user presses a key.</summary>
@@ -272,6 +332,8 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Returns fully visible or partially visible enumeration of row indexes.</summary>
+        /// <param name="fullyVisible">Return enumeration of fully visible row indexes?</param>
         private IEnumerable<int> DetermineVisibleRowIndexes(bool fullyVisible)
         {
             int top = 0;
@@ -291,72 +353,8 @@ namespace UserInterface.Views
             }
         }
 
-        private void OnHorizontalScrollbarChanged(object sender, EventArgs e)
-        {
-            //if (view.NumberColumnsScrolled != horizontalScrollbar.Value)
-            //{
-            //    view.ScrollHorizontalTo(horizontalScrollbar.Value);
-            //    QueueDraw();
-            //}
-        }
-
-        private void OnVerticalScrollbarChanged(object sender, EventArgs e)
-        {
-            //view.ScrollVerticalTo(verticalScrollbar.Value);
-            //QueueDraw();
-        }
-
-        private void OnHorizontallyScrolled(object sender, EventArgs e)
-        {
-            //if (horizontalScrollbar.Value != view.NumberColumnsScrolled)
-            //    horizontalScrollbar.Value = view.NumberColumnsScrolled;
-        }
-
-        private void AddScollBars()
-        {
-            /*var horizontalAdjustment = new Adjustment(1, 0, view.MaximumNumberHiddenColumns + 1, 1, 1, 1);
-            horizontalScrollbar = new HScrollbar(horizontalAdjustment);
-            horizontalScrollbar.Value = 0;
-            horizontalScrollbar.ValueChanged += OnHorizontalScrollbarChanged;
-            horizontalScrollbar.SetSizeRequest(windowWidth, scrollBarWidth);
-
-            var verticalAdjustment = new Adjustment(1, 0, view.MaximumNumberHiddenRows + 1, 1, 1, 1);
-            verticalScrollbar = new VScrollbar(verticalAdjustment);
-            verticalScrollbar.Value = 0;
-            verticalScrollbar.ValueChanged += OnVerticalScrollbarChanged;
-            verticalScrollbar.SetSizeRequest(scrollBarWidth, windowHeight);
-
-            fix = new Fixed();
-            fix.Put(horizontalScrollbar, 0, windowHeight);
-            fix.Put(verticalScrollbar, windowWidth - scrollBarWidth, 0);
-
-            Add(fix);
-            fix.ShowAll();*/
-        }
-
-        /// <summary>Update the position of the scroll bars to match the view.</summary>
-        private void UpdateScrollBars()
-        {
-            //if (horizontalScrollbar.Value != view.NumberColumnsScrolled)
-            //{
-            //    // Disconnect the ValueChanged event handler from the scroll bar
-            //    // before we change the value, otherwise we will trigger the 
-            //    // event which isn't wanted.
-            //    horizontalScrollbar.ValueChanged -= OnHorizontalScrollbarChanged;
-            //    horizontalScrollbar.Value = view.NumberColumnsScrolled;
-            //    horizontalScrollbar.ValueChanged += OnHorizontalScrollbarChanged;
-            //}
-            //if (verticalScrollbar.Value != view.NumberRowsScrolled)
-            //{
-            //    // Disconnect the ValueChanged event handler from the scroll bar
-            //    // before we change the value, otherwise we will trigger the 
-            //    // event which isn't wanted.
-            //    verticalScrollbar.ValueChanged -= OnVerticalScrollbarChanged;
-            //    verticalScrollbar.Value = view.NumberRowsScrolled;
-            //    verticalScrollbar.ValueChanged -= OnVerticalScrollbarChanged;
-            //}
-        }
-
+        /// <summary>Calculate the number of hidden columns to make a column visible.</summary>
+        /// <param name="columnIndex"></param>
         private int CalculateNumberOfHiddenColumnsToMakeColumnVisible(int columnIndex)
         {
             int savedNumberHiddenColumns = NumberHiddenColumns;
@@ -372,6 +370,8 @@ namespace UserInterface.Views
             return returnColumnNumber;
         }
 
+        /// <summary>Calculte the column widths in pixels.</summary>
+        /// <param name="cr">The current draing context.</param>
         private void CalculateColumnWidths(Context cr)
         {
             ColumnWidths = new int[DataProvider.ColumnCount];
@@ -386,10 +386,8 @@ namespace UserInterface.Views
                     var extents = cr.TextExtents(text);
                     columnWidth = Math.Max(columnWidth, (int)extents.Width);
                 }
-                ColumnWidths[columnIndex] = columnWidth + columnPadding * 2;
+                ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
-            MaximumNumberHiddenColumns = CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1);
-            MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.Last();
         }
 
         /// <summary>Draw a single cell to the context.</summary>
@@ -420,7 +418,7 @@ namespace UserInterface.Views
                 cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
                 cr.Fill();
                 cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
-                if (showLines)
+                if (ShowLines)
                 {
                     cr.Rectangle(cellBounds.ToRectangle());
                     cr.Stroke();
@@ -443,14 +441,14 @@ namespace UserInterface.Views
                 if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
                 {
                     // left justify
-                    cr.MoveTo(cellBounds.Left + columnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
+                    cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
                     cr.TextPath(text);
                 }
                 else
                 {
                     // right justify
                     var textExtents = cr.TextExtents(text);
-                    cr.MoveTo(cellBounds.Right - columnPadding - textExtents.Width, cellBounds.Bottom - maxHeight);
+                    cr.MoveTo(cellBounds.Right - ColumnPadding - textExtents.Width, cellBounds.Bottom - maxHeight);
                     cr.TextPath(text);
                 }
 
