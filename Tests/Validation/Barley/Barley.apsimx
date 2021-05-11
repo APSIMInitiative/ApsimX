@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 370,
   "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -22,6 +22,10 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
+            "[IWeather].Radn",
+            "[IWeather].MeanT",
+            "[Barley].Phenology.Photoperiod",
+            "[Barley].Structure.HaunStage",
             "([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
             "[Barley].AboveGround.N",
             "[Barley].AboveGround.Wt",
@@ -42924,10 +42928,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=2-Nov",
+                                    "[SowingRule].Script.SowDate=10-may",
                                     "[SowingRule].Script.Treat=LN",
-                                    "[Clock].StartDate=2018-11-02",
-                                    "[Clock].EndDate=2019-03-04"
+                                    "[Clock].StartDate=2019-05-10",
+                                    "[Clock].EndDate=2019-11-06"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -42953,10 +42957,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=2-Nov",
+                                    "[SowingRule].Script.SowDate=10-May",
                                     "[SowingRule].Script.Treat=LV",
-                                    "[Clock].StartDate=2018-11-02",
-                                    "[Clock].EndDate=2019-03-04"
+                                    "[Clock].StartDate=2019-05-10",
+                                    "[Clock].EndDate=2019-10-07"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -42982,10 +42986,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=6-Jul",
+                                    "[SowingRule].Script.SowDate=20-Nov",
                                     "[SowingRule].Script.Treat=SN",
-                                    "[Clock].StartDate=2018-07-06",
-                                    "[Clock].EndDate=2019-03-18"
+                                    "[Clock].StartDate=2019-11-20",
+                                    "[Clock].EndDate=2020-05-18"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -43011,10 +43015,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=4-Aug",
+                                    "[SowingRule].Script.SowDate=19-Nov",
                                     "[SowingRule].Script.Treat=SV",
-                                    "[Clock].StartDate=2018-08-04",
-                                    "[Clock].EndDate=2019-03-18"
+                                    "[Clock].StartDate=2019-11-19",
+                                    "[Clock].EndDate=2020-07-28"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -43936,7 +43940,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Wheat.Phenology.Photoperiod",
+                              "YFieldName": "Barley.Phenology.Photoperiod",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -44004,7 +44008,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Wheat.Phenology.HaunStage",
+                              "YFieldName": "Barley.Structure.HaunStage",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
