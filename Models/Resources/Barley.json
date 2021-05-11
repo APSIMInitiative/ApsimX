@@ -10128,7 +10128,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10141,7 +10143,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10154,7 +10158,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.33",
+                    "[Phenology].PpSensitivity.FixedValue = 2.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10167,7 +10173,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10180,7 +10188,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.66",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10206,7 +10216,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 11.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10219,7 +10231,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10232,7 +10246,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.66",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10245,7 +10261,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10258,7 +10276,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.66",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10271,7 +10291,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.66",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10284,7 +10306,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10.66",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10297,7 +10321,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 3",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10310,7 +10336,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10323,7 +10351,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 0.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.16",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10336,7 +10366,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10349,7 +10381,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10362,7 +10396,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 2.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10388,7 +10424,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10414,7 +10452,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10427,7 +10467,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6.66",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10440,7 +10482,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10453,7 +10497,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10466,7 +10512,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9.66",
+                    "[Phenology].PpSensitivity.FixedValue = 0.33",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10479,7 +10527,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10492,7 +10542,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10505,7 +10557,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10518,7 +10572,9 @@
                                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10531,7 +10587,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10544,7 +10602,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10557,7 +10617,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10570,7 +10632,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.66",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10583,7 +10647,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9.66",
+                    "[Phenology].PpSensitivity.FixedValue = 0.33",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10596,7 +10662,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10609,7 +10677,9 @@
                                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
