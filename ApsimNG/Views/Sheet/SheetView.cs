@@ -431,7 +431,8 @@ namespace UserInterface.Views
                 var bold = FontWeight.Normal;
                 if (CellPainter.TextBold(columnIndex, rowIndex))
                     bold = FontWeight.Bold;
-                cr.SelectFontFace("sans-serif", italics, bold);
+                cr.SelectFontFace("Segoe UI", italics, bold);
+                cr.SetFontSize(18);
 
                 TextExtents extents = cr.TextExtents(text);
                 var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
