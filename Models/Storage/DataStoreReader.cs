@@ -280,10 +280,10 @@
                       $" FROM {tableName}";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
-            if (Connection is SQLite && count > 0)
-                sql += $" LIMIT {count} OFFSET {from}";
             if (orderByFields.Count > 0)
                 sql += $" ORDER BY {orderByFields.Enclose("\"", "\"").Join(",")}";
+            if (Connection is SQLite && count > 0)
+                sql += $" LIMIT {count} OFFSET {from}";
 
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);

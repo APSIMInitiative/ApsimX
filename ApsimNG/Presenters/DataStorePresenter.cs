@@ -118,7 +118,7 @@ namespace UserInterface.Presenters
                 {
                     maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
-                tableDropDown.SelectedIndex = -1;
+                tableDropDown.SelectedIndex = 0;
             }
 
             tableDropDown.Changed += this.OnTableSelected;
@@ -146,167 +146,53 @@ namespace UserInterface.Presenters
         /// <summary>Populate the grid control with data.</summary>
         public void PopulateGrid()
         {
-            using (DataTable data = GetData())
+            if (!string.IsNullOrEmpty(tableDropDown.SelectedValue))
             {
-                // Strip out unwanted columns.
-                if (data != null)
+                // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                IEnumerable<string> simulationNames = null;
+                if (ExperimentFilter != null)
                 {
-                    int colPos = 0;
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        if (data.Columns[i].ColumnName.Contains("Date") || data.Columns[i].ColumnName.Contains("Today"))
-                        {
-                            //numFrozenColumns = i;
-                            // Make the date column the left-most column
-                            data.Columns[i].SetOrdinal(0);
-                            colPos = 1;
-                            break;
-                        }
-                    }
+                    // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                    simulationNames = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                }
+                else if (SimulationFilter == null)
+                    simulationNames = null;
+                else
+                    simulationNames = new string[] { SimulationFilter.Name };
 
-                    // Make order of columns "Date, Simulation Name, Zone"
-                    if (data.Columns.Contains("SimulationName"))
-                        data.Columns["SimulationName"].SetOrdinal(colPos++);
-                    if (data.Columns.Contains("Zone"))
-                        data.Columns["Zone"].SetOrdinal(colPos++);
-                    int numFrozenColumns = colPos;
+                string filter = GetFilter();
+                if (ZoneFilter != null)
+                {
+                    // More assumptions about column names
+                    filter = AppendToFilter(filter, $"[Zone] = '{ZoneFilter.Name}'");
+                }
 
-                    // Remove checkpoint columns.
-                    if (data.Columns.Contains("CheckpointName"))
-                        data.Columns.Remove("CheckpointName");
-
-                    if (data.Columns.Contains("CheckpointID"))
-                        data.Columns.Remove("CheckpointID");
-
-                    int simulationId = 0;
-
-                    for (int i = 0; i < data.Columns.Count; i++)
-                    {
-                        if (data.Columns[i].ColumnName == "SimulationID")
-                        {
-                            if (simulationId == 0 && data.Rows.Count > 0)
-                            {
-                                simulationId = (int)data.Rows[0][i];
-                            }
-
-                            // We don't want to display the SimulationID column.
-                            data.Columns.RemoveAt(i);
-                            i--;
-                        }
-                        else if (i >= numFrozenColumns &&
-                                 columnFilterEditBox.Text != string.Empty &&
-                                 !columnFilterEditBox.Text.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
-                        {
-                            // A column filter is provided and it doesn't match this column.
-                            // Therefore, remove the column from the table.
-                            data.Columns.RemoveAt(i);
-                            i--;
-                        }
-                    }
-
-                    // Convert the last dot to a CRLF so that the columns in the grid are narrower.
-                    //foreach (DataColumn column in data.Columns)
-                    //{
-                    //    string units = null;
-
-                    //    // Try to obtain units
-                    //    if (dataStore != null && simulationId != 0)
-                    //    {
-                    //        units = dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName);
-                    //    }
-
-                    //    int posLastDot = column.ColumnName.LastIndexOf('.');
-                    //    if (posLastDot != -1)
-                    //    {
-                    //        column.ColumnName = column.ColumnName.Insert(posLastDot + 1, "\r\n");
-                    //    }
-
-                    //    // Add the units, if they're available
-                    //    if (units != null)
-                    //    {
-                    //        column.ColumnName = column.ColumnName + " (" + units + ")";
-                    //    }
-                    //}
-
-                    // Get units for all columns
-                    List<string> units = new List<string>();
-                    foreach (DataColumn column in data.Columns)
-                    {
-                        // Try to obtain units
-                        if (dataStore != null && simulationId != 0)
-                            units.Add(dataStore.Reader.Units(tableDropDown.SelectedValue, column.ColumnName));
-                        else
-                            units.Add(null);
-                    }
-
-                    // Create sheet control
-                    if (data != null)
+                // Create sheet control
+                if (tableDropDown.SelectedValue != null)
+                {
+                    try
                     {
                         grid = new SheetView();
-                        grid.DataProvider = new DataTableProvider(data, units);
-                        grid.NumberFrozenRows = 2;
-                        grid.NumberFrozenColumns = numFrozenColumns;
+                        var dataProvider = new PagedDataTableProvider(dataStore.Reader,
+                                                                      checkpointDropDown.SelectedValue,
+                                                                      tableDropDown.SelectedValue,
+                                                                      simulationNames,
+                                                                      columnFilterEditBox.Text,
+                                                                      filter);
+                        grid.DataProvider = dataProvider;
+                        grid.NumberFrozenRows = dataProvider.NumHeadingRows;
+                        grid.NumberFrozenColumns = dataProvider.NumPriorityColumns;
                         container.Add(grid);
                         var cellSelector = new SingleCellSelect(grid);
                         grid.CellPainter = new DefaultCellPainter(grid, sheetSelection: cellSelector);
                         var scrollbars = new SheetScrollBars(grid);
-
                     }
-
-                    //grid.LockLeftMostColumns(numFrozenColumns);  // lock simulationname, zone, date.
-                }
-            }
-        }
-
-        /// <summary>Get data to show in grid.</summary>
-        /// <returns>A data table of all data.</returns>
-        private DataTable GetData()
-        {
-            DataTable data = null;
-            if (dataStore != null)
-            {
-                try
-                {
-                    int start = 0;
-                    int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
-
-                    // Note that the filter contains the zone filter and experiment filter but not simulation filter.
-                    IEnumerable<string> simulationNames = null;
-                    if (ExperimentFilter != null)
+                    catch (Exception err)
                     {
-                        // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
-                        simulationNames = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                        explorerPresenter.MainPresenter.ShowError(err.ToString());
                     }
-                    else if (SimulationFilter == null)
-                        simulationNames = null;
-                    else
-                        simulationNames = new string[] { SimulationFilter.Name };
-
-                    string filter = GetFilter();
-                    if (ZoneFilter != null)
-                    {
-                        // More assumptions about column names
-                        filter = AppendToFilter(filter, $"[Zone] = '{ZoneFilter.Name}'");
-                    }
-
-                    data = dataStore.Reader.GetData(tableName: tableDropDown.SelectedValue,
-                                                    checkpointName: checkpointDropDown.SelectedValue,
-                                                    simulationNames: simulationNames,
-                                                    filter: filter,
-                                                    from: start,
-                                                    count: count);
-                }
-                catch (Exception e)
-                {
-                    this.explorerPresenter.MainPresenter.ShowError(new Exception("Error reading data tables.", e));
                 }
             }
-            else
-            {
-                data = new DataTable();
-            }
-
-            return data;
         }
 
         private string GetFilter()

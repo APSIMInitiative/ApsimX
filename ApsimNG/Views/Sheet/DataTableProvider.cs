@@ -4,30 +4,49 @@ using System.Data;
 
 namespace UserInterface.Views
 {
+    /// <summary>
+    /// Wraps a .NET DataTable as a data provider for a sheet widget.
+    /// </summary>
     public class DataTableProvider : ISheetDataProvider
     {
+        /// <summary>The wrapped data table.</summary>
         private DataTable data;
-        private IList<string> units;
-        private const int numHeadingRows = 2; // first row is number of heading rows. Second row is units.
 
-        public DataTableProvider(DataTable dataSource, IList<string> columnUnits)
+        /// <summary>The optional units for each column in the data table. Can be null.</summary>
+        private IList<string> units;
+
+        private int numHeadingRows = 2; // first row is number of heading rows. Second row is units.
+
+        /// <summary>Constructor.</summary>
+        /// <param name="dataSource">A data table.</param>
+        /// <param name="columnUnits">Optional units for each column of data.</param>
+        public DataTableProvider(DataTable dataSource, IList<string> columnUnits = null)
         {
             if (dataSource == null)
                 data = new DataTable();
             else
                 data = dataSource;
             units = columnUnits;
+            if (units == null)
+                numHeadingRows = 1;
+            else
+                numHeadingRows = 2;
         }
 
+        /// <summary>Gets the number of columns of data.</summary>
         public int ColumnCount => data.Columns.Count;
 
-        public int RowCount => data.Rows.Count + numHeadingRows;  
+        /// <summary>Gets the number of rows of data.</summary>
+        public int RowCount => data.Rows.Count + numHeadingRows;
 
+        /// <summary>Get the contents of a cell.</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
         public string GetCellContents(int colIndex, int rowIndex)
         {
             if (rowIndex == 0)
                 return data.Columns[colIndex].ColumnName;
-            else if (rowIndex == 1)
+            else if (numHeadingRows == 2 && rowIndex == 1)
                 return units[colIndex];
             var value = data.Rows[rowIndex - numHeadingRows][colIndex];
             if (value is double)
@@ -37,6 +56,10 @@ namespace UserInterface.Views
             return value.ToString();
         }
 
+        /// <summary>Set the contents of a cell.</summary>
+        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="rowIndex">Row index of cell.</param>
+        /// <param name="value">The value.</param>
         public void SetCellContents(int colIndex, int rowIndex, string value)
         {
             data.Rows[rowIndex - numHeadingRows][colIndex] = value;
