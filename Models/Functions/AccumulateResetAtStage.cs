@@ -13,7 +13,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation and reset to zero each time the specisified stage is passed")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateResetAtStage : Model, IFunction, ICustomDocumentation
     {        

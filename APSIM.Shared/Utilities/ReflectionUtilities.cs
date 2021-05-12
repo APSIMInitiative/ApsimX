@@ -369,6 +369,12 @@
                             .Union(
                             GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
                             ).ToList();
+                // If this type overrides a base class's property or field, then this list
+                // will contain multiple properties with the same name, which causes a
+                // serialization exception when we go to serialize these properties. The
+                // solution is to group the properties by name and take the last of each
+                // group so we end up with the most derived property.
+                props = props.GroupBy(p => p.PropertyName).Select(g => g.Last()).ToList();
                 props.ForEach(p => { p.Writable = true; p.Readable = true; });
                 return props.Where(p => p.PropertyName != "Parent").ToList();
             }
@@ -568,13 +574,24 @@
             List<Type> types = new List<Type>();
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type t in assembly.GetTypes())
-                {
-                    if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
-                        types.Add(t);
-                }
-            }
+                types.AddRange(GetTypesThatHaveInterface(assembly, interfaceType));
+
+            return types;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="interfaceType"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetTypesThatHaveInterface(Assembly assembly, Type interfaceType)
+        {
+            List<Type> types = new List<Type>();
+
+            foreach (Type t in assembly.GetTypes())
+                if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
+                    types.Add(t);
 
             return types;
         }

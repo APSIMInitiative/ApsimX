@@ -8,7 +8,7 @@ namespace Models.Functions
     /// <summary>Value returned is determined according to given criteria</summary>
     [Serializable]
     [Description("Tests if value of a string property is equal to a given value and returns a value depending on the result.")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StringComparisonFunction : Model, IFunction, ICustomDocumentation
     {

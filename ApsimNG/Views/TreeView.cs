@@ -272,6 +272,8 @@ namespace UserInterface.Views
         public void Delete(string nodePath)
         {
             TreeIter node = FindNode(nodePath);
+            if (node.Equals(TreeIter.Zero))
+                return;
 
             // We will typically be deleting the currently selected node. If this is the case,
             // Gtk will not automatically move the cursor for us.

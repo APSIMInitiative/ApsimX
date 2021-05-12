@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
@@ -152,11 +152,11 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. RuminantGroup required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">FILTER NOT DEFINED</div>";
             }
             else
             {
@@ -245,6 +245,10 @@ namespace Models.CLEM.Groupings
         /// ID of individuals
         /// </summary>
         ID = 4,
+        /// <summary>
+        /// Determines if within breeding ages
+        /// </summary>
+        IsBreedingCondition = 15,
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>

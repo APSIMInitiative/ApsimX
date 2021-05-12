@@ -153,6 +153,9 @@
     /// </summary>
     public class TextAnnotation : IAnnotation
     {
+        /// <summary>Name of annotation.</summary>
+        public string Name;
+
         /// <summary>X position - can be double.MinValue for autocalculated</summary>
         public object x;
 
@@ -167,6 +170,9 @@
 
         /// <summary>Left align the text?</summary>
         public bool leftAlign;
+
+        /// <summary>Top align the text?</summary>
+        public bool topAlign = true;
 
         /// <summary>Text rotation angle</summary>
         public double textRotation;

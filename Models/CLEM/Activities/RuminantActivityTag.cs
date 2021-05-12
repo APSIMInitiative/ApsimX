@@ -15,12 +15,13 @@ namespace Models.CLEM.Activities
     /// <summary>Add or remove a tag to specified individual ruminants</summary>
     /// <version>1.0</version>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity adds or removes a specified tag to/from the specified individuals for customised filtering.")]
+    [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
 
@@ -81,11 +82,11 @@ namespace Models.CLEM.Activities
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
                     {
-                        numberToTag += herd.Filter(item).Where(a => !a.TagExists(TagLabel)).Count();
+                        numberToTag += herd.Filter(item).Where(a => !a.AttributeExists(TagLabel)).Count();
                     }
                     else
                     {
-                        numberToTag += herd.Filter(item).Where(a => a.TagExists(TagLabel)).Count();
+                        numberToTag += herd.Filter(item).Where(a => a.AttributeExists(TagLabel)).Count();
                     }
                 }
             }
@@ -124,6 +125,7 @@ namespace Models.CLEM.Activities
         {
             if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
             {
+                this.Status = ActivityStatus.Partial;
                 switch (labourRequirement.UnitType)
                 {
                     case LabourUnitType.Fixed:
@@ -149,16 +151,20 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        foreach (Ruminant ind in herd.Filter(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.TagExists(TagLabel): a.TagExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Filter(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.AttributeExists(TagLabel): a.AttributeExists(TagLabel)).Take(numberToTag))
                         {
-                            this.Status = ActivityStatus.Success;
+                            if(this.Status != ActivityStatus.Partial)
+                            {
+                                this.Status = ActivityStatus.Success;
+                            }
+
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.TagAdd(TagLabel);
+                                    ind.AddAttribute(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.TagRemove(TagLabel);
+                                    ind.RemoveAttribute(TagLabel);
                                     break;
                             }
                             numberToTag--;
@@ -166,16 +172,20 @@ namespace Models.CLEM.Activities
                     }
                     if(filterGroupsCount == 0)
                     {
-                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.TagExists(TagLabel) : a.TagExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.AttributeExists(TagLabel) : a.AttributeExists(TagLabel)).Take(numberToTag))
                         {
-                            this.Status = ActivityStatus.Success;
+                            if (this.Status != ActivityStatus.Partial)
+                            {
+                                this.Status = ActivityStatus.Success;
+                            }
+
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.TagAdd(TagLabel);
+                                    ind.AddAttribute(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.TagRemove(TagLabel);
+                                    ind.RemoveAttribute(TagLabel);
                                     break;
                             }
                             numberToTag--;

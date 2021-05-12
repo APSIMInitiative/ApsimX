@@ -11,7 +11,7 @@ namespace Models.Functions.DemandFunctions
     /// Demand is calculated from the product of growth rate, thermal time and population.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PopulationBasedDemandFunction : Model, IFunction
     {

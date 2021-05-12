@@ -19,7 +19,7 @@
             var binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             const double delta = 0.000001;
 
-            var weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "Examples", "WeatherFiles", "Dalby.met"));
+            var weatherFilePath = Path.GetFullPath(Path.Combine(binDirectory, "..", "..", "..", "Examples", "WeatherFiles", "Dalby.met"));
 
             var baseSim = new Simulation()
             {

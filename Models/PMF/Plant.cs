@@ -79,25 +79,7 @@
         {
             get
             {
-                SortedSet<string> cultivarNames = new SortedSet<string>();
-                foreach (Cultivar cultivar in FindAllDescendants<Cultivar>())
-                {
-                    string name = cultivar.Name;
-                    IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
-                    foreach (IModel memo in memos)
-                    {
-                        name += '|' + ((Memo)memo).Text;
-                    }
-
-                    cultivarNames.Add(name);
-                    if (cultivar.Alias != null)
-                    {
-                        foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
-                    }
-                }
-
-                return new List<string>(cultivarNames).ToArray();
+                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
             }
         }
 
@@ -183,6 +165,35 @@
         /// <summary>A list of organs that can be damaged.</summary>
         List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
 
+        /// <summary>
+        /// Total plant green cover from all organs
+        /// </summary>
+        [Units("-")]
+        public double CoverGreen
+        {
+            get
+            {
+                double cover = 0;
+                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                    cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverGreen);
+                return cover;
+            }
+        }
+
+        /// <summary>
+        /// Total plant cover from all organs
+        /// </summary>
+        [Units("-")]
+        public double CoverTotal
+        {
+            get
+            {
+                double cover = 0;
+                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                    cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverTotal);
+                return cover;
+            }
+        }
         /// <summary>Leaf area index.</summary>
         [Units("m^2/m^2")]
         public double LAI

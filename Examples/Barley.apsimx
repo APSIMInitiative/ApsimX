@@ -689,7 +689,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Wheat Yield",
+              "Name": "Barley Yield",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,

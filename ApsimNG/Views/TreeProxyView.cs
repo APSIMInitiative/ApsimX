@@ -68,8 +68,8 @@
             belowGroundGraph.SetSizeRequest(-1, 100);
             graphContainer.PackStart(belowGroundGraph, true, true, 0);
 
-            ConstantsGrid = new GridView(this);
-            constantsTab.Add((ConstantsGrid as ViewBase).MainWidget);
+            Constants = new PropertyView(this);
+            constantsTab.Add((Constants as ViewBase).MainWidget);
             MainWidget.ShowAll();
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -92,7 +92,7 @@
         /// <summary>
         /// Constants grid.
         /// </summary>
-        public IGridView ConstantsGrid { get; private set; }
+        public IPropertyView Constants { get; private set; }
 
         /// <summary>
         /// Data to be displayed in the spatial data grid.
@@ -395,8 +395,6 @@
         {
             try
             {
-                TemporalDataGrid.Dispose();
-                SpatialDataGrid.Dispose();
                 mainWidget.Dispose();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;

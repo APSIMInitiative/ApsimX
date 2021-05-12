@@ -39,6 +39,7 @@ call :getVersion
 
 rem Build
 dotnet build %flags% "%solution_file%"
+dotnet build %flags% "%apsimx%\Updater\Updater.csproj"
 endlocal
 exit /b %errorlevel%
 

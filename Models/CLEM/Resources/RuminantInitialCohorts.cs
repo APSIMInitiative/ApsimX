@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -16,6 +17,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
+    [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     public class RuminantInitialCohorts : CLEMModel
@@ -36,34 +38,28 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
         {
+            List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
             {
-                individuals.AddRange(cohort.CreateIndividuals());
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes));
             }
             return individuals;
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "</table>";
@@ -74,10 +70,7 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             WeightWarningOccurred = false;

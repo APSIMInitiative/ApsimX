@@ -484,6 +484,8 @@ namespace Models.PMF.Struct
 			dltLeafNo = 0;
 			tpla = 0;
 			radiationValues = new List<double>();
+
+			NLeaves = 0;
 		}
 
 		/// <summary>

@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// CLEM Activity base model
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
@@ -850,12 +850,12 @@ namespace Models.CLEM.Activities
                     string resourcelist = "";
                     foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
                     {
-                        Summary.WriteWarning(this, String.Format("@error:Insufficient [r={0}] resource of type [r={1}] for activity [a={2}]", item.ResourceType, item.ResourceTypeName, this.Name));
-                        resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
+                        resourcelist += item.ResourceType.Name + ",";
                     }
+                    resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
+                        Summary.WriteError(this, String.Format("Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
                         Status = ActivityStatus.Critical;
                         throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
                     }

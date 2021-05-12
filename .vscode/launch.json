@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/NetCoreBin/ApsimNG.dll",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/ApsimNG.dll",
             "args": [],
             "cwd": "${workspaceFolder}/ApsimNG",
             "console": "internalConsole",
@@ -26,7 +26,7 @@
             "type": "mono",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}/Bin/ApsimNG.exe",
+            "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
         {

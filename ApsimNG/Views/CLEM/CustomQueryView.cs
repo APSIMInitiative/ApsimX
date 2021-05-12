@@ -87,13 +87,13 @@ namespace UserInterface.Views
             runbtn = (Button)builder.GetObject("runbtn");
             storebtn = (Button)builder.GetObject("storebtn");
             textview1 = (TextView)builder.GetObject("textview1");
+            ScrolledWindow gridScroller = (ScrolledWindow)builder.GetObject("gridScroller");
 
             // Add the custom gridview (external to glade)
             Grid = new GridView(owner);
             Grid.ReadOnly = true;
 
-            vbox4.Add(Grid.MainWidget);
-            //notebook1.AppendPage(gridview1.MainWidget, data);
+            gridScroller.Add(Grid.MainWidget);
 
             // Assign methods to button click events
             loadbtn.Clicked += OnLoadClicked;

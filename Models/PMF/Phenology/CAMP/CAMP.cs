@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description(" Final Leaf Number observations (or estimates) for genotype from specific environmental conditions")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CAMP))]
     public class FinalLeafNumberSet : Model
@@ -37,7 +37,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("Controlled environment conditions that FinalLeafNumberSet was observed in")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CAMP))]
     public class FLNParameterEnvironment : Model
@@ -65,7 +65,7 @@ namespace Models.PMF.Phen
     /// BaseDVrn1 in seperate calculation otherwise te same as Brown etal 2013
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class ColdUpRegVrn1 : Model, IFunction, IIndexedFunction
@@ -120,7 +120,7 @@ namespace Models.PMF.Phen
     /// </summary>
     [Serializable]
     [Description("")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class CAMP : Model, IVrn1Expression

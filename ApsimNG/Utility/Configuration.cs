@@ -96,11 +96,6 @@ namespace Utility
         [Input("Mute all sound effects")]
         public bool Muted { get; set; }
 
-        /// <summary>Use the new property presenter?</summary>
-        [Separator("Beta Features")]
-        [Input("Use new property presenter")]
-        public bool UseNewPropertyPresenter { get; set; }
-
         /// <summary>
         /// In theory, if there are any commands in the command history,
         /// then the file has been modified. In practice, there may be

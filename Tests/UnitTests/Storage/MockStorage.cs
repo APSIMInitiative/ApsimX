@@ -62,7 +62,7 @@ namespace UnitTests.Storage
             public IList<object> values;
         }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
+        public DataTable GetData(string tableName, string checkpointName = null, IEnumerable<string> simulationNames = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, IEnumerable<string> groupBy = null, bool b = true)
         {
             return null;
         }
@@ -113,11 +113,6 @@ namespace UnitTests.Storage
 
         public void EmptyDataStore()
         {
-        }
-
-        public int GetSimulationID(string simulationName, string folderName)
-        {
-            return 0;
         }
 
         public void AllCompleted()
@@ -279,6 +274,17 @@ namespace UnitTests.Storage
         }
 
         public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
+        {
+            simulationID = 0;
+            return true;
+        }
+
+        public int GetSimulationID(string simulationName, string folderName)
         {
             throw new NotImplementedException();
         }

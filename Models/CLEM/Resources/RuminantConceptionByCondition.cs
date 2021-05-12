@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Advanced ruminant conception for first conception less than 12 months, 12-24 months, 2nd calf and 3+ calf
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
@@ -38,13 +38,21 @@ namespace Models.CLEM.Resources
         public double ConditionCutOff { get; set; }
 
         /// <summary>
+        /// Maximum probability of conceiving given condition satisfied
+        /// </summary>
+        [Description("Maximum probability of conceiving")]
+        [Required, Proportion, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        public double MaximumConceptionProbability { get; set; }
+
+        /// <summary>
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
+            return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
         }
 
         #region descriptive summary 

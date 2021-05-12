@@ -13,7 +13,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateByNumericPhase : Model, IFunction 
     {

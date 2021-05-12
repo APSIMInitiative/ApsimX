@@ -300,7 +300,7 @@
             if (dataStore?.Writer != null && !dataStore.Writer.TablesModified.Contains(TableName))
                 return;
 
-            DataTable predictedData = dataStore.Reader.GetData(TableName, filter: "SimulationName LIKE '" + Name + "%'", orderBy: "SimulationID");
+            DataTable predictedData = dataStore.Reader.GetData(TableName);
             if (predictedData != null)
             {
                 IndexedDataTable variableValues = new IndexedDataTable(null);

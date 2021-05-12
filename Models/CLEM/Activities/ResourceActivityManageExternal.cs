@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     /// Activity to manage external resources from resource reader
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -161,7 +162,7 @@ namespace Models.CLEM.Activities
                             // if finances
                             if (resource != null && bankAccount != null)
                             {
-                                double amount = Convert.ToDouble(item[fileResource.AmountColumnName]);
+                                double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture);
 
                                 // get price of resource
                                 ResourcePricing price = resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
@@ -308,7 +309,7 @@ namespace Models.CLEM.Activities
                     else
                     {
                         // matching resource was found
-                        double amount = Convert.ToDouble(currentEntries[i][fileResource.AmountColumnName]);
+                        double amount = Convert.ToDouble(currentEntries[i][fileResource.AmountColumnName], CultureInfo.InvariantCulture);
                         bool isSale = (amount < 0);
                         amount = Math.Abs(amount);
                         ResourcePricing price = null;

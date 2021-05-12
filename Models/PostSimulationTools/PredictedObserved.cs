@@ -23,7 +23,7 @@ namespace Models.PostSimulationTools
     /// If the file does NOT have a 'SimulationName' column then all data will be input.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(Folder))]

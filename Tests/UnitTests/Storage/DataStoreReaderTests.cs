@@ -21,20 +21,9 @@
         public static string FindSqlite3DLL()
         {
             string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            while (directory != null)
-            {
-                string[] directories = Directory.GetDirectories(directory, "Bin", SearchOption.AllDirectories);
-                foreach (string dir in directories)
-                {
-                    string[] files = Directory.GetFiles(dir, "sqlite3.dll");
-                    if (files.Length == 1)
-                    {
-                        return files[0];
-                    }
-                }
-
-                directory = Path.GetDirectoryName(directory); // parent directory
-            }
+            string[] files = Directory.GetFiles(directory, "sqlite3.dll");
+            if (files.Length == 1)
+                return files[0];
 
             throw new Exception("Cannot find sqlite3 dll directory");
         }
@@ -60,12 +49,15 @@
             CreateTable(database);
 
             DataStoreReader reader = new DataStoreReader(database);
-            Assert.AreEqual(Utilities.TableToString(reader.GetData("Report")),
-                            $"CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1,  Col2{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2017-01-01, 1.000{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2017-01-02, 2.000{Environment.NewLine}" +
-                            $"       Current,           1,          Sim2,           2,2017-01-01,21.000{Environment.NewLine}" +
-                            $"       Current,           1,          Sim2,           2,2017-01-02,22.000{Environment.NewLine}");
+            var data = reader.GetData("Report");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] {                    "CheckpointName", "CheckpointID", "SimulationName", "SimulationID",                     "Col1", "Col2" },
+                                      new List<object[]> { new object[] {      "Current",              1,           "Sim1",              1, new DateTime(2017, 01, 01),   1.0 },
+                                                           new object[] {      "Current",              1,           "Sim1",              1, new DateTime(2017, 01, 02),   2.0 },
+                                                           new object[] {      "Current",              1,           "Sim2",              2, new DateTime(2017, 01, 01),   21.0 },
+                                                           new object[] {      "Current",              1,           "Sim2",              2, new DateTime(2017, 01, 02),   22.0 }})
+               .IsSame(data));
         }
 
         /// <summary>Ensure that GetData when passed a table name and simulation name returns the correct data</summary>
@@ -76,11 +68,13 @@
 
             DataStoreReader reader = new DataStoreReader(database);
             var data = reader.GetData(tableName: "Report",
-                                      simulationName: "Sim1");
-            Assert.AreEqual(Utilities.TableToString(data),
-                            $"CheckpointName,CheckpointID,SimulationName,SimulationID,      Col1, Col2{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2017-01-01,1.000{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2017-01-02,2.000{Environment.NewLine}");
+                                      simulationNames: new string[] { "Sim1" });
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[] { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "Col1", "Col2" },
+                                      new List<object[]> { new object[] {      "Current",              1,        "Sim1",      1, new DateTime(2017, 01, 01),   1.0 },
+                                                           new object[] {      "Current",              1,        "Sim1",      1, new DateTime(2017, 01, 02),   2.0 } })
+               .IsSame(data));
         }
 
         /// <summary>Read a single column for a simulation.</summary>
@@ -91,12 +85,14 @@
 
             DataStoreReader reader = new DataStoreReader(database);
             var data = reader.GetData(tableName: "Report",
-                                      simulationName: "Sim1",
+                                      simulationNames: new string[] { "Sim1" },
                                       fieldNames: new string[] { "Col2" });
-            Assert.AreEqual(Utilities.TableToString(data),
-                            $"CheckpointName,CheckpointID,SimulationName,SimulationID, Col2{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,1.000{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2.000{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(new string[]                    { "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "Col2" },
+                                      new List<object[]> { new object[] {      "Current",              1,           "Sim1",              1,     1 },
+                                                           new object[] {      "Current",              1,           "Sim1",              1,     2 } })
+               .IsSame(data));
         }
 
         /// <summary>Read a single column for a simulation with a filter.</summary>
@@ -107,12 +103,15 @@
 
             DataStoreReader reader = new DataStoreReader(database);
             var data = reader.GetData(tableName: "Report",
-                                      simulationName: "Sim1",
+                                      simulationNames: new string[] { "Sim1" },
                                       fieldNames: new string[] { "Col2" },
                                       filter: "Col2=2");
-            Assert.AreEqual(Utilities.TableToString(data),
-                            $"CheckpointName,CheckpointID,SimulationName,SimulationID, Col2{Environment.NewLine}" +
-                            $"       Current,           1,          Sim1,           1,2.000{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(
+                    new string[] {                    "CheckpointName", "CheckpointID", "SimulationName", "SimulationID", "Col2" },
+                    new List<object[]> { new object[] {      "Current",              1,           "Sim1",              1,     2 }})
+               .IsSame(data));
         }
 
         /// <summary>Read data using SQL.</summary>
@@ -124,16 +123,19 @@
             DataStoreReader reader = new DataStoreReader(database);
             var data = reader.GetDataUsingSql("SELECT [Col1] FROM [Report]");
 
-            Assert.AreEqual(Utilities.TableToString(data),
-                                           $"      Col1{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}" +
-                                           $"2017-01-01{Environment.NewLine}" +
-                                           $"2017-01-02{Environment.NewLine}");
+
+            Assert.IsTrue(
+                Utilities.CreateTable(
+                    new string[]                      {                    "Col1" },
+                    new List<object[]> { new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) },
+                                         new object[] { new DateTime(2017, 01, 01) },
+                                         new object[] { new DateTime(2017, 01, 02) }})
+               .IsSame(data));
         }
 
         /// <summary>Get units for a column.</summary>

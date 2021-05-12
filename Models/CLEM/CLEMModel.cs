@@ -109,7 +109,6 @@ namespace Models.CLEM
         {
             get
             {
-                Console.WriteLine(this.Name);
                 int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
 
                 var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
@@ -466,6 +465,7 @@ namespace Models.CLEM
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+                ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
                 ".filterset {float: left; font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 0px 3px; margin: 2px 0px 0px 5px; border-radius:3px; }" +
@@ -478,6 +478,7 @@ namespace Models.CLEM
                 ".defaultcontent {background-color:[ContDefaultBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:[ContDefaultBanner]; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".holdermain {margin: 20px 0px 20px 0px}" +
                 ".holdersub {margin: 5px 0px 5px}" +
+                ".otherlink {font-weight:bold; color:black; background-color:[ContDefaultBack] !important; border-color:black; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 "@media print { body { -webkit - print - color - adjust: exact; }}" +
                 "\r\n</style>\r\n<!-- graphscript --></ head>\r\n<body>\r\n<!-- CLEMZoneBody -->";
 
@@ -584,7 +585,7 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
+                    htmlWriter.Write($"<div class=\"namediv\">Component {fullname} named {modelToSummarise.GetType().Name}</div>");
                 }
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");

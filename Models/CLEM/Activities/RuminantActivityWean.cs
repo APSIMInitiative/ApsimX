@@ -17,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant wean activity</summary>
     /// <summary>This activity will wean the herd</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]

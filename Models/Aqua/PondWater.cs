@@ -19,7 +19,7 @@ namespace Models.Aqua
     /// Maintains a water balance in the Pond.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PondWater : Model
         {
