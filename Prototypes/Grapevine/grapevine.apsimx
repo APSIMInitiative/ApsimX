@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 130,
   "ApsimVersion": "2021.5.10.6379",
   "Name": "Simulations",
@@ -25,7 +25,7 @@
     },
     {
       "$type": "Models.Memo, Models",
-      "Text": "\n##Cautions for running the model\n- The current grapevine model was developed based up on a rich dataset of Sauvignon blanc in New Zealand in five regions, mainly in the Marlborough region.\n- Parameters for potential bunch number, berry number and berry mass determination were derived based on the long-term Sauvignon blanc trial in Marlborough.\n \n",
+      "Text": "\n##Cautions for running the model \n- Vineyard conditions differ from one to the other due to differences in local climatic conditions, soil, rootstock, varieity, irrigtation, fertilization and canopy management practice. The current grapevine model rather provide a modelling framework to simulate phenology, canopy development, radiation interception, dry matter production and allocation, non-structural carbohydrate dynamics, yield components, soil water and nitrogen uptake in vineyard, than a universal model that can be applied anywhere without adjustments. \n- The current grapevine model was developed based on a rich phenology and yield dataset of Sauvignon blanc in New Zealand in five regions, mainly in the Marlborough region. The dataset were collected in irrigated and fertilized vineyards where water and nutrient stress were minimized. This was reflected in the simulation through irrigation and fertilization management script as well. For conditions with water and nutrient stress, further calibration based on local dataset would be needed. \n- Parameters for potential bunch number, berry number and berry mass determination were derived based on the long-term Sauvignon blanc trial in Marlborough. The general framework would hold for other varieties as well, but actual parameters needed to be refitted based on robust dataset for other varieties. \n- The current model can allocate vine roots to the alley and allocate the root of the alley crop to the vine row. However, the water and nitrogen competition between the vine and alley crop is based on the value of KL of each species, not based on the amount of root and root density presented in the soil zone. One option is change the KL as a function of root density or directly use root density in the source code. A good dataset of root distribution in different layor would be required. Further calibration of soil water, nitrogen and organic matter dynamics are needed.\n \n",
       "Name": "Cautions for new users",
       "Children": [],
       "IncludeInDocumentation": true,
@@ -1946,11 +1946,20 @@
                           "A": 0.0,
                           "B": 1.0,
                           "C": 0.045,
-                          "Name": "ExponentialFunction",
+                          "Name": "TempResponse",
                           "Children": [
                             {
+                              "$type": "Models.Memo, Models",
+                              "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
+                              "Name": "TempDiff",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -1972,15 +1981,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
-                              "Name": "Memo",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2605,6 +2605,206 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.DeltaFunction, Models",
+                          "StartStageName": null,
+                          "Name": "Structural",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Integral",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Structure].MainStemPopn",
+                                  "Name": "ShootPopulation",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                                  "tm": 29.0,
+                                  "te": 57.0,
+                                  "Name": "BetaGrowthFunction",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 30.0,
+                                      "Units": "g",
+                                      "Name": "Ymax",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MaximumFunction, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "Name": "Storage",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.SubtractFunction, Models",
+                              "Name": "StorageDeficit",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                  "Name": "StructuralWt",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Shoot.Live.Wt",
+                                      "Name": "StructuralWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.26,
+                                      "Units": "gStorageDM/gStructureDM",
+                                      "Name": "MaxConcentration",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Shoot.Live.StorageWt",
+                                  "Name": "StorageWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.BetaGrowthFunction, Models",
+                              "tm": 34.4,
+                              "te": 54.0,
+                              "Name": "DailySynthesis",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.03,
+                                  "Units": null,
+                                  "Name": "Ymax",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Zero",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": "percentage",
@@ -3061,206 +3261,6 @@
                 },
                 {
                   "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.DeltaFunction, Models",
-                          "StartStageName": null,
-                          "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Integral",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Structure].MainStemPopn",
-                                  "Name": "ShootPopulation",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
-                                  "tm": 29.0,
-                                  "te": 57.0,
-                                  "Name": "BetaGrowthFunction",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 30.0,
-                                      "Units": "g",
-                                      "Name": "Ymax",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                      "Name": "XValue",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.MaximumFunction, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "SubtractFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "StructuralWt",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Shoot.Live.Wt",
-                                      "Name": "StructuralWt",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.26,
-                                      "Units": "gStorageDM/gStructureDM",
-                                      "Name": "MaxConcentration",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Shoot.Live.StorageWt",
-                                  "Name": "StorageWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.BetaGrowthFunction, Models",
-                              "tm": 34.4,
-                              "te": 54.0,
-                              "Name": "DailySynthesis",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.03,
-                                  "Units": null,
-                                  "Name": "Ymax",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Zero",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "DMDemandPriorityFactors",
                   "Children": [
                     {
@@ -3316,12 +3316,21 @@
                       "$type": "Models.Functions.ExponentialFunction, Models",
                       "A": 0.0,
                       "B": 1.0,
-                      "C": 0.05,
-                      "Name": "ExponentialFunction",
+                      "C": 0.045,
+                      "Name": "TempResponse",
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "TempDiff",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -3395,9 +3404,304 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Cane, Trunk and Structural root module were all represented by the Generic Organ class, which has properties of biomass status and daily biomass demand and supply. The structural DM demand of cane and trunk (Eq. 6) were calculated by their radius (r, unit m) derived from their DM and length, daily growth rate of the radius (dr/dt, m d-1), length (l, m) and wood density (ρ, g m-3) (Cieslak et al., 2011). \n〖dStructuralDM〗_i/dt=q_(str,i) 2πrlρ dr/dt\t\tEq. 6\nwhere i was organ type. Qstr,i was the priority factor for structural DM demand for a certain organ, determined as 0.7 for all three organs see model calibration methods. Daily growth rate of the radius were calculated based on the trunk circumference measurements on the same eight hundreds vines with 14 years’ interval. \nThe structural carbon demand of the structural root was calculated by the structural demand of the trunk times the structural root/trunk ratio (set to one in this model). The structural root/trunk ratio may vary between vineyards and training systems. \n\nThe non-structural DM demand was modelled as an active competing sink (Cieslak et al., 2011), and the parameters were kept the same for those three organs. The rate of non-structural DM synthesis depended on organ size and limited by overloading. \n〖dNonStructuralDM〗_i/dt=q_(NSC,i)*k_syn*\n(C_(max,NSC)*〖StructuralDM〗_i-〖NonStructuralDM〗_i )\tEq. 7\nThe equation limited carbon storage owing to non-structural DM overloading and the organ storage capacity, which was proportional to the current organ structural biomass, Cmax,NSC was the maximum non-structural DM per unit of structural DM, set as 0.26 based on our field trunk and root samples (Greven et al., 2016). qNSC was set to 0.61 throughout the growing season. ksyn was daily non-structural DM synthesis rate, which was represented by a beta growth function Eq. 8 (Yin et al., 2003) for capturing the fast recovery of carbon reserves after flowering (Greven et al., 2016; Seleznyova et al., 2018). \n\nParameters were optimized based on the measured dynamics of non-structural carbon in trunk and root by Greven et al. (2016), see model calibration methods.\nk_syn=k_max (1+ (t_e-t)/(t_e-t_m )) (t/t_e )^(t_e/(t_e-t_m ))              0≤t_m<t_e\t(Eq. 8)\nk_max was the maximum non-structural DM synthesis rate, 0.03 g g-1. t_e was the thermal day after budburst when kmax was reached, 54 td (around véraison). t_m was the time when maximum increase rate occurred, 34.4 td.\nFor potential carbon retranslocation by those storage organs, a value of 3.7% each day (DMRetranslocationFactor) was obtained through optimization. Actual retranslocation depends on the daily carbon supply and demand differences. \nThe biomass of retained cane for following season was reset by the pruning events based on input cane diameter in the UI each year for the cane-pruned vines. The biomass of trunk and fibrous root keep growing each year. \n",
+                  "Text": "Cane, Trunk and Structural root module were all represented by the Generic Organ class, which has properties of biomass status and daily biomass demand and supply. The structural DM demand of cane and trunk were calculated by their radius (r, unit m) derived from their DM and length, daily growth rate of the radius (dr/dt, m d-1), length (l, m) and wood density (ρ, g m-3) [cieslak2011functional]. \n\nThe priority factor for structural DM demand for a certain organ, determined as 0.7 for all three organs. Daily growth rate of the radius was calculated based on the trunk circumference increment in 14 years measured on 800 field grown irrigated Sauvignon blanc vines. \nThe structural carbohydrate demand of the structural root was calculated by the structural demand of the trunk times the structural root/trunk ratio (set to one in this model). The structural root/trunk ratio may vary between vineyards and training systems and further work is required to capture this in the model. The non-structural carbohydrate (NSC) DM demand was modelled as an active competing sink [cieslak2011functional], and the parameters were kept the same for those three organs. NSC included total soluble carbohydrates and starch. The rate of non-structural DM synthesis depended on organ size and limited by overloading. \n\nFor capturing the fast recovery of carbohydrate reserves after flowering [greven2016effect], ksynthesis was simulated using a beta function. Parameters were optimized based on the measured dynamics of non-structural carbohydrate in trunk and root by Greven et al. (2016).\n \nFor potential carbohydrate retranslocation, 3.7 % of the total carbohydrate storage in each organ per day (DM retranslocation factor) was set available to be retranslocated. Actual retranslocation depends on the daily carbohydrate supply and demand differences. Carbohydrate supplies from organ senescence and photosynthesis will be used first before using carbohydrate storage. \nThe biomass of retained cane for the following season was reset by the winter pruning events based on input cane diameter in the UI for the cane-pruned vines. The biomass of trunk and structural root keeps growing each year. In addition, retained cane can be parameterized as cordon and keep growing each year as well. \n",
                   "Name": "Cane",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemands",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "Structural",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "LeafFall",
+                          "Name": "GrowingSeason",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Structural",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 2.0,
+                                  "Units": null,
+                                  "Name": "2",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 3.1415926,
+                                  "Units": null,
+                                  "Name": "PI",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.PowerFunction, Models",
+                                  "Exponent": 0.5,
+                                  "Name": "Radius",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.DivideFunction, Models",
+                                      "Name": "RadiusSquare",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Cane].Live.Wt",
+                                          "Name": "Wt",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Grapevine].Population",
+                                          "Name": "population",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Cane].CaneNumber",
+                                          "Name": "CaneNumber",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 500000.0,
+                                          "Units": "g/m3",
+                                          "Name": "Density",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Cane].CaneLength",
+                                          "Name": "Length",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 3.1415926,
+                                          "Units": null,
+                                          "Name": "PI",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 400000.0,
+                                  "Units": "g/m3",
+                                  "Name": "Density",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 9E-06,
+                                  "Units": "meter",
+                                  "Name": "RadiusGR",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cane].CaneLength",
+                                  "Name": "Length",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Grapevine].Population",
+                                  "Name": "Population",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Cane].CaneNumber",
+                                  "Name": "CaneNumber",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "Storage",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "BudBurst",
+                          "End": "LeafFall",
+                          "Name": "GrowingSeason",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.SubtractFunction, Models",
+                                  "Name": "StorageDeficit",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.MultiplyFunction, Models",
+                                      "Name": "StructuralWt",
+                                      "Children": [
+                                        {
+                                          "$type": "Models.Functions.VariableReference, Models",
+                                          "VariableName": "[Grapevine].Cane.Live.StructuralWt",
+                                          "Name": "StructuralWt",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        },
+                                        {
+                                          "$type": "Models.Functions.Constant, Models",
+                                          "FixedValue": 0.26,
+                                          "Units": "gStorageDM/gStructureDM",
+                                          "Name": "MaxConcentration",
+                                          "Children": [],
+                                          "IncludeInDocumentation": true,
+                                          "Enabled": true,
+                                          "ReadOnly": false
+                                        }
+                                      ],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Grapevine].Cane.Live.StorageWt",
+                                      "Name": "StorageWt",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
+                                  "tm": 34.4,
+                                  "te": 54.0,
+                                  "Name": "DailySynthesis",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.Functions.Constant, Models",
+                                      "FixedValue": 0.03,
+                                      "Units": null,
+                                      "Name": "Ymax",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
+                                      "Name": "XValue",
+                                      "Children": [],
+                                      "IncludeInDocumentation": true,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3853,321 +4157,6 @@
                               "Units": null,
                               "Name": "RefT",
                               "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "DMDemands",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Metabolic",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "LeafFall",
-                          "Name": "GrowingSeason",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Structural",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "LeafFall",
-                          "Name": "GrowingSeason",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Structural",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 2.0,
-                                  "Units": null,
-                                  "Name": "2",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 3.1415926,
-                                  "Units": null,
-                                  "Name": "PI",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.PowerFunction, Models",
-                                  "Exponent": 0.5,
-                                  "Name": "Radius",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.DivideFunction, Models",
-                                      "Name": "RadiusSquare",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Cane].Live.Wt",
-                                          "Name": "Wt",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Grapevine].Population",
-                                          "Name": "population",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Cane].CaneNumber",
-                                          "Name": "CaneNumber",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 500000.0,
-                                          "Units": "g/m3",
-                                          "Name": "Density",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Cane].CaneLength",
-                                          "Name": "Length",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 3.1415926,
-                                          "Units": null,
-                                          "Name": "PI",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 400000.0,
-                                  "Units": "g/m3",
-                                  "Name": "Density",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 9E-06,
-                                  "Units": "meter",
-                                  "Name": "RadiusGR",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cane].CaneLength",
-                                  "Name": "Length",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Grapevine].Population",
-                                  "Name": "Population",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Cane].CaneNumber",
-                                  "Name": "CaneNumber",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Storage",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "LeafFall",
-                          "Name": "GrowingSeason",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.SubtractFunction, Models",
-                                  "Name": "SubtractFunction",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.MultiplyFunction, Models",
-                                      "Name": "StructuralWt",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Grapevine].Cane.Live.StructuralWt",
-                                          "Name": "StructuralWt",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.Functions.Constant, Models",
-                                          "FixedValue": 0.26,
-                                          "Units": "gStorageDM/gStructureDM",
-                                          "Name": "MaxConcentration",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Grapevine].Cane.Live.StorageWt",
-                                      "Name": "StorageWt",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.BetaGrowthFunction, Models",
-                                  "tm": 34.4,
-                                  "te": 54.0,
-                                  "Name": "DailySynthesis",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.03,
-                                      "Units": null,
-                                      "Name": "Ymax",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[Shoot].ThermalTimeAfterBudBurst",
-                                      "Name": "XValue",
-                                      "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -4700,36 +4689,6 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Metabolic",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "LeafFall",
-                          "Name": "GrowingSeason",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
                       "Name": "Structural",
                       "Children": [
                         {
@@ -4945,7 +4904,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "SubtractFunction",
+                                      "Name": "StorageDeficit",
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -5048,6 +5007,16 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -5114,36 +5083,6 @@
                   "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "DMDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "Metabolic",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "BudBurst",
-                          "End": "LeafFall",
-                          "Name": "GrowingSeason",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.PhaseLookup, Models",
                       "Name": "Structural",
@@ -5371,7 +5310,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.SubtractFunction, Models",
-                                      "Name": "SubtractFunction",
+                                      "Name": "StorageDeficit",
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -5471,6 +5410,16 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -5889,12 +5838,21 @@
                       "$type": "Models.Functions.ExponentialFunction, Models",
                       "A": 0.0,
                       "B": 1.0,
-                      "C": 0.05,
-                      "Name": "ExponentialFunction",
+                      "C": 0.045,
+                      "Name": "TempResponse",
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "TempDiff",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -5988,7 +5946,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "The final yield was calculated by bunches per shoot, shoots per vine, berries per bunch,and berry fresh or dry weight. \n\nThe effects of carbon status on yield compoent has been included but may requires further calibration. Bunch number, berry number and potential berry fresh weight were determined by weather conditions at critical periods around flowerings of the previous and current season, see details at Zhu et al., 2020 OENO one. Furthermore, in the current model, carbon effects represented by total carbon supply and demand were added in the calculation of bunch number, berry number and potential berry fresh weight. \n\nBerry dry mass accumulation following the source-sink carbon allocation rules. Brix was calculated based on the ratio of berry dry weight to fresh weight. Total titratable acid was simulated based on thermaltime accumulation after veraison follwoing a negative exponetial curve. \n\nA long-term phenology and yield monitoring trial using both two-cane and four-cane trained vertically shoot positioned (VSP) Sauvignon blanc vines was established in four vineyards in Marlborough, New Zealand in 2004, and was used for calibrating the berry module. Phenology, bunch number, berry mass, yield and meteorology records were collated. A multivariable mixed linear model was used to assess the relationship between various yield components and weather conditions. The critical periods for each yield component and weather factor were optimised based on the maximum likelihood returned from the mixed linear model. The optimised critical periods of temperature for all yield components occurred mainly before 50 % flowering either in the previous season (during inflorescence initiation) and the current season, indicating the importance of the pre-flowering period on yield formation. Out of all weather factors, maximum daily temperature had the largest effect on bunch number and overall yield and strongly influenced berry number and bunch mass. Rainfall near flowering time had a negative effect on berry mass and bunch mass, but post-flowering rainfall had a strong positive effect.",
+                  "Text": "The final yield was calculated by bunches per shoot, shoots per vine, berries per bunch,and berry fresh or dry weight. \n\nThe effects of carbon status on yield compoent has been included but may requires further calibration. Bunch number, berry number and potential berry fresh weight were determined by weather conditions at critical periods around flowerings of the previous and current season, see details at [zhu2020quantifying]. Furthermore, in the current model, carbon effects represented by total carbon supply and demand were added in the calculation of bunch number, berry number and potential berry fresh weight. \n\nBerry dry mass accumulation following the source-sink carbon allocation rules. Brix was calculated based on the ratio of berry dry weight to fresh weight. Total titratable acid was simulated based on thermaltime accumulation after veraison follwoing a negative exponetial curve. \n\nA long-term phenology and yield monitoring trial using both two-cane and four-cane trained vertically shoot positioned (VSP) Sauvignon blanc vines was established in four vineyards in Marlborough, New Zealand in 2004, and was used for calibrating the berry module. Phenology, bunch number, berry mass, yield and meteorology records were collated. A multivariable mixed linear model was used to assess the relationship between various yield components and weather conditions. The critical periods for each yield component and weather factor were optimised based on the maximum likelihood returned from the mixed linear model. The optimised critical periods of temperature for all yield components occurred mainly before 50 % flowering either in the previous season (during inflorescence initiation) and the current season, indicating the importance of the pre-flowering period on yield formation. Out of all weather factors, maximum daily temperature had the largest effect on bunch number and overall yield and strongly influenced berry number and bunch mass. Rainfall near flowering time had a negative effect on berry mass and bunch mass, but post-flowering rainfall had a strong positive effect.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6002,7 +5960,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "The final yield was calculated by vines per hectare, shoots per vine, bunches per shoot, flower number per bunch, berries per bunch,and mean berry weight. The effects of temperature and carbon status were or will be considered on bunches per shoot, flower number per bunch, berries per bunch,and mean berry weight. ",
+                      "Text": "The final yield was calculated by vines per hectare, shoots per vine, bunches per shoot, berries per bunch,and mean berry weight. The effects of weather conditions and carbohydrate supply/demand status were used to determine the bunches per shoot, berries per bunch,and potential berry fresh weight. \n\nNaming conventions for different factors (e.g. BEN_TmaxFlow) is yield component in concern (e.g. berry number per bunch), plus the factor, (e.g. Tmax), plus the period that the calculation was conducted (e.g. flowering period). \n\n- BUN represent bunch number.\n- BEN represent berry number.\n- BM  represent berry mass.\n- Tmax is maximum daily temperature; Tmin is the minimum daily temperature; Rad is the daily radiation; RainTot is the accumulated rainfall during the calculated period; Carbon is the carbohydrate supply demand ratio at the plant level.\n- Ini in each factor denotes the period during inflorescence initiation. The calculation for Ini uses flowering time of the previous season as the reference point.\n- Flow denotes the period during the flowering time of the current season, using flowering time as the reference point. \n- Ver denotes the post flowering and pre-véraison period of the current season, using time of véraison as the reference point.\n- Record in the one event function represent the value of a certain factor that was calculated in the current season and stored for using in the following season\n\n",
                       "Name": "MetFactors",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -6402,7 +6360,7 @@
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.0,
                           "Units": null,
-                          "Name": "Constant",
+                          "Name": "Days",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -6566,7 +6524,7 @@
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.0,
                           "Units": null,
-                          "Name": "Constant",
+                          "Name": "Days",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -6670,7 +6628,7 @@
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.0,
                           "Units": null,
-                          "Name": "Constant",
+                          "Name": "Days",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -6732,126 +6690,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Ecodormancy",
-                      "ReSetEvent": null,
-                      "Name": "BUN_TmaxIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 21.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni",
-                          "Name": "PostEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Ecodormancy",
-                      "ReSetEvent": null,
-                      "Name": "BUN_RadIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 21.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Berry].MetFactors.BUN_RadIni",
-                          "Name": "PostEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Ecodormancy",
-                      "ReSetEvent": null,
-                      "Name": "BUN_CarbonIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Berry].MetFactors.BUN_CarbonIni",
-                          "Name": "PostEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.OnEventFunction, Models",
-                      "SetEvent": "Veraison",
-                      "ReSetEvent": "FloweringTime",
-                      "Name": "BEN_TmaxIni1",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 21.0,
-                          "Units": null,
-                          "Name": "PreEventValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Berry].MetFactors.BEN_TmaxIni",
-                          "Name": "PostEventValue",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6925,7 +6763,127 @@
                       "$type": "Models.Functions.OnEventFunction, Models",
                       "SetEvent": "Ecodormancy",
                       "ReSetEvent": null,
-                      "Name": "BEN_CarbonIni1",
+                      "Name": "BUN_TmaxIni_Record",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 21.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BUN_TmaxIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Ecodormancy",
+                      "ReSetEvent": null,
+                      "Name": "BUN_RadIni_Record",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 21.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BUN_RadIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Ecodormancy",
+                      "ReSetEvent": null,
+                      "Name": "BUN_CarbonIni_Record",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 1.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BUN_CarbonIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Veraison",
+                      "ReSetEvent": "FloweringTime",
+                      "Name": "BEN_TmaxIni_Record",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 21.0,
+                          "Units": null,
+                          "Name": "PreEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Berry].MetFactors.BEN_TmaxIni",
+                          "Name": "PostEventValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.OnEventFunction, Models",
+                      "SetEvent": "Ecodormancy",
+                      "ReSetEvent": null,
+                      "Name": "BEN_CarbonIni_Record",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -6969,7 +6927,7 @@
                       "Children": [
                         {
                           "$type": "Models.Memo, Models",
-                          "Text": "here we use a trigger function for bunches per shoot as the value of mean bunch initiation temperature in the previous season \r\n\r\nNumbers were guessed based on Eltom 2013 Fig. 7.7. y=0.0981*Ta + 0.35\r\n\r\n\r\n Bunches per shoot is affected by the temperature and CHO during initiation, it is further affected by the CHO during bud burst. The later decided whether the potential initiated inflorescence can grow out successfully or been realized. \r\n\r\nFor simiplicity, right now, the CHO effect during bud burst is expressed as a function of number of buds retained.",
+                          "Text": "Bunches per shoot is affected by the temperature and carbohydrate status during initiation. \r\n",
                           "Name": "Memo",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -7005,7 +6963,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "MultiplyFunction",
+                                  "Name": "BunchesPerShootFun",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.AddFunction, Models",
@@ -7015,7 +6973,7 @@
                                           "$type": "Models.Functions.Constant, Models",
                                           "FixedValue": -0.7965,
                                           "Units": null,
-                                          "Name": "Constant",
+                                          "Name": "Intercept",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -7027,7 +6985,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                              "VariableName": "[Berry].MetFactors.BUN_TmaxIni_Record",
                                               "Name": "XValue",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -7082,7 +7040,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Berry].MetFactors.BUN_TmaxIni1",
+                                                  "VariableName": "[Berry].MetFactors.BUN_TmaxIni_Record",
                                                   "Name": "XValue",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -7105,7 +7063,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                              "VariableName": "[Berry].MetFactors.BUN_RadIni_Record",
                                               "Name": "XValue",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -7160,7 +7118,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Berry].MetFactors.BUN_RadIni1",
+                                                  "VariableName": "[Berry].MetFactors.BUN_RadIni_Record",
                                                   "Name": "XValue",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -7188,7 +7146,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BUN_CarbonIni1",
+                                          "VariableName": "[Berry].MetFactors.BUN_CarbonIni_Record",
                                           "Name": "XValue",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -7199,7 +7157,7 @@
                                           "$type": "Models.Functions.Constant, Models",
                                           "FixedValue": 0.1,
                                           "Units": null,
-                                          "Name": "Constant",
+                                          "Name": "FirstYear",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -7221,7 +7179,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BUN_CarbonIni1",
+                                              "VariableName": "[Berry].MetFactors.BUN_CarbonIni_Record",
                                               "Name": "XValue",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -7305,15 +7263,6 @@
                       "Name": "BunchesPerVine",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Trigger the calculation after the determination of bunches per shoot\n\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 50.0,
                           "Units": null,
@@ -7329,9 +7278,9 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
+                              "FixedValue": 1.0,
                               "Units": null,
-                              "Name": "zero",
+                              "Name": "Minimum",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -7339,7 +7288,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "NumberFunction",
+                              "Name": "BunchesPerVineFun",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
@@ -7399,15 +7348,6 @@
                       "Name": "BerryNum",
                       "Children": [
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "here we use a trigger function for bunches per shoot as the value of mean flowering temperature Y0 is updating itself during the growing season, which would cause inconvience if we directly correlates the bunches per shoot and mean flowering temperature Y0. \r\n\r\nNumbers were guessed based on Eltom 2013 Fig. 7.7. y=0.0981*Ta + 0.35\r\n\r\n\r\n Bunches per shoot is affected by the temperature and CHO during initiation, it is further affected by the CHO during bud burst. The later decided whether the potential initiated inflorescence can grow out successfully or been realized. \r\n\r\nFor simiplicity, right now, the CHO effect during bud burst is expressed as a function of number of buds retained.",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 65.0,
                           "Units": null,
@@ -7427,7 +7367,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.MultiplyFunction, Models",
-                                  "Name": "MultiplyFunction",
+                                  "Name": "BerryNumFun",
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.AddFunction, Models",
@@ -7437,7 +7377,7 @@
                                           "$type": "Models.Functions.Constant, Models",
                                           "FixedValue": -67.4,
                                           "Units": null,
-                                          "Name": "Constant",
+                                          "Name": "Intercept",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -7630,7 +7570,7 @@
                                               "Children": [
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Berry].MetFactors.BEN_TmaxIni1",
+                                                  "VariableName": "[Berry].MetFactors.BEN_TmaxIni_Record",
                                                   "Name": "XValue",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -7659,7 +7599,7 @@
                                                 },
                                                 {
                                                   "$type": "Models.Functions.VariableReference, Models",
-                                                  "VariableName": "[Berry].MetFactors.BEN_TmaxIni1",
+                                                  "VariableName": "[Berry].MetFactors.BEN_TmaxIni_Record",
                                                   "Name": "TmaxIni1",
                                                   "Children": [],
                                                   "IncludeInDocumentation": true,
@@ -7725,7 +7665,7 @@
                                       "Children": [
                                         {
                                           "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                          "VariableName": "[Berry].MetFactors.BEN_CarbonIni_Record",
                                           "Name": "XValue",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
@@ -7736,7 +7676,7 @@
                                           "$type": "Models.Functions.Constant, Models",
                                           "FixedValue": 0.1,
                                           "Units": null,
-                                          "Name": "Constant",
+                                          "Name": "Intercept",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -7758,7 +7698,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Berry].MetFactors.BEN_CarbonIni1",
+                                              "VariableName": "[Berry].MetFactors.BEN_CarbonIni_Record",
                                               "Name": "XValue",
                                               "Children": [],
                                               "IncludeInDocumentation": true,
@@ -7804,7 +7744,7 @@
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 30.0,
                                   "Units": null,
-                                  "Name": "zero",
+                                  "Name": "Minimum",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -7841,15 +7781,6 @@
                       "ReSetEvent": "BudBurst",
                       "Name": "BerryMass",
                       "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "here we use a trigger function for bunches per shoot as the value of mean flowering temperature Y0 is updating itself during the growing season, which would cause inconvience if we directly correlates the bunches per shoot and mean flowering temperature Y0. \r\n\r\nNumbers were guessed based on Eltom 2013 Fig. 7.7. y=0.0981*Ta + 0.35\r\n\r\n\r\n Bunches per shoot is affected by the temperature and CHO during initiation, it is further affected by the CHO during bud burst. The later decided whether the potential initiated inflorescence can grow out successfully or been realized. \r\n\r\nFor simiplicity, right now, the CHO effect during bud burst is expressed as a function of number of buds retained.",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
                         {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 2.1,
@@ -7890,7 +7821,7 @@
                                           "$type": "Models.Functions.Constant, Models",
                                           "FixedValue": 0.92369,
                                           "Units": null,
-                                          "Name": "Constant",
+                                          "Name": "Intercept",
                                           "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
@@ -8961,12 +8892,21 @@
                       "$type": "Models.Functions.ExponentialFunction, Models",
                       "A": 0.0,
                       "B": 1.0,
-                      "C": 0.05,
-                      "Name": "ExponentialFunction",
+                      "C": 0.045,
+                      "Name": "TempResponse",
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "TempDiff",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -9761,67 +9701,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "KLModifier",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        300.0,
-                        600.0,
-                        900.0,
-                        1200.0,
-                        1500.0,
-                        1800.0,
-                        2100.0,
-                        2400.0,
-                        2700.0,
-                        3000.0
-                      ],
-                      "Y": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "\nThis is important in SLURP as it is set for each species to represent their differences in rooting patterns between crop species\n",
-                      "Name": "Description",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Root].LayerMidPointDepth",
-                      "Name": "XValue",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
@@ -9888,12 +9767,21 @@
                       "$type": "Models.Functions.ExponentialFunction, Models",
                       "A": 0.0,
                       "B": 1.0,
-                      "C": 0.05,
-                      "Name": "ExponentialFunction",
+                      "C": 0.045,
+                      "Name": "TempResponse",
                       "Children": [
                         {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The temperature-dependent parameter is set so that the respiration rate doubles for every 10 oC increase in temperature.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
                           "$type": "Models.Functions.SubtractFunction, Models",
-                          "Name": "SubtractFunction",
+                          "Name": "TempDiff",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -9934,6 +9822,16 @@
                   "FixedValue": 0.01,
                   "Units": "g/g",
                   "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": null,
+                  "Name": "KLModifier",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -10381,10 +10279,10 @@
             "[Grapevine].Berry.Brix \t\t\t\tas brix",
             "[Grapevine].Berry.TitratableAcid \tas ta",
             "",
-            "[Grapevine].Berry.MetFactors.BUN_TmaxIni1    as BUN_TmaxIni",
-            "[Grapevine].Berry.MetFactors.BUN_RadIni1     as BUN_RadIni",
+            "[Grapevine].Berry.MetFactors.BUN_TmaxIni_Record    as BUN_TmaxIni",
+            "[Grapevine].Berry.MetFactors.BUN_RadIni_Record     as BUN_RadIni",
             "[Grapevine].Berry.MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
-            "[Grapevine].Berry.MetFactors.BEN_TmaxIni1    as BEN_TmaxIni1",
+            "[Grapevine].Berry.MetFactors.BEN_TmaxIni_Record    as BEN_TmaxIni_Record",
             "[Grapevine].Berry.MetFactors.BEN_TmaxFlow   as BEN_TmaxFlow",
             "[Grapevine].Berry.MetFactors.BEN_TminFlow   as BEN_TminFlow",
             "[Grapevine].Berry.MetFactors.BM_RadFlow      as BM_RadFlow",
@@ -12298,7 +12196,7 @@
     {
       "$type": "Models.Core.Folder, Models",
       "ShowPageOfGraphs": true,
-      "Name": "BaseSim",
+      "Name": "ExampleSimulation",
       "Children": [
         {
           "$type": "Models.Core.Simulation, Models",
@@ -12456,10 +12354,10 @@
                     "[Grapevine].Berry.Brix \t\t\t\tas brix",
                     "[Grapevine].Berry.TitratableAcid \tas ta",
                     "",
-                    "[Grapevine].Berry.MetFactors.BUN_TmaxIni1    as BUN_TmaxIni",
-                    "[Grapevine].Berry.MetFactors.BUN_RadIni1     as BUN_RadIni",
+                    "[Grapevine].Berry.MetFactors.BUN_TmaxIni_Record    as BUN_TmaxIni",
+                    "[Grapevine].Berry.MetFactors.BUN_RadIni_Record     as BUN_RadIni",
                     "[Grapevine].Berry.MetFactors.BEN_RainTotFlow as BEN_RainTotFlow",
-                    "[Grapevine].Berry.MetFactors.BEN_TmaxIni1    as BEN_TmaxIni1",
+                    "[Grapevine].Berry.MetFactors.BEN_TmaxIni_Record    as BEN_TmaxIni_Record",
                     "[Grapevine].Berry.MetFactors.BEN_TmeanFlow   as BEN_TmeanFlow",
                     "[Grapevine].Berry.MetFactors.BM_RadFlow      as BM_RadFlow",
                     "[Grapevine].Berry.MetFactors.BM_RainTotFlow  as BM_RainTotFlow",
