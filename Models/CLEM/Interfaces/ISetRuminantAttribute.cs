@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace Models.CLEM.Interfaces
 {
     /// <summary>
-    /// Interface for all Ruminant attribute models
+    /// Interface for all attribute models
     /// </summary>
-    public interface ISetRuminantAttribute
+    public interface ISetAttribute
     {
         /// <summary>
         /// Property to return a random assignment of the attribute
         /// </summary>
-        RuminantAttribute GetRandomSetAttribute { get; }
+        Resources.CLEMAttribute GetRandomSetAttribute();
 
         /// <summary>
         /// Name to apply to the attribute
