@@ -65,5 +65,10 @@ namespace APSIM.Server.Commands
             if (errors != null && errors.Count > 0)
                 throw new AggregateException("File ran with errors", errors);
         }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} with {changes.Count()} changes";
+        }
     }
 }

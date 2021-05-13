@@ -6,6 +6,7 @@ using System.IO.Pipes;
 using System.Text;
 using APSIM.Server.Cli;
 using APSIM.Server.Commands;
+using APSIM.Server.IO;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.ApsimFile;
@@ -55,50 +56,19 @@ namespace APSIM.Server
             {
                 if (options.Verbose)
                     Console.WriteLine($"Starting server...");
-                using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("testpipe", PipeDirection.InOut, 1))
+                using (ISocketConnection conn = CreateConnection())
                 {
                     while (true)
                     {
                         if (options.Verbose)
                             Console.WriteLine("Waiting for connections...");
-                        pipeServer.WaitForConnection();
+                        conn.WaitForConnection();
                         if (options.Verbose)
                             Console.WriteLine("Client connected to server.");
-                        object response;
-                        while ( (response = ReadFromPipe(pipeServer)) != null)
-                        {
-                            if (response is string message)
-                            {
-                                Console.WriteLine($"Message from client: '{message}'");
-                                SendToPipe(pipeServer, "Hello there");
-                            }
-                            else if (response is ICommand command)
-                            {
-                                if (options.Verbose)
-                                    Console.WriteLine($"Received command {command.GetType().Name}. Running command...");
-                                try
-                                {
-                                    // Clone the simulations object before running the command.
-                                    var timer = Stopwatch.StartNew();
-                                    command.Run(runner, jobRunner);
-                                    timer.Stop();
-                                    if (options.Verbose)
-                                        Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
-                                    SendToPipe(pipeServer, "fin");
-                                }
-                                catch (Exception err)
-                                {
-                                    if (options.Verbose)
-                                        Console.Error.WriteLine(err);
-                                    SendToPipe(pipeServer, err);
-                                }
-                            }
-                            else
-                            {
-                                Console.Error.WriteLine($"Unknown response {response.GetType()}: {response}");
-                                break;
-                            }
-                        }
+                        ICommand command;
+                        while ( (command = conn.WaitForCommand()) != null)
+                            RunCommand(command, conn);
+
                         if (options.Verbose)
                             Console.WriteLine($"Connection closed by client.");
 
@@ -106,7 +76,7 @@ namespace APSIM.Server
                         // Otherwise we will go back and wait for another connection.
                         if (!options.KeepAlive)
                             return;
-                        pipeServer.Disconnect();
+                        conn.Disconnect();
                     }
                 }
             }
@@ -116,41 +86,39 @@ namespace APSIM.Server
             }
         }
 
-        private void SendToPipe(NamedPipeServerStream pipe, object message)
+        private ISocketConnection CreateConnection()
         {
-            byte[] buffer;
-            if (options.Mode == CommunicationMode.Managed)
+            switch (options.Mode)
             {
-                buffer = ((MemoryStream)ReflectionUtilities.BinarySerialise(message)).ToArray();
+                case CommunicationMode.Managed:
+                    throw new NotImplementedException();
+                case CommunicationMode.Native:
+                    return new NativeSocketConnection("testpipe", options.Verbose);
+                default:
+                    throw new NotImplementedException();
             }
-            else if (options.Mode == CommunicationMode.Native)
-            {
-                buffer = Encoding.Default.GetBytes(message.ToString());
-            }
-            else
-                throw new NotImplementedException();
-            PipeUtilities.SendObjectToPipe(pipe, buffer);
         }
 
-        private object ReadFromPipe(NamedPipeServerStream pipe)
+        private void RunCommand(ICommand command, ISocketConnection connection)
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
-            // Convert bytes to object.
-            if (options.Mode == CommunicationMode.Managed)
+            if (options.Verbose)
+                Console.WriteLine($"Received command {command}. Running command...");
+            try
             {
-                if (buffer == null)
-                    return null;
-                return ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
+                // Clone the simulations object before running the command.
+                var timer = Stopwatch.StartNew();
+                command.Run(runner, jobRunner);
+                timer.Stop();
+                if (options.Verbose)
+                    Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
+                connection.OnCommandFinished();
+                
             }
-            else if (options.Mode == CommunicationMode.Native)
+            catch (Exception err)
             {
-                if (buffer == null)
-                    return null;
-                return Encoding.Default.GetString(buffer);
-            }
-            else
-            {
-                throw new NotImplementedException();
+                if (options.Verbose)
+                    Console.Error.WriteLine(err);
+                connection.OnCommandFinished(err);
             }
         }
     }
