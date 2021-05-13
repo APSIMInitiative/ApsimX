@@ -87,6 +87,11 @@ namespace Models.CLEM.Resources
         private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
+        /// Property indicates whether to include attribute inheritance when mating
+        /// </summary>
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+
+        /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
         /// </summary>
         /// <param name="name">name of attribute</param>
@@ -99,7 +104,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add a attribute name to the list of mandatory attributes for the type
+        /// Determins whether a specified attribute is mandatory
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public bool IsMandatoryAttribute(string name)
+        {
+            return mandatoryAttributes.Contains(name);
+        }
+
+        /// <summary>
+        /// Check whether an individual has all mandotory attributes
         /// </summary>
         /// <param name="ind">Individual ruminant to check</param>
         /// <param name="model">Model adding individuals</param>
