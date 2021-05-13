@@ -355,9 +355,9 @@
         /// <param name="filterClause">The clause to add e.g. Exp = 'Exp1'.</param>
         private string AddToFilter(string filter, string filterClause)
         {
-            if (filterClause != null)
+            if (!string.IsNullOrEmpty(filterClause))
             {
-                if (filter == null)
+                if (string.IsNullOrEmpty(filter))
                     return filterClause;
                 else
                     return filter + " AND " + filterClause;
@@ -424,7 +424,7 @@
         /// </summary>
         /// <param name="simulationNames">The simulation names to convert to Ids.</param>
         /// <returns></returns>
-        private IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
         {
             foreach (var simulationName in simulationNames)
                 if (TryGetSimulationID(simulationName, out int simulationID))

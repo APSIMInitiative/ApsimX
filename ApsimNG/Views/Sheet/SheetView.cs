@@ -20,7 +20,13 @@ namespace UserInterface.Views
     public class SheetView : EventBox
     {
         /// <summary>The width of the grid lines in pixels.</summary>
-        const double lineWidth = 0.2;
+        private const double lineWidth = 0.2;
+
+        /// <summary>A backing field for NumberHiddenColumns property.</summary>
+        private int numberHiddenColumnsBackingField;
+
+        /// <summary>A backing field for NumberHiddenRows property.</summary>
+        private int numberHiddenRowsBackingField;
 
         /// <summary>Constructor</summary>
         public SheetView()
@@ -62,10 +68,34 @@ namespace UserInterface.Views
         public int NumberFrozenRows { get; set; }
 
         /// <summary>Number of hidden columns - columns that have been scrolled off screen.</summary>        
-        public int NumberHiddenColumns { get; set; }
+        public int NumberHiddenColumns
+        {
+            get
+            {
+                return numberHiddenColumnsBackingField;
+            }
+            set
+            {
+                if (NumberHiddenColumns != value)
+                    numberHiddenColumnsBackingField = value;
+                ScrolledHorizontally?.Invoke(this, new EventArgs());
+            }
+        }
 
         /// <summary>Number of hidden rows - rows that have been scrolled off screen.</summary>        
-        public int NumberHiddenRows { get; set; }
+        public int NumberHiddenRows
+        {
+            get
+            {
+                return numberHiddenRowsBackingField;
+            }
+            set
+            {
+                if (NumberHiddenRows != value)
+                    numberHiddenRowsBackingField = value;
+                ScrolledVertically?.Invoke(this, new EventArgs());
+            }
+        }
 
         /// <summary>Maximum number of columns that can be hidden (scrolled).</summary>        
         public int MaximumNumberHiddenColumns { get { return CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1); } }
@@ -142,31 +172,21 @@ namespace UserInterface.Views
             // Calculate the new right most column index.
             var newRightColumnIndex = Math.Min(rightColumnIndex + 1, DataProvider.ColumnCount-1);
 
-            var newNumberHiddenColumns = CalculateNumberOfHiddenColumnsToMakeColumnVisible(newRightColumnIndex);
-            var haveScrolled = newNumberHiddenColumns != NumberHiddenColumns;
-            NumberHiddenColumns = newNumberHiddenColumns;
-            if (haveScrolled)
-                ScrolledHorizontally?.Invoke(this, new EventArgs());
+            NumberHiddenColumns = CalculateNumberOfHiddenColumnsToMakeColumnVisible(newRightColumnIndex);
         }
 
         /// <summary>Scroll the sheet to the left one column.</summary>
         public void ScrollLeft()
         {
             if (NumberHiddenColumns > 0)
-            {
                 NumberHiddenColumns--;
-                ScrolledHorizontally?.Invoke(this, new EventArgs());
-            }
         }
 
         /// <summary>Scroll the sheet up one row.</summary>
         public void ScrollUp()
         {
             if (NumberHiddenRows > 0)
-            {
                 NumberHiddenRows--;
-                ScrolledVertically?.Invoke(this, new EventArgs());
-            }
         }
 
         /// <summary>Scroll the sheet down one row.</summary>
@@ -174,10 +194,7 @@ namespace UserInterface.Views
         {
             var bottomRowIndex = FullyVisibleRowIndexes.Last();
             if (bottomRowIndex < DataProvider.RowCount - 1)
-            {
                 NumberHiddenRows++;
-                ScrolledVertically?.Invoke(this, new EventArgs());
-            }
         }
 
         /// <summary>Scroll the sheet down one page of rows.</summary>
@@ -185,21 +202,14 @@ namespace UserInterface.Views
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
             if (NumberHiddenRows + pageSize < DataProvider.RowCount - 1)
-            {
                 NumberHiddenRows += pageSize;
-                ScrolledVertically?.Invoke(this, new EventArgs());
-            }
         }
 
         /// <summary>Scroll the sheet up one page of rows.</summary>
         public void ScrollUpPage()
         {
             int pageSize = FullyVisibleRowIndexes.Count() - NumberFrozenRows; 
-            if (NumberHiddenRows - pageSize > 0)
-            {
-                NumberHiddenRows -= pageSize;
-                ScrolledVertically?.Invoke(this, new EventArgs());
-            }
+            NumberHiddenRows = Math.Max(NumberHiddenRows - pageSize, 0);
         }
 
         /// <summary>Refresh the sheet.</summary>

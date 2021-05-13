@@ -1,66 +1,68 @@
-﻿using Models.Storage;
+﻿using APSIM.Shared.Utilities;
+using Models.Storage;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Data;
-using System.Threading.Tasks;
-using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace UserInterface.Views
 {
     /// <summary>
     /// Provides paged access to a table in the DataStore.
     /// </summary>
-    public class PagedDataTableProvider : ISheetDataProvider
+    public class PagedDataProvider : ISheetDataProvider
     {
         /// <summary>The data store.</summary>
-        private IStorageReader dataStore;
+        private readonly IStorageReader dataStore;
 
         /// <summary>The data table.</summary>
-        private List<DataPage> dataPages = new List<DataPage>();
-
-        /// <summary>The optional units for each column in the data table. Can be null.</summary>
-        private IList<string> units;
+        private readonly List<DataPage> dataPages = new List<DataPage>();
 
         /// <summary>The number of rows to load at a time from the datastore table.</summary>
-        private int pageSize;
+        private readonly int pageSize;
 
         /// <summary>The name of the checkpoint.</summary>
-        private string checkpointName;
+        private readonly string checkpointName;
         
         /// <summary>The name of the table.</summary>
-        private string tableName;
+        private readonly string tableName;
 
         /// <summary>The names of the simulations in scope.</summary>
-        private IEnumerable<string> simulationNames;
+        private readonly IEnumerable<string> simulationNames;
+
+        /// <summary>The row filter.</summary>
+        private readonly string rowFilter;
 
         /// <summary>The names of the columns to read from table.</summary>
         private IEnumerable<string> columnNames;
 
-        /// <summary>The row filter.</summary>
-        private string filter;
+        /// <summary>The optional units for each column in the data table. Can be null.</summary>
+        private IList<string> units;
+
+        /// <summary>The names of the columns to read from table.</summary>
+        private IEnumerable<string> columnNameFilters;
 
         /// <summary>Constructor.</summary>
         /// <param name="store">The data store.</param>
         /// <param name="dataTableName">Name of table to read.</param>
         /// <param name="checkpointNameInScope">Name of checkpoint to load.</param>
         /// <param name="simulationNamesInScope">The names of simulations in scope.</param>
-        /// <param name="columnNameFilter">Column name filter. Can be null.</param>
+        /// <param name="columnNameFilter">Column name filter (csv). Can be null.</param>
         /// <param name="dataFilter">The data filter to apply.</param>
         /// <param name="dataPageSize">The number of rows to load at a time from the datastore table.</param>
-        public PagedDataTableProvider(IStorageReader store, 
-                                     string checkpointNameInScope,
-                                     string dataTableName,
-                                     IEnumerable<string> simulationNamesInScope,
-                                     string columnNameFilter,
-                                     string dataFilter,
-                                     int dataPageSize = 100)
+        public PagedDataProvider(IStorageReader store, 
+                                 string checkpointNameInScope,
+                                 string dataTableName,
+                                 IEnumerable<string> simulationNamesInScope,
+                                 string columnNameFilter,
+                                 string dataFilter,
+                                 int dataPageSize = 100)
         {
             dataStore = store;
             checkpointName = checkpointNameInScope;
             tableName = dataTableName;
             simulationNames = simulationNamesInScope;
-            filter = dataFilter;
+            rowFilter = dataFilter;
             pageSize = dataPageSize;
             GetColumnNames(columnNameFilter);
             GetData(0);
@@ -71,6 +73,7 @@ namespace UserInterface.Views
         /// <summary>Number of heading rows.</summary>
         public int NumHeadingRows { get; set; }
 
+        /// <summary>Number of columns that are always to be visible.</summary>
         public int NumPriorityColumns { get; set; }
 
         /// <summary>Gets the number of columns of data.</summary>
@@ -80,15 +83,15 @@ namespace UserInterface.Views
         public int RowCount { get; private set; }
 
         /// <summary>Get the contents of a cell.</summary>
-        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="columnIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
-        public string GetCellContents(int colIndex, int rowIndex)
+        public string GetCellContents(int columnIndex, int rowIndex)
         {
             // Return heading or units if rowIndex = 0 or 1.
             if (rowIndex == 0)
-                return dataPages[0].GetColumnName(colIndex);
+                return dataPages[0].GetColumnName(columnIndex);
             else if (units != null && rowIndex == 1)
-                return units[colIndex];
+                return units[columnIndex];
 
             rowIndex -= NumHeadingRows;
 
@@ -97,7 +100,7 @@ namespace UserInterface.Views
             if (dataPage == null)
                 dataPage = GetData(rowIndex);
 
-            object value = dataPage.GetCellContents(colIndex, rowIndex);
+            object value = dataPage.GetCellContents(columnIndex, rowIndex);
 
             if (value is double)
                 return ((double)value).ToString("F3");  // 3 decimal places.
@@ -107,26 +110,24 @@ namespace UserInterface.Views
         }
 
         /// <summary>Set the contents of a cell.</summary>
-        /// <param name="colIndex">Column index of cell.</param>
+        /// <param name="columnIndex">Column index of cell.</param>
         /// <param name="rowIndex">Row index of cell.</param>
         /// <param name="value">The value.</param>
-        public void SetCellContents(int colIndex, int rowIndex, string value)
+        public void SetCellContents(int columnIndex, int rowIndex, string value)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>Get data to show in grid.</summary>
-        private DataPage GetData(int from)
+        /// <param name="startRowIndex">The row index to start getting data from.</param>
+        private DataPage GetData(int startRowIndex)
         {
-            int startRowIndex = from / pageSize;
-            int count = pageSize;
-
             var newData = dataStore.GetData(tableName,
                                             checkpointName,
                                             simulationNames,
                                             columnNames,
-                                            filter,
-                                            from,
+                                            rowFilter,
+                                            startRowIndex,
                                             pageSize);
 
             // Remove unwanted columns from data table.
@@ -134,12 +135,13 @@ namespace UserInterface.Views
                 if (!columnNames.Contains(columnName))
                     newData.Columns.Remove(columnName);
 
-            var newPage = new DataPage(newData, from, pageSize);
+            var newPage = new DataPage(newData, startRowIndex);
 
             dataPages.Add(newPage);
             return newPage;
         }
 
+        /// <summary>Get units for columns.</summary>
         private void GetUnits()
         {
             // Get units for all columns
@@ -152,9 +154,22 @@ namespace UserInterface.Views
                 units = null;
         }
 
+        /// <summary>Calculate the row count.</summary>
         private void GetRowCount()
         {
-            var table = dataStore.GetDataUsingSql($"SELECT COUNT(*) FROM {tableName}");
+            var filter = rowFilter;
+            if (simulationNames != null)
+            {
+                var simulationFilter = $"SimulationID in ({dataStore.ToSimulationIDs(simulationNames).Join(",")})";
+                if (string.IsNullOrEmpty(filter))
+                    filter = simulationFilter;
+                else
+                    filter += " AND " + simulationFilter;
+            }
+            var sql = $"SELECT COUNT(*) FROM {tableName}";
+            if (!string.IsNullOrEmpty(filter))
+                sql += $" WHERE {filter}";
+            var table = dataStore.GetDataUsingSql(sql);
             RowCount = Convert.ToInt32(table.Rows[0][0]) + 1; // add a row for headings.
             NumHeadingRows = 1;
             if (units != null)
@@ -164,6 +179,8 @@ namespace UserInterface.Views
             }
         }
 
+        /// <summary>Get the names of all columns to read from data store.</summary>
+        /// <param name="columnNameFilter">The column name filter to use.</param>
         private void GetColumnNames(string columnNameFilter)
         {
             // Get a list of column names to read from the datastore.
@@ -181,43 +198,72 @@ namespace UserInterface.Views
             NumPriorityColumns = priorityColumns.Count();
 
             if (!string.IsNullOrEmpty(columnNameFilter))
-                columnNames = priorityColumns.Concat(columnNameFilter.Split(',')
-                                                                           .Where(x => !string.IsNullOrEmpty(x)));
+            {
+                columnNameFilters = columnNameFilter.Split(',').Where(x => !string.IsNullOrEmpty(x));
+                columnNames = priorityColumns.Concat(rawColumnNames.Where(c => ColumnMatchesFilter(c)));
+            }
             else
                 columnNames = priorityColumns.Concat(rawColumnNames.Except(priorityColumns));
         }
 
-
-        class DataPage
+        /// <summary>Returns true if a column name matches the column filter.</summary>
+        /// <param name="columnName">The column name.</param>
+        private bool ColumnMatchesFilter(string columnName)
         {
-            private int start;
-            private int count;
-            private DataTable data;
+            
+            foreach (var columnNameFilter in columnNameFilters)
+                if (columnName.Contains(columnNameFilter))
+                    return true;
+            return false;
+        }
 
-            public DataPage(DataTable table, int startRowIndex, int pageSize)
+
+        /// <summary>
+        ///  Encapsulates a page of DataTable rows.
+        /// </summary>
+        private class DataPage
+        {
+            /// <summary>The data table.</summary>
+            private readonly DataTable data;
+            
+            /// <summary>The index of the start row.</summary>
+            private readonly int start;
+
+
+            /// <summary>Constructor.</summary>
+            /// <param name="table">The data table.</param>
+            /// <param name="startRowIndex">The index of the start row.</param>
+            public DataPage(DataTable table, int startRowIndex)
             {
                 data = table;
                 start = startRowIndex;
-                count = pageSize;
             }
 
+            /// <summary>Returns true if a row is within the data page instance.</summary>
+            /// <param name="rowIndex">The row index.</param>
             public bool Contains(int rowIndex)
             {
-                return rowIndex >= start && rowIndex < start + count;
+                return rowIndex >= start && rowIndex < start + data.Rows.Count;
             }
 
+            /// <summary>The number of columns.</summary>
             public int ColumnCount => data.Columns.Count;
 
+            /// <summary>Gets a column name.</summary>
+            /// <param name="columnIndex">The column index.</param>
             public string GetColumnName(int columnIndex)
             {
                 return data.Columns[columnIndex].ColumnName;
             }
 
+            /// <summary>Gets the contents of a cell.</summary>
+            /// <param name="columnIndex">The column index.</param>
+            /// <param name="rowIndex">The row index.</param>
+            /// <returns></returns>
             public object GetCellContents(int columnIndex, int rowIndex)
             {
                 return data.Rows[rowIndex - start][columnIndex];
             }
-
-        }
+}
     }
 }

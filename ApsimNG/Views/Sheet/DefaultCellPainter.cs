@@ -32,7 +32,7 @@
         /// <param name="rowIndex">The row index of the cell.</param>
         public bool PaintCell(int columnIndex, int rowIndex)
         {
-            bool cellBeingEdited = editor != null && selection != null && !editor.IsEditing && selection.IsSelected(columnIndex, rowIndex);
+            bool cellBeingEdited = editor != null && selection != null && editor.IsEditing && selection.IsSelected(columnIndex, rowIndex);
             return !(cellBeingEdited);
         }
 

@@ -29,6 +29,8 @@ namespace UserInterface.Views
 
         public void Add(Widget child)
         {
+            if (container.Children.Length > 0)
+                container.Remove(container.Children[0]);
             container.Add(child);
             container.ShowAll();
         }

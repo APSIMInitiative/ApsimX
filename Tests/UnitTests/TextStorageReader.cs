@@ -174,6 +174,11 @@ namespace UnitTests
             simulationID = 0;
             return true;
         }
+
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

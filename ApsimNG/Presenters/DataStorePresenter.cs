@@ -1,19 +1,14 @@
-﻿using UserInterface.Commands;
-
-namespace UserInterface.Presenters
+﻿namespace UserInterface.Presenters
 {
-    using System;
-    using System.Data;
-    using System.Linq;
-    using APSIM.Shared.Utilities;
+    using EventArguments;
     using Models.Core;
     using Models.Factorial;
-    using Views;
-    using EventArguments;
-    using Models.Core.Run;
     using Models.Storage;
-    using System.Globalization;
+    using System;
     using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
     public class DataStorePresenter : IPresenter
@@ -21,16 +16,19 @@ namespace UserInterface.Presenters
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
 
-        /// <summary>The data store view to work with.</summary>
-        private ViewBase view;
+        /// <summary>The sheet widget.</summary>
+        private SheetView sheet;
 
-        private SheetView grid;
+        /// <summary>The sheet cell selector.</summary>
+        SingleCellSelect cellSelector;
 
-        private ContainerView container;
+        /// <summary>The sheet scrollbars</summary>
+        SheetScrollBars scrollbars;
 
-        /// <summary>
-        /// The intellisense.
-        /// </summary>
+        /// <summary>The container that houses the sheet.</summary>
+        private ContainerView sheetContainer;
+
+        /// <summary>The intellisense.</summary>
         private IntellisensePresenter intellisense;
 
         /// <summary>Parent explorer presenter.</summary>
@@ -52,7 +50,7 @@ namespace UserInterface.Presenters
         private EditView rowFilterEditBox;
 
         /// <summary>Row filter edit box.</summary>
-        private EditView maxNumRecordsEditBox;
+        private LabelView statusLabel;
 
         /// <summary>Gets or sets the experiment filter. When specified, will only show experiment data.</summary>
         public Experiment ExperimentFilter { get; set; }
@@ -63,9 +61,9 @@ namespace UserInterface.Presenters
         /// <summary>When specified will only show data from a given zone.</summary>
         public Zone ZoneFilter { get; set; }
 
+        /// <summary>Default constructor</summary>
         public DataStorePresenter()
         {
-
         }
 
         /// <summary>
@@ -86,26 +84,20 @@ namespace UserInterface.Presenters
         public void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
             dataStore = model as IDataStore;
-            view = v as ViewBase;
+            var view = v as ViewBase;
             this.explorerPresenter = explorerPresenter;
 
-            intellisense = new IntellisensePresenter(this.view as ViewBase);
+            intellisense = new IntellisensePresenter(view as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
             checkpointDropDown = view.GetControl<DropDownView>("checkpointDropDown");
             tableDropDown = view.GetControl<DropDownView>("tableDropDown");
             columnFilterEditBox = view.GetControl<EditView>("columnFilterEditBox");
             rowFilterEditBox = view.GetControl<EditView>("rowFilterEditBox");
-
-            container = view.GetControl<ContainerView>("grid");
-                
-            maxNumRecordsEditBox = view.GetControl<EditView>("maxNumRecordsEditBox");
-
-            //base.Attach(model, grid, explorerPresenter);
+            sheetContainer = view.GetControl<ContainerView>("grid");
+            statusLabel = view.GetControl<LabelView>("statusLabel");
 
             tableDropDown.IsEditable = false;
-            //grid.ReadOnly = true;
-            //grid.NumericFormat = "N3";
             if (dataStore != null)
             {
                 tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
@@ -116,7 +108,7 @@ namespace UserInterface.Presenters
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
                 if (Utility.Configuration.Settings.MaximumRowsOnReportGrid > 0)
                 {
-                    maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
+                    statusLabel.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
                 tableDropDown.SelectedIndex = 0;
             }
@@ -125,7 +117,6 @@ namespace UserInterface.Presenters
             columnFilterEditBox.Leave += OnColumnFilterChanged;
             columnFilterEditBox.IntellisenseItemsNeeded += OnIntellisenseNeeded;
             rowFilterEditBox.Leave += OnColumnFilterChanged;
-            maxNumRecordsEditBox.Leave += OnMaximumNumberRecordsChanged;
             checkpointDropDown.Changed += OnCheckpointDropDownChanged;
             PopulateGrid();
         }
@@ -134,13 +125,12 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             //base.Detach();
-            maxNumRecordsEditBox.EndEdit();
             tableDropDown.Changed -= OnTableSelected;
             columnFilterEditBox.Leave -= OnColumnFilterChanged;
             rowFilterEditBox.Leave -= OnColumnFilterChanged;
-            maxNumRecordsEditBox.Leave -= OnMaximumNumberRecordsChanged;
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
+            CleanupSheet();
         }
 
         /// <summary>Populate the grid control with data.</summary>
@@ -160,7 +150,7 @@ namespace UserInterface.Presenters
                 else
                     simulationNames = new string[] { SimulationFilter.Name };
 
-                string filter = GetFilter();
+                string filter = rowFilterEditBox.Text;
                 if (ZoneFilter != null)
                 {
                     // More assumptions about column names
@@ -172,20 +162,29 @@ namespace UserInterface.Presenters
                 {
                     try
                     {
-                        grid = new SheetView();
-                        var dataProvider = new PagedDataTableProvider(dataStore.Reader,
-                                                                      checkpointDropDown.SelectedValue,
-                                                                      tableDropDown.SelectedValue,
-                                                                      simulationNames,
-                                                                      columnFilterEditBox.Text,
-                                                                      filter);
-                        grid.DataProvider = dataProvider;
-                        grid.NumberFrozenRows = dataProvider.NumHeadingRows;
-                        grid.NumberFrozenColumns = dataProvider.NumPriorityColumns;
-                        container.Add(grid);
-                        var cellSelector = new SingleCellSelect(grid);
-                        grid.CellPainter = new DefaultCellPainter(grid, sheetSelection: cellSelector);
-                        var scrollbars = new SheetScrollBars(grid);
+                        // Cleanup existing sheet instances before creating new ones.
+                        CleanupSheet();
+
+                        var dataProvider = new PagedDataProvider(dataStore.Reader,
+                                                                 checkpointDropDown.SelectedValue,
+                                                                 tableDropDown.SelectedValue,
+                                                                 simulationNames,
+                                                                 columnFilterEditBox.Text,
+                                                                 filter);
+
+                        sheet = new SheetView()
+                        {
+                            DataProvider = dataProvider,
+                            NumberFrozenRows = dataProvider.NumHeadingRows,
+                            NumberFrozenColumns = dataProvider.NumPriorityColumns
+                        };
+                        sheetContainer.Add(sheet);
+
+                        cellSelector = new SingleCellSelect(sheet);
+                        scrollbars = new SheetScrollBars(sheet);
+                        sheet.CellPainter = new DefaultCellPainter(sheet, sheetSelection: cellSelector);
+
+                        statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
                     catch (Exception err)
                     {
@@ -195,21 +194,14 @@ namespace UserInterface.Presenters
             }
         }
 
-        private string GetFilter()
+        /// <summary>Clean up the sheet components.</summary>
+        private void CleanupSheet()
         {
-            string filter = rowFilterEditBox.Text;
-
-            if (ExperimentFilter != null)
+            if (cellSelector != null)
             {
-                // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
-                IEnumerable<string> names = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
-                string exptFilter = "S.[Name] IN " + "(" + StringUtilities.Build(names, delimiter: ",", prefix: "'", suffix: "'") + ")";
-                filter = AppendToFilter(filter, exptFilter);
+                cellSelector.Cleanup();
+                scrollbars.Cleanup();
             }
-
-            if (filter == string.Empty)
-                return null;
-            return filter;
         }
 
         /// <summary>
@@ -259,6 +251,11 @@ namespace UserInterface.Presenters
             }
         }
 
+        /// <summary>
+        /// Invoked when an intellisense item is selected by user.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="args">The event arguments.</param>
         private void OnIntellisenseItemSelected(object sender, IntellisenseItemSelectedArgs args)
         {
             try
@@ -272,29 +269,6 @@ namespace UserInterface.Presenters
             }
         }
 
-        /// <summary>The maximum number of records has changed.</summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        private void OnMaximumNumberRecordsChanged(object sender, EventArgs e)
-        {
-            if (maxNumRecordsEditBox.Text == string.Empty)
-            {
-                Utility.Configuration.Settings.MaximumRowsOnReportGrid = 0;
-            }
-            else
-            {
-                try
-                {
-                    Utility.Configuration.Settings.MaximumRowsOnReportGrid = Convert.ToInt32(maxNumRecordsEditBox.Text, CultureInfo.InvariantCulture);
-                }
-                catch (FormatException)
-                {
-                }
-            }
-
-            PopulateGrid();
-        }
-
         /// <summary>
         /// Checkpoint name has changed by user.
         /// </summary>
@@ -304,6 +278,5 @@ namespace UserInterface.Presenters
         {
             PopulateGrid();
         }
-
     }
 }

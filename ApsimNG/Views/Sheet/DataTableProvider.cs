@@ -10,12 +10,13 @@ namespace UserInterface.Views
     public class DataTableProvider : ISheetDataProvider
     {
         /// <summary>The wrapped data table.</summary>
-        private DataTable data;
+        private readonly DataTable data;
 
         /// <summary>The optional units for each column in the data table. Can be null.</summary>
-        private IList<string> units;
+        private readonly IList<string> units;
 
-        private int numHeadingRows = 2; // first row is number of heading rows. Second row is units.
+        /// <summary>Number of heading rows.</summary>
+        private int numHeadingRows;
 
         /// <summary>Constructor.</summary>
         /// <param name="dataSource">A data table.</param>
