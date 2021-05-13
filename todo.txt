@@ -1,0 +1,4 @@
+- Implement string/bool/date property replacements
+- Low priority - model replacements?
+- Implement data retrieval (managed -> native)
+  - Need to bypass file IO
