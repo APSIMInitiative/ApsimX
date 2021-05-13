@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 126,
+  "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -98,6 +98,7 @@
                   "MonthColumnName": "Month",
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
+                  "HarvestTypeColumnName": null,
                   "Name": "FileForage",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -629,7 +630,6 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.TransmutationCost, Models",
-                                  "ResourceType": null,
                                   "ResourceTypeName": "Finances.General account",
                                   "CostPerUnit": 100.0,
                                   "Name": "Money",
@@ -721,6 +721,7 @@
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                              "Reason": 0,
                               "Proportion": 1.0,
                               "Name": "All",
                               "Children": [],
@@ -774,7 +775,7 @@
                         },
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityBreed, Models",
-                          "UseAI": true,
+                          "NumberConceived": 0,
                           "InferStartupPregnancy": false,
                           "HerdFilters": null,
                           "PredictedHerdName": null,
@@ -783,12 +784,25 @@
                           "Name": "Breed",
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
-                              "Interval": 12,
-                              "MonthDue": 3,
-                              "Name": "Controlled mating",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
+                              "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
+                              "HerdFilters": null,
+                              "PredictedHerdName": null,
+                              "PredictedHerdBreed": null,
+                              "OnPartialResourcesAvailableAction": 0,
+                              "Name": "ControlledMating",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
+                                  "Interval": 12,
+                                  "MonthDue": 3,
+                                  "Name": "Controlled mating",
+                                  "Children": [],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -831,11 +845,9 @@
                           "MarkOldBreedersForSale": true,
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
-                          "NumberOfBreederPurchaseAgeClasses": 1,
                           "MaximumSiresKept": 1.0,
                           "MarkOldSiresForSale": true,
                           "MaximumSireAge": 96.0,
-                          "SireAgeAtPurchase": 24.0,
                           "AllowSireReplacement": false,
                           "RestockSiresRelativeToBreeders": false,
                           "MaximumSiresPerPurchase": 1,
@@ -866,6 +878,60 @@
                               "Name": "every August",
                               "Children": [],
                               "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
+                              "WeightWarningOccurred": false,
+                              "RuminantTypeName": "Ruminants.Bos indicus",
+                              "Proportion": 1.0,
+                              "Name": "Breeders",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                                  "Gender": 1,
+                                  "Age": 24,
+                                  "Number": 0.0,
+                                  "Weight": 0.0,
+                                  "WeightSD": 0.0,
+                                  "Suckling": false,
+                                  "Sire": false,
+                                  "Name": "24mth breeder",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
+                              "WeightWarningOccurred": false,
+                              "RuminantTypeName": "Ruminants.Bos indicus",
+                              "Proportion": 1.0,
+                              "Name": "Sires",
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
+                                  "Gender": 0,
+                                  "Age": 36,
+                                  "Number": 0.0,
+                                  "Weight": 0.0,
+                                  "WeightSD": 0.0,
+                                  "Suckling": false,
+                                  "Sire": true,
+                                  "Name": "36mth sire",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
@@ -924,7 +990,7 @@
                       "CreateHTML": false,
                       "RotateReport": false,
                       "AutoCreateHTML": false,
-                      "SelectedTab": null,
+                      "SelectedTab": "Display",
                       "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
@@ -975,9 +1041,13 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
                       "VariableNames": [
                         "GrazeFoodStore"
                       ],
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "GrazeFoodStoreLedger",
@@ -988,9 +1058,13 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
                       "VariableNames": [
                         "AnimalFoodStore"
                       ],
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "AnimalFoodLedger",
@@ -1001,9 +1075,13 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
                       "VariableNames": [
                         "Finances"
                       ],
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
@@ -1014,9 +1092,13 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
                       "VariableNames": [
                         "Ruminants"
                       ],
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "HerdLedger",
@@ -1090,6 +1172,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Income vs Expenses",
@@ -1226,6 +1309,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Animal numbers vs Feed available",
@@ -1362,6 +1446,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Graph_Pasture Growth vs Grazing",
