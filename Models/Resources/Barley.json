@@ -10452,8 +10452,8 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
                     "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
