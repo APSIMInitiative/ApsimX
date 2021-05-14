@@ -9,10 +9,12 @@
 #include <unistd.h>
 
 #include "replacement.h"
+#include "client.h"
 
 const char* ACK = "ACK";
 const char* FIN = "FIN";
 const char* COMMAND_RUN = "RUN";
+const char* COMMAND_READ = "READ";
 
 // Connect to the APSIM Server with the specified name.
 int connectToServer(char* name) {
@@ -61,25 +63,43 @@ void sendToSocket(int sock, const char *msg, size_t len) {
 }
 
 // Read the server's response over the socket.
-char* readFromSocket(int sock) {
+char* readFromSocket(int sock, uint32_t* len) {
     // Read message length (4 bytes).
-    char length_raw[4];
+    unsigned char length_raw[4];
     int err = read(sock, length_raw, 4);
     assert(err >= 0);
 
+    uint32_t n;
+    memcpy(&n, length_raw, 4);
+
+    // Allocate 1 extra byte, to allow for a null terminator.
+    unsigned char* resp = malloc((n + 1) * sizeof(unsigned char));
+    resp[n] = 0; // n+1-th index
+
     // Read n bytes
-    int32_t n = (int32_t)(*length_raw) + 1;
-    char* resp = malloc(n * sizeof(char));
-    resp[n - 1] = 0;
     err = read(sock, resp, n);
     assert(err >= 0);
-    return resp;
+
+    // if (verbose)
+    // printf("RECV ");
+    // for (int i = 0; i < 4; i++) {
+    //     printf("%02x ", length_raw[i]);
+    // }
+    // printf("n = %u: ", n);
+    // for (uint32_t i = 0; i < n - 1; i++) {
+    //     printf("%02x ", resp[i]);
+    // }
+    // printf("\n");
+
+    *len = n;
+    return (char*)resp;
 }
 
 // Read a message from the server and ensure that it matches the
 // expected value.
 void validateResponse(int sock, const char* expected) {
-    char* resp = readFromSocket(sock);
+    uint32_t len;
+    char* resp = readFromSocket(sock, &len);
     if (strcmp(resp, expected) != 0) {
         printf("Expected response '%s' but got '%s'\n", expected, resp);
         assert(strcmp(resp, expected) == 0);
@@ -121,11 +141,55 @@ void runWithChanges(int sock, struct Replacement** changes, unsigned int n) {
     validateResponse(sock, ACK);
     // Server will send through a second response when the command finishes
     // (FIN for success, otherwise a longer string detailing the error).
-    char* resp = readFromSocket(sock);
-    if (strcmp(resp, FIN) == 0) {
-        printf("Command ran successfully.\n");
-    } else {
+    uint32_t msg_len;
+    char* resp = readFromSocket(sock, &msg_len);
+    int err = strcmp(resp, FIN) != 0;
+    if (err) {
         printf("Command ran with errors: %s\n", resp);
     }
     free(resp);
+    assert(!err);
+}
+
+// Read the simulation output with the given name from the
+// specified table. It's up to the caller to cast/interpret
+// the return value.
+//
+// The protocol is:
+// 1. Send READ command
+// 2. Receive ACK
+// 3. Send table name
+// 4. Receive ACK
+// 5. Send parameter names one at a time (receive ACK after each).
+// 5a) Send number of items in array
+// 5b) Receive ACK
+// 5c) Send items one by one (receive ACK after each)
+// 6. Send FIN
+// 7. Receive one message per parameter name sent. Send ACK after each.
+struct output** readOutput(int sock, char* table, char** param_names, uint32_t nparams) {
+    // 1. Send READ command.
+    sendStringToSocket(sock, COMMAND_READ);
+    // 2. Receive ACK.
+    validateResponse(sock, ACK);
+    // 3. Send table name.
+    sendStringToSocket(sock, table);
+    // 4. Receive ACK.
+    validateResponse(sock, ACK);
+    // 5. Send parameter names one at a time.
+    for (uint32_t i = 0; i < nparams; i++) {
+        sendStringToSocket(sock, param_names[i]);
+        // Should receive ACK after each message.
+        validateResponse(sock, ACK);
+    }
+    // Send FIN to indicate end of parameter names.
+    sendStringToSocket(sock, FIN);
+    struct output** outputs = malloc(nparams * sizeof(struct output));
+
+    // Now we should receive one result per parameter name.
+    for (uint32_t i = 0; i < nparams; i++) {
+        outputs[i] = malloc(sizeof(struct output));
+        outputs[i]->data = readFromSocket(sock, &outputs[i]->len);
+        sendStringToSocket(sock, ACK);
+    }
+    return outputs;
 }

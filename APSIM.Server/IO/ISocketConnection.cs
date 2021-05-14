@@ -29,7 +29,8 @@ namespace APSIM.Server.IO
         /// The expectation is that the client will need to be signalled
         /// somehow when this occurs.
         /// </summary>
+        /// <param name="command">The command that was run.</param>
         /// <param name="error">Error details (if command failed). If command succeeded, this will be null.</param>
-        void OnCommandFinished(Exception error = null);
+        void OnCommandFinished(ICommand command, Exception error = null);
     }
 }

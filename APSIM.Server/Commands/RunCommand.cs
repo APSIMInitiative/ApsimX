@@ -6,6 +6,7 @@ using Models.Core;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Storage;
 
 namespace APSIM.Server.Commands
 {
@@ -55,7 +56,7 @@ namespace APSIM.Server.Commands
         /// Run the command.
         /// </summary>
         /// <param name="runner">Job runner.</param>
-        public void Run(Runner runner, ServerJobRunner jobRunner)
+        public void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage)
         {
             jobRunner.Replacements = changes;
             var timer = Stopwatch.StartNew();

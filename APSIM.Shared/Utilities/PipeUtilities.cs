@@ -164,7 +164,7 @@
         /// </summary>
         /// <param name="pipeWriter">The pipe to write to.</param>
         /// <param name="buffer">The data to send.</param>
-        public static void SendObjectToPipe(Stream pipeWriter, byte[] buffer)
+        public static void SendToPipe(Stream pipeWriter, byte[] buffer)
         {
             // Write the number of bytes
             var numBytes = Convert.ToInt32(buffer.Length);

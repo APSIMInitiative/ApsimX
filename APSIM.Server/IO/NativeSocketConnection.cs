@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using APSIM.Server.Commands;
 using APSIM.Shared.Utilities;
@@ -16,6 +18,7 @@ namespace APSIM.Server.IO
     {
         private bool verbose;
         private const string commandRun = "RUN";
+        private const string commandRead = "READ";
         private const string ack = "ACK";
         private const string fin = "FIN";
 
@@ -70,6 +73,11 @@ namespace APSIM.Server.IO
                     ICommand result = new RunCommand(ReadChanges());
                     return result;
                 }
+                else if (input == commandRead)
+                {
+                    SendMessage(ack);
+                    return ReadReadCommand();
+                }
                 else
                 {
                     if (verbose)
@@ -80,10 +88,55 @@ namespace APSIM.Server.IO
             return null;
         }
 
-        public void OnCommandFinished(Exception error = null)
+        /// <summary>
+        /// Receive a READ command over the socket.
+        /// </summary>
+        /// <remarks>
+        /// The protocol is:
+        /// 1. Receive READ command
+        /// 2. Send ACK.
+        /// 3. Receive table name.
+        /// 4. Send ACK.
+        /// 5. Receive parameters one at a time (send ACK after each).
+        /// 6. Receive FIN.
+        /// 7. Send one message per parameter name received. Receive ACK after each.
+        /// </remarks>
+        private ICommand ReadReadCommand()
+        {
+            // 3. Receive table name.
+            string table = ReadString();
+            // 4. Send ACK.
+            SendMessage(ack);
+            // 5. Receive parameters one at a time (send ACK after each).
+            List<string> parameters = new List<string>();
+            string parameter;
+            while ( (parameter = ReadString()) != null && parameter != fin)
+            {
+                parameters.Add(parameter);
+                SendMessage(ack);
+            }
+
+            return new ReadCommand(table, parameters);
+        }
+
+        public void OnCommandFinished(ICommand command, Exception error = null)
         {
             if (error == null)
-                SendMessage(fin);
+            {
+                if (command is ReadCommand reader)
+                {
+                    foreach (string param in reader.Parameters)
+                    {
+                        if (reader.Result.Columns[param] == null)
+                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
+                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                        SendArray(data);
+                        ValidateResponse(ReadString(), ack);
+                    }
+                }
+                else
+                    SendMessage(fin);
+            }
             else
                 SendMessage(error.ToString());
         }
@@ -131,10 +184,16 @@ namespace APSIM.Server.IO
             }
         }
 
+        private void ValidateResponse(string actual, string expected)
+        {
+            if (!string.Equals(actual, expected))
+                throw new Exception($"Expected {expected} but received {actual}");
+        }
+
         public void SendMessage(string message)
         {
             byte[] buffer = Encoding.Default.GetBytes(message);
-            PipeUtilities.SendObjectToPipe(pipe, buffer);
+            PipeUtilities.SendToPipe(pipe, buffer);
         }
 
         public int ReadInt()
@@ -167,6 +226,54 @@ namespace APSIM.Server.IO
             if (buffer == null)
                 return null;
             return Encoding.Default.GetString(buffer);
+        }
+
+        public void SendInt(int value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            PipeUtilities.SendToPipe(pipe, buffer);
+        }
+
+        public void SendDouble(double value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            PipeUtilities.SendToPipe(pipe, buffer);
+        }
+
+        public void SendBool(bool value)
+        {
+            byte[] buffer = BitConverter.GetBytes(value);
+            PipeUtilities.SendToPipe(pipe, buffer);
+        }
+
+        public void SendDate(DateTime value)
+        {
+            // tbi - need to give this one some thought.
+            throw new NotImplementedException();
+        }
+    
+        public void SendArray(Array data)
+        {
+            PipeUtilities.SendToPipe(pipe, GetBytes(data));
+        }
+
+        private byte[] GetBytes(Array data)
+        {
+            if (data == null || data.Length < 1)
+                return new byte[0];
+            Type arrayType = data.GetValue(0).GetType();
+            if (arrayType == typeof(int))
+                return data.Cast<int>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
+            else if (arrayType == typeof(double))
+                return data.Cast<double>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
+            else if (arrayType == typeof(bool))
+                return data.Cast<bool>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
+            else if (arrayType == typeof(DateTime))
+                throw new NotImplementedException();
+            else if (arrayType == typeof(string))
+                return data.Cast<string>().SelectMany(i => Encoding.Default.GetBytes(i)).ToArray();
+            else
+                throw new NotImplementedException();
         }
     }
 }

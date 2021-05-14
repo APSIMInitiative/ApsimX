@@ -11,6 +11,11 @@ const int PROPERTY_TYPE_DOUBLE = 1;
 const int PROPERTY_TYPE_BOOL = 2;
 const int PROPERTY_TYPE_DATE = 3;
 const int PROPERTY_TYPE_STRING = 4;
+const int PROPERTY_TYPE_INT_ARRAY = 5;
+const int PROPERTY_TYPE_DOUBLE_ARRAY = 6;
+const int PROPERTY_TYPE_BOOL_ARRAY = 7;
+const int PROPERTY_TYPE_DATE_ARRAY = 8;
+const int PROPERTY_TYPE_STRING_ARRAY = 9;
 
 struct Replacement* createIntReplacement(char* path, int32_t value) {
     struct Replacement* result = malloc(sizeof(struct Replacement));

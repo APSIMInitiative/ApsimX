@@ -1,6 +1,7 @@
 using APSIM.Shared.JobRunning;
 using Models.Core;
 using Models.Core.Run;
+using Models.Storage;
 
 namespace APSIM.Server.Commands
 {
@@ -12,6 +13,6 @@ namespace APSIM.Server.Commands
         /// <summary>
         /// Run the command.
         /// </summary>
-        void Run(Runner runner, ServerJobRunner jobRunner);
+        void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage);
     }
 }

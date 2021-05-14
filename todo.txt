@@ -1,11 +1,11 @@
-- Implement string/bool/date property replacements
-- Low priority - model replacements?
 - Implement data retrieval (managed -> native)
   - Need to bypass file IO
-- Modify parameters on a per-simulation basis
-  - Just extend the replacement protocol a bit.
 - Document the various protocols
 - Write a managed implementation of ISocketConnection
   - Very easy. Probably not useful to many people but good proof of concept, so lower priority
+- Modify parameters on a per-simulation basis
+  - Just extend the replacement protocol a bit.
+- Implement string/bool/date/array property replacements
+- Implement model replacements?
 - Unit tests
 - (Eventually) move C code to separate repository

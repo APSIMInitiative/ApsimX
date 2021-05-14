@@ -60,23 +60,32 @@ namespace APSIM.Server
                 {
                     while (true)
                     {
-                        if (options.Verbose)
-                            Console.WriteLine("Waiting for connections...");
-                        conn.WaitForConnection();
-                        if (options.Verbose)
-                            Console.WriteLine("Client connected to server.");
-                        ICommand command;
-                        while ( (command = conn.WaitForCommand()) != null)
-                            RunCommand(command, conn);
+                        try
+                        {
+                            if (options.Verbose)
+                                Console.WriteLine("Waiting for connections...");
+                            conn.WaitForConnection();
+                            if (options.Verbose)
+                                Console.WriteLine("Client connected to server.");
+                            ICommand command;
+                            while ( (command = conn.WaitForCommand()) != null)
+                                RunCommand(command, conn);
 
-                        if (options.Verbose)
-                            Console.WriteLine($"Connection closed by client.");
+                            if (options.Verbose)
+                                Console.WriteLine($"Connection closed by client.");
 
-                        // If we don't want to keep the server alive we can exit now.
-                        // Otherwise we will go back and wait for another connection.
-                        if (!options.KeepAlive)
-                            return;
-                        conn.Disconnect();
+                            // If we don't want to keep the server alive we can exit now.
+                            // Otherwise we will go back and wait for another connection.
+                            if (!options.KeepAlive)
+                                return;
+                            conn.Disconnect();
+                        }
+                        catch (IOException)
+                        {
+                            if (options.Verbose)
+                                Console.WriteLine("Pipe is broken. Closing connection...");
+                            conn.Disconnect();
+                        }
                     }
                 }
             }
@@ -107,18 +116,18 @@ namespace APSIM.Server
             {
                 // Clone the simulations object before running the command.
                 var timer = Stopwatch.StartNew();
-                command.Run(runner, jobRunner);
+                command.Run(runner, jobRunner, sims.FindChild<Models.Storage.IDataStore>());
                 timer.Stop();
                 if (options.Verbose)
                     Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
-                connection.OnCommandFinished();
+                connection.OnCommandFinished(command);
                 
             }
             catch (Exception err)
             {
                 if (options.Verbose)
                     Console.Error.WriteLine(err);
-                connection.OnCommandFinished(err);
+                connection.OnCommandFinished(command, err);
             }
         }
     }
