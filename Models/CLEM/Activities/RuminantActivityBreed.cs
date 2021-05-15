@@ -348,7 +348,7 @@ namespace Models.CLEM.Activities
             {
                 // group by location
                 var breeders = from ind in herd
-                               where ind.IsBreedingCondition
+                               where ind.IsAbleToBreed
                                group ind by ind.Location into grp
                                select grp;
 
