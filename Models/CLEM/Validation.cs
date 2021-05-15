@@ -124,7 +124,7 @@ namespace Models.CLEM
             string[] memberNames = new string[] { validationContext.MemberName };
 
             double[] listvalues;
-            if (value.GetType().IsArray)
+            if (value != null && value.GetType().IsArray)
             {
                 listvalues = value as double[];
             }
