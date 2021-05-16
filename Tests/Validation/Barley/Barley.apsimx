@@ -22,6 +22,10 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
+            "[IWeather].Radn",
+            "[IWeather].MeanT",
+            "[Barley].Phenology.Photoperiod",
+            "[Barley].Structure.HaunStage",
             "([Barley].Leaf.Transpiration + [Soil].SoilWater.Es + [MicroClimate].PrecipitationInterception) as ET",
             "[Barley].AboveGround.N",
             "[Barley].AboveGround.Wt",
@@ -150,7 +154,8 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "Observed.xlsx"
+            "Observed.xlsx",
+            "LaTrobeCE_Obs.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -42924,10 +42929,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=2-Nov",
+                                    "[SowingRule].Script.SowDate=10-may",
                                     "[SowingRule].Script.Treat=LN",
-                                    "[Clock].StartDate=2018-11-02",
-                                    "[Clock].EndDate=2019-03-04"
+                                    "[Clock].StartDate=2019-05-10",
+                                    "[Clock].EndDate=2019-11-06"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -42953,10 +42958,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=2-Nov",
+                                    "[SowingRule].Script.SowDate=10-May",
                                     "[SowingRule].Script.Treat=LV",
-                                    "[Clock].StartDate=2018-11-02",
-                                    "[Clock].EndDate=2019-03-04"
+                                    "[Clock].StartDate=2019-05-10",
+                                    "[Clock].EndDate=2019-10-07"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -42982,10 +42987,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=6-Jul",
+                                    "[SowingRule].Script.SowDate=20-Nov",
                                     "[SowingRule].Script.Treat=SN",
-                                    "[Clock].StartDate=2018-07-06",
-                                    "[Clock].EndDate=2019-03-18"
+                                    "[Clock].StartDate=2019-11-20",
+                                    "[Clock].EndDate=2020-05-18"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -43011,10 +43016,10 @@
                                   "$type": "Models.Factorial.CompositeFactor, Models",
                                   "Specifications": [
                                     "[Weather]",
-                                    "[SowingRule].Script.SowDate=4-Aug",
+                                    "[SowingRule].Script.SowDate=19-Nov",
                                     "[SowingRule].Script.Treat=SV",
-                                    "[Clock].StartDate=2018-08-04",
-                                    "[Clock].EndDate=2019-03-18"
+                                    "[Clock].StartDate=2019-11-19",
+                                    "[Clock].EndDate=2020-07-28"
                                   ],
                                   "Paths": null,
                                   "Values": null,
@@ -43723,7 +43728,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing System.Globalization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        [Description(\"Treatment duration (Weeks)\")]\r\n        public double TransitionWeek { get; set; }\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"Environment\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing System.Globalization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        [Description(\"Treatment duration (Weeks)\")]\r\n        public double TransitionWeek { get; set; }\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"Environment\"]);\r\n\t                if (Env == Treat)\r\n\t                {\t                    \r\n\t                    EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -43738,6 +43743,10 @@
                                   "Value": ""
                                 },
                                 {
+                                  "Key": "TransitionWeek",
+                                  "Value": "0"
+                                },
+                                {
                                   "Key": "SowingDepth",
                                   "Value": "25"
                                 },
@@ -43750,12 +43759,8 @@
                                   "Value": "6"
                                 },
                                 {
-                                  "Key": "TransitionWeek",
-                                  "Value": "0"
-                                },
-                                {
                                   "Key": "FilePath",
-                                  "Value": "%root%\\Tests\\Validation\\Wheat\\LaTrobeEmergenceDates.csv"
+                                  "Value": "%root%\\Tests\\Validation\\Barley\\LaTrobeEmergenceDates.csv"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -43936,7 +43941,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Wheat.Phenology.Photoperiod",
+                              "YFieldName": "Barley.Phenology.Photoperiod",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -44004,7 +44009,7 @@
                               "LineThickness": 0,
                               "TableName": "DailyReport",
                               "XFieldName": "Clock.Today",
-                              "YFieldName": "Wheat.Phenology.HaunStage",
+                              "YFieldName": "Barley.Structure.HaunStage",
                               "X2FieldName": "",
                               "Y2FieldName": "",
                               "ShowInLegend": false,
@@ -44042,7 +44047,7 @@
                               "Type": 3,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
+                              "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
                               "DateTimeAxis": false,
@@ -44053,15 +44058,15 @@
                               "Type": 0,
                               "Title": null,
                               "Inverted": false,
-                              "Minimum": "NaN",
+                              "Minimum": 0.0,
                               "Maximum": "NaN",
                               "Interval": "NaN",
                               "DateTimeAxis": false,
                               "CrossesAtZero": false
                             }
                           ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
+                          "LegendPosition": 4,
+                          "LegendOrientation": 1,
                           "AnnotationPosition": 0,
                           "DisabledSeries": [],
                           "LegendOutsideGraph": false,
@@ -44073,19 +44078,19 @@
                               "XAxis": 3,
                               "YAxis": 0,
                               "ColourArgb": 0,
-                              "FactorToVaryColours": "Experiment",
-                              "FactorToVaryMarkers": "Experiment",
+                              "FactorToVaryColours": "Cv",
+                              "FactorToVaryMarkers": "Cv",
                               "FactorToVaryLines": null,
-                              "Marker": 11,
+                              "Marker": 0,
                               "MarkerSize": 0,
                               "Line": 4,
                               "LineThickness": 0,
                               "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
+                              "XFieldName": "Observed.Barley.Structure.FinalLeafNumber",
+                              "YFieldName": "Predicted.Barley.Structure.FinalLeafNumber",
                               "X2FieldName": "",
                               "Y2FieldName": "",
-                              "ShowInLegend": false,
+                              "ShowInLegend": true,
                               "IncludeSeriesNameInLegend": false,
                               "Cumulative": false,
                               "CumulativeX": false,
