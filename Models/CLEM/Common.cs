@@ -601,7 +601,7 @@ namespace Models.CLEM
     /// <summary>
     /// Style of inheriting ruminant attributes from parents
     /// </summary>
-    public enum RuminantAttributeInheritanceStyle
+    public enum AttributeInheritanceStyle
     {
         /// <summary>
         /// Not inheritated
