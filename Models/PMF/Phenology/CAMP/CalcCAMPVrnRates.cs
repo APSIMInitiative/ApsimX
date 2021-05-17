@@ -138,17 +138,16 @@ namespace Models.PMF.Phen
             // Minimum Therval time duration from vernalisation saturation to terminal spikelet under long day conditions (MinVsTs)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             // Assume maximum of 3, Data from Lincoln CE (CRWT153) showed varieties that harve a high TSHS hit VS ~3HS prior to TS 
-            // The tt duraiton of this will depend on the HS at which VS occurs so need to calculate VSHS and TSHS then converty the
-            // difference in HS to a tt target at the given phyllochoron
-
             double MinVsTsHS = Math.Min(3.0,FLNset.LV / 2.0);
 
-            // The Tt duration from Vern sat to final leaf under long Pp vernalised treatment
-            double VS_FL_LV = FLNset.LV - MinVS - MinVsTsHS;
+            // The soonist a wheat plant may exhibit termenal spikelet
+            double MinTSHS = MinVS + MinVsTsHS;
 
             // The Intercept of the assumed relationship between FLN and TSHS for genotype (IntFLNvsTSHS)
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            Params.IntFLNvsTSHS = Math.Min(2.85, VS_FL_LV / 1.1);
+            // At low FLNs the function for calculating TSHS (TSHS = FLN/1.1 - 2.86) will give values < MinTSHS
+            // To account for this we assume the intercept (2.86 by default) is lower at low FLN values 
+            Params.IntFLNvsTSHS = Math.Min(2.85, FLNset.LV - MinTSHS * 1.1);
 
             // Calculate Terminal spikelet duration (TSHS) for each treatment from FLNData
             // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
