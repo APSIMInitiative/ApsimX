@@ -1676,7 +1676,8 @@ namespace Models.Soils
             x[1] = 2.0 * dx[0] + x[0];
 
             for (int i = 1; i < n; i++)
-                x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;
+                //x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;  TIP REVISION - nodes in middle of layer.
+                x[i] = 2.0 * dx[i - 1] + x[i - 2];    
 
             x[n] = MathUtilities.Sum(dx);
 
