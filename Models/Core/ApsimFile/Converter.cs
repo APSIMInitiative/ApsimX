@@ -3432,6 +3432,56 @@
         }
 
         /// <summary>
+        /// Update the SoilNitrogen component to be a Nutrient
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion889(JObject root, string fileName)
+        {
+            foreach (var manager in JsonUtilities.ChildManagers(root))
+            {
+                var originalCode = manager.ToString();
+                if (originalCode != null)
+                {
+                    if (originalCode.Contains("SoilNitrogen"))
+                    {
+                        manager.Replace("SoilNitrogen", "INutrient");
+                        manager.Replace("SoilN", "nutrient");
+                        manager.Replace("soilN", "nutrient");
+                    }
+                    if (originalCode != manager.ToString())
+                    {
+                        var usingLines = manager.GetUsingStatements().ToList();
+                        usingLines.Add("Models.Soils.Nutrients");
+                        manager.SetUsingStatements(usingLines);
+                        manager.Save();
+                    }
+                }
+            }
+
+            foreach (var soil in JsonUtilities.ChildrenRecursively(root, "Soil"))
+            {
+                foreach (var soilnitrogen in JsonUtilities.ChildrenOfType(soil, "SoilNitrogen"))
+                {
+                    soilnitrogen.Remove();
+                                        
+                    JArray soilChildren = soil["Children"] as JArray;
+                    if (soilChildren != null)
+                    {
+                        JObject nutrient = new JObject();
+                        nutrient["$type"] = "Models.Soils.Nutrients.Nutrient, Models";
+                        JsonUtilities.RenameModel(nutrient as JObject, "Nutrient");
+                        nutrient["ResourceName"] = "Nutrient";
+                        nutrient["IncludeInDocumentation"] = true;
+                        nutrient["Enabled"] = true;
+                        nutrient["ReadOnly"] = false;
+                        soilChildren.Add(nutrient);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Refactor LifeCycle model
         /// </summary>
         /// <param name="root">The root JSON token.</param>

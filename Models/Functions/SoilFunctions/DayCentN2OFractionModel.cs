@@ -39,7 +39,7 @@ namespace Models.Functions
             double WF = 0;
             if (WFPS > 21.3)
                 WF = 1.18 * (WFPS - 21.3) / (100 - 21.3);
-            double CO2Factor = Math.Min(0.16, Math.Exp(-0.8 * MathUtilities.Divide(NO3.ppm[arrayIndex], Nutrient.Catm[arrayIndex],0)));
+            double CO2Factor = Math.Max(0.16, Math.Exp(-0.8 * MathUtilities.Divide(NO3.kgha[arrayIndex], Nutrient.Catm[arrayIndex], 0)));
             double N2N2ORatio = Math.Max(0,25.1 * WF * CO2Factor);
             double N2OFraction = 1 / (N2N2ORatio + 1);
 

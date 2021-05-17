@@ -75,7 +75,9 @@ namespace UserInterface.Presenters
                     {
                         propPresenterName = "UserInterface.Presenters.PropertyPresenter";
                         if(viewName != "UserInterface.Views.PropertyMultiModelView")
+                        {
                             viewName = "UserInterface.Views.PropertyView";
+                        }
                     }
 
                     var props = model.GetType().GetProperties(

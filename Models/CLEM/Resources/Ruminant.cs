@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -225,18 +226,18 @@ namespace Models.CLEM.Resources
                 {
                     result = Math.Round((weight - mid) / ((max - mid) / 2.5));
                 }
-                return Convert.ToInt32(result);
+                return Convert.ToInt32(result, CultureInfo.InvariantCulture);
             }
         }
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreedingCondition 
+        public bool IsAbleToBreed 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating && !(this as RuminantMale).IsCastrated) |
                     (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
@@ -396,7 +397,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// List of individual attributes
         /// </summary>
-        private Dictionary<string, IRuminantAttribute> attributes { get; set; }
+        private Dictionary<string, ICLEMAttribute> attributes { get; set; }
+
+        /// <summary>
+        /// The list of available attributes for the individual
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, ICLEMAttribute> Attributes
+        {
+            get
+            {
+                return attributes;
+            }
+        }
 
         /// <summary>
         /// Check if the selected attribute exists on this individual
@@ -413,7 +426,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="tag">Attribute label</param>
         /// <param name="value">Value to set or change</param>
-        public void AddAttribute(string tag, IRuminantAttribute value = null)
+        public void AddAttribute(string tag, ICLEMAttribute value = null)
         {
             if (!attributes.ContainsKey(tag))
             {
@@ -430,7 +443,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="tag">Attribute label</param>
         /// <returns>Value of attribute if found</returns>
-        public IRuminantAttribute GetAttributeValue(string tag)
+        public ICLEMAttribute GetAttributeValue(string tag)
         {
             if (!attributes.ContainsKey(tag))
             {
@@ -441,7 +454,6 @@ namespace Models.CLEM.Resources
                 return attributes[tag];
             }
         }
-
 
         /// <summary>
         /// Remove the attribute from this individual
@@ -715,7 +727,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.attributes = new Dictionary<string, IRuminantAttribute>();
+            this.attributes = new Dictionary<string, ICLEMAttribute>();
         }
     }
 
