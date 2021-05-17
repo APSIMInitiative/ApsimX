@@ -67,7 +67,11 @@ echo 2.0>$deb_bin
 tar cf control.tar.gz control md5sums
 tar cf data.tar.gz -C data .
 
-outfile="apsim-$version.deb"
+if [[ $# -ge 2 ]]; then
+    outfile="$2"
+else
+    outfile="apsim-$version.deb"
+fi
 test -f "$outfile" && rm "$outfile"
 ar r "$outfile" $deb_bin control.tar.gz data.tar.gz
 
