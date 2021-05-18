@@ -316,6 +316,34 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Statstical summar of a list of numbers (e.g. attribute values)
+        /// </summary>
+        [JsonIgnore]
+        public ListStatistics LastListStatistics { get; set; }
+
+        /// <summary>
+        /// Return the mean and standard deviation of an attribute value
+        /// </summary>
+        public int SummariseAttribute(string tag, bool ignoreNotFound)
+        {
+            LastListStatistics = new ListStatistics();
+            var values = Herd.Where( a => (ignoreNotFound & a.GetAttributeValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.GetAttributeValue(tag)?.storedValue));
+            if (values.Count() == 0)
+            {
+                return 0;
+            }
+            double sd = 0;
+            double mean = values.Average();
+            double sum = values.Sum(d => Math.Pow(d - mean, 2));
+            sd = Math.Sqrt((sum) / values.Count() - 1);
+            LastListStatistics.Average = mean;
+            LastListStatistics.StandardDeviation = sd;
+            LastListStatistics.Count = values.Count();
+            LastListStatistics.Total = Herd.Count();
+            return Herd.Count();
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]

@@ -141,12 +141,6 @@
     <GtkFiles Include="..\DeploymentSupport\Windows\Bin64\*.dll" />
     <WimpFiles Include="..\DeploymentSupport\Windows\Bin64\lib\**\*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\TreeViewImages\CLEM\SetRuminantAttributeWithValue.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <!-- Copy gtk-sharp dependencies (only used in .net framework (gtk2) builds) -->
