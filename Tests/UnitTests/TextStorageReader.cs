@@ -179,6 +179,11 @@ namespace UnitTests
         {
             throw new NotImplementedException();
         }
+
+        public void ExecuteSql(string sql)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

@@ -56,7 +56,7 @@ namespace UserInterface.Views
                                  IEnumerable<string> simulationNamesInScope,
                                  string columnNameFilter,
                                  string dataFilter,
-                                 int dataPageSize = 100)
+                                 int dataPageSize = 50)
         {
             dataStore = store;
             checkpointName = checkpointNameInScope;
@@ -64,11 +64,24 @@ namespace UserInterface.Views
             simulationNames = simulationNamesInScope;
             rowFilter = dataFilter;
             pageSize = dataPageSize;
+            CreateTemporaryKeyset();
             GetColumnNames(columnNameFilter);
             GetData(0);
             GetUnits();
             GetRowCount();
         }
+
+        /// <summary>Cleanup the instance.</summary>
+        public void Cleanup()
+        {
+            dataStore.ExecuteSql("DROP TABLE keyset");
+        }
+
+        /// <summary>Invoked when the paging is about to start.</summary>
+        public event EventHandler PagingStart;
+
+        /// <summary>Invoked when the paging has ended.</summary>
+        public event EventHandler PagingEnd;
 
         /// <summary>Number of heading rows.</summary>
         public int NumHeadingRows { get; set; }
@@ -122,13 +135,12 @@ namespace UserInterface.Views
         /// <param name="startRowIndex">The row index to start getting data from.</param>
         private DataPage GetData(int startRowIndex)
         {
+            PagingStart?.Invoke(this, new EventArgs());
             var newData = dataStore.GetData(tableName,
                                             checkpointName,
                                             simulationNames,
                                             columnNames,
-                                            rowFilter,
-                                            startRowIndex,
-                                            pageSize);
+                                            GetRollingCursorRowFilter(startRowIndex, pageSize));
 
             // Remove unwanted columns from data table.
             foreach (string columnName in DataTableUtilities.GetColumnNames(newData))
@@ -138,7 +150,40 @@ namespace UserInterface.Views
             var newPage = new DataPage(newData, startRowIndex);
 
             dataPages.Add(newPage);
+
+            PagingEnd?.Invoke(this, new EventArgs());
             return newPage;
+        }
+
+        /// <summary>Create a temporary keyset of rowids.</summary>
+        /// <remarks>This concept of a rolling cursor comes from: https://sqlite.org/forum/forumpost/2cfa137263</remarks>
+        private void CreateTemporaryKeyset()
+        {
+            string filter = GetFilter();
+            string sql = "CREATE TEMPORARY TABLE keyset AS " +
+                         $"SELECT rowid FROM {tableName} ";
+            if (!string.IsNullOrEmpty(filter))
+                sql += $"WHERE {filter}";
+
+            dataStore.GetDataUsingSql(sql);
+        }
+
+        /// <summary>Gets a filter that includes rowid to implement data pagination (rolling cursor).</summary>
+        /// <param name="from"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        private string GetRollingCursorRowFilter(int from, int count)
+        {
+            string filter = GetFilter();
+
+            var data = dataStore.GetDataUsingSql($"SELECT rowid FROM keyset WHERE rowid >= {from} ORDER BY rowid LIMIT {count}");
+            var rowIds = DataTableUtilities.GetColumnAsIntegers(data, "rowid");
+            var rowIdsCSV = StringUtilities.Build(rowIds, ",");
+
+            var returnFilter = $"RowID in ({rowIdsCSV})";
+            if (!string.IsNullOrEmpty(filter))
+                returnFilter += $" AND ({filter})";
+            return returnFilter;
         }
 
         /// <summary>Get units for columns.</summary>
@@ -157,15 +202,7 @@ namespace UserInterface.Views
         /// <summary>Calculate the row count.</summary>
         private void GetRowCount()
         {
-            var filter = rowFilter;
-            if (simulationNames != null)
-            {
-                var simulationFilter = $"SimulationID in ({dataStore.ToSimulationIDs(simulationNames).Join(",")})";
-                if (string.IsNullOrEmpty(filter))
-                    filter = simulationFilter;
-                else
-                    filter += " AND " + simulationFilter;
-            }
+            string filter = GetFilter();
             var sql = $"SELECT COUNT(*) FROM {tableName}";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
@@ -177,6 +214,22 @@ namespace UserInterface.Views
                 RowCount = RowCount + 1; // add a row for units.
                 NumHeadingRows++;
             }
+        }
+
+        /// <summary>Create a sql filter</summary>
+        private string GetFilter()
+        {
+            var filter = rowFilter;
+            if (simulationNames != null)
+            {
+                var simulationFilter = $"SimulationID in ({dataStore.ToSimulationIDs(simulationNames).Join(",")})";
+                if (string.IsNullOrEmpty(filter))
+                    filter = simulationFilter;
+                else
+                    filter += " AND " + simulationFilter;
+            }
+
+            return filter;
         }
 
         /// <summary>Get the names of all columns to read from data store.</summary>

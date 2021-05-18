@@ -36,13 +36,30 @@
             return !(cellBeingEdited);
         }
 
+#if NETCOREAPP
+        /// <summary>Paint a cell in the sheet.</summary>
+        /// <param name="columnIndex">The column index of the cell.</param>
+        /// <param name="rowIndex">The row index of the cell.</param>
+        public Gtk.StateFlags GetCellState(int columnIndex, int rowIndex)
+        {
+            if (selection != null && selection.IsSelected(columnIndex, rowIndex))
+                return Gtk.StateFlags.Selected;
+            else if (rowIndex < sheet.NumberFrozenRows)
+                return Gtk.StateFlags.Insensitive;
+            else
+                return Gtk.StateFlags.Normal;
+        }
+#else
         /// <summary>Gets the foreground colour of a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
         public Cairo.Color GetForegroundColour(int columnIndex, int rowIndex)
         {
+
             if (Utility.Configuration.Settings.DarkTheme)
             {
+
+
                 if (rowIndex < sheet.NumberFrozenRows)
                     return new Cairo.Color(1, 1, 1); // white
                 else
@@ -81,13 +98,14 @@
                     return new Cairo.Color(1, 1, 1); // white
             }
         }
+#endif
 
         /// <summary>Gets whether to use a bold font for a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
         public bool TextBold(int columnIndex, int rowIndex)
         {
-            return false;
+            return rowIndex < sheet.NumberFrozenRows;
         }
 
         /// <summary>Gets whether to use an italics font for a cell.</summary>

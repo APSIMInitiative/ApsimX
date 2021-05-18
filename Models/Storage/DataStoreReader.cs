@@ -389,6 +389,13 @@
             }
         }
 
+        /// <summary>Execute sql.</summary>
+        /// <param name="sql">The SQL.</param>
+        public void ExecuteSql(string sql)
+        {
+            Connection.ExecuteQuery(sql);
+        }
+
         /// <summary>
         /// Return a checkpoint ID for the specified checkpoint name.
         /// </summary>

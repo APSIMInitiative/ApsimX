@@ -1,4 +1,5 @@
-﻿using Cairo;
+﻿using APSIM.Shared.Utilities;
+using Cairo;
 using Gdk;
 using Gtk;
 using System;
@@ -32,6 +33,9 @@ namespace UserInterface.Views
         public SheetView()
         {
             CanFocus = true;
+#if NETCOREAPP
+            this.StyleContext.AddClass("sheet");
+#endif
         }
 
         /// <summary>Invoked when a key is pressed.</summary>
@@ -113,7 +117,7 @@ namespace UserInterface.Views
         public bool ShowLines { get; set; } = true;
 
         /// <summary>The padding (in pixels) to go on the left and right size of a column.</summary>
-        public int ColumnPadding { get; set; } = 10;
+        public int ColumnPadding { get; set; } = 20;
 
         /// <summary>A collection of column indexes that are currently visible or partially visible.</summary>        
         public IEnumerable<int> VisibleColumnIndexes {  get { return DetermineVisibleColumnIndexes(fullyVisible: false);  } }
@@ -248,9 +252,6 @@ namespace UserInterface.Views
         {
             Context cr = CairoHelper.Create(expose.Window);
 
-            cr.SelectFontFace("Segoe UI", FontSlant.Normal, FontWeight.Normal);
-            cr.SetFontSize(18);
-
             // Do initialisation
             if (ColumnWidths == null)
                 Initialise(cr);
@@ -271,9 +272,6 @@ namespace UserInterface.Views
         /// <param name="cr">The context to draw in.</param>
         protected override bool OnDrawn(Context cr)
         {
-            cr.SelectFontFace("Segoe UI", FontSlant.Normal, FontWeight.Normal);
-            cr.SetFontSize(18);
-
             // Do initialisation
             if (ColumnWidths == null)
                 Initialise(cr);
@@ -308,7 +306,14 @@ namespace UserInterface.Views
         /// <returns>True if event has handled.</returns>
         protected override bool OnKeyPressEvent(EventKey evnt)
         {
-            KeyPress?.Invoke(this, evnt);
+            try
+            {
+                KeyPress?.Invoke(this, evnt);
+            }
+            catch (Exception ex)
+            {
+                MainView.MasterView.ShowError(ex);
+            }
             return true;
         }
 
@@ -317,7 +322,15 @@ namespace UserInterface.Views
         /// <returns></returns>
         protected override bool OnButtonPressEvent(EventButton evnt)
         {
-            MouseClick?.Invoke(this, evnt);
+            try
+            {
+                MouseClick?.Invoke(this, evnt);
+            }
+            catch (Exception ex)
+            {
+                MainView.MasterView.ShowError(ex);
+            }
+
             return true;
         }
 
@@ -393,8 +406,13 @@ namespace UserInterface.Views
                     var text = DataProvider.GetCellContents(columnIndex, rowIndex);
                     if (text == null)
                         text = string.Empty;
-                    var extents = cr.TextExtents(text);
-                    columnWidth = Math.Max(columnWidth, (int)extents.Width);
+
+                    var layout = this.CreatePangoLayout(text);
+                    layout.FontDescription = new Pango.FontDescription();
+                    layout.FontDescription.Weight = Pango.Weight.Bold;
+                    layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
+
+                    columnWidth = Math.Max(columnWidth, (int)inkRectangle.Width);
                 }
                 ColumnWidths[columnIndex] = columnWidth + ColumnPadding * 2;
             }
@@ -406,66 +424,78 @@ namespace UserInterface.Views
         /// <param name="rowIndex">The row index.</param>
         private void DrawCell(Context cr, int columnIndex, int rowIndex)
         {
-            var text = DataProvider.GetCellContents(columnIndex, rowIndex);
-            var cellBounds = CalculateBounds(columnIndex, rowIndex);
-
-            if (text == null)
-                text = string.Empty;
-
-            cr.Rectangle(cellBounds.ToClippedRectangle(Width, Height));
-            cr.Clip();
-
-            cr.LineWidth = lineWidth;
-
-            cr.Rectangle(cellBounds.ToRectangle());
-            if (!CellPainter.PaintCell(columnIndex, rowIndex))
+            try
             {
-                cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
-                cr.Stroke();
-            }
-            else
-            {
-                cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
-                cr.Fill();
-                cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
-                if (ShowLines)
+                var text = DataProvider.GetCellContents(columnIndex, rowIndex);
+                var cellBounds = CalculateBounds(columnIndex, rowIndex);
+
+                if (text == null)
+                    text = string.Empty;
+
+                cr.Rectangle(cellBounds.ToClippedRectangle(Width, Height));
+                cr.Clip();
+
+                cr.LineWidth = lineWidth;
+
+                cr.Rectangle(cellBounds.ToRectangle());
+                if (!CellPainter.PaintCell(columnIndex, rowIndex))
                 {
-                    cr.Rectangle(cellBounds.ToRectangle());
-                    cr.Stroke();
-                }
-
-                // Set text font options for cell.
-                var italics = FontSlant.Normal;
-                if (CellPainter.TextItalics(columnIndex, rowIndex))
-                    italics = FontSlant.Italic;
-                var bold = FontWeight.Normal;
-                if (CellPainter.TextBold(columnIndex, rowIndex))
-                    bold = FontWeight.Bold;
-                cr.SelectFontFace("Segoe UI", italics, bold);
-                cr.SetFontSize(18);
-
-                TextExtents extents = cr.TextExtents(text);
-                var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
-                maxHeight = 10;
-
-                //var textExtents = cr.TextExtents("j")
-                if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
-                {
-                    // left justify
-                    cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
-                    cr.TextPath(text);
+                    //cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
+                    //cr.Stroke();
                 }
                 else
                 {
-                    // right justify
-                    var textExtents = cr.TextExtents(text);
-                    cr.MoveTo(cellBounds.Right - ColumnPadding - textExtents.Width, cellBounds.Bottom - maxHeight);
-                    cr.TextPath(text);
-                }
+                    // Draw the filled in cell.
+#if NETCOREAPP
+                    this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
+                    this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width, cellBounds.Height);
+                    var c = this.StyleContext.GetColor(this.StyleContext.State);
+                    cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
+#else
+                    cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
+                    cr.Fill();
+                    cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
 
-                cr.Fill();
+#endif
+                    // Draw cell outline.
+                    if (ShowLines)
+                    {
+                        cr.Rectangle(cellBounds.ToRectangle());
+                        cr.Stroke();
+                    }
+
+                    //Set text font options for cell.
+                    var layout = this.CreatePangoLayout(text);
+                    layout.FontDescription = new Pango.FontDescription();
+                    if (CellPainter.TextItalics(columnIndex, rowIndex))
+                        layout.FontDescription.Style = Pango.Style.Italic;
+                    if (CellPainter.TextBold(columnIndex, rowIndex))
+                        layout.FontDescription.Weight = Pango.Weight.Bold;
+                    layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
+                    
+                    var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
+                    maxHeight = 10;
+
+                    if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
+                    {
+                        // left justify
+                        cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
+                        cr.TextPath(text);
+                    }
+                    else
+                    {
+                        // right justify
+                        var textExtents = cr.TextExtents(text);
+                        cr.MoveTo(cellBounds.Right - ColumnPadding - inkRectangle.Width, cellBounds.Top);
+                        Pango.CairoHelper.ShowLayout(cr, layout);
+                    }
+                }
+                cr.ResetClip();
             }
-            cr.ResetClip();
+            catch (Exception ex)
+            {
+                MainView.MasterView.ShowError(ex);
+            }
         }
     }
 }

@@ -22,8 +22,11 @@
         /// <summary>The sheet cell selector.</summary>
         SingleCellSelect cellSelector;
 
-        /// <summary>The sheet scrollbars</summary>
-        SheetScrollBars scrollbars;
+        ///// <summary>The sheet scrollbars</summary>
+        //SheetScrollBars scrollbars;
+
+        /// <summary>The data provider for the sheet</summary>
+        PagedDataProvider dataProvider;
 
         /// <summary>The container that houses the sheet.</summary>
         private ContainerView sheetContainer;
@@ -165,12 +168,14 @@
                         // Cleanup existing sheet instances before creating new ones.
                         CleanupSheet();
 
-                        var dataProvider = new PagedDataProvider(dataStore.Reader,
-                                                                 checkpointDropDown.SelectedValue,
-                                                                 tableDropDown.SelectedValue,
-                                                                 simulationNames,
-                                                                 columnFilterEditBox.Text,
-                                                                 filter);
+                        dataProvider = new PagedDataProvider(dataStore.Reader,
+                                                             checkpointDropDown.SelectedValue,
+                                                             tableDropDown.SelectedValue,
+                                                             simulationNames,
+                                                             columnFilterEditBox.Text,
+                                                             filter);
+                        dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                        dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
                         sheet = new SheetView()
                         {
@@ -178,12 +183,15 @@
                             NumberFrozenRows = dataProvider.NumHeadingRows,
                             NumberFrozenColumns = dataProvider.NumPriorityColumns
                         };
-                        sheetContainer.Add(sheet);
+#if NETFRAMEWORK
+                        sheet.RowHeight = 20;
+#endif
 
                         cellSelector = new SingleCellSelect(sheet);
-                        scrollbars = new SheetScrollBars(sheet);
+                        //scrollbars = new SheetScrollBars(sheet);
                         sheet.CellPainter = new DefaultCellPainter(sheet, sheetSelection: cellSelector);
 
+                        sheetContainer.Add(sheet);
                         statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
                     catch (Exception err)
@@ -199,8 +207,9 @@
         {
             if (cellSelector != null)
             {
+                dataProvider.Cleanup();
                 cellSelector.Cleanup();
-                scrollbars.Cleanup();
+                //scrollbars.Cleanup();
             }
         }
 

@@ -15,6 +15,7 @@
     using EventArguments;
     using global::UserInterface.Extensions;
     using System.Text;
+    using Utility;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -226,12 +227,12 @@
 #if NETCOREAPP
         private void LoadStylesheets()
         {
-            string css = ReflectionUtilities.GetResourceAsString("ApsimNG.Resources.Style.global.css");
+            var cssName = Configuration.Settings.DarkTheme ? "dark" : "light";
+            string css = ReflectionUtilities.GetResourceAsString($"ApsimNG.Resources.Style.{cssName}.css");
             CssProvider provider = new CssProvider();
             if (!provider.LoadFromData(css))
-                throw new Exception("Unable to parse global.css");
-
-            window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+                throw new Exception($"Unable to parse {cssName}.css");
+            StyleContext.AddProviderForScreen(window1.Screen, provider, StyleProviderPriority.Application);
         }
 #endif
 
