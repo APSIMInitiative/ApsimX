@@ -19,7 +19,7 @@ namespace Models.Soils
     /// Ported by Eric Zurcher July 2014
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]   // Until we have a better view for SWIM...
+    [ViewName("UserInterface.Views.PropertyView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Swim3 : Model, ISoilWater

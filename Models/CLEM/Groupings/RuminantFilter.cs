@@ -248,6 +248,10 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
+        IsBreedingCondition = 15,
+        /// <summary>
+        /// Determines if within breeding ages
+        /// </summary>
         IsBreeder = 17,
         /// <summary>
         /// Identified as a replacement breeder growing up
