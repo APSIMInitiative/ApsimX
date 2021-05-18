@@ -53,6 +53,11 @@
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        event EventHandler OnAnnotationClick;
+
+        /// <summary>
         /// Left margin in pixels.
         /// </summary>
         int LeftRightPadding { get; set; }
@@ -65,7 +70,8 @@
         /// <summary>
         /// Show the specified editor.
         /// </summary>
-        /// <param name="editor">Show the specified series editor</param>
+        /// <param name="editorObj">Show the specified series editor</param>
+        /// <param name="expanderText">Text to be displayed in the editor.</param>
         void ShowEditorPanel(object editorObj, string expanderText);
 
         /// <summary>
@@ -100,6 +106,7 @@
         /// <param name="markerType">The type of series markers</param>
         /// <param name="lineThickness">The line thickness</param>
         /// <param name="markerSize">The size of the marker</param>
+        /// <param name="markerModifier">Marker size multiplier.</param>
         /// <param name="showInLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawLineAndMarkers(
@@ -129,6 +136,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showInLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawBar(
             string title, 
@@ -151,6 +159,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showInLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawRegion(
             string title,
@@ -173,6 +182,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawArea(
             string title,
@@ -195,6 +205,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawStackedArea(
             string title,
@@ -215,6 +226,10 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
+        /// <param name="lineType">Type of line to be used.</param>
+        /// <param name="markerType">Type of marker to be used.</param>
+        /// <param name="lineThickness">Line thickness.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         void DrawBoxPLot(
             string title,
@@ -235,6 +250,7 @@
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="topAlign">Top align the text?</param>
         /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
@@ -245,6 +261,7 @@
             object x,
             object y,
             bool leftAlign,
+            bool topAlign,
             double textRotation,
             Models.Axis.AxisType xAxisType,
             Models.Axis.AxisType yAxisType,
@@ -318,6 +335,7 @@
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
+        /// <param name="r">Desired bitmap size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
         void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside);
 

@@ -14,7 +14,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individuals able to undertake labour
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourRequirement))]
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
@@ -75,7 +75,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -90,7 +90,7 @@ namespace Models.CLEM.Groupings
             {
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\r\n<div class=\"filterborder clearfix\">";
             if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";

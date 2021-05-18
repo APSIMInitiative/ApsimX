@@ -51,6 +51,7 @@
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="cache">Cached definitions to be used.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
             this.graph = model as Graph;
@@ -61,6 +62,7 @@
             graphView.OnLegendClick += OnLegendClick;
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnHoverOverPoint += OnHoverOverPoint;
+            graphView.OnAnnotationClick += OnAnnotationClick;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
             this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
@@ -87,6 +89,7 @@
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
+            graphView.OnAnnotationClick -= OnAnnotationClick;
         }
 
         public void DrawGraph()
@@ -120,7 +123,6 @@
                 storage = graph.FindInScope<IDataStore>();
             if (graph != null && graph.Series != null)
             {
-
                 foreach (SeriesDefinition definition in definitions)
                 {
                     DrawOnView(definition);
@@ -129,14 +131,12 @@
                 // Update axis maxima and minima
                 graphView.UpdateView();
 
-                // Get a list of series annotations.
-                DrawOnView(graph.GetAnnotationsToGraph());
-
                 // Format the axes.
                 foreach (Models.Axis a in graph.Axis)
-                {
                     FormatAxis(a);
-                }
+
+                // Get a list of series annotations.
+                DrawOnView(graph.GetAnnotationsToGraph());
 
                 // Format the legend.
                 graphView.FormatLegend(graph.LegendPosition, graph.LegendOrientation);
@@ -311,7 +311,7 @@
                 }
                 catch (Exception err)
                 {
-                    explorerPresenter.MainPresenter.ShowError(err);
+                    throw new Exception($"Unable to draw graph {graph.FullPath}", err);
                 }
             }
         }
@@ -320,7 +320,9 @@
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
+            var range = graphView.AxisMaximum(Axis.AxisType.Bottom) - graphView.AxisMinimum(Axis.AxisType.Bottom);
+
+            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) + range * 0.03;
             double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
             double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
             double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
@@ -331,33 +333,55 @@
                 IAnnotation annotation = annotations.ElementAt(i);
                 if (annotation is TextAnnotation textAnnotation)
                 {
-                    if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
-                    {
-                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
+                    double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
 
-                        double yPosition = largestAxisScale - (i * interval);
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            minimumX, 
-                                            yPosition,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                    object x, y;
+                    bool leftAlign = textAnnotation.leftAlign;
+                    bool topAlign = textAnnotation.topAlign;
+                    if (textAnnotation.Name != null && textAnnotation.Name.StartsWith("Regression"))
+                    {
+                        if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopLeft)
+                        {
+                            x = minimumX;
+                            y = maximumY - i * interval;
+                        }
+                        else if (graph.AnnotationPosition == Graph.AnnotationPositionType.TopRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = maximumY - i * interval;
+                            leftAlign = false;
+                        }
+                        else if (graph.AnnotationPosition == Graph.AnnotationPositionType.BottomRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = minimumY + i * interval;
+                            leftAlign = false;
+                            topAlign = false;
+                        }
+                        else
+                        {
+                            x = minimumX;
+                            y = minimumY + i * interval;
+                            topAlign = false;
+                        }
+
+                        //y = largestAxisScale - (i * interval);
                     }
                     else
                     {
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            textAnnotation.x, 
-                                            textAnnotation.y,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                        x = textAnnotation.x;
+                        y = textAnnotation.y;
                     }
+
+                    graphView.DrawText( textAnnotation.text,
+                                        x,
+                                        y,
+                                        leftAlign,
+                                        topAlign,
+                                        textAnnotation.textRotation,
+                                        Axis.AxisType.Bottom,
+                                        Axis.AxisType.Left,
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -377,6 +401,10 @@
             }
         }
 
+        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
+        {
+                   }
+
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
         private void FormatAxis(Models.Axis axis)
@@ -386,8 +414,8 @@
             {
                 // Work out a default title by going through all series and getting the
                 // X or Y field name depending on whether 'axis' is an x axis or a y axis.
-                HashSet<string> names = new HashSet<string>();
-
+                HashSet<string> titles = new HashSet<string>();
+                HashSet<string> variableNames = new HashSet<string>();
                 foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
                     if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
@@ -396,12 +424,14 @@
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.XFieldName;
-                        if (definition.XFieldUnits != null)
+                        if (!variableNames.Contains(xName))
                         {
-                            xName = xName + " " + definition.XFieldUnits;
-                        }
+                            variableNames.Add(xName);
+                            if (definition.XFieldUnits != null)
+                                xName = xName + " (" + definition.XFieldUnits + ")";
 
-                        names.Add(xName);
+                            titles.Add(xName);
+                        }
                     }
 
                     if (definition.Y != null && definition.YAxis == axis.Type && definition.YFieldName != null)
@@ -410,17 +440,19 @@
                         if (enumerator.MoveNext())
                             axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.YFieldName;
-                        if (definition.YFieldUnits != null)
+                        if (!variableNames.Contains(yName))
                         {
-                            yName = yName + " " + definition.YFieldUnits;
-                        }
+                            variableNames.Add(yName);
+                            if (definition.YFieldUnits != null)
+                                yName = yName + " (" + definition.YFieldUnits + ")";
 
-                        names.Add(yName);
+                            titles.Add(yName);
+                        }
                     }
                 }
 
                 // Create a default title by appending all 'names' together.
-                title = StringUtilities.BuildString(names.ToArray(), ", ");
+                title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
             graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
@@ -430,7 +462,7 @@
         /// <param name="model">The model.</param>
         private void OnGraphModelChanged(object model)
         {
-            if (model == graph || graph.FindAllDescendants().Contains(model))
+            if (model == graph || graph.FindAllDescendants().Contains(model) || graph.Axis.Contains(model))
                 DrawGraph();
         }
 
@@ -509,6 +541,25 @@
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");
+            presenter.Attach(graph, view, explorerPresenter);
+        }
+
+        /// <summary>
+        /// User has clicked on graph annotation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAnnotationClick(object sender, EventArgs e)
+        {
+            if (CurrentPresenter != null)
+                CurrentPresenter.Detach();
+
+            AnnotationPresenter presenter = new AnnotationPresenter();
+            CurrentPresenter = presenter;
+
+            //LegendView view = new LegendView(graphView as GraphView);
+            var view = new ViewBase(graphView as ViewBase, "ApsimNG.Resources.Glade.AnnotationView.glade");
+            graphView.ShowEditorPanel(view.MainWidget, "Stats / Equation options");
             presenter.Attach(graph, view, explorerPresenter);
         }
 

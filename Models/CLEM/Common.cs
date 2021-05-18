@@ -70,7 +70,7 @@ namespace Models.CLEM
         /// <summary>
         /// Excess heifer sold
         /// </summary>
-        ExcessHeiferSale,
+        ExcessPreBreederSale,
         /// <summary>
         /// Excess sire sold
         /// </summary>
@@ -119,6 +119,45 @@ namespace Models.CLEM
         /// Reduce initial herd to management levels
         /// </summary>
         ReduceInitialHerd
+    }
+
+    /// <summary>
+    /// Reasons link to herd change for use with manual mark for sale
+    /// </summary>
+    public enum MarkForSaleReason
+    {
+        /// <summary>
+        /// Reason not provided
+        /// </summary>
+        NotProvided = 0,
+        /// <summary>
+        /// Individual sold as marked for sale
+        /// </summary>
+        MarkedSale = 4,
+        /// <summary>
+        /// Individual reached sale weight or age
+        /// </summary>
+        AgeWeightSale = 12,
+        /// <summary>
+        /// Individual consumed by household
+        /// </summary>
+        Consumed = 15,
+        /// <summary>
+        /// Destocking sale
+        /// </summary>
+        DestockSale = 16,
+        /// <summary>
+        /// Dry breeder sold
+        /// </summary>
+        DryBreederSale = 6,
+        /// <summary>
+        /// Individual reached maximim age and sold
+        /// </summary>
+        MaxAgeSale = 10,
+        /// <summary>
+        /// Trade individual sold weight/age
+        /// </summary>
+        TradeSale = 5 
     }
 
     /// <summary>
@@ -529,4 +568,110 @@ namespace Models.CLEM
         ReserveProportion
     }
 
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum TagApplicationStyle
+    {
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Remove tag
+        /// </summary>
+        Remove
+    }
+
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum RuminantStockGroupStyle
+    {
+        /// <summary>
+        /// Animals to select
+        /// </summary>
+        Select = 0,
+        /// <summary>
+        /// Animals to destock
+        /// </summary>
+        Destock = 5,
+    }
+
+    /// <summary>
+    /// Style of inheriting ruminant attributes from parents
+    /// </summary>
+    public enum AttributeInheritanceStyle
+    {
+        /// <summary>
+        /// Not inheritated
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// From mother's value if present
+        /// </summary>
+        Maternal = 5,
+        /// <summary>
+        /// From father's value if present
+        /// </summary>
+        Paternal = 10,
+        /// <summary>
+        /// At least one parent has attribute or least of both parents
+        /// </summary>
+        LeastParentValue = 15,
+        /// <summary>
+        /// At least one parent has attribute or greatest of both parents
+        /// </summary>
+        GreatestParentValue = 20,
+        /// <summary>
+        /// Both parents must have attribute and the least value is used
+        /// </summary>
+        LeastBothParents = 25,
+        /// <summary>
+        /// Both parents must have attribute and the greatest value is used
+        /// </summary>
+        GreatestBothParents = 30,
+        /// <summary>
+        /// Mean of the attribute value of parents using zero for those without attribute
+        /// </summary>
+        MeanValueZeroAbsent = 35,
+        /// <summary>
+        /// Mean of the attribute value of parents ignoring those without attribute
+        /// </summary>
+        MeanValueIgnoreAbsent = 40,
+        /// <summary>
+        /// Rules for single genetic trait (punnett square)
+        /// </summary>
+        AsGeneticTrait = 45
+    }
+
+    /// <summary>
+    /// Type of ledger transaction (gain or loss)
+    /// </summary>
+    public enum TransactionType
+    {
+        /// <summary>
+        /// Loss of resource
+        /// </summary>
+        Loss = 0,
+        /// <summary>
+        /// Gain in resource
+        /// </summary>
+        Gain = 1
+    }
+
+    /// <summary>
+    /// Style transaction reporting in resource ledger (style and amount) or (gain and loss)
+    /// </summary>
+    public enum ReportTransactionStyle
+    {
+        /// <summary>
+        /// Reports transaction type and amount
+        /// </summary>
+        TypeAndAmountColumns = 1,
+        /// <summary>
+        /// Reports both gain and loss columns for transaction
+        /// </summary>
+        GainAndLossColumns = 0
+    }
 }

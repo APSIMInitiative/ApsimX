@@ -14,13 +14,13 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
-        /// Is female of breeing age
+        /// Is female weaned and of minimum breeing age and weight 
         /// </summary>
         public bool IsBreeder
         {
             get
             {
-                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
+                return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
             }
         }
 
@@ -115,6 +115,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Indicates if this female is a weaned but less than age at first mating 
+        /// </summary>
+        public bool IsPreBreeder
+        {
+            get
+            {
+                // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
+                // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
+                // this was a misunderstanding opn my part.
+                return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating);
+            }
+        }
+
+
+        /// <summary>
         /// Calculate the number of offspring this preganacy given multiple offspring rates
         /// </summary>
         /// <returns></returns>
@@ -204,7 +219,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// Number of breeding months in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
         /// </summary>
         public bool SuccessfulPregnancy
         {
@@ -230,6 +245,7 @@ namespace Models.CLEM.Resources
             // use normalised weight for age if offset provided for pre simulation allocation
             WeightAtConception = (ageOffset < 0)?this.CalculateNormalisedWeight(AgeAtLastConception):this.Weight;
             NumberOfConceptions++;
+            ReplacementBreeder = false;
         }
 
         /// <summary>

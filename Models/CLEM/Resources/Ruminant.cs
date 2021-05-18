@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -71,6 +72,11 @@ namespace Models.CLEM.Resources
         /// Gender as string for reports
         /// </summary>
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
+
+        /// <summary>
+        /// Marked as a replacement breeder
+        /// </summary>
+        public bool ReplacementBreeder { get; set; }
 
         /// <summary>
         /// Age (Months)
@@ -170,7 +176,7 @@ namespace Models.CLEM.Resources
         /// The adult equivalent of this individual
         /// </summary>
         public double AdultEquivalent { get { return adultEquivalent; } }
-        // Needs to include ind.Number*weight if ever added to this model
+        // TODO: Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
         /// Highest previous weight
@@ -201,13 +207,37 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The current health score -2 to 2 with 0 standard weight
+        /// </summary>
+        public int HealthScore
+        {
+            get
+            {
+                double result = 0;
+                double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
+                double mid = NormalisedAnimalWeight;
+                double max = BreedParams.MaximumSizeOfIndividual;
+
+                if(weight < mid)
+                {
+                    result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
+                }
+                else if (weight > mid)
+                {
+                    result = Math.Round((weight - mid) / ((max - mid) / 2.5));
+                }
+                return Convert.ToInt32(result, CultureInfo.InvariantCulture);
+            }
+        }
+
+        /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreedingCondition 
+        public bool IsAbleToBreed 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating && !(this as RuminantMale).IsCastrated) |
                     (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
@@ -231,9 +261,9 @@ namespace Models.CLEM.Resources
                 {
                     if(this is RuminantFemale)
                     {
-                        if ((this as RuminantFemale).IsHeifer)
+                        if ((this as RuminantFemale).IsPreBreeder)
                         {
-                            return "Heifer";
+                            return "PreBreeder";
                         }
                         else
                         {
@@ -365,9 +395,77 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// List of individual tags
+        /// List of individual attributes
         /// </summary>
-        public List<string> Tags { get; set; }
+        private Dictionary<string, ICLEMAttribute> attributes { get; set; }
+
+        /// <summary>
+        /// The list of available attributes for the individual
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<string, ICLEMAttribute> Attributes
+        {
+            get
+            {
+                return attributes;
+            }
+        }
+
+        /// <summary>
+        /// Check if the selected attribute exists on this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <returns></returns>
+        public bool AttributeExists(string tag)
+        {
+            return attributes.ContainsKey(tag);
+        }
+
+        /// <summary>
+        /// Add an attribute to this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <param name="value">Value to set or change</param>
+        public void AddAttribute(string tag, ICLEMAttribute value = null)
+        {
+            if (!attributes.ContainsKey(tag))
+            {
+                attributes.Add(tag, value); 
+            }
+            else
+            {
+                attributes[tag] = value;
+            }
+        }
+
+        /// <summary>
+        /// Return the value of the selected attribute on this individual else null if not provided
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <returns>Value of attribute if found</returns>
+        public ICLEMAttribute GetAttributeValue(string tag)
+        {
+            if (!attributes.ContainsKey(tag))
+            {
+                return null;
+            }
+            else
+            {
+                return attributes[tag];
+            }
+        }
+
+        /// <summary>
+        /// Remove the attribute from this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        public void RemoveAttribute(string tag)
+        {
+            if (attributes.ContainsKey(tag))
+            {
+                attributes.Remove(tag);
+            }
+        }
 
         /// <summary>
         /// Determines if the change resson is her positive or negative
@@ -388,7 +486,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
                     case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessHeiferSale:
+                    case HerdChangeReason.ExcessPreBreederSale:
                     case HerdChangeReason.Consumed:
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
@@ -629,7 +727,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.Tags = new List<string>();
+            this.attributes = new Dictionary<string, ICLEMAttribute>();
         }
     }
 

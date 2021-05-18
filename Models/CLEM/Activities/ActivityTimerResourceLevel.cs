@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -16,7 +17,7 @@ namespace Models.CLEM.Activities
     /// Activity timer based on crop harvest
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
@@ -35,7 +36,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Resource type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type is required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
@@ -169,58 +170,60 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            if (ResourceTypeName is null || ResourceTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                if (ResourceTypeName is null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span> ");
+                }
+                string str = "";
+                switch (Operator)
+                {
+                    case FilterOperators.Equal:
+                        str += "equals";
+                        break;
+                    case FilterOperators.NotEqual:
+                        str += "does not equal";
+                        break;
+                    case FilterOperators.LessThan:
+                        str += "is less than";
+                        break;
+                    case FilterOperators.LessThanOrEqual:
+                        str += "is less than or equal to";
+                        break;
+                    case FilterOperators.GreaterThan:
+                        str += "is greater than";
+                        break;
+                    case FilterOperators.GreaterThanOrEqual:
+                        str += "is greater than or equal to";
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write(str);
+                if (Amount == 0)
+                {
+                    htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Amount.ToString());
+                    htmlWriter.Write("</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (!this.Enabled)
+                {
+                    htmlWriter.Write(" - DISABLED!");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span> ";
-            }
-            string str = "";
-            switch (Operator)
-            {
-                case FilterOperators.Equal:
-                    str += "equals";
-                    break;
-                case FilterOperators.NotEqual:
-                    str += "does not equal";
-                    break;
-                case FilterOperators.LessThan:
-                    str += "is less than";
-                    break;
-                case FilterOperators.LessThanOrEqual:
-                    str += "is less than or equal to";
-                    break;
-                case FilterOperators.GreaterThan:
-                    str += "is greater than";
-                    break;
-                case FilterOperators.GreaterThanOrEqual:
-                    str += "is greater than or equal to";
-                    break;
-                default:
-                    break;
-            }
-            html += str;
-            if (Amount == 0)
-            {
-                html += " <span class=\"errorlink\">NOT SET</span>";
-            }
-            else
-            {
-                html += " <span class=\"setvalueextra\">";
-                html += Amount.ToString();
-                html += "</span>";
-            }
-            html += "</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
         /// <summary>
@@ -238,15 +241,17 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                {
+                    htmlWriter.Write(this.Name);
+                }
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
 

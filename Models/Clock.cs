@@ -16,8 +16,8 @@
     /// date, publishing events that other models can subscribe to.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class Clock : Model, IClock, ICustomDocumentation
     {
@@ -212,7 +212,9 @@
         public event EventHandler CLEMAnimalMilking;
         /// <summary>CLEM Calculate ecological state after all deaths and before management</summary>
         public event EventHandler CLEMCalculateEcologicalState;
-        /// <summary>CLEM Do Animal (Ruminant and Other) Herd Management (Kulling, Castrating, Weaning, etc.)</summary>
+        /// <summary>CLEM Do animal marking so complete before undertaking management decisions</summary>
+        public event EventHandler CLEMAnimalMark;
+        /// <summary>CLEM Do Animal (Ruminant and Other) Herd Management (adjust breeders and sires etc.)</summary>
         public event EventHandler CLEMAnimalManage;
         /// <summary>CLEM stock animals to pasture availability or other metrics</summary>
         public event EventHandler CLEMAnimalStock;
@@ -412,6 +414,8 @@
                         CLEMAnimalMilking.Invoke(this, args);
                     if (CLEMCalculateEcologicalState != null)
                         CLEMCalculateEcologicalState.Invoke(this, args);
+                    if (CLEMAnimalMark != null)
+                        CLEMAnimalMark.Invoke(this, args);
                     if (CLEMAnimalManage != null)
                         CLEMAnimalManage.Invoke(this, args);
                     if (CLEMAnimalStock != null)

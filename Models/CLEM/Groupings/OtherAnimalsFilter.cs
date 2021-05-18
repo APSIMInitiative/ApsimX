@@ -13,7 +13,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
     [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]

@@ -8,12 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Activity to undertake milking of particular herd</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -29,7 +30,7 @@ namespace Models.CLEM.Activities
         /// Resource type to store milk in
         /// </summary>
         [Description("Store to place milk")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of milk store required")]
         public string ResourceTypeName { get; set; }
 
@@ -189,19 +190,21 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Milk is placed in ";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
 
-            if (ResourceTypeName == null || ResourceTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span>";
+                if (ResourceTypeName == null || ResourceTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span>";
-            }
-            html += "</div>";
-            return html;
         } 
         #endregion
 

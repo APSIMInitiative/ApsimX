@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UserInterface.Commands
 {
     using Models.Core;
     using Models.GrazPlan;
     using Interfaces;
+    using Presenters;
+
     class AddSupplementCommand : ICommand
     {
         /// <summary>The supplement parent model to add the supplement to.</summary>
@@ -39,8 +38,9 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             int suppNo = SupplementLibrary.DefaultSuppConsts.IndexOf(this.supplementName);
             if (suppNo >= 0)
@@ -49,13 +49,14 @@ namespace UserInterface.Commands
                 this.prevSuppIdx = this.parent.CurIndex;
                 this.parent.CurIndex = this.parent.Add(this.supplementName);
                 this.supplementAdded = true;
-                commandHistory.InvokeModelChanged(this.parent);
+                modelChanged(parent);
             }
         }
 
         /// <summary>Undoes the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             if (this.supplementAdded && this.supplementToAdd != null)
             {
@@ -63,7 +64,7 @@ namespace UserInterface.Commands
                 if (suppIdx >= 0)
                     this.parent.Delete(suppIdx);
                 this.parent.CurIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
-                commandHistory.InvokeModelChanged(this.parent);
+                modelChanged(parent);
             }
         }
 
@@ -97,28 +98,29 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             int suppNo = parent.IndexOf(this.supplementToDelete);
             this.prevSuppIdx = this.parent.CurIndex;
             this.parent.Delete(suppNo);
             this.parent.CurIndex = Math.Min(this.prevSuppIdx, parent.NoStores - 1);
             this.supplementDeleted = true;
-            commandHistory.InvokeModelChanged(this.parent);
+            modelChanged(this.parent);
         }
 
         /// <summary>Undoes the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             if (this.supplementDeleted && this.supplementToDelete != null)
             {
                 this.parent.CurIndex = this.parent.Add(supplementToDelete);
-                commandHistory.InvokeModelChanged(this.parent);
+                modelChanged(this.parent);
             }
         }
-
     }
 
     /// <summary>This command records changes in the 'suppIdx' in the Supplement view and presenter.</summary>
@@ -153,19 +155,21 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             this.parent.CurIndex = newSuppIdx;
-            commandHistory.InvokeModelChanged(this.parent);
+            modelChanged(this.parent);
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             this.parent.CurIndex = prevSuppIdx;
-            commandHistory.InvokeModelChanged(this.parent);
+            modelChanged(this.parent);
         }
     }
 
@@ -205,8 +209,9 @@ namespace UserInterface.Commands
         }
 
         /// <summary>Perform the command</summary>
-        /// <param name="commandHistory">The command history.</param>
-        public void Do(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Do(ITreeView tree, Action<object> modelChanged)
         {
             if (parent.ReadOnly)
                 throw new ApsimXException(parent, string.Format("Unable to modify {0} - it is read-only.", parent.Name));
@@ -234,12 +239,13 @@ namespace UserInterface.Commands
             }
             supplementsReset = true;
             if (this.parent.CurIndex > 0)
-                commandHistory.InvokeModelChanged(this.parent[this.parent.CurIndex]);
+                modelChanged(this.parent[this.parent.CurIndex]);
         }
 
         /// <summary>Undo the command</summary>
-        /// <param name="CommandHistory">The command history.</param>
-        public void Undo(CommandHistory commandHistory)
+        /// <param name="tree">A tree view to which the changes will be applied.</param>
+        /// <param name="modelChanged">Action to be performed if/when a model is changed.</param>
+        public void Undo(ITreeView tree, Action<object> modelChanged)
         {
             if (supplementsReset)
             {
@@ -247,7 +253,7 @@ namespace UserInterface.Commands
                     suppList[i].Assign(prevList[i]);
             }
             if (this.parent.CurIndex > 0)
-                commandHistory.InvokeModelChanged(this.parent[this.parent.CurIndex]);
+                modelChanged(this.parent[this.parent.CurIndex]);
         }
     }
 }

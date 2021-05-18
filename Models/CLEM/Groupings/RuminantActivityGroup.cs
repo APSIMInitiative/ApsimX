@@ -7,14 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Defines a group of individual ruminants for whcih all activities below the implimentation consider
+    /// Defines a group of individual ruminants for which all activities below the implementation consider
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
@@ -34,7 +35,9 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [JsonIgnore]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Description("Proportion of group to use")]
+        [Required, GreaterThanValue(0), Proportion]
         public double Proportion { get; set; }
 
         #region descriptive summary
@@ -76,7 +79,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -87,7 +90,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder filteractivityborder clearfix\">";
+            html += "\r\n<div class=\"filterborder filteractivityborder clearfix\">";
             if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";

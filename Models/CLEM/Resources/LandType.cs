@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -13,7 +14,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for land
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
@@ -145,7 +146,7 @@ namespace Models.CLEM.Resources
             if (this.areaAvailable + addAmount > this.UsableArea)
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
-                string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
+                string message = $"Tried to add more available land to [r={this.Name}] than exists.";
                 Summary.WriteWarning(this, message);
                 this.areaAvailable = this.UsableArea;
             }
@@ -155,7 +156,8 @@ namespace Models.CLEM.Resources
             }
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = amountAdded,
+                TransactionType = TransactionType.Gain,
+                Amount = amountAdded,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -214,7 +216,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -305,41 +308,44 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            if (LandArea == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land";
-            }
-            else if (ProportionOfTotalArea == 0)
-            {
-                html += "The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned";
-            }
-            else
-            {
-                html += "This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>";
-                string units = (this as IResourceType).Units;
-                if (units != "NA")
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (LandArea == 0)
                 {
-                    if (units == null || units == "")
+                    htmlWriter.Write("<span class=\"errorlink\">NO VALUE</span> has been set for the area of this land");
+                }
+                else if (ProportionOfTotalArea == 0)
+                {
+                    htmlWriter.Write("The proportion of total area assigned to this land type is <span class=\"errorlink\">0</span> so no area is assigned");
+                }
+                else
+                {
+                    htmlWriter.Write("This land type has an area of <span class=\"setvalue\">" + (this.LandArea * ProportionOfTotalArea).ToString("#,##0.##") + "</span>");
+                    string units = (this as IResourceType).Units;
+                    if (units != "NA")
                     {
-                        html += "";
-                    }
-                    else
-                    {
-                        html += " <span class=\"setvalue\">" + units + "</span>";
+                        if (units == null || units == "")
+                        {
+                            htmlWriter.Write("");
+                        }
+                        else
+                        {
+                            htmlWriter.Write(" <span class=\"setvalue\">" + units + "</span>");
+                        }
                     }
                 }
-            }
 
-            if (PortionBuildings > 0)
-            {
-                html += " of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings";
+                if (PortionBuildings > 0)
+                {
+                    htmlWriter.Write(" of which <span class=\"setvalue\">" + this.PortionBuildings.ToString("0.##%") + "</span> is buildings");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            html += "This land is identified as <span class=\"setvalue\">" + SoilType.ToString() + "</span>";
-            html += "\n</div>";
-            return html;
         }
 
         /// <summary>

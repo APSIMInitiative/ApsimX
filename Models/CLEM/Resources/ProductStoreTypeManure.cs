@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -14,7 +15,7 @@ namespace Models.CLEM.Resources
     /// Store for manure
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
@@ -215,7 +216,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -247,7 +249,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -277,12 +280,15 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "<div class=\"activityentry\">";
-            html += "Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>";
-            html += "<div class=\"activityentry\">";
-            html += "Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.";
-            html += "</div>";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>");
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
         }
 
         #endregion

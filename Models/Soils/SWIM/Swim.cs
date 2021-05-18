@@ -19,7 +19,7 @@ namespace Models.Soils
     /// Ported by Eric Zurcher July 2014
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]   // Until we have a better view for SWIM...
+    [ViewName("UserInterface.Views.PropertyView")]   // Until we have a better view for SWIM...
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Soil))]
     public class Swim3 : Model, ISoilWater
@@ -924,8 +924,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Pond depth (mm)</summary>
         [Units("mm")]
-        private double pond
+        public double pond
         {
             get
             {
@@ -1344,81 +1345,84 @@ namespace Models.Soils
 
         }
 
-        //// [EventHandler]
-        // public void OnIrrigated(IrrigationApplicationType Irrigated)
-        // {
-        //     //+  Assumptions
-        //     //   That g%day and g%year have already been updated before entry into this
-        //     //   routine. e.g. Prepare stage executed already.
+        /// <summary>Called when an irrigation occurs.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="Irrigated">The event data.</param>
+        [EventSubscribe("Irrigated")]
+        private void OnIrrigated(object sender, IrrigationApplicationType Irrigated)
+        {
+            //+  Assumptions
+            //   That g%day and g%year have already been updated before entry into this
+            //   routine. e.g. Prepare stage executed already.
 
-        //     //+  Changes
-        //     //   neilh - 19-01-1995 - Programmed and Specified
-        //     //   neilh - 28-05-1996 - Added call to get_other_variables to make
-        //     //                        sure g%day and g%year are up to date.
-        //     //      21-06-96 NIH Changed extract calls to collect calls
-        //     //   neilh - 22-07-1996 removed data_String from arguments
-        //     //   neilh - 29-08-1997 added test for whether directives are to be echoed
+            //+  Changes
+            //   neilh - 19-01-1995 - Programmed and Specified
+            //   neilh - 28-05-1996 - Added call to get_other_variables to make
+            //                        sure g%day and g%year are up to date.
+            //      21-06-96 NIH Changed extract calls to collect calls
+            //   neilh - 22-07-1996 removed data_String from arguments
+            //   neilh - 29-08-1997 added test for whether directives are to be echoed
 
-        //     if (echo_directives != null && echo_directives.Trim() == "on")
-        //     {
-        //         // flag this event in output file
-        //         summary.WriteMessage(this, "APSwim adding irrigation to log");
-        //     }
+            if (echo_directives != null && echo_directives.Trim() == "on")
+            {
+                // flag this event in output file
+                summary.WriteMessage(this, "APSwim adding irrigation to log");
+            }
 
-        //     string time_string = Irrigated.time;
-        //     double amount = Irrigated.Amount;
-        //     double duration = Irrigated.Duration;
+            string time_string = "00:00"; // Irrigated.time;
+            double amount = Irrigated.Amount;
+            double duration = Irrigated.Duration;
 
-        //     // get information regarding time etc.
-        //     GetOtherVariables();
+            // get information regarding time etc.
+            GetOtherVariables();
 
-        //     int time_mins = TimeToMins(time_string);
-        //     double irrigation_time = Time(year, day, time_mins);
+            int time_mins = TimeToMins(time_string);
+            double irrigation_time = Time(year, day, time_mins);
 
-        //     // allow 1 sec numerical error as data resolution is
-        //     // 60 sec.
-        //     if (irrigation_time < (t - 1.0 / 3600.0))
-        //         throw new Exception("Irrigation has been specified for an already processed time period");
+            // allow 1 sec numerical error as data resolution is
+            // 60 sec.
+            if (irrigation_time < (t - 1.0 / 3600.0))
+                throw new Exception("Irrigation has been specified for an already processed time period");
 
 
-        //     InsertLoginfo(irrigation_time, duration, amount, ref SWIMRainTime, ref SWIMRainAmt);
+            InsertLoginfo(irrigation_time, duration, amount, ref SWIMRainTime, ref SWIMRainAmt);
 
-        //     RecalcEqrain();
+            RecalcEqrain();
 
-        //     for (int solnum = 0; solnum < num_solutes; solnum++)
-        //     {
-        //         double solconc = 0.0;
-        //         if (solute_names[solnum] == "no3")
-        //             solconc = Irrigated.NO3;
-        //         else if (solute_names[solnum] == "nh4")
-        //             solconc = Irrigated.NH4;
-        //         else if (solute_names[solnum] == "cl")
-        //             solconc = Irrigated.CL;
+            for (int solnum = 0; solnum < num_solutes; solnum++)
+            {
+                double solconc = 0.0;
+                if (solute_names[solnum] == "no3")
+                    solconc = Irrigated.NO3;
+                else if (solute_names[solnum] == "nh4")
+                    solconc = Irrigated.NH4;
+                else if (solute_names[solnum] == "cl")
+                    solconc = Irrigated.CL;
 
-        //         if (solconc > 0.0)
-        //         {
-        //             int numPairs = SWIMSolTime[solnum].Length;
-        //             double[] TEMPSolTime = new double[numPairs];
-        //             double[] TEMPSolAmt = new double[numPairs];
-        //             for (int counter = 0; counter < numPairs; counter++)
-        //             {
-        //                 TEMPSolTime[counter] = SWIMSolTime[solnum][counter];
-        //                 TEMPSolAmt[counter] = SWIMSolAmt[solnum][counter];
-        //             }
-        //             InsertLoginfo(irrigation_time, duration, solconc, ref TEMPSolTime, ref TEMPSolAmt);
+                if (solconc > 0.0)
+                {
+                    int numPairs = SWIMSolTime[solnum].Length;
+                    double[] TEMPSolTime = new double[numPairs];
+                    double[] TEMPSolAmt = new double[numPairs];
+                    for (int counter = 0; counter < numPairs; counter++)
+                    {
+                        TEMPSolTime[counter] = SWIMSolTime[solnum][counter];
+                        TEMPSolAmt[counter] = SWIMSolAmt[solnum][counter];
+                    }
+                    InsertLoginfo(irrigation_time, duration, solconc, ref TEMPSolTime, ref TEMPSolAmt);
 
-        //             int nPairs = TEMPSolTime.Length;
-        //             Array.Resize(ref SWIMSolTime[solnum], nPairs);
-        //             Array.Resize(ref SWIMSolAmt[solnum], nPairs);
+                    int nPairs = TEMPSolTime.Length;
+                    Array.Resize(ref SWIMSolTime[solnum], nPairs);
+                    Array.Resize(ref SWIMSolAmt[solnum], nPairs);
 
-        //             for (int counter = 0; counter < nPairs; counter++)
-        //             {
-        //                 SWIMSolTime[solnum][counter] = TEMPSolTime[counter];
-        //                 SWIMSolAmt[solnum][counter] = TEMPSolAmt[counter];
-        //             }
-        //         }
-        //     }
-        // }
+                    for (int counter = 0; counter < nPairs; counter++)
+                    {
+                        SWIMSolTime[solnum][counter] = TEMPSolTime[counter];
+                        SWIMSolAmt[solnum][counter] = TEMPSolAmt[counter];
+                    }
+                }
+            }
+        }
 
         ////  [EventHandler]
         //  public void OnSubsurfaceFlow(ApsimVariantType data)
@@ -3586,6 +3590,8 @@ namespace Models.Soils
                     //RC   lines for g%th and g%csl added by RCichota, 09/02/2010
 
                     _dt = 0.5 * _dt;
+                    if (_dt == 0)
+                        throw new Exception("SWIM failed to find a solution");
 
                     // Tell user that SWIM is changing dt
                     summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt));
@@ -5683,7 +5689,7 @@ namespace Models.Soils
 
             if (subsurfaceDrain != null)
             {
-                int drain_node = FindLayerNo(subsurfaceDrain.DrainDepth);
+                int drain_node = SoilUtilities.LayerIndexOfClosestDepth(soilPhysical.Thickness, subsurfaceDrain.DrainDepth);
 
                 double d = subsurfaceDrain.ImpermDepth - subsurfaceDrain.DrainDepth;
                 if (_psi[drain_node] > 0)
@@ -5733,21 +5739,6 @@ namespace Models.Soils
             }
 
             return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
-        }
-
-        private int FindLayerNo(double depth)
-        {
-            // Find the soil layer in which the indicated depth is located
-            // NOTE: The returned layer number is 0-based
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < soilPhysical.Thickness.Length; i++)
-            {
-                depth_cum = depth_cum + soilPhysical.Thickness[i];
-                if (depth_cum >= depth)
-                    return i;
-            }
-            return soilPhysical.Thickness.Length - 1;
         }
 
         ///// <summary>
@@ -5836,26 +5827,6 @@ namespace Models.Soils
         //    return (8.0 * Ke * de * m + 4 * Ke * m * m) / (C * L * L);
         //}
 
-        ///// <summary>
-        ///// Finds the layer no.
-        ///// </summary>
-        ///// <param name="depth">The depth.</param>
-        ///// <returns></returns>
-        //private int FindLayerNo(double depth)
-        //{
-        //    // Find the soil layer in which the indicated depth is located
-        //    // NOTE: The returned layer number is 0-based
-        //    // If the depth is not reached, the last element is used
-        //    double depth_cum = 0.0;
-        //    for (int i = 0; i < _dlayer.Length; i++)
-        //    {
-        //        depth_cum = depth_cum + _dlayer[i];
-        //        if (depth_cum >= depth)
-        //            return i;
-        //    }
-        //    return _dlayer.Length - 1;
-        //}
-
         /// <summary>
         /// Issues the warning.
         /// </summary>
@@ -5880,10 +5851,6 @@ namespace Models.Soils
         ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
         [JsonIgnore]
         public double[] Thickness { get { return soilPhysical.Thickness; } }
-
-        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>
-        public double[] LayerThickness { get { return soilPhysical.Thickness; } }
-
 
         /// <summary>Amount of water moving laterally out of the profile (mm)</summary>
         [JsonIgnore]

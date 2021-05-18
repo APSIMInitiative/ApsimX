@@ -36,7 +36,7 @@
     ///     randomly generated weather years.
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     public class WeatherSampler : Model, IWeather
@@ -166,6 +166,11 @@
         [Units("hPa")]
         [JsonIgnore]
         public double AirPressure { get; set; }
+
+        /// <summary>Diffuse radiation fraction. If not specified in the weather file the default is 1.</summary>
+        [Units("0-1")]
+        [JsonIgnore]
+        public double DiffuseFraction { get; set; }
 
         /// <summary>Latitude.</summary>
         [JsonIgnore]

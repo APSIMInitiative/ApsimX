@@ -119,20 +119,42 @@
         {
             bool ok = true;
 
-            foreach (ExplorerPresenter presenter in this.Presenters1.OfType<ExplorerPresenter>())
+            for (int i = 0; i < Presenters1.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (Presenters1[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, true);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, true);
+                    i--;
+                }
             }
 
-            foreach (ExplorerPresenter presenter in this.presenters2.OfType<ExplorerPresenter>())
+            for (int i = 0; i < presenters2.Count; i++)
             {
-                if (presenter.SaveIfChanged())
-                    presenter.Detach();
+                if (presenters2[i] is ExplorerPresenter presenter)
+                {
+                    if (presenter.SaveIfChanged())
+                    {
+                        CloseTab(i, false);
+                        i--;
+                    }
+                    else
+                        ok = false;
+                }
                 else
-                    ok = false;
+                {
+                    CloseTab(i, false);
+                    i--;
+                }
             }
 
             return ok;
@@ -164,7 +186,11 @@
             };
 
             var compiler = new ScriptCompiler();
+#if NETFRAMEWORK
             var results = compiler.Compile(code, new Model(), assemblies);
+#else
+            var results = compiler.Compile(code, new Model());
+#endif
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
@@ -194,7 +220,7 @@
         /// For error messages, use <see cref="ShowError(Exception)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
-        /// <param name="errorLevel">The error level value</param>
+        /// <param name="messageType">The error level value</param>
         public void ShowMessage(string message, Simulation.MessageType messageType)
         {
             Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
@@ -209,7 +235,7 @@
         
         /// <summary>
         /// Displays several messages, with a separator between them. 
-        /// For error messages, use <see cref="ShowError(List{Exception})"/>.
+        /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
         /// <param name="messageType"></param>
@@ -269,7 +295,8 @@
         /// Displays several error messages in the status bar. Each error will have an associated 
         /// </summary>
         /// <param name="errors"></param>
-        public void ShowError(List<Exception> errors)
+        /// <param name="overwrite"></param>
+        public void ShowError(List<Exception> errors, bool overwrite = true)
         {
             // if the list contains at least 1 null exception, display none of them
             if (errors != null && !errors.Contains(null))
@@ -277,8 +304,11 @@
                 LastError = errors.Select(err => err.ToString()).ToList();
                 for (int i = 0; i < errors.Count; i++)
                 {
-                    // only overwrite other messages the first time through the loop
-                    view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, i == 0, true);
+                    if (errors[i] is AggregateException aggregate)
+                        ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
+                    else
+                        // only overwrite other messages the first time through the loop
+                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -319,6 +349,7 @@
         /// Show progress bar with the specified percent.
         /// </summary>
         /// <param name="percent">The progress</param>
+        /// <param name="showStopButton">Should a stop button be displayed as well?</param>
         public void ShowProgress(int percent, bool showStopButton = true)
         {
             this.view.ShowProgress(percent, showStopButton);
@@ -1089,7 +1120,7 @@
             }
             catch (Exception err)
             {
-                ShowError(err);
+                throw new Exception("Error during Import: " + err.Message);
             }
         }
 
@@ -1105,10 +1136,7 @@
                 bool onLeftTabControl = view.IsControlOnLeft(sender);
                 // Clear the message window
                 view.ShowMessage(" ", Simulation.ErrorLevel.Information);
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
-                else
-                    ShowError("Microsoft Azure functionality is currently only available under Windows.");
+                CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
             }
             catch (Exception err)
             {

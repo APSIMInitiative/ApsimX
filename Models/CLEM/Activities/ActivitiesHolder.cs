@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// Manager for all activities available to the model
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
@@ -309,7 +309,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<h1>Activities summary</h1>";
+            return "\r\n<h1>Activities summary</h1>";
         }
 
         /// <summary>
@@ -318,7 +318,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         } 
         #endregion
     }

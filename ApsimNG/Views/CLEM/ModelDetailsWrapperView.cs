@@ -1,52 +1,71 @@
 
 namespace UserInterface.Views
 {
-    using EventArguments;
     using Gtk;
     using Interfaces;
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.Serialization;
-    using System.Runtime.InteropServices;
-    using APSIM.Shared.Utilities;
     using System.IO;
     using System.Net.NetworkInformation;
-    using System.Net;
     using System.Globalization;
+    using Extensions;
+    using System.Runtime.InteropServices;
+    using APSIM.Shared.Utilities;
+    using System.Reflection;
 
     /// <summary>
     /// This provides a wrapper view to display model type, description and help link
     /// These are taken from the namespace and Description Attribute
     /// The Explorer presenter will use this wrapper if a Description attributre is present.
     /// </summary>
+    /// <remarks>
+    /// This styling in here (fonts, backgrounds, ...) needs to be redone for gtk3.
+    /// As far as I know, this can (and should) now be done via css.
+    /// </remarks>
     public class ModelDetailsWrapperView : ViewBase, IModelDetailsWrapperView
     {
         private HBox hbox = null;
         private VBox vbox1 = null;
+        private VBox labels = null;
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
         private LinkButton modelHelpLinkImg = null;
         private Label modelVersionLabel = null;
         private Viewport bottomView = null;
+        private string modelTypeLabelText;
+        private string modelVersionLabelText;
+        private string modelTypeColour;
 
         public ModelDetailsWrapperView(ViewBase owner) : base(owner)
         {
+            string css = "";
+            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Style.clem.css"))
+            {
+                using (StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8))
+                {
+                    css = reader.ReadToEnd();
+                }
+            }
+
+#if NETCOREAPP3_1
+            Gtk.CssProvider css_provider = new CssProvider();
+            css_provider.LoadFromData(css);
+#endif
             hbox = new HBox();
             vbox1 = new VBox();
+            labels = new VBox();
 
             modelTypeLabel = new Label
             {
                 Xalign = 0.0f,
                 Xpad = 3
             };
-            Pango.FontDescription font = new Pango.FontDescription
-            {
-                Size = Convert.ToInt32(16 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
-                Weight = Pango.Weight.Semibold
-            };
-            modelTypeLabel.ModifyFont(font);
+
+#if NETCOREAPP3_1
+            hbox.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
+            modelTypeLabel.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
+            modelTypeLabel.StyleContext.AddClass("wrapper_label_type");
+#endif
 
             modelDescriptionLabel = new Label()
             {
@@ -55,14 +74,17 @@ namespace UserInterface.Views
             };
             modelDescriptionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelDescriptionLabel.Wrap = true;
+#if NETFRAMEWORK
             modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-
+#endif
             modelHelpLinkLabel = new LinkButton("", "")
             {
                 Xalign = 0.0f,
             };
             modelHelpLinkLabel.Clicked += ModelHelpLinkLabel_Clicked;
-            modelHelpLinkLabel.ModifyBase(StateType.Normal, new Gdk.Color(131, 0, 131));
+#if netframework
+            modelhelplinklabel.modifybase(statetype.normal, new gdk.color(131, 0, 131));
+#endif
             modelHelpLinkLabel.Visible = false;
 
             Gtk.CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
@@ -75,18 +97,23 @@ namespace UserInterface.Views
             modelVersionLabel = new Label()
             {
                 Xalign = 0.0f,
-                Xpad = 4
+                Xpad = 4,
+                UseMarkup = true
             };
-            font = new Pango.FontDescription
-            {
-                Size = Convert.ToInt32(8 * Pango.Scale.PangoScale, CultureInfo.InvariantCulture),
-                Weight = Pango.Weight.Normal,
-            };
-            modelVersionLabel.ModifyFont(font);
+#if NETFRAMEWORK
             modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
+            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+#endif
             modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelVersionLabel.Wrap = true;
+
+#if NETFRAMEWORK
+            modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+            modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
             modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
+#else
+            //labels.OverrideBackgroundColor(StateFlags.Normal, new Gdk.RGBA(131, 0, 131,0.5));
+#endif
 
             bottomView = new Viewport
             {
@@ -96,12 +123,23 @@ namespace UserInterface.Views
             hbox.PackStart(modelTypeLabel, false, true, 0);
             hbox.PackStart(modelHelpLinkLabel, false, false, 0);
 
-            vbox1.PackStart(hbox, false, true, 0);
-            vbox1.PackStart(modelTypeLabel, false, true, 0);
-            vbox1.PackStart(modelDescriptionLabel, false, true, 0);
-            vbox1.PackStart(modelVersionLabel, false, true, 4);
+            labels.PackStart(hbox, false, true, 0);
+            labels.PackStart(modelDescriptionLabel, false, true, 0);
+            labels.PackStart(modelVersionLabel, false, true, 4);
 
-            vbox1.Add(bottomView);
+
+            vbox1.PackStart(labels, false, true, 0);
+
+            ScrolledWindow scroll = new ScrolledWindow();
+            scroll.ShadowType = ShadowType.EtchedIn;
+            scroll.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
+#if NETFRAMEWORK
+            scroll.AddWithViewport(bottomView);
+#else
+            scroll.Add(bottomView);
+#endif
+
+            vbox1.Add(scroll);
             vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
             mainWidget = vbox1;
@@ -110,7 +148,14 @@ namespace UserInterface.Views
 
         private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            modelHelpLinkImg.HeightRequest = 50;
+            try
+            {
+                modelHelpLinkImg.HeightRequest = 50;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -121,21 +166,28 @@ namespace UserInterface.Views
         /// </summary>
         private void Vbox1_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
-            modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
+            try
+            {
+                modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
+                modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
         {
             //Check internet connection and choose either local or online help files
-            if(ModelHelpURL != "")
+            try
             {
-                try
+                if(ModelHelpURL != "")
                 {
                     string helpURL = "";
                     // does offline help exist
                     var directory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-                    string offlinePath = Path.Combine(directory, "CLEM/Help");
+                    string offlinePath = Path.Combine(directory, "CLEM\\Help");
                     if (File.Exists(Path.Combine(offlinePath, "Default.htm")))
                     {
                         helpURL = "file:///" + offlinePath.Replace(@"\","/") + "/" + ModelHelpURL.TrimStart('/');
@@ -151,35 +203,54 @@ namespace UserInterface.Views
                     {
                         helpURL = "https://www.apsim.info";
                     }
-                    System.Diagnostics.Process.Start(helpURL);
+                    ProcessUtilities.ProcessStart(helpURL);
                 }
-                catch(Exception ex)
-                {
-                    throw new Exception(ex.Message); 
-                }
+            }
+            catch(Exception ex)
+            {
+                ShowError(ex);
             }
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
-            modelHelpLinkLabel.Clicked -= ModelHelpLinkLabel_Clicked;
-            vbox1.SizeAllocated -= Vbox1_SizeAllocated;
-            if (bottomView != null)
+            try
             {
-                foreach (Widget child in bottomView.Children)
+                modelHelpLinkLabel.Clicked -= ModelHelpLinkLabel_Clicked;
+                vbox1.SizeAllocated -= Vbox1_SizeAllocated;
+                if (bottomView != null)
                 {
-                    bottomView.Remove(child);
-                    child.Destroy();
+                    foreach (Widget child in bottomView.Children)
+                    {
+                        bottomView.Remove(child);
+                        child.Cleanup();
+                    }
                 }
+                mainWidget.Destroyed -= _mainWidget_Destroyed;
+                owner = null;
             }
-            mainWidget.Destroyed -= _mainWidget_Destroyed;
-            owner = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         public string ModelTypeText
         {
-            get { return modelTypeLabel.Text; }
-            set { modelTypeLabel.Text = value; }
+            get
+            {
+                return modelTypeLabelText;
+            }
+            set
+            {
+                modelTypeLabelText = value;
+                // update markup and include colour if supplied
+#if NETFRAMEWORK
+                modelTypeLabel.Markup = $"<span{(((modelTypeColour??"")!="")?$" foreground=\"#{modelTypeColour}\"":"")} size=\"15000\"><b>{value}</b></span>";
+#else
+                modelTypeLabel.Markup = value;
+#endif
+            }
         }
 
         public string ModelDescriptionText
@@ -190,8 +261,15 @@ namespace UserInterface.Views
 
         public string ModelVersionText
         {
-            get { return modelVersionLabel.Text; }
-            set { modelVersionLabel.Markup = value; }
+            get
+            {
+                return modelVersionLabelText;
+            }
+            set
+            {
+                modelVersionLabelText = value;
+                modelVersionLabel.Markup = value;
+            }
         }
 
         public string ModelHelpURL
@@ -205,6 +283,18 @@ namespace UserInterface.Views
             }
         }
 
+        public string ModelTypeTextStyle
+        {
+            get { return ModelTypeTextStyle; }
+            set
+            {
+#if NETCOREAPP3_1
+            modelTypeLabel.StyleContext.AddClass($"wrapper_label_type_{value}");
+#endif
+                ;
+            } 
+        }
+
         public string ModelTypeTextColour
         {
             get { return "N/A"; }
@@ -215,7 +305,12 @@ namespace UserInterface.Views
                     byte r = Convert.ToByte(value.Substring(0, 2), 16);
                     byte g = Convert.ToByte(value.Substring(2, 2), 16);
                     byte b = Convert.ToByte(value.Substring(4, 2), 16);
+#if NETFRAMEWORK
+                    // gtk tbi
                     modelTypeLabel.ModifyFg(StateType.Normal, new Gdk.Color(r, g, b));
+#endif
+                    modelTypeColour = value;
+                    ModelTypeText = ModelTypeText;
                 }
             }
         }
@@ -225,7 +320,7 @@ namespace UserInterface.Views
             foreach (Widget child in bottomView.Children)
             {
                 bottomView.Remove(child);
-                child.Destroy();
+                child.Cleanup();
             }
             ViewBase view = control as ViewBase;
             if (view != null)

@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     /// Manger for all resources available to the model
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
@@ -325,7 +325,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
-                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().ToString()}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
                 if (!Warnings.Exists(warn) & Summary != null)
                 {
                     Summary.WriteWarning(this, warn);
@@ -348,7 +348,7 @@ namespace Models.CLEM.Resources
                 {
                     // add warning the market does not have the resource
                     string zoneName = FindAncestor<Zone>().Name;
-                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\nAdd resource and associated components to the market to permit trading.";
+                    string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
                         Summary.WriteWarning(this, warn);
@@ -365,6 +365,38 @@ namespace Models.CLEM.Resources
                 }
             }
             return resType as IResourceWithTransactionType;
+        }
+
+        /// <summary>
+        /// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
+        /// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
+        /// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// 
+        /// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
+        /// </summary>
+        /// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
+        /// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
+        /// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
+        public string[] GetCLEMResourceNames(Type resourceGroupType)
+        {
+            List<string> resourseTypes = new List<string>();
+            if (resourceGroupType != null)
+            {
+                // resource groups specified (use them)
+                IModel resGroup = this.Children.Find(c => resourceGroupType.IsAssignableFrom(c.GetType()));
+                if (resGroup != null)  //see if this group type is included in this particular simulation.
+                {
+                    foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
+                    {
+                        if (item.GetType() != typeof(Memo))
+                        {
+                            resourseTypes.Add(resGroup.Name  + "." + item.Name);
+                        }
+                    }
+                }
+            }
+            return resourseTypes.ToArray();
         }
 
         /// <summary>
@@ -626,7 +658,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
         /// <summary>
@@ -635,7 +667,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         #endregion

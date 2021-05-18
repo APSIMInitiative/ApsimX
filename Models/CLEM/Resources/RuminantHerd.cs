@@ -9,6 +9,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.Globalization;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -17,8 +18,8 @@ namespace Models.CLEM.Resources
     /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreeTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
@@ -91,7 +92,7 @@ namespace Models.CLEM.Resources
                         {
                             if (sucklingList.Count() > 0)
                             {
-                                Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                 break;
                             }
                         }
@@ -161,7 +162,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                    Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                     break;
                                 }
                             }
@@ -236,9 +237,13 @@ namespace Models.CLEM.Resources
             Herd.Add(ind);
             LastIndividualChanged = ind;
 
+            // check mandatory attributes
+            ind.BreedParams.CheckMandatoryAttributes(ind, model);
+
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = 1,
+                TransactionType = TransactionType.Gain,
+                Amount = 1,
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
@@ -283,7 +288,8 @@ namespace Models.CLEM.Resources
             // report transaction of herd change
             ResourceTransaction details = new ResourceTransaction
             {
-                Loss = 1,
+                TransactionType = TransactionType.Loss,
+                Amount = 1,
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
                 ResourceType = ind.BreedParams,
@@ -307,6 +313,34 @@ namespace Models.CLEM.Resources
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
+        }
+
+        /// <summary>
+        /// Statstical summar of a list of numbers (e.g. attribute values)
+        /// </summary>
+        [JsonIgnore]
+        public ListStatistics LastListStatistics { get; set; }
+
+        /// <summary>
+        /// Return the mean and standard deviation of an attribute value
+        /// </summary>
+        public int SummariseAttribute(string tag, bool ignoreNotFound)
+        {
+            LastListStatistics = new ListStatistics();
+            var values = Herd.Where( a => (ignoreNotFound & a.GetAttributeValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.GetAttributeValue(tag)?.storedValue));
+            if (values.Count() == 0)
+            {
+                return 0;
+            }
+            double sd = 0;
+            double mean = values.Average();
+            double sum = values.Sum(d => Math.Pow(d - mean, 2));
+            sd = Math.Sqrt((sum) / values.Count() - 1);
+            LastListStatistics.Average = mean;
+            LastListStatistics.StandardDeviation = sd;
+            LastListStatistics.Count = values.Count();
+            LastListStatistics.Total = Herd.Count();
+            return Herd.Count();
         }
 
         /// <summary>

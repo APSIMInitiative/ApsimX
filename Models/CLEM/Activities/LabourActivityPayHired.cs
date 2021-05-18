@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// Labour can be limited by shortfall
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// Account to use
         /// </summary>
         [Description("Account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
@@ -203,13 +203,13 @@ namespace Models.CLEM.Activities
             if (Resources.Labour().Items.Where(a => a.Hired).Count() == 0)
             {
                 string[] memberNames = new string[] { "Hired labour" };
-                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\nThis activity will not be performed without hired labour.", memberNames));
+                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
             }
             // make sure pay rates present
             if (!Resources.Labour().PricingAvailable)
             {
                 string[] memberNames = new string[] { "Labour pay rate" };
-                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\nThis activity will not be performed without labour pay rates.", memberNames));
+                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
             }
             return results;
         }
@@ -223,8 +223,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ";
+            string html = "\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ";
             if (AccountName == null || AccountName == "")
             {
                 html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";

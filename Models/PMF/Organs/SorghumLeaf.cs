@@ -35,7 +35,7 @@ namespace Models.PMF.Organs
     /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage, ICanopy
     {
@@ -505,6 +505,17 @@ namespace Models.PMF.Organs
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
             culms.Initialize();
+            NitrogenPhotoStress = 0;
+            NitrogenPhenoStress = 0;
+
+            MicroClimatePresent = false;
+            _PotentialEP = 0;
+            LightProfile = null;
+
+            WaterDemand = 0;
+            WaterAllocation = 0;
+
+            SowingDensity = 0;
         }
         #endregion
 
@@ -918,7 +929,7 @@ namespace Models.PMF.Organs
                     Senesced.StorageWt += storageWtSenescing;
 
                     double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-                    DltSenescedN += DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
+                    DltSenescedN += DltSenescedLai * Math.Max(slnToday, 0.0);
 
                     SenescingProportion = DltSenescedN / Live.N;
 

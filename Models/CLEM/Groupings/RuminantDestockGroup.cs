@@ -16,7 +16,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual ruminants for destocking activities
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
@@ -84,7 +84,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (this.FindAllChildren<RuminantFilter>().Count() >= 1)
             {
-                html += "\n</div>";
+                html += "\r\n</div>";
             }
             return html;
         }
@@ -96,7 +96,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
+            html += "\r\n<div class=\"filterborder clearfix\">";
             if (FindAllChildren<RuminantFilter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";

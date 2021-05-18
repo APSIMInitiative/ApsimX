@@ -3,6 +3,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Advanced ruminant conception for first conception less than 12 months, 12-24 months, 2nd calf and 3+ calf
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
@@ -37,13 +38,21 @@ namespace Models.CLEM.Resources
         public double ConditionCutOff { get; set; }
 
         /// <summary>
+        /// Maximum probability of conceiving given condition satisfied
+        /// </summary>
+        [Description("Maximum probability of conceiving")]
+        [Required, Proportion, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        public double MaximumConceptionProbability { get; set; }
+
+        /// <summary>
         /// Calculate conception rate for a female based on condition score
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
         /// <returns></returns>
         public double ConceptionRate(RuminantFemale female)
         {
-            return (female.RelativeCondition >= ConditionCutOff) ? 1 : 0;
+            return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
         }
 
         #region descriptive summary 
@@ -55,19 +64,21 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\nNo breeding females will concieve if this ratio is below ";
-            if (ConditionCutOff == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">No set</span>";
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\r\nNo breeding females will concieve if this ratio is below ");
+                if (ConditionCutOff == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">No set</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>";
-            }
-            html += "</div>";
-            return html;
         }
 
         #endregion

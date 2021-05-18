@@ -20,7 +20,7 @@
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
@@ -194,7 +194,7 @@
                 InterceptedRadn = 0.0;
                 myLightProfile = value;
                 foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
-                    InterceptedRadn += canopyLayer.amount;
+                    InterceptedRadn += canopyLayer.AmountOnGreen;
 
                 // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
                 // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total

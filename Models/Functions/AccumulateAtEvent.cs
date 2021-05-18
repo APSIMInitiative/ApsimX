@@ -11,7 +11,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class AccumulateAtEvent : Model, IFunction, ICustomDocumentation
     {
@@ -94,17 +94,6 @@ namespace Models.Functions
 
             startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
             endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
-        }
-
-        /// <summary>
-        /// Invoked when simulation has completed.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            events.Unsubscribe(AccumulateEventName, OnCalcEvent);
         }
 
         /// <summary>Called by Plant.cs when phenology routines are complete.</summary>

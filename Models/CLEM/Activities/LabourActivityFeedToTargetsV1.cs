@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -423,7 +423,7 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 
@@ -434,12 +434,12 @@ namespace Models.CLEM.Activities
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            html += "\n<div class=\"croprotationborder\">";
+            html += "\r\n<div class=\"croprotationborder\">";
             html += "<div class=\"croprotationlabel\">The people will eat to the following targets:</div>";
 
             if (this.FindAllChildren<LabourActivityFeedTarget>().Count() == 0)
             {
-                html += "\n<div class=\"errorbanner clearfix\">";
+                html += "\r\n<div class=\"errorbanner clearfix\">";
                 html += "<div class=\"filtererror\">No Feed To Target component provided</div>";
                 html += "</div>";
             }

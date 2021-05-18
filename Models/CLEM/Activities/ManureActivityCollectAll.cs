@@ -13,7 +13,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant manure collection activity</summary>
     /// <summary>This activity performs the collection of all manure</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -165,9 +165,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Collect manure from all pasture</div>";
-            return html;
+            return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";
         }
 
     }

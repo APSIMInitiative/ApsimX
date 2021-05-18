@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// The simplest ruminant conception using a single curve
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
@@ -75,11 +75,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception rates are being calculated for all females using the same curve.";
-            html += "</div>";
-            return html;
+            return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
         }
 
         #endregion

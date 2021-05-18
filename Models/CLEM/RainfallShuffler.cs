@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -88,25 +89,27 @@ namespace Models.CLEM
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "\nThe rainfall year starts in ";
-            if (StartSeasonMonth == MonthsOfYear.NotSet)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Not set";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">";
-                html += StartSeasonMonth.ToString();
-            }
-            html += "</span>";
-            html += "\n</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThe rainfall year starts in ");
+                if (StartSeasonMonth == MonthsOfYear.NotSet)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not set");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(StartSeasonMonth.ToString());
+                }
+                htmlWriter.Write("</span>");
+                htmlWriter.Write("\r\n</div>");
 
-            html += "\n<div class=\"activityentry\">";
-            html += "\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>";
-            html += "\n</div>";
-            return html;
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: Rainfall years are being shuffled as a proxy for stochastic rainfall variation in this simulation.<br />This is an advance feature provided for particular projects.</div>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
+            }
         }
 
         #endregion

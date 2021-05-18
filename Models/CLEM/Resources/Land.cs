@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -15,7 +16,7 @@ namespace Models.CLEM.Resources
     /// Parent model of Land Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all land types for the simulation.")]
@@ -179,26 +180,28 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Reported in ";
-            if (UnitsOfArea == null || UnitsOfArea == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Unspecified units of area</span>";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + UnitsOfArea + "</span>";
-            }
-            html += "</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Reported in ");
+                if (UnitsOfArea == null || UnitsOfArea == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
+                }
+                htmlWriter.Write("</span>");
 
 
-            if (UnitsOfAreaToHaConversion != 1)
-            {
-                html += " (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)";
+                if (UnitsOfAreaToHaConversion != 1)
+                {
+                    htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
+                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            return html;
         }
 
         #endregion

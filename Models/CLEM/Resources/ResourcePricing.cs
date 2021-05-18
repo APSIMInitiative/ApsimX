@@ -3,6 +3,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Resource type pricing
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStoreType))]
     [ValidParent(ParentType = typeof(EquipmentType))]
@@ -77,57 +78,60 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "\nThis is a <span class=\"setvalue\">";
-            switch (PurchaseOrSale)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                case PurchaseOrSalePricingStyleType.Both:
-                    html += "purchase and sell";
-                    break;
-                case PurchaseOrSalePricingStyleType.Purchase:
-                    html += "purchase";
-                    break;
-                case PurchaseOrSalePricingStyleType.Sale:
-                    html += "sell";
-                    break;
-                default:
-                    break;
-            }
-            html += "</span> price</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis is a <span class=\"setvalue\">");
+                switch (PurchaseOrSale)
+                {
+                    case PurchaseOrSalePricingStyleType.Both:
+                        htmlWriter.Write("purchase and sell");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Purchase:
+                        htmlWriter.Write("purchase");
+                        break;
+                    case PurchaseOrSalePricingStyleType.Sale:
+                        htmlWriter.Write("sell");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</span> price</div>");
 
-            html += "\n<div class=\"activityentry\">";
-            html += "\nThis resource is managed ";
-            if (UseWholePackets)
-            {
-                html += "only in whole ";
-            }
-            else
-            {
-                html += "in ";
-            }
-            html += "packets ";
-            if (PacketSize > 0)
-            {
-                html += "<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">Not defined</span>";
-            }
-            html += " unit" + ((this.PacketSize == 1) ? "" : "s");
-            html += " in size\n</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("\r\nThis resource is managed ");
+                if (UseWholePackets)
+                {
+                    htmlWriter.Write("only in whole ");
+                }
+                else
+                {
+                    htmlWriter.Write("in ");
+                }
+                htmlWriter.Write("packets ");
+                if (PacketSize > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
+                }
+                htmlWriter.Write(" unit" + ((this.PacketSize == 1) ? "" : "s"));
+                htmlWriter.Write(" in size\r\n</div>");
 
-            html += "\n<div class=\"activityentry\">\nEach packet is worth ";
-            if (PricePerPacket > 0)
-            {
-                html += "<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">\r\nEach packet is worth ");
+                if (PricePerPacket > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
+                }
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"errorlink\">Not defined</span>";
-            }
-            html += "\n</div>";
-            return html;
         }
 
         #endregion

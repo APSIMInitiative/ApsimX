@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     /// # [Name]
     /// The leaves are modelled as a set of leaf cohorts and the properties of each of these cohorts are summed to give overall values for the leaf organ.  
     ///   A cohort represents all the leaves of a given main- stem node position including all of the branch leaves appearing at the same time as the given main-stem leaf ([lawless2005wheat]).  
-    ///   The number of leaves in each cohort is the product of the number of plants per m<sup>2</sup> and the number of branches per plant.  
+    ///   The number of leaves in each cohort is the product of the number of plants per m^2^ and the number of branches per plant.  
     ///   The *Structure* class models the appearance of main-stem leaves and branches.  Once cohorts are initiated the *Leaf* class models the area and biomass dynamics of each.  
     ///   It is assumed all the leaves in each cohort have the same size and biomass properties.  The modelling of the status and function of individual cohorts is delegated to *LeafCohort* classes.  
     /// 
@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage
@@ -778,9 +778,9 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        if(Double.IsNaN(LightProfile[i].amount)) 
+                        if(Double.IsNaN(LightProfile[i].AmountOnGreen)) 
                             TotalRadn += 0;
-                    else TotalRadn += LightProfile[i].amount;
+                    else TotalRadn += LightProfile[i].AmountOnGreen;
                     return TotalRadn;                    
                 }
                 else
@@ -1240,6 +1240,15 @@ namespace Models.PMF.Organs
         /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
 
+        /// <summary>Called at start of simulation to initialise the model.</summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs args)
+        {
+            Reset();
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1293,6 +1302,7 @@ namespace Models.PMF.Organs
         public void Reset()
         {
             Leaves = new List<LeafCohort>();
+            CurrentRank = 0;
             needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
@@ -1308,6 +1318,14 @@ namespace Models.PMF.Organs
             Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
+            CurrentExpandingLeaf = 0;
+            StartFractionExpanded = 0;
+            FractionNextleafExpanded = 0;
+            DeadNodesYesterday = 0;
+            CohortParameters.ExpansionStressValue = 0;
+            CohortParameters.CellDivisionStressValue = 0;
+            CohortParameters.DroughtInducedLagAccelerationValue = 0;
+            CohortParameters.DroughtInducedSenAccelerationValue = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]

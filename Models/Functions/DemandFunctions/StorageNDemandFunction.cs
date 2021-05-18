@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
-using APSIM.Shared.Utilities;
 
 namespace Models.Functions.DemandFunctions
 {
     /// <summary>
-    /// The partitioning of daily growth to storage biomass attempts to bring the organ's N content to the maximum concentration.
+    /// The partitioning of daily N supply to storage N attempts to bring the organ's N content to the maximum concentration.
     /// </summary>
     [Serializable]
     [Description("This function calculates...")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StorageNDemandFunction : Model, IFunction, ICustomDocumentation
     {

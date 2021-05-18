@@ -20,7 +20,7 @@
             var analysisNode = soil.FindChild<Chemical>();
             var layerStructure = soil.FindChild<LayerStructure>();
             var weirdo = soil.FindChild<WEIRDO>();
-            var organic = soil.FindChild<Organic>();
+            var organicNode = soil.FindChild<Organic>();
             var waterBalance = soil.FindChild<ISoilWater>();
 
             // Determine the target layer structure.
@@ -34,20 +34,18 @@
             if (waterBalance is WaterModel.WaterBalance)
                 SetSoilWaterThickness(waterBalance as WaterModel.WaterBalance, targetThickness);
             if (weirdo != null)
-            {
-                weirdo.LayerThickness = targetThickness;
-                weirdo.MapVariables(physicalNode, targetThickness);
-            }
+                weirdo.SetLayerThickness(targetThickness);
+
             SetAnalysisThickness(analysisNode, targetThickness);
-            SetSoilOrganicMatterThickness(organic, targetThickness);
-            SetWaterThickness(physicalNode, targetThickness, soil);
+            SetSoilOrganicMatterThickness(organicNode, targetThickness);
+            SetPhysicalPropertiesThickness(physicalNode, targetThickness, soil);
         }
 
         /// <summary>Sets the water thickness.</summary>
         /// <param name="physical">The water.</param>
         /// <param name="toThickness">To thickness.</param>
         /// <param name="soil">Soil</param>
-        private static void SetWaterThickness(IPhysical physical, double[] toThickness, Soil soil)
+        private static void SetPhysicalPropertiesThickness(IPhysical physical, double[] toThickness, Soil soil)
         {
             if (!MathUtilities.AreEqual(toThickness, physical.Thickness))
             {
@@ -66,10 +64,16 @@
                 physical.SAT = MapConcentration(physical.SAT, physical.Thickness, toThickness, MathUtilities.LastValue(physical.SAT));
                 physical.KS = MapConcentration(physical.KS, physical.Thickness, toThickness, MathUtilities.LastValue(physical.KS));
                 if (physical != null)
-                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length == physical.Thickness.Length)
+                {
+                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length > 0 && physical.ParticleSizeClay.Length != toThickness.Length)
                         physical.ParticleSizeClay = MapConcentration(physical.ParticleSizeClay, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeClay));
-                    else
-                        physical.ParticleSizeClay = null;
+                    if (physical.ParticleSizeSand != null && physical.ParticleSizeSand.Length > 0 && physical.ParticleSizeSand.Length != toThickness.Length)
+                        physical.ParticleSizeSand = MapConcentration(physical.ParticleSizeSand, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+                    if (physical.ParticleSizeSilt != null && physical.ParticleSizeSilt.Length > 0 && physical.ParticleSizeSilt.Length != toThickness.Length)
+                        physical.ParticleSizeSilt = MapConcentration(physical.ParticleSizeSilt, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSilt));
+                    if (physical.Rocks != null && physical.Rocks.Length > 0 && physical.Rocks.Length != toThickness.Length)
+                        physical.Rocks = MapConcentration(physical.Rocks, physical.Thickness, toThickness, MathUtilities.LastValue(physical.Rocks));
+                }
                 physical.Thickness = toThickness;
 
                 foreach (var crop in crops)
@@ -95,7 +99,6 @@
                     soilWater.SWCON = MapConcentration(soilWater.SWCON, soilWater.Thickness, thickness, 0.0);
 
                     soilWater.Thickness = thickness;
-                    soilWater.LayerThickness = thickness;
                 }
                 if (soilWater.SWCON == null)
                     soilWater.SWCON = MathUtilities.CreateArrayOfValues(0.3, soilWater.Thickness.Length);
@@ -144,6 +147,8 @@
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
+                analysis.LabileP = MapConcentration(analysis.LabileP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.LabileP));
+                analysis.UnavailableP = MapConcentration(analysis.UnavailableP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.UnavailableP));
 
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.Thickness = thickness;

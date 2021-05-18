@@ -13,8 +13,8 @@ namespace Models.CLEM.Resources
     /// Holds a list of labour availability items
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This represents a list of labour availability settings")]
     [Version(1, 0, 1, "")]
@@ -41,7 +41,7 @@ namespace Models.CLEM.Resources
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() == 0)
             {
-                html += "\n<div class=\"errorlink\">";
+                html += "\r\n<div class=\"errorlink\">";
                 html += "No labour availability has been defined";
                 html += "</div>";
             }
@@ -54,9 +54,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
-            string html = "";
-            html += "</table>";
-            return html;
+            return "</table>";
         }
 
         /// <summary>

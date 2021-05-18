@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -13,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for bank account
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
     [Description("This resource represents a finance type (e.g. General bank account).")]
@@ -164,7 +165,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -233,7 +235,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 RelatesToResource = request.RelatesToResource,
                 Category = request.Category
@@ -263,43 +266,45 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">";
-            html += "Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>";
-            if (this.EnforceWithdrawalLimit)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>";
-            }
-            else
-            {
-                html += " with no withdrawal limit";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">";
-            if (this.InterestRateCharged + this.InterestRatePaid == 0)
-            {
-                html += "No interest rates included";
-            }
-            else
-            {
-                html += "Interest rate of ";
-                if (this.InterestRateCharged > 0)
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
+                if (this.EnforceWithdrawalLimit)
                 {
-                    html += "<span class=\"setvalue\">";
-                    html += this.InterestRateCharged.ToString("0.##") + "</span>% charged ";
+                    htmlWriter.Write(" that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>");
+                }
+                else
+                {
+                    htmlWriter.Write(" with no withdrawal limit");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (this.InterestRateCharged + this.InterestRatePaid == 0)
+                {
+                    htmlWriter.Write("No interest rates included");
+                }
+                else
+                {
+                    htmlWriter.Write("Interest rate of ");
+                    if (this.InterestRateCharged > 0)
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(this.InterestRateCharged.ToString("0.##") + "</span>% charged ");
+                        if (this.InterestRatePaid > 0)
+                        {
+                            htmlWriter.Write("and ");
+                        }
+                    }
                     if (this.InterestRatePaid > 0)
                     {
-                        html += "and ";
+                        htmlWriter.Write("<span class=\"setvalue\">");
+                        htmlWriter.Write(this.InterestRatePaid.ToString("0.##") + "</span>% paid");
                     }
                 }
-                if (this.InterestRatePaid > 0)
-                {
-                    html += "<span class=\"setvalue\">";
-                    html += this.InterestRatePaid.ToString("0.##") + "</span>% paid";
-                }
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
             }
-            html += "</div>";
-            return html;
         } 
         #endregion
 

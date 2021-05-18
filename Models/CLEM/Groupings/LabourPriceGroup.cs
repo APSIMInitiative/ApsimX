@@ -15,7 +15,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual labour in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
@@ -62,7 +62,7 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!formatForParentControl)
             {
-                html += "\n<div class=\"activityentry\">";
+                html += "\r\n<div class=\"activityentry\">";
                 html += "Pay ";
                 if (Value.ToString() == "0")
                 {
@@ -102,7 +102,7 @@ namespace Models.CLEM.Groupings
             }
             else
             {
-                html += "\n</div>";
+                html += "\r\n</div>";
             }
             return html;
         }
@@ -124,7 +124,7 @@ namespace Models.CLEM.Groupings
             }
             else
             {
-                html += "\n<div class=\"filterborder clearfix\">";
+                html += "\r\n<div class=\"filterborder clearfix\">";
                 if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";

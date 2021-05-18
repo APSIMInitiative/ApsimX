@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -16,7 +17,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -46,7 +47,8 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Category("General", "Pasture details")]
         [Description("GrazeFoodStore (paddock) to place purchases in")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
         private string grazeStore = "";
@@ -76,22 +78,36 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // check that a RuminantTypeCohort is supplied to identify trade individuals.
-            if (this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Count() == 0)
+            var specifyRuminants = this.FindAllChildren<SpecifyRuminant>();
+            if (specifyRuminants.Count() == 0)
             {
                 string[] memberNames = new string[] { "PurchaseDetails" };
-                results.Add(new ValidationResult("At least one trade pruchase description is required. Provide a RuminantTypeCohort model below this activity specifying the number, size and age of individuals to be purchased.", memberNames));
+                results.Add(new ValidationResult("At least one trade purchase description is required. Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
             }
-            foreach (RuminantTypeCohort item in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
+            else
             {
-                if (item.Suckling)
+                foreach (SpecifyRuminant specRumItem in specifyRuminants)
                 {
-                    string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
-                    results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                    // get Cohort
+                    var items = specRumItem.FindAllChildren<RuminantTypeCohort>();
+                    if(items.Count() > 1)
+                    {
+                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
+                        results.Add(new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames));
+                    }
+                    if (items.First().Suckling)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
+                        results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                    }
+                    if (items.First().Sire)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
+                        results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
+                    }
                 }
-                if (item.Sire)
+                foreach (RuminantTypeCohort specRumItem in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
                 {
-                    string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
-                    results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
                 }
             }
             return results;
@@ -127,7 +143,7 @@ namespace Models.CLEM.Activities
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                 {
-                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
                 }
             }
 
@@ -154,8 +170,9 @@ namespace Models.CLEM.Activities
                 // remove any old potential sales from list as these will be updated here
                 Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
-                foreach (RuminantTypeCohort purchasetype in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
+                foreach (SpecifyRuminant purchaseSpecific in this.FindAllChildren<SpecifyRuminant>())
                 {
+                    RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
                     {
@@ -163,7 +180,9 @@ namespace Models.CLEM.Activities
                         number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
                     }
 
-                    for (int i = 0; i < number; i++)
+                    number *= purchaseSpecific.Proportion;
+
+                    for (int i = 0; i < Math.Ceiling(number); i++)
                     {
                         object ruminantBase = null;
 
@@ -184,8 +203,8 @@ namespace Models.CLEM.Activities
 
                         Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
-                        ruminant.Breed = this.PredictedHerdBreed;
-                        ruminant.HerdName = this.PredictedHerdName;
+                        ruminant.Breed = purchaseSpecific.BreedParams.Name;
+                        ruminant.HerdName = purchaseSpecific.BreedParams.Breed;
                         ruminant.PurchaseAge = purchasetype.Age;
                         ruminant.SaleFlag = HerdChangeReason.TradePurchase;
                         ruminant.Location = grazeStore;
@@ -195,7 +214,7 @@ namespace Models.CLEM.Activities
                         {
                             case Sex.Male:
                                 RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                                ruminantMale.IsSire = false;
+                                ruminantMale.Sire = false;
                                 break;
                             case Sex.Female:
                                 RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
@@ -309,43 +328,45 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Trade individuals are kept for ";
-            html += "<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months";
-            if (TradeWeight > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += " or until";
-                html += "<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg";
-            }
-            html += "</div>";
-
-            html += "\n<div class=\"activityentry\">";
-            html += "Purchased individuals will be placed in ";
-            if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-            {
-                html += "<span class=\"resourcelink\">General yards</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>";
-            }
-            html += "</div>";
-
-            Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
-            if (numberRelationship != null)
-            {
-                html += "\n<div class=\"activityentry\">";
-                if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Trade individuals are kept for ");
+                htmlWriter.Write("<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months");
+                if (TradeWeight > 0)
                 {
-                    html += "The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)";
+                    htmlWriter.Write(" or until");
+                    htmlWriter.Write("<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg");
+                }
+                htmlWriter.Write("</div>");
+
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("Purchased individuals will be placed in ");
+                if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
                 }
                 else
                 {
-                    html += "The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)";
+                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
                 }
-                html += "</div>";
+                htmlWriter.Write("</div>");
+
+                Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
+                if (numberRelationship != null)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
+                    {
+                        htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
+                    }
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
     }

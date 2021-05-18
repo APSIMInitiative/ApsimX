@@ -1,15 +1,16 @@
 ﻿namespace Models.PMF
 {
+    using APSIM.Shared.Utilities;
+    using Models.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Newtonsoft.Json;
-    using Models.Core;
-    using APSIM.Shared.Utilities;
 
     /// <summary>
-    /// # [Name]
-    /// Class for holding parameter overrides that are used to define a cultivar.
+    /// # [Name] 
+    /// [Name] overrides the following properties:
+    /// 
+    /// [Command]
     /// </summary>
     /// <remarks>
     /// A cultivar includes \p Aliases to indicate other common names
@@ -24,7 +25,7 @@
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(GrazPlan.Stock))]
     [ValidParent(ParentType = typeof(CultivarFolder))]
-    public class Cultivar : Model, ICustomDocumentation
+    public class Cultivar : Model
     {
         /// <summary>
         /// The properties for each command
@@ -35,11 +36,6 @@
         /// The original property values before the command was applied. Allows undo.
         /// </summary>
         private List<object> oldPropertyValues = new List<object>();
-
-        /// <summary>
-        /// Gets or sets a collection of names this cultivar is known as.
-        /// </summary>
-        public string[] Alias { get => FindAllChildren<Alias>().Select(a => a.Name).ToArray(); }
 
         /// <summary>
         /// Gets or sets a collection of commands that must be executed when applying this cultivar.
@@ -53,10 +49,17 @@
         /// <param name="name">The name.</param>
         public bool IsKnownAs(string name)
         {
-            if (string.Equals(Name, name, StringComparison.InvariantCultureIgnoreCase))
-                return true;
-            
-            return Alias.Any(a => string.Equals(a, name, StringComparison.InvariantCultureIgnoreCase));
+            return GetNames().Any(a => string.Equals(a, name, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        /// <summary>
+        /// Return all names by which this cultivar is known.
+        /// </summary>
+        public IEnumerable<string> GetNames()
+        {
+            yield return Name;
+            foreach (string name in FindAllChildren<Alias>().Select(a => a.Name))
+                yield return name;
         }
 
         /// <summary>
@@ -131,24 +134,6 @@
 
             this.properties.Clear();
             this.oldPropertyValues.Clear();
-        }
-
-        /// <summary>
-        /// Writes documentation for this function by adding to the list of documentation tags.
-        /// </summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("This cultivar is defined by overriding some of the base parameters of the plant model.", indent));
-                tags.Add(new AutoDocumentation.Paragraph(Name + " makes the following changes:", indent));
-                if (Command != null && Command.Length > 0)
-                    tags.Add(new AutoDocumentation.Paragraph(Command.Aggregate((a, b) => a + "<br>" + b), indent));
-            }
         }
     }
 }

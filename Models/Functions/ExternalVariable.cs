@@ -16,7 +16,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the value of a nominated external APSIM numerical variable")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ExternalVariable : Model, IFunction
     {

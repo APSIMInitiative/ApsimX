@@ -5,14 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch",
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/ApsimNG.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ApsimNG",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        {
+            "name": "Mono Launch",
             "type": "mono",
             "request": "launch",
-            "program": "${workspaceRoot}/Bin/ApsimNG.exe",
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}/bin/Debug/net472/ApsimNG.exe",
             "cwd": "${workspaceRoot}"
         },
         {
-            "name": "Attach",
+            "name": "Mono Attach",
             "type": "mono",
             "request": "attach",
             "address": "localhost",

@@ -1,3 +1,0 @@
-Col(1),Col(2),Zones(1).WaterUptake(1),Zones(1).WaterUptake(2),Col(3)
-     1,     2,                  3.000,                  4.000,      
-     5,     6,                  8.000,                  9.000,     7

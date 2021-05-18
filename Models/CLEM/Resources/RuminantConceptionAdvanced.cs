@@ -13,7 +13,7 @@ namespace Models.CLEM.Resources
     /// Advanced ruminant conception for first conception less than 12 months, 12-24 months, 2nd calf and 3+ calf
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
     [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
@@ -112,11 +112,7 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf.";
-            html += "</div>";
-            return html;
+            return "<div class=\"activityentry\">Conception rates are being calculated for first pregnancy before 12 months, between 12-24 months and after 24 months as well as 2nd calf and 3rd or later calf. </div>";
         }
 
 

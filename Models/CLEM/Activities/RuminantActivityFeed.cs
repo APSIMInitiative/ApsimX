@@ -9,6 +9,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using MathNet.Numerics;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -38,7 +39,7 @@ namespace Models.CLEM.Activities
         /// eg. AnimalFoodStore.RiceStraw
         /// </summary>
         [Description("Feed to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] {typeof(AnimalFoodStore), typeof(HumanFoodStore)} )]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Feed type required")]
         public string FeedTypeName { get; set; }
 
@@ -440,6 +441,10 @@ namespace Models.CLEM.Activities
                 }
                 SetStatusSuccess();
             }
+            else
+            {
+                Status = ActivityStatus.NotNeeded;
+            }
         }
 
         /// <summary>
@@ -488,24 +493,26 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Feed ruminants ";
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
 
-            if (FeedTypeName == null || FeedTypeName == "")
-            {
-                html += "<span class=\"errorlink\">[Feed TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + FeedTypeName + "</span>";
-            }
-            html += "</div>";
+                if (FeedTypeName == null || FeedTypeName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
+                }
+                htmlWriter.Write("</div>");
 
-            if (ProportionTramplingWastage > 0)
-            {
-                html += "\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>";
+                if (ProportionTramplingWastage > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
     }

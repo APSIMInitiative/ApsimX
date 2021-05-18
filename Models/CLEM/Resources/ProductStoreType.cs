@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for emission type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a product store type (e.g. Cotton).")]
@@ -107,7 +107,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -154,7 +155,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = amountRemoved,
+                    TransactionType = TransactionType.Loss,
+                    Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -187,12 +189,12 @@ namespace Models.CLEM.Resources
         {
             string html = base.ModelSummary(formatForParentControl);
 
-            html += "\n<div class=\"activityentry\">";
+            html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)
             {
                 html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
             }
-            html += "\n</div>";
+            html += "\r\n</div>";
             return html;
         }
 

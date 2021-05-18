@@ -7,12 +7,17 @@ using Models.Core;
 
 namespace Models.Functions
 {
-    /// <summary>Minimize the values of the children of this node</summary>
+    /// <summary>
+    /// #[Name] 
+    /// [Name] is calculated as the minimum of [ChildFunctionList]
+    /// 
+    /// Where:
+    /// </summary>
     /// \pre All children have to contain a public function "Value"
     /// \retval Minimum value of all children of this node. Return 999999999 if no child.
     [Serializable]
     [Description("Returns the Minimum value of all children functions")]
-    public class MinimumFunction : Model, IFunction, ICustomDocumentation
+    public class MinimumFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
@@ -32,35 +37,12 @@ namespace Models.Functions
             return ReturnValue;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>String list of child functions</summary>
+        public string ChildFunctionList
         {
-            if (IncludeInDocumentation)
+            get
             {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // create a string to display 'child1 - child2 - child3...'
-                string msg = "";
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                {
-                    if (msg != string.Empty)
-                        msg += ", ";
-                    msg += child.Name;
-                }
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = minimum (" + msg + ")</i>", indent));
-
-                // write children
-                tags.Add(new AutoDocumentation.Paragraph("Where:", indent));
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
+                return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
             }
         }
     }

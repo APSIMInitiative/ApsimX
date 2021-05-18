@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Labour activity task</summary>
     /// <summary>Defines a labour activity task with associated costs</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -128,8 +128,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">This activity uses a category label ";
+            string html = "\r\n<div class=\"activityentry\">This activity uses a category label ";
             if (Category != null && Category != "")
             {
                 html += "<span class=\"setvalue\">" + Category + "</span> ";

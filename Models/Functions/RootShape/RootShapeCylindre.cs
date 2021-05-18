@@ -11,7 +11,7 @@ namespace Models.Functions.RootShape
     /// This model calculates the proportion of each soil layer occupided by roots.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Root))]
     public class RootShapeCylindre : Model, IRootShape, ICustomDocumentation

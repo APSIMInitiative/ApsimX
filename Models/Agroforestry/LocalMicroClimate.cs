@@ -13,7 +13,7 @@ namespace Models.Agroforestry
     /// Class to calculate and communicate local microclimate in agroforestry systems
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
@@ -94,6 +94,12 @@ namespace Models.Agroforestry
         /// </summary>
         [JsonIgnore]
         public double AirPressure { get { return weather.AirPressure; } set { weather.AirPressure = value; } }
+
+        /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [JsonIgnore]
+        public double DiffuseFraction { get { return weather.DiffuseFraction; } set { weather.DiffuseFraction = value; } }
 
         /// <summary>Gets the latitude</summary>
         [JsonIgnore]

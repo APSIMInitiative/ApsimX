@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Other animals breed activity</summary>
     /// <summary>This activity handles breeding in other animals types</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Other animal type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of other animal type required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(OtherAnimals) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(OtherAnimals) } })]
         public string AnimalType { get; set; }
 
         /// <summary>

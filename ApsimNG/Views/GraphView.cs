@@ -19,6 +19,7 @@
     using System.Linq;
     using System.Globalization;
     using MathNet.Numerics.Statistics;
+    using Extensions;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -72,11 +73,6 @@
                         series.MarkerSize = numericValue;
             }
         }
-
-        /// <summary>
-        /// Overall font size for the graph.
-        /// </summary>
-        //public double MarkerSize = -1;
 
         /// <summary>
         /// Overall font to use.
@@ -142,6 +138,18 @@
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+
+            
+
+#if NETCOREAPP
+            // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
+            // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
+            // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
+            // scaling is 125% or 100% then ScaleFactor is 1.0. It doesn't seem consistent though.
+            // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
+            var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
+#endif
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -175,8 +183,8 @@
                     }
                 }
                 Clear();
-                popup.Dispose();
-                plot1.Destroy();
+                popup.Cleanup();
+                plot1.Cleanup();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -210,6 +218,11 @@
         /// Invoked when the user clicks on the graph caption.
         /// </summary>
         public event EventHandler OnCaptionClick;
+
+        /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        public event EventHandler OnAnnotationClick;
 
         /// <summary>
         /// Invoked when the user hovers over a series point.
@@ -262,14 +275,36 @@
 
         public int Width
         {
-            get { return this.plot1.Allocation.Width > 1 ? this.plot1.Allocation.Width : this.plot1.ChildRequisition.Width; }
-            set { this.plot1.WidthRequest = value; }
+            get
+            {
+#if NETFRAMEWORK
+                int preferredWidth = plot1.ChildRequisition.Width;
+#else
+                plot1.GetPreferredWidth(out int minWidth, out int preferredWidth);
+#endif
+                return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
+            }
+            set
+            {
+                plot1.WidthRequest = value;
+            }
         }
 
         public int Height
         {
-            get { return this.plot1.Allocation.Height > 1 ? this.plot1.Allocation.Height : this.plot1.ChildRequisition.Height; }
-            set { this.plot1.HeightRequest = value; }
+            get
+            {
+#if NETFRAMEWORK
+                int preferredHeight = plot1.ChildRequisition.Height;
+#else
+                plot1.GetPreferredHeight(out int minHeight, out int preferredHeight);
+#endif
+                return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
+            }
+            set
+            {
+                plot1.HeightRequest = value;
+            }
         }
 
         /// <summary>Gets or sets a value indicating if the legend is visible.</summary>
@@ -367,7 +402,8 @@
         /// <param name="markerType">The type of series markers</param>
         /// <param name="lineThickness">The line thickness</param>
         /// <param name="markerSize">The size of the marker</param>
-        /// <param name="showInLegend">Show in legend?</param>
+        /// <param name="markerModifier">Multiplier on marker size.</param>
+        /// <param name="showOnLegend">Show in legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawLineAndMarkers(
              string title,
@@ -399,6 +435,8 @@
 
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -489,6 +527,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawBar(
             string title,
@@ -501,10 +540,7 @@
         {
             if (x != null && y != null)
             {
-                // In a bar chart, we need to ensure that the x-axis is always a category axis.
-                EnsureAxisExists(xAxisType, typeof(string));
-
-                ColumnXYSeries series = new ColumnXYSeries();
+                var series = new Utility.ColumnXYSeries();
                 if (showOnLegend)
                     series.Title = title;
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
@@ -512,12 +548,14 @@
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
                 series.XAxisKey = xAxisType.ToString();
                 series.YAxisKey = yAxisType.ToString();
+
+                
                 // By default, clicking on a datapoint (a bar) of a bar graph
                 // will create a pop-up showing the x/y values at the beginning
                 // and end of the bar. We override this here, so that it only
                 // shows the x/y pair at the end of the bar. Perhaps we should
                 // accept the tracker string as an argument to this function?
-                series.TrackerFormatString = "{0}\n{1}: {3}\n{4}: {6}";
+                series.TrackerFormatString = "{0}\n{1}: {2}\n{3}: {4}";
                 this.plot1.Model.Series.Add(series);
             }
         }
@@ -534,6 +572,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawRegion(
             string title,
@@ -597,6 +636,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawArea(
             string title,
@@ -626,6 +666,7 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawStackedArea(
             string title,
@@ -720,6 +761,10 @@
         /// <param name="xAxisType">The axis type the x values are related to</param>
         /// <param name="yAxisType">The axis type the y values are related to</param>
         /// <param name="colour">The series color</param>
+        /// <param name="showOnLegend">Show this series in the legend?</param>
+        /// <param name="lineType">Type of line to be used.</param>
+        /// <param name="markerType">Type of marker to be used.</param>
+        /// <param name="lineThickness">Line thickness.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed.")]
         public void DrawBoxPLot(
             string title,
@@ -769,6 +814,8 @@
                 // Colour
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
 
                 OxyColor oxyColour = Utility.Colour.ToOxy(colour);
                 series.Fill = oxyColour;
@@ -837,6 +884,7 @@
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="topAlign">Top align the text?</param>
         /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
@@ -847,6 +895,7 @@
             object x,
             object y,
             bool leftAlign,
+            bool topAlign,
             double textRotation,
             Models.Axis.AxisType xAxisType,
             Models.Axis.AxisType yAxisType,
@@ -857,9 +906,12 @@
             if (leftAlign)
                 annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
             else
-                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Center;
-            annotation.TextVerticalAlignment = VerticalAlignment.Top;
-            annotation.Stroke = OxyColors.White;
+                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Right;
+            if (topAlign)
+                annotation.TextVerticalAlignment = VerticalAlignment.Top;
+            else
+                annotation.TextVerticalAlignment = VerticalAlignment.Bottom;
+            annotation.Stroke = BackColor;
             annotation.Font = Font;
             annotation.TextRotation = textRotation;
 
@@ -881,6 +933,9 @@
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
 
             if (colour == Color.Empty)
+                annotation.TextColor = ForegroundColour;
+            else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                // We never want text to be the same as the background colour.
                 annotation.TextColor = ForegroundColour;
             else
                 annotation.TextColor = Utility.Colour.ToOxy(colour);
@@ -1139,7 +1194,8 @@
         /// <summary>
         /// Show the specified editor.
         /// </summary>
-        /// <param name="editor">The editor to show</param>
+        /// <param name="editorObj">The editor to show</param>
+        /// <param name="expanderLabel">Text to be displayed in the editor.</param>
         public void ShowEditorPanel(object editorObj, string expanderLabel)
         {
             Widget editor = editorObj as Widget;
@@ -1150,7 +1206,7 @@
                     if (widget != label2)
                     {
                         expander1.Remove(widget);
-                        widget.Destroy();
+                        widget.Cleanup();
                     }
                 });
                 expander1.Add(editor);
@@ -1164,6 +1220,7 @@
         /// Export the graph to the specified 'bitmap'
         /// </summary>
         /// <param name="bitmap">Bitmap to write to</param>
+        /// <param name="r">Desired image size.</param>
         /// <param name="legendOutside">Put legend outside of graph?</param>
         public void Export(ref Bitmap bitmap, Rectangle r, bool legendOutside)
         {
@@ -1184,7 +1241,6 @@
         /// </summary>
         public void ExportToClipboard()
         {
-            Gdk.Color colour = MainWidget.Style.Background(StateType.Normal);
             string fileName = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()), ".png");
             PngExporter.Export(plot1.Model, fileName, 800, 600, new Cairo.SolidPattern(new Cairo.Color(BackColor.R / 255.0, BackColor.G / 255.0, BackColor.B/ 255.0, 1), false));
             Clipboard cb = MainWidget.GetClipboard(Gdk.Selection.Clipboard);
@@ -1199,7 +1255,7 @@
         /// <param name="onClick">Event handler for menu item click</param>
         public void AddContextAction(string menuText, System.EventHandler onClick)
         {
-            ImageMenuItem item = new ImageMenuItem(menuText);
+            MenuItem item = new MenuItem(menuText);
             item.Activated += onClick;
             popup.Append(item);
             popup.ShowAll();
@@ -1210,6 +1266,7 @@
         /// </summary>
         /// <param name="menuItemText">The text of the menu item</param>
         /// <param name="onClick">The event handler to call when menu is selected</param>
+        /// <param name="active">Should the context item be active?</param>
         public void AddContextOption(string menuItemText, System.EventHandler onClick, bool active)
         {
             CheckMenuItem item = null;
@@ -1388,6 +1445,7 @@
         /// </summary>
         /// <param name="x">The x values</param>
         /// <param name="y">The y values</param>
+        /// <param name="xError">The error size values for the x-axis.</param>
         /// <param name="yError">The error size values</param>
         /// <param name="xAxisType">The x axis the data is associated with</param>
         /// <param name="yAxisType">The y axis the data is associated with</param>
@@ -1445,7 +1503,7 @@
         }
 
         /// <summary>Gets an array of values for the given enumerator</summary>
-        /// <param name="xEnum">The enumumerator</param>
+        /// <param name="enumerator">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
         private double[] GetDataPointValues(IEnumerator enumerator, Models.Axis.AxisType axisType)
@@ -1469,12 +1527,12 @@
                 }
                 while (enumerator.MoveNext());
             }
-            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || (double.TryParse(enumerator.Current.ToString(), out x) && GetAxis(axisType) == null))
+            else if (enumerator.Current.GetType() == typeof(double) || enumerator.Current.GetType() == typeof(float) || double.TryParse(enumerator.Current.ToString(), out x))
             {
                 this.EnsureAxisExists(axisType, typeof(double));
                 do
-                    dataPointValues.Add(Convert.ToDouble(enumerator.Current, 
-                                                         System.Globalization.CultureInfo.InvariantCulture));
+                    if (!(enumerator.Current is string str && (string.IsNullOrEmpty(str))))
+                        dataPointValues.Add(Convert.ToDouble(enumerator.Current, CultureInfo.InvariantCulture));
                 while (enumerator.MoveNext());
             }
             else
@@ -1538,7 +1596,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
+        public OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1636,10 +1694,19 @@
                 }
                 else if (plotArea.Contains(location))
                 {
-                    if (this.OnPlotClick != null)
+                    bool userClickedOnAnnotation = false;
+                    foreach (var annotation in this.plot1.Model.Annotations)
                     {
-                        this.OnPlotClick.Invoke(sender, e);
+                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                        if (result != null)
+                        {
+                            userClickedOnAnnotation = true;
+                            OnAnnotationClick?.Invoke(this, new EventArgs());
+                        }
                     }
+
+                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                        this.OnPlotClick.Invoke(sender, e);
                 }
                 else
                 {
@@ -1740,7 +1807,10 @@
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
             {
-                return axis.ActualMaximum;
+                if (double.IsNaN(axis.Maximum))
+                    return axis.ActualMaximum;
+                else
+                    return axis.Maximum;
             }
             else
                 return double.NaN;
@@ -1755,7 +1825,10 @@
 
             if (axis != null)
             {
-                return axis.ActualMinimum;
+                if (double.IsNaN(axis.Minimum))
+                    return axis.ActualMinimum;
+                else
+                    return axis.Minimum;
             }
             else
                 return double.NaN;
@@ -1817,7 +1890,7 @@
                 e.Handled = false;
 
                 inRightClick = e.ChangedButton == OxyMouseButton.Right;
-                if (e.ChangedButton == OxyMouseButton.Left) /// Left clicks only
+                if (e.ChangedButton == OxyMouseButton.Left) // Left clicks only
                 {
                     if (e.ClickCount == 1 && SingleClick != null)
                         SingleClick.Invoke(this, e);

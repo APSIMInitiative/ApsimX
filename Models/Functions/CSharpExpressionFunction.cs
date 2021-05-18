@@ -12,7 +12,7 @@ namespace Models.Functions
     /// A c# expression is evaluated.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class CSharpExpressionFunction : Model, IFunction, ICustomDocumentation
     {
@@ -116,10 +116,10 @@ namespace Models.Functions
             template = template.Replace("class Script", $"class {Name}Script");
 
             // Replace the link place holder in the template with links created above.
-            template = template.Replace("        [Link] Clock Clock;", links.ToString());
+            template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
 
             // Replace the expression place holder in the template with the real expression.
-            template = template.Replace("return 123456;", "return " + Expression + ";");
+            template = template.Replace("return Clock.FractionComplete;", "return " + Expression + ";");
 
             // Create a new manager that will compile the expression.
             var result = Compiler().Compile(template, this);

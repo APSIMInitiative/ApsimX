@@ -16,7 +16,7 @@ namespace Models.CLEM
     /// <summary>This functionality has been moved from the CLEM component to an individual component placed under the simulation</summary>
     /// <summary>This allows sharing of a single sequence between multiple farms in a simulation</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This component provides the random number sequence to be used for all stochastic processes in CLEM")]
@@ -53,7 +53,7 @@ namespace Models.CLEM
             { 
                 if(generator is null)
                 {
-                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\nThis simulation uses stochastic processes requiring random numbers\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
+                    throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
                 }
                 return generator; 
             } 

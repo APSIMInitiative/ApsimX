@@ -7,6 +7,7 @@ using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Groupings;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -16,7 +17,7 @@ namespace Models.CLEM.Resources
     /// eg. AdultMale, AdultFemale etc.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
@@ -86,7 +87,7 @@ namespace Models.CLEM.Resources
                 if(adultEquivalent == null)
                 {
                     CLEMModel parent = (Parent as CLEMModel);
-                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\nAdd a suitable relationship identified with \"AE\" in the component name.";
+                    string warning = "No Adult Equivalent (AE) relationship has been added to [r="+this.Parent.Name+"]. All individuals assumed to be 1 AE.\r\nAdd a suitable relationship identified with \"AE\" in the component name.";
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
@@ -274,7 +275,8 @@ namespace Models.CLEM.Resources
             this.AvailableDays += addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = addAmount,
+                TransactionType = TransactionType.Gain,
+                Amount = addAmount,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -327,7 +329,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -401,30 +404,32 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (formatForParentControl == false)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html = "<div class=\"activityentry\">";
-                if (this.Individuals == 0)
+                if (formatForParentControl == false)
                 {
-                    html += "No individuals are provided for this labour type";
-                }
-                else
-                {
-                    if (this.Individuals > 1)
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    if (this.Individuals == 0)
                     {
-                        html += "<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ";
+                        htmlWriter.Write("No individuals are provided for this labour type");
                     }
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ";
-                    html += "<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>";
-                    if (Hired)
+                    else
                     {
-                        html += " as hired labour";
+                        if (this.Individuals > 1)
+                        {
+                            htmlWriter.Write("<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ");
+                        }
+                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ");
+                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>");
+                        if (Hired)
+                        {
+                            htmlWriter.Write(" as hired labour");
+                        }
                     }
+                    htmlWriter.Write("</div>");
                 }
-                html += "</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>

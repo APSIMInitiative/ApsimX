@@ -8,6 +8,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -102,7 +103,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                Summary.WriteWarning(this, "No GrazeFoodStore is available for the ruminant grazing activity!");
+                Summary.WriteWarning(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!");
             }
         }
 
@@ -253,20 +254,22 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">All individuals in managed pastures will graze for ";
-            if (HoursGrazed <= 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ";
-            }
-            else
-            {
-                html += ((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
+                if (HoursGrazed <= 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
+                }
+                else
+                {
+                    htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
+                }
 
-            html += "the maximum 8 hours each day</span>";
-            html += "</div>";
-            return html;
+                htmlWriter.Write("the maximum 8 hours each day</span>");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 

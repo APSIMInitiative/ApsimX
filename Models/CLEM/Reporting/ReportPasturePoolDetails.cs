@@ -25,7 +25,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a current balance column for each CLEM Resource Type\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
     public class ReportPasturePoolDetails: Models.Report
@@ -196,7 +196,7 @@ namespace Models.CLEM.Reporting
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
                 {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\n{string.Join("\n", invalidVariables)}");
+                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
                 }
 
                 // Add row to our table that will be written to the db file

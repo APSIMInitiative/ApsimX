@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on RUE using the approach of [Reyenga1999].
+    /// This model calculates the CO~2~ impact on RUE using the approach of [Reyenga1999].
+    /// 
+    /// For C3 plants,
+    /// 
+    ///     _F~CO2~ = (CO~2~ - CP) x (350 + 2 x CP)/(CO~2~ + 2 x CP) x (350 - CP)_
+    ///     
+    /// where CP, is the compensation point calculated from daily average temperature (T) as
+    /// 
+    ///     _CP = (163.0 - T) / (5.0 - 0.1 * T)_
+    /// 
+    /// For C4 plants,
+    /// 
+    ///     _F<sub>CO~2~</sub> = 0.000143 * CO~2~ + 0.95_
+    /// 
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling && Software 14:297-306")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class RUECO2Function : Model, IFunction, ICustomDocumentation

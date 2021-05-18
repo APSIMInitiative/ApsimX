@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
+            return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
-            return "\n</div>";
+            return "\r\n</div>";
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
-            return "\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
+            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
         } 
         #endregion
 

@@ -77,7 +77,7 @@ namespace UserInterface.Presenters
 
         /// <summary>Attach the model and view to this presenter and populate the view.</summary>
         /// <param name="model">The data store model to work with.</param>
-        /// <param name="view">Data store view to work with.</param>
+        /// <param name="v">Data store view to work with.</param>
         /// <param name="explorerPresenter">Parent explorer presenter.</param>
         public override void Attach(object model, object v, ExplorerPresenter explorerPresenter)
         {
@@ -105,8 +105,6 @@ namespace UserInterface.Presenters
                 tableDropDown.Values = dataStore.Reader.TableAndViewNames.ToArray();
                 if (tablesFilter != null && tablesFilter.Length > 0)
                     tableDropDown.Values = tableDropDown.Values.Intersect(tablesFilter).ToArray();
-                if (tableDropDown.Values.Length == 1)
-                    tableDropDown.SelectedIndex = 0;
                 checkpointDropDown.Values = dataStore.Reader.CheckpointNames.ToArray();
                 if (checkpointDropDown.Values.Length > 0)
                     checkpointDropDown.SelectedValue = checkpointDropDown.Values[0];
@@ -114,6 +112,7 @@ namespace UserInterface.Presenters
                 {
                     maxNumRecordsEditBox.Text = Utility.Configuration.Settings.MaximumRowsOnReportGrid.ToString();
                 }
+                tableDropDown.SelectedIndex = -1;
             }
 
             tableDropDown.Changed += this.OnTableSelected;
@@ -184,6 +183,7 @@ namespace UserInterface.Presenters
                                 simulationId = (int)data.Rows[0][i];
                             }
 
+                            // We don't want to display the SimulationID column.
                             data.Columns.RemoveAt(i);
                             i--;
                         }
@@ -191,6 +191,8 @@ namespace UserInterface.Presenters
                                  columnFilterEditBox.Text != string.Empty &&
                                  !columnFilterEditBox.Text.Split(',').Where(x => !string.IsNullOrEmpty(x)).Any(c => data.Columns[i].ColumnName.Contains(c.Trim())))
                         {
+                            // A column filter is provided and it doesn't match this column.
+                            // Therefore, remove the column from the table.
                             data.Columns.RemoveAt(i);
                             i--;
                         }
@@ -239,11 +241,27 @@ namespace UserInterface.Presenters
                     int count = Utility.Configuration.Settings.MaximumRowsOnReportGrid;
 
                     // Note that the filter contains the zone filter and experiment filter but not simulation filter.
+                    IEnumerable<string> simulationNames = null;
+                    if (ExperimentFilter != null)
+                    {
+                        // fixme: this makes some serious assumptions about how the query is generated in the data store layer...
+                        simulationNames = ExperimentFilter.GenerateSimulationDescriptions().Select(s => s.Name);
+                    }
+                    else if (SimulationFilter == null)
+                        simulationNames = null;
+                    else
+                        simulationNames = new string[] { SimulationFilter.Name };
+
                     string filter = GetFilter();
+                    if (ZoneFilter != null)
+                    {
+                        // More assumptions about column names
+                        filter = AppendToFilter(filter, $"[Zone] = '{ZoneFilter.Name}'");
+                    }
 
                     data = dataStore.Reader.GetData(tableName: tableDropDown.SelectedValue,
                                                     checkpointName: checkpointDropDown.SelectedValue,
-                                                    simulationName: SimulationFilter?.Name,
+                                                    simulationNames: simulationNames,
                                                     filter: filter,
                                                     from: start,
                                                     count: count);
@@ -273,13 +291,8 @@ namespace UserInterface.Presenters
                 filter = AppendToFilter(filter, exptFilter);
             }
 
-            if (ZoneFilter != null)
-            {
-                // More assumptions about column names
-                string zoneFilter = $"T.[Zone] = '{ZoneFilter.Name}'";
-                filter = AppendToFilter(filter, zoneFilter);
-            }
-
+            if (filter == string.Empty)
+                return null;
             return filter;
         }
 

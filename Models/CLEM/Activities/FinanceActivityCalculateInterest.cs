@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -13,7 +14,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -137,7 +138,7 @@ namespace Models.CLEM.Activities
                                 switch (OnPartialResourcesAvailableAction)
                                 {
                                     case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
+                                        throw new ApsimXException(this, String.Format("Insufficient funds in [r={0}] to pay interest charged.\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.", accnt.Name));
                                     case OnPartialResourcesAvailableActionTypes.SkipActivity:
                                         Status = ActivityStatus.Ignored;
                                         break;
@@ -176,43 +177,45 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
-            ResourcesHolder resHolder;
-            Finance finance = null;
-            if (clemParent != null)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
-                finance = resHolder.FinanceResource();
-            }
-
-            if (finance == null)
-            {
-                html += "\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>";
-            }
-            else
-            {
-                html += "\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>";
-                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
+                ZoneCLEM clemParent = FindAncestor<ZoneCLEM>();
+                ResourcesHolder resHolder;
+                Finance finance = null;
+                if (clemParent != null)
                 {
-                    if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
+                    resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
+                    finance = resHolder.FinanceResource();
+                }
+
+                if (finance == null)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
+                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                     {
-                        html += "\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>";
-                    }
-                    else
-                    {
-                        if (accnt.InterestRateCharged > 0)
+                        if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>";
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         }
                         else
                         {
-                            html += "\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>";
+                            if (accnt.InterestRateCharged > 0)
+                            {
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
+                            }
+                            else
+                            {
+                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                            }
                         }
                     }
                 }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
 

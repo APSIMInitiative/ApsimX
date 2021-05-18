@@ -9,6 +9,7 @@ using Models.CLEM.Activities;
 using Models.CLEM.Reporting;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -16,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a GrazeFoodType and holds values in the store
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
@@ -370,7 +371,7 @@ namespace Models.CLEM.Resources
         {
             if(Manager == null)
             {
-                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
+                Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
             }
         }
 
@@ -554,7 +555,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -659,7 +661,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = request.Provided,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -697,7 +700,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Gain = request.Provided * -1,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -753,48 +757,51 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\n<div class=\"activityentry\">";
-            html += "This pasture has an initial green nitrogen content of ";
-            if (this.GreenNitrogen == 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">Not set</span>%";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>";
-            }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write("This pasture has an initial green nitrogen content of ");
+                if (this.GreenNitrogen == 0)
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>");
+                }
 
-            if (DecayNitrogen > 0)
-            {
-                html += " and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>";
-            }
-            html += "\n</div>";
-            if (DecayDMD > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>";
-                html += "\n</div>";
-            }
-            if (DetachRate > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month";
-                if (CarryoverDetachRate > 0)
+                if (DecayNitrogen > 0)
                 {
-                    html += " and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months";
+                    htmlWriter.Write(" and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>");
                 }
-                html += "\n</div>";
-            }
-            else
-            {
-                if (CarryoverDetachRate > 0)
+                htmlWriter.Write("\r\n</div>");
+                if (DecayDMD > 0)
                 {
-                    html += "\n<div class=\"activityentry\">";
-                    html += "Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months";
-                    html += "\n</div>";
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Dry Matter Digestibility will decay at a rate of <span class=\"setvalue\">" + this.DecayDMD.ToString("0.###") + "</span> per month to a minimum DMD of <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
+                    htmlWriter.Write("\r\n</div>");
                 }
+                if (DetachRate > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month");
+                    if (CarryoverDetachRate > 0)
+                    {
+                        htmlWriter.Write(" and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                    }
+                    htmlWriter.Write("\r\n</div>");
+                }
+                else
+                {
+                    if (CarryoverDetachRate > 0)
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write("Pasture is lost through detachement at a rate of <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
+                        htmlWriter.Write("\r\n</div>");
+                    }
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
         /// <summary>
