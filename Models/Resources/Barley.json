@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 130,
+  "Version": 131,
   "Name": "Simulations",
   "Children": [
     {
@@ -6388,7 +6388,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedLagAcceleration",
+                  "Name": "LagAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -7055,7 +7055,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedSenAcceleration",
+                  "Name": "SenescenceAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -10569,7 +10569,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                                {
+                {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
@@ -10674,7 +10674,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                                {
+                {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",
