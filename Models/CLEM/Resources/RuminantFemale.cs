@@ -14,13 +14,13 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
-        /// Is female of breeing age
+        /// Is female weaned and of minimum breeing age and weight 
         /// </summary>
         public bool IsBreeder
         {
             get
             {
-                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
+                return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
             }
         }
 
@@ -219,7 +219,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// Number of breeding months in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
         /// </summary>
         public bool SuccessfulPregnancy
         {
