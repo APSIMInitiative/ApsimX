@@ -3439,7 +3439,7 @@
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion131(JObject root, string fileName)
         {
-            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "LeafCohortParmeters"))
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Leaf+LeafCohortParameters"))
             {
                 JsonUtilities.RenameChildModel(Root, "DroughtInducedLagAcceleration", "LagAcceleration");
                 JsonUtilities.RenameChildModel(Root, "DroughtInducedSenAcceleration", "SenescenceAcceleration");
