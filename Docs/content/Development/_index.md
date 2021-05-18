@@ -16,6 +16,8 @@ Reasons need to be given by the model author should any of the guidelines not be
 
 * Submissions will be via a [GitHub Pull Request](/contribute/sourcetree/pushandpullrequest)
 
+* Where possible, submissions should be small. For example, rather than adding a new model validation dataset and changing the parameterisation of a model, separate these into 2 submissions. This will allow the impacts of the new dataset and the changed parameterisation to be independently assessed.
+
 * For science submissions (new models or processes), the submission pull request will have all files (.apsimx, .met, .xlsx) in a directory formatted as Tests\UnderReview\MODELNAME. The directory can contain:
 	- weather files (*.met)
 	- observed files (*.xlsx)

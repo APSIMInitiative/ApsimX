@@ -11,7 +11,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Returns the ValueToHold which is updated daily until the WhenToHold stage is reached, beyond which it is held constant")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class HoldFunction : Model, IFunction, ICustomDocumentation
     {

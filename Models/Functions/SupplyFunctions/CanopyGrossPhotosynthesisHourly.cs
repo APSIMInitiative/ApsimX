@@ -36,7 +36,7 @@ namespace Models.Functions.SupplyFunctions
     /// <summary>Daily growth increment of total plant biomass</summary>
     /// <returns>g dry matter/m2 soil/day</returns>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CanopyPhotosynthesis))]
 

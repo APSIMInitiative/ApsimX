@@ -116,7 +116,7 @@ namespace UserInterface.Views
                 nrow = 1;
                 AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, (uint)i);
 #else
-                label.MarginRight = 10;
+                label.MarginEnd = 10;
                 propertyTable.Attach(label, 2+i, 0, 1, 1);
                 nrow = 1;
                 AddPropertiesToTable(ref propertyTable, properties[i], ref nrow, i);
@@ -139,6 +139,5 @@ namespace UserInterface.Views
                 }
             }
         }
-
     }
 }

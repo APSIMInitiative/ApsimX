@@ -6,7 +6,7 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentMathFunction p]
+    /// [DocumentMathFunction +]
     /// </summary>
     [Serializable]
     [Description("Add the values of all child functions")]

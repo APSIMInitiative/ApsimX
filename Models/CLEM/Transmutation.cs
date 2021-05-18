@@ -17,7 +17,7 @@ namespace Models.CLEM
     /// These re defined under each ResourceType in the Resources section of the UI tree
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IResourceType))]
     [Description("This Transmutation will convert any other resource into the current resource where there is a shortfall. This is placed under any resource type where you need to provide a transmutation. For example to convert Finance Type (money) into a Animal Food Store Type (Lucerne) or effectively purchase fodder when low.")]
@@ -121,7 +121,7 @@ namespace Models.CLEM
     /// Determines the amount of resource required for the transmutation
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
@@ -136,6 +136,7 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [JsonIgnore]
         [field: NonSerialized]
         public Type ResourceType { get; set; }
 
@@ -268,7 +269,7 @@ namespace Models.CLEM
     /// Determines the amount of labour required for the transmutation
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost specifies how much of a given resource (e.g. money) is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
@@ -278,6 +279,8 @@ namespace Models.CLEM
         /// <summary>
         /// Type of resource to use
         /// </summary>
+        [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>
@@ -361,7 +364,7 @@ namespace Models.CLEM
     /// Resource transmutation cost using defined finance pricing
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
     [Description("This Transmutation cost uses the pricing drfined for the given resource.")]
@@ -374,6 +377,7 @@ namespace Models.CLEM
         /// Type of resource to use
         /// </summary>
         [JsonIgnore]
+        [field: NonSerialized]
         public Type ResourceType { get; set; }
 
         /// <summary>

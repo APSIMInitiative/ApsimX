@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -225,18 +226,18 @@ namespace Models.CLEM.Resources
                 {
                     result = Math.Round((weight - mid) / ((max - mid) / 2.5));
                 }
-                return Convert.ToInt32(result);
+                return Convert.ToInt32(result, CultureInfo.InvariantCulture);
             }
         }
 
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreedingCondition 
+        public bool IsAbleToBreed 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating && !(this as RuminantMale).IsCastrated) |
                     (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }
@@ -394,41 +395,75 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// List of individual tags
+        /// List of individual attributes
         /// </summary>
-        private List<string> tags { get; set; }
+        private Dictionary<string, ICLEMAttribute> attributes { get; set; }
 
         /// <summary>
-        /// Check if the selected tag exists on this individual
+        /// The list of available attributes for the individual
         /// </summary>
-        /// <param name="tag">Tag label</param>
         /// <returns></returns>
-        public bool TagExists(string tag)
+        public Dictionary<string, ICLEMAttribute> Attributes
         {
-            return tags.Contains(tag);
-        }
-
-        /// <summary>
-        /// Add the tag to this individual
-        /// </summary>
-        /// <param name="tag">Tag label</param>
-        public void TagAdd(string tag)
-        {
-            if (!tags.Contains(tag))
+            get
             {
-                tags.Add(tag); 
+                return attributes;
             }
         }
 
         /// <summary>
-        /// Remove the tag from this individual
+        /// Check if the selected attribute exists on this individual
         /// </summary>
-        /// <param name="tag">Tag label</param>
-        public void TagRemove(string tag)
+        /// <param name="tag">Attribute label</param>
+        /// <returns></returns>
+        public bool AttributeExists(string tag)
         {
-            if (tags.Contains(tag))
+            return attributes.ContainsKey(tag);
+        }
+
+        /// <summary>
+        /// Add an attribute to this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <param name="value">Value to set or change</param>
+        public void AddAttribute(string tag, ICLEMAttribute value = null)
+        {
+            if (!attributes.ContainsKey(tag))
             {
-                tags.Remove(tag);
+                attributes.Add(tag, value); 
+            }
+            else
+            {
+                attributes[tag] = value;
+            }
+        }
+
+        /// <summary>
+        /// Return the value of the selected attribute on this individual else null if not provided
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        /// <returns>Value of attribute if found</returns>
+        public ICLEMAttribute GetAttributeValue(string tag)
+        {
+            if (!attributes.ContainsKey(tag))
+            {
+                return null;
+            }
+            else
+            {
+                return attributes[tag];
+            }
+        }
+
+        /// <summary>
+        /// Remove the attribute from this individual
+        /// </summary>
+        /// <param name="tag">Attribute label</param>
+        public void RemoveAttribute(string tag)
+        {
+            if (attributes.ContainsKey(tag))
+            {
+                attributes.Remove(tag);
             }
         }
 
@@ -692,7 +727,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.tags = new List<string>();
+            this.attributes = new Dictionary<string, ICLEMAttribute>();
         }
     }
 

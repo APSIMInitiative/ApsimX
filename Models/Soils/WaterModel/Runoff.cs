@@ -78,6 +78,18 @@
         /// <summary>Running total of cumulative rainfall since last tillage event. Used for tillage CN reduction (mm).</summary>
         public double CumWaterSinceTillage { get; set; }
 
+        /// <summary>
+        /// Clear the model's state at the start of a simulation.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void Clear(object sender, EventArgs args)
+        {
+            CumWaterSinceTillage = 0;
+            TillageCnRed = 0;
+            TillageCnCumWater = 0;
+        }
 
         /// <summary>Calculate and return the runoff (mm).</summary>
         public double Value(int arrayIndex = -1)

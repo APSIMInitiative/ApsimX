@@ -17,7 +17,7 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
@@ -36,6 +36,14 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// The reason for this filter group
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Description("Reason")]
+        [Required]
+        public RuminantStockGroupStyle Reason { get; set; }
 
         /// <summary>
         /// Proportion of group to use

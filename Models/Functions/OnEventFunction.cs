@@ -10,7 +10,7 @@ namespace Models.Functions
     /// Returns the a value depending on whether an event has occurred.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class OnEventFunction : Model, IFunction, ICustomDocumentation
     {

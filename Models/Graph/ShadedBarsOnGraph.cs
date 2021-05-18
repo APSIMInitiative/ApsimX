@@ -13,7 +13,7 @@
     /// A class for putting text annotations on a graph.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
     public class ShadedBarsOnGraph : Model, ICachableGraphable

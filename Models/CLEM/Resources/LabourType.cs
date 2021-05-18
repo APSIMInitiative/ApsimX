@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// eg. AdultMale, AdultFemale etc.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
@@ -275,7 +275,8 @@ namespace Models.CLEM.Resources
             this.AvailableDays += addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = addAmount,
+                TransactionType = TransactionType.Gain,
+                Amount = addAmount,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -328,7 +329,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

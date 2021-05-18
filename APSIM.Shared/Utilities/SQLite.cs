@@ -493,8 +493,13 @@ namespace APSIM.Shared.Utilities
                 }
                 else
                 {
-                    dataType = typeof(string);
-                    values.Add(value);
+                    if (string.IsNullOrEmpty(value) && (dataType == typeof(double) || dataType == typeof(int)))
+                        addNull();
+                    else
+                    {
+                        dataType = typeof(string);
+                        values.Add(value);
+                    }
                 }
             }
             public void addNull()

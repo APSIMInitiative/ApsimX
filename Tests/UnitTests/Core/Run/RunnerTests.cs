@@ -83,9 +83,12 @@
                 Runner runner = new Runner(simulation, runType: typeOfRun);
                 Assert.IsNull(runner.Run());
 
-                // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine}");
+
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {              "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -156,8 +159,14 @@
                 Assert.IsNull(runner.Run());
 
                 // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine} 1980-01-03{Environment.NewLine} 1980-01-04{Environment.NewLine}");
+
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {               "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) },
+                                                               new object[] { new DateTime(1980, 01, 03) },
+                                                               new object[] { new DateTime(1980, 01, 04) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -228,8 +237,11 @@
                 Assert.IsNull(runner.Run());
 
                 // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       $"Clock.Today{Environment.NewLine} 1980-01-01{Environment.NewLine} 1980-01-02{Environment.NewLine}");
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[] { "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -663,18 +675,22 @@
             // Check simulation 1 database
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim1.db"), readOnly: true);
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   $"                       Message{Environment.NewLine}" +
-                   $"Simulation terminated normally{Environment.NewLine}");
+
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {                        "Message" },
+                                          new List<object[]> { new object[] { "Simulation terminated normally" }})
+                   .IsSame(database.ExecuteQuery("SELECT [Message] FROM _Messages")));
 
             database.CloseDatabase();
 
             // Check simulation 2 database
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim2.db"), readOnly: true);
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   $"                       Message{Environment.NewLine}" +
-                   $"Simulation terminated normally{Environment.NewLine}");
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {                        "Message" },
+                                          new List<object[]> { new object[] { "Simulation terminated normally" }})
+                   .IsSame(database.ExecuteQuery("SELECT [Message] FROM _Messages")));
+
             database.CloseDatabase();
         }
     }

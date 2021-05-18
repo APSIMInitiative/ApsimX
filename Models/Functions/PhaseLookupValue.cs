@@ -10,10 +10,10 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] has a non-zero value between [Start] and [End] calcualted as:
+    /// [Name] has a value between [Start] and [End] calculated as:
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
     public class PhaseLookupValue : Model, IFunction
