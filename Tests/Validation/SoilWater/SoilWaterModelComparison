@@ -8388,7 +8388,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] ISoilWater SoilWater;\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n         SoilWater.SetWaterTable(1050.0);\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] ISoilWater SoilWater;\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\n         if (Clock.Today.DayOfYear < 150)\r\n            SoilWater.SetWaterTable(1050.0);\n         else \n            SoilWater.WaterTable = 1550.0;\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [],
                   "Name": "SetWaterTable",
                   "IncludeInDocumentation": true,
@@ -8898,7 +8898,7 @@
                       "PSIDul": -100.0,
                       "VC": true,
                       "DTMin": 0.0,
-                      "DTMax": 60.0,
+                      "DTMax": 1440.0,
                       "MaxWaterIncrement": 1.0,
                       "SpaceWeightingFactor": 0.5,
                       "SoluteSpaceWeightingFactor": 1.0,
@@ -9645,7 +9645,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] ISoilWater SoilWater;\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n         SoilWater.SetWaterTable(1050.0);\r\n        }\r\n    }\r\n}\r\n",
+                  "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] ISoilWater SoilWater;\r\n\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\n         if (Clock.Today.DayOfYear < 150)\r\n            SoilWater.SetWaterTable(1050.0);\n         else \n            SoilWater.SetWaterTable(1550.0);\r\n        }\r\n    }\r\n}\r\n",
                   "Parameters": [],
                   "Name": "SetWaterTable",
                   "IncludeInDocumentation": true,
