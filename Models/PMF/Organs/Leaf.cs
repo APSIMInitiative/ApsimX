@@ -423,10 +423,10 @@ namespace Models.PMF.Organs
             public double ExpansionStressValue { get; set; }
             /// <summary>The CellDivisionStressValue</summary>
             public double CellDivisionStressValue { get; set; }
-            /// <summary>The DroughtInducedLagAccelerationValue</summary>
-            public double DroughtInducedLagAccelerationValue { get; set; }
-            /// <summary>The DroughtInducedSenAccelerationValue</summary>
-            public double DroughtInducedSenAccelerationValue { get; set; }
+            /// <summary>The LagAccelerationValue</summary>
+            public double LagAccelerationValue { get; set; }
+            /// <summary>The SenescenceAccelerationValue</summary>
+            public double SenescenceAccelerationValue { get; set; }
             /// <summary>The ShadeInducedSenescenceRateValue</summary>
             public double ShadeInducedSenescenceRateValue { get; set; }
             /// <summary>The SenessingLeafRelativeSizeValue</summary>
@@ -442,12 +442,12 @@ namespace Models.PMF.Organs
             /// <summary>The shade induced senescence rate</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction ShadeInducedSenescenceRate = null;
-            /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            /// <summary>The stress induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link(Type = LinkType.Child, ByName = true)]
-            public IFunction DroughtInducedLagAcceleration = null;
-            /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            public IFunction LagAcceleration = null;
+            /// <summary>The stress induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link(Type = LinkType.Child, ByName = true)]
-            public IFunction DroughtInducedSenAcceleration = null;
+            public IFunction SenescenceAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction StorageFraction = null;
@@ -1270,8 +1270,8 @@ namespace Models.PMF.Organs
             // Store values prior to looping through all leaves
             CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
             CohortParameters.CellDivisionStressValue = CohortParameters.CellDivisionStress.Value();
-            CohortParameters.DroughtInducedLagAccelerationValue = CohortParameters.DroughtInducedLagAcceleration.Value();
-            CohortParameters.DroughtInducedSenAccelerationValue = CohortParameters.DroughtInducedSenAcceleration.Value();
+            CohortParameters.LagAccelerationValue = CohortParameters.LagAcceleration.Value();
+            CohortParameters.SenescenceAccelerationValue = CohortParameters.SenescenceAcceleration.Value();
             //CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
             //CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
 
@@ -1324,8 +1324,8 @@ namespace Models.PMF.Organs
             DeadNodesYesterday = 0;
             CohortParameters.ExpansionStressValue = 0;
             CohortParameters.CellDivisionStressValue = 0;
-            CohortParameters.DroughtInducedLagAccelerationValue = 0;
-            CohortParameters.DroughtInducedSenAccelerationValue = 0;
+            CohortParameters.LagAccelerationValue = 0;
+            CohortParameters.SenescenceAccelerationValue = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
