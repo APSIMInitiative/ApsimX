@@ -102,7 +102,7 @@
                 foreach (var definition in definitions)
                 {
                     var simulationNameDescriptor = definition.Descriptors?.Find(desc => desc.Name == "SimulationName")?.Value;
-                    if (simulationFilter != null && simulationFilter.Count > 0)
+                    if (string.IsNullOrEmpty(simulationNameDescriptor) && simulationFilter != null && simulationFilter.Count > 0)
                         simulationNameDescriptor = simulationFilter[0];
 
                     if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
