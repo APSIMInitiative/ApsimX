@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# This script will build a macOS installer for .NET Core APSIM Next Gen
+#
+# Takes two arguments:
+# 1. Version number
+# 2. Optional output file name. Default value is apsim-$version.dmg.
+
+# Exit immediately upon error
+set -e
+
+# Get version number (first argument).
+# Abort with error if no version number provided.
+usage="Usage: $0 <Version> [outfile]"
+test $# -ge 1 || (echo $usage; exit 1)
+version=$1
+
+# Get apsimx path (path of repository root)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+apsimx="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../.." &> /dev/null && pwd )"
+
+# Version stamp the Models and ApsimNG assemblies.
+sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.cs"
+cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
+
+# Publish the build.
+dotnet publish --nologo -f netcoreapp3.1 -c Release --no-self-contained -r osx-x64 "$apsimx/ApsimX.sln"
+
+# Now generate the installer.
+
+# Insert the version number into the Info.plist file.
+plist="$DIR/Info.plist"
+sed -i "s/@Version/$version/g" "$plist"
+
+# Delete MacBundle directory if it already exists.
+test -d MacBundle && rm -rf MacBundle
+
+appdir=MacBundle/APSIM$version.app/Contents
+template="$apsimx/Setup/osx/Template"
+copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' $@; }
+copy $template/Contents/MacOS/ApsimNG $appdir/MacOS/
+copy $template/Contents/Resources/ApsimNG.icns $appdir/Resources/
+copy "$apsimx/Examples" $appdir/Resources/
+copy "$apsimx/Tests/UnderReview" $appdir/Resources/
+copy "$apsimx/ApsimNG/Resources/world" $appdir/Resources/ApsimNG/Resources/
+copy "$apsimx/bin/Release/netcoreapp3.1/osx-x64/publish/*" $appdir/Resources/bin/
+copy "$apsimx/APSIM.bib" $appdir/Resources/
+copy "$plist" $appdir/
+
+# Now create the .dmg file.
+if [ $# -ge 2 ]; then
+    outfile=$2
+else
+    outfile=apsim-$version.dmg
+fi
+test -f $outfile && rm $outfile
+genisoimage -quiet -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o $outfile MacBundle
+
+# Delete the intermediate files.
+rm -rf MacBundle
