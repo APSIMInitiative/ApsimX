@@ -3302,8 +3302,8 @@ namespace Models.Soils
 
                     if (Math.Abs(est - theta) < tolerance)
                         break;
-                    //psiValue -= Math.Min(-dpsi,(est - theta) / m);
-                    psiValue -= (est - theta) / m;
+                    psiValue -= Math.Min(-dpsi,(est - theta) / m);
+                    //psiValue -= (est - theta) / m;
                 }
                 return psiValue;
             }
