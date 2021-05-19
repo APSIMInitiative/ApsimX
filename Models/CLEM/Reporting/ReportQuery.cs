@@ -25,12 +25,8 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Description("SQL statement")]
         [Display(Type = DisplayType.MultiLineText)]
-        public string[] Lines { get; set; } = new string[1];
-
-        /// <summary>
-        /// The complete query
-        /// </summary>
-        public string SQL => ((Lines is null) ? "" : string.Join(" ", Lines));
+        [System.ComponentModel.DataAnnotations.Required]
+        public string SQL { get; set; }
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
