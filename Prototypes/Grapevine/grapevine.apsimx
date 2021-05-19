@@ -69088,7 +69088,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\n\nThis simulation example was made based on the Stock.apsimx AgistmentGrazing simulation.\nAgistment Grazing refers to a practise of bringing stock onto and then off a paddock based on a set of criteria. The location and management of the stock when not on the paddock are ignored. \nBring sheep to vineyard is a common practice in NZ especially in winter to graze the interrows. Sometimes growers also use sheep a leaf plucking method. \n\nBecause we are not concerned with the disposition of the stock while not grazing the forage crop, this a single-paddock simulation. The paddock contains a forage crop, in this example we use plantain, that is irrigated and fertilised. The forage is sown in spring of the first year and is rejuvenated thereafter at the frequency set on the sowing rule in the paddock. In this simulation a new mob of animals are bought every time the forage is ready to be grazed and sold after each grazing event (note that here bought and sold only refer to acquiring and  disposing of animals not the financial transactions of such actions). The user sets the characteristics of the stock, the grazing rules and if/how any supplementary feeding is done.\n\nThis example includes:\n\n* setting several commonly-needed stock characteristics \n* buying stock\n* finding out the current location of the stock\n* changing the location of the stock\n* feeding supplements based on a range of criteria\n* selling stock\n\n\n\n",
+          "Text": "\n\nThis simulation example was made based on the Stock.apsimx AgistmentGrazing simulation.\nAgistment Grazing refers to a practise of bringing stock onto and then off a paddock based on a set of criteria. The location and management of the stock when not on the paddock are ignored. \nBring sheep to vineyard is a common practice in NZ especially in winter to graze the interrows. Sometimes growers also use sheep a leaf plucking method. This simulation is more to test whether there is issues with adding sheep into the grapevine model due to the row structure and see what components will the sheep eat. \n\nBecause we are not concerned with the disposition of the stock while not grazing the forage crop, this a single-paddock simulation. The paddock contains a forage crop, in this example we use plantain, that is irrigated and fertilised. The forage is sown in spring of the first year and is rejuvenated thereafter at the frequency set on the sowing rule in the paddock. In this simulation a new mob of animals are bought every time the forage is ready to be grazed and sold after each grazing event (note that here bought and sold only refer to acquiring and  disposing of animals not the financial transactions of such actions). The user sets the characteristics of the stock, the grazing rules and if/how any supplementary feeding is done.\n\nThis example includes:\n\n* setting several commonly-needed stock characteristics \n* buying stock\n* finding out the current location of the stock\n* changing the location of the stock\n* feeding supplements based on a range of criteria\n* selling stock\n\n\n\n",
           "Name": "Notes",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -71360,11 +71360,7 @@
                     "[Stock].CondScoreAll as ConditionScoreAlley",
                     "[GrazeVineyardAlley].Script.HarvestableBiomass as HarvestableBiomassAlley",
                     "[GrazeVineyardAlley].Script.CurrentLocation as StockLocationAlley",
-                    "//[AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt as TotalAboveGroundAlley",
-                    "//[Plantain].AboveGround.Wt + [AGPRyegrass].AboveGround.Wt as TotalAboveGroundAlley",
-                    "[Plantain].AboveGround.Wt",
-                    "//[AGPRyegrass].AboveGround.Wt",
-                    "//[AGPWhiteClover].AboveGround.Wt"
+                    "[Plantain].AboveGround.Wt"
                   ],
                   "EventNames": [
                     "[Clock].EndOfDay"
@@ -71374,28 +71370,6 @@
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "InitialShootDM": 500.0,
-                  "InitialRootDM": 250.0,
-                  "InitialRootDepth": 450.0,
-                  "ResourceName": "AGPWhiteClover",
-                  "Name": "AGPWhiteClover",
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.AgPasture.PastureSpecies, Models",
-                  "InitialShootDM": 1000.0,
-                  "InitialRootDM": 500.0,
-                  "InitialRootDepth": 900.0,
-                  "ResourceName": "AGPRyegrass",
-                  "Name": "AGPRyegrass",
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -72175,6 +72149,15 @@
           "DisabledSimNames": null,
           "Name": "IrrigationResponse",
           "Children": [
+            {
+              "$type": "Models.Memo, Models",
+              "Text": "This simulation experiment is set up to test the sensibility of the model output to water stress. The days of interval between two irrigation events was set as the experimental factor. The results show the model present reasonable water stress responses for leaf area, biomass dynamics of different organ, profile soil water storage, and non-structural carbohydrate. one caution should be note is for the Brix values. Brix was calculated based on water content, which is related to the berry dry weight and fresh weight. Dry weight response strongly to the water stress as carbon assimilation was reduced. For the response of fresh weight to water stress, only a emipirical function based on our rule of thumb was added. The effects of carbon status on berry fresh weight needed to be added based on experimental data as well. \n\n\n\n",
+              "Name": "Notes",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
             {
               "$type": "Models.Factorial.Factors, Models",
               "Name": "Factors",
