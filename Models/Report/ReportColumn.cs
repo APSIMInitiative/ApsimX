@@ -384,9 +384,9 @@
         {
             if (!string.IsNullOrEmpty(collectionEventName))
                 events.Unsubscribe(collectionEventName, OnDoReportCalculations);
-            if (!string.IsNullOrEmpty(toString))
+            if (!string.IsNullOrEmpty(toString) && toVariable == null)
                 events.Unsubscribe(toString, OnToEvent);
-            if (!string.IsNullOrEmpty(fromString))
+            if (!string.IsNullOrEmpty(fromString) && fromVariable == null)
                 events.Unsubscribe(fromString, OnFromEvent);
             events.Unsubscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
             events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
