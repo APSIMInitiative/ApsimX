@@ -25,7 +25,6 @@
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
 
-
         /// <summary>The soil physical node</summary>
         private IPhysical soilPhysical = null;
 
@@ -57,11 +56,8 @@
 
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
-        /// <param name="initialDM">Initial dry matter weight</param>
-        /// <param name="initialDepth">Initial root depth</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        public void Initialise(Zone zone, double initialDM, double initialDepth,
-                               double minLiveDM)
+        public void Initialise(Zone zone, double minLiveDM)
         {
             soil = zone.FindInScope<Soil>();
             if (soil == null)
@@ -90,30 +86,23 @@
             if (nh4 == null)
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 
-            // save the parameters for this organ
+            // link to soil and initialise related variables
+            zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
-            minimumLiveDM = minLiveDM;
             dulMM = soilPhysical.DULmm;
             ll15MM = soilPhysical.LL15mm;
-            Live = tissue[0];
-            Dead = tissue[1];
-
-            // Link to soil and initialise variables
-            zoneName = soil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
 
-            // Initialise root DM, N, depth, and distribution
-            Depth = initialDepth;
-            CalculateRootZoneBottomLayer();
+            // initialise tissues
+            Live = tissue[0];
+            Dead = tissue[1];
+            Live.InitialiseLayeredVariables();
+            Dead.InitialiseLayeredVariables();
+
+            // save minimum DM and get target root distribution
+            minimumLiveDM = minLiveDM;
             TargetDistribution = RootDistributionTarget();
-
-            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
-            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
-
-            // Initialise the live tissue.
-            Live.Initialise(initialDMByLayer, initialNByLayer);
-            Dead.Initialise(null, null);
         }
 
         /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
@@ -158,14 +147,8 @@
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         public double MaximumNUptake { get; set; } = 10.0;
 
-        /// <summary>Reference value for root length density for the Water and N availability.</summary>
-        public double ReferenceRLD { get; set; } = 5.0;
-
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        private double ExponentSoilMoisture = 1.50;
-
-        /// <summary>Reference value of Ksat for water availability function.</summary>
-        public double ReferenceKSuptake { get; set; } = 15.0;
+        public double ExponentSoilMoisture = 1.50;
 
         /// <summary>Gets or sets the rooting depth (mm).</summary>
         public double Depth { get; set; }
@@ -175,19 +158,6 @@
 
         /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
-
-        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
-        internal double DMTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length; t++)
-                    result += tissue[t].DM.Wt;
-
-                return result;
-            }
-        }
 
         /// <summary>Returns the root live tissue.</summary>
         public RootTissue Live { get; private set; }
@@ -213,6 +183,32 @@
         internal double DMDead
         {
             get { return tissue[tissue.Length - 1].DM.Wt; }
+        }
+
+        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
+        internal double DMTotal
+        {
+            get
+            {
+                double result = 0.0;
+                for (int t = 0; t < tissue.Length; t++)
+                    result += tissue[t].DM.Wt;
+
+                return result;
+            }
+        }
+
+        /// <summary>Gets the dry matter fraction in each soil layer (0-1).</summary>
+        internal double[] DMFractions
+        {
+            get
+            {
+                double[] result = new double[soilPhysical.Thickness.Length];
+                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
+                    result[layer] = tissue[0].FractionWt[layer];
+
+                return result;
+            }
         }
 
         /// <summary>The total N amount in this tissue (kg/ha).</summary>
@@ -305,8 +301,8 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
-                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
+                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
                     result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
@@ -344,37 +340,30 @@
                 return (1 / threshold) * LengthDensity[layerIndex];
         }
 
-
-        /// <summary>
-        /// Reset this root organ's state.
-        /// </summary>
+        /// <summary>Reset this root organ's state.</summary>
         /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
         /// <param name="rootDepth">The depth of roots to reset to(mm).</param>
+        /// <remarks>It is assumed that N is at optimum content.</remarks>
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
             CalculateRootZoneBottomLayer();
 
             var rootFractions = CurrentRootDistributionTarget();
-            var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
-            Live.ResetTo(rootBiomass);
-        }
-
-        /// <summary>Reset this root organ's state to the inital state.</summary>
-        public void Reset()
-        {
-            Reset(minimumLiveDM, RootDepthMinimum);
+            var rootBiomass = MathUtilities.Multiply_Value(rootFractions, rootWt);
+            var rootNContents = MathUtilities.Multiply_Value(rootBiomass, NConcOptimum);
+            Live.Reset(rootBiomass, rootNContents);
+            Dead.Reset(new double[nLayers], new double[nLayers]);
         }
 
         /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        internal void DoResetOrgan()
+        internal void DoResetOrganToZero()
         {
             Depth = 0;
             CalculateRootZoneBottomLayer();
             for (int t = 0; t < tissue.Length; t++)
             {
-                tissue[t].Reset();
-                DoCleanTransferAmounts();
+                tissue[t].Reset(new double[nLayers], new double[nLayers]);
             }
         }
 
@@ -382,7 +371,7 @@
         internal void DoCleanTransferAmounts()
         {
             for (int t = 0; t < tissue.Length; t++)
-                tissue[t].DailyReset();
+                tissue[t].ClearDailyTransferAmounts();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
@@ -426,13 +415,8 @@
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
         /// <param name="myZone">The soil information</param>
-        /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone)
         {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double bdFac;  // the soil density factor
-            double potAvailableN; // potential available N
             var thickness = soilPhysical.Thickness;
             var bd = soilPhysical.BD;
             var water = myZone.Water;
@@ -441,38 +425,29 @@
             double depthOfTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                layerFrac = (Depth - depthOfTopOfLayer) / thickness[layer];
-                layerFrac = Math.Min(1.0, Math.Max(0.0, layerFrac));
-
-                bdFac = 100.0 / (thickness[layer] * bd[layer]);
-                if (water[layer] >= dulMM[layer])
-                    swFac = 1.0;
-                else if (water[layer] <= ll15MM[layer])
-                    swFac = 0.0;
-                else
-                {
-                    double waterRatio = (water[layer] - ll15MM[layer]) /
-                                        (dulMM[layer] - ll15MM[layer]);
-                    waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
-                }
+                // general factors
+                double layerFraction = MathUtilities.Bound((Depth - depthOfTopOfLayer) / thickness[layer], 0.0, 1.0);
+                double rwc = MathUtilities.Bound((water[layer] - ll15MM[layer]) / (dulMM[layer] - ll15MM[layer]), 0.0, 1.0);
+                double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
                 // get NH4 available
-                potAvailableN = nh4[layer] * layerFrac * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(nh4[layer] * layerFrac, potAvailableN);
+                double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                double concentrationFactor = nh4ppm * KNH4;
+                mySoilNH4Available[layer] = nh4[layer] * layerFraction * Math.Min(1.0, concentrationFactor * moistureFactor);
 
                 // get NO3 available
-                potAvailableN = no3[layer] * layerFrac * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(no3[layer] * layerFrac, potAvailableN);
+                double no3ppm = no3[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                concentrationFactor = no3ppm * KNO3;
+                mySoilNO3Available[layer] = no3[layer] * layerFraction * Math.Min(1.0, concentrationFactor * moistureFactor);
 
                 depthOfTopOfLayer += thickness[layer];
             }
 
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
+            // check totals, reduce available N if greater than maximum uptake
+            double calculatedAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
+            if (calculatedAvailableN > MaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potAvailableN;
+                double upFraction = MaximumNUptake / calculatedAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;
