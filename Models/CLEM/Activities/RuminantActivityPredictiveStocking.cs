@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .Filter(item)
+                    .FilterRuminants(item)
                     .ToList();
 
                 int cnt = 0;

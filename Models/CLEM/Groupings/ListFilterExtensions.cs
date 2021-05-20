@@ -44,7 +44,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Filter extensions for herd list
         /// </summary>
-        public static IEnumerable<Ruminant> Filter(this IEnumerable<Ruminant> individuals, IFilterGroup group)
+        public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, IFilterGroup group)
         {
             var filters = group.FindAllChildren<RuminantFilter>();
             

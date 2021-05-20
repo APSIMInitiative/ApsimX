@@ -83,7 +83,7 @@ namespace Models.CLEM.Reporting
                 // get all filter groups below.
                 foreach (var fgroup in allRumGroups)
                 {
-                    foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
+                    foreach (Ruminant item in Resources.RuminantHerd().Herd.FilterRuminants(fgroup))
                     {
                         ReportDetails = new RuminantReportItemEventArgs();
                         if (item is RuminantFemale)
