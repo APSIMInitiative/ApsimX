@@ -951,6 +951,7 @@
             PlantZone.Clear();
             Zones.Clear();
             needToRecalculateLiveDead = true;
+            GrowthRespiration = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -1118,6 +1119,7 @@
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
