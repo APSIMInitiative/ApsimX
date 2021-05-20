@@ -16,10 +16,9 @@ namespace Models.CLEM.Groupings
     public static class ListFilterExtensions
     {
         /// <summary>
-        /// 
+        /// Converts a filter expression to a rule
         /// </summary>
-        /// <param name="filter"></param>
-        /// <returns></returns>
+        /// <param name="filter">The filter to be converted</param>
         private static Rule ToRule(this IFilter filter)
         {
             ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
@@ -28,7 +27,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Filter extensions for other animals cohort list
+        /// Filter the source using any valid models in the given model
         /// </summary>
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, IModel model)
         {
@@ -42,7 +41,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Filter extensions for herd list
+        /// Filter a collection of ruminants by the parameters defined in the filter group
         /// </summary>
         public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, IFilterGroup group)
         {
@@ -94,8 +93,29 @@ namespace Models.CLEM.Groupings
             double proportion = group.Proportion <= 0 ? 1 : group.Proportion;
             int number = Convert.ToInt32(Math.Ceiling(proportion * individuals.Count()));
 
-            return result.Filter(group).Take(number);
-        }        
+            var sorts = group.FindAllChildren<ISort>();
+
+            return result.Filter(group).Sort(sorts).Take(number);
+        }
+
+        /// <summary>
+        /// Order a collection based on the given sorting parameters
+        /// </summary>
+        /// <param name="source">The items to sort</param>
+        /// <param name="sorts">The parameters to sort by</param>
+        /// <returns></returns>
+        public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source, IEnumerable<ISort> sorts)
+        {
+            var sorted = source.OrderBy(i => 1);
+
+            if (!sorts.Any())
+                return sorted;
+
+            foreach (ISort sort in sorts)
+                sorted = sort.Ascending ? sorted.ThenBy(sort.OrderRule) : sorted.ThenByDescending(sort.OrderRule);
+
+            return sorted;
+        }
 
         private class Rule
         {

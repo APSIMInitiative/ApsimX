@@ -1,0 +1,84 @@
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
+using Models.Core.Attributes;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace Models.CLEM.Groupings
+{
+    ///<summary>
+    /// Individual filter term for ruminant group of filters to identify individual ruminants
+    ///</summary> 
+    [Serializable]
+    [ViewName("UserInterface.Views.GridView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
+    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
+    [ValidParent(ParentType = typeof(RuminantGroup))]
+    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
+    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [Description("This ruminant sort rule is used to order results. Multiple sorts can be chained, with sorts higher in the tree taking precedence.")]
+    [Version(1, 0, 0, "")]
+    public class RuminantSort : CLEMModel, IValidatableObject, ISort
+    {
+        /// <summary>
+        /// Name of parameter to sort by
+        /// </summary>
+        [Description("Name of parameter to sort by")]
+        [Required]
+        public RuminantFilterParameters Parameter { get; set; }
+
+        /// <inheritdoc/>
+        [Description("")]
+        public bool Ascending { get; set; } = true;
+
+        /// <inheritdoc/>
+        public object OrderRule<T>(T t) => typeof(T).GetProperty(Parameter.ToString()).GetValue(t, null);
+
+        #region descriptive summary
+
+        /// <summary>
+        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// </summary>
+        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <returns></returns>
+        public override string ModelSummary(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        {
+            return "";
+        }
+        #endregion
+
+        #region validation
+
+        /// <summary>
+        /// Validate this component
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return new List<ValidationResult>();
+        }
+        #endregion
+    }
+
+}
