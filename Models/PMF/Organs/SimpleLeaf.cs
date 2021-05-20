@@ -728,6 +728,9 @@
             Height = 0;
             LAI = 0;
             leafInitialised = false;
+            GrowthRespiration = 0;
+            FRGR = 0;
+            LightProfile = null;
         }
 
         /// <summary>
@@ -855,8 +858,6 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
             startLive = new Biomass();
             DMDemand = new BiomassPoolType();
             DMDemandPriorityFactor = new BiomassPoolType();
@@ -874,6 +875,7 @@
             Height = 0.0;
             LAI = 0.0;
             leafInitialised = false;
+            Clear();
         }
 
         /// <summary>
