@@ -20,6 +20,11 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// 
         /// </summary>
+        string ParameterName { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         string Value { get; set; }
     }
 }

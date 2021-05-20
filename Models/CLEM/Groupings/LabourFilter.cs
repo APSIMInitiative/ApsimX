@@ -80,6 +80,9 @@ namespace Models.CLEM.Groupings
         }
         private string _value;
 
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
+
         /// <summary>
         /// Convert filter to string
         /// </summary>

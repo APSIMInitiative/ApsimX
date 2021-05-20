@@ -111,6 +111,9 @@ namespace Models.CLEM.Groupings
             }
         }
 
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
+
         /// <summary>
         /// Convert filter to string
         /// </summary>
