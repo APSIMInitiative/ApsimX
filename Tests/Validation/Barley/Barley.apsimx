@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 402,
+  "ExplorerWidth": 282,
   "Version": 130,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -1674,6 +1674,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -2070,6 +2072,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.31,
                                 0.28,
@@ -5452,6 +5456,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -5835,6 +5841,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.31,
                                 0.31,
@@ -8161,6 +8169,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -8544,6 +8554,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.33,
                                 0.33,
@@ -10925,6 +10937,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -11307,6 +11321,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.31,
                                 0.25,
@@ -14223,6 +14239,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -17175,6 +17193,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -17592,6 +17612,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -17643,6 +17665,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.3,
                                 0.28,
@@ -19995,6 +20019,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -20352,6 +20378,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.33,
                                 0.33,
@@ -21738,6 +21766,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -22121,6 +22151,8 @@
                               ],
                               "NO3": null,
                               "NH4": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": [
                                 0.33,
                                 0.33,
@@ -23217,6 +23249,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -23612,6 +23646,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.31,
                                     0.31,
@@ -23660,6 +23696,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.31,
                                     0.31,
@@ -25801,6 +25839,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -25833,6 +25873,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.326,
                                     0.326,
@@ -27609,6 +27651,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -27641,6 +27685,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.0
                                   ],
@@ -29265,6 +29311,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -29297,6 +29345,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.0
                                   ],
@@ -31143,6 +31193,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -31181,6 +31233,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.32,
                                     0.405,
@@ -33839,6 +33893,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -33871,6 +33927,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.52,
                                     0.53,
@@ -35015,6 +35073,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -35053,6 +35113,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.42,
                                     0.42,
@@ -36272,6 +36334,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -36310,6 +36374,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.1,
                                     0.431,
@@ -37526,6 +37592,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -37558,6 +37626,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     0.326,
                                     0.326,
@@ -38710,6 +38780,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -39001,256 +39073,6 @@
                               "$type": "Models.Irrigation, Models",
                               "Name": "Irrigation",
                               "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -39800,6 +39622,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -40091,256 +39915,6 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -40890,6 +40464,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -41181,256 +40757,6 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "Harvest",
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -41980,6 +41306,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -42212,7 +41540,7 @@
                                 },
                                 {
                                   "Key": "FilePath",
-                                  "Value": "%root%\\Tests\\Validation\\BarleyYanYeanEmergenceDates.csv"
+                                  "Value": "%root%\\Tests\\Validation\\Barley\\YanYeanEmergenceDates.csv"
                                 }
                               ],
                               "Name": "Sowing",
@@ -42301,576 +41629,6 @@
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 5,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "EmergenceDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": 1.0,
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FLN",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Cv",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                      "YFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": true,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": "Observed",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": "Predicted",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "HeadingDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.HeadingDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.HeadingDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 5,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FloweringDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.FloweringDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.FloweringDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
@@ -43447,6 +42205,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -43706,15 +42466,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                              "Parameters": [],
-                              "Name": "Harvest",
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Report, Models",
                               "VariableNames": null,
                               "EventNames": null,
@@ -43741,6 +42492,15 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name==\"GrainFilling\")\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Parameters": [],
+                              "Name": "HarvestAtFlowering",
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -43749,416 +42509,6 @@
                         }
                       ],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": 1.0,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 2,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage1",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 1,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPredHaunStage",
-                              "XFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FlagleafDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FlagLeafDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.FlagLeafDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": "Observed",
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": "Predicted",
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HeadingDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -16777216,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.HeadingDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.HeadingDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": false,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -44719,6 +43069,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -44978,15 +43330,6 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                              "Parameters": [],
-                              "Name": "Harvest",
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.Report, Models",
                               "VariableNames": null,
                               "EventNames": null,
@@ -45013,6 +43356,15 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Manager, Models",
+                              "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name==\"GrainFilling\")\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Parameters": [],
+                              "Name": "HarvestAtFlowering",
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -45021,336 +43373,6 @@
                         }
                       ],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": 1.0,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 2,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage1",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 1,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPredHaunStage",
-                              "XFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FlagleafDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FlagLeafDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.FlagLeafDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -45911,6 +43933,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -46199,339 +44223,9 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name==\"GrainFilling\")\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
-                              "Name": "Harvest",
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": 1.0,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 2,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage1",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 1,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPredHaunStage",
-                              "XFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FlagleafDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FlagLeafDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.FlagLeafDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Name": "HarvestAtFlowering",
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -47103,6 +44797,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -47416,825 +45112,15 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Barley.IsReadyForHarvesting)\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();  \r\n               sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));  \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name==\"GrainFilling\")\r\n            {\r\n               Barley.Harvest();\r\n               Barley.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [],
-                              "Name": "Harvest",
+                              "Name": "HarvestAtFlowering",
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Folder, Models",
-                      "ShowPageOfGraphs": true,
-                      "Name": "PredObs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FLN",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                              "YFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "EmergenceDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "Cv",
-                              "FactorToVaryMarkers": "Experiment",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": 1.0,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 2,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "HaunStage1",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 0,
-                              "MarkerSize": 1,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "DailyObsPredHaunStage",
-                              "XFieldName": "Observed.Wheat.Phenology.HaunStage",
-                              "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                              "X2FieldName": null,
-                              "Y2FieldName": null,
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Predicted",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            },
-                            {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
-                              "Title": null,
-                              "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false
-                            }
-                          ],
-                          "LegendPosition": 0,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "FlagleafDAS",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": 0,
-                              "FactorToVaryColours": "TOS",
-                              "FactorToVaryMarkers": "Cv",
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 4,
-                              "LineThickness": 0,
-                              "TableName": "HarvestObsPred",
-                              "XFieldName": "Observed.Wheat.Phenology.FlagLeafDAS",
-                              "YFieldName": "Predicted.Wheat.Phenology.FlagLeafDAS",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "Series",
-                              "Children": [
-                                {
-                                  "$type": "Models.Regression, Models",
-                                  "ForEachSeries": false,
-                                  "showOneToOne": true,
-                                  "showEquation": true,
-                                  "Name": "Regression",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 5,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "EmergenceDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.EmergenceDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.EmergenceDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": 1.0,
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FLN",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": "TOS",
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.FinalLeafNumber",
-                      "YFieldName": "Predicted.Wheat.Phenology.FinalLeafNumber",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FlagleafDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": "TOS",
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.FlagLeafDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.FlagLeafDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": "Observed",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": "Predicted",
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 3,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "HeadingDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -16777216,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.HeadingDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.HeadingDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": false,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 5,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "FloweringDAS",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "HarvestObsPred",
-                      "XFieldName": "Observed.Wheat.Phenology.FloweringDAS",
-                      "YFieldName": "Predicted.Wheat.Phenology.FloweringDAS",
-                      "X2FieldName": "",
-                      "Y2FieldName": "",
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Series",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": false,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": 1.0,
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    },
-                    {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
-                      "Title": null,
-                      "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
-                    }
-                  ],
-                  "LegendPosition": 2,
-                  "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "HaunStage",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "Experiment",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 0,
-                      "MarkerSize": 0,
-                      "Line": 4,
-                      "LineThickness": 0,
-                      "TableName": "DailyObsPredHaunStage",
-                      "XFieldName": "Observed.Wheat.Phenology.HaunStage",
-                      "YFieldName": "Predicted.Wheat.Phenology.HaunStage",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Predicted",
-                      "Children": [
-                        {
-                          "$type": "Models.Regression, Models",
-                          "ForEachSeries": true,
-                          "showOneToOne": true,
-                          "showEquation": true,
-                          "Name": "Regression",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -48823,6 +45709,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -48867,6 +45755,8 @@
                                   ],
                                   "NO3": null,
                                   "NH4": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "SW": [
                                     "NaN",
                                     "NaN",
@@ -49944,6 +46834,8 @@
                           "CL": null,
                           "EC": null,
                           "ESP": null,
+                          "LabileP": null,
+                          "UnavailableP": null,
                           "ECMetadata": null,
                           "CLMetadata": null,
                           "ESPMetadata": null,
