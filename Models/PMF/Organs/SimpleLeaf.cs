@@ -731,6 +731,10 @@
             GrowthRespiration = 0;
             FRGR = 0;
             LightProfile = null;
+            PotentialEP = 0;
+            LAIDead = 0;
+            WaterDemand = 0;
+            WaterAllocation = 0;
         }
 
         /// <summary>
