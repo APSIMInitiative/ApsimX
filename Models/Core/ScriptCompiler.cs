@@ -314,6 +314,7 @@
             IEnumerable<MetadataReference> references = new MetadataReference[] 
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
@@ -324,7 +325,6 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
