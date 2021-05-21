@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("Randomly orders any unsorted parameters in the group.")]
     [Version(1, 0, 0, "")]
-    public class RandomSort : CLEMModel, IValidatableObject, ISort
+    public class SortRandom : CLEMModel, IValidatableObject, ISort
     {
         /// <inheritdoc/>
         public bool Ascending => true;

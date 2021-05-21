@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant sort rule is used to order results. Multiple sorts can be chained, with sorts higher in the tree taking precedence.")]
     [Version(1, 0, 0, "")]
-    public class RuminantSort : CLEMModel, IValidatableObject, ISort
+    public class SortRuminant : CLEMModel, IValidatableObject, ISort
     {
         /// <summary>
         /// Name of parameter to sort by
