@@ -258,7 +258,7 @@ namespace Models.CLEM.Resources
             if (labour.LabourAvailability != null)
             {
                 // check labour availability still ok
-                if (checkList.Filter(labour.LabourAvailability).Count == 0)
+                if (checkList.Filter(labour.LabourAvailability).Count() == 0)
                 {
                     labour.LabourAvailability = null;
                 }
