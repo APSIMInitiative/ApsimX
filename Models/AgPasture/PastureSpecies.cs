@@ -2590,7 +2590,11 @@
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
-        [EventSubscribe("Commencing")]
+        /// <remarks>
+        /// This occurs in StartOfSimulation so that various other components (such as GenericTissue) have time
+        /// to initialise themselves during the Commencing event.
+        /// </remarks>
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
@@ -2696,6 +2700,24 @@
 
             // Calculate the values for LAI
             EvaluateLAI();
+
+            glfRadn = 1;
+            glfCO2 = 1;
+            glfNc = 1;
+            glfTemp = 1;
+            usingHeatStressFactor = true;
+            usingColdStressFactor = true;
+            glfHeat = 1;
+            highTempStress = 1;
+            cumulativeDDHeat = 0;
+            glfCold = 1;
+            lowTempStress = 1;
+            cumulativeDDCold = 0;
+            glfWaterSupply = 1;
+            cumWaterLogging = 0;
+            glfWaterLogging = 1;
+            glfNSupply = 1;
+            tempEffectOnRespiration = 0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
