@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreedingCondition });
                 var purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                var filteredPurchases = purchases.Filter(group);
+                var filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
@@ -352,7 +352,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Female", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreeder });
                 purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                filteredPurchases = purchases.Filter(group);
+                filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumProportionBreedersPerPurchase > 0)

@@ -82,10 +82,10 @@ namespace Models.CLEM.Groupings
                 result = individuals;
 
             else if (genders == "Female")
-                result = individuals.Where(a => a.Gender == Sex.Female);
+                result = individuals.OfType<RuminantFemale>();
 
             else if (genders == "Male")
-                result = individuals.Where(a => a.Gender == Sex.Male);
+                result = individuals.OfType<RuminantMale>();
 
             else
                 return result;
