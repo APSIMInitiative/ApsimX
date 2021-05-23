@@ -264,12 +264,27 @@ namespace Models.CLEM.Resources
                 }
             }
 
-            // if still null report error
+            // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                string msg = $"Unable to find labour availability suitable for labour type {labour.Name} {labour.Gender} {labour.Age}" +
-                    $"\r\nAdd additional labour availability item to {availabilityList.Name} under {Name}";
-                throw new ApsimXException(this, msg);
+                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
+                {
+                    if (checkList.Filter(availItem).Count() > 0)
+                    {
+                        labour.LabourAvailability = availItem as LabourSpecificationItem;
+                        break;
+                    }
+                }
+                // if still null report error
+                if (labour.LabourAvailability == null)
+                {
+                    string msg = $"Unable to find labour availability suitable for labour type" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Gender}] [f=Age:{labour.Age}]" +
+                        $"\r\nAdd additional labour availability item to " +
+                        $"[r={availabilityList.Name}] under [r={Name}]";
+
+                    throw new ApsimXException(this, msg);
+                }
             }            
         }
 
