@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 132; } }
+        public static int LatestVersion { get { return 133; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3463,6 +3463,17 @@
                     manager.Save();
                 }
             }
+        }
+
+        /// <summary>
+        /// Remove the WaterAvailableMethod from PastureSpecies.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion133(JObject root, string fileName)
+        {
+            foreach (JObject pasturSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
+                pasturSpecies.Remove("WaterAvailableMethod");
         }
 
         /// <summary>
