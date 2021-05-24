@@ -33,9 +33,6 @@
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
 
-        /// <summary>The path last used to open the examples</summary>
-        private string lastExamplesPath;
-
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
@@ -1198,25 +1195,11 @@
         {
             try
             {
-                string initialPath;
-
-                if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
-                {
-                    initialPath = this.lastExamplesPath; // use the last used path in this session
-                }
-                else
-                {
-                    // use an examples directory relative to this assembly
-                    initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
-                }
-
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
+                string fileName = AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {
-                    this.lastExamplesPath = Path.GetDirectoryName(fileName);
-
                     // ensure that they are saved in another file before running by opening them in memory
                     StreamReader reader = new StreamReader(fileName);
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
