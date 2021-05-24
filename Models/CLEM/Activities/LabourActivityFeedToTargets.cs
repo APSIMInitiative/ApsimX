@@ -393,7 +393,7 @@ namespace Models.CLEM.Activities
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = group.Filter(child).ToList();
                 head += subgroup.Count();

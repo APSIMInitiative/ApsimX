@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
             }
             foreach (RuminantGroup item in filterGroups)
             {
-                foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
+                foreach (Ruminant ind in this.CurrentHerd(false).FilterRuminants(item))
                 {
                     // set new location ID
                     if (ind.Location != pastureName)

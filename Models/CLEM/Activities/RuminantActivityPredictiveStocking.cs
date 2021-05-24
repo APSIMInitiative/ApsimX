@@ -221,11 +221,14 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (IModel item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
+            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .FilterRuminants(item)
+                    .ToList();
+
                 int cnt = 0;
                 while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {

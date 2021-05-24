@@ -105,7 +105,7 @@ namespace Models.CLEM
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantGroup filter in herdFilters)
             {
-                herd = herd.Filter(filter).ToList();
+                herd = herd.FilterRuminants(filter).ToList();
             }
 
             // group by breed
