@@ -112,7 +112,7 @@ namespace Models.CLEM.Groupings
                 return sorted;
 
             foreach (ISort sort in sorts)
-                sorted = sort.Ascending ? sorted.ThenBy(sort.OrderRule) : sorted.ThenByDescending(sort.OrderRule);
+                sorted = (sort.SortDirection == System.ComponentModel.ListSortDirection.Ascending) ? sorted.ThenBy(sort.OrderRule) : sorted.ThenByDescending(sort.OrderRule);
 
             return sorted;
         }
