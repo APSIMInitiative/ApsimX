@@ -876,13 +876,13 @@ namespace Models.CLEM.Activities
                         int cnt = 0;
                         while (cnt < herdToSell.Count() && excessBreeders > 0)
                         {
-                            if (herd[cnt] is RuminantFemale)
+                            if (herdToSell[cnt] is RuminantFemale)
                             {
-                                if ((herd[cnt] as RuminantFemale).IsBreeder)
+                                if ((herdToSell[cnt] as RuminantFemale).IsBreeder)
                                 {
-                                    if (herd[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
+                                    if (herdToSell[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
                                     {
-                                        herd[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                        herdToSell[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
                                         excessBreeders--;
                                     }
                                 }
