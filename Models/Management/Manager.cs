@@ -202,7 +202,7 @@
 
         /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <returns></returns>
-        private void GetParametersFromScriptModel()
+        public void GetParametersFromScriptModel()
         {
             if (Children.Count > 0)
             {

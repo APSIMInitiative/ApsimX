@@ -53,6 +53,15 @@
                         }
                     };
 
+                    // If any of the property replacements (ie from a factor) modify manager
+                    // script parameters, we need to tell the manager to update its parameter
+                    // list before serializing the models. This normally doesn't matter because
+                    // the changes are applied to the script object itself, rather than the
+                    // dictionary; however in this instance, we care about what's going to be
+                    // serialized, which is the contents of the dict.
+                    foreach (Manager manager in simulation.FindAllDescendants<Manager>())
+                        manager.GetParametersFromScriptModel();
+
                     if (collectExternalFiles)
                     {
                         // Find all models that reference external files. For each model, copy all the referenced
