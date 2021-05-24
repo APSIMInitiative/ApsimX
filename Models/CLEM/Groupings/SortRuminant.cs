@@ -30,8 +30,8 @@ namespace Models.CLEM.Groupings
         public RuminantFilterParameters Parameter { get; set; }
 
         /// <inheritdoc/>
-        [Description("")]
-        public bool Ascending { get; set; } = true;
+        [Description("Sort direction")]
+        public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => typeof(T).GetProperty(Parameter.ToString()).GetValue(t, null);

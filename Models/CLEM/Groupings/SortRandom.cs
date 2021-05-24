@@ -24,7 +24,7 @@ namespace Models.CLEM.Groupings
     public class SortRandom : CLEMModel, IValidatableObject, ISort
     {
         /// <inheritdoc/>
-        public bool Ascending => true;
+        public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => RandomNumberGenerator.Generator.Next();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Models.CLEM.Interfaces
 {
@@ -8,9 +9,9 @@ namespace Models.CLEM.Interfaces
     public interface ISort
     {
         /// <summary>
-        /// If the parameter will be sorted ascending
+        /// The direction of sorting to apply
         /// </summary>
-        bool Ascending { get; }
+        ListSortDirection SortDirection { get; }
 
         /// <summary>
         /// An expression defining how the items should be sorted

@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -24,18 +25,18 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant sort rule is used to order results by the value assicated with a named Attribute. Multiple sorts can be chained, with sorts higher in the tree taking precedence.")]
     [Version(1, 0, 0, "")]
-    public class SortByAttributeValue : CLEMModel, IValidatableObject
+    public class SortByAttributeValue : CLEMModel, ISort, IValidatableObject
     {
         /// <summary>
-        /// Name of parameter to sort by
+        /// Name of attribute to sort by
         /// </summary>
         [Description("Name of Attribute to sort by")]
         [Required]
         public string AttributeName { get; set; }
 
         /// <inheritdoc/>
-        [Description("Sort ascending?")]
-        public bool Ascending { get; set; } = true;
+        [Description("Sort direction")]
+        public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
         public object OrderRule<T>(T t) =>  (t as Ruminant).GetAttributeValue(AttributeName);
@@ -57,7 +58,7 @@ namespace Models.CLEM.Groupings
                 {
                     sortString.Write($"<span class=\"filter\">{AttributeName}</span> value ");
                 }
-                sortString.Write((Ascending?"ascending":"descending"));
+                sortString.Write(SortDirection.ToString().ToLower());
                 return sortString.ToString();
             }
         }
