@@ -3303,6 +3303,7 @@ namespace Models.Soils
                     if (Math.Abs(est - theta) < tolerance)
                         break;
                     psiValue -= Math.Min(-dpsi,(est - theta) / m);
+                    //psiValue -= (est - theta) / m;
                 }
                 return psiValue;
             }
@@ -5904,7 +5905,8 @@ namespace Models.Soils
         /// <param name="InitialDepth">The initial depth.</param>
         public void SetWaterTable(double InitialDepth)
         {
-            throw new NotImplementedException("SWIM doesn't implement SetWaterTable");
+            bbc_value = x[n] - InitialDepth / 10.0;
+            ibbc = 1;
         }
 
         ///<summary>Perform a reset</summary>
