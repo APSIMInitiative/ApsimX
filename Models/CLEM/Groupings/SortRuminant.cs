@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace Models.CLEM.Groupings
 {
@@ -36,6 +37,20 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => typeof(T).GetProperty(Parameter.ToString()).GetValue(t, null);
 
+        /// <summary>
+        /// Convert sort to string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            using (StringWriter sortString = new StringWriter())
+            {
+                sortString.Write("Sort by property ");
+                sortString.Write($"{Parameter.ToString()} value {SortDirection.ToString().ToLower()}");
+                return sortString.ToString();
+            }
+        }
+
         #region descriptive summary
 
         /// <summary>
@@ -45,7 +60,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "";
+            return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">{this}</div>";
         }
 
         /// <summary>

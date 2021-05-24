@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Description("This ruminant sort rule is used to order results by the value assicated with a named Attribute. Multiple sorts can be chained, with sorts higher in the tree taking precedence.")]
     [Version(1, 0, 0, "")]
-    public class SortByAttributeValue : CLEMModel, ISort, IValidatableObject
+    public class SortByAttributeValue : CLEMModel, ISort
     {
         /// <summary>
         /// Name of attribute to sort by
@@ -52,13 +52,12 @@ namespace Models.CLEM.Groupings
                 sortString.Write("Sort by attribute ");
                 if (this.AttributeName == null)
                 {
-                    sortString.Write($"<span class=\"errorlink\">NOT DEFINED</span> value ");
+                    sortString.Write($"NOT DEFINED");
                 }
                 else
                 {
-                    sortString.Write($"<span class=\"filter\">{AttributeName}</span> value ");
+                    sortString.Write($"{AttributeName} value {SortDirection.ToString().ToLower()}");
                 }
-                sortString.Write(SortDirection.ToString().ToLower());
                 return sortString.ToString();
             }
         }
@@ -72,11 +71,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write($"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">{this.ToString()}</div>");
-                return htmlWriter.ToString();
-            }
+            return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">{this}</div>";
         }
 
         /// <summary>
@@ -95,19 +90,6 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";
-        }
-        #endregion
-
-        #region validation
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            return new List<ValidationResult>();
         }
         #endregion
     }

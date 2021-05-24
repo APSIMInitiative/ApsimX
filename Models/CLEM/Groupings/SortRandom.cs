@@ -29,6 +29,16 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => RandomNumberGenerator.Generator.Next();
 
+        /// <summary>
+        /// Convert sort to string
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "Randomise order";
+        }
+
+
         #region descriptive summary
 
         /// <summary>
@@ -38,7 +48,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "";
+            return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">{this}</div>";
         }
 
         /// <summary>
