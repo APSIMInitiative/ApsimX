@@ -1673,23 +1673,20 @@ namespace Models.Soils
                 dx[i] = soilPhysical.Thickness[i] / 10.0;
 
             x[0] = 0.0;
-            x[1] = 2.0 * dx[0] + x[0];
+            x[1] = 0.0 + dx[0] / 2.0;
+            double cumDepth = 0.0;
 
-            for (int i = 1; i < n; i++)
-                //x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;  TIP REVISION - nodes in middle of layer.
-                x[i] = 2.0 * dx[i - 1] + x[i - 2];    
-
-            x[n] = MathUtilities.Sum(dx);
-
-            //      p%dx(0) = 0.5*(p%x(1) - p%x(0))
-            //      do 10 i=1,p%n-1
-            //         p%dx(i) = 0.5*(p%x(i+1)-p%x(i-1))
-            //   10 continue
-            //      p%dx(p%n) = 0.5*(p%x(p%n)-p%x(p%n-1))
-
-
-            // ------- IF USING SIMPLE SOIL SPECIFICATION CALCULATE PROPERTIES -----
-
+            for (int i = 2; i < n; i++)
+            {
+                cumDepth += dx[i-2]; 
+                x[i] = cumDepth + dx[i-1] / 2.0;  
+                // this is what it used to be         x[i] = MathUtilities.Sum(dx, 0, i - 1) + dx[i] / 2;  //TIP REVISION - nodes in middle of layer.
+            }
+            x[n] = MathUtilities.Sum(dx);   // jumps straight to the bottom of the profile - can end up being a very thick node in a plce that can be highly dynamic
+            // There should be 2 more nodes than there are layers (one node in the middle of each layer, one at the surface, and one at the base)
+            // This scheme has the same number of nodes as layers
+            // If N (so there should be N+2 nodes) is the number of layers then what it is doing is skipping the two layers completely 
+            // It would be interesting to know where/how it is getting the soil properties
 
 
             SetupThetaCurve();
