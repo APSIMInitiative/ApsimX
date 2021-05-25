@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 133; } }
+        public static int LatestVersion { get { return 134; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3474,6 +3474,21 @@
         {
             foreach (JObject pasturSpecies in JsonUtilities.ChildrenRecursively(root, "PastureSpecies"))
                 pasturSpecies.Remove("WaterAvailableMethod");
+        }
+
+        /// <summary>
+        /// Set WaterBalance.DischargeWidth to 5 if it's NaN, and
+        /// set Waterbalance.CatchmentArea to 10 if it's NaN.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion134(JObject root, string fileName)
+        {
+            foreach (JObject soilwat in JsonUtilities.ChildrenRecursively(root, "WaterBalance"))
+            {
+                JsonUtilities.SetPropertyValIfNaN(soilwat, "DischargeWidth", 5);
+                JsonUtilities.SetPropertyValIfNaN(soilwat, "CatchmentArea", 10);
+            }
         }
 
         /// <summary>
