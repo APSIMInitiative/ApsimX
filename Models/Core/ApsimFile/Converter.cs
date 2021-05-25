@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 130; } }
+        public static int LatestVersion { get { return 131; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3428,6 +3428,21 @@
                     JsonUtilities.AddConstantFunctionIfNotExists(demand, "Storage", "1");
                     organChildren.Add(demand);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Rename DroughtInducedSenescence and Lag functions so they can be used for other stresses 
+        /// optional functions non-optional.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion131(JObject root, string fileName)
+        {
+            foreach (JObject Root in JsonUtilities.ChildrenOfType(root, "Leaf+LeafCohortParameters"))
+            {
+                JsonUtilities.RenameChildModel(Root, "DroughtInducedLagAcceleration", "LagAcceleration");
+                JsonUtilities.RenameChildModel(Root, "DroughtInducedSenAcceleration", "SenescenceAcceleration");
             }
         }
 
