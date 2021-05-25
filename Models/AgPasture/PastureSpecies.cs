@@ -683,7 +683,7 @@
 
         /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
         [Units("-")]
-        private double myRespirationExponent = 1.5;
+        public double RespirationExponent { get; set; } = 1.5;
 
 
         /// <summary>N concentration thresholds for roots, optimum, minimum and maximum (kgN/kgDM).</summary>
@@ -4261,7 +4261,7 @@
             else
             {
                 double scalef = 1.0 - Math.Exp(-1.0);
-                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / RespirationTReference, myRespirationExponent));
+                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / RespirationTReference, RespirationExponent));
                 result = baseEffect / scalef;
             }
 
