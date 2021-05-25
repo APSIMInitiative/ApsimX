@@ -266,6 +266,11 @@ namespace Models.Core
 
                 IsRunning = true;
 
+#if DEBUG
+                foreach (Model model in FindAllDescendants<Model>())
+                    model.Validate();
+#endif
+
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
@@ -275,7 +280,7 @@ namespace Models.Core
             catch (Exception err)
             {
                 // Exception occurred. Write error to summary.
-                simulationError = new SimulationException("", err, Name, FileName);
+                simulationError = new SimulationException(err, Name, FileName);
                 summary?.WriteError(this, simulationError.ToString());
 
                 // Rethrow exception

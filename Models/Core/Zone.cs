@@ -94,8 +94,9 @@
         /// <summary>
         /// Ensure that child zones' total area does not exceed this zone's area.
         /// </summary>
-        private void Validate()
+        public override void Validate()
         {
+            base.Validate();
             Zone[] subPaddocks = Children.OfType<Zone>().ToArray();
             double totalSubzoneArea = subPaddocks.Sum(z => z.Area);
             if (totalSubzoneArea > Area)

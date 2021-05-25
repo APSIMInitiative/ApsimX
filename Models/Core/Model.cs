@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System.Linq;
+    using System.Reflection;
 
     /// <summary>
     /// Base class for all models
@@ -528,6 +529,65 @@
 
             // Simulation can be null if this model is not under a simulation e.g. DataStore.
             return new Locater();
+        }
+
+        /// <summary>
+        /// Validate all model inputs.
+        /// Throw if any inputs are invalid.
+        /// </summary>
+        public virtual void Validate()
+        {
+            foreach (MemberInfo member in GetInputs())
+            {
+                BoundsAttribute bounds = member.GetCustomAttribute<BoundsAttribute>();
+                if (bounds != null)
+                {
+                    object value;
+                    if (member is PropertyInfo property)
+                        value = property.GetValue(this);
+                    else if (member is FieldInfo field)
+                        value = field.GetValue(this);
+                    else
+                        throw new Exception("Bounds attribute is only valid on fields and properties");
+                    if (value == null)
+                    {
+                        // todo: need some way to distinguish optional params from non-optional params
+                        // throw new ModelException(this, $"Parameter {member.Name} cannot be null");
+                    }
+                    else if (value.GetType().IsArray)
+                        for (int i = 0; i < ((Array)value).Length; i++)
+                            CheckBounds(Convert.ToDouble(((Array)value).GetValue(i)), bounds, $"{member.Name}[{i}])");
+                    else
+                        CheckBounds(Convert.ToDouble(value), bounds, member.Name);
+                }
+            }
+        }
+
+        private void CheckBounds(double value, BoundsAttribute bounds, string parameterName)
+        {
+            try
+            {
+                Assert.GreaterThanOrEqual(bounds.Lower, value);
+                Assert.LessThanOrEqual(bounds.Upper, value);
+            }
+            catch (AssertionFailedException err)
+            {
+                throw new ModelException(this, $"Illegal value for parameter {parameterName}", err);
+            }
+        }
+
+        /// <summary>
+        /// Get all inputs of the model.
+        /// </summary>
+        protected virtual IEnumerable<MemberInfo> GetInputs()
+        {
+            BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            foreach (PropertyInfo property in GetType().GetProperties(flags))
+                if (Attribute.IsDefined(property, typeof(DescriptionAttribute)))
+                    yield return property;
+            foreach (FieldInfo field in GetType().GetFields(flags))
+                if (Attribute.IsDefined(field, typeof(DescriptionAttribute)))
+                    yield return field;
         }
     }
 }
