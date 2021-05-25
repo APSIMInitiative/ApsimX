@@ -3,7 +3,9 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
+    using Models.Factorial;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -78,6 +80,79 @@
             Assert.AreEqual("Sim1.apsimx", Path.GetFileName(generatedFiles[0]));
             Assert.AreEqual("Sim2.apsimx", Path.GetFileName(generatedFiles[1]));
             Directory.Delete(path, true);
+        }
+
+        /// <summary>
+        /// This test reproduces bug #6461 on github. The problem occurs when
+        /// an experiment overrides manager script properties via a factor.
+        /// The bug is that the changes aren't saved when the model is serialized.
+        /// </summary>
+        [Test]
+        public void TestManagerParameterChanges()
+        {
+            Manager m = new Manager()
+            {
+                Name = "Manager",
+                Code = "using System; namespace Models { [Serializable] public class Script : Models.Core.Model { public string X { get; set; } } }"
+            };
+            Simulations sims = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new DataStore(),
+                    new Experiment()
+                    {
+                        Name = "expt",
+                        Children = new List<IModel>()
+                        {
+                            new Factors()
+                            {
+                                Children = new List<IModel>()
+                                {
+                                    new Factor()
+                                    {
+                                        Name = "x",
+                                        Specification = "[Manager].Script.X = 1"
+                                    }
+                                }
+                            },
+                            new Simulation()
+                            {
+                                Name = "sim",
+                                Children = new List<IModel>()
+                                {
+                                    new Clock()
+                                    {
+                                        StartDate = new DateTime(2020, 1, 1),
+                                        EndDate = new DateTime(2020, 1, 2),
+                                        Name = "Clock"
+                                    },
+                                    new Summary(),
+                                    m
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            sims.ParentAllDescendants();
+            m.OnCreated();
+            Runner runner = new Runner(sims);
+            string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                GenerateApsimXFiles.Generate(runner, temp, _ => {});
+                string file = Path.Combine(temp, "exptx1.apsimx");
+                sims = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
+                if (errors != null && errors.Count > 0)
+                    throw errors[0];
+                Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
+            }
+            finally
+            {
+                if (Directory.Exists(temp))
+                    Directory.Delete(temp, true);
+            }
         }
     }
 }
