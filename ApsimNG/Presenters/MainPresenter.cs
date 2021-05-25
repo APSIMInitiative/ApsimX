@@ -278,7 +278,7 @@
                 else
                 {
                     LastError = new List<string> { error.ToString() };
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                    view.ShowMessage(GetBasicErrorInfo(error), Simulation.ErrorLevel.Error);
                 }
             }
             else
@@ -286,6 +286,14 @@
                 LastError = new List<string>();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
+        }
+
+        private string GetBasicErrorInfo(Exception error)
+        {
+            StringBuilder text = new StringBuilder(error.Message);
+            while ( (error = error.InnerException) != null)
+                text.Append($" --> {error.Message}");
+            return text.ToString();
         }
 
         /// <summary>
@@ -305,7 +313,7 @@
                         ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
                     else
                         // only overwrite other messages the first time through the loop
-                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
+                        view.ShowMessage(GetBasicErrorInfo(errors[i]), Simulation.ErrorLevel.Error, overwrite && i == 0, true);
                 }
             }
             else
