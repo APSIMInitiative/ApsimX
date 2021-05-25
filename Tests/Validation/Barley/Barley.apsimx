@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 130,
+  "ExplorerWidth": 300,
+  "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -1273,7 +1273,7 @@
                   "XAxis": 3,
                   "YAxis": 0,
                   "ColourArgb": -16777216,
-                  "FactorToVaryColours": "SD",
+                  "FactorToVaryColours": "Experiment",
                   "FactorToVaryMarkers": null,
                   "FactorToVaryLines": null,
                   "Marker": 0,
@@ -1283,6 +1283,86 @@
                   "TableName": "HarvestObsPred",
                   "XFieldName": "Observed.Barley.Phenology.FloweringDAS",
                   "YFieldName": "Predicted.Barley.Phenology.FloweringDAS",
+                  "X2FieldName": "",
+                  "Y2FieldName": "",
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [
+                    {
+                      "$type": "Models.Regression, Models",
+                      "ForEachSeries": false,
+                      "showOneToOne": true,
+                      "showEquation": true,
+                      "Name": "Regression",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "Observed",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "Predicted",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 3,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "FlagLeaf Date",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": "Experiment",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "HarvestObsPred",
+                  "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                  "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
                   "X2FieldName": "",
                   "Y2FieldName": "",
                   "ShowInLegend": true,
@@ -2025,9 +2105,9 @@
                               "FOM": [
                                 390.59753892353666,
                                 289.36177378799243,
-                                158.80510849565769,
-                                87.154091413591289,
-                                47.831179500981357,
+                                158.8051084956577,
+                                87.15409141359129,
+                                47.83117950098136,
                                 26.250307878240648
                               ],
                               "CarbonMetadata": null,
@@ -5799,7 +5879,7 @@
                                 476.415325486973,
                                 261.46227424077387,
                                 143.49353850294406,
-                                78.750923634721943
+                                78.75092363472194
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -8144,18 +8224,18 @@
                               ],
                               "NO3N": [
                                 4.5528455284552845,
-                                6.2872628726287267,
-                                2.7548209366391179,
-                                3.0555555555555549,
+                                6.287262872628727,
+                                2.754820936639118,
+                                3.055555555555555,
                                 2.5,
-                                0.83333333333333337
+                                0.8333333333333334
                               ],
                               "NH4N": [
                                 1.084010840108401,
-                                0.32520325203252032,
+                                0.3252032520325203,
                                 0.22038567493112945,
-                                0.083333333333333329,
-                                0.055555555555555622,
+                                0.08333333333333333,
+                                0.05555555555555562,
                                 0.11111111111111105
                               ],
                               "PH": [
@@ -8509,10 +8589,10 @@
                               "FOM": [
                                 585.896308385305,
                                 434.04266068198865,
-                                238.20766274348651,
+                                238.2076627434865,
                                 130.73113712038693,
-                                71.746769251472031,
-                                39.375461817360971
+                                71.74676925147203,
+                                39.37546181736097
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -8647,7 +8727,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.PMF.Struct;\nusing System;\nusing System.Collections.Generic;\nusing System.Xml.Serialization;\nusing Models.Core;\nusing Models.Interfaces;\nusing Models.PMF;\nusing Models.PMF.Organs;\nusing Models.Soils.Arbitrator;\nusing APSIM.Shared.Utilities;\n\n\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Plant Barley;\n        public  event EventHandler LeafReport;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Structure\")]\n        private Structure structure;\n        \n        \n        [XmlIgnore] public int LeafPosition { get; set; }\n        [XmlIgnore] public double MaxLeafSize { get; set; }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            var leaf = Barley.Leaf as Leaf;\n            if ((leaf.ExpandedCohortNo > LeafPosition) & (structure.NextLeafProportion == 1))\n            {\n                LeafPosition = (int)\n                leaf.ExpandedCohortNo;\n                MaxLeafSize = leaf.CohortSize[LeafPosition - 1];\n                LeafReport.Invoke(this, new EventArgs());\n            }\n        }\n    }\n}\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Arbitrator;\r\nusing Models.PMF.Organs;\r\nusing Models.PMF;\r\nusing Models.Interfaces;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System.Collections.Generic;\r\nusing System;\r\nusing Models.PMF.Struct;\r\n\r\n\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Plant Barley;\r\n        public  event EventHandler LeafReport;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Structure\")]\r\n        private Structure structure;\r\n        \r\n        \r\n        [JsonIgnore] public int LeafPosition { get; set; }\r\n        [JsonIgnore] public double MaxLeafSize { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            var leaf = Barley.Leaf as Leaf;\r\n            if ((leaf.ExpandedCohortNo > LeafPosition) & (structure.NextLeafProportion == 1))\r\n            {\r\n                LeafPosition = (int)\r\n                leaf.ExpandedCohortNo;\r\n                MaxLeafSize = leaf.CohortSize[LeafPosition - 1];\r\n                LeafReport.Invoke(this, new EventArgs());\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [],
                               "Name": "MaxLeafSize",
                               "IncludeInDocumentation": false,
@@ -10911,20 +10991,20 @@
                                 300.0
                               ],
                               "NO3N": [
-                                19.512195121951219,
+                                19.51219512195122,
                                 14.423503325942352,
-                                0.60606060606060663,
-                                0.45454545454545342,
-                                0.45454545454545342,
-                                0.33333333333333331
+                                0.6060606060606066,
+                                0.4545454545454534,
+                                0.4545454545454534,
+                                0.3333333333333333
                               ],
                               "NH4N": [
                                 1.1924119241192412,
                                 1.2071938901207195,
-                                0.54545454545454519,
+                                0.5454545454545452,
                                 0.4242424242424242,
-                                0.30303030303030293,
-                                0.27272727272727287
+                                0.3030303030303029,
+                                0.2727272727272729
                               ],
                               "PH": [
                                 6.6,
@@ -11282,14 +11362,14 @@
                                 0.96
                               ],
                               "FOM": [
-                                536.93360952000455,
+                                536.9336095200046,
                                 359.91736185153144,
                                 197.52683621638468,
                                 132.40619794584117,
                                 108.4050261563909,
                                 72.66606212364664,
                                 59.493939765704596,
-                                32.650966420495813
+                                32.65096642049581
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -14208,17 +14288,17 @@
                               ],
                               "NO3N": [
                                 24.390243902439025,
-                                6.0975609756097562,
-                                3.4013605442176891,
-                                3.4013605442176869,
+                                6.097560975609756,
+                                3.401360544217689,
+                                3.401360544217687,
                                 3.184713375796179,
                                 1.5772870662460583,
                                 3.125,
                                 1.0414496979795878
                               ],
                               "NH4N": [
-                                4.0650406504065044,
-                                0.20325203252032509,
+                                4.065040650406504,
+                                0.2032520325203251,
                                 0.11337868480725632,
                                 0.11337868480725603,
                                 0.0,
@@ -14577,14 +14657,14 @@
                                 0.96
                               ],
                               "FOM": [
-                                536.93360952000455,
+                                536.9336095200046,
                                 359.91736185153144,
                                 197.52683621638468,
                                 132.40619794584117,
                                 108.4050261563909,
                                 72.66606212364664,
                                 59.493939765704596,
-                                32.650966420495813
+                                32.65096642049581
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -17177,7 +17257,7 @@
                               "NH4N": [
                                 5.2,
                                 5.5,
-                                5.4666666666666668,
+                                5.466666666666667,
                                 0.1,
                                 0.1,
                                 0.1
@@ -17571,14 +17651,14 @@
                                 0.96
                               ],
                               "FOM": [
-                                536.93360952000455,
+                                536.9336095200046,
                                 359.91736185153144,
                                 197.52683621638468,
                                 132.40619794584117,
                                 108.4050261563909,
                                 72.66606212364664,
                                 59.493939765704596,
-                                32.650966420495813
+                                32.65096642049581
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -20337,7 +20417,7 @@
                               "FOM": [
                                 1562.3901556941466,
                                 1157.4470951519697,
-                                635.22043398263077,
+                                635.2204339826308,
                                 348.61636565436515,
                                 191.32471800392543,
                                 105.00123151296259
@@ -21741,18 +21821,18 @@
                               ],
                               "NO3N": [
                                 4.5528455284552845,
-                                6.2872628726287267,
-                                2.7548209366391179,
-                                3.0555555555555549,
+                                6.287262872628727,
+                                2.754820936639118,
+                                3.055555555555555,
                                 2.5,
-                                0.83333333333333337
+                                0.8333333333333334
                               ],
                               "NH4N": [
                                 1.084010840108401,
-                                0.32520325203252032,
+                                0.3252032520325203,
                                 0.22038567493112945,
-                                0.083333333333333329,
-                                0.055555555555555622,
+                                0.08333333333333333,
+                                0.05555555555555562,
                                 0.11111111111111105
                               ],
                               "PH": [
@@ -22106,10 +22186,10 @@
                               "FOM": [
                                 585.896308385305,
                                 434.04266068198865,
-                                238.20766274348651,
+                                238.2076627434865,
                                 130.73113712038693,
-                                71.746769251472031,
-                                39.375461817360971
+                                71.74676925147203,
+                                39.37546181736097
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -23223,17 +23303,17 @@
                                     300.0
                                   ],
                                   "NO3N": [
-                                    18.699186991869919,
-                                    7.3170731707317076,
-                                    3.4013605442176851,
-                                    0.63694267515923764,
-                                    0.62795741324921128,
+                                    18.69918699186992,
+                                    7.317073170731708,
+                                    3.401360544217685,
+                                    0.6369426751592376,
+                                    0.6279574132492113,
                                     0.20833333333333334
                                   ],
                                   "NH4N": [
                                     1.788617886178862,
-                                    0.81300813008130091,
-                                    0.40816326530612251,
+                                    0.8130081300813009,
+                                    0.4081632653061225,
                                     0.46709129511677283,
                                     0.21010778128286006,
                                     0.020833333333333332
@@ -23605,14 +23685,14 @@
                                     0.96
                                   ],
                                   "FOM": [
-                                    536.93360952000455,
+                                    536.9336095200046,
                                     359.91736185153144,
                                     197.52683621638468,
                                     132.40619794584117,
                                     108.4050261563909,
                                     72.66606212364664,
                                     59.493939765704596,
-                                    32.650966420495813
+                                    32.65096642049581
                                   ],
                                   "CarbonMetadata": null,
                                   "FOMMetadata": null,
@@ -23792,7 +23872,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Interfaces;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nusing Models.PMF.Organs;\n\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private ISummary summary;\n        [Link] private Irrigation Irrig;\n        [Link] private Clock Clock;\n        [Link] private Soils.Soil soil;\n        [Link] private Plant Barley;\n        [Link] private Simulation Simulation;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        //Communication to other modules\n        \n       \n        //User inputs from properties tab\n\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\n        public double Trigger_Def { get; set; }\n        [Description(\"Irrigation application Y(mm)\")]\n        public double Irrigation_Amount { get; set; }\n        [Description(\"Depth to calculate Deficit (mm)\")]\n        public double Top_Depth { get; set; }\n        \n        //private\n        [XmlIgnore] public bool SoilIsDry { get; set; }\n        [XmlIgnore] public double Top_DUL { get; set; }\n        [XmlIgnore] public double Top_Refull { get; set; }\n        [XmlIgnore] public double Top_Trigger { get; set; }\n        [XmlIgnore] public double Top_LL { get; set; }\n        [XmlIgnore] public double Top_SW { get; set; }\n        [XmlIgnore] public double Accumulated_depth { get; set; }\n        [XmlIgnore] public double Current_Deficit { get; set; }\n        \n        \n       \n    \n        //Calculate static soil variables\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {   \n            //Calculated soil water variables\n            Accumulated_depth = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_LL += soilPhysical.LL15mm[layer];\n                Top_DUL += soilPhysical.DULmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            Top_Trigger = Top_DUL - Trigger_Def;\n            //SeasonIsOpen = false;\n        \n        }\n       \n      \n        //Determine daily requirement for irrigation\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n                        \n        \n        \n        \n            \n              \n            //Is the soil dry enough to require irrigation?\n            SoilIsDry = false;\n            double CurrentRootDepth = 0;\n            double RootDepth = root.Depth;\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\n          \n            Accumulated_depth = 0;\n            Top_SW = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_SW += waterBalance.SWmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            \n            if (Top_SW <= Top_Trigger)\n                SoilIsDry = true;\n            \n                \n            \n            if (SoilIsDry) //Set Deficit-based irrigation\n            {\n                \n                \n                Irrig.Apply(Irrigation_Amount);\n                summary.WriteMessage(this, \"Automatic Irrigation\");\n                \n                            \n            }\n        }\n    }\n}\n             \n                             \n                   \n",
+                              "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soils.Soil soil;\r\n        [Link] private Plant Barley;\r\n        [Link] private Simulation Simulation;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\r\n        private Root root;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n        \r\n       \r\n        //User inputs from properties tab\r\n\r\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\r\n        public double Trigger_Def { get; set; }\r\n        [Description(\"Irrigation application Y(mm)\")]\r\n        public double Irrigation_Amount { get; set; }\r\n        [Description(\"Depth to calculate Deficit (mm)\")]\r\n        public double Top_Depth { get; set; }\r\n        \r\n        //private\r\n        [JsonIgnore] public bool SoilIsDry { get; set; }\r\n        [JsonIgnore] public double Top_DUL { get; set; }\r\n        [JsonIgnore] public double Top_Refull { get; set; }\r\n        [JsonIgnore] public double Top_Trigger { get; set; }\r\n        [JsonIgnore] public double Top_LL { get; set; }\r\n        [JsonIgnore] public double Top_SW { get; set; }\r\n        [JsonIgnore] public double Accumulated_depth { get; set; }\r\n        [JsonIgnore] public double Current_Deficit { get; set; }\r\n        \r\n        \r\n       \r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Calculated soil water variables\r\n            Accumulated_depth = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_LL += soilPhysical.LL15mm[layer];\r\n                Top_DUL += soilPhysical.DULmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            Top_Trigger = Top_DUL - Trigger_Def;\r\n            //SeasonIsOpen = false;\r\n        \r\n        }\r\n       \r\n      \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n                        \r\n        \r\n        \r\n        \r\n            \r\n              \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double CurrentRootDepth = 0;\r\n            double RootDepth = root.Depth;\r\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n            Accumulated_depth = 0;\r\n            Top_SW = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_SW += waterBalance.SWmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            \r\n            if (Top_SW <= Top_Trigger)\r\n                SoilIsDry = true;\r\n            \r\n                \r\n            \r\n            if (SoilIsDry) //Set Deficit-based irrigation\r\n            {\r\n                \r\n                \r\n                Irrig.Apply(Irrigation_Amount);\r\n                summary.WriteMessage(this, \"Automatic Irrigation\");\r\n                \r\n                            \r\n            }\r\n        }\r\n    }\r\n}\r\n             \r\n                             \r\n                   \r\n",
                               "Parameters": [
                                 {
                                   "Key": "Trigger_Def",
@@ -23814,7 +23894,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Irrigation Irrig;\n        [Link] Simulation Simulation;\n        \n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        //[XmlIgnore] public double FertN { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n            if (DAS == 1)\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\n        }\n    }\n    \n}\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Irrigation Irrig;\r\n        [Link] Simulation Simulation;\r\n        \r\n                    \r\n        [JsonIgnore] public bool InitialDay { get; set; }\r\n        //[JsonIgnore] public double FertN { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n            if (DAS == 1)\r\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\r\n        }\r\n    }\r\n    \r\n}\r\n",
                               "Parameters": null,
                               "Name": "ApplyN_at_sowing",
                               "IncludeInDocumentation": true,
@@ -23823,7 +23903,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "\nusing Models.PMF.Phen;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Plant Barley;\n        [Link] private Clock Clock;\n        [Link] private Simulation sim;\n        [Link] private Summary Summary;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\n        private Phenology phenology;\n        \n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        \n        [XmlIgnore] public bool Sown { get; set; }\n        [XmlIgnore] public bool Harvested { get; set; }\n        [XmlIgnore] public bool EndSet { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Sown = false;\n            Harvested = false;\n            EndSet = false;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Sown == false)\n            {\n                Barley.Sow(population: 200, cultivar: Cultivar, depth: 20, rowSpacing: 150, budNumber: 1);\n                Sown = true;\n            }\n            \n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\n            {\n                Barley.Harvest();\n                Barley.EndCrop();\n                Harvested = true;\n                Summary.WriteMessage(this, \"Flowering reached so setting end date to stop simulation\");\n            }\n            \n            if ((Harvested == true) && (EndSet == false))\n            {\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\n                EndSet = true;\n            }\n        }\n    }\n}\n                \n",
+                              "Code": "\r\nusing Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                Barley.Sow(population: 200, cultivar: Cultivar, depth: 20, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\r\n            }\r\n            \r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Barley.Harvest();\r\n                Barley.EndCrop();\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"Flowering reached so setting end date to stop simulation\");\r\n            }\r\n            \r\n            if ((Harvested == true) && (EndSet == false))\r\n            {\r\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\r\n                EndSet = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
                               "Parameters": [
                                 {
                                   "Key": "Cultivar",
@@ -25773,12 +25853,12 @@
                                     0.99
                                   ],
                                   "FOM": [
-                                    694.25806462551282,
-                                    540.68872438398739,
-                                    327.94428869980209,
+                                    694.2580646255128,
+                                    540.6887243839874,
+                                    327.9442886998021,
                                     198.90826577408126,
                                     120.64396166224935,
-                                    73.174261657349746,
+                                    73.17426165734975,
                                     44.3824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -27589,8 +27669,8 @@
                                     235.78015505123685,
                                     166.79174166874014,
                                     117.98908641334282,
-                                    83.465910082671712,
-                                    41.768004076393069,
+                                    83.46591008267171,
+                                    41.76800407639307,
                                     20.90154127352859
                                   ],
                                   "CarbonMetadata": null,
@@ -29257,10 +29337,10 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    469.51082743106582,
+                                    469.5108274310658,
                                     290.52550228750255,
                                     141.41394365234578,
-                                    68.833556096975613,
+                                    68.83355609697561,
                                     29.716170532110265
                                   ],
                                   "CarbonMetadata": null,
@@ -31111,11 +31191,11 @@
                                   "FOM": [
                                     260.58740315916066,
                                     220.5824745109322,
-                                    158.05424955092769,
+                                    158.0542495509277,
                                     113.25081857248298,
-                                    81.147757455295647,
-                                    58.144908999566972,
-                                    41.662647848653442,
+                                    81.14775745529565,
+                                    58.14490899956697,
+                                    41.66264784865344,
                                     29.852591664969907,
                                     21.390316629725067,
                                     15.32683160828522
@@ -31157,7 +31237,7 @@
                                   "NO3N": [
                                     1.717,
                                     1.717,
-                                    0.68700000000000017,
+                                    0.6870000000000002,
                                     0.34300000000000014,
                                     0.34300000000000014,
                                     0.34300000000000014,
@@ -31320,7 +31400,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.PMF.Phen;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Plant Barley;\n        [Link] private Clock Clock;\n        [Link] private Simulation sim;\n        [Link] private Summary Summary;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\n        private Phenology phenology;\n        \n        [Description(\"Sowing Date\")]\n        public DateTime SowingDate { get; set; }\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        \n        \n        [XmlIgnore] public bool Harvested { get; set; }\n        [XmlIgnore] public bool EndSet { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Harvested = false;\n            EndSet = false;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today.Date == SowingDate)\n            {\n                Barley.Sow(population: 90, cultivar: Cultivar, depth: 40, rowSpacing: 500, budNumber: 1);\n                \n            }\n            \n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\n            {\n                Barley.Harvest();\n                Barley.EndCrop();\n                Harvested = true;\n                Summary.WriteMessage(this, \"Flowering reached so setting end date to stop simulation\");\n            }\n            \n            if ((Harvested == true) && (EndSet == false))\n            {\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\n                EndSet = true;\n            }\n        }\n    }\n}\n                   \n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Barley;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        \r\n        \r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Harvested = false;\r\n            EndSet = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                Barley.Sow(population: 90, cultivar: Cultivar, depth: 40, rowSpacing: 500, budNumber: 1);\r\n                \r\n            }\r\n            \r\n            if (phenology.CurrentPhase.Name == \"ReadyForHarvesting\")\r\n            {\r\n                Barley.Harvest();\r\n                Barley.EndCrop();\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"Flowering reached so setting end date to stop simulation\");\r\n            }\r\n            \r\n            if ((Harvested == true) && (EndSet == false))\r\n            {\r\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\r\n                EndSet = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                   \r\n",
                                   "Parameters": [
                                     {
                                       "Key": "SowingDate",
@@ -31338,7 +31418,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Irrigation Irrig;\n        [Link] Simulation Simulation;\n        \n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        //[XmlIgnore] public double FertN { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n            if (DAS == 1)\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\n        }\n    }\n    \n}\n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Irrigation Irrig;\r\n        [Link] Simulation Simulation;\r\n        \r\n                    \r\n        [JsonIgnore] public bool InitialDay { get; set; }\r\n        //[JsonIgnore] public double FertN { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n            if (DAS == 1)\r\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\r\n        }\r\n    }\r\n    \r\n}\r\n",
                                   "Parameters": null,
                                   "Name": "ApplyN_at_sowing",
                                   "IncludeInDocumentation": true,
@@ -33828,11 +33908,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -33868,13 +33948,13 @@
                                     9.43,
                                     4.669,
                                     4.45,
-                                    4.1410000000000009,
+                                    4.141000000000001,
                                     3.58,
                                     3.5269999999999984
                                   ],
                                   "NH4N": [
                                     0.317,
-                                    0.28299999999999992,
+                                    0.2829999999999999,
                                     0.14000000000000004,
                                     0.13399999999999995,
                                     0.12399999999999996,
@@ -34045,7 +34125,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Interfaces;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nusing Models.PMF.Organs;\n\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private ISummary summary;\n        [Link] private Irrigation Irrig;\n        [Link] private Clock Clock;\n        [Link] private Soils.Soil soil;\n        [Link] private Plant Barley;\n        [Link] private Simulation Simulation;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        //Communication to other modules\n        \n       \n        //User inputs from properties tab\n\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\n        public double Trigger_Def { get; set; }\n        [Description(\"Irrigation application Y(mm)\")]\n        public double Irrigation_Amount { get; set; }\n        [Description(\"Depth to calculate Deficit (mm)\")]\n        public double Top_Depth { get; set; }\n        \n        //private\n        [XmlIgnore] public bool SoilIsDry { get; set; }\n        [XmlIgnore] public double Top_DUL { get; set; }\n        [XmlIgnore] public double Top_Refull { get; set; }\n        [XmlIgnore] public double Top_Trigger { get; set; }\n        [XmlIgnore] public double Top_LL { get; set; }\n        [XmlIgnore] public double Top_SW { get; set; }\n        [XmlIgnore] public double Accumulated_depth { get; set; }\n        [XmlIgnore] public double Current_Deficit { get; set; }\n        \n        \n       \n    \n        //Calculate static soil variables\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {   \n            //Calculated soil water variables\n            Accumulated_depth = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_LL += soilPhysical.LL15mm[layer];\n                Top_DUL += soilPhysical.DULmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            Top_Trigger = Top_DUL - Trigger_Def;\n            //SeasonIsOpen = false;\n        \n        }\n       \n      \n        //Determine daily requirement for irrigation\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n                        \n        \n        \n        \n            \n              \n            //Is the soil dry enough to require irrigation?\n            SoilIsDry = false;\n            double CurrentRootDepth = 0;\n            double RootDepth = root.Depth;\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\n          \n            Accumulated_depth = 0;\n            Top_SW = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_SW += waterBalance.SWmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            \n            if (Top_SW <= Top_Trigger)\n                SoilIsDry = true;\n            \n                \n            \n            if (SoilIsDry) //Set Deficit-based irrigation\n            {\n                \n                \n                Irrig.Apply(Irrigation_Amount);\n                summary.WriteMessage(this, \"Automatic Irrigation\");\n                \n                            \n            }\n        }\n    }\n}\n             \n                             \n                   \n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soils.Soil soil;\r\n        [Link] private Plant Barley;\r\n        [Link] private Simulation Simulation;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\r\n        private Root root;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n        \r\n       \r\n        //User inputs from properties tab\r\n\r\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\r\n        public double Trigger_Def { get; set; }\r\n        [Description(\"Irrigation application Y(mm)\")]\r\n        public double Irrigation_Amount { get; set; }\r\n        [Description(\"Depth to calculate Deficit (mm)\")]\r\n        public double Top_Depth { get; set; }\r\n        \r\n        //private\r\n        [JsonIgnore] public bool SoilIsDry { get; set; }\r\n        [JsonIgnore] public double Top_DUL { get; set; }\r\n        [JsonIgnore] public double Top_Refull { get; set; }\r\n        [JsonIgnore] public double Top_Trigger { get; set; }\r\n        [JsonIgnore] public double Top_LL { get; set; }\r\n        [JsonIgnore] public double Top_SW { get; set; }\r\n        [JsonIgnore] public double Accumulated_depth { get; set; }\r\n        [JsonIgnore] public double Current_Deficit { get; set; }\r\n        \r\n        \r\n       \r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Calculated soil water variables\r\n            Accumulated_depth = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_LL += soilPhysical.LL15mm[layer];\r\n                Top_DUL += soilPhysical.DULmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            Top_Trigger = Top_DUL - Trigger_Def;\r\n            //SeasonIsOpen = false;\r\n        \r\n        }\r\n       \r\n      \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n                        \r\n        \r\n        \r\n        \r\n            \r\n              \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double CurrentRootDepth = 0;\r\n            double RootDepth = root.Depth;\r\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n            Accumulated_depth = 0;\r\n            Top_SW = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_SW += waterBalance.SWmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            \r\n            if (Top_SW <= Top_Trigger)\r\n                SoilIsDry = true;\r\n            \r\n                \r\n            \r\n            if (SoilIsDry) //Set Deficit-based irrigation\r\n            {\r\n                \r\n                \r\n                Irrig.Apply(Irrigation_Amount);\r\n                summary.WriteMessage(this, \"Automatic Irrigation\");\r\n                \r\n                            \r\n            }\r\n        }\r\n    }\r\n}\r\n             \r\n                             \r\n                   \r\n",
                                   "Parameters": [
                                     {
                                       "Key": "Trigger_Def",
@@ -34991,11 +35071,11 @@
                                   "FOM": [
                                     260.58740315916066,
                                     220.5824745109322,
-                                    158.05424955092769,
+                                    158.0542495509277,
                                     113.25081857248298,
-                                    81.147757455295647,
-                                    58.144908999566972,
-                                    41.662647848653442,
+                                    81.14775745529565,
+                                    58.14490899956697,
+                                    41.66264784865344,
                                     29.852591664969907,
                                     21.390316629725067,
                                     15.32683160828522
@@ -35038,22 +35118,22 @@
                                     4.293,
                                     4.293,
                                     1.7169999999999999,
-                                    0.85899999999999976,
-                                    0.85899999999999976,
-                                    0.85899999999999976,
-                                    0.85899999999999976,
-                                    0.85900000000000087,
-                                    0.85900000000000087,
-                                    0.85900000000000087
+                                    0.8589999999999998,
+                                    0.8589999999999998,
+                                    0.8589999999999998,
+                                    0.8589999999999998,
+                                    0.8590000000000009,
+                                    0.8590000000000009,
+                                    0.8590000000000009
                                   ],
                                   "NH4N": [
                                     0.596,
                                     0.09900000000000006,
-                                    0.098999999999999991,
-                                    0.098999999999999991,
+                                    0.09899999999999999,
+                                    0.09899999999999999,
                                     0.09900000000000006,
                                     0.09900000000000006,
-                                    0.098999999999999921,
+                                    0.09899999999999992,
                                     0.09900000000000006,
                                     0.09900000000000006,
                                     0.09900000000000006
@@ -35161,7 +35241,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Irrigation Irrig;\n        [Link] Simulation Simulation;\n        \n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        //[XmlIgnore] public double FertN { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n            if (DAS == 1)\n                Fertiliser.Apply(130, Fertiliser.Types.NO3N, 50);\n        }\n    }\n    \n}\n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Irrigation Irrig;\r\n        [Link] Simulation Simulation;\r\n        \r\n                    \r\n        [JsonIgnore] public bool InitialDay { get; set; }\r\n        //[JsonIgnore] public double FertN { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n            if (DAS == 1)\r\n                Fertiliser.Apply(130, Fertiliser.Types.NO3N, 50);\r\n        }\r\n    }\r\n    \r\n}\r\n",
                                   "Parameters": null,
                                   "Name": "ApplyN_at_sowing",
                                   "IncludeInDocumentation": true,
@@ -35209,7 +35289,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Interfaces;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nusing Models.PMF.Organs;\n\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private ISummary summary;\n        [Link] private Irrigation Irrig;\n        [Link] private Clock Clock;\n        [Link] private Soils.Soil soil;\n        [Link] private Plant Barley;\n        [Link] private Simulation Simulation;\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        //Communication to other modules\n        \n       \n        //User inputs from properties tab\n\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\n        public double Trigger_Def { get; set; }\n        [Description(\"Irrigation application Y(mm)\")]\n        public double Irrigation_Amount { get; set; }\n        [Description(\"Depth to calculate Deficit (mm)\")]\n        public double Top_Depth { get; set; }\n        \n        //private\n        [XmlIgnore] public bool SoilIsDry { get; set; }\n        [XmlIgnore] public double Top_DUL { get; set; }\n        [XmlIgnore] public double Top_Refull { get; set; }\n        [XmlIgnore] public double Top_Trigger { get; set; }\n        [XmlIgnore] public double Top_LL { get; set; }\n        [XmlIgnore] public double Top_SW { get; set; }\n        [XmlIgnore] public double Accumulated_depth { get; set; }\n        [XmlIgnore] public double Current_Deficit { get; set; }\n        \n        \n       \n    \n        //Calculate static soil variables\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {   \n            //Calculated soil water variables\n            Accumulated_depth = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_LL += soilPhysical.LL15mm[layer];\n                Top_DUL += soilPhysical.DULmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            Top_Trigger = Top_DUL - Trigger_Def;\n            //SeasonIsOpen = false;\n        \n        }\n       \n      \n        //Determine daily requirement for irrigation\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n                        \n        \n        \n        \n            \n              \n            //Is the soil dry enough to require irrigation?\n            SoilIsDry = false;\n            double CurrentRootDepth = 0;\n            double RootDepth = root.Depth;\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\n          \n            Accumulated_depth = 0;\n            Top_SW = 0;\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\n            {\n                Top_SW += waterBalance.SWmm[layer];\n                Accumulated_depth += soilPhysical.Thickness[layer];\n            }\n            \n            if (Top_SW <= Top_Trigger)\n                SoilIsDry = true;\n            \n                \n            \n            if (SoilIsDry) //Set Deficit-based irrigation\n            {\n                \n                \n                Irrig.Apply(Irrigation_Amount);\n                summary.WriteMessage(this, \"Automatic Irrigation\");\n                \n                            \n            }\n        }\n    }\n}\n             \n                             \n                   \n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing Models.PMF.Organs;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soils.Soil soil;\r\n        [Link] private Plant Barley;\r\n        [Link] private Simulation Simulation;\r\n        [Link(Type = LinkType.Path, Path = \"[Barley].Root\")]\r\n        private Root root;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n        \r\n       \r\n        //User inputs from properties tab\r\n\r\n        [Description(\"Deficit to trigger irrigation Y(mm)\")]\r\n        public double Trigger_Def { get; set; }\r\n        [Description(\"Irrigation application Y(mm)\")]\r\n        public double Irrigation_Amount { get; set; }\r\n        [Description(\"Depth to calculate Deficit (mm)\")]\r\n        public double Top_Depth { get; set; }\r\n        \r\n        //private\r\n        [JsonIgnore] public bool SoilIsDry { get; set; }\r\n        [JsonIgnore] public double Top_DUL { get; set; }\r\n        [JsonIgnore] public double Top_Refull { get; set; }\r\n        [JsonIgnore] public double Top_Trigger { get; set; }\r\n        [JsonIgnore] public double Top_LL { get; set; }\r\n        [JsonIgnore] public double Top_SW { get; set; }\r\n        [JsonIgnore] public double Accumulated_depth { get; set; }\r\n        [JsonIgnore] public double Current_Deficit { get; set; }\r\n        \r\n        \r\n       \r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Calculated soil water variables\r\n            Accumulated_depth = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_LL += soilPhysical.LL15mm[layer];\r\n                Top_DUL += soilPhysical.DULmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            Top_Trigger = Top_DUL - Trigger_Def;\r\n            //SeasonIsOpen = false;\r\n        \r\n        }\r\n       \r\n      \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n                        \r\n        \r\n        \r\n        \r\n            \r\n              \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double CurrentRootDepth = 0;\r\n            double RootDepth = root.Depth;\r\n            CurrentRootDepth = Math.Max(RootDepth, CurrentRootDepth);\r\n          \r\n            Accumulated_depth = 0;\r\n            Top_SW = 0;\r\n            for (int layer = 0; Accumulated_depth < Top_Depth; layer++)\r\n            {\r\n                Top_SW += waterBalance.SWmm[layer];\r\n                Accumulated_depth += soilPhysical.Thickness[layer];\r\n            }\r\n            \r\n            if (Top_SW <= Top_Trigger)\r\n                SoilIsDry = true;\r\n            \r\n                \r\n            \r\n            if (SoilIsDry) //Set Deficit-based irrigation\r\n            {\r\n                \r\n                \r\n                Irrig.Apply(Irrigation_Amount);\r\n                summary.WriteMessage(this, \"Automatic Irrigation\");\r\n                \r\n                            \r\n            }\r\n        }\r\n    }\r\n}\r\n             \r\n                             \r\n                   \r\n",
                                   "Parameters": [
                                     {
                                       "Key": "Trigger_Def",
@@ -36254,12 +36334,12 @@
                                     1.0928325491238042,
                                     0.9059900045189464,
                                     0.751092094526599,
-                                    0.62267721679765631,
-                                    0.51621754395278707,
+                                    0.6226772167976563,
+                                    0.5162175439527871,
                                     0.35479078348255794,
                                     0.24384390170141126,
                                     0.11518370325361448,
-                                    0.079164524337650061
+                                    0.07916452433765006
                                   ],
                                   "CarbonMetadata": null,
                                   "FOMMetadata": null,
@@ -36299,18 +36379,18 @@
                                     7.803,
                                     1.1329999999999996,
                                     1.1329999999999996,
-                                    0.81799999999999951,
+                                    0.8179999999999995,
                                     0.6920000000000005,
                                     1.0070000000000006,
-                                    0.62899999999999978,
-                                    0.62899999999999978,
-                                    0.62900000000000034,
-                                    0.62899999999999978
+                                    0.6289999999999998,
+                                    0.6289999999999998,
+                                    0.6290000000000003,
+                                    0.6289999999999998
                                   ],
                                   "NH4N": [
                                     1.3000000000000003,
                                     1.0,
-                                    0.99999999999999967,
+                                    0.9999999999999997,
                                     0.8,
                                     0.8,
                                     0.5,
@@ -36461,7 +36541,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        [Link] Irrigation Irrig;\n        [Link] Simulation Simulation;\n        \n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        //[XmlIgnore] public double FertN { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\n            if (DAS == 1)\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\n        }\n    }\n    \n}\n",
+                                  "Code": "using Newtonsoft.Json;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Irrigation Irrig;\r\n        [Link] Simulation Simulation;\r\n        \r\n                    \r\n        [JsonIgnore] public bool InitialDay { get; set; }\r\n        //[JsonIgnore] public double FertN { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            double DAS = (double)Simulation.FindByPath(\"DAS.Script.DAS\").Value;\r\n            if (DAS == 1)\r\n                Fertiliser.Apply(100, Fertiliser.Types.NO3N, 50);\r\n        }\r\n    }\r\n    \r\n}\r\n",
                                   "Parameters": null,
                                   "Name": "ApplyN_at_sowing",
                                   "IncludeInDocumentation": true,
@@ -37526,12 +37606,12 @@
                                     0.99
                                   ],
                                   "FOM": [
-                                    694.25806462551282,
-                                    540.68872438398739,
-                                    327.94428869980209,
+                                    694.2580646255128,
+                                    540.6887243839874,
+                                    327.9442886998021,
                                     198.90826577408126,
                                     120.64396166224935,
-                                    73.174261657349746,
+                                    73.17426165734975,
                                     44.3824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -38253,7 +38333,7 @@
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
-                  "Name": "WaggaWagga",
+                  "Name": "WaggaWagga2019",
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factors, Models",
@@ -38714,12 +38794,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -38753,19 +38833,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -38986,7 +39066,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -39095,7 +39175,7 @@
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
-                  "Name": "Callington",
+                  "Name": "Callington2019",
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factors, Models",
@@ -39556,12 +39636,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -39595,19 +39675,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -39828,7 +39908,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -39937,7 +40017,7 @@
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
-                  "Name": "Dale",
+                  "Name": "Dale2019",
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factors, Models",
@@ -40398,12 +40478,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -40437,19 +40517,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -40670,7 +40750,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -40779,7 +40859,7 @@
                 {
                   "$type": "Models.Factorial.Experiment, Models",
                   "DisabledSimNames": null,
-                  "Name": "YanYean",
+                  "Name": "YanYean2019",
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factors, Models",
@@ -41240,12 +41320,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -41279,19 +41359,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -41512,7 +41592,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -41640,6 +41720,86 @@
                     }
                   ],
                   "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": "Observed",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": "Predicted",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationPosition": 3,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FlagLeaf Date",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -42139,12 +42299,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -42178,19 +42338,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -42411,7 +42571,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -43003,12 +43163,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -43042,19 +43202,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -43275,7 +43435,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -43867,12 +44027,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -43906,19 +44066,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -44139,7 +44299,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -44731,12 +44891,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -44770,19 +44930,19 @@
                                   "NO3N": [
                                     10.1010101010101,
                                     10.256410256410257,
-                                    2.7100271002710028,
+                                    2.710027100271003,
                                     0.787401574803151,
                                     0.48661800486618023,
                                     0.246913580246913,
                                     0.246913580246913
                                   ],
                                   "NH4N": [
-                                    0.50505050505050508,
-                                    0.51282051282051277,
-                                    0.27100271002710019,
+                                    0.5050505050505051,
+                                    0.5128205128205128,
+                                    0.2710027100271002,
                                     0.26246719160104987,
                                     0.24330900243308992,
-                                    0.24691358024691359,
+                                    0.2469135802469136,
                                     0.2469135802469134
                                   ],
                                   "PH": [
@@ -45003,7 +45163,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing System.Globalization;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"TOS\"]);\r\n\t                if (Env == Treat)\r\n\t                {\r\n\t                    //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System.Globalization;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                \r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"TOS\"]);\r\n                    if (Env == Treat)\r\n                    {\r\n                        //EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        //EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                //Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -45121,6 +45281,86 @@
                             }
                           ],
                           "IncludeInDocumentation": false,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": "Observed",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": "Predicted",
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationPosition": 3,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "FlagLeaf Date",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Cv",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 0,
+                      "MarkerSize": 0,
+                      "Line": 4,
+                      "LineThickness": 0,
+                      "TableName": "HarvestObsPred",
+                      "XFieldName": "Observed.Barley.Phenology.FlagLeafDAS",
+                      "YFieldName": "Predicted.Barley.Phenology.FlagLeafDAS",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Predicted",
+                      "Children": [
+                        {
+                          "$type": "Models.Regression, Models",
+                          "ForEachSeries": false,
+                          "showOneToOne": true,
+                          "showEquation": true,
+                          "Name": "Regression",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -45643,12 +45883,12 @@
                                     1.0
                                   ],
                                   "FOM": [
-                                    347.12903231275641,
+                                    347.1290323127564,
                                     270.3443621919937,
                                     163.97214434990104,
-                                    99.454132887040629,
-                                    60.321980831124677,
-                                    36.587130828674873,
+                                    99.45413288704063,
+                                    60.32198083112468,
+                                    36.58713082867487,
                                     22.1912165985086
                                   ],
                                   "CarbonMetadata": null,
@@ -45983,7 +46223,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.Utilities;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Data;\r\nusing System.Globalization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        [Description(\"Treatment duration (Weeks)\")]\r\n        public double TransitionWeek { get; set; }\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [XmlIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                foreach (DataRow row in EmergDates.Rows)\r\n\t            {\r\n\t                string Env = Convert.ToString(row[\"Environment\"]);\r\n\t                if (Env == Treat)\r\n\t                {\t                    \r\n\t                    EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n\t                    EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n\t                }\r\n\t            }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                              "Code": "using Newtonsoft.Json;\r\nusing System.Globalization;\r\nusing System.Data;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Interfaces;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary;\r\n        [Link] Soil Soil;\r\n        [Link] Plant Barley;\r\n        [Link] Simulation Simulation;\r\n        Accumulator accumulatedRain;\r\n        \r\n        [Description(\"Sowing date (d-mmm)\")]\r\n        public string SowDate { get; set; }\r\n        [Description(\"Treatment Name\")]\r\n        public string Treat { get; set; }\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        [Description(\"Cultivar to be sown\")]\r\n        public string CultivarName { get; set; }\r\n        [Description(\"Sowing depth (mm)\")]\r\n        public double SowingDepth { get; set; }\r\n        [Description(\"Row spacing (mm)\")]\r\n        public double RowSpacing { get; set; }\r\n        [Description(\"Plant population (/m2)\")]\r\n        public double Population { get; set; }\r\n        [Description(\"Treatment duration (Weeks)\")]\r\n        public double TransitionWeek { get; set; }\r\n        [Description(\"Emergence Date File Path\")]\r\n        public string FilePath {get; set;}\r\n\r\n        private DateTime EmergenceDate {get; set;}\r\n        private string EmergenceString {get; set;}\r\n\r\n        [JsonIgnore] private DataTable EmergDates{ get; set; }\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n            \r\n            string fullFileName = PathUtilities.GetAbsolutePath(FilePath, Simulation.FileName);\r\n            \r\n            ApsimTextFile textFile = new ApsimTextFile();\r\n            textFile.Open(fullFileName);\r\n            EmergDates = textFile.ToTable();\r\n            textFile.Close();\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(SowDate, Clock.Today, SowDate))\r\n            {\r\n                foreach (DataRow row in EmergDates.Rows)\r\n                {\r\n                    string Env = Convert.ToString(row[\"Environment\"]);\r\n                    if (Env == Treat)\r\n                    {                        \r\n                        EmergenceDate = Convert.ToDateTime(row[CultivarName]);\r\n                        EmergenceString = EmergenceDate.ToString(\"dd-MMM\", CultureInfo.InvariantCulture);\r\n                    }\r\n                }\r\n\r\n                Barley.Sow(population: Population, cultivar: CultivarName, depth: SowingDepth, rowSpacing: RowSpacing);    \r\n                Barley.SetEmergenceDate(EmergenceString);\r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "SowDate",
@@ -46808,16 +47048,16 @@
                             300.0
                           ],
                           "NO3N": [
-                            0.54200542005420049,
-                            0.54200542005420049,
+                            0.5420054200542005,
+                            0.5420054200542005,
                             0.27548209366391185,
                             0.27777777777777773,
                             0.2777777777777779,
                             0.2777777777777779
                           ],
                           "NH4N": [
-                            0.054200542005420058,
-                            0.054200542005420058,
+                            0.05420054200542006,
+                            0.05420054200542006,
                             0.027548209366391192,
                             0.027777777777777787,
                             0.027777777777777762,
