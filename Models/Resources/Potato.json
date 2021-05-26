@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 131,
+  "Version": 133,
   "Name": "Simulations",
   "Children": [
     {
@@ -2056,8 +2056,8 @@
           "$type": "Models.PMF.Organs.Leaf, Models",
           "Leaves": [],
           "CurrentExpandingLeaf": 34.0,
-          "StartFractionExpanded": 0.83819041077407885,
-          "FractionNextleafExpanded": 0.92664093062319453,
+          "StartFractionExpanded": 0.8381904107740789,
+          "FractionNextleafExpanded": 0.9266409306231945,
           "DeadNodesYesterday": 0.0,
           "MaxCover": 1.0,
           "GrowthRespiration": 0.0,
