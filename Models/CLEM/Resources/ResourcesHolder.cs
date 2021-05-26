@@ -158,8 +158,10 @@ namespace Models.CLEM.Resources
                         // get matching labour types
                         // use activity uid to ensure unique for this request
                         List<LabourType> items = (resourceGroup as Labour).Items;
-                        items = items.Filter(request.FilterDetails.FirstOrDefault() as Model);
-                        items = items.Where(a => a.LastActivityRequestID != request.ActivityID).ToList();
+                        items = items.Filter(request.FilterDetails.FirstOrDefault() as Model)
+                            .Where(a => a.LastActivityRequestID != request.ActivityID)
+                            .ToList();
+
                         if (items.Where(a => a.Amount >= request.Required).Count()>0)
                         {
                             // get labour least available but with the amount needed
