@@ -53,8 +53,19 @@ if [ $# -ge 2 ]; then
 else
     outfile=apsim-$version.dmg
 fi
+
+# Remove output file if it already exists.
 test -f $outfile && rm $outfile
+
+# Bundle the files into an installer.
 genisoimage -quiet -V APSIM$version -D -R -apple -no-pad -file-mode 755 -dir-mode 755 -o $outfile MacBundle
+
+# Compress the installer. Note: the dmg tool used here may be obtained from:
+# https://github.com/fanquake/libdmg-hfsplus
+# Alternately, just run this script from inside the apsiminitiative/apsimng-complete
+# docker image, which contains all of the necessary dependencies.
+dmg $outfile $outfile.compressed
+mv $outfile.compressed $outfile
 
 # Delete the intermediate files.
 rm -rf MacBundle
