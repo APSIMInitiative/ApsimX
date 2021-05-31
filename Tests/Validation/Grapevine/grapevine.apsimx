@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 281,
+  "ExplorerWidth": 300,
   "Version": 130,
   "ApsimVersion": "2021.5.17.6459",
   "Name": "Simulations",
