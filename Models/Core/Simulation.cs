@@ -266,7 +266,7 @@ namespace Models.Core
 
                 IsRunning = true;
 
-#if DEBUG
+#if RELEASE
                 foreach (Model model in FindAllDescendants<Model>())
                     model.Validate();
 #endif
