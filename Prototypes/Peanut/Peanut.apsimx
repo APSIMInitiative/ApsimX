@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 129,
+  "ExplorerWidth": 300,
+  "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -174,7 +174,8 @@
             "[Peanut].AboveGround.Wt",
             "[Peanut].Grain.Wt",
             "[Peanut].Pod.Wt",
-            "[Peanut].Pod.HarvestIndex"
+            "[Peanut].Pod.HarvestIndex",
+            "[Peanut].AflotoxinPercentage"
           ],
           "EventNames": [
             "[Peanut].Harvesting"
@@ -5946,6 +5947,64 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Shell].MinimumNConc",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "dmDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -6735,6 +6794,64 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Photosynthesis",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Stem].MinimumNConc",
+                  "Name": "initialNConcFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "dmDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -7019,7 +7136,7 @@
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 400",
                     "[Phenology].EarlyFlowering.Target.FixedValue = 160",
-                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.70",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.7",
                     "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1020",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.20",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
@@ -7095,6 +7212,123 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.AccumulateFunction, Models",
+              "StartStageName": "EndPodDevelopment",
+              "EndStageName": "EndGrainFill",
+              "ResetStageName": null,
+              "FractionRemovedOnCut": 0.0,
+              "FractionRemovedOnHarvest": 0.0,
+              "FractionRemovedOnGraze": 0.0,
+              "FractionRemovedOnPrune": 0.0,
+              "Name": "AflotoxinPercentage",
+              "Children": [
+                {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "DailyIncrease",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "TemperatureFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            22.0,
+                            30.0,
+                            35.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Soil].Temperature.Value[1]",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SoilWaterFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.2,
+                            0.21,
+                            1.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            0.0,
+                            0.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Peanut].Root.FASW",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -7126,7 +7360,7 @@
           "Center": {
             "$type": "Models.Map+Coordinate, Models",
             "Latitude": 25.539565395653945,
-            "Longitude": 72.928864288642927
+            "Longitude": 72.92886428864293
           },
           "Name": "Map",
           "Children": [],
@@ -7163,6 +7397,7 @@
           ],
           "LegendPosition": 2,
           "LegendOrientation": 0,
+          "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Growing Season Mean Air Temperature",
@@ -7230,6 +7465,7 @@
           ],
           "LegendPosition": 2,
           "LegendOrientation": 0,
+          "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
           "Name": "Growing Season Photoperiod",
@@ -7311,6 +7547,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "EmergenceDAS",
@@ -7390,6 +7627,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "FloweringDAS",
@@ -7469,6 +7707,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "MaturityDAS",
@@ -7548,6 +7787,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "Harvest Yield",
@@ -7627,6 +7867,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "HarvestBiomass",
@@ -7706,6 +7947,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "Daily Biomass",
@@ -7785,6 +8027,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "Daily LAI",
@@ -7864,6 +8107,7 @@
               ],
               "LegendPosition": 10,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": true,
               "Name": "Harvest Index",
@@ -8760,6 +9004,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -8844,6 +9090,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs FloweringDAS",
@@ -8923,6 +9170,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "FloweringDAS",
@@ -9019,6 +9267,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Predicted EmergenceDAS",
@@ -9748,6 +9997,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -9827,6 +10078,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
@@ -9899,6 +10151,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -9995,6 +10248,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pod",
@@ -10091,6 +10345,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -10197,6 +10452,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestBiomass",
@@ -10276,6 +10532,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodBiomass",
@@ -10593,16 +10850,16 @@
                               "Value": "EarlyBunch"
                             },
                             {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
-                            },
-                            {
                               "Key": "RowSpacing",
                               "Value": "900"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
+                            },
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
                             }
                           ],
                           "Name": "SowingRule",
@@ -10938,6 +11195,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -11052,6 +11311,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -11148,6 +11408,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -11863,12 +12124,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.12903231275641,
+                                347.1290323127564,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.454132887040629,
-                                60.321980831124677,
-                                36.587130828674873,
+                                99.45413288704063,
+                                60.32198083112468,
+                                36.58713082867487,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -11913,6 +12174,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -11955,6 +12218,8 @@
                               "NH4": [
                                 1.0
                               ],
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -12035,6 +12300,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -12142,6 +12408,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -12259,6 +12526,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "TotalSoilWater",
@@ -12337,6 +12605,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ET",
@@ -12444,6 +12713,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SW Stress",
@@ -12522,6 +12792,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Rainfall",
@@ -12600,6 +12871,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Radn",
@@ -12678,6 +12950,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SWPotential",
@@ -12756,6 +13029,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RootDepth",
@@ -12844,6 +13118,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -12951,6 +13226,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LightInterception",
@@ -13058,6 +13334,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Photosynthesis",
@@ -13084,7 +13361,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName] LIKE 'Kingaroy1819CvRedvaleIrrigationWet'",
+                          "Filter": "",
                           "Name": "Supply",
                           "Children": [
                             {
@@ -13124,7 +13401,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "[SimulationName] LIKE 'Kingaroy1819CvRedvaleIrrigationWet'",
+                          "Filter": "",
                           "Name": "Demand",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -13165,6 +13442,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "ExtinctionCoefficient",
@@ -13235,9 +13513,78 @@
                   "Children": [
                     {
                       "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "[SowingRule].Script.SowingRate = 8.8, 27.3, 39.4, 58.8",
+                      "Specification": "[SowingRule]",
                       "Name": "Pop",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\t\t\t   [Description(\"Emergence Date\")]\r\n               public string EmergDate { get; set; }\r\n\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = (1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A)*1000;\r\n                if (Clock.Today.Date == SowingDate)\n                {\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n                    if (EmergDate!=\"\")\r\n                       Peanut.SetEmergenceDate(EmergDate);\n                }\r\n               }\r\n            }\r\n        }\r\n                \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
+                            },
+                            {
+                              "Key": "SpacingRatio",
+                              "Value": "1"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "Florunner"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "12/10/1981 00:00:00"
+                            },
+                            {
+                              "Key": "EmergDate",
+                              "Value": ""
+                            }
+                          ],
+                          "Name": "9",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\t\t\t   [Description(\"Emergence Date\")]\r\n               public string EmergDate { get; set; }\r\n\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = (1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A)*1000;\r\n                if (Clock.Today.Date == SowingDate)\n                {\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\n                    if (EmergDate!=\"\")\r\n                       Peanut.SetEmergenceDate(EmergDate);\n                }\r\n               }\r\n            }\r\n        }\r\n                \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "SowingRate",
+                              "Value": "27.3"
+                            },
+                            {
+                              "Key": "SpacingRatio",
+                              "Value": "2.15"
+                            },
+                            {
+                              "Key": "SowingDepth",
+                              "Value": "50"
+                            },
+                            {
+                              "Key": "CultivarName",
+                              "Value": "Florunner"
+                            },
+                            {
+                              "Key": "SowingDate",
+                              "Value": "12/10/1981 00:00:00"
+                            },
+                            {
+                              "Key": "EmergDate",
+                              "Value": ""
+                            }
+                          ],
+                          "Name": "27",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -13868,6 +14215,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -13901,17 +14250,12 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Utilities;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Peanut;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Peanut.IsReadyForHarvesting)\r\n            {\r\n               Peanut.Harvest();\r\n               Peanut.EndCrop();    \r\n            }\r\n        \r\n        }\r\n        \r\n    }\r\n}\r\n",
-                          "Parameters": [],
-                          "Name": "Harvest",
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Manager, Models",
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = Math.Sqrt(1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A);\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
+                            {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
+                            },
                             {
                               "Key": "SpacingRatio",
                               "Value": "1"
@@ -13919,10 +14263,6 @@
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -13934,6 +14274,20 @@
                             }
                           ],
                           "Name": "SowingRule",
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Manager, Models",
+                          "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    \t[Link] ISummary summary;\r\n        [Link] private Plant Peanut;\r\n        [Link(Type = LinkType.Path, Path = \"[Peanut].Phenology\")]\r\n        private Phenology phenology;\n                [Link] Clock Clock;\r\n\n        private bool Harvestable = false;\n\n        [Description(\"Harvest Date (d-mmm)\")]\n        public string HarvestDate { get; set; }   \n      \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n           \n        \tif (Harvestable && Peanut.IsReadyForHarvesting)\r\n            {\r\n                Peanut.Harvest();\r\n                Peanut.EndCrop();                \r\n            }\n            \n            if (DateUtilities.DatesAreEqual(HarvestDate, Clock.Today))\n                Harvestable = true;\n\r\n        }\r\n    }\r\n}\r\n       \r\n",
+                          "Parameters": [
+                            {
+                              "Key": "HarvestDate",
+                              "Value": "9-Apr"
+                            }
+                          ],
+                          "Name": "HarvestAfterDate",
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -13982,6 +14336,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -14078,6 +14433,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -14174,6 +14530,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "CoverGreen",
@@ -14240,6 +14597,103 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Graph, Models",
+                      "Caption": null,
+                      "Axis": [
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 3,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": true,
+                          "CrossesAtZero": false
+                        },
+                        {
+                          "$type": "Models.Axis, Models",
+                          "Type": 0,
+                          "Title": null,
+                          "Inverted": false,
+                          "Minimum": "NaN",
+                          "Maximum": "NaN",
+                          "Interval": "NaN",
+                          "DateTimeAxis": false,
+                          "CrossesAtZero": false
+                        }
+                      ],
+                      "LegendPosition": 0,
+                      "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
+                      "DisabledSeries": [],
+                      "LegendOutsideGraph": false,
+                      "Name": "LAI",
+                      "Children": [
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Pop",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 11,
+                          "MarkerSize": 0,
+                          "Line": 0,
+                          "LineThickness": 0,
+                          "TableName": "DailyReport",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Peanut.Leaf.LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Predicted",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Series, Models",
+                          "Type": 1,
+                          "XAxis": 3,
+                          "YAxis": 0,
+                          "ColourArgb": -16777216,
+                          "FactorToVaryColours": "Pop",
+                          "FactorToVaryMarkers": null,
+                          "FactorToVaryLines": null,
+                          "Marker": 0,
+                          "MarkerSize": 0,
+                          "Line": 4,
+                          "LineThickness": 0,
+                          "TableName": "Observed",
+                          "XFieldName": "Clock.Today",
+                          "YFieldName": "Peanut.Leaf.LAI",
+                          "X2FieldName": "",
+                          "Y2FieldName": "",
+                          "ShowInLegend": false,
+                          "IncludeSeriesNameInLegend": false,
+                          "Cumulative": false,
+                          "CumulativeX": false,
+                          "Filter": null,
+                          "Name": "Observed",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -14280,6 +14734,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestBiomass",
@@ -14359,6 +14814,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodBiomass",
@@ -15168,6 +15624,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -15247,6 +15705,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Mean Air Temperature",
@@ -15314,6 +15773,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
@@ -15381,6 +15841,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Min Air Temperature",
@@ -15453,6 +15914,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs FloweringDAS",
@@ -15532,6 +15994,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs MaturityDAS",
@@ -15632,6 +16095,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -15757,6 +16221,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pod",
@@ -15853,6 +16318,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -15949,6 +16415,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SpecificLeafArea",
@@ -16045,6 +16512,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafMass",
@@ -16141,6 +16609,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StemMass",
@@ -16277,6 +16746,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Branching",
@@ -16383,6 +16853,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "HarvestBiomass",
@@ -16462,6 +16933,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodBiomass",
@@ -17124,6 +17596,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -17233,6 +17707,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
@@ -17305,6 +17780,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -17412,6 +17888,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -17529,6 +18006,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass N",
@@ -17625,6 +18103,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pod N",
@@ -18485,6 +18964,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -18608,6 +19089,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Mean Air Temperature",
@@ -18704,6 +19186,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
@@ -18776,6 +19259,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -18872,6 +19356,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -18978,6 +19463,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -19085,6 +19571,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Cover",
@@ -19173,6 +19660,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NodeNumber",
@@ -19280,6 +19768,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumber",
@@ -19387,6 +19876,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -19483,6 +19973,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -19827,16 +20318,16 @@
                           "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\n        namespace Models\r\n        {\r\n           [Serializable] \r\n           [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n            public class Script : Model\r\n            {      \r\n               [Link] Plant Peanut;\r\n               [Link] Clock Clock;\r\n\r\n               [Description(\"Spacing Ratio (row vs plant spacing)\")]\r\n               public double SpacingRatio { get; set; }\r\n               [Description(\"Depth (mm) Grains are planted\")]\r\n               public double SowingDepth { get; set; }\r\n               [Description(\"Seeds sown (/m2)\")]\r\n               public double SowingRate { get; set; }\r\n               [Description(\"Cultivar\")]\r\n               [Display(Type=DisplayType.CultivarName)]\r\n               public string CultivarName { get; set; }\r\n               [Description(\"Sowing Date\")]\r\n               public DateTime SowingDate { get; set; }\r\n\t\t\t   [Description(\"Emergence Date\")]\r\n               public string EmergDate { get; set; }\r\n\r\n\r\n               [EventSubscribe(\"DoManagement\")]\r\n               private void OnDoManagement(object sender, EventArgs e)\r\n               {\r\n               double A = (1/SowingRate);\r\n               double RowSpacing = Math.Sqrt(SpacingRatio*A)*1000;\r\n                if (Clock.Today.Date == SowingDate)\r\n                    Peanut.Sow(population:SowingRate, cultivar:CultivarName, depth:SowingDepth, rowSpacing:RowSpacing, budNumber:1);\r\n                    Peanut.SetEmergenceDate(EmergDate);\r\n               }\r\n            }\r\n        }\r\n                \r\n",
                           "Parameters": [
                             {
+                              "Key": "SowingRate",
+                              "Value": "8.8"
+                            },
+                            {
                               "Key": "SpacingRatio",
                               "Value": "1"
                             },
                             {
                               "Key": "SowingDepth",
                               "Value": "50"
-                            },
-                            {
-                              "Key": "SowingRate",
-                              "Value": "8.8"
                             },
                             {
                               "Key": "CultivarName",
@@ -20184,6 +20675,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -20303,6 +20796,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -20399,6 +20893,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "PodWt",
@@ -20505,6 +21000,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -20612,6 +21108,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "KValue",
@@ -20679,6 +21176,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "RowSpacing",
@@ -20746,6 +21244,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Nodes",
@@ -21535,6 +22034,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -21619,6 +22120,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pred vs Obs FloweringDAS",
@@ -21698,6 +22200,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "FloweringDAS",
@@ -21794,6 +22297,7 @@
                       ],
                       "LegendPosition": 3,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Predicted EmergenceDAS",
@@ -21895,6 +22399,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Mean Air Temperature",
@@ -22607,6 +23112,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -22696,6 +23203,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NodeNumber",
@@ -22803,6 +23311,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumber",
@@ -22910,6 +23419,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -23006,6 +23516,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafMass",
@@ -23102,6 +23613,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SpecificLeafArea",
@@ -23198,6 +23710,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -23294,6 +23807,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pod",
@@ -23390,6 +23904,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StemMass",
@@ -23486,6 +24001,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "BranchNumber",
@@ -23564,6 +24080,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "KValue",
@@ -23642,6 +24159,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StemMass with components",
@@ -23809,7 +24327,7 @@
             {
               "$type": "Models.Core.Folder, Models",
               "ShowPageOfGraphs": true,
-              "Name": "Gainsville",
+              "Name": "Gainsville EarlyBunch",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -23849,6 +24367,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Mean Air Temperature",
@@ -23916,6 +24435,7 @@
                   ],
                   "LegendPosition": 2,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Growing Season Photoperiod",
@@ -24628,6 +25148,8 @@
                                   "CL": null,
                                   "EC": null,
                                   "ESP": null,
+                                  "LabileP": null,
+                                  "UnavailableP": null,
                                   "ECMetadata": null,
                                   "CLMetadata": null,
                                   "ESPMetadata": null,
@@ -24730,6 +25252,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LAI",
@@ -24837,6 +25360,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Biomass",
@@ -24933,6 +25457,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Pod",
@@ -25029,6 +25554,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NodeNumber",
@@ -25136,6 +25662,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafNumber",
@@ -25243,6 +25770,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "LeafMass",
@@ -25339,6 +25867,7 @@
                       ],
                       "LegendPosition": 5,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SpecificLeafArea",
@@ -25435,6 +25964,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StemMass",
@@ -25531,6 +26061,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "BranchNumber",
@@ -25609,6 +26140,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "StemMass with components",
@@ -26335,12 +26867,12 @@
                                 1.0
                               ],
                               "FOM": [
-                                347.12903231275641,
+                                347.1290323127564,
                                 270.3443621919937,
                                 163.97214434990104,
-                                99.454132887040629,
-                                60.321980831124677,
-                                36.587130828674873,
+                                99.45413288704063,
+                                60.32198083112468,
+                                36.58713082867487,
                                 22.1912165985086
                               ],
                               "CarbonMetadata": null,
@@ -26385,6 +26917,8 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "ECMetadata": null,
                               "CLMetadata": null,
                               "ESPMetadata": null,
@@ -26427,6 +26961,8 @@
                               "NH4": [
                                 1.0
                               ],
+                              "LabileP": null,
+                              "UnavailableP": null,
                               "SW": null,
                               "OC": null,
                               "EC": null,
@@ -26507,6 +27043,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "SupplyDemand",
@@ -26614,6 +27151,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "OrganDemands",
@@ -26818,6 +27356,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "DryMatter",
@@ -26983,6 +27522,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Nitrogen",
@@ -27148,6 +27688,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NConc",
@@ -27323,6 +27864,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "DryMatter",
@@ -27488,6 +28030,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Nitrogen",
@@ -27653,6 +28196,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NConc",
@@ -27828,6 +28372,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "DryMatter",
@@ -27993,6 +28538,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Nitrogen",
@@ -28158,6 +28704,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "NConc",
