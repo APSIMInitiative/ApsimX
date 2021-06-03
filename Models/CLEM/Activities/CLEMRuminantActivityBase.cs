@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantActivityGroup filter in HerdFilters)
             {
-                herd = herd.Filter(filter).ToList();
+                herd = herd.FilterRuminants(filter).ToList();
             }
             return herd;
         }

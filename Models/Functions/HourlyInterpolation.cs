@@ -158,7 +158,7 @@ namespace Models.Functions
 
     /// <summary>
     /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d) 
-    /// usig the method of [Goudriaan1994].  
+    /// using the method of [Goudriaan1994].  
     /// During sunlight hours Ta is calculated each hour using a 
     /// sinusoidal curve fitted to Tmin and Tmax . 
     /// After sunset Ta is calculated as an exponential decline from Ta at sunset 
