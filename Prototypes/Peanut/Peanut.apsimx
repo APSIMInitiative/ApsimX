@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 468,
+  "ExplorerWidth": 300,
   "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -7308,102 +7308,141 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.AccumulateFunction, Models",
-              "StartStageName": "EndPodDevelopment",
-              "EndStageName": "EndGrainFill",
-              "ResetStageName": null,
-              "FractionRemovedOnCut": 0.0,
-              "FractionRemovedOnHarvest": 0.0,
-              "FractionRemovedOnGraze": 0.0,
-              "FractionRemovedOnPrune": 0.0,
+              "$type": "Models.Functions.BoundFunction, Models",
               "Name": "AflotoxinPercentage",
               "Children": [
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "DailyIncrease",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Lower",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 100.0,
+                  "Units": null,
+                  "Name": "Upper",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "EndPodDevelopment",
+                  "EndStageName": "EndGrainFill",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "AccumulatedValue",
                   "Children": [
                     {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "TemperatureFactor",
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DailyIncrease",
                       "Children": [
                         {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            22.0,
-                            30.0,
-                            35.0
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "TemperatureFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                22.0,
+                                30.0,
+                                35.0
+                              ],
+                              "Y": [
+                                0.0,
+                                1.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Soil].Temperature.Value[1]",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Y": [
-                            0.0,
-                            1.0,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Soil].Temperature.Value[1]",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "SoilWaterFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.2,
-                            0.21,
-                            1.0
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "SoilWaterFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.2,
+                                0.21,
+                                1.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Peanut].Root.FASW",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            0.0,
-                            0.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Memo, Models",
-                          "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Peanut].Root.FASW",
-                          "Name": "XValue",
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 3.0,
+                          "Units": null,
+                          "Name": "Constant",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
