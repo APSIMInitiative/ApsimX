@@ -64,8 +64,8 @@ popd >/dev/null 2>&1
 deb_bin=debian-binary
 echo 2.0>$deb_bin
 
-tar cf control.tar.gz control md5sums
-tar cf data.tar.gz -C data .
+tar czf control.tar.gz control md5sums
+tar czf data.tar.gz -C data .
 
 if [[ $# -ge 2 ]]; then
     outfile="$2"
