@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
@@ -435,19 +436,37 @@
                     return null;
             }
 
-            if (dataType.IsArray)
+            if ( (dataType.IsArray || typeof(IEnumerable<>).IsAssignableFrom(dataType) || typeof(IEnumerable).IsAssignableFrom(dataType)) && dataType != typeof(string))
             {
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
                 //
                 // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
+                Type elementType;
+                if (dataType.IsArray)
+                    elementType = dataType.GetElementType();
+                else if (dataType.IsGenericType)
+                    elementType = dataType.GenericTypeArguments.First();
+                else
+                    elementType = typeof(object);
+                object[] arr = newValue.Split(',').Select(s => StringToObject(elementType, s.TrimStart(), format)).ToArray();
 
-                // An object array is not good enough. We need an array with correct element type.
-                Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
-                Array.Copy(arr, result, arr.Length);
-                return result;
+                // arr is an array of object. We need an array with correct element type.
+                if (dataType.IsArray)
+                {
+                    Array result = Array.CreateInstance(elementType, arr.Length);
+                    Array.Copy(arr, result, arr.Length);
+                    return result;
+                }
+                else
+                {
+                    Type listType = typeof(List<>).MakeGenericType(elementType);
+                    IList list = (IList)Activator.CreateInstance(listType);
+                    foreach (object obj in arr)
+                        list.Add(obj);
+                    return list;
+                }
             }
 
             if (dataType == typeof(System.Drawing.Color) && int.TryParse(newValue, out int argb))
