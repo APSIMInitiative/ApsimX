@@ -1,6 +1,5 @@
 - Find a way to avoid writing sqlite to disk (use in-memory DB)
 - Unit tests to ensure crop variables are zeroed at simulation start/end
-- Documentation
 - Write a managed implementation of ISocketConnection
   - Very easy. Probably not useful to many people but good proof of concept, so lower priority
 - Modify parameters on a per-simulation basis
