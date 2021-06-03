@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 103,
+  "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -18,6 +18,7 @@
     {
       "$type": "Models.Core.Simulation, Models",
       "IsRunning": false,
+      "Descriptors": null,
       "Name": "SpeciesTable",
       "Children": [
         {
@@ -40,7 +41,8 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "%root%\\Tests\\WeatherFiles\\lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -124,6 +126,7 @@
               "Latitude": -37.967,
               "Longitude": 175.767,
               "LocationAccuracy": null,
+              "YearOfSampling": null,
               "DataSource": "Romero, C.C., Hoogenboom, G., Baigorria, G.A., Koo, J., Gijsman, A.J., Wood, S., 2012. Reanalysis of a global soil database for crop and environmental modeling. Environmental Modelling & Software 35, 163-170.  https://harvestchoice.wufoo.com/forms/download-wisol.",
               "Comments": "You will need to add crops to this soil before running simulations.",
               "Name": "Soil",
@@ -145,6 +148,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     0.73,
                     0.7,
@@ -182,6 +187,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -522,7 +532,6 @@
                   "CN2Bare": 73.0,
                   "CNRed": 0.0,
                   "CNCov": 0.0,
-                  "Slope": "NaN",
                   "DischargeWidth": "NaN",
                   "CatchmentArea": "NaN",
                   "Thickness": [
@@ -597,6 +606,8 @@
                     0.0,
                     0.0
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -638,6 +649,12 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "LabileP": null,
+                  "UnavailableP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -657,39 +674,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-18",
-                    "18-30",
-                    "30-51",
-                    "51-74"
-                  ],
-                  "Thickness": [
-                    180.0,
-                    120.0,
-                    210.0,
-                    230.0
-                  ],
-                  "NO3N": null,
-                  "NH4N": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "Initial nitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -823,7 +809,7 @@
             },
             {
               "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing System.Collections.Generic;\r\nusing System.Xml.Serialization;\r\nusing System.Text;\r\nusing System.IO;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Interfaces;\r\nusing System.Data;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model, ICustomDocumentation\r\n    {\r\n\r\n        [Link]\r\n        List<AgPasture.PastureSpecies> models = new List<AgPasture.PastureSpecies>();\r\n\r\n        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>\r\n        /// <param name=\"tags\">The list of tags to add to.</param>\r\n        /// <param name=\"headingLevel\">The level (e.g. H2) of the headings.</param>\r\n        /// <param name=\"indent\">The level of indentation 1, 2, 3 etc.</param>\r\n        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)\r\n        {\r\n        \ttags.Add(new AutoDocumentation.PageSetup() { Portrait = false });\r\n\r\n        \tDataTable table = new DataTable();\r\n        \ttable.Columns.Add(\"Parameter name\");\r\n            if (models.Count > 0)\r\n            {\r\n                foreach (var model in models)\r\n                    table.Columns.Add(model.Name);\r\n\r\n                var parameterNames = models[0].GetModelParameterNames();\r\n\r\n                foreach (var parameterName in parameterNames)\r\n                {\r\n                    var row = table.NewRow();\r\n                    row[\"Parameter name\"] = parameterName;\r\n                    foreach (var model in models)\r\n                    {\r\n                        var value = Apsim.Get(model, parameterName);\r\n                        // ReflectionUtilities.GetValueOfFieldOrProperty(parameterName, model);\r\n                        if (value != null)\r\n                        {\r\n                            if (value is double[])\r\n                                value = StringUtilities.BuildString(value as double[], \"f4\");\r\n                            row[model.Name] = value.ToString();\r\n                        }\r\n                    }\r\n                    table.Rows.Add(row);\r\n                }\r\n            }\r\n            tags.Add(new AutoDocumentation.Table(table, indent, style:\"Small\"));\r\n        }\r\n    }\r\n}",
+              "Code": "using System;\nusing System.Collections.Generic;\nusing System.Xml.Serialization;\nusing System.Text;\nusing System.IO;\nusing Models.Core;\nusing Models.PMF;\nusing Models.Soils;\nusing APSIM.Shared.Utilities;\nusing Models.Interfaces;\nusing System.Data;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model, ICustomDocumentation\n    {\n        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>\n        /// <param name=\"tags\">The list of tags to add to.</param>\n        /// <param name=\"headingLevel\">The level (e.g. H2) of the headings.</param>\n        /// <param name=\"indent\">The level of indentation 1, 2, 3 etc.</param>\n        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)\n        {\n        \tIEnumerable<AgPasture.PastureSpecies> models = FindAllInScope<AgPasture.PastureSpecies>();\n            tags.Add(new AutoDocumentation.PageSetup() { Portrait = false });\n\n            DataTable table = new DataTable();\n            table.Columns.Add(\"Parameter name\");\n            if (models.Any())\n            {\n                foreach (var model in models)\n                    table.Columns.Add(model.Name);\n\t\t\t\tSystem.Diagnostics.Debugger.Break();\n                var parameterNames = models.First().GetModelParameterNames();\n\n                foreach (var parameterName in parameterNames)\n                {\n                    var row = table.NewRow();\n                    row[\"Parameter name\"] = parameterName;\n                    foreach (var model in models)\n                    {\n                        var value = model.FindByPath(parameterName).Value;\n                        // ReflectionUtilities.GetValueOfFieldOrProperty(parameterName, model);\n                        if (value != null)\n                        {\n                            if (value is double[])\n                                value = StringUtilities.BuildString(value as double[], \"f4\");\n                            row[model.Name] = value.ToString();\n                        }\n                    }\n                    table.Rows.Add(row);\n                }\n            }\n            tags.Add(new AutoDocumentation.Table(table, indent, style:\"Small\"));\n        }\n    }\n}\n",
               "Parameters": [],
               "Name": "Manager",
               "IncludeInDocumentation": true,

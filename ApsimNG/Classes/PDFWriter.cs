@@ -94,7 +94,8 @@
         /// <param name="fileName">The name of the file to write.</param>
         public void CreatePDF(List<AutoDocumentation.ITag> tags, string fileName)
         {
-            string bibFile = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "..", "APSIM.bib");
+            string apsimDir = PathUtilities.GetAbsolutePath("%root%", null);
+            string bibFile = Path.Combine(apsimDir, "APSIM.bib");
             bibTeX = new BibTeX(bibFile);
             citations = new List<BibTeX.Citation>();
             citations.Clear();

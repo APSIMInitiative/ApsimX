@@ -21,16 +21,12 @@ namespace Models.CLEM.Reporting
         private IDataStore dataStore = null;
 
         /// <summary>
-        /// The line by line query, separated for display purposes
+        /// The line by line SQL query, separated for display purposes
         /// </summary>
-        [Description("SQL to run on parent report")]
+        [Description("SQL statement")]
         [Display(Type = DisplayType.MultiLineText)]
-        public string[] Lines { get; set; }
-        
-        /// <summary>
-        /// The complete query
-        /// </summary>
-        public string SQL => string.Join(" ", Lines);
+        [System.ComponentModel.DataAnnotations.Required]
+        public string SQL { get; set; }
 
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
@@ -40,15 +36,40 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            var storage = FindInScope<IDataStore>();
-            storage.AddView(Name, SQL);
-            return storage.Reader.GetDataUsingSql(SQL);
+            if (SQL != "")
+            {
+                var storage = FindInScope<IDataStore>();
+                AddView(storage, Name, SQL);
+                return storage.Reader.GetDataUsingSql(SQL);
+            }
+            else
+            {
+                return new DataTable();
+            }
+        }
+
+        private void AddView(IDataStore data, string name, string sql)
+        {
+            try
+            {
+                data.AddView(Name, SQL);
+            }
+            catch (Exception ex)
+            {
+                throw new ApsimXException(this, $"Error trying to execute SQL query for [{this.Name}]: {ex.Message}");
+            }
         }
 
         /// <summary>
         /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e) => dataStore.AddView(Name, SQL);
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            if (SQL != "")
+            {
+                AddView(dataStore, Name, SQL);
+            }
+        }
     }
 }

@@ -170,7 +170,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteWarning(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}[ for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);
@@ -341,8 +341,11 @@ namespace Models.CLEM.Activities
             foreach (RuminantGroup item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .FilterRuminants(item).FilterRuminants(item).FilterRuminants(item)
+                    .ToList();
+
                 int cnt = 0;
                 while (cnt < herd.Count() && animalEquivalentsForSale > 0)
                 {
@@ -403,7 +406,7 @@ namespace Models.CLEM.Activities
 
                         if(newIndividual.Weight == 0)
                         {
-                            throw new ApsimXException(this, "Specified individual added during restock cannot have no weight");
+                            throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);

@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -22,8 +23,10 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
-    [Description("This component allows the details of a individual ruminant to be defined for")]
-    [HelpUri(@"Content/Features/Filters/SpecifyRuminant.htm")]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [Description("This component allows the details of a individual ruminant to be defined")]
+    [HelpUri(@"Content/Resources/Ruminanta/SpecifyRuminant.htm")]
+    [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
@@ -56,6 +59,12 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public RuminantTypeCohort Details { get; private set; }
 
+        /// <summary>
+        /// The local store of an example individual for checking against filters
+        /// </summary>
+        [JsonIgnore]
+        public Ruminant ExampleIndividual { get; private set; }
+
         private RuminantType ruminantType;
 
         /// <summary>
@@ -74,11 +83,15 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResources")]
-        private void OnCLEMInitialiseResources(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
             ruminantType = Resources.GetResourceItem(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+
+            // create example ruminant
+            Details.Number = 1;
+            ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
         }
 
         #region validation
@@ -112,11 +125,7 @@ namespace Models.CLEM.Resources
 
         private bool cohortFound;
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -142,39 +151,6 @@ namespace Models.CLEM.Resources
                 }
                 return htmlWriter.ToString();
             }
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            string html = "";
-            //if (cohortFound)
-            //{
-            //    html = "</table></div>";
-            //}
-
-            //if (WeightWarningOccurred)
-            //{
-            //    html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            //}
-            return html;
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            //WeightWarningOccurred = false;
-            //if (cohortFound)
-            //{
-            //    return "<div class=\"activityentry\"><table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>"; 
-            //}
-            return "";
         }
 
         #endregion
