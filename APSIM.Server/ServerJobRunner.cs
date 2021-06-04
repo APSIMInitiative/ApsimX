@@ -47,7 +47,10 @@ namespace APSIM.Server
             if (job is SimulationDescription sim)
                 sim.Run(cancelToken, Replacements);
             else
+            {
                 base.Prepare(job);
+                base.Run(job);
+            }
         }
     }
 }
