@@ -33,9 +33,28 @@
         [NonSerialized]
         private DataStoreWriter dbWriter = new DataStoreWriter();
 
+        private bool useInMemoryDB;
+
         [JsonIgnore]
         private string fileName;
 
+        /// <summary>
+        /// Controls whether the database connection is an in-memory DB.
+        /// </summary>
+        public bool UseInMemoryDB
+        {
+            get
+            {
+                return useInMemoryDB;
+            }
+            set
+            {
+                useInMemoryDB = value;
+                Close();
+                UpdateFileName();
+                Open();
+            }
+        }
         /// <summary>
         /// Selector for the database type. Set in the constructors.
         /// </summary>
@@ -200,7 +219,9 @@
             // parent simulation's filename (which should be the same anyway).
             Simulation simulation = FindAncestor<Simulation>();
 
-            if (simulations != null && simulations.FileName != null)
+            if (useInMemoryDB)
+                FileName = ":memory:";
+            else if (simulations != null && simulations.FileName != null)
                 FileName = Path.ChangeExtension(simulations.FileName, extension);
             else if (simulation != null && simulation.FileName != null)
                 FileName = Path.ChangeExtension(simulation.FileName, extension);
