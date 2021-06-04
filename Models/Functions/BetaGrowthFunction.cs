@@ -12,7 +12,7 @@ namespace Models.Functions
     /// See Yin et al 2003 A Flexible Sigmoid Function of Determinate Growth
     /// </summary>
     [Serializable]
-    [Description("Takes the value of the child (Ymax adnd Xvalue) and returns the y value from a beta growth function of the form y = Ymax * (1 + (te - t)/(te-tm))* (t/te)^(te/(te-tm))")]
+    [Description("Takes the value of the child (Ymax adnd Xvalue) and returns the y value from a beta growth function of the form y = Ymax * (1 + (te - XVaule)/(te-tm))* (XVaule/te)^(te/(te-tm))")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class BetaGrowthFunction : Model, IFunction, ICustomDocumentation

@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(OtherAnimalsFilterGroup))]
     [Description("This other animal filter filter rule is used to define specific individuals from the other animals. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
-    public class OtherAnimalsFilter: CLEMModel
+    public class OtherAnimalsFilter: CLEMModel, IFilter
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -78,6 +79,8 @@ namespace Models.CLEM.Groupings
         }
         private string _value;
 
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
 
         private void UpdateName()
         {
