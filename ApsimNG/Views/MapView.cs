@@ -131,8 +131,8 @@
             {
                 if (map == null)
                     return 0;
-                return Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0;
-            }
+                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0, 2);
+             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
@@ -158,7 +158,7 @@
                 if (map == null)
                     return null;
                 Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
-                return new Map.Coordinate(centerLatLon.Y, centerLatLon.X);
+                return new Map.Coordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
             }
             set
             {
