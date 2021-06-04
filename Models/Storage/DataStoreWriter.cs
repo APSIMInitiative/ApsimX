@@ -3,6 +3,7 @@
     using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -22,7 +23,7 @@
         private List<IRunnable> commands = new List<IRunnable>();
 
         /// <summary>A sleep job to stop the job runner from exiting.</summary>
-        private IRunnable sleepJob = new JobRunnerSleepJob();
+        private IRunnable sleepJob = new EmptyJob();
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
         private JobRunner commandRunner;
@@ -183,8 +184,7 @@
             if (commandRunner != null)
             {
                 // Make sure all existing writing has completed.
-                while (commands.Count > 0 || !idle)
-                    Thread.Sleep(100);
+                SpinWait.SpinUntil(() => commands.Count < 1 && idle);
             }
         }
 
