@@ -674,4 +674,21 @@ namespace Models.CLEM
         /// </summary>
         GainAndLossColumns = 0
     }
+
+    /// <summary>
+    /// The style of assessing an Attribute for filtering
+    /// </summary>
+    public enum AttributeFilterStyle
+    {
+        /// <summary>
+        /// Use the value associated with the attribute
+        /// </summary>
+        ByValue,
+        /// <summary>
+        /// Use boolean of whether the attribute exists on the individual
+        /// </summary>
+        Exists
+
+    }
+
 }
