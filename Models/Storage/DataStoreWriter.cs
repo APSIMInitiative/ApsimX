@@ -210,7 +210,7 @@
                     WaitForIdle();
 
                     stopping = true;
-                    commandRunner.Stop();
+                    commandRunner?.Stop();
                     commandRunner = null;
                     commands.Clear();
                     simulationIDs.Clear();
