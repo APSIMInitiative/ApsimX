@@ -27,6 +27,16 @@ namespace UnitTests.Core.ApsimFile
     [TestFixture]
     public class EditFileTests
     {
+        private class ListClass<T> : Model
+        {
+            public ListClass(string name, int n)
+            {
+                Name = name;
+                Data = new List<T>(n);
+            }
+            public List<T> Data { get; set; }
+        }
+
         /// <summary>
         /// Path to the .apsimx file.
         /// </summary>
@@ -104,6 +114,12 @@ namespace Models
             Structure.Add(physical, paddock);
             Structure.Add(new WaterBalance(), paddock);
             Structure.Add(new SurfaceOrganicMatter(), paddock);
+
+            ListClass<string> stringList = new ListClass<string>("StringList", 5);
+            Structure.Add(stringList, simulation);
+
+            ListClass<double> doubleList = new ListClass<double>("DoubleList", 5);
+            Structure.Add(doubleList, simulation);
 
             basicFile.Write(basicFile.FileName);
             fileName = basicFile.FileName;
@@ -214,6 +230,56 @@ namespace Models
             Assert.AreEqual(new double[5] { 1, 2, 3, 4, 5 }, physical.BD);
             Assert.AreEqual(new double[5] { 0, 6, 0, 0, 0 }, physical.AirDry);
             Assert.AreEqual(new double[5] { 0, 0, 7, 7, 0 }, physical.LL15);
+        }
+
+        [Test]
+        public void TestEditingGenericLists()
+        {
+            string configFile = Path.GetTempFileName();
+            File.WriteAllLines(configFile, new[]
+            {
+                // Set an entire (string) list.
+                "[StringList].Data = 1, x, y, true, 0.5",
+                
+                // Modify a single element of a (string) list.
+                "[StringList].Data[1] = 6",
+
+                // Modify multiple elements of a (string) list.
+                "[StringList].Data[3:4] = xyz",
+
+                // Set an entire (numeric) list.
+                "[DoubleList].Data = 1, 2, 3, 4, 4.5",
+                
+                // Modify a single element of a (numeric) list.
+                "[DoubleList].Data[1] = -13",
+
+                // Modify multiple elements of a (numeric) list.
+                "[DoubleList].Data[3:4] = 1e9",
+            });
+
+            Simulations file = EditFile.Do(fileName, configFile);
+
+            ListClass<string> stringList = (ListClass<string>)file.Children[1].Children[7];
+            ListClass<double> doubleList = (ListClass<double>)file.Children[1].Children[8];
+
+            List<string> expectedStrings = new List<string>(new[]
+            {
+                "6",
+                "x",
+                "xyz",
+                "xyz",
+                "0.5"
+            });
+            Assert.AreEqual(expectedStrings, stringList.Data);
+            List<double> expectedNumbers = new List<double>(new[]
+            {
+                -13,
+                2,
+                1e9,
+                1e9,
+                4.5
+            });
+            Assert.AreEqual(expectedNumbers, doubleList.Data);
         }
     }
 }
