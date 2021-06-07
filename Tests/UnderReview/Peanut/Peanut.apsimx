@@ -7291,6 +7291,26 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].Vegetative.Target.FixedValue = 500",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1050",
+                    "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.5",
+                    "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.2",
+                    "[Grain].MaximumNConc.FixedValue = 0.067",
+                    "[Stem].PotentialGrowth.PartitionFraction.StemGrowthPhase.StemFraction.FixedValue = 0.5",
+                    "",
+                    "[Leaf].BranchingRate.XYPairs.X = 0,1,2,3,15,16",
+                    "[Leaf].BranchingRate.XYPairs.Y = 0,1,2,2.0,1.0,0"
+                  ],
+                  "Name": "Holt",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -31744,38 +31764,56 @@
                   "Name": "Factors",
                   "Children": [
                     {
-                      "$type": "Models.Factorial.Factor, Models",
-                      "Specification": "",
-                      "Name": "Sow",
+                      "$type": "Models.Factorial.Permutation, Models",
+                      "Name": "Permutation",
                       "Children": [
                         {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.SowDate=15-Nov"
-                          ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "15Nov",
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "[SowingRule].Script.CultivarName=Redvale,Holt",
+                          "Name": "Cv",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Factorial.CompositeFactor, Models",
-                          "Specifications": [
-                            "[SowingRule].Script.SowDate=15-Jan"
+                          "$type": "Models.Factorial.Factor, Models",
+                          "Specification": "",
+                          "Name": "Sow",
+                          "Children": [
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[SowingRule].Script.SowDate=15-Nov"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "15Nov",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Factorial.CompositeFactor, Models",
+                              "Specifications": [
+                                "[SowingRule].Script.SowDate=15-Jan"
+                              ],
+                              "Paths": null,
+                              "Values": null,
+                              "Name": "15Jan",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
                           ],
-                          "Paths": null,
-                          "Values": null,
-                          "Name": "15Jan",
-                          "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -32426,24 +32464,24 @@
                           "Type": 5,
                           "XAxis": 3,
                           "YAxis": 0,
-                          "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Sow",
+                          "ColourArgb": -2793984,
+                          "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "Sow",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
                           "TableName": "AflotoxinReport",
-                          "XFieldName": "Sow",
+                          "XFieldName": "SimulationName",
                           "YFieldName": "Peanut.Pod.Wt",
                           "X2FieldName": null,
                           "Y2FieldName": null,
-                          "ShowInLegend": true,
+                          "ShowInLegend": false,
                           "IncludeSeriesNameInLegend": false,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": null,
+                          "Filter": "",
                           "Name": "Predicted",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -32467,7 +32505,7 @@
                           "Minimum": "NaN",
                           "Maximum": "NaN",
                           "Interval": "NaN",
-                          "DateTimeAxis": true,
+                          "DateTimeAxis": false,
                           "CrossesAtZero": false
                         },
                         {
@@ -32495,15 +32533,15 @@
                           "XAxis": 3,
                           "YAxis": 0,
                           "ColourArgb": -1663232,
-                          "FactorToVaryColours": "Sow",
+                          "FactorToVaryColours": "Cv",
                           "FactorToVaryMarkers": null,
-                          "FactorToVaryLines": null,
+                          "FactorToVaryLines": "Sow",
                           "Marker": 11,
                           "MarkerSize": 0,
                           "Line": 0,
                           "LineThickness": 0,
                           "TableName": "AflotoxinReport",
-                          "XFieldName": "Clock.Today",
+                          "XFieldName": "SimulationName",
                           "YFieldName": "Peanut.AflotoxinPercentage",
                           "X2FieldName": null,
                           "Y2FieldName": null,
