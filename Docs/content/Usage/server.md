@@ -14,7 +14,7 @@ When the server starts, it will read the .apsimx file, prepare the file to be ru
 - RUN (run the .apsimx file, possibly with modified parameters)
 - READ (read results from the most recent run)
 
-The recommended way to send these commands to the server is to use a client API. A sample C API is provided in ***Insert link to C Client Repo here - if you're reading this, then I haven't moved the C Client into a separate repo yet, so it probably still lives in the ApsimX repo, located at ApsimX/SimpleClient.***
+The recommended way to send these commands to the server is to use a client API. A sample C API is provided [here](https://github.com/APSIMInitiative/APSIM.Client).
 
 ## Notes on running/invoking the server
 
