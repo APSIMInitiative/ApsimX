@@ -93,7 +93,7 @@
             Manager m = new Manager()
             {
                 Name = "Manager",
-                Code = "using System; namespace Models { [Serializable] public class Script : Models.Core.Model { public string X { get; set; } } }"
+                Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
             };
             Simulations sims = new Simulations()
             {
