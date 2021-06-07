@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 561,
   "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -130,7 +130,7 @@
           "GroupByVariableName": null,
           "Name": "DailyReport",
           "Children": [],
-          "IncludeInDocumentation": true,
+          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -7119,6 +7119,162 @@
               "ReadOnly": false
             },
             {
+              "$type": "Models.Functions.BoundFunction, Models",
+              "Name": "AflotoxinRisk",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "Lower",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 100.0,
+                  "Units": null,
+                  "Name": "Upper",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "EndPodDevelopment",
+                  "EndStageName": "EndGrainFill",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "AccumulatedValue",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "DailyIncrease",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "TemperatureFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                22.0,
+                                30.0,
+                                35.0
+                              ],
+                              "Y": [
+                                0.0,
+                                1.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Soil].Temperature.Value[1]",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "SoilWaterFactor",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                0.2,
+                                0.21,
+                                1.0
+                              ],
+                              "Y": [
+                                1.0,
+                                1.0,
+                                0.0,
+                                0.0
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Memo, Models",
+                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                              "Name": "Memo",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Peanut].Root.FASW",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 3.0,
+                          "Units": null,
+                          "Name": "Constant",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
               "$type": "Models.PMF.CultivarFolder, Models",
               "Name": "Cultivars",
               "Children": [
@@ -7296,8 +7452,8 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Vegetative.Target.FixedValue = 500",
-                    "[Phenology].EarlyFlowering.Target.FixedValue = 200",
-                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1050",
+                    "[Phenology].EarlyFlowering.Target.FixedValue = 250",
+                    "[Phenology].LateGrainFilling.Target.EntireGrainfillPeriod.FixedValue = 1100",
                     "[Phenology].EarlyGrainFilling.Target.FractionofGrainfilling.FixedValue = 0.5",
                     "[Phenology].MidGrainFilling.Target.FractionofMidToLateGrainfilling.FixedValue=0.2",
                     "[Grain].MaximumNConc.FixedValue = 0.067",
@@ -7326,162 +7482,6 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.BoundFunction, Models",
-              "Name": "AflotoxinPercentage",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "Lower",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 100.0,
-                  "Units": null,
-                  "Name": "Upper",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "EndPodDevelopment",
-                  "EndStageName": "EndGrainFill",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "AccumulatedValue",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "DailyIncrease",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "TemperatureFactor",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                22.0,
-                                30.0,
-                                35.0
-                              ],
-                              "Y": [
-                                0.0,
-                                1.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Soil].Temperature.Value[1]",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "SoilWaterFactor",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                0.2,
-                                0.21,
-                                1.0
-                              ],
-                              "Y": [
-                                1.0,
-                                1.0,
-                                0.0,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Peanut].Root.FASW",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 3.0,
-                          "Units": null,
-                          "Name": "Constant",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
             }
           ],
           "IncludeInDocumentation": true,
@@ -7489,7 +7489,7 @@
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
+      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -10530,7 +10530,7 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -10559,12 +10559,12 @@
                           "Filter": null,
                           "Name": "Observed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -10741,17 +10741,17 @@
                               "showEquation": true,
                               "Name": "Regression",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -10821,22 +10821,22 @@
                               "showEquation": true,
                               "Name": "Regression",
                               "Children": [],
-                              "IncludeInDocumentation": true,
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
+                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
+                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -31760,6 +31760,15 @@
               "Name": "Aflotoxin",
               "Children": [
                 {
+                  "$type": "Models.Memo, Models",
+                  "Text": "This sensibility test demonstrates predicted pod yields for rainfed crops for two sowing dates (mid November and mid December) for Kingary, Queensland, Australia. Pod yields should range from 2t/ha to 5 t/ha with decreased risk from Aflotoxin for later sowing and later maturing cultivars.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Factorial.Factors, Models",
                   "Name": "Factors",
                   "Children": [
@@ -31772,7 +31781,7 @@
                           "Specification": "[SowingRule].Script.CultivarName=Redvale,Holt",
                           "Name": "Cv",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -31790,25 +31799,25 @@
                               "Values": null,
                               "Name": "15Nov",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.Factorial.CompositeFactor, Models",
                               "Specifications": [
-                                "[SowingRule].Script.SowDate=15-Jan"
+                                "[SowingRule].Script.SowDate=15-Dec"
                               ],
                               "Paths": null,
                               "Values": null,
-                              "Name": "15Jan",
+                              "Name": "15Dec",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
@@ -31818,7 +31827,7 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -31958,7 +31967,7 @@
                           "VariableNames": [
                             "[Clock].Today",
                             "[Peanut].Pod.Wt",
-                            "[Peanut].AflotoxinPercentage"
+                            "[Peanut].AflotoxinRisk"
                           ],
                           "EventNames": [
                             "[Peanut].Harvesting"
@@ -31966,7 +31975,7 @@
                           "GroupByVariableName": null,
                           "Name": "AflotoxinReport",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -32484,12 +32493,12 @@
                           "Filter": "",
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -32525,7 +32534,7 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "Name": "Aflotoxin Percentage",
+                      "Name": "Aflotoxin Risk",
                       "Children": [
                         {
                           "$type": "Models.Series, Models",
@@ -32542,7 +32551,7 @@
                           "LineThickness": 0,
                           "TableName": "AflotoxinReport",
                           "XFieldName": "SimulationName",
-                          "YFieldName": "Peanut.AflotoxinPercentage",
+                          "YFieldName": "Peanut.AflotoxinRisk",
                           "X2FieldName": null,
                           "Y2FieldName": null,
                           "ShowInLegend": true,
@@ -32552,27 +32561,27 @@
                           "Filter": null,
                           "Name": "Predicted",
                           "Children": [],
-                          "IncludeInDocumentation": false,
+                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
+                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
+                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
+              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
+          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
