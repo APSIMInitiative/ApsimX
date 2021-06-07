@@ -45,7 +45,7 @@ namespace APSIM.Server
                 throw new Exception($"Unable to read file {options.File}", errors[0]);
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();
-            runner.UseRunner(jobRunner);
+            runner.Use(jobRunner);
         }
 
         /// <summary>

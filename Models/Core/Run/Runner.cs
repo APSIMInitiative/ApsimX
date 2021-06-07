@@ -209,7 +209,7 @@
         /// Use the given job runner to run jobs.
         /// </summary>
         /// <param name="runner">The job runner to be used.</param>
-        public void UseRunner(JobRunner runner)
+        public void Use(JobRunner runner)
         {
             jobRunner = runner;
             useFixedRunner = true;
