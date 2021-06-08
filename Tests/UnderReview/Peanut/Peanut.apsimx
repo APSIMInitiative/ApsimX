@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 561,
+  "ExplorerWidth": 530,
   "Version": 133,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -148,7 +148,7 @@
             "[Peanut].Grain.Wt",
             "[Peanut].Pod.Wt",
             "[Peanut].Pod.HarvestIndex",
-            "[Peanut].AflotoxinPercentage"
+            "[Peanut].AflotoxinRisk"
           ],
           "EventNames": [
             "[Peanut].Harvesting"
@@ -1387,95 +1387,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "AreaOLD",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SpecificArea",
-                      "Name": "SLA",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Live.Wt",
-                      "Name": "LeafLiveWt",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "AreaNew",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "InitialArea",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AccumulateFunction, Models",
-                      "StartStageName": "Emergence",
-                      "EndStageName": "EndCanopyDevelopment",
-                      "ResetStageName": null,
-                      "FractionRemovedOnCut": 1.0,
-                      "FractionRemovedOnHarvest": 1.0,
-                      "FractionRemovedOnGraze": 1.0,
-                      "FractionRemovedOnPrune": 0.0,
-                      "Name": "AreaGrowth",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "DeltaArea",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Allocated.StructuralWt",
-                              "Name": "DeltaMass",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].SpecificArea",
-                              "Name": "SLA",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.AddFunction, Models",
                   "Name": "Area",
                   "Children": [
@@ -2078,89 +1989,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AccumulateAtEvent, Models",
-                  "StartStageName": "Emergence",
-                  "EndStageName": "EndCanopyDevelopment",
-                  "AccumulateEventName": "DoUpdate",
-                  "Name": "BranchNumberNew",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.MultiplyFunction, Models",
-                      "Name": "DeltaBranch",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].NodeNumber.DeltaNode",
-                          "Name": "DeltaNode",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                          "Name": "BranchingRate",
-                          "Children": [
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "From Hammer Paper\n",
-                              "Name": "Memo",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.XYPairs, Models",
-                              "X": [
-                                0.0,
-                                2.0,
-                                3.0,
-                                6.0,
-                                7.0,
-                                15.0,
-                                16.0
-                              ],
-                              "Y": [
-                                0.0,
-                                0.0,
-                                1.0,
-                                1.0,
-                                1.5,
-                                1.5,
-                                0.0
-                              ],
-                              "Name": "XYPairs",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NodeNumber",
-                              "Name": "XValue",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": false,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": false,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
@@ -2754,49 +2582,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "FrostFraction",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        -4.0,
-                        4.0
-                      ],
-                      "Y": [
-                        1.0,
-                        0.0
-                      ],
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Weather].MinT",
-                      "Name": "XValue",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
