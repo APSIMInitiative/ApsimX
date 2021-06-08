@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 478,
+  "ExplorerWidth": 281,
   "Version": 133,
   "ApsimVersion": "2021.6.1.6508",
   "Name": "Simulations",
@@ -9709,10 +9709,10 @@
                               "Y": [
                                 0.0,
                                 0.0,
-                                0.0030125,
+                                0.01,
                                 0.013545,
                                 0.02102184,
-                                0.0035542,
+                                0.01,
                                 0.0,
                                 0.0
                               ],
@@ -9988,7 +9988,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.02,
                   "Units": null,
                   "Name": "KNO3",
                   "Children": [],
@@ -9998,7 +9998,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
+                  "FixedValue": 0.02,
                   "Units": null,
                   "Name": "KNH4",
                   "Children": [],
@@ -10008,7 +10008,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
+                  "FixedValue": 5.0,
                   "Units": null,
                   "Name": "MaxDailyNUptake",
                   "Children": [],
@@ -10214,90 +10214,6 @@
                 },
                 {
                   "$type": "Models.Functions.LessThanFunction, Models",
-                  "Name": "SenescenceRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].FirstGrowthSeason",
-                      "Name": "FirstGrowthSeason",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": null,
-                      "Name": "CheckValue",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "0",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "SenescenceRate",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            61.0,
-                            122.0,
-                            153.0,
-                            192.0,
-                            275.0,
-                            310.0,
-                            366.0
-                          ],
-                          "Y": [
-                            0.001484,
-                            0.001484,
-                            0.001973,
-                            0.005178,
-                            0.01264,
-                            0.013,
-                            0.003,
-                            0.001484
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Weather].DaysSinceWinterSolstice",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LessThanFunction, Models",
                   "Name": "MaintenanceRespirationFunction",
                   "Children": [
                     {
@@ -10384,6 +10300,127 @@
                                 }
                               ],
                               "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LessThanFunction, Models",
+                  "Name": "SenescenceRate",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].FirstGrowthSeason",
+                      "Name": "FirstGrowthSeason",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": null,
+                      "Name": "CheckValue",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "0",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.MultiplyFunction, Models",
+                      "Name": "SenescenceRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                          "Name": "SenescenceRate",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.XYPairs, Models",
+                              "X": [
+                                0.0,
+                                61.0,
+                                122.0,
+                                153.0,
+                                192.0,
+                                275.0,
+                                310.0,
+                                366.0
+                              ],
+                              "Y": [
+                                0.001484,
+                                0.001484,
+                                0.001973,
+                                0.005178,
+                                0.01264,
+                                0.013,
+                                0.003,
+                                0.001484
+                              ],
+                              "Name": "XYPairs",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Weather].DaysSinceWinterSolstice",
+                              "Name": "XValue",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DivideFunction, Models",
+                          "Name": "DivideFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Root].Live.StructuralWt",
+                              "Name": "wt",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 100.0,
+                              "Units": null,
+                              "Name": "Ref",
+                              "Children": [],
+                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
