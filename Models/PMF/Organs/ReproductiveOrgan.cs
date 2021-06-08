@@ -303,21 +303,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
-            DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
-            NDemand = new BiomassPoolType();
-            DMSupply = new BiomassSupplyType();
-            NSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
-            Allocated = new Biomass();
-            Senesced = new Biomass();
-            Detached = new Biomass();
-            Removed = new Biomass();
+            Clear();
         }
 
 
@@ -418,6 +404,20 @@ namespace Models.PMF.Organs
         {
             Live = new Biomass();
             Dead = new Biomass();
+            DMDemand = new BiomassPoolType();
+            DMDemandPriorityFactor = new BiomassPoolType();
+            DMDemandPriorityFactor.Structural = 1.0;
+            DMDemandPriorityFactor.Metabolic = 1.0;
+            DMDemandPriorityFactor.Storage = 1.0;
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
+            Allocated = new Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+            GrowthRespiration = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
