@@ -53,7 +53,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool IsGreaterThanOrEqual(double value1, double value2)
         {
-            return (value1 - value2) >= tolerance;
+            return (value1 - value2) >= tolerance || FloatsAreEqual(value1, value2);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         public static bool IsLessThanOrEqual(double value1, double value2)
         {
-            return (value2 - value1) >= tolerance;
+            return (value2 - value1) >= tolerance || FloatsAreEqual(value1, value2);
         }
 
         /// <summary>

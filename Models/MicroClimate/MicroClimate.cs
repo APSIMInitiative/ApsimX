@@ -116,6 +116,8 @@
         {
             get
             {
+                if (microClimatesZones == null)
+                    return null;
                 double[] values = new double[microClimatesZones.Count];
                 for (int i = 0; i < microClimatesZones.Count; i++)
                     values[i] = microClimatesZones[i].SurfaceRs;

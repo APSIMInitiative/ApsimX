@@ -437,6 +437,19 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Change the value of a property if it's currently set to NaN.
+        /// </summary>
+        /// <param name="node">The object containing the property.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <param name="defaultValue">Value to assign to the property if it's currently NaN.</param>
+        public static void SetPropertyValIfNaN(JObject node, string propertyName, double defaultValue)
+        {
+            JProperty property = node.Property(propertyName);
+            if (property != null && property.Value.ToString() == "NaN")
+                property.Value = defaultValue;
+        }
+
+        /// <summary>
         /// Adds the given model as a child of node.
         /// </summary>
         /// <param name="node">Node to which the model will be added.</param>
