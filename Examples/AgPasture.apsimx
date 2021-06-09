@@ -749,7 +749,6 @@
                 "Sum of (sum([AGPRyegrass].WaterUptake) + Sum([AGPWhiteClover].WaterUptake)) from [ReportExample].DayAfterLastOutput to [Clock].Today as WaterUptake    //the amount of water actuially taken up from the soil (mm)",
                 "Sum of ([AGPRyegrass].SoilDemandN + [AGPWhiteClover].SoilDemandN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NDemand                   //N demand (kg N /ha)",
                 "Sum of ([AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
-                "Sum of ([AGPRyegrass].SoilUptakeN + [AGPWhiteClover].SoilUptakeN) from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenUptake       //N uptake from the soil (kg N /ha)",
                 "Sum of [AGPWhiteClover].FixedN from [ReportExample].DayAfterLastOutput to [Clock].Today as NitrogenFixed       //N uptake from the soil (kg N /ha)",
                 "Mean of ([AGPRyegrass].AboveGroundWt + [AGPWhiteClover].AboveGroundWt) from [ReportExample].DayAfterLastOutput to [Clock].Today as HerbageMass",
                 "Mean of ([AGPRyegrass].LAIGreen + [AGPWhiteClover].LAIGreen) from [ReportExample].DayAfterLastOutput to [Clock].Today as LAIGreen",
