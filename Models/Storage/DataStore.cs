@@ -41,6 +41,7 @@
         /// <summary>
         /// Controls whether the database connection is an in-memory DB.
         /// </summary>
+        [JsonIgnore]
         public bool UseInMemoryDB
         {
             get
