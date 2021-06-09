@@ -3486,9 +3486,9 @@
             const string propertyName = "ReferenceHeight";
             foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
             {
-                double referenceHeight = microClimate[propertyName].Value<double>();
-                if (referenceHeight <= 0)
-                    microClimate[propertyName] = 2;
+                JToken property = microClimate[propertyName];
+                if (property == null || property.Value<double>() <= 0)
+                        microClimate[propertyName] = 2;
             }
         }
 
