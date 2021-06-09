@@ -86,6 +86,7 @@
             "[Clock].Today",
             "[Barley].Phenology.CurrentPhase.Name",
             "[Barley].Phenology.CurrentStageName",
+            "[Barley].Phenology.EmergenceDAS",
             "[Barley].Phenology.FlagLeafDAS",
             "[Barley].Phenology.FloweringDAS",
             "[Barley].Phenology.MaturityDAS",
