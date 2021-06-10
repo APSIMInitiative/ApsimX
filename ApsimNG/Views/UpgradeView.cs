@@ -449,8 +449,7 @@
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
                             // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                            string ourDirectory = PathUtilities.GetApsimXDirectory();
                             string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
                             string arguments = StringUtilities.DQuote(ourDirectory) + " " +
                                                StringUtilities.DQuote(newDirectory);
