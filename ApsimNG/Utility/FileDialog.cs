@@ -209,12 +209,18 @@
 
             dialog.Title = Prompt;
 
-            if (string.IsNullOrEmpty(FileType))
-                dialog.Filter = "All files (*.*)|*.*";
-            else if (FileType.Contains("|"))
-                dialog.Filter = FileType;
-            else
-                dialog.Filter = FileType + "|" + FileType;
+            string filterString = String.Empty;
+            if (!string.IsNullOrEmpty(FileType))
+            {
+                if (FileType.Contains("|"))
+                    filterString = FileType;
+                else
+                    filterString = FileType + "|" + FileType;
+                if (!filterString.EndsWith("|"))
+                    filterString += "|";
+            }
+            dialog.Filter = filterString + "All files (*.*)|*.*";
+
 
             // This almost works, but Windows is buggy.
             // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯

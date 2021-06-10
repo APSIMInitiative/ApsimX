@@ -226,6 +226,8 @@
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
+            if (ReferenceHeight < 1 || ReferenceHeight > 10)
+                throw new Exception($"Error in microclimate: reference height must be between 1 and 10. Actual value is {ReferenceHeight}");
             microClimatesZones = new List<MicroClimateZone>();
             foreach (Zone newZone in this.Parent.FindAllDescendants<Zone>())
                 microClimatesZones.Add(new MicroClimateZone(clock, newZone, MinimumHeightDiffForNewLayer));
