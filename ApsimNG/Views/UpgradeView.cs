@@ -321,6 +321,9 @@
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
+#if NETCOREAPP
+                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
+#endif
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
