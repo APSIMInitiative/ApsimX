@@ -129,7 +129,9 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
-            "[Barley].SowingData.Cultivar"
+            "[Barley].SowingData.Cultivar",
+            "[IWeather].Latitude",
+            "[IWeather].Longitude"
           ],
           "EventNames": [
             "[Barley].Sowing"
