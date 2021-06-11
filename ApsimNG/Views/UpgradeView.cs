@@ -419,11 +419,14 @@
         {
             try
             {
-                if (waitDlg != null)
+                Application.Invoke((_, __) =>
                 {
-                    waitDlg.Cleanup();
-                    waitDlg = null;
-                }
+                    if (waitDlg != null)
+                    {
+                        waitDlg.Cleanup();
+                        waitDlg = null;
+                    }
+                });
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
@@ -449,8 +452,7 @@
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
                             // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                            string ourDirectory = PathUtilities.GetApsimXDirectory();
                             string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
                             string arguments = StringUtilities.DQuote(ourDirectory) + " " +
                                                StringUtilities.DQuote(newDirectory);
@@ -468,18 +470,21 @@
                             }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
-                            window1.GetGdkWindow().Cursor = null;
+                            Application.Invoke((_, __) =>
+                            {
+                                window1.GetGdkWindow().Cursor = null;
 
-                            // Shutdown the user interface
-                            window1.Cleanup();
-                            tabbedExplorerView.Close();
+                                // Shutdown the user interface
+                                window1.Cleanup();
+                                tabbedExplorerView.Close();
+                            });
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GetGdkWindow().Cursor = null;
                         Application.Invoke(delegate
                         {
+                            window1.GetGdkWindow().Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }
