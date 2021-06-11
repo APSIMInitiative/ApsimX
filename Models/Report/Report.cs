@@ -96,7 +96,6 @@ namespace Models
 
             // Tidy up variable/event names.
             VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
 
             // Locate reporting variables.
             FindVariableMembers();
@@ -114,6 +113,9 @@ namespace Models
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
+            // Cleanup event names.
+            EventNames = TidyUpEventNames();
+
             // Subscribe to events.
             foreach (string eventName in EventNames)
                 events.Subscribe(eventName, DoOutputEvent);
