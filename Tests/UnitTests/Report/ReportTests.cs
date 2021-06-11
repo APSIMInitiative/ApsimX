@@ -507,7 +507,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("MockModel.Z(3)"),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
@@ -530,7 +532,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -563,7 +567,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -595,7 +601,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -696,7 +704,9 @@ namespace Models
                 "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
             };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("SumA"),
                             new double[] { 6, 15, 34 });
