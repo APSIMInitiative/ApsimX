@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>This activity moves specified ruminants to a given pasture</summary>
     /// <version>1.0</version>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
             }
             foreach (RuminantGroup item in filterGroups)
             {
-                foreach (Ruminant ind in this.CurrentHerd(false).Filter(item))
+                foreach (Ruminant ind in this.CurrentHerd(false).FilterRuminants(item))
                 {
                     // set new location ID
                     if (ind.Location != pastureName)

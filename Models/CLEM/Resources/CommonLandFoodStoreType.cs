@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This provides a common land store as GrazeFoodStoreType or AnimalFoodStoreType
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
@@ -310,7 +310,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     Category = category,
                     RelatesToResource = relatesToResource,
@@ -359,7 +360,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = request.Provided,
+                TransactionType = TransactionType.Loss,
+                Amount = request.Provided,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     /// [End] when [PPType] photo period passes a critical value of [CriticalPhotoperiod] 
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class PhotoperiodPhase : Model, IPhase, ICustomDocumentation

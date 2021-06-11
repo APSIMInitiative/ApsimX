@@ -18,7 +18,7 @@ namespace Models.CLEM
     /// CLEM Zone to control simulation
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [Description("This represents a shared market place for CLEM farms")]
@@ -29,9 +29,7 @@ namespace Models.CLEM
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
-        IDataStore DataStore = null;
-        [Link]
-        ISummary Summary = null;
+        Summary Summary = null;
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
@@ -105,19 +103,18 @@ namespace Models.CLEM
             {
                 string error = "@i:Invalid parameters in model";
 
-                // find IStorageReader of simulation
-                IModel parentSimulation = FindAncestor<Simulation>();
-                IStorageReader ds = DataStore.Reader;
-                if (ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages") != null)
+                // get all validations 
+                if (Summary.Messages() != null)
                 {
-                    DataRow[] dataRows = ds.GetData(simulationName: parentSimulation.Name, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
-                    // all all current errors and validation problems to error string.
-                    foreach (DataRow dr in dataRows)
+                    foreach (DataRow item in Summary.Messages().Rows)
                     {
-                        error += "\r\n" + dr[6].ToString();
+                        if (item[3].ToString().StartsWith("Invalid"))
+                        {
+                            error += "\r\n" + item[3].ToString();
+                        }
                     }
                 }
-                throw new ApsimXException(this, error);
+                throw new ApsimXException(this, error.Replace("&shy;", "."));
             }
         }
 
@@ -149,11 +146,11 @@ namespace Models.CLEM
                 results.Add(new ValidationResult("A market place must contain only one (1) Activities Holder to manage activities", memberNames));
             }
             // only one market
-            holderCount = FindAncestor<Zone>().FindAllChildren<Market>().Count();
+            holderCount = FindAncestor<Simulation>().FindAllChildren<Market>().Count();
             if (holderCount > 1)
             {
                 string[] memberNames = new string[] { "CLEM.Markets" };
-                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM simulation", memberNames));
+                results.Add(new ValidationResult("Only one [m=Market] place is allowed in a CLEM [Simulation]", memberNames));
             }
 
             return results;

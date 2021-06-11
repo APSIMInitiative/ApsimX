@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a GrazeFoodType and holds values in the store
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
@@ -555,7 +555,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -660,7 +661,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = request.Provided,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -698,7 +700,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Gain = request.Provided * -1,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource

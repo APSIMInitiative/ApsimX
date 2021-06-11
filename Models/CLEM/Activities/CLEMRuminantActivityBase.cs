@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// This has the ability of identify herd to be used.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
     public abstract class CLEMRuminantActivityBase : CLEMActivityBase
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantActivityGroup filter in HerdFilters)
             {
-                herd = herd.Filter(filter).ToList();
+                herd = herd.FilterRuminants(filter).ToList();
             }
             return herd;
         }

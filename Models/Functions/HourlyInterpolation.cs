@@ -19,7 +19,7 @@ namespace Models.Functions
 
     [Serializable]
     [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class HourlyInterpolation : Model, IFunction
     {
@@ -158,7 +158,7 @@ namespace Models.Functions
 
     /// <summary>
     /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d) 
-    /// usig the method of [Goudriaan1994].  
+    /// using the method of [Goudriaan1994].  
     /// During sunlight hours Ta is calculated each hour using a 
     /// sinusoidal curve fitted to Tmin and Tmax . 
     /// After sunset Ta is calculated as an exponential decline from Ta at sunset 

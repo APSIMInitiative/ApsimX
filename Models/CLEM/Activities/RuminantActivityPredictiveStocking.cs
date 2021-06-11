@@ -8,6 +8,7 @@ using System.Text;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -18,7 +19,7 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -57,31 +58,29 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Predicted pasture at end of assessment period
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double PasturePredicted { get; private set; }
 
         /// <summary>
         /// Predicted pasture shortfall at end of assessment period
         /// </summary>
-        [field: NonSerialized]
         public double PastureShortfall { get {return Math.Max(0, FeedLowLimit - PasturePredicted); } }
 
         /// <summary>
         /// AE to destock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>
         /// AE destock shortfall
         /// </summary>
-        [field: NonSerialized]
         public double AeShortfall { get {return AeToDestock - AeDestocked; } }
 
         #region validation
@@ -222,11 +221,14 @@ namespace Models.CLEM.Activities
             ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (IModel item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
+            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .FilterRuminants(item)
+                    .ToList();
+
                 int cnt = 0;
                 while (cnt < herd.Count() && animalEquivalentsforSale > 0)
                 {

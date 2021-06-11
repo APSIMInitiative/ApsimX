@@ -19,7 +19,7 @@ namespace Models.PMF.Organs
     /// This organ is parameterised using a simple leaf organ type which provides the core functions of intercepting radiation, providing a photosynthesis supply and a transpiration demand.  It also calculates the growth, senescence and detachment of leaves.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PerennialLeaf : Model, IOrgan, ICanopy, IArbitration, IHasWaterDemand, IOrganDamage
     {
@@ -448,6 +448,8 @@ namespace Models.PMF.Organs
             NSupply.Clear();
             Detached.Clear();
             Leaves.Clear();
+            GrowthRespiration = 0;
+            FRGR = 0;
             if (Structure != null)
                 Structure.LeafTipsAppeared = 0;
 

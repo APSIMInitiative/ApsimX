@@ -13,7 +13,7 @@ namespace Models.PMF.Phen
     /// vernalisation saturation occurs
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class VernalisationPhase : Model, IPhase, IPhaseWithTarget

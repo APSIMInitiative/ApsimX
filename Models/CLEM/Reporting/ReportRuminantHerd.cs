@@ -15,7 +15,7 @@ namespace Models.CLEM.Reporting
     /// <summary>Ruminant reporting</summary>
     /// <summary>This activity writes individual ruminant details for reporting</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -83,7 +83,7 @@ namespace Models.CLEM.Reporting
                 // get all filter groups below.
                 foreach (var fgroup in allRumGroups)
                 {
-                    foreach (Ruminant item in Resources.RuminantHerd().Herd.Filter(fgroup))
+                    foreach (Ruminant item in Resources.RuminantHerd().Herd.FilterRuminants(fgroup))
                     {
                         ReportDetails = new RuminantReportItemEventArgs();
                         if (item is RuminantFemale)

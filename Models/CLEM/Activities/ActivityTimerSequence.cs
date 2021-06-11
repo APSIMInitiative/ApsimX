@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// Activity timer sequence
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivityTimerCropHarvest))]
     [Description("This component adds a timer sequence to selected timers")]

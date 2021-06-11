@@ -53,6 +53,11 @@
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
 
         /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        event EventHandler OnAnnotationClick;
+
+        /// <summary>
         /// Left margin in pixels.
         /// </summary>
         int LeftRightPadding { get; set; }
@@ -245,6 +250,7 @@
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="topAlign">Top align the text?</param>
         /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
@@ -255,6 +261,7 @@
             object x,
             object y,
             bool leftAlign,
+            bool topAlign,
             double textRotation,
             Models.Axis.AxisType xAxisType,
             Models.Axis.AxisType yAxisType,

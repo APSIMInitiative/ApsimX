@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Threading.Tasks;
     using Utility;
     using Views;
 
@@ -270,32 +271,26 @@
             bool result = true;
             try
             {
-                if (this.ApsimXFile != null && this.ApsimXFile.FileName != null)
+                if (!string.IsNullOrEmpty(ApsimXFile?.FileName))
                 {
                     QuestionResponseEnum choice = QuestionResponseEnum.No;
 
-                    if (!File.Exists(this.ApsimXFile.FileName))
+                    if (!File.Exists(ApsimXFile.FileName))
                     {
                         choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
-                    else
-                    {
-                        if (FileHasPendingChanges())
-                        {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
-                        }
-                    }
+                    else if (FileHasPendingChanges())
+                        choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
 
                     if (choice == QuestionResponseEnum.Cancel)
-                    {   // cancel
-                        this.ShowRightHandPanel();
+                    {
+                        ShowRightHandPanel();
                         result = false;
                     }
                     else if (choice == QuestionResponseEnum.Yes)
                     {
-                        // save
-                        this.WriteSimulation();
+                        WriteSimulation(ApsimXFile.FileName);
                         result = true;
                     }
                 }
@@ -323,7 +318,7 @@
 
                 if (!string.IsNullOrEmpty(ApsimXFile.FileName))
                 {
-                    ApsimXFile.Write(ApsimXFile.FileName);
+                    WriteSimulation(ApsimXFile.FileName);
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
@@ -345,10 +340,7 @@
             {
                 try
                 {
-                    /*if (this.ApsimXFile.FileName != null)
-                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName); */
-
-                    this.ApsimXFile.Write(newFileName);
+                    WriteSimulation(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
@@ -365,10 +357,12 @@
         }
 
         /// <summary>Do the actual write to the file</summary>
-        public void WriteSimulation()
+        /// <param name="fileName">Path to which the file will be saved.</param>
+        public void WriteSimulation(string fileName)
         {
-            this.ApsimXFile.ExplorerWidth = this.TreeWidth;
-            this.ApsimXFile.Write(this.ApsimXFile.FileName);
+            ApsimXFile.ExplorerWidth = TreeWidth;
+            ApsimXFile.Write(fileName);
+            CommandHistory.Save();
         }
 
         /// <summary>Select a node in the view.</summary>
@@ -681,7 +675,7 @@
         /// Path which the files will be saved to. 
         /// If null, the user will be prompted to choose a directory.
         /// </param>
-        public bool GenerateApsimXFiles(IModel model, string path = null)
+        public async Task<bool> GenerateApsimXFiles(IModel model, string path = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -698,10 +692,7 @@
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
                 var runner = new Runner(model);
-                var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) =>
-                {
-                    MainPresenter.ShowProgress(percent, false);
-                });
+                List<Exception> errors = await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, p => MainPresenter.ShowProgress(p, false), true));
 
                 if (errors == null || errors.Count == 0)
                 {
@@ -753,20 +744,6 @@
                     {
                         viewName = new ViewNameAttribute("UserInterface.Views.ModelDetailsWrapperView");
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
-                    }
-
-                    if (Configuration.Settings.UseNewPropertyPresenter && presenterName != null)
-                    {
-                        if (presenterName.ToString().Contains(".PropertyPresenter"))
-                        {
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
-                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
-                        }
-                        else if (presenterName.ToString().Contains(".BiomassRemovalPresenter"))
-                        {
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.CompositePropertyPresenter");
-                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
-                        }
                     }
 
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper

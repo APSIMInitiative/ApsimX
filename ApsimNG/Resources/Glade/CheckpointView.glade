@@ -47,9 +47,17 @@
       </packing>
     </child>
     <child>
-      <object class="GtkTreeView" id="CheckpointList">
+      <object class="GtkScrolledWindow" id="scrolledwindow1">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="hscrollbar_policy">automatic</property>
+        <property name="vscrollbar_policy">automatic</property>
+        <child>
+          <object class="GtkTreeView" id="CheckpointList">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+          </object>
+        </child>
       </object>
       <packing>
         <property name="expand">True</property>

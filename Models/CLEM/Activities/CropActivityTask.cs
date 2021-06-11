@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Crop activity task</summary>
     /// <summary>This activity will perform costs and labour for a crop activity</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
@@ -83,7 +83,7 @@ namespace Models.CLEM.Activities
                         this.Status = ActivityStatus.Warning;
                         if (!timingIssueReported)
                         {
-                            Summary.WriteWarning(this, String.Format("The harvest timer for crop task [a=" + this.Name + "] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", this.Name));
+                            Summary.WriteWarning(this, $"The harvest timer for crop task [a={this.Name}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.");
                             timingIssueReported = true;
                         }
                     }

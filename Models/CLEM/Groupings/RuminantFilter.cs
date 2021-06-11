@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -14,7 +16,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
@@ -26,7 +28,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
-    public class RuminantFilter: CLEMModel, IValidatableObject
+    public class RuminantFilter: CLEMModel, IValidatableObject, IFilter
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -81,6 +83,36 @@ namespace Models.CLEM.Groupings
             }
         }
         private string _value;
+
+        /// <summary>
+        /// The gender the filter applies to (Male, Female or Either)
+        /// </summary>
+        public string Gender
+        {
+            get
+            {
+                switch (parameter)
+                {
+                    case RuminantFilterParameters.IsDraught:
+                    case RuminantFilterParameters.IsSire:
+                    case RuminantFilterParameters.IsCastrate:
+                        return "Male";
+
+                    case RuminantFilterParameters.IsBreeder:
+                    case RuminantFilterParameters.IsPregnant:
+                    case RuminantFilterParameters.IsLactating:
+                    case RuminantFilterParameters.IsPreBreeder:
+                    case RuminantFilterParameters.MonthsSinceLastBirth:
+                        return "Female";
+
+                    default:
+                        return "Either";
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
 
         /// <summary>
         /// Convert filter to string
@@ -152,11 +184,11 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. RuminantGroup required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">FILTER NOT DEFINED</div>";
             }
             else
             {
@@ -245,6 +277,10 @@ namespace Models.CLEM.Groupings
         /// ID of individuals
         /// </summary>
         ID = 4,
+        /// <summary>
+        /// Determines if within breeding ages
+        /// </summary>
+        IsBreedingCondition = 15,
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>

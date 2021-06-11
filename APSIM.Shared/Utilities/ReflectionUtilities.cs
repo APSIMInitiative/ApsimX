@@ -3,6 +3,7 @@
     using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
@@ -369,6 +370,12 @@
                             .Union(
                             GetAllProperties(type, bindingFlags).Select(p => base.CreateProperty(p, memberSerialization))
                             ).ToList();
+                // If this type overrides a base class's property or field, then this list
+                // will contain multiple properties with the same name, which causes a
+                // serialization exception when we go to serialize these properties. The
+                // solution is to group the properties by name and take the last of each
+                // group so we end up with the most derived property.
+                props = props.GroupBy(p => p.PropertyName).Select(g => g.Last()).ToList();
                 props.ForEach(p => { p.Writable = true; p.Readable = true; });
                 return props.Where(p => p.PropertyName != "Parent").ToList();
             }
@@ -429,19 +436,37 @@
                     return null;
             }
 
-            if (dataType.IsArray)
+            if ( (dataType.IsArray || typeof(IEnumerable<>).IsAssignableFrom(dataType) || typeof(IEnumerable).IsAssignableFrom(dataType)) && dataType != typeof(string))
             {
                 // Arrays do not implement IConvertible, so we cannot just split the string on
                 // the commas and parse the string array into Convert.ChangeType. Instead, we
                 // must convert each element of the array individually.
                 //
                 // Note: we trim the start of each element, so "a, b, c , d" becomes ["a","b","c ","d"].
-                object[] arr = newValue.Split(',').Select(s => StringToObject(dataType.GetElementType(), s.TrimStart(), format)).ToArray();
+                Type elementType;
+                if (dataType.IsArray)
+                    elementType = dataType.GetElementType();
+                else if (dataType.IsGenericType)
+                    elementType = dataType.GenericTypeArguments.First();
+                else
+                    elementType = typeof(object);
+                object[] arr = newValue.Split(',').Select(s => StringToObject(elementType, s.TrimStart(), format)).ToArray();
 
-                // An object array is not good enough. We need an array with correct element type.
-                Array result = Array.CreateInstance(dataType.GetElementType(), arr.Length);
-                Array.Copy(arr, result, arr.Length);
-                return result;
+                // arr is an array of object. We need an array with correct element type.
+                if (dataType.IsArray)
+                {
+                    Array result = Array.CreateInstance(elementType, arr.Length);
+                    Array.Copy(arr, result, arr.Length);
+                    return result;
+                }
+                else
+                {
+                    Type listType = typeof(List<>).MakeGenericType(elementType);
+                    IList list = (IList)Activator.CreateInstance(listType);
+                    foreach (object obj in arr)
+                        list.Add(obj);
+                    return list;
+                }
             }
 
             if (dataType == typeof(System.Drawing.Color) && int.TryParse(newValue, out int argb))
@@ -568,13 +593,24 @@
             List<Type> types = new List<Type>();
 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                foreach (Type t in assembly.GetTypes())
-                {
-                    if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
-                        types.Add(t);
-                }
-            }
+                types.AddRange(GetTypesThatHaveInterface(assembly, interfaceType));
+
+            return types;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="assembly"></param>
+        /// <param name="interfaceType"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetTypesThatHaveInterface(Assembly assembly, Type interfaceType)
+        {
+            List<Type> types = new List<Type>();
+
+            foreach (Type t in assembly.GetTypes())
+                if (interfaceType.IsAssignableFrom(t) && t.Name != interfaceType.Name && t.IsPublic)
+                    types.Add(t);
 
             return types;
         }

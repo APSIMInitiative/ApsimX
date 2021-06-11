@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -14,7 +15,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for to identify individuals
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Individual filter term for to identify individuals. Multiple filters are additive and will further refine the criteria")]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
@@ -23,7 +24,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourFeedGroup))]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilter.htm")]
-    public class LabourFilter: CLEMModel
+    public class LabourFilter: CLEMModel, IFilter
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -78,6 +79,9 @@ namespace Models.CLEM.Groupings
             }
         }
         private string _value;
+
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
 
         /// <summary>
         /// Convert filter to string

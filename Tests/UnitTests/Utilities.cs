@@ -13,10 +13,11 @@ namespace UnitTests
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
 
     [SetUpFixture]
-    public class Utilities
+    public static class Utilities
     {
         private static string tempPath;
         [OneTimeTearDown]
@@ -92,19 +93,8 @@ namespace UnitTests
             ReflectionUtilities.SetValueOfFieldOrProperty(linkFieldName, model, linkFieldValue);
         }
 
-
         /// <summary>Convert a SQLite table to a string.</summary>
-        public static string TableToString(string fileName, string tableName, IEnumerable<string> fieldNames = null)
-        {
-            SQLite database = new SQLite();
-            database.OpenDatabase(fileName, true);
-            var st = TableToString(database, tableName, fieldNames);
-            database.CloseDatabase();
-            return st;
-        }
-
-        /// <summary>Convert a SQLite table to a string.</summary>
-        public static string TableToString(IDatabaseConnection database, string tableName, IEnumerable<string> fieldNames = null)
+        public static DataTable GetTableFromDatabase(IDatabaseConnection database, string tableName, IEnumerable<string> fieldNames = null)
         {
             string sql = "SELECT ";
             if (fieldNames == null)
@@ -131,23 +121,7 @@ namespace UnitTests
                 orderByFieldNames.Add("[Clock.Today]");
             if (orderByFieldNames.Count > 0)
                 sql += " ORDER BY " + StringUtilities.BuildString(orderByFieldNames.ToArray(), ",");
-            DataTable data = database.ExecuteQuery(sql);
-            return TableToString(data);
-        }
-
-        /// <summary>Convert a SQLite query to a string.</summary>
-        public static string TableToStringUsingSQL(IDatabaseConnection database, string sql)
-        {
-            var data = database.ExecuteQuery(sql);
-            return TableToString(data);
-        }
-
-        /// <summary>Convert a DataTable to a string.</summary>
-        public static string TableToString(DataTable data)
-        {
-            StringWriter writer = new StringWriter();
-            DataTableUtilities.DataTableToText(data, 0, ",", true, writer);
-            return writer.ToString();
+            return database.ExecuteQuery(sql);
         }
 
         /// <summary>
@@ -250,6 +224,50 @@ namespace UnitTests
             model.OnCreated();
             foreach (var child in model.Children)
                 CallOnCreated(child);
+        }
+
+
+        public static DataTable CreateTable(IEnumerable<string> columnNames, IEnumerable<object[]> rows)
+        {
+            var data2 = new DataTable();
+            foreach (var columnName in columnNames)
+                data2.Columns.Add(columnName);
+
+            foreach (var row in rows)
+            {
+                var newRow = data2.NewRow();
+                newRow.ItemArray = row;
+                data2.Rows.Add(newRow);
+            }
+            return data2;
+        }
+
+        public static bool IsSame(this DataTable t1, DataTable t2)
+        {
+            if (t1 == null)
+                return false;
+            if (t2 == null)
+                return false;
+            if (t1.Rows.Count != t2.Rows.Count)
+                return false;
+
+            if (t1.Columns.Count != t2.Columns.Count)
+                return false;
+
+            if (t1.Columns.Cast<DataColumn>().Any(dc => !t2.Columns.Contains(dc.ColumnName)))
+            {
+                return false;
+            }
+
+            for (int i = 0; i <= t1.Rows.Count - 1; i++)
+            {
+                if (t1.Columns.Cast<DataColumn>().Any(dc1 => t1.Rows[i][dc1.ColumnName].ToString() != t2.Rows[i][dc1.ColumnName].ToString()))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }

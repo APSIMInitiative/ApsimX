@@ -29,7 +29,7 @@
     /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
@@ -728,6 +728,13 @@
             Height = 0;
             LAI = 0;
             leafInitialised = false;
+            GrowthRespiration = 0;
+            FRGR = 0;
+            LightProfile = null;
+            PotentialEP = 0;
+            LAIDead = 0;
+            WaterDemand = 0;
+            WaterAllocation = 0;
         }
 
         /// <summary>
@@ -855,8 +862,6 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
             startLive = new Biomass();
             DMDemand = new BiomassPoolType();
             DMDemandPriorityFactor = new BiomassPoolType();
@@ -874,6 +879,7 @@
             Height = 0.0;
             LAI = 0.0;
             leafInitialised = false;
+            Clear();
         }
 
         /// <summary>

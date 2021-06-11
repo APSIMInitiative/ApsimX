@@ -16,7 +16,7 @@ namespace Models.CLEM
     /// <summary>This activity summarizes ruminant herds for reporting</summary>
     /// <summary>Remove if you do not need monthly herd summaries</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -105,7 +105,7 @@ namespace Models.CLEM
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantGroup filter in herdFilters)
             {
-                herd = herd.Filter(filter).ToList();
+                herd = herd.FilterRuminants(filter).ToList();
             }
 
             // group by breed

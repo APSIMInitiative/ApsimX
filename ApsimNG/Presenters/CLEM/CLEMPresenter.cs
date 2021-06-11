@@ -73,9 +73,11 @@ namespace UserInterface.Presenters
                     string viewName = viewAttribute.ToString();
                     if (propPresenterName == "UserInterface.Presenters.PropertyPresenter" | !propPresenterName.Contains("Property"))
                     {
-                        propPresenterName = "UserInterface.Presenters.SimplePropertyPresenter";
+                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
                         if(viewName != "UserInterface.Views.PropertyMultiModelView")
+                        {
                             viewName = "UserInterface.Views.PropertyView";
+                        }
                     }
 
                     var props = model.GetType().GetProperties(

@@ -80,12 +80,16 @@ namespace UserInterface.Views
             box = new Frame();
             box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
+            ScrolledWindow scroller = new ScrolledWindow();
+            mainWidget = scroller;
 #if NETFRAMEWORK
-            mainWidget = box;
+            scroller.AddWithViewport(box);
 #else
             Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(box, false, false, 0);
-            mainWidget = container;
+            scroller.Add(container);
+            scroller.PropagateNaturalHeight = true;
+            scroller.PropagateNaturalWidth = true;
 #endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
@@ -156,7 +160,11 @@ namespace UserInterface.Views
             int nrow = 0;
 #endif
             AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
-            mainWidget.ShowAll();
+
+            if (nrow > 0)
+                mainWidget.ShowAll();
+            else
+                mainWidget.Hide();
 
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)
@@ -642,6 +650,19 @@ namespace UserInterface.Views
             {
                 widget.DetachAllHandlers();
             }
+        }
+
+        /// <summary>
+        /// Fire off a PropertyChanged event for any outstanding changes.
+        /// </summary>
+        public void SaveChanges()
+        {
+            // The only widget which can have outstanding changes is an entry,
+            // whose changes are applied when it loses focus. Therefore,
+            // grabbing focus on the main widget will cause any focused entries
+            // to lose focus and fire off a changed event.
+            mainWidget.CanFocus = true;
+            mainWidget.GrabFocus();
         }
     }
 }

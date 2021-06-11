@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     /// Parent model of Labour Person models.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all labour types (people) for the simulation.")]
@@ -41,6 +41,14 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public List<LabourType> Items { get; set; }
+
+        /// <summary>
+        /// Use cohorts for all analysis or use individuals
+        /// </summary>
+        [Description("Maintain cohorts")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        [Required]
+        public bool UseCohorts { get; set; }
 
         /// <summary>
         /// Allows indiviuals to age each month
@@ -90,11 +98,11 @@ namespace Models.CLEM.Resources
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
             {
-                value += ind.GetDietDetails(metric);
+                value += ind.GetDietDetails(metric)*ind.Individuals;
             }
             if(reportPerAE)
             {
-                value /= AdultEquivalents(includeHiredLabour);
+                value /= (AdultEquivalents(includeHiredLabour));
             }
             return value;
         }
@@ -150,23 +158,41 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {
-                for (int i = 0; i < labourChildModel.Individuals; i++)
+                if (UseCohorts)
                 {
-                    // get the availability from provided list
-
                     LabourType labour = new LabourType()
                     {
                         Gender = labourChildModel.Gender,
-                        Individuals = 1,
+                        Individuals = labourChildModel.Individuals,
                         Parent = this,
                         InitialAge = labourChildModel.InitialAge,
                         AgeInMonths = labourChildModel.InitialAge * 12,
                         LabourAvailability = labourChildModel.LabourAvailability,
-                        Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
+                        Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
                     };
                     labour.TransactionOccurred += Resource_TransactionOccurred;
                     Items.Add(labour);
+                }
+                else
+                {
+                    for (int i = 0; i < labourChildModel.Individuals; i++)
+                    {
+                        // get the availability from provided list
+                        LabourType labour = new LabourType()
+                        {
+                            Gender = labourChildModel.Gender,
+                            Individuals = 1,
+                            Parent = this,
+                            InitialAge = labourChildModel.InitialAge,
+                            AgeInMonths = labourChildModel.InitialAge * 12,
+                            LabourAvailability = labourChildModel.LabourAvailability,
+                            Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
+                            Hired = labourChildModel.Hired
+                        };
+                        labour.TransactionOccurred += Resource_TransactionOccurred;
+                        Items.Add(labour);
+                    }
                 }
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
@@ -228,16 +254,11 @@ namespace Models.CLEM.Resources
 
         private void CheckAssignLabourAvailability(LabourType labour)
         {
-            if(availabilityList == null)
-            {
-
-            }
-
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
             {
                 // check labour availability still ok
-                if (checkList.Filter(labour.LabourAvailability).Count == 0)
+                if (checkList.Filter(labour.LabourAvailability).Count() == 0)
                 {
                     labour.LabourAvailability = null;
                 }
@@ -248,7 +269,7 @@ namespace Models.CLEM.Resources
             {
                 foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
                 {
-                    if (checkList.Filter(availItem).Count > 0)
+                    if (checkList.Filter(availItem).Count() > 0)
                     {
                         labour.LabourAvailability = availItem as LabourSpecificationItem;
                         break;
@@ -257,9 +278,14 @@ namespace Models.CLEM.Resources
                 // if still null report error
                 if (labour.LabourAvailability == null)
                 {
-                    throw new ApsimXException(this, string.Format("Unable to find labour availability suitable for labour type [f=Name:{0}] [f=Gender:{1}] [f=Age:{2}]\r\nAdd additional labour availability item to [r={3}] under [r={4}]", labour.Name, labour.Gender, labour.Age, availabilityList.Name, this.Name));
+                    string msg = $"Unable to find labour availability suitable for labour type" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Gender}] [f=Age:{labour.Age}]" +
+                        $"\r\nAdd additional labour availability item to " +
+                        $"[r={availabilityList.Name}] under [r={Name}]";
+
+                    throw new ApsimXException(this, msg);
                 }
-            }
+            }            
         }
 
         /// <summary>Age individuals</summary>
@@ -313,7 +339,7 @@ namespace Models.CLEM.Resources
             {
                 if (!person.Hired | (includeHired))
                 {
-                    ae += CalculateAE(person.AgeInMonths)??1;
+                    ae += (CalculateAE(person.AgeInMonths)??1)*person.Individuals;
                 }
             }
             return ae;

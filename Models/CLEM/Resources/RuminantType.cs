@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -57,8 +58,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public AnimalPricing PriceList;
 
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -82,8 +81,57 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<string> mandatoryAttributes = new List<string>();
         private readonly List<string> WarningsMultipleEntry = new List<string>();
         private readonly List<string> WarningsNotFound = new List<string>();
+
+        /// <summary>
+        /// Property indicates whether to include attribute inheritance when mating
+        /// </summary>
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+
+        /// <summary>
+        /// Add a attribute name to the list of mandatory attributes for the type
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public void AddMandatoryAttribute(string name)
+        {
+            if(!mandatoryAttributes.Contains(name.ToLower()))
+            {
+                mandatoryAttributes.Add(name.ToLower());
+            }
+        }
+
+        /// <summary>
+        /// Determins whether a specified attribute is mandatory
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public bool IsMandatoryAttribute(string name)
+        {
+            return mandatoryAttributes.Contains(name);
+        }
+
+        /// <summary>
+        /// Check whether an individual has all mandotory attributes
+        /// </summary>
+        /// <param name="ind">Individual ruminant to check</param>
+        /// <param name="model">Model adding individuals</param>
+        public void CheckMandatoryAttributes(Ruminant ind, IModel model)
+        {
+            foreach (var attribute in mandatoryAttributes)
+            {
+                if(!ind.AttributeExists(attribute))
+                {
+                    string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
+                    if (!Warnings.Exists(warningString))
+                    {
+                        Warnings.Add(warningString);
+                        Summary.WriteWarning(this, warningString);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Get value of a specific individual
@@ -99,7 +147,7 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1)
+                    if (animalList.FilterRuminants(item).Count() == 1)
                     {
                         return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
@@ -134,7 +182,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
+                    if (animalList.FilterRuminants(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
