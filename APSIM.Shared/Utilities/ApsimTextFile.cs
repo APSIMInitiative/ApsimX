@@ -607,7 +607,7 @@ namespace APSIM.Shared.Utilities
 
             string Line = inData.ReadLine();
 
-            if (Line == null || Line.Length == 0)
+            if (string.IsNullOrWhiteSpace(Line))
                 return false;
 
             if (Line.IndexOf("!") > 0) //used to ignore "!" in a row

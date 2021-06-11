@@ -237,6 +237,20 @@
                     ]
                 },
                 {
+                    "Name": "Peanut (Under Review)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Peanut/Peanut.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Peanut/Peanut.apsimx",
+                            "ModelNameToDocument": "Peanut"
+                        }
+                    ]
+                },
+                {
                     "Name": "Plantain",
                     "Documents": [
                         {

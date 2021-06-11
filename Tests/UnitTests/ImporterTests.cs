@@ -341,6 +341,7 @@
             Assert.AreEqual(m.b_interception, 0.2);
             Assert.AreEqual(m.c_interception, 0.3);
             Assert.AreEqual(m.d_interception, 0.4);
+            Assert.AreEqual(2, m.ReferenceHeight);
         }
 
         /// <summary>

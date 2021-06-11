@@ -960,7 +960,7 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
@@ -1196,7 +1196,7 @@
             try
             {
                 string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
-                string fileName = AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string fileName = AskUserForOpenFileName("ApsimX files|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {
