@@ -662,5 +662,23 @@
 
             return null;
         }
+
+        /// <summary>
+        /// Copy the contents of a resource into a file on disk.
+        /// </summary>
+        /// <param name="assembly">Assembly to which the resource belongs.</param>
+        /// <param name="resource">Name of the resource.</param>
+        /// <param name="file">Path to the file to be written.</param>
+        public static void WriteResourceToFile(Assembly assembly, string resource, string file)
+        {
+            using (Stream reader = assembly.GetManifestResourceStream(resource))
+            {
+                using (FileStream writer = File.Create(file))
+                {
+                    reader.Seek(0, SeekOrigin.Begin);
+                    reader.CopyTo(writer);
+                }
+            }
+        }
     }
 }

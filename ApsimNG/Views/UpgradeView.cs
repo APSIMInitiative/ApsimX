@@ -321,6 +321,9 @@
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
+#if NETCOREAPP
+                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
+#endif
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -436,6 +439,7 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
+#if NETFRAMEWORK
                             // Copy the separate upgrader executable to the temp directory.
                             string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
                             string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
@@ -470,6 +474,29 @@
                             }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
+#else
+                            if (ProcessUtilities.CurrentOS.IsWindows)
+                            {
+                                // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
+                                // and will handle the removal of the previous version.
+                                string oldVersion = new Models.Core.Simulations().ApsimVersion;
+                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                            }
+                            else if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
+                                string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
+                            }
+                            else
+                            {
+                                // Assume (Debian) Linux and hope for the best.
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
+                            }
+#endif
                             Application.Invoke((_, __) =>
                             {
                                 window1.GetGdkWindow().Cursor = null;
