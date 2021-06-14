@@ -26,6 +26,15 @@
         [NonSerialized]
         private DataTable messages;
 
+        /// <summary>
+        /// The current messages during simulation before saving to db
+        /// </summary>
+        /// <returns>Messages</returns>
+        public DataTable Messages()
+        {
+            return messages;
+        }
+
         /// <summary>A link to a storage service</summary>
         [Link]
         private IDataStore storage = null;

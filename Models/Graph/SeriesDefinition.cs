@@ -289,7 +289,8 @@
                 var fieldsThatExist = reader.ColumnNames(series.TableName);
 
                 // If we have descriptors, then use them to filter the data for this series.
-                List<string> simulationNameFilter = null;
+                List<string> simulationNameFilter = new List<string>();;
+                IEnumerable<SimulationDescription> simulationNamesWithDescriptors = new List<SimulationDescription>();
                 string filter = null;
                 if (Descriptors != null)
                 {
@@ -299,17 +300,20 @@
                             filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
                         else
                         {
-                            simulationNameFilter = new List<string>();
-                            simulationNameFilter.AddRange(simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name));
+                            if (simulationNamesWithDescriptors.Any())
+                                simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
+                            else
+                                simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
                         }
                     }
-
+                    if (simulationNamesWithDescriptors.Any())
+                        simulationNameFilter = simulationNamesWithDescriptors.Select(s => s.Name).ToList();
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (simulationNameFilter == null && inScopeSimulationNames != null)
+                    if (!simulationNameFilter.Any() && inScopeSimulationNames != null)
                         simulationNameFilter = new List<string>(inScopeSimulationNames);
                 }
-                else
-                    simulationNameFilter = new List<string>(inScopeSimulationNames);
+                else if (inScopeSimulationNames != null)
+                    simulationNameFilter = new List<string>(inScopeSimulationNames ?? Enumerable.Empty<string>());
 
                 if (!string.IsNullOrEmpty(userFilter))
                     filter = AddToFilter(filter, userFilter);

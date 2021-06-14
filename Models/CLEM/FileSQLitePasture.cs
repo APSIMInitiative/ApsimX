@@ -745,7 +745,7 @@ namespace Models.CLEM
             {
                 foreach (DataRow row in results.Rows)
                 {
-                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
+                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
                 }
             }
 

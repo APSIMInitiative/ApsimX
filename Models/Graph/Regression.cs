@@ -88,11 +88,16 @@ namespace Models
                 foreach (SeriesDefinition definition in definitions)
                 {
                     if (definition.CheckpointName == checkpointName)
-                        if (definition.X is double[] && definition.Y is double[])
+                    {
+                        if (definition.X != null && definition.Y != null)
                         {
-                            x.AddRange(definition.X as IEnumerable<double>);
-                            y.AddRange(definition.Y as IEnumerable<double>);
+                            if (ReflectionUtilities.IsNumericType(definition.X.GetType().GetElementType()) && ReflectionUtilities.IsNumericType(definition.Y.GetType().GetElementType()))
+                            {
+                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).ToArray());
+                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).ToArray());
+                            }
                         }
+                    }
                 }
 
                 if (ForEachSeries)
@@ -178,11 +183,9 @@ namespace Models
         /// <summary>Puts the 1:1 line on graph.</summary>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
-        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable x, IEnumerable y)
+        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable<double> x, IEnumerable<double> y)
         {
-            IEnumerable<double> xValues = x.Cast<object>().Select(xi => xi is double ? (double)xi : Convert.ToDouble(xi, CultureInfo.InvariantCulture));
-            IEnumerable<double> yValues = y.Cast<object>().Select(yi => yi is double ? (double)yi : Convert.ToDouble(yi, CultureInfo.InvariantCulture));
-            MathUtilities.GetBounds(xValues, yValues, out double minX, out double maxX, out double minY, out double maxY);
+            MathUtilities.GetBounds(x, y, out double minX, out double maxX, out double minY, out double maxY);
             double lowestAxisScale = Math.Min(minX, minY);
             double largestAxisScale = Math.Max(maxX, maxY);
 
@@ -203,15 +206,19 @@ namespace Models
                     // Add an equation annotation.
                     TextAnnotation equation = new TextAnnotation();
                     StringBuilder text = new StringBuilder();
-                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
+                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r\u00B2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
                     text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
                     text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
+                    equation.Name = $"Regression{i}";
                     equation.text = text.ToString();
                     equation.colour = equationColours[i];
                     equation.leftAlign = true;
                     equation.textRotation = 0;
-                    equation.x = double.MinValue;
-                    equation.y = double.MinValue;
+                    if (stats.Count > 1)
+                    {
+                        equation.x = double.MinValue;  // More than one stats equation. Use default positioning
+                        equation.y = double.MinValue;
+                    }
                     yield return equation;
                 }
             }

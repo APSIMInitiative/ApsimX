@@ -33,9 +33,6 @@
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
 
-        /// <summary>The path last used to open the examples</summary>
-        private string lastExamplesPath;
-
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
@@ -235,7 +232,7 @@
         
         /// <summary>
         /// Displays several messages, with a separator between them. 
-        /// For error messages, use <see cref="ShowError(List{Exception})"/>.
+        /// For error messages, use <see cref="ShowError(List{Exception}, bool)"/>.
         /// </summary>
         /// <param name="messages">Messages to be displayed.</param>
         /// <param name="messageType"></param>
@@ -295,7 +292,8 @@
         /// Displays several error messages in the status bar. Each error will have an associated 
         /// </summary>
         /// <param name="errors"></param>
-        public void ShowError(List<Exception> errors)
+        /// <param name="overwrite"></param>
+        public void ShowError(List<Exception> errors, bool overwrite = true)
         {
             // if the list contains at least 1 null exception, display none of them
             if (errors != null && !errors.Contains(null))
@@ -303,8 +301,11 @@
                 LastError = errors.Select(err => err.ToString()).ToList();
                 for (int i = 0; i < errors.Count; i++)
                 {
-                    // only overwrite other messages the first time through the loop
-                    view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, i == 0, true);
+                    if (errors[i] is AggregateException aggregate)
+                        ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
+                    else
+                        // only overwrite other messages the first time through the loop
+                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -959,7 +960,7 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
@@ -1194,25 +1195,11 @@
         {
             try
             {
-                string initialPath;
-
-                if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
-                {
-                    initialPath = this.lastExamplesPath; // use the last used path in this session
-                }
-                else
-                {
-                    // use an examples directory relative to this assembly
-                    initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
-                }
-
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
+                string fileName = AskUserForOpenFileName("ApsimX files|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {
-                    this.lastExamplesPath = Path.GetDirectoryName(fileName);
-
                     // ensure that they are saved in another file before running by opening them in memory
                     StreamReader reader = new StreamReader(fileName);
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);

@@ -10,6 +10,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
 using Models.CLEM.Groupings;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -75,13 +76,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to destock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToDestock { get; private set; }
 
         /// <summary>
         /// AE destocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeDestocked { get; private set; }
 
         /// <summary>
@@ -92,13 +93,13 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// AE to restock
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeToRestock { get; private set; }
 
         /// <summary>
         /// AE restocked
         /// </summary>
-        [field: NonSerialized]
+        [JsonIgnore]
         public double AeRestocked { get; private set; }
 
         private string fullFilename;
@@ -169,7 +170,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteWarning(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}[ for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);
@@ -340,8 +341,11 @@ namespace Models.CLEM.Activities
             foreach (RuminantGroup item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .FilterRuminants(item).FilterRuminants(item).FilterRuminants(item)
+                    .ToList();
+
                 int cnt = 0;
                 while (cnt < herd.Count() && animalEquivalentsForSale > 0)
                 {
@@ -402,7 +406,7 @@ namespace Models.CLEM.Activities
 
                         if(newIndividual.Weight == 0)
                         {
-                            throw new ApsimXException(this, "Specified individual added during restock cannot have no weight");
+                            throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
                         Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);

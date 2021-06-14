@@ -2,6 +2,7 @@
 using APSIM.Services.Documentation;
 using System.Collections.Generic;
 using Models.Core;
+using System.Linq;
 
 namespace Models.PMF
 {
@@ -25,12 +26,7 @@ namespace Models.PMF
             yield return new Heading(Name, headingLevel);
 
             // Write a sorted list of cultivar names.
-            List<string> cultivarNames = new List<string>();
-            foreach (Cultivar cultivar in this.FindAllChildren<Cultivar>())
-            {
-                cultivarNames.Add(cultivar.Name);
-                cultivarNames.AddRange(cultivar.Alias);
-            }
+            List<string> cultivarNames = FindAllChildren<Cultivar>().SelectMany(c => c.GetNames()).ToList();
             cultivarNames.Sort();
 
             string text = string.Join(", ", cultivarNames);

@@ -611,7 +611,7 @@ namespace Models.CLEM.Activities
             {
                 List<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
                 items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
-                items = items.Filter(current as Model);
+                items = items.Filter(current).ToList();
 
                 // search for people who can do whole task first
                 while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
@@ -850,12 +850,12 @@ namespace Models.CLEM.Activities
                     string resourcelist = "";
                     foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
                     {
-                        Summary.WriteWarning(this, String.Format("@error:Insufficient [r={0}] resource of type [r={1}] for activity [a={2}]", item.ResourceType, item.ResourceTypeName, this.Name));
-                        resourcelist += ((resourcelist.Length >0)?",":"")+item.ResourceType.Name;
+                        resourcelist += item.ResourceType.Name + ",";
                     }
+                    resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteWarning(this, String.Format("Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
+                        Summary.WriteError(this, String.Format("Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
                         Status = ActivityStatus.Critical;
                         throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
                     }

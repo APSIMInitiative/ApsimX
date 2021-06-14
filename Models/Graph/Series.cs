@@ -21,6 +21,7 @@
     [Serializable]
     public class Series : Model, IGraphable
     {
+        [NonSerialized]
         private List<SimulationDescription> simulationDescriptions;
 
         /// <summary>Constructor for a series</summary>

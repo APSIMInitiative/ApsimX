@@ -34,6 +34,7 @@
     <EmbeddedResource Include="../LICENSE.md" />
 	
     <!-- Shared project references -->
+    <ProjectReference Include="..\APSIM.Services\APSIM.Services.csproj" />
     <ProjectReference Include="..\APSIM.Shared\APSIM.Shared.csproj" />
     <ProjectReference Include="..\APSIM.Interop\APSIM.Interop.csproj" />
     <ProjectReference Include="..\Models\Models.csproj" />
@@ -140,12 +141,6 @@
     <PackageReference Include="System.ComponentModel" Version="4.3.0" />
     <GtkFiles Include="..\DeploymentSupport\Windows\Bin64\*.dll" />
     <WimpFiles Include="..\DeploymentSupport\Windows\Bin64\lib\**\*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\TreeViewImages\CLEM\SetRuminantAttributeWithValue.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
   </ItemGroup>
   
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

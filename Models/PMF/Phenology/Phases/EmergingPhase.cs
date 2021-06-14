@@ -126,6 +126,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
+            TTForTimeStep = 0;
             ProgressThroughPhase = 0;
             Target = 0;
             EmergenceDate = null;

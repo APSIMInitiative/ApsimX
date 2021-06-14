@@ -31,6 +31,7 @@ namespace Models.Functions
         [Link]
         Phenology Phenology = null;
 
+        [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             YesterdaysValue = 0;

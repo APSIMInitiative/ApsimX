@@ -506,6 +506,17 @@ namespace Models.PMF.Organs
             LAIDead = 0.0;
             LossFromExpansionStress = 0.0;
             culms.Initialize();
+            NitrogenPhotoStress = 0;
+            NitrogenPhenoStress = 0;
+
+            MicroClimatePresent = false;
+            _PotentialEP = 0;
+            LightProfile = null;
+
+            WaterDemand = 0;
+            WaterAllocation = 0;
+
+            SowingDensity = 0;
         }
         #endregion
 

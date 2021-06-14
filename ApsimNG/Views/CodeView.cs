@@ -27,6 +27,11 @@ namespace UserInterface.Views
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
+        /// The find-and-replace form
+        /// </summary>
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
+
+        /// <summary>
         /// Scrolled window
         /// </summary>
         private ScrolledWindow scroller;
@@ -35,6 +40,16 @@ namespace UserInterface.Views
         /// The main text editor
         /// </summary>
         private SourceView textEditor;
+
+        /// <summary>
+        /// Settings for search and replace
+        /// </summary>
+        private SearchSettings searchSettings;
+
+        /// <summary>
+        /// Context for search and replace
+        /// </summary>
+        private SearchContext searchContext;
 
         /// <summary>
         /// Menu accelerator group
@@ -84,7 +99,11 @@ namespace UserInterface.Views
             set
             {
                 if (value != null)
+                {
+                    textEditor.Buffer.BeginNotUndoableAction();
                     textEditor.Buffer.Text = value;
+                    textEditor.Buffer.EndNotUndoableAction();
+                }
                 //if (Mode == EditorType.ManagerScript)
                 //{
                 //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
@@ -285,6 +304,8 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
             textEditor = new SourceView();
+            searchSettings = new SearchSettings();
+            searchContext = new SearchContext(textEditor.Buffer, searchSettings);
             scroller.Add(textEditor);
             InitialiseWidget();
         }
@@ -337,11 +358,37 @@ namespace UserInterface.Views
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
 
-            // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
-            // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
+            AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
             AddMenuItem("Change Style", OnChangeStyle);
 
+            textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
+        }
+
+        /// <summary>
+        /// Context menu items aren't actually added to the context menu until the
+        /// user requests the context menu (ie via right clicking). Keyboard shortcuts
+        /// (accelerators) won't work until this occurs. Therefore, we now manually
+        /// fire off a populate-popup signal to cause the context menu to be populated.
+        /// (This doesn't actually cause the context menu to be displayed.)
+        ///
+        /// We wait until the widget is realized so that the owner of the view has a
+        /// chance to add context menu items.
+        /// </summary>
+        /// <param name="sender">Sender object (the SourceView widget).</param>
+        /// <param name="args">Event data.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            try
+            {
+                textEditor.Realized -= OnRealized;
+                GLib.Signal.Emit(textEditor, "populate-popup", new Menu());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -462,6 +509,15 @@ namespace UserInterface.Views
         {
             try
             {
+                if (args.Event.Key == Gdk.Key.F3)
+                {
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, searchContext, false);
+                    else
+                        findForm.FindNext(true, (args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    args.RetVal = true;
+                    return;
+                }
                 char previousChar = 'x';
                 if (textEditor.Buffer.CursorPosition > 0)
                 {
@@ -874,7 +930,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, false);
+                findForm.ShowFor(textEditor, searchContext, false);
             }
             catch (Exception err)
             {
@@ -891,7 +947,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, true);
+                findForm.ShowFor(textEditor, searchContext, true);
             }
             catch (Exception err)
             {

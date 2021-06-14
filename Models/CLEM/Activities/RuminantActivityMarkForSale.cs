@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
+    [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
     public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
@@ -80,7 +81,7 @@ namespace Models.CLEM.Activities
                 number = 0;
                 foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                 {
-                    number += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                    number += herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
                 }
             }
             else
@@ -98,17 +99,16 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            //double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-            double daysNeeded = 0;
-            double numberUnits = 0;
             labourRequirement = requirement;
+            //double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = numberToTag / requirement.UnitSize;
+                    double numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
                         numberUnits = Math.Ceiling(numberUnits);
@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
         {
             if (this.TimingOK)
             {
-                // recluculate numbers and ensure it is not less than number calculated
+                // recalculate numbers and ensure it is not less than number calculated
                 int updatedNumberToTag = NumberToTag(); 
                 if (updatedNumberToTag < numberToTag)
                 {
@@ -163,7 +163,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        foreach (Ruminant ind in herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
                             ind.SaleFlag = changeReason;

@@ -57,6 +57,11 @@
         public LegendOrientation LegendOrientation { get; set; }
 
         /// <summary>
+        /// Gets or sets the location of the annotations - name/position map.
+        /// </summary>
+        public AnnotationPosition AnnotationLocation { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of raw grpah series that should be disabled.
         /// </summary>
         public List<string> DisabledSeries { get; set; }

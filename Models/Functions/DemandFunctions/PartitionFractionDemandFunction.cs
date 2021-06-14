@@ -40,9 +40,8 @@ namespace Models.Functions.DemandFunctions
         public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"*{Name} = PartitionFraction � [Arbitrator].DM.TotalFixationSupply*", indent);
+            yield return new Paragraph($"*{Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*", indent);
             yield return new Paragraph("Where:", indent);
         }
     }
 }
-

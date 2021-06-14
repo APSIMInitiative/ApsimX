@@ -42,6 +42,8 @@ namespace Models.Functions
         /// <param name="headingLevel">Heading level.</param>
         public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
+            yield return new Heading(Name, indent, headingLevel);
+
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>();
             foreach (IFunction child in ChildFunctions)
