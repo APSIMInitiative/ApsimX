@@ -90,6 +90,17 @@ namespace Models
         /// </summary>
         /// <param name="sender">Sender object..</param>
         /// <param name="args">Event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        private void OnFinalInitialise(object sender, EventArgs args)
+        {
+            DayAfterLastOutput = clock.Today;
+        }
+
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
