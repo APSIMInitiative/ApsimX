@@ -47,60 +47,42 @@ namespace UnitTests.Core
             }
         }
 
+        private object testMutex = new object();
+
         [Test]
         public void EnsureVariablesAreZeroed()
         {
-            /*
-            object mutex = new object();
-            // 1. Create simulation.
-            Parallel.ForEach<Simulation>(GetSimsToTest(), sim =>
-            {
-                Logger logger = new Logger();
-                logger.Parent = sim;
-                sim.Children.Add(logger);
-                sim.Prepare();
-
-                // 2. Run simulation.
-                sim.Run();
-
-                // 3. Compare simulation state now vs before running
-                string pre = logger.Json;
-
-                // Run a second time.
-                logger.ExitAfterLogging = true;
-                sim.Run();
-
-                string post = logger.Json;
-                lock (mutex)
-                    Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
-            });
-            */
+            // Parallel.ForEach<Simulation>(GetSimsToTest(), TestSimulation);
             foreach (Simulation sim in GetSimsToTest())
-            {
-                Logger logger = new Logger();
-                logger.Parent = sim;
-                sim.Children.Add(logger);
-                sim.Prepare();
+                TestSimulation(sim);
+        }
 
-                // 2. Run simulation.
-                sim.Run();
+        private void TestSimulation(Simulation sim)
+        {
+            Logger logger = new Logger();
+            logger.Parent = sim;
+            sim.Children.Add(logger);
+            sim.Prepare();
 
-                // 3. Compare simulation state now vs before running
-                string pre = logger.Json;
+            // 2. Run simulation.
+            sim.Run();
 
-                // Run a second time.
-                logger.ExitAfterLogging = true;
-                sim.Run();
+            // 3. Compare simulation state now vs before running
+            string pre = logger.Json;
 
-                string post = logger.Json;
+            // Run a second time.
+            logger.ExitAfterLogging = true;
+            sim.Run();
 
-                // Easiest way to debug this test is to uncomment these two lines
-                // and open the two json files in a diff tool.
-                // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
-                // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
+            string post = logger.Json;
 
+            // Easiest way to debug this test is to uncomment these two lines
+            // and open the two json files in a diff tool.
+            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
+            // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
+
+            lock (testMutex)
                 Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
-            }
         }
 
         private IEnumerable<Simulation> GetSimsToTest()
@@ -135,9 +117,7 @@ namespace UnitTests.Core
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path, out List<Exception> errors);
             SoilStandardiser.Standardise(sims.FindDescendant<Soil>());
             DataStore storage = sims.FindDescendant<DataStore>();
-            storage.Close();
-            storage.FileName = ":memory:";
-            storage.Open();
+            storage.UseInMemoryDB = true;
             Clock clock = sims.FindDescendant<Clock>();
             clock.EndDate = clock.StartDate.AddYears(1);
             return sims.FindDescendant<Simulation>();
