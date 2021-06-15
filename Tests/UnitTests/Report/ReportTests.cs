@@ -206,14 +206,14 @@
             report.VariableNames = new string[]
             {
                 "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
-                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy2",
             };
 
             // Run the simulation.
             runner.Run();
 
-            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
-            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+            Assert.AreEqual(new double[] { 496 }, storage.Get<double>("totalDoy1"));
+            Assert.AreEqual(new double[] { 70 }, storage.Get<double>("totalDoy2"));
         }
 
         /// <summary>This test ensures an expression with spaces works.</summary>
