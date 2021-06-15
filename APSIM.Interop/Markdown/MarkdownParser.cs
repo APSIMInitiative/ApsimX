@@ -128,9 +128,17 @@ namespace APSIM.Interop.Markdown
                 {
                     yield return new TextTag(br.IsHard ? Environment.NewLine : " ", style);
                 }
+                else if (inline is HtmlEntityInline entity)
+                {
+                    yield return new TextTag(entity.Transcoded.Text, style);
+                }
+                else if (inline is HtmlInline html)
+                {
+                    
+                }
                 else
                 {
-                    throw new NotImplementedException();
+                    throw new NotImplementedException($"Unimplemented markdown inline type: {inline.GetType()}");
                 }
             }
         }
@@ -153,7 +161,7 @@ namespace APSIM.Interop.Markdown
             }
             else
             {
-                string imagePath = $"APSIM.Interop.Resources.{uri}";
+                string imagePath = $"APSIM.Interop.Resources.Images.{uri}";
                 using (Stream stream = this.GetType().Assembly.GetManifestResourceStream(imagePath))
                 {
                     if (stream == null)

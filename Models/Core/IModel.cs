@@ -302,6 +302,9 @@ namespace Models.Core
         /// <summary>
         /// Document the model.
         /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
         IEnumerable<ITag> Document();
 
         /// <summary>

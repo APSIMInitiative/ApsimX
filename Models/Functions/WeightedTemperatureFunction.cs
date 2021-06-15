@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using Models.Core;
 using Models.Interfaces;
+using APSIM.Shared.Utilities;
+using System.Linq;
 
 namespace Models.Functions
 {
@@ -47,14 +49,24 @@ namespace Models.Functions
         public override IEnumerable<ITag> Document(int indent, int headingLevel)
         {
             yield return new Heading(Name, indent, headingLevel);
-            if (XYPairs != null)
-            {
-                yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*", indent);
-                yield return new Paragraph($"*aximumTemperatureWeighting = {MaximumTemperatureWeighting}*", indent);
-                // tbi
-                throw new NotImplementedException();
-                // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
-            }
+            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*", indent);
+            yield return new Paragraph($"*aximumTemperatureWeighting = {MaximumTemperatureWeighting}*", indent);
+            // fixme - the graph and table should be next to each other.
+            yield return XYPairs.ToTable(indent);
+            yield return CreateGraph(indent);
+            // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
+        }
+
+        private APSIM.Services.Documentation.Graph CreateGraph(int indent = 0)
+        {
+            // fixme - this is basically identical to what we've got in the linear interp code.
+            var series = new APSIM.Services.Graphing.Series[1];
+            series[0] = new APSIM.Services.Graphing.Series("Weighted temperature value", ColourUtilities.ChooseColour(4), false, XYPairs.X, XYPairs.Y);
+            var axes = new APSIM.Services.Graphing.Axis[2];
+            axes[0] = new APSIM.Services.Graphing.Axis("Average Temperature (°C)", APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
+            axes[1] = new APSIM.Services.Graphing.Axis(Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
+            var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft);
+            return new APSIM.Services.Documentation.Graph(series, axes, legend, indent);
         }
     }
 }

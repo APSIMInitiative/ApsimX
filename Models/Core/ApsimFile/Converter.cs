@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 134; } }
+        public static int LatestVersion { get { return 135; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3489,6 +3489,35 @@
                 JToken property = microClimate[propertyName];
                 if (property == null || property.Value<double>() <= 0)
                         microClimate[propertyName] = 2;
+            }
+        }
+
+        /// <summary>
+        /// Rename Models.Axis to APSIM.Services.Graphing.Axis.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion135(JObject root, string fileName)
+        {
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                foreach (JObject axis in graph["Axis"])
+                {
+                    // Class moved into APSIM.Services.Graphing namespace.
+                    axis["$type"] = "APSIM.Services.Graphing.Axis, APSIM.Services";
+
+                    // Type property renamed to Position.
+                    JsonUtilities.RenameProperty(axis, "Type", "Position");
+
+                    // Min/Max/Interval properties are now nullable doubles.
+                    // null is used to indicate no value, rather than NaN.
+                    if (axis["Minimum"].Value<string>() == "NaN")
+                        axis["Minimum"] = null;
+                    if (axis["Maximum"].Value<string>() == "NaN")
+                        axis["Maximum"] = null;
+                    if (axis["Interval"].Value<string>() == "NaN")
+                        axis["Interval"] = null;
+                }
             }
         }
 

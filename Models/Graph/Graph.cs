@@ -9,6 +9,7 @@
     using System.Linq;
     using Newtonsoft.Json;
     using APSIM.Services.Graphing;
+    using APSIM.Services.Documentation;
 
     /// <summary>
     /// Represents a graph
@@ -24,7 +25,7 @@
     [ValidParent(ParentType = typeof(Sobol))]
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(GraphPanel))]
-    public class Graph : Model, AutoDocumentation.ITag
+    public class Graph : Model
     {
         /// <summary>The data tables on the graph.</summary>
         [NonSerialized]
@@ -91,18 +92,6 @@
             return FindAllChildren<IGraphable>()
                         .Where(g => g.Enabled)
                         .SelectMany(g => g.GetAnnotations());
-        }
-
-        /// <summary>
-        /// Writes documentation for this function by adding to the list of documentation tags.
-        /// </summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-                tags.Add(this);
         }
 
         /// <summary>
@@ -351,5 +340,10 @@
             LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition);
             return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend, indent);
         }
+
+        // public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        // {
+        //     yield return ToGraph();
+        // }
     }
 }

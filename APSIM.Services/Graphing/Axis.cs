@@ -11,42 +11,47 @@ namespace APSIM.Services.Graphing
         /// <summary>
         /// Title of the axis.
         /// </summary>
-        public string Title { get; private set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// Axis location (left, top, right, or bottom).
         /// </summary>
-        public AxisPosition Position { get; private set; }
+        public AxisPosition Position { get; set; }
 
         /// <summary>
         /// Is the axis scale inverted?
         /// </summary>
-        public bool Inverted { get; private set; }
+        public bool Inverted { get; set; }
 
         /// <summary>
         /// Does this axis cross the other axis at the zero point?
         /// </summary>
-        public bool CrossesAtZero { get; private set; }
+        public bool CrossesAtZero { get; set; }
 
         /// <summary>
         /// Axis minimum (optional). Will be automatically calculated if null.
         /// </summary>
-        public double? Minimum { get; private set; }
+        public double? Minimum { get; set; }
 
         /// <summary>
         /// Axis maximum (optional). Will be automatically calculated if null.
         /// </summary>
-        public double? Maximum { get; private set; }
+        public double? Maximum { get; set; }
 
         /// <summary>
         /// Axis tick interval (optional). Will be automatically calculated if null.
         /// </summary>
-        public double? Interval { get; private set; }
+        public double? Interval { get; set; }
 
         /// <summary>
         /// tbi
         /// </summary>
         public bool DateTimeAxis { get; set; }
+
+        /// <summary>
+        /// Default constructor provided for json deserialization.
+        /// </summary>
+        public Axis() { }
 
         /// <summary>
         /// Create an axis instance.

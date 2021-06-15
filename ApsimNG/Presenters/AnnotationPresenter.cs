@@ -51,6 +51,5 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
     }
 }

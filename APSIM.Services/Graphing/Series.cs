@@ -45,6 +45,18 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        public Series(string title, Color colour, bool showLegend, IEnumerable<double> x, IEnumerable<double> y) : this(title, colour, showLegend, x.Cast<object>(), y.Cast<object>())
+        {
+        }
+
+        /// <summary>
+        /// Initialise a series instance.
+        /// </summary>
+        /// <param name="title">Name of the series.</param>
+        /// <param name="colour">Colour of the series.</param>
+        /// <param name="showLegend">Should this series appear in the legend?</param>
+        /// <param name="x">X-axis data.</param>
+        /// <param name="y">Y-axis data.</param>
         public Series(string title, Color colour, bool showLegend, IEnumerable<object> x, IEnumerable<object> y)
         {
             if (x == null)

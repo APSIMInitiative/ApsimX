@@ -235,10 +235,12 @@
 
                     MemoryStream ms = new MemoryStream();
                     MemoryStream pdbStream = new MemoryStream();
+                    using (MemoryStream xmlDocumentationStream = new MemoryStream())
                     {
                         EmitResult emitResult = compiled.Emit(
                             peStream: ms,
                             pdbStream: withDebug ? pdbStream : null,
+                            xmlDocumentationStream: xmlDocumentationStream,
                             embeddedTexts: embeddedTexts
                             );
                         if (!emitResult.Success)
@@ -269,6 +271,12 @@
                             string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
                             using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                                 ms.WriteTo(file);
+
+                            // Write XML Documentation file.
+                            string documentationFile = Path.ChangeExtension(fileName, ".xml");
+                            xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
+                            using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
+                                xmlDocumentationStream.WriteTo(documentationWriter);
 
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);

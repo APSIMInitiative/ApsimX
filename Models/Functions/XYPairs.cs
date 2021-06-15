@@ -4,6 +4,7 @@ using System.Text;
 using Models.Core;
 using System.Xml;
 using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Models.Functions
 {
@@ -41,6 +42,27 @@ namespace Models.Functions
         {
             bool DidInterpolate = false;
             return MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
+        }
+
+        /// <summary>
+        /// Create a table which can be passed into autodocs.
+        /// </summary>
+        /// <param name="indent"></param>
+        public APSIM.Services.Documentation.Table ToTable(int indent = 0)
+        {
+            DataTable table = new DataTable(Name);
+            // Using the string datatype gives us control over how the numbers
+            // are rendered, and allows for empty cells.
+            table.Columns.Add("X", typeof(string));
+            table.Columns.Add("Y", typeof(string));
+            for (int i = 0; i < Math.Max(X.Length, Y.Length); i++)
+            {
+                DataRow row = table.NewRow();
+                row[0] = i < X.Length - 1 ? X[i].ToString("F1") : "";
+                row[0] = i < Y.Length - 1 ? Y[i].ToString("F1") : "";
+                table.Rows.Add(row);
+            }
+            return new APSIM.Services.Documentation.Table(table, indent);
         }
     }
 }

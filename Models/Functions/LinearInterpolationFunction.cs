@@ -1,14 +1,14 @@
-﻿using Models.Core;
+﻿using APSIM.Services.Documentation;
+using Models.Core;
 using System;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentType Memo]
-    /// <i>[Name]</i> is calculated using linear interpolation.
-    /// [DocumentChart XYPairs, ,[XVariableName],[Name]]
-    /// [DontDocument XValue]
+    /// A linear interpolation model.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -107,6 +107,31 @@ namespace Models.Functions
         public double ValueForX(double XValue)
         {
             return XYPairs.ValueIndexed(XValue);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="indent">Indentation level.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        {
+            // fixme - the graph and table should be next to each other.
+            yield return new Paragraph($"*{Name}* is calculated using linear interpolation", indent);
+            yield return XYPairs.ToTable(indent);
+            yield return CreateGraph(indent);
+        }
+
+        private APSIM.Services.Documentation.Graph CreateGraph(int indent = 0)
+        {
+            var series = new APSIM.Services.Graphing.Series[1];
+            // fixme: colour
+            series[0] = new APSIM.Services.Graphing.Series(Name, ColourUtilities.ChooseColour(4), false, XYPairs.X, XYPairs.Y);
+            var axes = new APSIM.Services.Graphing.Axis[2];
+            axes[0] = new APSIM.Services.Graphing.Axis(XVariableName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
+            axes[1] = new APSIM.Services.Graphing.Axis(Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
+            var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft);
+            return new APSIM.Services.Documentation.Graph(series, axes, legend);
         }
     }
 }
