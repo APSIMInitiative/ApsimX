@@ -1324,9 +1324,6 @@ namespace Models.PMF.Organs
             DeadNodesYesterday = 0;
             CohortParameters.ExpansionStressValue = 0;
             CohortParameters.CellDivisionStressValue = 0;
-            Gsmax350 = 0;
-            FRGR = 0;
-            FractionDied = 0;
             CohortParameters.LagAccelerationValue = 0;
             CohortParameters.SenescenceAccelerationValue = 0;
             FRGR = 0;
