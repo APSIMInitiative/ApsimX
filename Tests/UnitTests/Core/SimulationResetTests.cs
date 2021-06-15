@@ -96,8 +96,8 @@ namespace UnitTests.Core
 
                 // Easiest way to debug this test is to uncomment these two lines
                 // and open the two json files in a diff tool.
-                File.WriteAllText("/home/drew/code/ApsimX/pre.json", pre);
-                File.WriteAllText("/home/drew/code/ApsimX/post.json", post);
+                // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
+                // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
                 Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
             }
