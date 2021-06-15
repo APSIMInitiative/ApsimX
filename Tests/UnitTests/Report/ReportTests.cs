@@ -400,8 +400,8 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
-
+            events.Publish("SubscribeToEvents", new object[] { report, new EventArgs() });
+            Assert.AreEqual(1, storage.tables.Count);
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
 
 
