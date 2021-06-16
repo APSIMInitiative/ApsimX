@@ -1133,6 +1133,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="idx">The index.</param>
         /// <returns>The SupplementItem</returns>
+        [JsonIgnore]
         public SupplementItem this[int idx]
         {
             get
