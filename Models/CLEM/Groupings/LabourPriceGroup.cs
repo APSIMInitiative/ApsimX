@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel, IFilterGroup
+    public class LabourPriceGroup : FilterGroup
     {
         /// <summary>
         /// Pay rate
@@ -29,18 +29,6 @@ namespace Models.CLEM.Groupings
         [Description("Daily pay rate")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor

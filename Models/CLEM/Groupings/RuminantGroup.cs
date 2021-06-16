@@ -29,14 +29,8 @@ namespace Models.CLEM.Groupings
     [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantGroup : CLEMModel, IFilterGroup
+    public class RuminantGroup : FilterGroup
     {
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
         /// <summary>
         /// The reason for this filter group
         /// </summary>
@@ -44,14 +38,6 @@ namespace Models.CLEM.Groupings
         [Description("Reason")]
         [Required]
         public RuminantStockGroupStyle Reason { get; set; }
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        [Description("Proportion of group to use")]
-        [Required, GreaterThanValue(0), Proportion]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults

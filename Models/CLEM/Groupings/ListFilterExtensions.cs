@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, IModel model)
         {
             var rules = model.FindAllChildren<Filter>().Select(f => f.CompileRule<T>());
-            var combined = (model as IFilterGroup)?.CombinedRules ?? rules;
+            var combined = (model as FilterGroup)?.CombinedRules ?? rules;
 
             if (combined is List<Func<T, bool>> predicates && predicates.Any())
                 return GetItemsThatMatchAll(source, predicates);
@@ -32,7 +32,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Filter a collection of ruminants by the parameters defined in the filter group
         /// </summary>
-        public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, IFilterGroup group)
+        public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, FilterGroup group)
         {
             var filters = group.FindAllChildren<Filter>();
             

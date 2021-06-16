@@ -24,22 +24,8 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
-    public class RuminantActivityGroup : CLEMModel, IFilterGroup
+    public class RuminantActivityGroup : FilterGroup
     {
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        [Description("Proportion of group to use")]
-        [Required, GreaterThanValue(0), Proportion]
-        public double Proportion { get; set; }
-
         #region descriptive summary
 
         /// <summary>

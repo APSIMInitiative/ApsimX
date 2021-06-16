@@ -179,7 +179,7 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(IFilterGroup))]
+    [ValidParent(ParentType = typeof(FilterGroup))]
     [Description("An individual filter for a filter group. Multiple filters are additive.")]
     [Version(1, 0, 1, "")]
     public class Filter : CLEMModel

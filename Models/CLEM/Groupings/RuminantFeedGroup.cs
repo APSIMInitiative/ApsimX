@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFeedGroup.htm")]
-    public class RuminantFeedGroup: CLEMModel, IFilterGroup
+    public class RuminantFeedGroup: FilterGroup
     {
         /// <summary>
         /// Value to supply for each month
@@ -30,18 +30,6 @@ namespace Models.CLEM.Groupings
         [Description("Value to supply")]
         [GreaterThanValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor

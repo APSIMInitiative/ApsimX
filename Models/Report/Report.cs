@@ -169,7 +169,7 @@ namespace Models
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
-            for (int i = 0; i < this.VariableNames.Length; i++)
+            for (int i = 0; i < this.VariableNames?.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
                 if (!isDuplicate && this.VariableNames[i] != string.Empty)

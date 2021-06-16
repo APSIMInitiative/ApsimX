@@ -25,20 +25,8 @@ namespace Models.CLEM.Groupings
     [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
-    public class RuminantDestockGroup : CLEMModel, IFilterGroup, IValidatableObject
+    public class RuminantDestockGroup : FilterGroup, IValidatableObject
     {
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>

@@ -2,11 +2,8 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -22,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability item with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
-    public class LabourAvailabilityItemMonthly : LabourSpecificationItem, IFilterGroup
+    public class LabourAvailabilityItemMonthly : FilterGroup, ILabourSpecificationItem
     {
         /// <summary>
         /// Monthly values. 
@@ -33,23 +30,11 @@ namespace Models.CLEM.Resources
         public double[] MonthlyValues { get; set; }
 
         /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
-
-        /// <summary>
         /// Provide the monthly labour availability
         /// </summary>
         /// <param name="month">Month for labour</param>
         /// <returns></returns>
-        public override double GetAvailability(int month)
+        public double GetAvailability(int month)
         {
             if(month<=12 && month>0 && month<=MonthlyValues.Count())
             {

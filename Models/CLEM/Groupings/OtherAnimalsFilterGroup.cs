@@ -1,10 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -19,22 +15,10 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
     [Version(1, 0, 1, "")]
-    public class OtherAnimalsFilterGroup: CLEMModel, IFilterGroup
+    public class OtherAnimalsFilterGroup : FilterGroup
     {
         [Link]
         private ResourcesHolder Resources = null;
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Daily amount to supply selected individuals each month
