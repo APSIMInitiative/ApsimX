@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 134; } }
+        public static int LatestVersion { get { return 135; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3477,11 +3477,27 @@
         }
 
         /// <summary>
-        /// Replace XmlIgnore attributes with JsonIgnore attributes in manager scripts.
+        /// Set MicroClimate's reference height to 2 if it's 0.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion134(JObject root, string fileName)
+        {
+            const string propertyName = "ReferenceHeight";
+            foreach (JObject microClimate in JsonUtilities.ChildrenRecursively(root, "MicroClimate"))
+            {
+                JToken property = microClimate[propertyName];
+                if (property == null || property.Value<double>() <= 0)
+                        microClimate[propertyName] = 2;
+            }
+        }
+
+        /// <summary>
+        /// Replace XmlIgnore attributes with JsonIgnore attributes in manager scripts.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion135(JObject root, string fileName)
         {
             foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
             {

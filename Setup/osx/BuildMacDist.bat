@@ -7,7 +7,7 @@ if "%apsimx%"=="" (
 )
 
 rem Delete all files from Windows' DeploymentSupport directory from bin
-for /r %apsimx%\DeploymentSupport %%D in (*.dll) do (
+for /r %apsimx%\DeploymentSupport\Windows %%D in (*.dll) do (
 	if exist %apsimx%\bin\Release\net472\%%~nD%%~xD (
 		echo Deleting %apsimx%\bin\Release\net472\%%~nD%%~xD...
 		del %apsimx%\bin\Release\net472\%%~nD%%~xD
