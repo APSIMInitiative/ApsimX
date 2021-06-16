@@ -117,7 +117,7 @@ namespace Models.CLEM.Groupings
             if (formatForParentControl)
             {
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
+                if (!(this.FindAllChildren<Filter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }
@@ -125,7 +125,7 @@ namespace Models.CLEM.Groupings
             else
             {
                 html += "\r\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
+                if (!(this.FindAllChildren<Filter>().Count() >= 1))
                 {
                     html += "<div class=\"filter\">All individuals</div>";
                 }

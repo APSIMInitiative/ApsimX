@@ -82,7 +82,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.FindAllChildren<RuminantFilter>().Count() >= 1)
+            if (this.FindAllChildren<Filter>().Count() >= 1)
             {
                 html += "\r\n</div>";
             }
@@ -97,7 +97,7 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\r\n<div class=\"filterborder clearfix\">";
-            if (FindAllChildren<RuminantFilter>().Count() < 1)
+            if (FindAllChildren<Filter>().Count() < 1)
             {
                 html += "<div class=\"filter\">All individuals</div>";
             }

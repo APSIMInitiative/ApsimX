@@ -206,7 +206,7 @@ namespace Models.CLEM.Groupings
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                if (!(this.FindAllChildren<Filter>().Count() >= 1))
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                 }

@@ -148,9 +148,9 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var filtergroup in this.HerdFilters)
                     {
-                        foreach (var filter in filtergroup.Children.Cast<RuminantFilter>())
+                        foreach (var filter in filtergroup.Children.Cast<Filter>())
                         {
-                            if (filter.Parameter == RuminantFilterParameters.Breed)
+                            if (filter.Parameter is RuminantFilterParameters.Breed)
                             {
                                 if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value && !allowMultipleBreeds)
                                 {
@@ -159,7 +159,7 @@ namespace Models.CLEM.Activities
                                 }
                                 PredictedHerdBreed = filter.Value;
                             }
-                            if (filter.Parameter == RuminantFilterParameters.HerdName)
+                            if (filter.Parameter is RuminantFilterParameters.HerdName)
                             {
                                 if (PredictedHerdName != "N/A" && !allowMultipleHerds)
                                 {

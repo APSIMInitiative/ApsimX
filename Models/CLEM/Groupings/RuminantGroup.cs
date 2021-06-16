@@ -132,7 +132,7 @@ namespace Models.CLEM.Groupings
                     }
                     htmlWriter.Write("</div>");
                 }
-                if (FindAllChildren<RuminantFilter>().Count() < 1)
+                if (FindAllChildren<Filter>().Count() < 1)
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                 }

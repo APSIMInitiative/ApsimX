@@ -16,23 +16,12 @@ namespace Models.CLEM.Groupings
     public static class ListFilterExtensions
     {
         /// <summary>
-        /// Converts a filter expression to a rule
-        /// </summary>
-        /// <param name="filter">The filter to be converted</param>
-        private static Rule ToRule(this IFilter filter)
-        {
-            ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-            // create rule list
-            return new Rule(filter.ParameterName, op, filter.Value);
-        }
-
-        /// <summary>
         /// Filter the source using any valid models in the given model
         /// </summary>
         public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, IModel model)
         {
-            var rules = model.FindAllChildren<IFilter>().Select(ToRule);
-            var combined = (model as IFilterGroup)?.CombinedRules ?? CompileRule<T>(rules);
+            var rules = model.FindAllChildren<Filter>().Select(f => f.CompileRule<T>());
+            var combined = (model as IFilterGroup)?.CombinedRules ?? rules;
 
             if (combined is List<Func<T, bool>> predicates && predicates.Any())
                 return GetItemsThatMatchAll(source, predicates);
@@ -45,10 +34,32 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, IFilterGroup group)
         {
-            var filters = group.FindAllChildren<RuminantFilter>();
+            var filters = group.FindAllChildren<Filter>();
             
-            string TestGender(RuminantFilter filter, string gender)
+            string TestGender(string parameter, string gender)
             {
+                string filter;
+                switch (parameter)
+                {
+                    case "IsDraught":
+                    case "IsSire":
+                    case "IsCastrate":
+                        filter = "Male";
+                        break;
+
+                    case "IsBreeder":
+                    case "IsPregnant":
+                    case "IsLactating":
+                    case "IsPreBreeder":
+                    case "MonthsSinceLastBirth":
+                        filter = "Female";
+                        break;
+
+                    default:
+                        filter = "Either";
+                        break;
+                }
+
                 /* CONDITIONAL LOGIC IS ORDER DEPENDENT, DO NOT REARRANGE */
 
                 // Gender is already determined
@@ -57,14 +68,14 @@ namespace Models.CLEM.Groupings
 
                 // If gender is undetermined, use the filter gender
                 if (gender == "Either")
-                    return filter.Gender;
+                    return filter;
 
                 // No need to change gender if parameter is genderless
-                if (filter.Gender == "Either")
+                if (filter == "Either")
                     return gender;
 
                 // If the genders do not match, return both
-                if (filter.Gender != gender)
+                if (filter != gender)
                     return "Both";
                 // If the genders match, return the current gender
                 else
@@ -72,10 +83,9 @@ namespace Models.CLEM.Groupings
             }
 
             // Which gender do the parameters belong to
-            string genders = filters.Aggregate("Either", (s, f) => TestGender(f, s));
-            
-            // TODO: MS. This is wrong I believe, but removing it leads to errors as the properties cannot be found in RuminantFemale when looking in Ruminant.
-            group.CombinedRules = filters.Select(f => f.ToRule());
+            string genders = filters.Aggregate("Either", (s, f) => TestGender(f.ParameterName, s));
+            var rules = filters.Select(f => f.CompileRule<Ruminant>());
+            group.CombinedRules = rules;
 
             // There will be no ruminants with parameters belonging to both genders
             IEnumerable<Ruminant> result = new List<Ruminant>();
@@ -118,19 +128,7 @@ namespace Models.CLEM.Groupings
             return sorted;
         }
 
-        private class Rule
-        {
-            public string ComparisonPredicate { get; set; }
-            public System.Linq.Expressions.ExpressionType ComparisonOperator { get; set; }
-            public string ComparisonValue { get; set; }
-
-            public Rule(string comparisonPredicate, System.Linq.Expressions.ExpressionType comparisonOperator, string comparisonValue)
-            {
-                ComparisonPredicate = comparisonPredicate;
-                ComparisonOperator = comparisonOperator;
-                ComparisonValue = comparisonValue;
-            }
-        }
+        
 
         private static IEnumerable<T> GetItemsThatMatchAny<T>(this IEnumerable<T> source, IEnumerable<Func<T, bool>> predicates)
         {
@@ -142,33 +140,5 @@ namespace Models.CLEM.Groupings
             
             return source?.Where(t => predicates.All(predicate => predicate(t)));
         }
-
-        private static List<Func<T, bool>> CompileRule<T>(IEnumerable<Rule> rules)
-        {
-            // Credit for this function goes to Cole Francis, Architect
-            // The pre-compiled rules type
-            // https://mobiusstraits.com/2015/08/12/expression-trees/
-
-            // Loop through the rules and compile them against the properties of the supplied shallow object
-            var compiledRules = rules.Select(rule =>
-            {
-                var genericType = Expression.Parameter(typeof(T));
-                var key = Expression.Property(genericType, rule.ComparisonPredicate);
-                var propertyType = typeof(T).GetProperty(rule.ComparisonPredicate).PropertyType;
-
-                object ce = propertyType.BaseType.Name == "Enum"                
-                    ? Enum.Parse(propertyType, rule.ComparisonValue, true)         
-                    : Convert.ChangeType(rule.ComparisonValue, propertyType);
-                
-                var value = Expression.Constant(ce);
-                var binaryExpression = Expression.MakeBinary(rule.ComparisonOperator, key, value);
-
-                return Expression.Lambda<Func<T, bool>>(binaryExpression, genericType).Compile();
-            });
-
-            // Return the compiled rules to the caller
-            return compiledRules.ToList();
-        }
-
     }
 }

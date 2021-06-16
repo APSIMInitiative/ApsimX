@@ -58,8 +58,8 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
 
             breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
+            breederGroup.Children.Add(new Filter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
+            breederGroup.Children.Add(new Filter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
             // TODO: add sort by condition
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();

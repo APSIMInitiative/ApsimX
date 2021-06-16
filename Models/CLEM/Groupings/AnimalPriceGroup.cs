@@ -234,7 +234,7 @@ namespace Models.CLEM.Groupings
                 if (formatForParentControl)
                 {
                     htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -242,7 +242,7 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }

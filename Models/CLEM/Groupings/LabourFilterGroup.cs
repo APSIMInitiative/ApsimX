@@ -91,7 +91,7 @@ namespace Models.CLEM.Groupings
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
             }
             html += "\r\n<div class=\"filterborder clearfix\">";
-            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
+            if (!(this.FindAllChildren<Filter>().Count() >= 1))
             {
                 html += "<div class=\"filter\">Any labour</div>";
             }
