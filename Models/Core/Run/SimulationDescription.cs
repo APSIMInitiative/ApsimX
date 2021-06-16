@@ -1,7 +1,6 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
-    using Models.Soils.Standardiser;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -154,11 +153,6 @@
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
-
-                // Standardise the soil.
-                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
-                foreach (Soils.Soil soil in soils)
-                    SoilStandardiser.Standardise(soil);
 
                 newSimulation.ClearCaches();
                 return newSimulation;
