@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -55,15 +56,6 @@
             return storage.Reader.ColumnNames(series.TableName).ToArray();
         }
 
-        /// <summary>
-        /// Gets a list of names of simulations in scope.
-        /// </summary>
-        /// <returns></returns>
-        public string[] GetValidSimNames()
-        {
-            return FindAncestor<Series>()?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
-        }
-
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
         /// <param name="seriesDefinition">The calling series definition.</param>
@@ -78,13 +70,16 @@
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
+        /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage,
+                                                                  List<SimulationDescription> simDescriptions, 
+                                                                  List<string> simulationFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
             if (seriesAncestor == null)
                 throw new Exception("EventNamesOnGraph model must be a descendant of a series");
-            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationFilter);
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simDescriptions, simulationFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
         }

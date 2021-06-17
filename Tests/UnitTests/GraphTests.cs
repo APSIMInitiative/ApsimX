@@ -72,7 +72,7 @@ namespace UnitTests
                 throw errors[0];
 
             var faultySeries = sim.Children[3].Children[0] as Series;
-            List<SeriesDefinition> definitions = faultySeries.GetSeriesDefinitions(storage.Reader).ToList();
+            List<SeriesDefinition> definitions = faultySeries.GetSeriesDefinitions(storage.Reader, null).ToList();
             if (definitions == null || definitions.Count < 1)
                 throw new Exception("Unable to graph data from a report which exists directly under a simulation.");
         }

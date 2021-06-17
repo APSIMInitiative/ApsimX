@@ -7,6 +7,7 @@
     using System.Drawing;
     using Newtonsoft.Json;
     using Models.Core;
+    using Models.Core.Run;
 
     /// <summary>
     /// An interface for a model that can graph itself.
@@ -15,8 +16,11 @@
     {
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
+        /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
-        IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null);
+        IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, 
+                                                           List<SimulationDescription> simulationDescriptions, 
+                                                           List<string> simulationFilter = null);
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
         IEnumerable<IAnnotation> GetAnnotations();

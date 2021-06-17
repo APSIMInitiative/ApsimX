@@ -8,6 +8,8 @@
     using System.Data;
     using System.Linq;
     using Newtonsoft.Json;
+    using Models.Core.Run;
+    using Models.CLEM;
 
     /// <summary>
     /// Represents a graph
@@ -183,6 +185,11 @@
         /// </summary>
         public bool LegendOutsideGraph { get; set; }
 
+        /// <summary>
+        /// Descriptions of simulations that are in scope.
+        /// </summary>
+        public List<SimulationDescription> SimulationDescriptions { get; set; }
+
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
@@ -191,9 +198,12 @@
         {
             EnsureAllAxesExist();
 
+            if (SimulationDescriptions == null)
+                SimulationDescriptions = FindSimulationDescriptions(this);
+
             return FindAllChildren<IGraphable>()
                         .Where(g => g.Enabled)
-                        .SelectMany(g => g.GetSeriesDefinitions(storage, simulationFilter));
+                        .SelectMany(g => g.GetSeriesDefinitions(storage, SimulationDescriptions, simulationFilter));
         }
 
         /// <summary>Gets the annotations to graph.</summary>
@@ -267,6 +277,62 @@
             if (unNeededAxisFound || axisWasAdded)
                 Axis = allAxes;
         }
-    }
 
+        /// <summary>
+        /// Find and return a list of all simulation descriptions.
+        /// </summary>
+        public static List<SimulationDescription> FindSimulationDescriptions(IModel model)
+        {
+            // Find a parent that heads the scope that we're going to graph
+            IModel parent = FindParent(model);
+
+            List<SimulationDescription> simulationDescriptions = null;
+            do
+            {
+                // Create a list of all simulation/zone objects that we're going to graph.
+                simulationDescriptions = GetSimulationDescriptionsUnderModel(parent);
+                parent = parent.Parent;
+            }
+            while (simulationDescriptions.Count == 0 && parent != null);
+            return simulationDescriptions;
+        }
+
+        /// <summary>
+        /// Get a list of simulation descriptions that are a child of the specified model.
+        /// </summary>
+        /// <param name="model">The model and it's child models to scan.</param>
+        private static List<SimulationDescription> GetSimulationDescriptionsUnderModel(IModel model)
+        {
+            var simulationDescriptions = new List<SimulationDescription>();
+            if (model is ISimulationDescriptionGenerator)
+                simulationDescriptions.AddRange((model as ISimulationDescriptionGenerator).GenerateSimulationDescriptions());
+            else
+            {
+                foreach (IModel child in model.Children)
+                {
+                    if (child is Simulation || child is ISimulationDescriptionGenerator || child is Folder)
+                        simulationDescriptions.AddRange(GetSimulationDescriptionsUnderModel(child));
+                }
+            }
+            return simulationDescriptions;
+        }
+
+        /// <summary>Find a parent to base our series on.</summary>
+        private static IModel FindParent(IModel model)
+        {
+            Type[] parentTypesToMatch = new Type[] { typeof(Simulation), typeof(Zone), typeof(ZoneCLEM), typeof(Experiment),
+                                                     typeof(Folder), typeof(Simulations) };
+
+            IModel obj = model;
+            do
+            {
+                foreach (Type typeToMatch in parentTypesToMatch)
+                    if (typeToMatch.IsAssignableFrom(obj.GetType()))
+                        return obj;
+                obj = obj.Parent;
+            }
+            while (obj != null);
+            return obj;
+        }
+    }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
+using Models.Core.Run;
 
 namespace UserInterface.Presenters
 {
@@ -194,6 +195,7 @@ namespace UserInterface.Presenters
         {
             IStorageReader storage = GetStorage();
             GraphTab tab = new GraphTab(sim, this.presenter);
+            List<SimulationDescription> simulationDescriptions = null;
             for (int i = 0; i < graphs.Length; i++)
             {
                 Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
@@ -219,7 +221,18 @@ namespace UserInterface.Presenters
                     {
                         if (!storage.TryGetSimulationID(sim, out int _))
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
+
+                        // If we have simulation descriptions already (from another graph) then given them
+                        // to this graph. Will speed up graphing.
+                        if (simulationDescriptions != null)
+                            graph.SimulationDescriptions = simulationDescriptions;
+
                         List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim }).ToList();
+
+                        // Store simulation descriptions for the next graph on the page.
+                        if (simulationDescriptions == null)
+                            simulationDescriptions = graph.SimulationDescriptions;
+
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
