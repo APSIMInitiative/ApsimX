@@ -77,11 +77,11 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
-                double value = (child as LabourFeedGroup).Value;
+                double value = child.Value;
 
-                foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                foreach (LabourType ind in child.Filter(Resources.Labour().Items))
                 {
                     // feed limited to the daily intake per ae set in HumanFoodStoreType
                     switch (FeedStyle)
@@ -124,12 +124,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            var group = Resources.Labour().Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = child.Filter(group);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -213,11 +213,11 @@ namespace Models.CLEM.Activities
                     return;
                 }
 
-                foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+                foreach (var child in FindAllChildren<LabourFeedGroup>())
                 {
-                    double value = (child as LabourFeedGroup).Value;
+                    double value = child.Value;
 
-                    foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                    foreach (LabourType ind in child.Filter(Resources.Labour().Items))
                     {
                         switch (FeedStyle)
                         {

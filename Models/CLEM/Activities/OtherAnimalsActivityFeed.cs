@@ -82,18 +82,18 @@ namespace Models.CLEM.Activities
             int month = Clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
-            foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
+            foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
             {
                 double total = 0;
-                foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))
+                foreach (var item in group.Filter(group.SelectedOtherAnimalsType.Cohorts))
                 {
-                    total += item.Number * ((item.Age < (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult)?0.1:1);
+                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
                 }
                 allIndividuals += total;
                 switch (FeedStyle)
                 {
                     case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-                        amount += (filtergroup as OtherAnimalsFilterGroup).MonthlyValues[month] * 30.4 * total;
+                        amount += (group as OtherAnimalsFilterGroup).MonthlyValues[month] * 30.4 * total;
                         break;
                     case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
                         throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
@@ -155,12 +155,12 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
-            foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
+            foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
             {
                 double total = 0;
-                foreach (OtherAnimalsTypeCohort item in (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.Cohorts.Filter(filtergroup as OtherAnimalsFilterGroup))
+                foreach (OtherAnimalsTypeCohort item in group.Filter(group.SelectedOtherAnimalsType.Cohorts))
                 {
-                    total += item.Number * ((item.Age < (filtergroup as OtherAnimalsFilterGroup).SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
+                    total += item.Number * ((item.Age < group.SelectedOtherAnimalsType.AgeWhenAdult) ? 0.1 : 1);
                 }
                 allIndividuals += total;
             }

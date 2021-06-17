@@ -291,7 +291,7 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                    var labourRequirement = model.FindAllChildren<LabourRequirement>().FirstOrDefault();
                     tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
 
                     // does activity have a Labour Requirement
@@ -302,22 +302,19 @@ namespace UserInterface.Presenters
                         {
                             tblstr.WriteLine("<td>");
                             // for each filter group
-                            foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                             {
                                 tblstr.Write("<div>");
                                 int level = 0;
                                 // while nested 
-                                Model nested = labourRequirement as Model;
+                                var nested = labourRequirement.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
 
-                                while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
+                                while (nested != null)
                                 {
                                     level++;
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
-                                    List<LabourType> ltlist = new List<LabourType>() { lt };
-                                    if (ltlist.Filter(nested).Count() >= 1)
-                                    {
-                                        tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
-                                    }
+                                    tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
+                                    if (!nested.Filter(new List<LabourType> { lt }).Any()) break;
+                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                 }
                                 tblstr.Write("</div>");
                             }
@@ -456,7 +453,7 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.Enabled && a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
+                    var labourRequirement = model.FindAllChildren<LabourRequirement>().FirstOrDefault();
                     string emph = (labourRequirement == null) ? "_" : "";
 
                     // does activity have a Labour Requirement
@@ -468,21 +465,18 @@ namespace UserInterface.Presenters
                         {
                             string levelstring = "";
                             // for each filter group
-                            foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                             {
                                 int level = 0;
                                 // while nested 
-                                Model nested = labourRequirement as Model;
+                                var nested = labourRequirement.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
 
-                                while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
+                                while (nested != null)
                                 {
                                     level++;
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
-                                    List<LabourType> ltlist = new List<LabourType>() { lt };
-                                    if (ltlist.Filter(nested).Count() >= 1)
-                                    {
-                                        levelstring = ((level < 5) ? level.ToString() : "5");
-                                    }
+                                    levelstring = (level < 5) ? level.ToString() : "5";
+                                    if (!nested.Filter(new List<LabourType> { lt }).Any()) break;
+                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                 }
                             }
                             tblstr.Write($" {levelstring} |");

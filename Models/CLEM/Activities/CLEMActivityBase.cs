@@ -449,7 +449,8 @@ namespace Models.CLEM.Activities
                         if (item.ApplyToAll)
                         {
                             // how many matches
-                            numberOfPpl = (Resources.GetResourceGroupByType(typeof(Labour)) as Labour).Items.Filter(fg).Count();
+                            var items = (Resources.GetResourceGroupByType(typeof(Labour)) as Labour).Items;
+                            numberOfPpl = fg.Filter(items).Count();
                         }
                         for (int i = 0; i < numberOfPpl; i++)
                         {
@@ -617,9 +618,9 @@ namespace Models.CLEM.Activities
             // start with top most LabourFilterGroup
             while (current != null && amountProvided < amountNeeded)
             {
-                List<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
-                items = items.Filter(current).ToList();
+                IEnumerable<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson));
+                items = current.Filter(items);
 
                 // search for people who can do whole task first
                 while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)

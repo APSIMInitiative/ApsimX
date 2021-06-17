@@ -259,9 +259,9 @@ namespace Models.CLEM.Resources
         {
             List<LabourType> checkList = new List<LabourType>() { labour };
             if (labour.LabourAvailability != null)
-            {
+            {                
                 // check labour availability still ok
-                if (checkList.Filter(labour.LabourAvailability).Count() == 0)
+                if (!(labour.LabourAvailability as FilterGroup).Filter(checkList).Any())
                 {
                     labour.LabourAvailability = null;
                 }
@@ -272,7 +272,7 @@ namespace Models.CLEM.Resources
             {
                 foreach (var availItem in availabilityList.Children.OfType<ILabourSpecificationItem>())
                 {
-                    if (checkList.Filter(availItem).Count() > 0)
+                    if ((availItem as FilterGroup).Filter(checkList).Any())
                     {
                         labour.LabourAvailability = availItem;
                         break;
@@ -359,12 +359,10 @@ namespace Models.CLEM.Resources
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
+                foreach (var item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
-                    if (labourList.Filter(item).Count() == 1)
-                    {
+                    if (item.Filter(labourList).Count() == 1)                    
                         return item.Value;
-                    }
                 }
                 // no price match found.
                 string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
@@ -392,12 +390,10 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
+                foreach (var item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
-                    if (labourList.Filter(item).Count() == 1 && matchIndividual == null)
-                    {
-                        matchIndividual = item;
-                    }
+                    if (item.Filter(labourList).Count() == 1 && matchIndividual == null)                    
+                        matchIndividual = item;                    
 
                     // check that pricing item meets the specified criteria.
                     if (item.FindAllChildren<Filter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
