@@ -47,17 +47,10 @@ namespace UnitTests.Core
             }
         }
 
-        private object testMutex = new object();
-
         [Test]
-        public void EnsureVariablesAreZeroed()
-        {
-            // Parallel.ForEach<Simulation>(GetSimsToTest(), TestSimulation);
-            foreach (Simulation sim in GetSimsToTest())
-                TestSimulation(sim);
-        }
-
-        private void TestSimulation(Simulation sim)
+        [Parallelizable]
+        [TestCaseSource(nameof(GetSimsToTest))]
+        public void TestSimulation(Simulation sim)
         {
             Logger logger = new Logger();
             logger.Parent = sim;
@@ -81,11 +74,10 @@ namespace UnitTests.Core
             // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"pre-{Guid.NewGuid().ToString()}.json"), pre);
             // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
-            lock (testMutex)
-                Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
+            Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
 
-        private IEnumerable<Simulation> GetSimsToTest()
+        private static IEnumerable<Simulation> GetSimsToTest()
         {
             // Lazy loading of simulations. The .apsimx files won't be read in
             // until we're ready to run them. Therefore if we fail in one of
@@ -111,7 +103,7 @@ namespace UnitTests.Core
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "WhiteClover.apsimx"));
         }
 
-        private Simulation CreateSimulation(string path)
+        private static Simulation CreateSimulation(string path)
         {
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path, out List<Exception> errors);
