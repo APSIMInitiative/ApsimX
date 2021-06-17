@@ -90,13 +90,12 @@ namespace UnitTests.Core
             // Lazy loading of simulations. The .apsimx files won't be read in
             // until we're ready to run them. Therefore if we fail in one of
             // the earlier files, the latter ones won't be read.
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Wheat.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Maize.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Eucalyptus.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "AgPasture.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Barley.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Chicory.apsimx"));
+            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Eucalyptus.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "FodderBeet.apsimx"));
+            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Maize.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Oats.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "OilPalm.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Plantain.apsimx"));
@@ -108,6 +107,7 @@ namespace UnitTests.Core
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Soybean.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Stock.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "Sugarcane.apsimx"));
+            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Wheat.apsimx"));
             yield return CreateSimulation(Path.Combine("%root%", "Examples", "WhiteClover.apsimx"));
         }
 
@@ -115,7 +115,8 @@ namespace UnitTests.Core
         {
             path = PathUtilities.GetAbsolutePath(path, null);
             Simulations sims = FileFormat.ReadFromFile<Simulations>(path, out List<Exception> errors);
-            SoilStandardiser.Standardise(sims.FindDescendant<Soil>());
+            foreach (Soil soil in sims.FindAllDescendants<Soil>())
+                SoilStandardiser.Standardise(soil);
             DataStore storage = sims.FindDescendant<DataStore>();
             storage.UseInMemoryDB = true;
             Clock clock = sims.FindDescendant<Clock>();
