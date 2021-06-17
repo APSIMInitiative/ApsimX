@@ -1176,7 +1176,7 @@ namespace Models.GrazPlan
         {
             if (!paddocksGiven)
                 theModel.ClearPaddockList();
-            theModel.Clear();
+            theModel.TotalAmount = 0;
         }
 
         /// <summary>
