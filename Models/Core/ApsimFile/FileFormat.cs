@@ -98,15 +98,20 @@
 
             // Call created in all models.
             creationExceptions = new List<Exception>();
-            foreach (var model in newModel.FindAllDescendants().ToList())
+            if (newModel is Simulations)
+                newModel.OnCreated();
+            else
             {
-                try
+                foreach (var model in newModel.FindAllDescendants().ToList())
                 {
-                    model.OnCreated();
-                }
-                catch (Exception err)
-                {
-                    creationExceptions.Add(err);
+                    try
+                    {
+                        model.OnCreated();
+                    }
+                    catch (Exception err)
+                    {
+                        creationExceptions.Add(err);
+                    }
                 }
             }
             return newModel;
