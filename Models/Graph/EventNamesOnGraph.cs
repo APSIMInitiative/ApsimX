@@ -21,7 +21,7 @@
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
-        private DataTable data;
+        private DataView data;
 
         /// <summary>The x variable name</summary>
         private string xFieldName;
@@ -56,6 +56,14 @@
             return storage.Reader.ColumnNames(series.TableName).ToArray();
         }
 
+        /// <summary>
+        /// Gets a list of names of simulations in scope. Called using reflection.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetValidSimNames()
+        {
+            return GraphPage.FindSimulationDescriptions(FindAncestor<Series>())?.Select(s => s.Name)?.ToArray();
+        }
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
         /// <param name="seriesDefinition">The calling series definition.</param>
@@ -72,14 +80,14 @@
         /// <param name="storage">Storage service</param>
         /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage,
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
                                                                   List<SimulationDescription> simDescriptions, 
                                                                   List<string> simulationFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
             if (seriesAncestor == null)
                 throw new Exception("EventNamesOnGraph model must be a descendant of a series");
-            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simDescriptions, simulationFilter);
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationFilter);
         }
@@ -101,11 +109,11 @@
                         simulationNameDescriptor = simulationFilter[0];
 
                     if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
-                        data = definition.Data;
+                        data = definition.View;
                 }
 
                 if (data == null)
-                    data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
+                    data = definitions.FirstOrDefault(d => d.View != null && d.View.Count > 0)?.View;
                 xFieldName = definitions.First().XFieldName;
             }
 
@@ -120,12 +128,12 @@
 
             if (data != null && ColumnName != null && xFieldName != null)
             {
-                string phenologyColumnName = FindPhenologyStageColumn(data);
-                if (phenologyColumnName != null && data.Columns.Contains(xFieldName))
+                string phenologyColumnName = FindPhenologyStageColumn(data.Table);
+                if (phenologyColumnName != null && data.Table.Columns.Contains(xFieldName))
                 {
                     string[] names = DataTableUtilities.GetColumnAsStrings(data, phenologyColumnName);
                     List<object> x;
-                    Type columnType = data.Columns[xFieldName].DataType;
+                    Type columnType = data.Table.Columns[xFieldName].DataType;
                     if (columnType == typeof(DateTime))
                         x = DataTableUtilities.GetColumnAsDates(data, xFieldName).Cast<object>().ToList();
                     else if (columnType == typeof(int))

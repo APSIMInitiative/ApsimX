@@ -18,7 +18,7 @@
         /// <param name="storage">Storage service</param>
         /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) only show data for these simulations.</param>
-        IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, 
+        IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage, 
                                                            List<SimulationDescription> simulationDescriptions, 
                                                            List<string> simulationFilter = null);
 

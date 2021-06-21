@@ -53,7 +53,7 @@ namespace Models
         /// <param name="storage">Storage service</param>
         /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationsFilter">Unused simulation names filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage,
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
                                                                   List<SimulationDescription> simDescriptions,
                                                                   List<string> simulationsFilter = null)
         {
@@ -64,10 +64,10 @@ namespace Models
                 Graph graph = FindAncestor<Graph>();
                 if (graph == null)
                     throw new Exception("Regression model must be a descendant of a series");
-                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.GetSeriesDefinitions(storage, simDescriptions, simulationsFilter));
+                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));
             }
             else
-                definitions = seriesAncestor.GetSeriesDefinitions(storage, simDescriptions, simulationsFilter);
+                definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationsFilter);
         }
