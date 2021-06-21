@@ -41,7 +41,7 @@ VersionInfoCompany=APSIM Initiative4
 VersionInfoDescription=Apsim Modelling
 VersionInfoProductName=Apsim
 VersionInfoProductVersion={#AppVerNo}
-
+UsedUserAreasWarning=no
 
 [Code]
 var
