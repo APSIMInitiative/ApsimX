@@ -71,7 +71,7 @@ var
     zipFile: Variant;
     targetFolder: Variant;
     child: Variant;
-    numItems, i, n: Integer;
+    numItems, i: Integer;
 begin
     shell := CreateOleObject('Shell.Application');
     zipFile := shell.NameSpace(zipPath);
@@ -98,8 +98,6 @@ begin
 end;
 
 function InstallGtk(): Boolean;
-var
-    doInstall: Boolean;
 begin
     DownloadPage.AbortButton.Caption := 'Cancel';
     DownloadPage.Clear;
