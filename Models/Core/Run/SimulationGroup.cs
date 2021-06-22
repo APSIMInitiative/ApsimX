@@ -219,17 +219,20 @@
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
+                    // Find a storage model.
+                    storage = rootModel.FindChild<IDataStore>();
+
                     // Find simulations to run.
                     if (runSimulations)
-                        foreach (IRunnable job in FindListOfSimulationsToRun(relativeTo, simulationNamesToRun))
+                    {
+                        var jobs = FindListOfSimulationsToRun(relativeTo, simulationNamesToRun).ToList();
+                        storage.Writer.Clean(jobs);
+                        foreach (IRunnable job in jobs)
                             Add(job);
-
+                    }
                     
                     if (numJobsToRun == 0)
                        Add(new EmptyJob());
-
-                    // Find a storage model.
-                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)

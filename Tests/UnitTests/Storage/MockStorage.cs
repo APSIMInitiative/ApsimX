@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.JobRunning;
+using Models.Core;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace UnitTests.Storage
             return null;
         }
 
-        public void WriteTable(DataTable table)
+        public void WriteTable(DataTable table, bool deleteAllData)
         {
             tables.Add(table);
         }
@@ -285,6 +286,11 @@ namespace UnitTests.Storage
         }
 
         public int GetSimulationID(string simulationName, string folderName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clean(List<IRunnable> jobs)
         {
             throw new NotImplementedException();
         }
