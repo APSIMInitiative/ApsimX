@@ -33,21 +33,32 @@ namespace Models.Storage
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
         {
+            var tableNames = writer.Connection.GetTableNames();
             var simulationIDsCSV = StringUtilities.Build(ids, ",");
             var simulationNamesCSV = StringUtilities.Build(names, ",");
-            int currentID = writer.Connection.ExecuteQueryReturnInt("SELECT ID FROM [_Checkpoints] WHERE [Name]='Current'");
+            int currentID = -1;
+            if (tableNames.Contains("_Checkpoints"))
+                currentID = writer.Connection.ExecuteQueryReturnInt("SELECT ID FROM [_Checkpoints] WHERE [Name]='Current'");
 
-            foreach (var tableName in writer.Connection.GetTableNames().Where(t => !t.StartsWith("_")))
+            foreach (var tableName in tableNames.Where(t => !t.StartsWith("_")))
             {
                 var fieldNames = writer.Connection.GetColumnNames(tableName);
                 if (fieldNames.Contains("SimulationID") && fieldNames.Contains("CheckpointID"))
-                    writer.Connection.ExecuteNonQuery($"DELETE FROM [{tableName}] " +
-                                                      $"WHERE SimulationID in ({simulationIDsCSV}) " +
-                                                      $"AND CheckpointID = {currentID}");
+                {
+                    string sql = $"DELETE FROM [{tableName}] " +
+                                 $"WHERE SimulationID in ({simulationIDsCSV}) ";
+                    if (currentID != -1)
+                        sql += $"AND CheckpointID = {currentID}";
+                    writer.Connection.ExecuteNonQuery(sql);
+                }
                 else if (fieldNames.Contains("SimulationName") && fieldNames.Contains("CheckpointID"))
-                    writer.Connection.ExecuteNonQuery($"DELETE FROM [{tableName}] " +
-                                                      $"WHERE SimulationName in ({simulationNamesCSV}) " +
-                                                      $"AND CheckpointID = {currentID}");
+                {
+                    string sql = $"DELETE FROM [{tableName}] " +
+                                 $"WHERE SimulationName in ({simulationNamesCSV}) ";
+                    if (currentID != -1)
+                        sql += $"AND CheckpointID = {currentID}";
+                    writer.Connection.ExecuteNonQuery(sql);
+                }
             }
         }
     }

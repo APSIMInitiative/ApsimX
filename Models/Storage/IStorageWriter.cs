@@ -89,9 +89,9 @@
         int GetSimulationID(string simulationName, string folderName);
 
         /// <summary>
-        /// Clean the datastore by removing old data.
+        /// Create a db clean command.
         /// </summary>
-        /// <param name="jobs">A list of jobs that are about to run.</param>
-        void Clean(List<IRunnable> jobs);
+        /// <param name="names">A list of simulation names that are about to run.</param>
+        IRunnable Clean(List<string> names);
     }
 }

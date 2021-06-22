@@ -226,7 +226,15 @@
                     if (runSimulations)
                     {
                         var jobs = FindListOfSimulationsToRun(relativeTo, simulationNamesToRun).ToList();
-                        storage.Writer.Clean(jobs);
+
+                        if (storage != null)
+                        {
+                            var names = new List<string>();
+                            foreach (Core.Run.SimulationDescription description in jobs)
+                                foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
+                                        names.Add(name);
+                            jobs.Insert(0, storage.Writer.Clean(names));
+                        }
                         foreach (IRunnable job in jobs)
                             Add(job);
                     }

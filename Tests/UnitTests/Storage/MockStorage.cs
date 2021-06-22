@@ -295,7 +295,7 @@ namespace UnitTests.Storage
             throw new NotImplementedException();
         }
 		
-        public void Clean(List<IRunnable> jobs)
+        public IRunnable Clean(List<string> names)
         {
             throw new NotImplementedException();
         }

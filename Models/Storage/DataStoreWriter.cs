@@ -431,22 +431,16 @@
         }
 
         /// <summary>
-        /// Clean the datastore by removing old data.
+        /// Create a db clean command.
         /// </summary>
-        /// <param name="jobs">A list of jobs that are about to run.</param>
-        public void Clean(List<IRunnable> jobs)
+        /// <param name="names">A list of simulation names that are about to run.</param>
+        public IRunnable Clean(List<string> names)
         {
-            var names = new List<string>();
             var ids = new List<int>();
-            foreach (Core.Run.SimulationDescription description in jobs)
-                foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
-                    if (simulationIDs.TryGetValue(name, out SimulationDetails details))
-                    {
-                        names.Add(name);
-                        ids.Add(details.ID);
-                    }
-
-            jobs.Insert(0, new CleanCommand(this, names, ids));
+            foreach (var name in names)
+                if (simulationIDs.TryGetValue(name, out SimulationDetails details))
+                    ids.Add(details.ID);
+            return new CleanCommand(this, names, ids);
         }
 
         /// <summary>Create a command runner one hasn't already been created.</summary>
