@@ -209,8 +209,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            List<Exception> creationExceptions;
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, out creationExceptions);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
             File.Delete(xfile);
             return newSimulations;
         }

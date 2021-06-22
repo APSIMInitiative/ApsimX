@@ -65,6 +65,9 @@
             intellisense = new IntellisensePresenter(managerView as ViewBase);
             intellisense.ItemSelected += OnIntellisenseItemSelected;
 
+            if (!manager.IsCreated)
+                manager.OnCreated();
+
             scriptModel = manager.Children.FirstOrDefault();
 
             // See if manager script has a description attribute on it's class.

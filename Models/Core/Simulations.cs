@@ -45,6 +45,8 @@ namespace Models.Core
         [JsonIgnore]
         public string FileName { get; set; }
 
+        private Task initTask;
+
         /// <summary>Returns an instance of a links service</summary>
         [JsonIgnore]
         public Links Links
@@ -63,6 +65,15 @@ namespace Models.Core
         /// initialisation task has finished running.
         /// </summary>
         public bool IsLoaded { get; private set; }
+
+        /// <summary>
+        /// Block until the initialisation task has finished running.
+        /// </summary>
+        public void WaitUntilLoaded()
+        {
+            if (initTask != null)
+                initTask.Wait();
+        }
 
         /// <summary>
         /// If set, this function will be called whenever an error occurs during initialisation.
@@ -169,7 +180,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -269,7 +280,7 @@ namespace Models.Core
         public override void OnCreated()
         {
             base.OnCreated();
-            Task init = Task.Run(() =>
+            initTask = Task.Run(() =>
             {
                 var timer = System.Diagnostics.Stopwatch.StartNew();
                 IsLoaded = false;
@@ -277,7 +288,7 @@ namespace Models.Core
                 {
                     try
                     {
-                        model.OnCreated();
+                        // model.OnCreated();
                     }
                     catch (Exception err)
                     {

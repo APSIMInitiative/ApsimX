@@ -462,14 +462,9 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    List<Exception> creationExceptions;
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
                     simulations.OnInitialisationError = e => ShowError(e, false);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (creationExceptions.Count > 0)
-                    {
-                        ShowError(creationExceptions);
-                    }
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -890,8 +885,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 

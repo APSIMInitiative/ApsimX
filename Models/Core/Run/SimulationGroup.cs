@@ -179,7 +179,9 @@
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+                    sims.WaitUntilLoaded();
+                    relativeTo = sims;
                     if (exceptions.Count > 0)
                         throw exceptions[0];
                 }
