@@ -4,6 +4,8 @@
     using Models.Core;
     using Models;
     using Views;
+    using Models.Storage;
+    using System.Linq;
 
     /// <summary>
     /// This presenter connects an instance of a folder model with a 
@@ -28,17 +30,18 @@
 
             List<GraphView> views = new List<GraphView>();
 
-            foreach (Graph graph in folder.FindAllChildren<Graph>())
+            var storage = folder.FindInScope<IDataStore>();
+            var graphPage = new GraphPage();
+            graphPage.Graphs.AddRange(folder.FindAllChildren<Graph>().Where(g => g.Enabled));
+
+            foreach (var graphSeries in graphPage.GetAllSeriesDefinitions(folder, storage.Reader))
             {
-                if (graph.Enabled)
-                {
-                    GraphView graphView = new GraphView();
-                    GraphPresenter presenter = new GraphPresenter();
-                    explorerPresenter.ApsimXFile.Links.Resolve(presenter);
-                    presenter.Attach(graph, graphView, explorerPresenter);
-                    presenters.Add(presenter);
-                    views.Add(graphView);
-                }
+                GraphView graphView = new GraphView();
+                GraphPresenter presenter = new GraphPresenter();
+                explorerPresenter.ApsimXFile.Links.Resolve(presenter);
+                presenter.Attach(graphSeries.Graph, graphView, explorerPresenter, graphSeries.SeriesDefinitions);
+                presenters.Add(presenter);
+                views.Add(graphView);
             }
 
             if (views.Count > 0)

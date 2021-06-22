@@ -290,6 +290,11 @@ namespace UnitTests.Storage
             throw new NotImplementedException();
         }
 
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            throw new NotImplementedException();
+        }
+		
         public void Clean(List<IRunnable> jobs)
         {
             throw new NotImplementedException();
