@@ -288,5 +288,10 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
