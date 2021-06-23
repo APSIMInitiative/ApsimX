@@ -81,6 +81,17 @@ namespace Models.Functions
 
         ///7. Private methods
         /// -----------------------------------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
+            events.Subscribe(AccumulateEventName, OnCalcEvent);
+        }
         
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -89,8 +100,6 @@ namespace Models.Functions
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             accumulatedValue = 0;
-
-            events.Subscribe(AccumulateEventName, OnCalcEvent);
 
             startStageIndex = phenology.StartStagePhaseIndex(StartStageName);
             endStageIndex = phenology.EndStagePhaseIndex(EndStageName);
@@ -115,10 +124,5 @@ namespace Models.Functions
                 accumulatedValue += DailyIncrement;
             }
         }
-
-
-
-        
     }
-
 }

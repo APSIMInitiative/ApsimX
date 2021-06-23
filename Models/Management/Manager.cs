@@ -202,7 +202,7 @@
 
         /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <returns></returns>
-        private void GetParametersFromScriptModel()
+        public void GetParametersFromScriptModel()
         {
             if (Children.Count > 0)
             {
@@ -214,7 +214,8 @@
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
-                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null)
+                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null &&
+                        Attribute.IsDefined(property, typeof(DescriptionAttribute)))
                     {
                         object value = property.GetValue(script, null);
                         if (value == null)

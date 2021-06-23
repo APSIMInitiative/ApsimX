@@ -218,11 +218,12 @@ namespace UserInterface.Intellisense
                 typeof(MathNet.Numerics.Combinatorics).Assembly, // MathNet.Numerics
                 typeof(System.Data.DataTable).Assembly, // System.Data
                 Assembly.Load("Microsoft.CodeAnalysis"),
-                Assembly.Load("Microsoft.CodeAnalysis.CSharp"),
                 Assembly.Load("Microsoft.CodeAnalysis.Features"),
-                Assembly.Load("Microsoft.CodeAnalysis.CSharp.Features")
+                Assembly.Load("Microsoft.CodeAnalysis.Workspaces"),
+                Assembly.Load("Microsoft.CodeAnalysis.CSharp"),
+                Assembly.Load("Microsoft.CodeAnalysis.CSharp.Features"),
+                Assembly.Load("Microsoft.CodeAnalysis.CSharp.Workspaces")
             };
-            assemblies.AddRange(MefHostServices.DefaultAssemblies);
             return assemblies.Distinct().ToArray();
         }
     }

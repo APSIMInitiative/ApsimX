@@ -177,13 +177,19 @@ namespace UnitTests
 
         public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
         {
-            throw new NotImplementedException();
-        }
+            var ids = new List<int>();
 
-        public void ExecuteSql(string sql)
+            foreach (var name in simulationNames)
+            {
+                string id = name.Replace("Sim", "");
+                ids.Add(Convert.ToInt32(id));
+            }
+            return ids;
+        }
+		
+		public void ExecuteSql(string sql)
         {
             throw new NotImplementedException();
         }
     }
-
 }

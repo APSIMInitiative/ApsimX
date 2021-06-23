@@ -202,17 +202,13 @@ namespace UnitTests
 
         public static Simulations GetSimpleExperiment()
         {
-            Simulations result = ReadFromResource<Simulations>("UnitTests.Resources.SimpleExperiment.apsimx", out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
-
-            return result;
+            return ReadFromResource<Simulations>("UnitTests.Resources.SimpleExperiment.apsimx", e => throw e);
         }
 
-        public static T ReadFromResource<T>(string resourceName, out List<Exception> creationExceptions) where T : IModel
+        public static T ReadFromResource<T>(string resourceName, Action<Exception> errorHandler) where T : IModel
         {
             string json = ReflectionUtilities.GetResourceAsString(resourceName);
-            return FileFormat.ReadFromString<T>(json, out creationExceptions);
+            return FileFormat.ReadFromString<T>(json, errorHandler, false);
         }
 
         /// <summary>

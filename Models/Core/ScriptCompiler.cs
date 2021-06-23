@@ -206,7 +206,7 @@
             if (code != null)
             {
                 // See if we have compiled the code already. If so then no need to compile again.
-                PreviousCompilation compilation = previousCompilations.Find(c => c.Code == code);
+                PreviousCompilation compilation = previousCompilations?.Find(c => c.Code == code);
 
                 bool newlyCompiled;
                 if (compilation == null || compilation.Code != code)
@@ -261,6 +261,8 @@
                             if (compilation == null)
                             {
                                 compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
+                                if (previousCompilations == null)
+                                    previousCompilations = new List<PreviousCompilation>();
                                 previousCompilations.Add(compilation);
                             }
 
@@ -312,6 +314,7 @@
             IEnumerable<MetadataReference> references = new MetadataReference[] 
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
@@ -322,7 +325,6 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),

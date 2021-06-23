@@ -233,11 +233,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsBreedingCondition 
+        public bool IsAbleToBreed 
         { 
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
+                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating && !(this as RuminantMale).IsCastrated) |
                     (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
             }
         }

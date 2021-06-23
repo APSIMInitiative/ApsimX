@@ -93,6 +93,7 @@
                 }
             };
 
+            simulation.Prepare();
             simulation.Run();
 
             var soil = simulation.Children[2] as MockSoil;

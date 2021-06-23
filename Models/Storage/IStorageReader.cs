@@ -107,6 +107,13 @@ namespace Models.Storage
         /// <param name="simulationID">The simulation ID (if it exists).</param>
         bool TryGetSimulationID(string simulationName, out int simulationID);
 
+        /// <summary>
+        /// Convert a collection of simulation names to ids.
+        /// </summary>
+        /// <param name="simulationNames">The simulation names to convert to Ids.</param>
+        /// <returns></returns>
+        IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames);
+
         /// <summary>Refresh this instance to reflect the database connection.</summary>
         void Refresh();
 

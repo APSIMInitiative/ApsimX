@@ -216,11 +216,11 @@
                                     }
             )
         ]
-        public void OnGenerateApsimXFiles(object sender, EventArgs e)
+        public async void OnGenerateApsimXFiles(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.GenerateApsimXFiles(explorerPresenter.CurrentNode as IModel);
+                await explorerPresenter.GenerateApsimXFiles(explorerPresenter.CurrentNode as IModel);
             }
             catch (Exception err)
             {

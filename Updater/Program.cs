@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace Updater
 {
@@ -13,12 +12,8 @@ namespace Updater
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        [STAThread]
         static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             try {
                 if (args.Length != 2)
                     throw new Exception("Usage: Updater uninstalldir newinstalldir");
@@ -44,7 +39,7 @@ namespace Updater
             }
             catch (Exception err)
             {
-                MessageBox.Show(err.Message, "Error",  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine(err);
             }
         }
 
@@ -140,7 +135,7 @@ namespace Updater
                 Process.Start("/usr/bin/open", "-a " + newInstallName);
             }
             else
-                MessageBox.Show("Update failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("Update failed");
         }
 
         private static void DoLinuxUpdate(string uninstallDirectory, string newInstallDirectory)
@@ -182,7 +177,7 @@ namespace Updater
                 Process.Start(apsimCmd);
             }
             else
-                MessageBox.Show("Update failed", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("Update failed");
         }
 
         private static string ReadProcessOutput(string name, string args, out int exitCode)
@@ -229,11 +224,6 @@ namespace Updater
             if (i == 10)
                 throw new Exception(exeName + " is still running. Aborting upgrade.");
             return i;
-        }
-
-        private static void UpdateDB()
-        {
-
         }
     }
 }

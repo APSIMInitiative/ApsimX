@@ -87,7 +87,8 @@ namespace UserInterface.Views
             VBox arcSelBox = new VBox();
 
             Label l1 = new Label("Rules");
-            arcSelBox.PackStart(l1, true, true, 0); l1.Show();
+            l1.Xalign = 0;
+            arcSelBox.PackStart(l1, true, true, 0);
             RuleList = new EditorView(owner);
             RuleList.TextHasChangedByUser += OnRuleChanged;
             //RuleList.ScriptMode = false;
@@ -101,10 +102,12 @@ namespace UserInterface.Views
             rules.Add((RuleList as ViewBase).MainWidget);
 #endif
             (RuleList as ViewBase).MainWidget.ShowAll();
-            arcSelBox.PackStart(rules, true, true, 0); rules.Show();
+            arcSelBox.PackStart(rules, true, true, 0);
+            rules.Show();
 
             Label l2 = new Label("Actions");
-            arcSelBox.PackStart(l2, true, true, 0); l2.Show();
+            l2.Xalign = 0;
+            arcSelBox.PackStart(l2, true, true, 0);
             ActionList = new EditorView(owner);
             ActionList.TextHasChangedByUser += OnActionChanged;
             //ActionList.ScriptMode = false;
@@ -164,22 +167,23 @@ namespace UserInterface.Views
             Label l6 = new Label();
             l6.LineWrap = true;
             l6.Text = "<left-click>: select a node or arc.\n" +
-            "<right-click>: shows a context-sensitive menu.\n" +
-            "\n" +
-            "Once a node/arc is selected, it can be dragged to a new position.\n" +
-            "\n" +
-            "Nodes are created by right-clicking on a blank area.\n" +
-            "\n" +
+            "<right-click>: shows a context-sensitive menu.\n\n" +
+            "Once a node/arc is selected, it can be dragged to a new position.\n\n" +
+            "Nodes are created by right-clicking on a blank area.\n\n" +
             "Transition arcs are created by firstly selecting a source node,\n" +
-            "then right-clicking over a target node.\n";
+            "then right-clicking over a target node.";
             infoWdgt = l6 as Widget;
             infoWdgt.ShowAll();
-            Alignment infoWdgtWrapper = new Alignment(0, 0, 0, 0);
+            l6.Xalign = 0;
+            l6.Yalign = 0;
+            l6.Wrap = false;
+            Alignment infoWdgtWrapper = new Alignment(0, 0, 1, 0);
             infoWdgtWrapper.Add(infoWdgt);
             //ctxBox.PackStart(infoWdgt, true, true, 0);
             //vbox1.PackStart(ctxBox, false, false, 0);
 
             PropertiesView = new PropertyView(this);
+            ((ScrolledWindow)((ViewBase)PropertiesView).MainWidget).HscrollbarPolicy = PolicyType.Never;
             // settingsBox = new Table(2, 2, false);
             // settingsBox.Attach(new Label("Initial State"), 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
             // combobox1 = new ComboBox();

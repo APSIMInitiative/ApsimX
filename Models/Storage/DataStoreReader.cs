@@ -30,7 +30,7 @@
         /// <summary>
         /// A copy of the units table.
         /// </summary>
-        private DataView units;
+        private DataTable units;
 
         /// <summary>Return a list of simulation names or empty string[]. Never returns null.</summary>
         public List<string> SimulationNames
@@ -77,13 +77,14 @@
         /// <returns>The units (with surrounding parentheses), or null if not available</returns>
         public string Units(string tableName, string columnHeading)
         {
-            if (units.Table != null && units.Table.Rows.Count > 0)
+            if (units != null && units.Rows.Count > 0)
             {
-                units.RowFilter = string.Format("TableName='{0}' AND ColumnHeading='{1}'",
+                var unitsView = new DataView(units);
+                unitsView.RowFilter = string.Format("TableName='{0}' AND ColumnHeading='{1}'",
                                                 tableName, columnHeading);
-                if (units.Count == 1)
-                    return units[0]["Units"].ToString();
-                else if (units.Count > 1)
+                if (unitsView.Count == 1)
+                    return unitsView[0]["Units"].ToString();
+                else if (unitsView.Count > 1)
                     throw new Exception(string.Format("Found multiple units for column {0} in table {1}",
                                         columnHeading, tableName));
             }
@@ -182,7 +183,7 @@
                 tables.Add(tableName, Connection.GetTableColumns(tableName));
 
             // Get the units table.
-            units = new DataView(GetData("_Units"));
+            units = GetData("_Units");
         }
 
         /// <summary>
