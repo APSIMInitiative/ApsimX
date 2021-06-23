@@ -206,14 +206,14 @@
             report.VariableNames = new string[]
             {
                 "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
-                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy2",
             };
 
             // Run the simulation.
             runner.Run();
 
-            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
-            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+            Assert.AreEqual(new double[] { 496 }, storage.Get<double>("totalDoy1"));
+            Assert.AreEqual(new double[] { 70 }, storage.Get<double>("totalDoy2"));
         }
 
         /// <summary>This test ensures an expression with spaces works.</summary>
@@ -400,8 +400,8 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
-
+            events.Publish("SubscribeToEvents", new object[] { report, new EventArgs() });
+            Assert.AreEqual(1, storage.tables.Count);
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
 
 
@@ -504,7 +504,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("MockModel.Z(3)"),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
@@ -527,7 +529,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -560,7 +564,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -592,7 +598,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
             datastore.Reader.Refresh();
 
@@ -693,7 +701,9 @@ namespace Models
                 "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
             };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("SumA"),
                             new double[] { 6, 15, 34 });

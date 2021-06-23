@@ -376,8 +376,8 @@
                 // solution is to group the properties by name and take the last of each
                 // group so we end up with the most derived property.
                 props = props.GroupBy(p => p.PropertyName).Select(g => g.Last()).ToList();
-                props.ForEach(p => { p.Writable = true; p.Readable = true; });
-                return props.Where(p => p.PropertyName != "Parent").ToList();
+                props.ForEach(p => { p.Writable = true; });
+                return props.Where(p => p.PropertyName != "Parent" && p.Readable).ToList();
             }
         }
 

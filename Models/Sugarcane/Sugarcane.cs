@@ -2355,6 +2355,7 @@ namespace Models
             g_dlt_tt = 0.0;
 
             g_sw_demand = 0.0;
+            WaterDemand = 0;
             //      dm_graze = 0.0;
             //      n_graze = 0.0;
 

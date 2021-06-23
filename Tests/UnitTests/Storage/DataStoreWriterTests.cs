@@ -314,39 +314,47 @@
             var writer = new DataStoreWriter(database);
 
             // Add a checkpoint
-            File.WriteAllText("Dummy.txt", "abcde");
-            writer.AddCheckpoint("Saved2", new string[] { "Dummy.txt" });
+            string file = Path.Combine(Path.GetTempPath(), $"dummy-{Guid.NewGuid()}.txt");
+            File.WriteAllText(file, "abcde");
+            try
+            {
+                writer.AddCheckpoint("Saved2", new string[] { file });
 
-            writer.Stop();
+                writer.Stop();
 
-            Assert.IsTrue(
-                Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID",                     "Col1", "Col2" },
-                                      new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),     1 },
-                                                           new object[] {              1,              1, new DateTime(2017, 01, 02),     2 },
-                                                           new object[] {              1,              2, new DateTime(2017, 01, 01),    21 },
-                                                           new object[] {              1,              2, new DateTime(2017, 01, 02),    22 },
-                                                           new object[] {              2,              1, new DateTime(2017, 01, 01),    11},
-                                                           new object[] {              2,              1, new DateTime(2017, 01, 02),    12 },
-                                                           new object[] {              2,              2, new DateTime(2017, 01, 01),    31 },
-                                                           new object[] {              2,              2, new DateTime(2017, 01, 02),    32 },
-                                                           new object[] {              3,              1, new DateTime(2017, 01, 01),     1 },
-                                                           new object[] {              3,              1, new DateTime(2017, 01, 02),     2 },
-                                                           new object[] {              3,              2, new DateTime(2017, 01, 01),    21 },
-                                                           new object[] {              3,              2, new DateTime(2017, 01, 02),    22 }})
-               .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "CheckpointID", "SimulationID",                     "Col1", "Col2" },
+                                        new List<object[]> { new object[] {              1,              1, new DateTime(2017, 01, 01),     1 },
+                                                            new object[] {              1,              1, new DateTime(2017, 01, 02),     2 },
+                                                            new object[] {              1,              2, new DateTime(2017, 01, 01),    21 },
+                                                            new object[] {              1,              2, new DateTime(2017, 01, 02),    22 },
+                                                            new object[] {              2,              1, new DateTime(2017, 01, 01),    11},
+                                                            new object[] {              2,              1, new DateTime(2017, 01, 02),    12 },
+                                                            new object[] {              2,              2, new DateTime(2017, 01, 01),    31 },
+                                                            new object[] {              2,              2, new DateTime(2017, 01, 02),    32 },
+                                                            new object[] {              3,              1, new DateTime(2017, 01, 01),     1 },
+                                                            new object[] {              3,              1, new DateTime(2017, 01, 02),     2 },
+                                                            new object[] {              3,              2, new DateTime(2017, 01, 01),    21 },
+                                                            new object[] {              3,              2, new DateTime(2017, 01, 02),    22 }})
+                .IsSame(Utilities.GetTableFromDatabase(database, "Report")));
 
 
-            Assert.IsTrue(
-                Utilities.CreateTable(new string[]                      { "ID",    "Name" },
-                                      new List<object[]> { new object[] {    1, "Current" },
-                                                           new object[] {    2,  "Saved1" },
-                                                           new object[] {    3,  "Saved2" }})
-               .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints", new string[] { "ID", "Name" })));
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "ID",    "Name" },
+                                        new List<object[]> { new object[] {    1, "Current" },
+                                                            new object[] {    2,  "Saved1" },
+                                                            new object[] {    3,  "Saved2" }})
+                .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints", new string[] { "ID", "Name" })));
 
-            Assert.IsTrue(
-                Utilities.CreateTable(new string[]                      { "CheckpointID",  "FileName",      "Contents" },
-                                      new List<object[]> { new object[] {              3, "Dummy.txt", "System.Byte[]"}})
-               .IsSame(Utilities.GetTableFromDatabase(database, "_CheckpointFiles")));
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "CheckpointID",  "FileName",      "Contents" },
+                                        new List<object[]> { new object[] {              3, file, "System.Byte[]"}})
+                .IsSame(Utilities.GetTableFromDatabase(database, "_CheckpointFiles")));
+            }
+            finally
+            {
+                File.Delete(file);
+            }
         }
 
         /// <summary>Delete a checkpoint</summary>

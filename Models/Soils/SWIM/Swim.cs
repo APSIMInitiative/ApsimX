@@ -2341,7 +2341,7 @@ namespace Models.Soils
             for (int i = 0; i < solutes.Count; i++)
             {
                 solute_names[i] = solutes[i].Name;
-                SwimSoluteParameters soluteParam = this.FindByPath(solute_names[i],true)?.Value as SwimSoluteParameters;
+                SwimSoluteParameters soluteParam = FindInScope<SwimSoluteParameters>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);

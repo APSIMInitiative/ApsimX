@@ -107,11 +107,31 @@
             replacementsToApply.Add(new PropertyReplacement(path, replacement));
         }
 
+        /// <summary>
+        /// Prepare the simulation to be run.
+        /// </summary>
+        public void Prepare()
+        {
+            SimulationToRun = ToSimulation();
+            SimulationToRun.Prepare();
+        }
+
+        /// <summary>
+        /// Run a simulation with a number of specified changes.
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        /// <param name="changes"></param>
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<IReplacement> changes)
+        {
+            foreach (IReplacement change in changes)
+                change.Replace(SimulationToRun);
+            Run(cancelToken);
+        }
+
         /// <summary>Run the simulation.</summary>
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            SimulationToRun = ToSimulation();
             SimulationToRun.Run(cancelToken);
         }
 

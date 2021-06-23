@@ -5,6 +5,7 @@
     /// <summary>
     /// This class encapsulates an instruction to replace a property value.
     /// </summary>
+    [Serializable]
     public class PropertyReplacement : IReplacement
     {
         /// <summary>
