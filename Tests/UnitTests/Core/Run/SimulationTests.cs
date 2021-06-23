@@ -33,6 +33,7 @@
             };
 
             // Run simulation
+            simulation.Prepare();
             simulation.Run();
 
             // Check that clock ticked.
@@ -61,6 +62,7 @@
             };
 
             // Run simulation making sure it throws.
+            simulation.Prepare();
             Assert.Throws<SimulationException>(() => simulation.Run());
 
             // Make sure the error was sent to summary.
@@ -92,10 +94,11 @@
             };
 
             // Run simulation making sure it throws.
+            simulation.Prepare();
             simulation.Run();
 
             // Check that clock ticked.
-            Assert.AreEqual((simulation.Children[0] as Clock).Today, new DateTime(1980, 01, 02));
+            Assert.AreEqual(new DateTime(1980, 01, 02), (simulation.Children[0] as Clock).Today);
         }
 
         [Serializable]

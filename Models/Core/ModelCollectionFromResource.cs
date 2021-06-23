@@ -164,9 +164,7 @@
             if (string.IsNullOrEmpty(contents))
                 return null;
 
-            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
 
             if (this.GetType() != modelFromResource.GetType())
             {

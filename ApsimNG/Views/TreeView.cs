@@ -7,6 +7,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
@@ -375,7 +376,7 @@ namespace UserInterface.Views
             treeview1.CursorChanged += OnAfterSelect;
 #endif
             TreeIter iter = treemodel.AppendNode();
-            RefreshNode(iter, nodeDescriptions);
+            RefreshNode(iter, nodeDescriptions, false);
             treeview1.ShowAll();
             treeview1.ExpandRow(new TreePath("0"), false);
             // Expand all rows which were previously expanded by the user.
@@ -434,7 +435,13 @@ namespace UserInterface.Views
         /// </remarks>
         /// <param name="node">The node.</param>
         /// <param name="description">The description.</param>
-        private void RefreshNode(TreeIter node, TreeViewNode description)
+        /// <param name="checkForExisting">
+        /// If set to true, will attempt to update existing nodes instead of creating
+        /// new ones, where possible. This should only be set to false when populating
+        /// the tree control for the first time, and when set to false it will improve
+        /// performance considerably, especially for large tree structures.
+        /// </param>
+        private void RefreshNode(TreeIter node, TreeViewNode description, bool checkForExisting = true)
         {
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
@@ -445,11 +452,46 @@ namespace UserInterface.Views
             foreach (TreeViewNode child in description.Children)
             {
                 string path = GetFullPath(treemodel.GetPath(node));
-                TreeIter iter = FindNode($"{path}.{child.Name}");
-                if (iter.Equals(TreeIter.Zero))
+                TreeIter iter;
+                if (checkForExisting)
+                {
+                    iter = FindChild(node, child.Name);
+                    if (iter.Equals(TreeIter.Zero))
+                        iter = treemodel.AppendNode(node);
+                }
+                else
                     iter = treemodel.AppendNode(node);
                 RefreshNode(iter, child);
             }
+        }
+
+        /// <summary>
+        /// Find a child of a TreeIter with the specified name.
+        /// </summary>
+        /// <param name="node">Node under which to search for a child.</param>
+        /// <param name="name">Name of the child.</param>
+        private TreeIter FindChild(TreeIter node, string name)
+        {
+            return GetChildren(node).FirstOrDefault(c => GetName(c) == name);
+        }
+
+        private IEnumerable<TreeIter> GetChildren(TreeIter node)
+        {
+            if (treemodel.IterChildren(out TreeIter child, node))
+            {
+                yield return child;
+                while (treemodel.IterNext(ref child))
+                    yield return child;
+            }
+        }
+
+        /// <summary>
+        /// Return the name of the given node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        private string GetName(TreeIter node)
+        {
+            return (string)treemodel.GetValue(node, 0);
         }
 
         /// <summary>Return a string representation of the specified path.</summary>

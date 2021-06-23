@@ -2568,6 +2568,7 @@
         public double Population { get { return 0; } }
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
+        [JsonIgnore]
         public double AssimilateAvailable => throw new NotImplementedException();
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

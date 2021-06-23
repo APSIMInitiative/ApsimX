@@ -171,7 +171,6 @@
             startTime = DateTime.Now;
             Status = "Finding simulations to run";
 
-            List<Exception> exceptions = null;
             try
             {
                 if (relativeTo == null)
@@ -179,9 +178,9 @@
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
-                    if (exceptions.Count > 0)
-                        throw exceptions[0];
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+                    sims.WaitUntilLoaded();
+                    relativeTo = sims;
                 }
 
                 if (relativeTo != null)

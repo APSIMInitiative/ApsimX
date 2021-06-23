@@ -143,9 +143,7 @@
             {
                 GenerateApsimXFiles.Generate(runner, temp, _ => {});
                 string file = Path.Combine(temp, "exptx1.apsimx");
-                sims = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
-                if (errors != null && errors.Count > 0)
-                    throw errors[0];
+                sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
                 Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
             }
             finally
