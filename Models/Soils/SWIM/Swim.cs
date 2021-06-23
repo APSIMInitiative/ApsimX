@@ -1673,10 +1673,14 @@ namespace Models.Soils
                 dx[i] = soilPhysical.Thickness[i] / 10.0;
 
             x[0] = 0.0;
-            x[1] = 2.0 * dx[0] + x[0];
+            x[1] = 0.0 + dx[0] / 2.0;
+            double cumDepth = 0.0;
 
-            for (int i = 1; i < n; i++)
-                x[i] = MathUtilities.Sum(dx, 0, i-1) + dx[i] / 2;
+            for (int i = 2; i < n; i++)
+            {
+                cumDepth += dx[i - 2];
+                x[i] = cumDepth + dx[i - 1] / 2.0;
+            }
 
             x[n] = MathUtilities.Sum(dx);
 
