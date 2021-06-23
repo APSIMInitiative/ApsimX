@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using Models.Core.Interfaces;
     using Newtonsoft.Json.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// A class for reading and writing the .apsimx file format.
@@ -97,7 +98,7 @@
             newModel.ParentAllDescendants();
 
             // Call created in all models.
-            creationExceptions = new List<Exception>();
+            var exceptions = new List<Exception>();
             foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
@@ -106,9 +107,10 @@
                 }
                 catch (Exception err)
                 {
-                    creationExceptions.Add(err);
+                    exceptions.Add(err);
                 }
             }
+            creationExceptions = exceptions;
             return newModel;
         }
 

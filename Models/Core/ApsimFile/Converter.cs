@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 134; } }
+        public static int LatestVersion { get { return 135; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3490,6 +3490,20 @@
                 if (property == null || property.Value<double>() <= 0)
                         microClimate[propertyName] = 2;
             }
+        }
+
+        /// <summary>
+        /// Rename memos' MemoText property to Text. This is only relevant when
+        /// importing files from old apsim (hopefully). It's really a cludge to
+        /// work around a bug in the xml to json converter which I'm not brave
+        /// enough to change.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion135(JObject root, string fileName)
+        {
+            foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
+                JsonUtilities.RenameProperty(memo, "MemoText", "Text");
         }
 
         /// <summary>
