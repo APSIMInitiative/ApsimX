@@ -75,9 +75,7 @@ namespace UnitTests
             string text = ReflectionUtilities.GetResourceAsString("UnitTests.BasicFile.apsimx");
 
             // Check property values at this point.
-            Simulations sims = FileFormat.ReadFromString<Simulations>(text, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false);
 
             Clock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();

@@ -127,7 +127,10 @@
         /// </summary>
         public void Unapply()
         {
-            for (int i = 0; i < this.properties.Count; i++)
+            // Unapply the cultivars in the reverse order to which they were applied.
+            // Otherwise, if two commands modify the same property, the unapply
+            // operation will not work as expected.
+            for (int i = properties.Count - 1; i >= 0; i--)
             {
                 this.properties[i].Value = this.oldPropertyValues[i];
             }

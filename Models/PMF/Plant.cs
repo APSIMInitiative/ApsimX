@@ -218,7 +218,7 @@
 
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
-        public double AssimilateAvailable => throw new NotImplementedException();
+        public double AssimilateAvailable => 0;
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }

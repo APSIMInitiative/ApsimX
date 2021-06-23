@@ -61,7 +61,7 @@ namespace UnitTests.ManagerTests
         public void TestScriptNotRebuilt()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.bork.apsimx");
-            IModel file = FileFormat.ReadFromString<IModel>(json, out List<Exception> errors);
+            IModel file = FileFormat.ReadFromString<IModel>(json, e => throw e, false);
             Simulation sim = file.FindInScope<Simulation>();
             Assert.DoesNotThrow(() => sim.Run());
         }
@@ -85,7 +85,7 @@ namespace UnitTests.ManagerTests
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.OnCreatedError.apsimx");
             List<Exception> errors = new List<Exception>();
-            FileFormat.ReadFromString<IModel>(json, out errors);
+            FileFormat.ReadFromString<IModel>(json, e => errors.Add(e), false);
 
             Assert.NotNull(errors);
             Assert.AreEqual(1, errors.Count, "Encountered the wrong number of errors when opening OnCreatedError.apsimx.");
@@ -101,14 +101,12 @@ namespace UnitTests.ManagerTests
         public void TestManagerOverrides()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Manager.ManagerOverrides.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             foreach (Runner.RunTypeEnum runType in Enum.GetValues(typeof(Runner.RunTypeEnum)))
             {
                 Runner runner = new Runner(sims);
-                errors = runner.Run();
+                List<Exception> errors = runner.Run();
                 if (errors != null && errors.Count > 0)
                     throw errors[0];
             }
