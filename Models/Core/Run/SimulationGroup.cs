@@ -230,10 +230,17 @@
                         if (storage != null)
                         {
                             var names = new List<string>();
-                            foreach (Core.Run.SimulationDescription description in jobs)
-                                foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
+                            foreach (var job in jobs)
+                            {
+                                if (job is SimulationDescription)
+                                {
+                                    var description = job as SimulationDescription;
+                                    foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
                                         names.Add(name);
-                            jobs.Insert(0, storage.Writer.Clean(names));
+                                }
+                            }
+                            if (names.Count > 0)
+                                jobs.Insert(0, storage.Writer.Clean(names));
                         }
                         foreach (IRunnable job in jobs)
                             Add(job);
