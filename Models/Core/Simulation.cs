@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Soils.Standardiser;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
@@ -217,6 +218,11 @@ namespace Models.Core
 
             // Remove disabled models.
             RemoveDisabledModels(this);
+
+            // Standardise the soil.
+            var soils = FindAllDescendants<Soils.Soil>();
+            foreach (Soils.Soil soil in soils)
+                SoilStandardiser.Standardise(soil);
 
             // If this simulation was not created from deserialisation then we need
             // to parent all child models correctly and call OnCreated for each model.
