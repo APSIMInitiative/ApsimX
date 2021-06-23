@@ -106,7 +106,7 @@ namespace UnitTests.Core
         private static Simulation CreateSimulation(string path)
         {
             path = PathUtilities.GetAbsolutePath(path, null);
-            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, out List<Exception> errors);
+            Simulations sims = FileFormat.ReadFromFile<Simulations>(path, e => throw e, false);
             foreach (Soil soil in sims.FindAllDescendants<Soil>())
                 SoilStandardiser.Standardise(soil);
             DataStore storage = sims.FindDescendant<DataStore>();

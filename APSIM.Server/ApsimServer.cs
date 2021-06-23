@@ -39,10 +39,8 @@ namespace APSIM.Server
         public ApsimServer(ServerOptions options)
         {
             this.options = options;
-            sims = FileFormat.ReadFromFile<Simulations>(options.File, out List<Exception> errors);
+            sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false);
             sims.FindChild<Models.Storage.DataStore>().UseInMemoryDB = true;
-            if (errors != null && errors.Count > 0)
-                throw new Exception($"Unable to read file {options.File}", errors[0]);
             runner = new Runner(sims);
             jobRunner = new ServerJobRunner();
             runner.Use(jobRunner);
