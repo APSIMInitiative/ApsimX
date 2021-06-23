@@ -174,6 +174,18 @@ namespace UnitTests
             simulationID = 0;
             return true;
         }
+
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            var ids = new List<int>();
+
+            foreach (var name in simulationNames)
+            {
+                string id = name.Replace("Sim", "");
+                ids.Add(Convert.ToInt32(id));
+            }
+            return ids;
+        }
     }
 
 }

@@ -654,7 +654,7 @@
         /// <param name="graphPage">The graph and table to convert to html.</param>
         private void CreateGraphPage(Section section, GraphPage graphPage)
         {
-            int numGraphsToPrint = graphPage.graphs.FindAll(g => g.IncludeInDocumentation).Count;
+            int numGraphsToPrint = graphPage.Graphs.FindAll(g => g.IncludeInDocumentation).Count;
             if (numGraphsToPrint > 0)
             {
                 int numColumns = 2;
@@ -682,13 +682,13 @@
 
                 int col = 0;
                 int row = 0;
-                for (int i = 0; i < graphPage.graphs.Count; i++)
+                for (int i = 0; i < graphPage.Graphs.Count; i++)
                 {
-                    if (graphPage.graphs[i].IncludeInDocumentation)
+                    if (graphPage.Graphs[i].IncludeInDocumentation)
                     {
                         try
                         {
-                            graphPresenter.Attach(graphPage.graphs[i], graphView, explorerPresenter);
+                            graphPresenter.Attach(graphPage.Graphs[i], graphView, explorerPresenter);
                             Rectangle r = new Rectangle(col * width, row * height,
                                                         width, height);
                             graphView.Export(ref image, r, false);
@@ -702,13 +702,13 @@
                         }
                         catch (Exception err)
                         {
-                            throw new Exception($"Unable to draw graph '{graphPage.graphs[i].FullPath}'", err);
+                            throw new Exception($"Unable to draw graph '{graphPage.Graphs[i].FullPath}'", err);
                         }
                     }
                 }
 
-                string basePngFileName = graphPage.graphs[0].Parent.FullPath + "." +
-                                                        graphPage.name + ".png";
+                string basePngFileName = graphPage.Graphs[0].Parent.FullPath + "." +
+                                                        graphPage.Name + ".png";
                 basePngFileName = basePngFileName.TrimStart('.');
                 string pngFileName = Path.Combine(WorkingDirectory, basePngFileName);
                 image.Save(pngFileName, System.Drawing.Imaging.ImageFormat.Png);

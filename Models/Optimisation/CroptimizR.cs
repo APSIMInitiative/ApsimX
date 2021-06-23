@@ -442,15 +442,19 @@ namespace Models.Optimisation
                 apsimxFileDir = FindAncestor<Simulation>()?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
+
+            IDataStore storage = FindInScope<IDataStore>();
+            bool firstFile = true;
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
                 if (Path.GetExtension(file) == ".Rdata")
                 {
-                    IDataStore storage = FindInScope<IDataStore>();
                     if (storage != null && storage.Writer != null)
                     {
                         output = ReadRData(file);
-                        storage.Writer.WriteTable(output);
+
+                        storage.Writer.WriteTable(output, deleteAllData:firstFile);
+                        firstFile = false;
                     }
                 }
                 if (!string.IsNullOrEmpty(apsimxFileDir))

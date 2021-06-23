@@ -370,5 +370,17 @@
 
             Assert.IsNotNull(sims);
         }
+
+        [Test]
+        public void EnsureMemoImports()
+        {
+            string oldXml = "<folder><simulation><memo>hello there</memo></simulation></folder>";
+
+            var importer = new Importer();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Memo memo = sims.Children[0].Children[0] as Memo;
+            Assert.NotNull(memo);
+            Assert.AreEqual("hello there", memo.Text, "Failed to import memo message from .apsim file");
+        }
     }
 }
