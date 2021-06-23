@@ -85,11 +85,11 @@
                     while (i < children.Count)
                     {
                         GraphPage page = new GraphPage();
-                        page.name = Name + pageNumber;
+                        page.Name = Name + pageNumber;
                         for (int j = i; j < i + 6 && j < children.Count; j++)
                             if (children[j].IncludeInDocumentation)
-                                page.graphs.Add(children[j] as Graph);
-                        if (page.graphs.Count > 0)
+                                page.Graphs.Add(children[j] as Graph);
+                        if (page.Graphs.Count > 0)
                             tags.Add(page);
                         i += 6;
                         pageNumber++;
