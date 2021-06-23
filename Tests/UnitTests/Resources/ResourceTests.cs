@@ -41,7 +41,7 @@ namespace UnitTests.Resources
                     int version = (int)root["Version"];
                     Assert.That(version == Converter.LatestVersion, $"Resource '{resourceName}' is not up to date - version is {version} but latest version is {Converter.LatestVersion}.");
 
-                    IModel model = FileFormat.ReadFromString<IModel>(resource, out _);
+                    IModel model = FileFormat.ReadFromString<IModel>(resource, e => throw e, false);
                     Assert.That(model is Simulations, $"Resource '{resourceName}' does not contain a top-level simulations node.");
 
                     int simulationsVersion = (model as Simulations).Version;
@@ -59,7 +59,7 @@ namespace UnitTests.Resources
         public void EnsureReleasedModelsAreNotSaved()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.WheatModel.apsimx");
-            IModel topLevel = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
+            IModel topLevel = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
             string serialized = FileFormat.WriteToString(topLevel);
 
             JObject root = JObject.Parse(serialized);

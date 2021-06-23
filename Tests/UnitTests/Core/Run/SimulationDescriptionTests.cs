@@ -279,12 +279,10 @@
         public void TestMultipleModelReplacements()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.Run.MultipleReplacements.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             Runner runner = new Runner(sims);
-            errors = runner.Run();
+            List<Exception> errors = runner.Run();
 
             // The above should throw. The simulations contains a replacements node which
             // replaces wheat's cultivars folder, giving axe an invalid parameter. We sow

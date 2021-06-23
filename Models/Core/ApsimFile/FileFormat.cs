@@ -56,28 +56,37 @@
 
         /// <summary>Create a simulations object by reading the specified filename</summary>
         /// <param name="fileName">Name of the file.</param>
-        /// <param name="creationExceptions">A list of exceptions created during creation of the models.</param>
-        public static T ReadFromFile<T>(string fileName, out List<Exception> creationExceptions) where T : IModel
+        /// <param name="errorHandler">Action to be taken when an error occurs.</param>
+        /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
+        public static T ReadFromFile<T>(string fileName, Action<Exception> errorHandler, bool initInBackground) where T : IModel
         {
-            if (!File.Exists(fileName))
-                throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
+            try
+            {
+                if (!File.Exists(fileName))
+                    throw new Exception("Cannot read file: " + fileName + ". File does not exist.");
 
-            string contents = File.ReadAllText(fileName);
-            T newModel = ReadFromString<T>(contents, out creationExceptions, fileName);
+                string contents = File.ReadAllText(fileName);
+                T newModel = ReadFromString<T>(contents, errorHandler, initInBackground, fileName);
 
-            // Set the filename
-            if (newModel is Simulations)
-                (newModel as Simulations).FileName = fileName;
-            foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
-                sim.FileName = fileName;
-            return newModel;
+                // Set the filename
+                if (newModel is Simulations)
+                    (newModel as Simulations).FileName = fileName;
+                foreach (Simulation sim in newModel.FindAllDescendants<Simulation>())
+                    sim.FileName = fileName;
+                return newModel;
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Error reading file {fileName}", err);
+            }
         }
 
         /// <summary>Convert a string (json or xml) to a model.</summary>
         /// <param name="st">The string to convert.</param>
-        /// <param name="creationExceptions">A list of exceptions created during creation of the models.</param>
-        /// <param name="fileName">The optional filename where the string came from.</param>
-        public static T ReadFromString<T>(string st, out List<Exception> creationExceptions, string fileName = null) where T : IModel
+        /// <param name="errorHandler">Action to be taken when an error occurs.</param>
+        /// <param name="initInBackground">Iff set to true, the models' OnCreated() method calls will occur in a background thread.</param>
+        /// <param name="fileName">The optional filename where the string came from. This is required by the converter, when it needs to modify the .db file.</param>
+        public static T ReadFromString<T>(string st, Action<Exception> errorHandler, bool initInBackground, string fileName = null) where T : IModel
         {
             // Run the converter.
             var converter = Converter.DoConvert(st, -1, fileName);
@@ -98,7 +107,16 @@
             newModel.ParentAllDescendants();
 
             // Call created in all models.
-            var exceptions = new List<Exception>();
+            if (initInBackground)
+                Task.Run(() => InitialiseModel(newModel, errorHandler));
+            else
+                InitialiseModel(newModel, errorHandler);
+
+            return newModel;
+        }
+
+        private static void InitialiseModel(IModel newModel, Action<Exception> errorHandler)
+        {
             foreach (var model in newModel.FindAllDescendants().ToList())
             {
                 try
@@ -107,11 +125,9 @@
                 }
                 catch (Exception err)
                 {
-                    exceptions.Add(err);
+                    errorHandler(err);
                 }
             }
-            creationExceptions = exceptions;
-            return newModel;
         }
 
         /// <summary>A contract resolver class to only write settable properties.</summary>

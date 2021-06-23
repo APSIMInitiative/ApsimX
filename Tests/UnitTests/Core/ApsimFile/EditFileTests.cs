@@ -88,7 +88,7 @@ namespace UnitTests.Core.ApsimFile
 
             // Add the wheat model.
             string json = ReflectionUtilities.GetResourceAsString(typeof(IModel).Assembly, "Models.Resources.Wheat.json");
-            Plant wheat = FileFormat.ReadFromString<IModel>(json, out _).Children[0] as Plant;
+            Plant wheat = FileFormat.ReadFromString<IModel>(json, e => throw e, false).Children[0] as Plant;
             wheat.ResourceName = "Wheat";
             Structure.Add(wheat, paddock);
 
