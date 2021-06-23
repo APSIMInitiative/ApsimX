@@ -130,6 +130,69 @@ begin
 	Result := False;
 end;
 
+{ Read from the registry the path to the uninstaller }
+{ @param version: the version to upgrade from }
+function GetUninstallString(version: String): String;
+var
+  regKey: String;
+  uninstaller: String;
+begin
+  regKey := 'Software\Microsoft\Windows\CurrentVersion\Uninstall\APSIM' + version + '_is1';
+  uninstaller := '';
+  if not RegQueryStringValue(HKLM, regKey, 'UninstallString', uninstaller) then
+    RegQueryStringValue(HKCU, regKey, 'UninstallString', uninstaller);
+  Result := uninstaller;
+end;
+
+function UnInstallOldVersion(oldVersion : String): Integer;
+var
+  uninstaller: String;
+  uninstallResult: Integer;
+begin
+{ Return Values: }
+{ 1 - uninstall string is empty }
+{ 2 - error executing the UnInstallString }
+{ 3 - successfully executed the UnInstallString }
+
+  { default return value }
+  Result := 0;
+
+  { get the uninstall string of the old app }
+  uninstaller := GetUninstallString(oldVersion);
+  if uninstaller <> '' then begin
+    uninstaller := RemoveQuotes(uninstaller);
+    if Exec(uninstaller, '/SILENT /NORESTART /SUPPRESSMSGBOXES','', SW_HIDE, ewWaitUntilTerminated, uninstallResult) then
+      Result := 3
+    else
+      Result := 2;
+  end else
+    Result := 1;
+end;
+
+{ This function is called during the setup's initialisation. We check if the 'upgradefrom'
+  command-line argument was provided, and if so, attempt to uninstall the previous version
+  before installing this version. If the uninstallation fails, we ask the user if they wish
+  to continue. The return value of this function is true iff installation should continue. }
+function UpgradeIfNecessary(): Boolean;
+var oldVersion : String;
+var uninstallResult, continueInstall : Integer;
+begin
+  oldVersion := ExpandConstant('{param:upgradefrom|}')
+  if (oldVersion = '') then
+    Result := true
+  else
+  begin
+    uninstallResult := UnInstallOldVersion(oldVersion);
+    if (uninstallResult <> 3) then
+    begin
+      continueInstall := MsgBox('Uninstallation of previous version of APSIM was unsuccessful. Do you wish to continue installing the new version?', mbConfirmation, MB_YESNO);
+      Result := continueInstall = IDYES;
+    end
+    else
+      Result := True;
+  end;
+end;
+
 // this is the main function that detects the required version
 function IsRequiredDotNetDetected(): Boolean;  
 begin
@@ -141,19 +204,21 @@ var
   answer: integer;
   ErrorCode: Integer;
 begin
-    //check for the .net runtime. If it is not found then show a message.
-    if not IsRequiredDotNetDetected() then 
-    begin
-        answer := MsgBox('The Microsoft .NET Core Runtime 3.1 or above is required.' + #13#10 + #13#10 +
-        'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);        
-        result := false;
-        if (answer = MROK) then
-        begin
-          ShellExecAsOriginalUser('open', 'https://download.visualstudio.microsoft.com/download/pr/88437980-f813-4a01-865c-f992ad4909bb/9a936984781f6ce3526ffc946267e0ea/windowsdesktop-runtime-3.1.14-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
-        end;
-    end
-    else
-      result := true;
+  result := true
+  //check for the .net runtime. If it is not found then show a message.
+  if not IsRequiredDotNetDetected() then 
+  begin
+      result := false;
+      answer := MsgBox('The Microsoft .NET Core Runtime 3.1 or above is required.' + #13#10 + #13#10 +
+      'Click OK to go to the web site or Cancel to quit', mbInformation, MB_OKCANCEL);
+      if (answer = MROK) then
+      begin
+        ShellExecAsOriginalUser('open', 'https://download.visualstudio.microsoft.com/download/pr/88437980-f813-4a01-865c-f992ad4909bb/9a936984781f6ce3526ffc946267e0ea/windowsdesktop-runtime-3.1.14-win-x64.exe', '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+        result := true
+      end;
+  end;
+  if result = true then
+    result := UpgradeIfNecessary();
 end;
 
 [InstallDelete]
