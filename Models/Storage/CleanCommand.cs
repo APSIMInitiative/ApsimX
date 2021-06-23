@@ -29,6 +29,14 @@ namespace Models.Storage
         /// </summary>
         public double Progress { get { return 0; } }
 
+        /// <summary>
+        /// Prepare the IRunnable instance to be run.
+        /// </summary>
+        public void Prepare()
+        {
+            // Nothing to do.
+        }
+
         /// <summary>Called to run the command. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>
         public void Run(CancellationTokenSource cancelToken)
