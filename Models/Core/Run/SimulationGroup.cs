@@ -171,7 +171,6 @@
             startTime = DateTime.Now;
             Status = "Finding simulations to run";
 
-            List<Exception> exceptions = null;
             try
             {
                 if (relativeTo == null)
@@ -182,8 +181,6 @@
                     Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
                     sims.WaitUntilLoaded();
                     relativeTo = sims;
-                    if (exceptions.Count > 0)
-                        throw exceptions[0];
                 }
 
                 if (relativeTo != null)
