@@ -184,7 +184,11 @@
             Assert.AreEqual(weather.MaxT, 1);
         }
 
-        /// <summary>Ensure the soil in a simulation is standardised when ToSimulation is called.</summary>
+        /// <summary>
+        /// Ensure the soil in a simulation is NOT standardised when ToSimulation is called.
+        /// This cannot happen during ToSimulation(), as we need to wait until disabled
+        /// models have been removed and other property/model replacements have been applied.
+        /// </summary>
         [Test]
         public void EnsureSoilIsStandardised()
         {
@@ -250,6 +254,8 @@
 
             var originalSoil = sim.Children[0] as Soil;
             var originalWater = originalSoil.Children[0] as Physical;
+            var originalSoilOM = originalSoil.Children[2] as Organic;
+            var originalSample = originalSoil.Children[4] as Sample;
 
             originalSoil.OnCreated();
             
@@ -262,12 +268,12 @@
             var sample = newSim.Children[0].Children[4] as Sample;
 
             // Make sure layer structures have been standardised.
-            Assert.AreEqual(water.Thickness, originalWater.Thickness);
-            Assert.AreEqual(soilOrganicMatter.Thickness, originalWater.Thickness);
-            Assert.AreEqual(sample.Thickness, originalWater.Thickness);
+            Assert.AreEqual(water.Thickness, originalWater.Thickness, "soilwat thickness is incorrect");
+            Assert.AreEqual(soilOrganicMatter.Thickness, originalSoilOM.Thickness, "soil OM thickness is incorrect");
+            Assert.AreEqual(sample.Thickness, originalSample.Thickness, "sample thickness is incorrect");
 
             // Make sure sample units are volumetric.
-            Assert.AreEqual(sample.SWUnits, Sample.SWUnitsEnum.Volumetric);
+            Assert.AreEqual(Sample.SWUnitsEnum.Gravimetric, sample.SWUnits, "sample's SW units are incorrect");
         }
 
         /// <summary>
