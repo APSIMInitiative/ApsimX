@@ -140,7 +140,7 @@
                     }
 
                     if (checkpointFiles.Rows.Count > 0)
-                        writer.WriteTable(checkpointFiles);
+                        writer.WriteTable(checkpointFiles, deleteAllData:true);
                 }
             }
         }

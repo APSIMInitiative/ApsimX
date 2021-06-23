@@ -122,12 +122,9 @@
             // Add units
             AddUnits(data.TableName, data.ColumnNames, data.ColumnUnits);
 
-            // Delete old rows in table.
-            DeleteOldRowsInTable(data.TableName, "Current", new string[] { data.SimulationName });
-
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table));
+                commands.Add(new WriteTableCommand(Connection, table, deleteOldData:false));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -137,7 +134,8 @@
         /// Write a table of data. Uses the TableName property of the specified DataTable.
         /// </summary>
         /// <param name="table">The data to write.</param>
-        public void WriteTable(DataTable table)
+        /// <param name="deleteAllData">Delete all data before writing table?</param>
+        public void WriteTable(DataTable table, bool deleteAllData = false)
         {
             if (table == null)
                 return;
@@ -147,21 +145,11 @@
 
             Start();
 
-            // Delete old rows in table.
-            if (table.Columns.Contains("SimulationName"))
-            {
-                var simulationNames = DataTableUtilities.GetColumnAsStrings(table, "SimulationName").ToList().Distinct();
-                DeleteOldRowsInTable(table.TableName, "Current",
-                                     simulationNamesThatMayNeedCleaning: simulationNames);
-            }
-            else
-                DeleteOldRowsInTable(table.TableName, "Current");
-
             AddIndexColumns(table, "Current", null, null);
 
             lock (lockObject)
             {
-                commands.Add(new WriteTableCommand(Connection, table));
+                commands.Add(new WriteTableCommand(Connection, table, deleteAllData));
                 if (!TablesModified.Contains(table.TableName))
                     TablesModified.Add(table.TableName);
             }
@@ -455,77 +443,16 @@
         }
 
         /// <summary>
-        /// Delete old rows for the specified table, checkpoint and simulation.
+        /// Create a db clean command.
         /// </summary>
-        /// <param name="tableName">The table name to delete from.</param>
-        /// <param name="checkpointName">The checkpoint name to use to match rows to delete.</param>
-        /// <param name="simulationNamesThatMayNeedCleaning">Simulation names that may need cleaning up.</param>
-        private void DeleteOldRowsInTable(string tableName, string checkpointName = null, IEnumerable<string> simulationNamesThatMayNeedCleaning = null)
+        /// <param name="names">A list of simulation names that are about to run.</param>
+        public IRunnable Clean(List<string> names)
         {
-            // Can be called by many threads simultaneously.
-
-            List<int> simulationIds = null;
-            if (tablesNotNeedingIndexColumns.Contains(tableName))
-            {
-                // Create a delete row command to remove the rows.
-                lock (lockObject)
-                {
-                    // This will drop the table.
-                    commands.Add(new DeleteRowsCommand(Connection, tableName,
-                                        0, simulationIds));
-                }
-            }
-            else 
-            {
-                if (simulationNamesThatMayNeedCleaning != null)
-                {
-                    IEnumerable<string> simsNeedingCleaning;
-
-                    lock (lockObject)
-                    {
-                        // Have we written anything to this table yet?
-                        if (!simulationNamesThatHaveBeenCleanedUp.TryGetValue(tableName, out var simsThatHaveBeenCleanedUp))
-                        {
-                            // No - create a empty list of simulation names that we've cleaned up.
-                            simulationNamesThatHaveBeenCleanedUp.Add(tableName, new List<string>());
-                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning;
-                        }
-                        else
-                        {
-                            // Get a list of simulations that haven't been cleaned up for this table.
-                            simsNeedingCleaning = simulationNamesThatMayNeedCleaning.Except(simsThatHaveBeenCleanedUp);
-                        }
-
-                        simulationIds = new List<int>();
-                        if (simsNeedingCleaning.Any())
-                        {
-                            // Add the simulations we're about to clean to our list so
-                            // that they aren't cleaned again. Also get id's for each one.
-                            foreach (var simulationName in simsNeedingCleaning)
-                            {
-                                simulationNamesThatHaveBeenCleanedUp[tableName].Add(simulationName);
-                                simulationIds.Add(GetSimulationID(simulationName, null));
-                            }
-                        }
-                    }
-                }
-
-                if (simulationNamesThatMayNeedCleaning == null || simulationIds.Any())
-                {
-                    // Get a checkpoint id.
-                    var checkpointID = 0;
-                    if (checkpointName != null)
-                        checkpointID = GetCheckpointID(checkpointName);
-
-                    // Create a delete row command to remove the rows.
-                    lock (lockObject)
-                    {
-                        commands.Add(new DeleteRowsCommand(Connection, tableName,
-                                            checkpointID,
-                                            simulationIds));
-                    }
-                }
-            }
+            var ids = new List<int>();
+            foreach (var name in names)
+                if (simulationIDs.TryGetValue(name, out SimulationDetails details))
+                    ids.Add(details.ID);
+            return new CleanCommand(this, names, ids);
         }
 
         /// <summary>Create a command runner one hasn't already been created.</summary>
@@ -631,7 +558,7 @@
                         unitTable.Rows.Add(unitRow);
                     }
                 }
-                WriteTable(unitTable);
+                WriteTable(unitTable, deleteAllData:true);
             }
         }
 
@@ -655,7 +582,7 @@
                     row[2] = simulation.Value.FolderName;
                     simulationsTable.Rows.Add(row);
                 }
-                WriteTable(simulationsTable);
+                WriteTable(simulationsTable, deleteAllData: true);
             }
         }
 
@@ -681,7 +608,7 @@
                         row[3] = 1;
                     checkpointsTable.Rows.Add(row);
                 }
-                WriteTable(checkpointsTable);
+                WriteTable(checkpointsTable, deleteAllData: true);
             }
         }
 

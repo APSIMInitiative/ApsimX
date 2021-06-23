@@ -136,6 +136,8 @@
             };
             data2.Rows.Add(new List<object>() { 3 });
             writer = new DataStoreWriter(database);
+            var cleanCommand = writer.Clean(new List<string>() { "Sim1" });
+            cleanCommand.Run(null);
             writer.WriteTable(data2);
             writer.Stop();
 
@@ -251,7 +253,7 @@
 
             // Write the table a second time.
             writer = new DataStoreWriter(database);
-            writer.WriteTable(data);
+            writer.WriteTable(data, deleteAllData:true);
             writer.Stop();
 
             // Make sure the old data was removed and we only have new data.
@@ -259,42 +261,6 @@
                 Utilities.CreateTable(new string[] {                      "CheckpointID", "Col1", "Col2" },
                                       new List<object[]> { new object[] {              1,    100,   200 },
                                                            new object[] {              1,    110,   210 }})
-               .IsSame(Utilities.GetTableFromDatabase(database, "Report1")));
-        }
-
-        /// <summary>Write a table of data twice ensuring the old data is removed.</summary>
-        [Test]
-        public void CleanupOldColumns()
-        {
-            DataTable data = new DataTable("Report1");
-            data.Columns.Add("Col1", typeof(int));
-            data.Columns.Add("Col2", typeof(int));
-            DataRow row = data.NewRow();
-            row["Col1"] = 10;
-            row["Col2"] = 20;
-            data.Rows.Add(row);
-
-            DataStoreWriter writer = new DataStoreWriter(database);
-            writer.WriteTable(data);
-            writer.Stop();
-
-            // Change the structure of the data.
-            data = new DataTable("Report1");
-            data.Columns.Add("Col1", typeof(int));
-            data.Columns.Add("Col3", typeof(int));
-            row = data.NewRow();
-            row["Col1"] = 100;
-            row["Col3"] = 200;
-            data.Rows.Add(row);
-            
-            // Write the table a second time.
-            writer = new DataStoreWriter(database);
-            writer.WriteTable(data);
-            writer.Stop();
-
-            Assert.IsTrue(
-                Utilities.CreateTable(new string[] {                      "CheckpointID", "Col1", "Col3" },
-                                      new List<object[]> { new object[] {              1,    100,   200 }})
                .IsSame(Utilities.GetTableFromDatabase(database, "Report1")));
         }
 
@@ -414,8 +380,8 @@
 
 
             Assert.IsTrue(
-                Utilities.CreateTable(new string[]                      { "ID", "Name",      "Version",     "OnGraphs"},
-                                      new List<object[]> { new object[] { 1, "Current", Convert.DBNull, Convert.DBNull } })
+                Utilities.CreateTable(new string[]                      { "ID", "Name",      "Version",   "Date",  "OnGraphs"},
+                                      new List<object[]> { new object[] { 1, "Current", Convert.DBNull, Convert.DBNull, Convert.DBNull } })
                .IsSame(Utilities.GetTableFromDatabase(database, "_Checkpoints")));
         }
 
@@ -483,6 +449,8 @@
             data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 1), 3.0 });
             data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 2), 4.0 });
             var writer = new DataStoreWriter(database);
+            var cleanCommand = writer.Clean(new List<string>() { "Sim2" });
+            cleanCommand.Run(null);
             writer.WriteTable(data1);
 
             // Add a checkpoint - overwrite existing one.
