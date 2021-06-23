@@ -102,40 +102,18 @@
         public int ActiveTabIndex { get; set; }
 
         /// <summary>
-        /// Has OnCreated() been called?
-        /// </summary>
-        public bool IsCreated
-        {
-            get
-            {
-                if (afterCreation)
-                    return true;
-                lock (this)
-                    return afterCreation;
-            }
-        }
-
-        /// <summary>
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
         public override void OnCreated()
         {
-            if (afterCreation)
-                return;
-            lock (this)
-            {
-                if (!afterCreation)
-                {
-                    afterCreation = true;
+            afterCreation = true;
 
-                    // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
-                    // resolved and there is no parent Simulations object which leads to no ScriptCompiler
-                    // instance. This needs to be fixed.
-                    if (TryGetCompiler())
-                        RebuildScriptModel();
-                }
-            }
+            // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
+            // resolved and there is no parent Simulations object which leads to no ScriptCompiler
+            // instance. This needs to be fixed.
+            if (TryGetCompiler())
+                RebuildScriptModel();
         }
 
         /// <summary>
