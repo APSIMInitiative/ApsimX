@@ -463,7 +463,6 @@
                 try
                 {
                     Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
-                    simulations.OnInitialisationError = e => ShowError(e, false);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
