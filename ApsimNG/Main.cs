@@ -27,6 +27,8 @@
             Gtk.Application.Init();
 #if NETFRAMEWORK
             Gtk.Settings.Default.SetLongProperty("gtk-menu-images", 1, "");
+#else
+            Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
 #endif
             IntellisensePresenter.Init();
             MainView mainForm = new MainView();
