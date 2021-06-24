@@ -210,7 +210,7 @@
             // Run the simulation - this shouldn't fail, because the soil is disabled.
             var runner = new Models.Core.Run.Runner(sims);
             List<Exception> errors = runner.Run();
-            Assert.Null(errors, "There should be no errors - the faulty soil is disabled");
+            Assert.AreEqual(0, errors.Count, "There should be no errors - the faulty soil is disabled");
         }
 
         private Soil CreateSimpleSoil()
