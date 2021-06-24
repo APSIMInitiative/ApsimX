@@ -8,7 +8,7 @@ if "%apsimx%"=="" (
 	set apsimx=!cd!
 	popd>nul
 )
-set "bin=%apsimx%\bin\Release\net472"
+set "bin=%apsimx%\bin\Release\netcoreapp3.1"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
