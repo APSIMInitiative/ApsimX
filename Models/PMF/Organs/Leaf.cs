@@ -1326,6 +1326,8 @@ namespace Models.PMF.Organs
             CohortParameters.CellDivisionStressValue = 0;
             CohortParameters.LagAccelerationValue = 0;
             CohortParameters.SenescenceAccelerationValue = 0;
+            FRGR = 0;
+            FractionDied = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]

@@ -214,7 +214,7 @@
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
-        /// For error messages, use <see cref="ShowError(Exception)"/>.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="messageType">The error level value</param>
@@ -253,7 +253,7 @@
 
         /// <summary>
         /// Displays a simple error message in the status bar, without a 'more information' button.
-        /// If you've just caught an exception, <see cref="ShowError(Exception)"/> is probably a better method to use.
+        /// If you've just caught an exception, <see cref="ShowError(Exception, bool)"/> is probably a better method to use.
         /// </summary>
         /// <param name="error"></param>
         public void ShowError(string error)
@@ -266,7 +266,8 @@
         /// Displays an error message in the status bar, along with a button which brings up more info.
         /// </summary>
         /// <param name="error">The error to be displayed.</param>
-        public void ShowError(Exception error)
+        /// <param name="overwrite">Overwrite any existing error messages?</param>
+        public void ShowError(Exception error, bool overwrite = true)
         {
             if (error != null)
             {
@@ -278,7 +279,7 @@
                 else
                 {
                     LastError = new List<string> { error.ToString() };
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite);
                 }
             }
             else
@@ -461,13 +462,9 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    List<Exception> creationExceptions;
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
+                    simulations.OnInitialisationError = e => ShowError(e, false);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (creationExceptions.Count > 0)
-                    {
-                        ShowError(creationExceptions);
-                    }
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -888,8 +885,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -931,7 +927,6 @@
                 this.presenters2.Add(newPresenter);
             }
 
-            XmlDocument doc = new XmlDocument();
             newPresenter.Attach(simulations, newView, null);
 
             this.view.AddTab(name, null, newView.MainWidget, onLeftTabControl);
@@ -960,7 +955,7 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
@@ -1196,7 +1191,7 @@
             try
             {
                 string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
-                string fileName = AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string fileName = AskUserForOpenFileName("ApsimX files|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {

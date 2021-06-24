@@ -448,6 +448,8 @@ namespace Models.PMF.Organs
             NSupply.Clear();
             Detached.Clear();
             Leaves.Clear();
+            GrowthRespiration = 0;
+            FRGR = 0;
             if (Structure != null)
                 Structure.LeafTipsAppeared = 0;
 

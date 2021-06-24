@@ -81,7 +81,9 @@
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
 
                 Assert.IsTrue(
@@ -156,7 +158,9 @@
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
                 // Run simulations.
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Check that data was written to database.
 
@@ -234,7 +238,9 @@
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
                 // Run simulations.
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Check that data was written to database.
                 Assert.IsTrue(
@@ -391,7 +397,9 @@
 
                 // Run simulations.
                 Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Make sure an exception is returned.
                 Assert.IsNotNull(MockSummary.messages.Find(m => m.Contains("Passed Test")));
@@ -618,9 +626,9 @@
 
                 // Simulation shouldn't have run. Check the summary messages to make
                 // sure there is NOT a 'Simulation completed' message.
-                Assert.AreEqual(MockSummary.messages.Count, 0);
+                Assert.AreEqual(0, MockSummary.messages.Count);
 
-                Assert.AreEqual(runner.Progress, 0);
+                Assert.AreEqual(1, runner.Progress);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(1, argsOfAllCompletedJobs.AllExceptionsThrown.Count);

@@ -176,9 +176,7 @@
 
         private static void ListSimulationNames(string fileName, string simulationNameRegex)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
 
             SimulationGroup jobFinder = new SimulationGroup(file, simulationNamePatternMatch: simulationNameRegex);
             jobFinder.FindAllSimulationNames(file, null).ForEach(name => Console.WriteLine(name));
@@ -187,9 +185,7 @@
 
         private static void ListReferencedFileNames(string fileName)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations file = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
 
             foreach (var referencedFileName in file.FindAllReferencedFiles())
                 Console.WriteLine(referencedFileName);

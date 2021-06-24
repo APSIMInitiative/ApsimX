@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 283,
-  "Version": 101,
+  "ExplorerWidth": 300,
+  "Version": 131,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -27,6 +27,7 @@
     {
       "$type": "Models.Core.Simulation, Models",
       "IsRunning": false,
+      "Descriptors": null,
       "Name": "Simulation",
       "Children": [
         {
@@ -60,7 +61,8 @@
           "ReadOnly": false
         },
         {
-          "$type": "Models.Weather, Models",
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
           "FileName": "%root%\\Examples\\WeatherFiles\\lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
@@ -102,6 +104,7 @@
               "Latitude": 0.0,
               "Longitude": 0.0,
               "LocationAccuracy": null,
+              "YearOfSampling": null,
               "DataSource": "Generic profile descriptions provided by Trevor Webb and data for functional horizions based on SWAMP project results",
               "Comments": "Bulk density values were measured on the fine earth fraction so values entered into apsim soil are adjusted down to account for stone content (assuming stones are inert from all soil process so their mass and volume is removed from model paramaters).  SAT, DUL, LL15 and Air dry have been adjusted down to account for stone content.  OC has not been adjusted so the model will get the correct carbon and N amounts using the adjusted BD.",
               "Name": "Lismore",
@@ -151,6 +154,10 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -178,6 +185,8 @@
                   "ParticleSizeClay": null,
                   "ParticleSizeSand": null,
                   "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
                   "BD": [
                     1.09,
                     1.09,
@@ -225,6 +234,11 @@
                   "DULMetadata": null,
                   "SATMetadata": null,
                   "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [
                     {
@@ -281,7 +295,6 @@
                   "CN2Bare": 73.0,
                   "CNRed": 20.0,
                   "CNCov": 0.8,
-                  "Slope": "NaN",
                   "DischargeWidth": "NaN",
                   "CatchmentArea": "NaN",
                   "Thickness": [
@@ -366,6 +379,8 @@
                     49.677713541852036,
                     27.263707246314198
                   ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -385,43 +400,8 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-20",
-                    "20-30",
-                    "30-60",
-                    "60-90",
-                    "90-120",
-                    "120-150"
-                  ],
-                  "Thickness": [
-                    200.0,
-                    100.0,
-                    300.0,
-                    300.0,
-                    300.0,
-                    300.0
-                  ],
-                  "NO3N": null,
-                  "NH4N": null,
-                  "SW": null,
-                  "OC": null,
-                  "EC": null,
-                  "CL": null,
-                  "ESP": null,
-                  "PH": null,
-                  "SWUnits": 0,
-                  "OCUnits": 0,
-                  "PHUnits": 0,
-                  "Name": "InitialNitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
-                  "Name": "CERESSoilTemperature",
+                  "Name": "Temperature",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -475,8 +455,8 @@
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
               "Name": "fertiliser",
-              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -502,7 +482,7 @@
               "Children": [
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.Surface;\r\nusing Models.PMF.Interfaces;\r\nusing System.Data;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link(ByName = true)] Plant FodderBeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Simulation Simulation;\r\n        [Link] SurfaceOrganicMatter SurfOM;\r\n        \r\n                \r\n        [Description(\"Initial Root Depth\")]\r\n        public double InitialRootDepth { get; set; }\r\n        [Description(\"Sown Crop\")]\r\n        [Display(Type=DisplayType.CultivarName, PlantName = \"FodderBeet\")]\r\n        public string CropToSow { get; set; }\r\n        [Description(\"Sowing Date\")]\r\n        public DateTime SowingDate { get; set; }\r\n        \r\n        \r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today.Date == SowingDate)\r\n            {\r\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\r\n                \r\n            }\r\n                        \r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Models.Surface;\nusing Models.PMF.Interfaces;\nusing System.Data;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    //[System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link(ByName = true)] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Simulation Simulation;\n        [Link] SurfaceOrganicMatter SurfOM;\n        \n                \n        [Description(\"Initial Root Depth\")]\n        public double InitialRootDepth { get; set; }\n        [Description(\"Sown Crop\")]\n        [Display(Type=DisplayType.CultivarName, PlantName = \"FodderBeet\")]\n        public string CropToSow { get; set; }\n        [Description(\"Sowing Date\")]\n        public DateTime SowingDate { get; set; }\n        \n        \n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today.Date == SowingDate)\n            {\n                FodderBeet.Sow(cultivar: CropToSow, population: 9, depth: InitialRootDepth, rowSpacing: 500);\n                \n            }\n                        \n            \n        }\n    }\n}\n                \n",
                   "Parameters": [
                     {
                       "Key": "InitialRootDepth",
@@ -616,11 +596,11 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant FodderBeet;\r\n        [Link] Clock Clock;\r\n        [Link] Zone zone;\r\n        [Link] Summary Summary;\r\n\r\n\r\n        [Description(\" Date of Infection\")]\r\n        public DateTime InfectionDate { get; set; }\r\n        [Description(\"Is Infected\")]\r\n        public bool IsInfected  {get; set;}    \r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            \r\n\r\n            if (IsInfected == true) // an infected crop\r\n              if (InfectionDate == Clock.Today)\r\n               {\r\n                zone.Set(\"FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue\", 600);\r\n                Summary.WriteMessage(this,\"Fodder beet infected with fugal disease\");\r\n                }\r\n            \r\n        }\r\n        \r\n    }\r\n}\r\n                \r\n",
+                  "Code": "\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant FodderBeet;\n        [Link] Clock Clock;\n        [Link] Zone zone;\n        [Link] Summary Summary;\n\n\n        [Description(\" Date of Infection\")]\n        public DateTime InfectionDate { get; set; }\n        [Description(\"Is Infected\")]\n        public bool IsInfected  {get; set;}    \n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            \n\n            if (IsInfected == true) // an infected crop\n              if (InfectionDate == Clock.Today)\n               {\n                zone.Set(\"FodderBeet.Leaf.CohortParameters.SenescenceDuration.BaseValue.FixedValue\", 600);\n                Summary.WriteMessage(this,\"Fodder beet infected with fugal disease\");\n                }\n            \n        }\n        \n    }\n}\n                \n",
                   "Parameters": [
                     {
                       "Key": "InfectionDate",
-                      "Value": "2015-01-03"
+                      "Value": "01/03/2015 00:00:00"
                     },
                     {
                       "Key": "IsInfected",
@@ -643,7 +623,7 @@
                 "[Clock].Today",
                 "[FodderBeet].Leaf.Fw",
                 "[FodderBeet].Leaf.Fn",
-                "[FodderBeet].Phenology.CurrentPhaseName",
+                "[FodderBeet].Phenology.CurrentPhase.Name",
                 "[FodderBeet].Phenology.Stage",
                 "[FodderBeet].Phenology.ThermalTime",
                 "[FodderBeet].Phenology.AccumulatedThermalTime",
@@ -685,7 +665,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using System.Diagnostics;\r\nusing Models.AgPasture;\r\nusing System.Linq;\r\nusing System.Collections.Generic;\r\nusing System.Collections;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.GrazPlan;\r\nusing Models.Utilities;\r\nusing Models.Core;\r\nusing Models;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] Stock stock;\r\n        [Link] List<Zone> paddocks;\r\n        [Link] ISummary summary;\r\n        [Link] Simulation farm;\r\n\r\n        private int CurrentGroupNum = 1;    // animal group number\r\n        private int CurrentLocationNum { get; set; }\r\n\r\n        public enum Genotypes\r\n        {\r\n            SmallMerino,\r\n            Angus,\r\n            Friesian\r\n        }\r\n\r\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\r\n\r\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \r\n        public Genotypes Genotype { get; set; }\r\n\r\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \r\n        public ReproductiveType Sex { get; set; }\r\n\r\n        [Description(\"Stock: age (months):\")] \r\n        public double Age { get; set; }\r\n\r\n        [Description(\"Stock: weight (kg liveweight /head):\")] \r\n        public double Weight { get; set; }\r\n\r\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \r\n        public int Pregnant { get; set; }\r\n\r\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\r\n        public int Lactating { get; set; }\r\n\r\n        [Description(\"Stock: number of unweaned young:\")]\r\n        public int YoungNumber { get; set; }\r\n\r\n        [Description(\"Stock: weight of unweaned young:\")] \r\n        public double YoungWt { get; set; }\r\n\r\n        [Separator(\"Grazing type info\")]\r\n\r\n        [Description(\"Paddock stocking rate (head/ha): \")] \r\n        public double StockingRate { get; set; }\r\n\r\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \r\n        public string CurrentLocation { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \r\n        public double PreGrazingDM { get; set; }\r\n\r\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \r\n        public double PostGrazingDM { get; set; }\r\n\r\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \r\n        public bool DoNoGrazingWindow { get; set; }\r\n\r\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeStart { get; set; }\r\n\r\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \r\n        public string NoGrazeEnd { get; set; }\r\n\r\n\r\n        public int NumStock { get; set; }\r\n        // number of cows on the whole farm\r\n        public bool GrazingSeasonIsOpen { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {\r\n\r\n            //Debugger.Break();\r\n\r\n            summary.WriteMessage(this, \"Initialising the paddock information\");\r\n\r\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\r\n\r\n            if (CurrentLocation.ToLower() != \"away\")\r\n            {\r\n                BuyStock();\r\n                stock.Move(CurrentLocation);\r\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\r\n            }\r\n\r\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\r\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\r\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\r\n\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            GrazingSeasonIsOpen = true;\r\n            if (DoNoGrazingWindow)\r\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\r\n\r\n            bool sellSomeStock = false;\r\n            if (!GrazingSeasonIsOpen)\r\n                sellSomeStock = true;\r\n\r\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\r\n            if (harvestableBiomass <= PostGrazingDM)\r\n                sellSomeStock = true;\r\n\r\n            if (CurrentLocation == \"Away\")\r\n                sellSomeStock = false;\r\n\r\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\r\n            {\r\n                CurrentLocation = paddocks[0].Name;\r\n                CurrentLocationNum = paddocks[0].Index;\r\n                BuyStock();\r\n                stock.Move(CurrentLocation);\r\n                summary.WriteMessage(this, \"     Buying stock \");\r\n            }\r\n\r\n            if (sellSomeStock)\r\n            {\r\n                CurrentLocation = \"Away\";\r\n                CurrentLocationNum = -1;\r\n                SellStock();\r\n                summary.WriteMessage(this, \"     Selling stock \");\r\n            }\r\n\r\n        }\r\n\r\n\r\n        public void BuyStock()\r\n        {\r\n            CurrentGroupNum = stock.NoGroups + 1;\r\n            StockBuy purchase = new StockBuy();\r\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\r\n            purchase.Number = NumStock;\r\n            purchase.Sex = Sex;\r\n            purchase.Age = Age;       // age in months\r\n            purchase.Weight = Weight;  // live weight in kg\r\n            purchase.UseTag = CurrentGroupNum + 1;\r\n            purchase.MatedTo = purchase.Genotype;\r\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\r\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\r\n            purchase.NumYoung = YoungNumber;\r\n            purchase.YoungWt = YoungWt;\r\n\r\n            stock.Buy(purchase);\r\n        }\r\n\r\n        public void SellStock()\r\n        {\r\n            int NumGroups = stock.NoGroups;\r\n\r\n            NumGroups = stock.NoGroups;\r\n            foreach (var animalGroup in stock.AnimalGroups)\r\n            {\r\n                stock.Sell(animalGroup.NoAnimals, animalGroup);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models;\nusing Models.Core;\nusing Models.Utilities;\nusing Models.GrazPlan;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Linq;\nusing Models.AgPasture;\nusing System.Diagnostics;\n\nnamespace Models\n{\n\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] Stock stock;\n        [Link] List<Zone> paddocks;\n        [Link] ISummary summary;\n        [Link] Simulation farm;\n\n        private int CurrentGroupNum = 1;    // animal group number\n        private int CurrentLocationNum { get; set; }\n        public string CurrentLocation { get; set; }\n\n        public enum Genotypes\n        {\n            SmallMerino,\n            Angus,\n            Friesian\n        }\n\n        [Separator(\"Stock type info, the same type of stock are brought onto the paddock at each grazing\")]\n\n        [Description(\"Stock: genotype (e.g. Small Merino, Angus, Friesian):\")] \n        public Genotypes Genotype { get; set; }\n\n        [Description(\"Stock: sex (Female, Male, Castrate):\")] \n        public ReproductiveType Sex { get; set; }\n\n        [Description(\"Stock: age (months):\")] \n        public double Age { get; set; }\n\n        [Description(\"Stock: weight (kg liveweight /head):\")] \n        public double Weight { get; set; }\n\n        [Description(\"Stock: fertility status (0 if non-pregnant or days since conception):\")] \n        public int Pregnant { get; set; }\n\n        [Description(\"Stock: lactation status (0 if non-lactating or days since parturition):\")]\n        public int Lactating { get; set; }\n\n        [Description(\"Stock: number of unweaned young:\")]\n        public int YoungNumber { get; set; }\n\n        [Description(\"Stock: weight of unweaned young:\")] \n        public double YoungWt { get; set; }\n\n        [Separator(\"Grazing type info\")]\n\n        [Description(\"Paddock stocking rate (head/ha): \")] \n        public double StockingRate { get; set; }\n\n        [Description(\"Initial location of the cows (give either the paddock name or 'Away'): \")] \n        public string InitialLocation { get; set; }\n\n        [Description(\"Standing biomass at which to bring the stock into the simulation (kg DM/ha): \")] \n        public double PreGrazingDM { get; set; }\n\n        [Description(\"Standing biomass at which to exit  stock from the simulation (kg DM/ha): \")] \n        public double PostGrazingDM { get; set; }\n\n        [Description(\"Implement a no-grazing window? (tick for yes): \")] \n        public bool DoNoGrazingWindow { get; set; }\n\n        [Description(\"Start of the no-grazing window (dd-MMM)\")] \n        public string NoGrazeStart { get; set; }\n\n        [Description(\"End of the no-grazing window (dd-MMM)\")] \n        public string NoGrazeEnd { get; set; }\n\n\n        public int NumStock { get; set; }\n        // number of cows on the whole farm\n        public bool GrazingSeasonIsOpen { get; set; }\n\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n\n            //Debugger.Break();\n\n            summary.WriteMessage(this, \"Initialising the paddock information\");\n\n            NumStock = (int)(Math.Round(StockingRate * farm.Area, 0));\n            CurrentLocation = InitialLocation;\n            if (CurrentLocation.ToLower() != \"away\")\n            {\n                BuyStock();\n                stock.Move(CurrentLocation);\n                summary.WriteMessage(this, \" The Stock have been moved to \" + CurrentLocation);\n            }\n\n            summary.WriteMessage(this, \"     The number of animals has been rounded to \" + NumStock + \" from \" + (StockingRate * farm.Area));\n            summary.WriteMessage(this, \"     The animals will begin in \" + CurrentLocation + \" which is paddock number \" + CurrentLocationNum + \" in the simulation\");\n            summary.WriteMessage(this, \"     The area of the whole farm is \" + farm.Area + \" ha\");\n\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            GrazingSeasonIsOpen = true;\n            if (DoNoGrazingWindow)\n                GrazingSeasonIsOpen = !DateUtilities.WithinDates(NoGrazeStart, clock.Today, NoGrazeEnd);\n\n            bool sellSomeStock = false;\n            if (!GrazingSeasonIsOpen)\n                sellSomeStock = true;\n\n            double harvestableBiomass = paddocks[0].Plants.Sum(plant => plant.AboveGround.Wt * 10);\n            if (harvestableBiomass <= PostGrazingDM)\n                sellSomeStock = true;\n\n            if (CurrentLocation == \"Away\")\n                sellSomeStock = false;\n\n            if (CurrentLocation == \"Away\" && harvestableBiomass >= PreGrazingDM && GrazingSeasonIsOpen)\n            {\n                CurrentLocation = paddocks[0].Name;\n                CurrentLocationNum = paddocks[0].Index;\n                BuyStock();\n                stock.Move(CurrentLocation);\n                summary.WriteMessage(this, \"     Buying stock \");\n            }\n\n            if (sellSomeStock)\n            {\n                CurrentLocation = \"Away\";\n                CurrentLocationNum = -1;\n                SellStock();\n                summary.WriteMessage(this, \"     Selling stock \");\n            }\n\n        }\n\n\n        public void BuyStock()\n        {\n            CurrentGroupNum = stock.NoGroups + 1;\n            StockBuy purchase = new StockBuy();\n            purchase.Genotype = ReflectionUtilities.EnumToString(Genotype);\n            purchase.Number = NumStock;\n            purchase.Sex = Sex;\n            purchase.Age = Age;       // age in months\n            purchase.Weight = Weight;  // live weight in kg\n            purchase.UseTag = CurrentGroupNum + 1;\n            purchase.MatedTo = purchase.Genotype;\n            purchase.Pregnant = Pregnant;  // days pregnant, 0 = non pregnant, 1 = pregnant\n            purchase.Lactating = Lactating;  // 0 for dry, 1 for lactating\n            purchase.NumYoung = YoungNumber;\n            purchase.YoungWt = YoungWt;\n\n            stock.Buy(purchase);\n        }\n\n        public void SellStock()\n        {\n            int NumGroups = stock.NoGroups;\n\n            NumGroups = stock.NoGroups;\n            foreach (var animalGroup in stock.AnimalGroups)\n            {\n                stock.Sell(animalGroup.NoAnimals, animalGroup);\n            }\n        }\n    }\n}\n",
           "Parameters": [
             {
               "Key": "Genotype",
@@ -724,7 +704,7 @@
               "Value": "50"
             },
             {
-              "Key": "CurrentLocation",
+              "Key": "InitialLocation",
               "Value": "Away"
             },
             {
@@ -746,14 +726,6 @@
             {
               "Key": "NoGrazeEnd",
               "Value": "30-may"
-            },
-            {
-              "Key": "NumStock",
-              "Value": "0"
-            },
-            {
-              "Key": "GrazingSeasonIsOpen",
-              "Value": "False"
             }
           ],
           "Name": "GrazeForageCrop",
@@ -808,6 +780,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "TotalWt",
@@ -875,6 +848,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "StorageRootWt",
@@ -942,6 +916,7 @@
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "SCS",

@@ -376,8 +376,8 @@
                 // solution is to group the properties by name and take the last of each
                 // group so we end up with the most derived property.
                 props = props.GroupBy(p => p.PropertyName).Select(g => g.Last()).ToList();
-                props.ForEach(p => { p.Writable = true; p.Readable = true; });
-                return props.Where(p => p.PropertyName != "Parent").ToList();
+                props.ForEach(p => { p.Writable = true; });
+                return props.Where(p => p.PropertyName != "Parent" && p.Readable).ToList();
             }
         }
 
@@ -661,6 +661,24 @@
                         return reader.ReadToEnd();
 
             return null;
+        }
+
+        /// <summary>
+        /// Copy the contents of a resource into a file on disk.
+        /// </summary>
+        /// <param name="assembly">Assembly to which the resource belongs.</param>
+        /// <param name="resource">Name of the resource.</param>
+        /// <param name="file">Path to the file to be written.</param>
+        public static void WriteResourceToFile(Assembly assembly, string resource, string file)
+        {
+            using (Stream reader = assembly.GetManifestResourceStream(resource))
+            {
+                using (FileStream writer = File.Create(file))
+                {
+                    reader.Seek(0, SeekOrigin.Begin);
+                    reader.CopyTo(writer);
+                }
+            }
         }
     }
 }
