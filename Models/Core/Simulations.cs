@@ -45,8 +45,6 @@ namespace Models.Core
         [JsonIgnore]
         public string FileName { get; set; }
 
-        private Task initTask;
-
         /// <summary>Returns an instance of a links service</summary>
         [JsonIgnore]
         public Links Links
@@ -58,27 +56,6 @@ namespace Models.Core
                 return links;
             }
         }
-
-        /// <summary>
-        /// When a Simulations object is deserialized it will perform some initialisation
-        /// in a background task (thread). This variable keeps track of whether this
-        /// initialisation task has finished running.
-        /// </summary>
-        public bool IsLoaded { get; private set; }
-
-        /// <summary>
-        /// Block until the initialisation task has finished running.
-        /// </summary>
-        public void WaitUntilLoaded()
-        {
-            if (initTask != null)
-                initTask.Wait();
-        }
-
-        /// <summary>
-        /// If set, this function will be called whenever an error occurs during initialisation.
-        /// </summary>
-        public Action<Exception> OnInitialisationError { get; set; }
 
         /// <summary>Gets a c# script compiler.</summary>
         public ScriptCompiler ScriptCompiler { get; } = new ScriptCompiler();
@@ -271,37 +248,6 @@ namespace Models.Core
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
             
             return fileNames;
-        }
-
-        /// <summary>
-        /// Overrides the OnCreated method to call all descendant models' OnCreated()
-        /// methods in a background thread.
-        /// </summary>
-        public override void OnCreated()
-        {
-            base.OnCreated();
-            initTask = Task.Run(() =>
-            {
-                var timer = System.Diagnostics.Stopwatch.StartNew();
-                IsLoaded = false;
-                foreach (var model in FindAllDescendants().ToList())
-                {
-                    try
-                    {
-                        // model.OnCreated();
-                    }
-                    catch (Exception err)
-                    {
-                        if (OnInitialisationError != null)
-                            OnInitialisationError(err);
-                    }
-                }
-                IsLoaded = true;
-                timer.Stop();
-                // Console.WriteLine($"Finished loading file {(string.IsNullOrEmpty(FileName) ? Children[0].Name : FileName)} in {timer.ElapsedMilliseconds}ms");
-                if (!string.IsNullOrEmpty(FileName))
-                    Console.WriteLine($"Finished loading file {FileName} in {timer.ElapsedMilliseconds}ms");
-            });
         }
 
         /// <summary>Documents the specified model.</summary>
