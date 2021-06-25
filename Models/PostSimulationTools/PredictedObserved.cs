@@ -27,6 +27,8 @@ namespace Models.PostSimulationTools
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
     [ValidParent(ParentType = typeof(Folder))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     public class PredictedObserved : Model, IPostSimulationTool
     {
         [Link]

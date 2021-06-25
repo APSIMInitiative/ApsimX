@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.JobRunning;
     using Models.Core.ApsimFile;
+    using Models.PostSimulationTools;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -301,7 +302,7 @@
         {
             // Call all post simulation tools.
             object[] args = new object[] { this, new EventArgs() };
-            foreach (IPostSimulationTool tool in rootModel.FindAllDescendants<IPostSimulationTool>())
+            foreach (IPostSimulationTool tool in FindPostSimulationTools())
             {
                 storage?.Writer.WaitForIdle();
                 storage?.Reader.Refresh();
@@ -310,11 +311,11 @@
                 Exception exception = null;
                 try
                 {
-                    if (rootModel is Simulations)
-                        (rootModel as Simulations).Links.Resolve(tool as IModel);
-                    if ((tool as IModel).Enabled)
+                    if (tool.Enabled)
                     {
                         Status = $"Running post-simulation tool {(tool as IModel).Name}";
+                        if (rootModel is Simulations)
+                            (rootModel as Simulations).Links.Resolve(tool as IModel);
                         tool.Run();
                     }
                 }
@@ -324,6 +325,13 @@
                     AddException(err);
                 }
             }
+        }
+
+        private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
+        {
+            return rootModel.FindAllDescendants<IPostSimulationTool>()
+                            .Where(t => t.FindAllAncestors()
+                                         .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }
 
         /// <summary>Run all tests.</summary>

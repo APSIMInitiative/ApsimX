@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
 using Models.Core.Run;
+using Models.PostSimulationTools;
 using Models.Storage;
 using System;
 
@@ -19,6 +20,8 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(Report))]
     [ValidParent(ParentType = typeof(ReportPasturePoolDetails))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Description("Creates a datastore view based on an SQL select statement")]
     [Version(1, 1, 0, "New release of this component")]
     [Version(1, 0, 2, "Now generates a database view for accessing the required data")]
