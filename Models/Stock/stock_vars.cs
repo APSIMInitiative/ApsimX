@@ -259,7 +259,8 @@
             {
                 total = 0;
 
-                for (idx = 1; idx <= model.Count(); idx++)
+                int n = model == null ? 0 : model.Count();
+                for (idx = 1; idx <= n; idx++)
                     if (!useTag || (model.Animals[idx].Tag == p))
                     {
                         if (!useYoung)
@@ -335,7 +336,8 @@
                 total = 0.0;
                 denom = 0;
 
-                for (idx = 1; idx <= model.Count(); idx++)
+                int count = model == null ? 0 : model.Count();
+                for (idx = 1; idx <= count; idx++)
                 {
                     if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {
@@ -506,7 +508,8 @@
                 GrazType.ZeroDMPool(ref totalPool);
                 denom = 0;
 
-                for (idx = 1; idx <= model.Count(); idx++)
+                int count = model == null ? 0 : model.Count();
+                for (idx = 1; idx <= count; idx++)
                 {
                     if (!useTag || (model.Animals[idx].Tag == passIdx))
                     {

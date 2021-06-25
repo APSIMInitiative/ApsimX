@@ -287,9 +287,7 @@ namespace UserInterface.Presenters
                             soilDoc.LoadXml(xml);
                             foreach (XmlNode soilNode in XmlUtilities.ChildNodesRecursively(soilDoc, "Soil"))
                             {
-                                Soil soil = FileFormat.ReadFromString<Soil>(soilNode.OuterXml, out List<Exception> errors);
-                                if (errors != null && errors.Count > 0)
-                                    throw errors[0];
+                                Soil soil = FileFormat.ReadFromString<Soil>(soilNode.OuterXml, e => throw e, false);
                                 // fixme: this should be handled by the converter or the importer.
                                 soil.Children.Add(new CERESSoilTemperature());
                                 soils.Add(new SoilFromDataSource()
@@ -326,7 +324,7 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, out List<Exception> errors);
+                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
                     soil.Children.Add(new CERESSoilTemperature());
                     soil.OnCreated();
 
@@ -363,7 +361,7 @@ namespace UserInterface.Presenters
                 // We will have either 0 or 1 soil nodes
                 if (soilNodes.Count > 0)
                 {
-                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, out List<Exception> errors);
+                    var soil = FileFormat.ReadFromString<Soil>(soilNodes[0].OuterXml, e => throw e, false);
                     soil.Children.Add(new CERESSoilTemperature());
                     soil.OnCreated();
 

@@ -30,7 +30,7 @@ dotnet publish --nologo -f netcoreapp3.1 -c Release --no-self-contained -r osx-x
 
 # Insert the version number into the Info.plist file.
 plist="$DIR/Info.plist"
-sed -i "s/@Version/$version/g" "$plist"
+sed -i -e "s/@Version/$version/g" "$plist"
 
 # Delete MacBundle directory if it already exists.
 test -d MacBundle && rm -rf MacBundle

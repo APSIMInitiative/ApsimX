@@ -137,7 +137,7 @@
         [Units("MJ/m^2")]
         public double RadiationInterception
         {
-            get { return microClimatesZones[0].RadiationInterception; }
+            get { return microClimatesZones == null ? 0 : microClimatesZones[0].RadiationInterception; }
         }
 
         /// <summary>Gets the total Penman-Monteith potential evapotranspiration (MJ/m2).</summary>

@@ -85,25 +85,33 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName{ get; set; }
 
-        /// <summary>An event handler to allow us to initialize ourselves.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
         [EventSubscribe("FinalInitialise")]
-        private void OnFinalInitialise(object sender, EventArgs e)
+        private void OnFinalInitialise(object sender, EventArgs args)
         {
             DayAfterLastOutput = clock.Today;
-            dataToWriteToDb = null;
+        }
+
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
+            // Cleanup event names.
+            EventNames = TidyUpEventNames();
 
             // Tidy up variable/event names.
             VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
 
             // Locate reporting variables.
             FindVariableMembers();
-
-            // Silently do nothing if no event names present.
-            if (EventNames == null || EventNames.Length < 1)
-                return;
 
             // Subscribe to events.
             foreach (string eventName in EventNames)

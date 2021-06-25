@@ -189,9 +189,7 @@
                 if (File.Exists(fileName))
                 {
                     // Open the file.
-                    var simulations = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> creationExceptions);
-                    if (creationExceptions?.Count > 0)
-                        throw creationExceptions[0];
+                    var simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
 
                     // Create some necessary presenters and views.
                     var mainPresenter = new MainPresenter();

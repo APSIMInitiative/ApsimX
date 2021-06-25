@@ -171,7 +171,6 @@
             startTime = DateTime.Now;
             Status = "Finding simulations to run";
 
-            List<Exception> exceptions = null;
             try
             {
                 if (relativeTo == null)
@@ -179,9 +178,9 @@
 
                     if (!File.Exists(FileName))
                         throw new Exception("Cannot find file: " + FileName);
-                    relativeTo = FileFormat.ReadFromFile<Simulations>(FileName, out exceptions);
-                    if (exceptions.Count > 0)
-                        throw exceptions[0];
+                    Simulations sims = FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
+                    sims.WaitUntilLoaded();
+                    relativeTo = sims;
                 }
 
                 if (relativeTo != null)
@@ -219,17 +218,35 @@
                     var e = new Events(rootModel);
                     e.Publish("BeginRun", new object[] { this, new EventArgs() });
 
+                    // Find a storage model.
+                    storage = rootModel.FindChild<IDataStore>();
+
                     // Find simulations to run.
                     if (runSimulations)
-                        foreach (IRunnable job in FindListOfSimulationsToRun(relativeTo, simulationNamesToRun))
-                            Add(job);
+                    {
+                        var jobs = FindListOfSimulationsToRun(relativeTo, simulationNamesToRun).ToList();
 
+                        if (storage != null)
+                        {
+                            var names = new List<string>();
+                            foreach (var job in jobs)
+                            {
+                                if (job is SimulationDescription)
+                                {
+                                    var description = job as SimulationDescription;
+                                    foreach (var name in description.Descriptors.Where(d => d.Name == "SimulationName").Select(d => d.Value))
+                                        names.Add(name);
+                                }
+                            }
+                            if (names.Count > 0)
+                                jobs.Insert(0, storage.Writer.Clean(names));
+                        }
+                        foreach (IRunnable job in jobs)
+                            Add(job);
+                    }
                     
                     if (numJobsToRun == 0)
                        Add(new EmptyJob());
-
-                    // Find a storage model.
-                    storage = rootModel.FindChild<IDataStore>();
                 }
             }
             catch (Exception readException)
