@@ -6,7 +6,7 @@ namespace Models.PostSimulationTools
 {
     /// <summary>
     /// This is a post-simulation tool which will run all child post-simulation
-    /// tools in parallel.
+    /// tools serially.
     /// </summary>
     [ValidParent(typeof(IDataStore))]
     [ValidParent(typeof(ParallelPostSimulationTool))]
