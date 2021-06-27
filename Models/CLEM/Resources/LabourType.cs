@@ -320,6 +320,11 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            if (this.Individuals > 1)
+            {
+                throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
+            }
+
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
