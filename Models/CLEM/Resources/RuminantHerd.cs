@@ -327,6 +327,11 @@ namespace Models.CLEM.Resources
         public int SummariseAttribute(string tag, bool ignoreNotFound)
         {
             LastListStatistics = new ListStatistics();
+            if (Herd is null)
+            {
+                return 0;
+            }
+
             var values = Herd.Where( a => (ignoreNotFound & a.GetAttributeValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.GetAttributeValue(tag)?.storedValue));
             if (values.Count() == 0)
             {

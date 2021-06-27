@@ -19,6 +19,9 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 0, "")]
     public class ReportPivot : Model, ICLEMUI
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// The report data
         /// </summary>
@@ -117,7 +120,12 @@ namespace Models.CLEM.Reporting
         public DataTable GenerateTable()
         {
             // Find the DataStore
-            var storage = FindInScope("DataStore") as IDataStore;
+            var storage = dataStore;
+            if(storage == null)
+            {
+                storage = FindInScope<IDataStore>();
+            }
+            //var storage = FindInScope("DataStore") as IDataStore;
 
             // Find the data
             report = report ?? storage.Reader.GetData(Parent.Name);
@@ -136,9 +144,21 @@ namespace Models.CLEM.Reporting
             pivot.Columns.AddRange(columns.ToArray());
             AddPivotRows(report, pivot);
 
+            var dataTable = pivot.DefaultView.ToTable();
+            dataTable.TableName = this.Name;
+
             // Add the pivoted table to the datastore
-            storage.Writer.WriteTable(pivot.DefaultView.ToTable());
+            storage.Writer.WriteTable(dataTable);
             return pivot;
+        }
+
+        /// <summary>
+        /// Saves the view post-simulation
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            GenerateTable();
         }
 
         /// <summary>
