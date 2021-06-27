@@ -446,13 +446,24 @@
         /// Create a db clean command.
         /// </summary>
         /// <param name="names">A list of simulation names that are about to run.</param>
-        public IRunnable Clean(List<string> names)
+        public IRunnable Clean(IEnumerable<string> names)
         {
             var ids = new List<int>();
             foreach (var name in names)
                 if (simulationIDs.TryGetValue(name, out SimulationDetails details))
                     ids.Add(details.ID);
             return new CleanCommand(this, names, ids);
+        }
+
+        /// <summary>
+        /// Initiate a clean of the database.
+        /// </summary>
+        /// <param name="names">Simulation names to be cleaned.</param>
+        public void StartClean(IEnumerable<string> names)
+        {
+            Start();
+            lock (lockObject)
+                commands.Add(Clean(names));
         }
 
         /// <summary>Create a command runner one hasn't already been created.</summary>

@@ -299,5 +299,15 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
+
+        public IRunnable Clean(IEnumerable<string> names)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartClean(IEnumerable<string> names)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
