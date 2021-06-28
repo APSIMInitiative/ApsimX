@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,19 +23,28 @@ namespace Models.CLEM.Activities
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
-    public class RuminantActivityControlledMating : CLEMRuminantActivityBase
+    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
         private List<LabourRequirement> labour;
 
         private RuminantGroup breederGroup;
-
-        List<SetAttributeWithValue> attributeList;
+        private List<SetAttributeWithValue> attributeList;
+        private ActivityTimerBreedForMilking milkingTimer;
+        private RuminantActivityBreed breedingParent;
 
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
         public List<SetAttributeWithValue> SireAttributes => attributeList;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityControlledMating()
+        {
+            this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -43,12 +53,12 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.AllocationStyle = ResourceAllocationStyle.Manual;
-
             this.InitialiseHerd(false, true);
 
             breederGroup = new RuminantGroup();
             breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
             breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
+            // TODO: add sort by condition
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
 
@@ -59,11 +69,44 @@ namespace Models.CLEM.Activities
                 labour = new List<LabourRequirement>();
             }
 
+            milkingTimer = FindChild<ActivityTimerBreedForMilking>();
+
             // check that timer exists for controlled mating
             if (!this.TimingExists)
             {
                 Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
             }
+
+            // get details from parent breeding activity
+            breedingParent = this.Parent as RuminantActivityBreed;
+        }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (breedingParent is null)
+            {
+                string[] memberNames = new string[] { "Controlled mating parent" };
+                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
+        /// <summary>
+        /// Provide the list of all breeders currently available
+        /// </summary>
+        /// <returns>A list of breeders to work with before returning to the breed activity</returns>
+        public IEnumerable<Ruminant> GetBreeders()
+        {
+            return CurrentHerd(true).FilterRuminants(breederGroup).Where(a => a.IsAbleToBreed);
         }
 
         /// <summary>
@@ -75,14 +118,16 @@ namespace Models.CLEM.Activities
             this.Status = ActivityStatus.NotNeeded;
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
-                // get list of breeders using filtergroups to this activity
-                IEnumerable<Ruminant> herd = CurrentHerd(true).FilterRuminants(breederGroup);
+                IEnumerable<Ruminant> herd = GetBreeders();
+
+                if (milkingTimer != null)
+                {
+                    // grab the required number from all ready breeders
+                    herd = herd.Take(milkingTimer.NumberOfIndividualsToBreed);
+                }
 
                 if (herd.Count() > 0)
                 {
-                    // reduce to breed for milking number
-                    // get number needed
-
                     // calculate labour and finance costs
                     List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(herd);
                     CheckResources(resourcesneeded, Guid.NewGuid());
