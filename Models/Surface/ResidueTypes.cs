@@ -29,7 +29,7 @@
                 if (residueType != null)
                     return FillDerived(residueType);
             }
-            throw new Exception("Could not find residue type " + name);
+            throw new Exception($"Could not find residue type '{name}'");
         }
 
         /// <summary>Looks at a residue type and copies properties from the base type if one was specified.</summary>
