@@ -21,6 +21,11 @@ namespace Models.CLEM.Resources
         private double adultEquivalent;
 
         /// <summary>
+        /// A list of attributes added to this individual
+        /// </summary>
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
+
+        /// <summary>
         /// Reference to the Breed Parameters.
         /// </summary>
         public RuminantType BreedParams;
@@ -92,7 +97,7 @@ namespace Models.CLEM.Resources
             {
                 age = value;
                 normalisedWeight = CalculateNormalisedWeight(age);
-                    //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
+                //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -395,79 +400,6 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// List of individual attributes
-        /// </summary>
-        private Dictionary<string, ICLEMAttribute> attributes { get; set; }
-
-        /// <summary>
-        /// The list of available attributes for the individual
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string, ICLEMAttribute> Attributes
-        {
-            get
-            {
-                return attributes;
-            }
-        }
-
-        /// <summary>
-        /// Check if the selected attribute exists on this individual
-        /// </summary>
-        /// <param name="tag">Attribute label</param>
-        /// <returns></returns>
-        public bool AttributeExists(string tag)
-        {
-            return attributes.ContainsKey(tag);
-        }
-
-        /// <summary>
-        /// Add an attribute to this individual
-        /// </summary>
-        /// <param name="tag">Attribute label</param>
-        /// <param name="value">Value to set or change</param>
-        public void AddAttribute(string tag, ICLEMAttribute value = null)
-        {
-            if (!attributes.ContainsKey(tag))
-            {
-                attributes.Add(tag, value); 
-            }
-            else
-            {
-                attributes[tag] = value;
-            }
-        }
-
-        /// <summary>
-        /// Return the value of the selected attribute on this individual else null if not provided
-        /// </summary>
-        /// <param name="tag">Attribute label</param>
-        /// <returns>Value of attribute if found</returns>
-        public ICLEMAttribute GetAttributeValue(string tag)
-        {
-            if (!attributes.ContainsKey(tag))
-            {
-                return null;
-            }
-            else
-            {
-                return attributes[tag];
-            }
-        }
-
-        /// <summary>
-        /// Remove the attribute from this individual
-        /// </summary>
-        /// <param name="tag">Attribute label</param>
-        public void RemoveAttribute(string tag)
-        {
-            if (attributes.ContainsKey(tag))
-            {
-                attributes.Remove(tag);
-            }
-        }
-
-        /// <summary>
         /// Determines if the change resson is her positive or negative
         /// </summary>
         public int PopulationChangeDirection
@@ -727,7 +659,7 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
 
-            this.attributes = new Dictionary<string, ICLEMAttribute>();
+            this.Attributes = new IndividualAttributeList();
         }
     }
 

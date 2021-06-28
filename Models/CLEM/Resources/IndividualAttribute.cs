@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// Interface for all resource attributes
     /// </summary>
-    public interface ICLEMAttribute
+    public interface IIndividualAttribute
     {
         /// <summary>
         /// The value of the attribute
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// A ruminant attribute that stores an associated object
     /// </summary>
-    public class CLEMAttribute: ICLEMAttribute
+    public class IndividualAttribute: IIndividualAttribute
     {
         /// <summary>
         /// Value object of attribute
@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         /// <returns>A ruminant attribute to supply the offspring</returns>
         public object GetInheritedAttribute()
         {
-            CLEMAttribute newAttribute = new CLEMAttribute()
+            IndividualAttribute newAttribute = new IndividualAttribute()
             {
                 InheritanceStyle = this.InheritanceStyle
             };
@@ -205,7 +205,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// A ruminant attribute that stores an associated geneotype
     /// </summary>
-    public class CLEMGenotypeAttribute : ICLEMAttribute
+    public class CLEMGenotypeAttribute : IIndividualAttribute
     {
         /// <summary>
         /// Value object of attribute

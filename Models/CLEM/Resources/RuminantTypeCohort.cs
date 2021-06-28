@@ -193,7 +193,7 @@ namespace Models.CLEM.Resources
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
                     {
-                        ruminant.AddAttribute(item.AttributeName, item.GetRandomSetAttribute());
+                        ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
                     }
 
                     individuals.Add(ruminantBase as Ruminant);

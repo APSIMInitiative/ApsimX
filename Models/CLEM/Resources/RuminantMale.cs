@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!AttributeExists("Castrated"))
+                if(!Attributes.Exists("Castrated"))
                 {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
@@ -37,7 +37,7 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return AttributeExists("Castrated");
+                return Attributes.Exists("Castrated");
             }
         }
 

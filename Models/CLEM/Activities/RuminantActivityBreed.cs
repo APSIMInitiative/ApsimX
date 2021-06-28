@@ -310,9 +310,9 @@ namespace Models.CLEM.Activities
                         newCalfRuminant.SaleFlag = HerdChangeReason.Born;
 
                         // add attributes inherited from mother
-                        foreach (var attribute in female.Attributes)
+                        foreach (var attribute in female.Attributes.Items)
                         {
-                            newCalfRuminant.AddAttribute(attribute.Key, attribute.Value.GetInheritedAttribute() as ICLEMAttribute);
+                            newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
                         }
 
                         Resources.RuminantHerd().AddRuminant(newCalfRuminant, this);
@@ -383,7 +383,7 @@ namespace Models.CLEM.Activities
                     }
 
                     numberServiced = 1;
-                    foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                    foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                     {
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                         if (numberServiced <= numberPossible)
@@ -447,7 +447,7 @@ namespace Models.CLEM.Activities
         /// <param name="maleAttributes">a list of available male attributes setters</param>
         private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes)
         {
-            foreach (var attribute in female.Attributes)
+            foreach (var attribute in female.Attributes.Items)
             {
                 var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
                 if(maleAttribute != null)
@@ -479,9 +479,9 @@ namespace Models.CLEM.Activities
         {
             if (male != null)
             {
-                foreach (var attribute in female.Attributes)
+                foreach (var attribute in female.Attributes.Items)
                 {
-                    var maleAttribute = male.GetAttributeValue(attribute.Key);
+                    var maleAttribute = male.Attributes.GetValue(attribute.Key);
                     if (maleAttribute != null)
                     {
                         if (attribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
@@ -658,25 +658,10 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</div>");
                 }
                 controlledMating = this.FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
-                if (useControlledMating)
+                if (controlledMating is null)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Breeding uses controlled mating as outlined in the component below");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating");
-
-                    if (this.FindAllChildren<IActivityTimer>().Count() >= 1)
-                    {
-                        htmlWriter.Write(". The timer associated with this activity may restrict uncontrolled mating regardless of whether males and females of breeding condition are located together.");
-                    }
-                    else
-                    {
-                        htmlWriter.Write(" that will occur every month when males and females of breeding condition are located together.");
-                    }
+                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating that will occur when males and females of breeding condition are located together");
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString(); 
