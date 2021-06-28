@@ -8,6 +8,12 @@ namespace Models.Storage
 {
     internal class CleanCommand : IRunnable
     {
+        private static readonly string[] otherTablesToClean = new string[2]
+        {
+            "_Messages",
+            "_InitialConditions"
+        };
+
         private DataStoreWriter writer;
         private List<string> names;
         private List<int> ids;
@@ -49,12 +55,26 @@ namespace Models.Storage
                 currentID = writer.Connection.ExecuteQueryReturnInt("SELECT ID FROM [_Checkpoints] WHERE [Name]='Current'");
 
             foreach (var tableName in tableNames.Where(t => !t.StartsWith("_")))
-            {
+                CleanTable(tableName, simulationIDsCSV, simulationNamesCSV, currentID);
+            foreach (string tableName in otherTablesToClean)
+                if (tableNames.Contains(tableName))
+                    CleanTable(tableName, simulationIDsCSV, simulationNamesCSV, currentID);
+        }
+
+        /// <summary>
+        /// Clean all existing data in the given table for the specified simulation names.
+        /// </summary>
+        /// <param name="tableName">Name of the table to clean.</param>
+        /// <param name="simulationIDs">Comma-separated list of simulation IDs for the simulations to be cleaned.</param>
+        /// <param name="simulationNames">Comma-separated list of simulation names for the simulations to be cleaned.</param>
+        /// <param name="currentID">ID of the "Current" checkpoint.</param>
+        private void CleanTable(string tableName, string simulationIDs, string simulationNames, int currentID)
+        {
                 var fieldNames = writer.Connection.GetColumnNames(tableName);
                 if (fieldNames.Contains("SimulationID") && fieldNames.Contains("CheckpointID"))
                 {
                     string sql = $"DELETE FROM [{tableName}] " +
-                                 $"WHERE SimulationID in ({simulationIDsCSV}) ";
+                                 $"WHERE SimulationID in ({simulationIDs}) ";
                     if (currentID != -1)
                         sql += $"AND CheckpointID = {currentID}";
                     writer.Connection.ExecuteNonQuery(sql);
@@ -62,12 +82,11 @@ namespace Models.Storage
                 else if (fieldNames.Contains("SimulationName") && fieldNames.Contains("CheckpointID"))
                 {
                     string sql = $"DELETE FROM [{tableName}] " +
-                                 $"WHERE SimulationName in ({simulationNamesCSV}) ";
+                                 $"WHERE SimulationName in ({simulationNames}) ";
                     if (currentID != -1)
                         sql += $"AND CheckpointID = {currentID}";
                     writer.Connection.ExecuteNonQuery(sql);
                 }
-            }
         }
     }
 }
