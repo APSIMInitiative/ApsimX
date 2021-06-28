@@ -92,12 +92,6 @@
         /// Create a db clean command.
         /// </summary>
         /// <param name="names">A list of simulation names that are about to run.</param>
-        IRunnable Clean(IEnumerable<string> names);
-
-        /// <summary>
-        /// Start a db clean command.
-        /// </summary>
-        /// <param name="names">A list of simulation names that are about to run.</param>
-        void StartClean(IEnumerable<string> names);
+        void Clean(IEnumerable<string> names);
     }
 }

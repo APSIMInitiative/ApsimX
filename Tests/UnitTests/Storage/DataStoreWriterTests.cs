@@ -136,8 +136,7 @@
             };
             data2.Rows.Add(new List<object>() { 3 });
             writer = new DataStoreWriter(database);
-            var cleanCommand = writer.Clean(new List<string>() { "Sim1" });
-            cleanCommand.Run(null);
+            writer.Clean(new List<string>() { "Sim1" });
             writer.WriteTable(data2);
             writer.Stop();
 
@@ -449,8 +448,7 @@
             data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 1), 3.0 });
             data1.Rows.Add(new List<object>() { new DateTime(2017, 1, 2), 4.0 });
             var writer = new DataStoreWriter(database);
-            var cleanCommand = writer.Clean(new List<string>() { "Sim2" });
-            cleanCommand.Run(null);
+            writer.Clean(new List<string>() { "Sim2" });
             writer.WriteTable(data1);
 
             // Add a checkpoint - overwrite existing one.
