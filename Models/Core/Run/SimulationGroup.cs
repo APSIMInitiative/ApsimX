@@ -237,8 +237,7 @@
                                         names.Add(name);
                                 }
                             }
-                            if (names.Count > 0)
-                                jobs.Insert(0, storage.Writer.Clean(names));
+                            storage.Writer.StartClean(names);
                         }
                         foreach (IRunnable job in jobs)
                             Add(job);
