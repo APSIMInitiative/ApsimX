@@ -284,14 +284,15 @@ namespace Models.Core
 
                     Simulation clonedSimulation = simDescription.ToSimulation();
 
+                    // Prepare the simulation for running - this perform misc cleanup tasks such
+                    // as removing disabled models, standardising the soil, resolving links, etc.
+                    clonedSimulation.Prepare();
+
                     // Now use the path to get the model we want to document.
                     modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
-
-                    // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
 
