@@ -459,11 +459,15 @@
         /// Initiate a clean of the database.
         /// </summary>
         /// <param name="names">Simulation names to be cleaned.</param>
-        public void StartClean(IEnumerable<string> names)
+        /// <param name="wait">Wait for the clean operation to finish?</param>
+        public void Clean(IEnumerable<string> names, bool wait)
         {
-            Start();
+            if (wait)
+                Start();
             lock (lockObject)
                 commands.Add(Clean(names));
+            if (wait)
+                Stop();
         }
 
         /// <summary>Create a command runner one hasn't already been created.</summary>
