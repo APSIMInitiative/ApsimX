@@ -73,20 +73,18 @@ namespace Models.CLEM.Activities
             {
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
             }
-            breedParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.GetResourceItem(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
+            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedParent.PredictedHerdBreed}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
-            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4));
+            int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Min(ShortenLactationMonths, monthsOfMilking);
 
             // determine min time between conceptions with full milk production minus cut short and resting
-            double minConceiveInterval = Convert.ToInt32(breedParams.GestationLength + Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture) - shortenLactationMonths + RestMonths;
+            minConceiveInterval = Math.Max(0, breedParams.GestationLength + monthsOfMilking - shortenLactationMonths + RestMonths);
 
             // get the milking period
             milkingsPerConceptionsCycle = Math.Ceiling(minConceiveInterval/ monthsOfMilking);
         }
-
-
 
         /// <summary>An event handler to determine the breeders to breed</summary>
         /// <param name="sender">The sender.</param>
@@ -95,12 +93,14 @@ namespace Models.CLEM.Activities
         private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
             // cut and carry event to ensure this is determined before breeding event
-            // calculate whether activity is needed this time step
+            // calculate whether activity is needed this time step (NumberOfIndividualsToBreed > 0)
 
             NumberOfIndividualsToBreed = 0;
 
             // get all breeders
-            IEnumerable<RuminantFemale> breeders = controlledMatingParent.GetBreeders().OfType<RuminantFemale>();
+            IEnumerable<RuminantFemale> breeders = controlledMatingParent.GetBreeders(false);
+            // dont consider too old to mate
+            breeders = breeders.Where(a => a.Age <= breedParams.MaximumAgeMating);
 
             if (breeders.Count() > 0)
             {
@@ -114,15 +114,7 @@ namespace Models.CLEM.Activities
                 {
                     NumberOfIndividualsToBreed = maxBreedersPerCycle - pregnantInMinConceiveInterval;
                 }
-            }
-        }
-
-        /// <inheritdoc/>
-        public bool ActivityDue
-        {
-            get
-            {
-                if(NumberOfIndividualsToBreed > 0)
+                if (NumberOfIndividualsToBreed > 0)
                 {
                     // report activity performed details.
                     ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
@@ -135,7 +127,17 @@ namespace Models.CLEM.Activities
                     };
                     activitye.Activity.SetGuID(this.UniqueID);
                     this.OnActivityPerformed(activitye);
+                }
+            }
+        }
 
+        /// <inheritdoc/>
+        public bool ActivityDue
+        {
+            get
+            {
+                if(NumberOfIndividualsToBreed > 0)
+                {
                     return true;
                 }
                 return false;

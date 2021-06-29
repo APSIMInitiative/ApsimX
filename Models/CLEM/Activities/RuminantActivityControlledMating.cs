@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
 
             breederGroup = new RuminantGroup();
             breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
+            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
             // TODO: add sort by condition
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
@@ -100,13 +100,31 @@ namespace Models.CLEM.Activities
         }
         #endregion
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            this.Status = ActivityStatus.NotNeeded;
+        }
+
         /// <summary>
         /// Provide the list of all breeders currently available
         /// </summary>
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
-        public IEnumerable<Ruminant> GetBreeders()
+        public IEnumerable<RuminantFemale> GetBreeders(bool onlySelectAbleToBreed)
         {
-            return CurrentHerd(true).FilterRuminants(breederGroup).Where(a => a.IsAbleToBreed);
+            if (onlySelectAbleToBreed)
+            {
+                // return the full list of breeders currently able to breed
+                return CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>();
+            }
+            else
+            {
+                // return the full list of breeders in the herd
+                return CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBreeder);
+            }
         }
 
         /// <summary>
@@ -118,7 +136,7 @@ namespace Models.CLEM.Activities
             this.Status = ActivityStatus.NotNeeded;
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
-                IEnumerable<Ruminant> herd = GetBreeders();
+                IEnumerable<Ruminant> herd = GetBreeders(true);
 
                 if (milkingTimer != null)
                 {
@@ -222,7 +240,11 @@ namespace Models.CLEM.Activities
                         limiter = Math.Min(cashlimit, labourlimit);
                     }
 
-                    if (limiter == 1)
+                    if (limiter < 1)
+                    {
+                        this.Status = ActivityStatus.Partial;
+                    }
+                    else if (limiter == 1)
                     {
                         this.Status = ActivityStatus.Success;
                     }
@@ -235,7 +257,8 @@ namespace Models.CLEM.Activities
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
             }
-            return null;
+            IEnumerable<Ruminant> res = new List<Ruminant>();
+            return res;
         }
 
         /// <summary>
@@ -245,89 +268,7 @@ namespace Models.CLEM.Activities
         /// <returns>List of required resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
         {
-            ResourceRequestList = null;
-            int head = breederList.Count();
-            double adultEquivalents = breederList.Sum(a => a.AdultEquivalent);
-
-            if (head == 0)
-            {
-                return null;
-            }
-
-            // get all fees for breeding
-            foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
-            {
-                if (ResourceRequestList == null)
-                {
-                    ResourceRequestList = new List<ResourceRequest>();
-                }
-
-                double sumneeded = 0;
-                switch (item.PaymentStyle)
-                {
-                    case AnimalPaymentStyleType.Fixed:
-                        sumneeded = item.Amount;
-                        break;
-                    case AnimalPaymentStyleType.perHead:
-                        sumneeded = head * item.Amount;
-                        break;
-                    case AnimalPaymentStyleType.perAE:
-                        sumneeded = adultEquivalents * item.Amount;
-                        break;
-                    default:
-                        throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
-                }
-                ResourceRequestList.Add(new ResourceRequest()
-                {
-                    AllowTransmutation = false,
-                    Required = sumneeded,
-                    ResourceType = typeof(Finance),
-                    ResourceTypeName = item.BankAccountName.Split('.').Last(),
-                    ActivityModel = this,
-                    FilterDetails = null,
-                    Category = item.Name
-                }
-                );
-            }
-
-            // for each labour item specified
-            foreach (var item in labour)
-            {
-                double daysNeeded = 0;
-                switch (item.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        daysNeeded = Math.Ceiling(adultEquivalents / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                }
-                if (daysNeeded > 0)
-                {
-                    if (ResourceRequestList == null)
-                    {
-                        ResourceRequestList = new List<ResourceRequest>();
-                    }
-
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = daysNeeded,
-                        ResourceType = typeof(Labour),
-                        ResourceTypeName = "",
-                        ActivityModel = this,
-                        FilterDetails = new List<object>() { item }
-                    }
-                    );
-                }
-            }
-            return ResourceRequestList;
+            return null;
         }
 
         /// <inheritdoc/>

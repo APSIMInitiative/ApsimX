@@ -327,8 +327,8 @@ namespace Models.CLEM.Activities
                 // sires
                 RuminantGroup group = new RuminantGroup();
                 group.Children.Add(new RuminantFilter() { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
-                group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreedingCondition });
-                var purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
+                group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsSire });
+                var purchases = purchaseDetails.Select(a => a.ExampleRuminant);
                 var filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
@@ -501,22 +501,30 @@ namespace Models.CLEM.Activities
                         // get number in herd
                         List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Male & a.Sire == true).ToList();
                         int numberPresent = Convert.ToInt32(cohortList.Sum(a => a.Number));
-                        RuminantMale exampleSire = null;
-                        if (exampleSire != null)
-                        {
-                            exampleSire = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).FirstOrDefault();
-                        }
-
+                        // expand from those in herd
                         if (numberPresent < SiresKept)
                         {
                             int numberToAdd = SiresKept - numberPresent;
-                            foreach (var item in cohortList)
+                            if (cohortList is null)
                             {
-                                foreach (var newind in item.CreateIndividuals(Convert.ToInt32(Math.Round(numberToAdd*(item.Number/ numberPresent)), CultureInfo.InvariantCulture), initialCohortAttributes))
+                                // add warning
+                                string warn = $"Unable to increase breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]\r\nNo representative sires are present in the initial herd. Future sire purchases will be used.";
+                                if (!Warnings.Exists(warn))
                                 {
-                                    newind.SaleFlag = HerdChangeReason.FillInitialHerd;
-                                    herd.AddRuminant(newind, this);
-                                    numberAdded++;
+                                    Summary.WriteWarning(this, warn);
+                                    Warnings.Add(warn);
+                                }
+                            }
+                            else
+                            {
+                                foreach (var item in cohortList)
+                                {
+                                    foreach (var newind in item.CreateIndividuals(Convert.ToInt32(Math.Round(numberToAdd * (item.Number / numberPresent)), CultureInfo.InvariantCulture), initialCohortAttributes))
+                                    {
+                                        newind.SaleFlag = HerdChangeReason.FillInitialHerd;
+                                        herd.AddRuminant(newind, this);
+                                        numberAdded++;
+                                    }
                                 }
                             }
                         }
