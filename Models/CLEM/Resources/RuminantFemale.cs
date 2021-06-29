@@ -14,13 +14,24 @@ namespace Models.CLEM.Resources
         // Female Ruminant properties
 
         /// <summary>
-        /// Is female weaned and of minimum breeing age and weight 
+        /// Is female weaned and of minimum breeding age and weight 
         /// </summary>
         public bool IsBreeder
         {
             get
             {
                 return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return (this.IsBreeder && !this.IsPregnant && this.Age <= BreedParams.MaximumAgeMating && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
             }
         }
 
@@ -124,7 +135,8 @@ namespace Models.CLEM.Resources
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
-                return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating);
+                //return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                return (this.Weaned && !this.IsBreeder);
             }
         }
 

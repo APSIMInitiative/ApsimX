@@ -236,18 +236,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Is this individual a valid breeder and in condition
-        /// </summary>
-        public bool IsAbleToBreed 
-        { 
-            get
-            {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating && !(this as RuminantMale).IsCastrated) |
-                    (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
-            }
-        }
-
-        /// <summary>
         /// Determine the category of this individual
         /// </summary>
         public string Category
@@ -294,6 +282,10 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public virtual bool IsAbleToBreed { get { return false; } }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner

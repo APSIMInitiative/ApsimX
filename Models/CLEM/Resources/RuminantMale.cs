@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!Attributes.Exists("Castrated"))
+                if(Attributes.Exists("Sire") && !Attributes.Exists("Castrated"))
                 {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
@@ -38,6 +38,17 @@ namespace Models.CLEM.Resources
             get
             {
                 return Attributes.Exists("Castrated");
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return this.IsSire;
             }
         }
 
