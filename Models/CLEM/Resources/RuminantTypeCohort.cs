@@ -186,7 +186,6 @@ namespace Models.CLEM.Resources
                     if (this.Gender == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                        ruminantFemale.DryBreeder = true;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
                     }

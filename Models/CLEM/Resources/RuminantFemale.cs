@@ -261,11 +261,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if the individual is a dry breeder
-        /// </summary>
-        public bool DryBreeder { get; set; }
-
-        /// <summary>
         /// Indicates if the individual is lactating
         /// </summary>
         public bool IsLactating
