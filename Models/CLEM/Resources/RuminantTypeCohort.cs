@@ -172,6 +172,7 @@ namespace Models.CLEM.Resources
                         if (this.Gender == Sex.Male)
                         {
                             RuminantMale ruminantMale = ruminantBase as RuminantMale;
+                            ruminantMale.Attributes.Add("Sire");
                         }
                         else
                         {
