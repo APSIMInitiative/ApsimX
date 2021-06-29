@@ -280,7 +280,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
-        IsBreedingCondition = 15,
+        IsAbleToBreed = 25, //15
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
@@ -288,7 +288,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Identified as a replacement breeder growing up
         /// </summary>
-        ReplacementBreeder = 18,
+        ReplacementBreeder = 28, //18
         /// <summary>
         /// Is female a pre-breeder (weaned, less than set age, up to first birth)
         /// </summary>
@@ -312,7 +312,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Weight as proportion of High weight achieved
         /// </summary>
-        ProportionOfHighWeight = 6,
+        ProportionOfHighWeight = 26,  //6
         /// <summary>
         /// Weight as proportion of Standard Reference Weight
         /// </summary>
