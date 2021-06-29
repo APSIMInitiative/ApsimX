@@ -25,6 +25,10 @@ namespace Models.CLEM.Resources
         {
             get
             {
+                if (attributes is null)
+                {
+                    attributes = new Dictionary<string, IIndividualAttribute>();
+                }
                 return attributes;
             }
         }
