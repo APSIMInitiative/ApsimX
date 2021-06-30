@@ -414,22 +414,30 @@
                     CreateTable(section, tag as AutoDocumentation.Table);
                 else if (tag is Graph)
                 {
-                    GraphPresenter graphPresenter = new GraphPresenter();
-                    explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
-                    GraphView graphView = new GraphView();
-                    graphView.BackColor = OxyPlot.OxyColors.White;
-                    graphView.ForegroundColour = OxyPlot.OxyColors.Black;
-                    graphView.FontSize = 12;
-                    graphView.Width = 500;
-                    graphView.Height = 500;
-                    graphPresenter.Attach(tag, graphView, explorerPresenter);
-                    string pngFileName = graphPresenter.ExportToPNG(WorkingDirectory);
-                    section.AddResizeImage(pngFileName);
-                    string caption = (tag as Graph).Caption;
-                    if (caption != null)
-                        section.AddParagraph(caption);
-                    graphPresenter.Detach();
-                    graphView.MainWidget.Cleanup();
+                    try
+                    {
+                        GraphPresenter graphPresenter = new GraphPresenter();
+                        explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
+                        GraphView graphView = new GraphView();
+                        graphView.BackColor = OxyPlot.OxyColors.White;
+                        graphView.ForegroundColour = OxyPlot.OxyColors.Black;
+                        graphView.FontSize = 12;
+                        graphView.Width = 500;
+                        graphView.Height = 500;
+                        graphPresenter.Attach(tag, graphView, explorerPresenter);
+                        string pngFileName = graphPresenter.ExportToPNG(WorkingDirectory);
+                        section.AddResizeImage(pngFileName);
+                        string caption = (tag as Graph).Caption;
+                        if (caption != null)
+                            section.AddParagraph(caption);
+                        graphPresenter.Detach();
+                        graphView.MainWidget.Cleanup();
+                    }
+                    catch (Exception)
+                    {
+                        // Hide the error - nowhere to show it and the user can click on the problem graphs in the GUI
+                        // to see the error.
+                    }
                 }
                 else if (tag is Map && (tag as Map).GetCoordinates().Count > 0)
                 {
