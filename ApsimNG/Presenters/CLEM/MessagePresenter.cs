@@ -60,6 +60,14 @@ namespace UserInterface.Presenters
                 {
                     return markdownWriter.ToString();
                 }
+
+                if (!ds.Reader.TableNames.Contains("_Messages"))
+                {
+                    markdownWriter.Write("### Datastore is empty");
+                    markdownWriter.Write("  \r\n  \r\nNo simulation has been performed for this farm");
+
+                    return markdownWriter.ToString();
+                }
                 if (ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages") == null)
                 {
                     return markdownWriter.ToString();
