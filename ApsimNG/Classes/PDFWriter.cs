@@ -654,7 +654,7 @@
         /// <param name="graphPage">The graph and table to convert to html.</param>
         private void CreateGraphPage(Section section, GraphPage graphPage)
         {
-            int numGraphsToPrint = graphPage.Graphs.FindAll(g => g.IncludeInDocumentation).Count;
+            int numGraphsToPrint = graphPage.Graphs.FindAll(g => g.IncludeInDocumentation && g.Enabled).Count;
             if (numGraphsToPrint > 0)
             {
                 int numColumns = 2;
@@ -684,7 +684,7 @@
                 int row = 0;
                 for (int i = 0; i < graphPage.Graphs.Count; i++)
                 {
-                    if (graphPage.Graphs[i].IncludeInDocumentation)
+                    if (graphPage.Graphs[i].IncludeInDocumentation && graphPage.Graphs[i].Enabled)
                     {
                         try
                         {

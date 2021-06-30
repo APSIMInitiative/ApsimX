@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 442,
-  "Version": 131,
+  "ExplorerWidth": 300,
+  "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -458,12 +458,12 @@
                         1.0
                       ],
                       "FOM": [
-                        347.12903231275641,
+                        347.1290323127564,
                         270.3443621919937,
                         163.97214434990104,
-                        99.454132887040629,
-                        60.321980831124677,
-                        36.587130828674873,
+                        99.45413288704063,
+                        60.32198083112468,
+                        36.58713082867487,
                         22.1912165985086
                       ],
                       "CarbonMetadata": null,
@@ -668,7 +668,6 @@
                   "b_interception": 1.0,
                   "c_interception": 0.0,
                   "d_interception": 0.0,
-                  "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
                   "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
@@ -1114,12 +1113,12 @@
                         1.0
                       ],
                       "FOM": [
-                        347.12903231275641,
+                        347.1290323127564,
                         270.3443621919937,
                         163.97214434990104,
-                        99.454132887040629,
-                        60.321980831124677,
-                        36.587130828674873,
+                        99.45413288704063,
+                        60.32198083112468,
+                        36.58713082867487,
                         22.1912165985086
                       ],
                       "CarbonMetadata": null,
@@ -1324,7 +1323,6 @@
                   "b_interception": 1.0,
                   "c_interception": 0.0,
                   "d_interception": 0.0,
-                  "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
                   "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
@@ -1824,12 +1822,12 @@
                         1.0
                       ],
                       "FOM": [
-                        347.12903231275641,
+                        347.1290323127564,
                         270.3443621919937,
                         163.97214434990104,
-                        99.454132887040629,
-                        60.321980831124677,
-                        36.587130828674873,
+                        99.45413288704063,
+                        60.32198083112468,
+                        36.58713082867487,
                         22.1912165985086
                       ],
                       "CarbonMetadata": null,
@@ -2034,7 +2032,6 @@
                   "b_interception": 1.0,
                   "c_interception": 0.0,
                   "d_interception": 0.0,
-                  "soil_albedo": 0.3,
                   "SoilHeatFluxFraction": 0.4,
                   "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.5,
@@ -2129,6 +2126,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "SoilWater",
           "Children": [
             {
@@ -2255,6 +2253,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "SoilNO3",
           "Children": [
             {
@@ -2381,6 +2380,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "SoilNH4",
           "Children": [
             {
@@ -2507,6 +2507,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "PotentialEP",
           "Children": [
             {
@@ -2633,6 +2634,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "ActualEP",
           "Children": [
             {
@@ -3309,12 +3311,12 @@
                     1.0
                   ],
                   "FOM": [
-                    347.12903231275641,
+                    347.1290323127564,
                     270.3443621919937,
                     163.97214434990104,
-                    99.454132887040629,
-                    60.321980831124677,
-                    36.587130828674873,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
                     22.1912165985086
                   ],
                   "CarbonMetadata": null,
@@ -3519,7 +3521,6 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.3,
               "SoilHeatFluxFraction": 0.4,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.5,
@@ -3608,6 +3609,7 @@
           "AnnotationPosition": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
+          "SimulationDescriptions": null,
           "Name": "Water Demand and Uptakes",
           "Children": [
             {
@@ -3796,6 +3798,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWater",
               "Children": [
                 {
@@ -3864,6 +3867,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNO3",
               "Children": [
                 {
@@ -3932,6 +3936,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -4000,6 +4005,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NUptake",
               "Children": [
                 {
@@ -4068,6 +4074,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Individual_Water_Uptake",
               "Children": [
                 {
@@ -4165,6 +4172,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Individual_N_Uptake",
               "Children": [
                 {
@@ -4548,7 +4556,6 @@
                           "b_interception": 0.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -5136,11 +5143,11 @@
                               ],
                               "FOM": [
                                 331.337020409173,
-                                245.46050190550559,
+                                245.4605019055056,
                                 164.53709493722965,
                                 121.89207790753734,
-                                73.931282427002344,
-                                40.574348067292682,
+                                73.93128242700234,
+                                40.57434806729268,
                                 22.267674346259405
                               ],
                               "CarbonMetadata": null,
@@ -5270,6 +5277,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage EqualIrrigFert",
               "Children": [
                 {
@@ -5367,6 +5375,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage EqualDryNofert",
               "Children": [
                 {
@@ -5464,6 +5473,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage UnequalIrrigFert",
               "Children": [
                 {
@@ -5561,6 +5571,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage UnequalDryNofert",
               "Children": [
                 {
@@ -5658,6 +5669,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Yield",
               "Children": [
                 {
@@ -5726,6 +5738,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PropRye1",
               "Children": [
                 {
@@ -6071,7 +6084,6 @@
                           "b_interception": 0.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -6628,11 +6640,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -6682,6 +6694,7 @@
                               "AnnotationPosition": 0,
                               "DisabledSeries": null,
                               "LegendOutsideGraph": false,
+                              "SimulationDescriptions": null,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -6959,6 +6972,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage UnequalIrrigFert",
               "Children": [
                 {
@@ -7085,6 +7099,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "StandingHerbage UnequalDryNofert",
               "Children": [
                 {
@@ -7211,6 +7226,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Yield",
               "Children": [
                 {
@@ -7279,6 +7295,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PropRye1",
               "Children": [
                 {
@@ -7624,7 +7641,6 @@
                           "b_interception": 0.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -8294,11 +8310,11 @@
                               ],
                               "FOM": [
                                 331.337020409173,
-                                245.46050190550559,
+                                245.4605019055056,
                                 164.53709493722965,
                                 121.89207790753734,
-                                73.931282427002344,
-                                40.574348067292682,
+                                73.93128242700234,
+                                40.57434806729268,
                                 22.267674346259405
                               ],
                               "CarbonMetadata": null,
@@ -8425,6 +8441,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "Yield",
               "Children": [
                 {
@@ -8493,6 +8666,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "PropRye1",
               "Children": [
                 {
@@ -8561,6 +8891,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "YieldRye1",
               "Children": [
                 {
@@ -8629,6 +9116,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "YieldRye2",
               "Children": [
                 {
@@ -8697,6 +9341,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "WaterStressRye1",
               "Children": [
                 {
@@ -8721,7 +9522,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Month] IN (12, 1)",
+                  "Filter": "Clock.Today.Month IN (12, 1)",
                   "Name": "WaterStressRye1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8765,6 +9566,163 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": [
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor750mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "750mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor500mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "500mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor350mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "350mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor225mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "225mm"
+                    }
+                  ]
+                },
+                {
+                  "$type": "Models.Core.Run.SimulationDescription, Models",
+                  "SimulationToRun": null,
+                  "Descriptors": [
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Experiment",
+                      "Value": "Experiment04"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "SimulationName",
+                      "Value": "Experiment04Factor100mm"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "FolderName",
+                      "Value": "04 AgPasture Test Root Depth Differential"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Zone",
+                      "Value": "Field"
+                    },
+                    {
+                      "$type": "Models.Core.Run.SimulationDescription+Descriptor, Models",
+                      "Name": "Factor",
+                      "Value": "100mm"
+                    }
+                  ]
+                }
+              ],
               "Name": "WaterStressRye2",
               "Children": [
                 {
@@ -8789,7 +9747,7 @@
                   "IncludeSeriesNameInLegend": true,
                   "Cumulative": false,
                   "CumulativeX": false,
-                  "Filter": "[Clock.Today.Month] IN (12, 1)",
+                  "Filter": "Clock.Today.Month IN (12, 1)",
                   "Name": "WaterStressRye2",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -9144,7 +10102,6 @@
                           "b_interception": 0.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -9687,11 +10644,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -9741,6 +10698,7 @@
                               "AnnotationPosition": 0,
                               "DisabledSeries": null,
                               "LegendOutsideGraph": false,
+                              "SimulationDescriptions": null,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -10024,6 +10982,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PropGrass",
               "Children": [
                 {
@@ -10092,6 +11051,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Standing_DryNone",
               "Children": [
                 {
@@ -10189,6 +11149,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Standing_IrrigNone",
               "Children": [
                 {
@@ -10286,6 +11247,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Standing_IrrigFert",
               "Children": [
                 {
@@ -10656,7 +11618,6 @@
                           "b_interception": 0.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -11199,11 +12160,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -11253,6 +12214,7 @@
                               "AnnotationPosition": 0,
                               "DisabledSeries": null,
                               "LegendOutsideGraph": false,
+                              "SimulationDescriptions": null,
                               "Name": "Graph",
                               "Children": [
                                 {
@@ -11549,6 +12511,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PlantWt",
               "Children": [
                 {
@@ -11617,6 +12580,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Harvested",
               "Children": [
                 {
@@ -11685,6 +12649,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterDemand",
               "Children": [
                 {
@@ -11753,6 +12718,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -11821,6 +12787,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterStress",
               "Children": [
                 {
@@ -11889,6 +12856,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NStress",
               "Children": [
                 {
@@ -11957,6 +12925,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone0",
               "Children": [
                 {
@@ -12025,6 +12994,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone1",
               "Children": [
                 {
@@ -12093,6 +13063,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone1",
               "Children": [
                 {
@@ -12161,6 +13132,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone0",
               "Children": [
                 {
@@ -12229,6 +13201,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone0",
               "Children": [
                 {
@@ -12297,6 +13270,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone1",
               "Children": [
                 {
@@ -12365,6 +13339,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone0",
               "Children": [
                 {
@@ -12433,6 +13408,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone1",
               "Children": [
                 {
@@ -12758,7 +13734,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -13357,7 +14332,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -13888,6 +14862,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PlantWt",
               "Children": [
                 {
@@ -13956,6 +14931,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Harvested",
               "Children": [
                 {
@@ -14024,6 +15000,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterDemand",
               "Children": [
                 {
@@ -14092,6 +15069,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -14160,6 +15138,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterStress",
               "Children": [
                 {
@@ -14228,6 +15207,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NStress",
               "Children": [
                 {
@@ -14296,6 +15276,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone0",
               "Children": [
                 {
@@ -14364,6 +15345,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone1",
               "Children": [
                 {
@@ -14432,6 +15414,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone1",
               "Children": [
                 {
@@ -14500,6 +15483,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone0",
               "Children": [
                 {
@@ -14568,6 +15552,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone0",
               "Children": [
                 {
@@ -14636,6 +15621,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone1",
               "Children": [
                 {
@@ -14704,6 +15690,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone0",
               "Children": [
                 {
@@ -14772,6 +15759,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone1",
               "Children": [
                 {
@@ -15097,7 +16085,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -15696,7 +16683,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -16227,6 +17213,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PlantWt",
               "Children": [
                 {
@@ -16295,6 +17282,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Harvested",
               "Children": [
                 {
@@ -16363,6 +17351,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterDemand",
               "Children": [
                 {
@@ -16431,6 +17420,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -16499,6 +17489,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterStress",
               "Children": [
                 {
@@ -16567,6 +17558,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NStress",
               "Children": [
                 {
@@ -16635,6 +17627,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone0",
               "Children": [
                 {
@@ -16703,6 +17696,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWaterZone1",
               "Children": [
                 {
@@ -16771,6 +17765,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone1",
               "Children": [
                 {
@@ -16839,6 +17834,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogenZone0",
               "Children": [
                 {
@@ -16907,6 +17903,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone0",
               "Children": [
                 {
@@ -16975,6 +17972,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationAppliedZone1",
               "Children": [
                 {
@@ -17043,6 +18041,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone0",
               "Children": [
                 {
@@ -17111,6 +18110,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserAppliedZone1",
               "Children": [
                 {
@@ -17436,7 +18436,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -18035,7 +19034,6 @@
                           "b_interception": 1.0,
                           "c_interception": 0.0,
                           "d_interception": 0.0,
-                          "soil_albedo": 0.23,
                           "SoilHeatFluxFraction": 0.4,
                           "MinimumHeightDiffForNewLayer": 0.0,
                           "NightInterceptionFraction": 0.5,
@@ -18566,6 +19564,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PlantWt",
               "Children": [
                 {
@@ -18634,6 +19633,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Harvested",
               "Children": [
                 {
@@ -18702,6 +19702,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterDemand",
               "Children": [
                 {
@@ -18770,6 +19771,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -18838,6 +19840,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterStress",
               "Children": [
                 {
@@ -18906,6 +19909,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NStress",
               "Children": [
                 {
@@ -18974,6 +19978,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWater",
               "Children": [
                 {
@@ -19042,6 +20047,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogen",
               "Children": [
                 {
@@ -19110,6 +20116,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationApplied",
               "Children": [
                 {
@@ -19178,6 +20185,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserApplied",
               "Children": [
                 {
@@ -19468,7 +20476,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
@@ -20151,7 +21158,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
@@ -20834,7 +21840,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
@@ -21377,6 +22382,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "PlantWt",
               "Children": [
                 {
@@ -21445,6 +22451,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "Harvested",
               "Children": [
                 {
@@ -21513,6 +22520,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterDemand",
               "Children": [
                 {
@@ -21581,6 +22589,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterUptake",
               "Children": [
                 {
@@ -21649,6 +22658,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "WaterStress",
               "Children": [
                 {
@@ -21717,6 +22727,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "NStress",
               "Children": [
                 {
@@ -21785,6 +22796,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilWater",
               "Children": [
                 {
@@ -21853,6 +22865,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "SoilNitrogen",
               "Children": [
                 {
@@ -21921,6 +22934,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "IrrigationApplied",
               "Children": [
                 {
@@ -21989,6 +23003,7 @@
               "AnnotationPosition": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
+              "SimulationDescriptions": null,
               "Name": "FertiliserApplied",
               "Children": [
                 {
@@ -22279,7 +23294,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
@@ -22962,7 +23976,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
@@ -23645,7 +24658,6 @@
                       "b_interception": 1.0,
                       "c_interception": 0.0,
                       "d_interception": 0.0,
-                      "soil_albedo": 0.23,
                       "SoilHeatFluxFraction": 0.4,
                       "MinimumHeightDiffForNewLayer": 0.0,
                       "NightInterceptionFraction": 0.5,
