@@ -7,7 +7,6 @@
     using Models.Factorial;
     using Models.Storage;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -149,8 +148,6 @@
                 if (d.InScopeSimulationNames != null)
                     allSimulationNamesInScope.AddRange(d.InScopeSimulationNames);
             var inScopeSimulationNames = allSimulationNamesInScope.Distinct();
-            if (!inScopeSimulationNames.Any())
-                inScopeSimulationNames = null;
 
             foreach (var tableName in allTableNames)
             {
@@ -162,7 +159,6 @@
                 var fieldNames = definitionsUsingThisTable.SelectMany(d => d.GetFieldNames(fieldsThatExist))
                                                           .Distinct();
 
-                var exceptions = new ConcurrentQueue<Exception>();
                 foreach (var checkpointName in checkpointNames)
                 {
                     var table = storage.GetData(tableName, checkpointName, inScopeSimulationNames, fieldNames);
@@ -170,22 +166,7 @@
                     // Tell each series definition to read its data.
                     var definitions = definitionsToProcess.Where(d => d.Series.TableName == tableName && d.CheckpointName == checkpointName);
                     Parallel.ForEach(definitions, (definition) =>
-                    {
-                        try
-                        {
-                            definition.ReadData(table, simulationDescriptions, storage);
-                        }
-                        catch (Exception err)
-                        {
-                            exceptions.Enqueue(err);
-                        }
-                    });
-                }
-
-                // Throw any exceptions found while reading data
-                if (exceptions.Any())
-                {
-                    throw new Exception(exceptions.Select(ex => ex.ToString()).Join(Environment.NewLine));
+                        definition.ReadData(table, simulationDescriptions, storage));
                 }
             }
         }
