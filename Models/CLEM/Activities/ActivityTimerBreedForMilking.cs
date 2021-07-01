@@ -29,12 +29,15 @@ namespace Models.CLEM.Activities
         [Link]
         private ResourcesHolder Resources = null;
 
-        private int shortenLactationMonths = 0;
-        private double milkingsPerConceptionsCycle = 0;
-        private double minConceiveInterval = 0;
+        private int shortenLactationMonths;
+        private double milkingsPerConceptionsCycle;
+        private int minConceiveInterval;
+        private int startBreedCycleGestationOffsett;
+        private int pregnancyDuration;
         private RuminantType breedParams; 
         private RuminantActivityBreed breedParent = null;
         private RuminantActivityControlledMating controlledMatingParent = null;
+        private RuminantGroup breederGroup;
 
         /// <summary>
         /// Months to rest after lactation
@@ -59,7 +62,7 @@ namespace Models.CLEM.Activities
         /// The list of individuals to breed this time step
         /// </summary>
         [JsonIgnore]
-        public int NumberOfIndividualsToBreed { get; set; } = 0;
+        public IEnumerable<RuminantFemale> IndividualsToBreed { get; set; } = null;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -67,6 +70,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            breederGroup = new RuminantGroup();
+            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value = "Female" });
+            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
+            // TODO: add sort by condition
+
             // get details from parent breeding activity
             controlledMatingParent = this.Parent as RuminantActivityControlledMating;
             if (controlledMatingParent is null)
@@ -77,13 +85,21 @@ namespace Models.CLEM.Activities
             breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedParent.PredictedHerdBreed}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
-            shortenLactationMonths = Math.Min(ShortenLactationMonths, monthsOfMilking);
+            shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);
+
+            pregnancyDuration = Convert.ToInt32(breedParams.GestationLength, CultureInfo.InvariantCulture);
 
             // determine min time between conceptions with full milk production minus cut short and resting
-            minConceiveInterval = Math.Max(0, breedParams.GestationLength + monthsOfMilking - shortenLactationMonths + RestMonths);
+            minConceiveInterval = Math.Max(0, pregnancyDuration + shortenLactationMonths + RestMonths);
+
+            startBreedCycleGestationOffsett = shortenLactationMonths - pregnancyDuration;
+            if (startBreedCycleGestationOffsett < pregnancyDuration * -1)
+            {
+                throw new Exception("Cannot handle condition where milking cycle starts before pregnancy");
+            }
 
             // get the milking period
-            milkingsPerConceptionsCycle = Math.Ceiling(minConceiveInterval/ monthsOfMilking);
+            milkingsPerConceptionsCycle = Math.Ceiling((minConceiveInterval * 1.0)/ monthsOfMilking);
         }
 
         /// <summary>An event handler to determine the breeders to breed</summary>
@@ -93,40 +109,52 @@ namespace Models.CLEM.Activities
         private void OnCLEMDoCutAndCarry(object sender, EventArgs e)
         {
             // cut and carry event to ensure this is determined before breeding event
-            // calculate whether activity is needed this time step (NumberOfIndividualsToBreed > 0)
 
-            NumberOfIndividualsToBreed = 0;
+            // calculate whether activity is needed this time step (IndividualsToBreed contains breeders)
+            IndividualsToBreed = null;
 
-            // get all breeders
-            IEnumerable<RuminantFemale> breeders = controlledMatingParent.GetBreeders(false);
-            // dont consider too old to mate
-            breeders = breeders.Where(a => a.Age <= breedParams.MaximumAgeMating);
+            // get all breeders less than the max breed age for controlled mating
+            IndividualsToBreed = controlledMatingParent.CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>().Where(a => a.Age <= breedParams.MaximumAgeMating);
 
-            if (breeders.Count() > 0)
+            if (IndividualsToBreed != null && IndividualsToBreed.Count() > 0)
             {
-                int maxBreedersPerCycle = Math.Max(1, Convert.ToInt32(Math.Ceiling(breeders.Count() / milkingsPerConceptionsCycle)));
+                // this needs to be calculated here at this time with current herd size
+                int maxBreedersPerCycle = Math.Max(1, Convert.ToInt32(Math.Ceiling(IndividualsToBreed.Count() / milkingsPerConceptionsCycle)));
 
-                // should always have max pregnant in early stage up to 
-                int pregnantInMinConceiveInterval = breeders.Where(a => a.IsPregnant && a.Age - a.AgeAtLastConception < minConceiveInterval).Count();
-                int readyToBreedCount = breeders.Where(a => a.IsAbleToBreed).Count();
-
-                if(readyToBreedCount > 0 && pregnantInMinConceiveInterval < maxBreedersPerCycle)
+                // should always have max in state ready for next cycle 
+                int numberPreparingForNextLactationCycle;
+                if(startBreedCycleGestationOffsett <= 0)
                 {
-                    NumberOfIndividualsToBreed = maxBreedersPerCycle - pregnantInMinConceiveInterval;
+                    numberPreparingForNextLactationCycle = IndividualsToBreed.Where(a => a.IsPregnant && a.Age - a.AgeAtLastConception <= (pregnancyDuration + startBreedCycleGestationOffsett)).Count();
                 }
-                if (NumberOfIndividualsToBreed > 0)
+                else
                 {
-                    // report activity performed details.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                    numberPreparingForNextLactationCycle = IndividualsToBreed.Where(a => a.IsPregnant | (a.IsLactating && a.Age - a.AgeAtLastBirth <= startBreedCycleGestationOffsett)).Count();
+                }
+
+                int numberNeeded = Math.Max(0, maxBreedersPerCycle - numberPreparingForNextLactationCycle); 
+                if(numberNeeded > 0)
+                {
+                    // reduce to ready to breed, including the resting period after lactation
+                    IndividualsToBreed = IndividualsToBreed.Where(a => a.IsAbleToBreed && (a.Age - a.AgeAtLastBirth >= shortenLactationMonths + RestMonths)).Take(numberNeeded);
+                    if (IndividualsToBreed != null && IndividualsToBreed.Count() > 0)
                     {
-                        Activity = new BlankActivity()
+                        // report activity performed details.
+                        ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
                         {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name,
-                        }
-                    };
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    this.OnActivityPerformed(activitye);
+                            Activity = new BlankActivity()
+                            {
+                                Status = ActivityStatus.Timer,
+                                Name = this.Name,
+                            }
+                        };
+                        activitye.Activity.SetGuID(this.UniqueID);
+                        this.OnActivityPerformed(activitye);
+                    }
+                }
+                else
+                {
+                    IndividualsToBreed = null;
                 }
             }
         }
@@ -136,7 +164,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if(NumberOfIndividualsToBreed > 0)
+                if(IndividualsToBreed != null && IndividualsToBreed.Count() > 0)
                 {
                     return true;
                 }

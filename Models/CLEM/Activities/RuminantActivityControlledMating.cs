@@ -32,6 +32,7 @@ namespace Models.CLEM.Activities
         private List<SetAttributeWithValue> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
+        private RuminantType breedParams;
 
         /// <summary>
         /// The available attributes for the breeding sires
@@ -56,8 +57,8 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
 
             breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
+            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
+            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
             // TODO: add sort by condition
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
@@ -79,6 +80,7 @@ namespace Models.CLEM.Activities
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
+            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedingParent.PredictedHerdBreed}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         #region validation
@@ -113,41 +115,39 @@ namespace Models.CLEM.Activities
         /// Provide the list of all breeders currently available
         /// </summary>
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
-        public IEnumerable<RuminantFemale> GetBreeders(bool onlySelectAbleToBreed)
+        private IEnumerable<RuminantFemale> GetBreeders()
         {
-            if (onlySelectAbleToBreed)
+            IEnumerable<RuminantFemale> breedersAvailable = null;
+
+            if (milkingTimer != null)
             {
-                // return the full list of breeders currently able to breed
-                return CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>();
+                breedersAvailable = milkingTimer.IndividualsToBreed;
             }
             else
             {
-                // return the full list of breeders in the herd
-                return CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsBreeder);
+                // return the full list of breeders currently able to breed
+                // controlled mating respects the max breeding age property of the breed, so reduce
+                // TODO: remove OfType when code handles adding gender property 
+                breedersAvailable = CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>().Where(a => a.Age <= breedParams.MaximumAgeMating);
             }
+            return breedersAvailable;
         }
 
         /// <summary>
         /// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
         /// </summary>
         /// <returns>A list of breeders for the breeding activity to work with</returns>
-        public IEnumerable<Ruminant> BreedersToMate()
+        public IEnumerable<RuminantFemale> BreedersToMate()
         {
+            IEnumerable<RuminantFemale> breeders = null;
             this.Status = ActivityStatus.NotNeeded;
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
-                IEnumerable<Ruminant> herd = GetBreeders(true);
-
-                if (milkingTimer != null)
-                {
-                    // grab the required number from all ready breeders
-                    herd = herd.Take(milkingTimer.NumberOfIndividualsToBreed);
-                }
-
-                if (herd.Count() > 0)
+                breeders = GetBreeders();
+                if (breeders != null &&  breeders.Count() > 0)
                 {
                     // calculate labour and finance costs
-                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(herd);
+                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
                     CheckResources(resourcesneeded, Guid.NewGuid());
                     bool tookRequestedResources = TakeResources(resourcesneeded, true);
                     // get all shortfalls
@@ -248,17 +248,12 @@ namespace Models.CLEM.Activities
                     {
                         this.Status = ActivityStatus.Success;
                     }
-
-                    // report that this activity was performed as it does not use base GetResourcesRequired
-                    this.TriggerOnActivityPerformed();
-
-                    return herd.Take(Convert.ToInt32(Math.Floor(herd.Count() * limiter), CultureInfo.InvariantCulture));
+                    breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
             }
-            IEnumerable<Ruminant> res = new List<Ruminant>();
-            return res;
+            return breeders;
         }
 
         /// <summary>

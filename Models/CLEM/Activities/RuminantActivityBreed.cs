@@ -334,14 +334,11 @@ namespace Models.CLEM.Activities
             {
                 // determined by controlled mating and subsequent timer (e.g. smart milking)
                 herd = controlledMating.BreedersToMate();
-                //this.TriggerOnActivityPerformed();
             }
             else if (!useControlledMating && TimingOK)
             {
-                // whole herd for activity
+                // whole herd for activity including males
                 herd = CurrentHerd(true);
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                //this.TriggerOnActivityPerformed();
             }
 
             if (herd != null && herd.Count() > 0)
@@ -438,6 +435,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+            // report that this activity was performed as it does not use base GetResourcesRequired
             this.TriggerOnActivityPerformed();
         }
 
