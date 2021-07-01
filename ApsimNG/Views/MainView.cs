@@ -67,6 +67,15 @@
         private ProgressBar progressBar = null;
 
         /// <summary>
+        /// Label adjacent to progress bar. Used to display
+        /// progress status updates. The progress bar does
+        /// support displaying text by itself, but vertical
+        /// space here is limited so we display it in this
+        /// label instead.
+        /// </summary>
+        private Label lblStatus = null;
+
+        /// <summary>
         /// Status window used to display error messages and other information.
         /// </summary>
         private TextView statusWindow = null;
@@ -104,7 +113,7 @@
         /// <summary>
         /// Gtk widget which holds the status panel.
         /// </summary>
-        private HBox hbox1 = null;
+        private Widget hbox1 = null;
 
         /// <summary>
         /// Dark theme icon.
@@ -135,6 +144,7 @@
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
+            lblStatus = (Label)builder.GetObject("lblStatus");
             statusWindow = (TextView)builder.GetObject("StatusWindow");
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -142,7 +152,7 @@
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
-            hbox1 = (HBox)builder.GetObject("hbox1");
+            hbox1 = (Widget)builder.GetObject("vbox3");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -165,6 +175,12 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
+#if NETCOREAPP
+            // Normally, one would specify the style class in the UI (.glade) file.
+            // However, doing so breaks gtk2-compatibility, so for now, we will just
+            // set the style class in code.
+            progressBar.StyleContext.AddClass("fat-progress-bar");
+#endif
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -766,6 +782,18 @@
             }
         }
 
+        /// <summary>
+        /// Clear the status panel.
+        /// </summary>
+        public void ClearStatusPanel()
+        {
+            Application.Invoke(delegate
+            {
+                numberOfButtons = 0;
+                statusWindow.Buffer.Clear();
+            });
+        }
+
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -819,8 +847,6 @@
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
-                progressBar.Visible = false;
-                stopButton.Visible = false;
             });
         }
 
@@ -972,11 +998,24 @@
         }
 
         /// <summary>
+        /// Show a message next to the progress bar.
+        /// </summary>
+        /// <param name="message">Message to be displayed.</param>
+        public void ShowProgressMessage(string message)
+        {
+            Application.Invoke(delegate
+            {
+                lblStatus.Visible = !string.IsNullOrEmpty(message);
+                lblStatus.Text = message ?? "";
+            });
+        }
+
+        /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">Percentage complete.</param>
+        /// <param name="progress">Progress (0 - 1).</param>
         /// <param name="showStopButton">Should a stop button be shown?</param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
             // We need to use "Invoke" if the timer is running in a
             // different thread. That means we can use either
@@ -985,10 +1024,20 @@
             Application.Invoke(delegate
             {
                 progressBar.Visible = true;
-                progressBar.Fraction = percent / 100.0;
+                progressBar.Fraction = progress;
                 if (showStopButton)
                     stopButton.Visible = true;
             });
+        }
+
+        /// <summary>
+        /// Hide the progress bar.
+        /// </summary>
+        public void HideProgressBar()
+        {
+            progressBar.Visible = false;
+            stopButton.Visible = false;
+            lblStatus.Hide();
         }
 
         /// <summary>User is trying to close the application - allow that to happen?</summary>
