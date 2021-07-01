@@ -247,7 +247,7 @@
             if (!provider.LoadFromData(css))
                 throw new Exception("Unable to parse global.css");
 
-            window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+            StyleContext.AddProviderForScreen(Gdk.Screen.Default, provider, StyleProviderPriority.Application);
         }
 #endif
 
