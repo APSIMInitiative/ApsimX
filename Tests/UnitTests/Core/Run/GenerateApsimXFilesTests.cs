@@ -65,7 +65,7 @@
             Directory.CreateDirectory(path);
 
             // Create a list of progress ints.
-            var progress = new List<int>();
+            var progress = new List<double>();
 
             // Create a runner for our folder.
             Runner runner = new Runner(folder);
