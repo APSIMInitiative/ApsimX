@@ -784,6 +784,7 @@ namespace Models.CLEM.Activities
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
                                 male.Attributes.Remove("GrowOut");
+                                male.Attributes.Add("Sire");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -796,6 +797,7 @@ namespace Models.CLEM.Activities
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
                                 male.Attributes.Remove("GrowOut");
+                                male.Attributes.Add("Sire");
                                 male.ReplacementBreeder = true;
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
@@ -846,6 +848,10 @@ namespace Models.CLEM.Activities
                                 ind.ID = 0;
                                 ind.PurchaseAge = ind.Age;
 
+                                if(!ind.Attributes.Exists("Sire"))
+                                {
+                                    ind.Attributes.Add("Sire");
+                                }
                                 // add to purchase request list and await purchase in Buy/Sell
                                 ruminantHerd.PurchaseIndividuals.Add(ind);
                             }
@@ -1050,47 +1056,6 @@ namespace Models.CLEM.Activities
                                     ruminantHerd.PurchaseIndividuals.Add(ind);
                                 }
                             }
-
-                            //int ageOfBreeder = 0;
-
-                            //// IAT-NABSA had buy mortality base% more to account for deaths before these individuals grow to breeding age
-                            //// These individuals are already of breeding age so we will ignore this in CLEM
-                            //// minimum of (max kept x prop in single purchase) and (the number needed + annual mortality)
-                            //int numberToBuy = Math.Min(excessBreeders,Convert.ToInt32(Math.Ceiling(MaximumProportionBreedersPerPurchase*minBreeders), CultureInfo.InvariantCulture));
-                            //int numberPerPurchaseCohort = Convert.ToInt32(Math.Ceiling(numberToBuy / Convert.ToDouble(NumberOfBreederPurchaseAgeClasses, CultureInfo.InvariantCulture)), CultureInfo.InvariantCulture);
-
-                            //int numberBought = 0;
-                            //while(numberBought < numberToBuy)
-                            //{
-                            //    this.Status = ActivityStatus.Success;
-
-                            //    int breederClass = Convert.ToInt32(numberBought / numberPerPurchaseCohort, CultureInfo.InvariantCulture);
-                            //    ageOfBreeder = Convert.ToInt32(minBreedAge + (breederClass * 12), CultureInfo.InvariantCulture);
-
-                            //    RuminantFemale newBreeder = new RuminantFemale(ageOfBreeder, Sex.Female, 0, breedParams)
-                            //    {
-                            //        Location = grazeStoreBreeders,
-                            //        Breed = this.PredictedHerdBreed,
-                            //        HerdName = this.PredictedHerdName,
-                            //        BreedParams = breedParams,
-                            //        Gender = Sex.Female,
-                            //        ID = 0,
-                            //        SaleFlag = HerdChangeReason.BreederPurchase
-                            //    };
-                            //    // weight will be set to normalised weight as it was assigned 0 at initialisation
-                            //    newBreeder.PreviousWeight = newBreeder.Weight;
-
-                            //    // get purchased breeder attributes
-                            //    // TODO: allow proportion preg-tested - check preganant in pricing test
-                            //    // TODO: supply attributes with new individuals
-
-                            //    // this individual must be weaned to be permitted to start breeding.
-                            //    newBreeder.Wean(false, "Initial");
-                            //    // add to purchase request list and await purchase in Buy/Sell
-                            //    ruminantHerd.PurchaseIndividuals.Add(newBreeder);
-                            //    numberBought++;
-                            //    excessBreeders--;
-                            //}
                         }
                     }
                 }
@@ -1279,10 +1244,16 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("Young male age/weight sales will only be performed when this activity is due");
                         htmlWriter.Write("</div>");
                     }
+                    if (CastrateGrowOutMales)
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write("Young males will be castrated (e.g. create steers or bullocks)");
+                        htmlWriter.Write("</div>");
+                    }
                     if (SellFemalesLikeMales)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write("Females will be sold the same as males");
+                        htmlWriter.Write($"Females will be sold the same as males and sold when when <span class=\"setvalue\">{FemaleSellingAge.ToString("###")}</span> months old or <span class=\"setvalue\">{FemaleSellingWeight.ToString("#,###")}</span> kg");
                         htmlWriter.Write("</div>");
                     }
                 }
@@ -1330,6 +1301,36 @@ namespace Models.CLEM.Activities
                     }
                 }
                 htmlWriter.Write("</div>");
+
+                if (MarkAgeWeightMalesForSale || MaleSellingAge + MaleSellingWeight > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Grow-out males will be placed in ");
+                    if (GrazeFoodStoreNameGrowOutMales == null || GrazeFoodStoreNameGrowOutMales == "")
+                    {
+                        htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutMales + "</span>");
+                    }
+                    htmlWriter.Write("</div>");
+
+                    if(SellFemalesLikeMales)
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write("Grow-out females will be placed in ");
+                        if (GrazeFoodStoreNameGrowOutFemales == null || GrazeFoodStoreNameGrowOutFemales == "")
+                        {
+                            htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
+                        }
+                        else
+                        {
+                            htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutFemales + "</span>");
+                        }
+                        htmlWriter.Write("</div>");
+                    }
+                }
 
                 if (FindAllChildren<RuminantGroup>().Any())
                 {

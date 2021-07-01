@@ -275,7 +275,14 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            return "PreBreeder";
+                            if((this as RuminantMale).IsWildBreeder)
+                            {
+                                return "WildBreeder";
+                            }
+                            else
+                            {
+                                return "PreBreeder";
+                            }
                         }
                     }
                 }
