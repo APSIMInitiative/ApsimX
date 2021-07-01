@@ -72,8 +72,8 @@
             GenerateApsimXFiles.Generate(runner, path, (s) => { progress.Add(s); });
 
             Assert.AreEqual(progress.Count, 2);
-            Assert.AreEqual(progress[0], 50);
-            Assert.AreEqual(progress[1], 100);
+            Assert.AreEqual(progress[0], 0.5);
+            Assert.AreEqual(progress[1], 1);
 
             var generatedFiles = Directory.GetFiles(path).OrderBy(x => x).ToArray();
             Assert.AreEqual(generatedFiles.Length, 2);
