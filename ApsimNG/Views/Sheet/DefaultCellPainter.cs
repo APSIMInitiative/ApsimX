@@ -7,7 +7,7 @@
     public class DefaultCellPainter : ISheetCellPainter
     {
         /// <summary>The sheet to paint.</summary>
-        SheetView sheet;
+        SheetWidget sheet;
 
         /// <summary>The optional cell editor instance.</summary>
         ISheetEditor editor;
@@ -20,7 +20,7 @@
         /// <param name="sheetView">The sheet to paint.</param>
         /// <param name="sheetEditor">The optional cell editor instance.</param>
         /// <param name="sheetSelection">The optional cell selection instance.</param>
-        public DefaultCellPainter(SheetView sheetView, ISheetEditor sheetEditor = null, ISheetSelection sheetSelection = null)
+        public DefaultCellPainter(SheetWidget sheetView, ISheetEditor sheetEditor = null, ISheetSelection sheetSelection = null)
         {
             sheet = sheetView;
             editor = sheetEditor;

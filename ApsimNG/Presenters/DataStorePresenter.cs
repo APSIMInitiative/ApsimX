@@ -17,7 +17,7 @@
         private IDataStore dataStore;
 
         /// <summary>The sheet widget.</summary>
-        private SheetView sheet;
+        private SheetWidget sheet;
 
         /// <summary>The sheet cell selector.</summary>
         SingleCellSelect cellSelector;
@@ -177,7 +177,7 @@
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        sheet = new SheetView()
+                        sheet = new SheetWidget()
                         {
                             DataProvider = dataProvider,
                             NumberFrozenRows = dataProvider.NumHeadingRows,
@@ -188,10 +188,10 @@
 #endif
 
                         cellSelector = new SingleCellSelect(sheet);
-                        //scrollbars = new SheetScrollBars(sheet);
+                        var scrollbars = new SheetScrollBars(sheet);
                         sheet.CellPainter = new DefaultCellPainter(sheet, sheetSelection: cellSelector);
 
-                        sheetContainer.Add(sheet);
+                        sheetContainer.Add(scrollbars.MainWidget);
                         statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";
                     }
                     catch (Exception err)

@@ -18,10 +18,13 @@ namespace UserInterface.Views
     /// The caller can provide column widths or the widget will auto-calculate them.
     /// 
     /// </remarks>
-    public class SheetView : EventBox
+    public class SheetWidget : EventBox
     {
         /// <summary>The width of the grid lines in pixels.</summary>
         private const double lineWidth = 0.2;
+
+        /// <summary>The number of rows to scroll (up or down) on mouse wheel.</summary>
+        private const int mouseWheelScrollRows = 10;
 
         /// <summary>A backing field for NumberHiddenColumns property.</summary>
         private int numberHiddenColumnsBackingField;
@@ -30,12 +33,13 @@ namespace UserInterface.Views
         private int numberHiddenRowsBackingField;
 
         /// <summary>Constructor</summary>
-        public SheetView()
+        public SheetWidget()
         {
             CanFocus = true;
 #if NETCOREAPP
             this.StyleContext.AddClass("sheet");
 #endif
+            AddEvents((int)EventMask.ScrollMask);
         }
 
         /// <summary>Invoked when a key is pressed.</summary>
@@ -105,7 +109,7 @@ namespace UserInterface.Views
         public int MaximumNumberHiddenColumns { get { return CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1); } }
 
         /// <summary>Maximum number of rows that can be hidden (scrolled).</summary>        
-        public int MaximumNumberHiddenRows { get { return DataProvider.RowCount - FullyVisibleRowIndexes.Last(); } }
+        public int MaximumNumberHiddenRows { get; private set; }
 
         /// <summary>Width of the sheet in pixels.</summary>        
         public int Width { get; set; }
@@ -187,18 +191,17 @@ namespace UserInterface.Views
         }
 
         /// <summary>Scroll the sheet up one row.</summary>
-        public void ScrollUp()
+        /// <param name="numRows">Number of rows to scroll.</param>
+        public void ScrollUp(int numRows = 1)
         {
-            if (NumberHiddenRows > 0)
-                NumberHiddenRows--;
+            NumberHiddenRows = Math.Max(NumberHiddenRows -= numRows, 0);
         }
 
         /// <summary>Scroll the sheet down one row.</summary>
-        public void ScrollDown()
+        /// <param name="numRows">Number of rows to scroll.</param>
+        public void ScrollDown(int numRows = 1)
         {
-            var bottomRowIndex = FullyVisibleRowIndexes.Last();
-            if (bottomRowIndex < DataProvider.RowCount - 1)
-                NumberHiddenRows++;
+            NumberHiddenRows = Math.Min(NumberHiddenRows + numRows, MaximumNumberHiddenRows);
         }
 
         /// <summary>Scroll the sheet down one page of rows.</summary>
@@ -294,11 +297,30 @@ namespace UserInterface.Views
             Width = Parent.Allocation.Width;
             Height = Parent.Allocation.Height;
 #else
-            Width = Parent.AllocatedWidth;
-            Height = Parent.AllocatedHeight;
+            Width = this.AllocatedWidth;
+            Height = this.AllocatedHeight;
 #endif
-            CalculateColumnWidths(cr);
+            if (cr != null)
+                CalculateColumnWidths(cr);
+
+            // The first time through here calculate maximum number of hidden rows.
+            if (MaximumNumberHiddenRows == 0)
+                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.Last();
+
             Initialised?.Invoke(this, new EventArgs());
+            GrabFocus();
+        }
+
+        protected override void OnSizeAllocated(Gdk.Rectangle allocation)
+        {
+            base.OnSizeAllocated(allocation);
+
+            if (allocation.Width != Width || allocation.Height != Height)
+            {
+                ColumnWidths = null;
+                MaximumNumberHiddenRows = 0;
+                Refresh();
+            }
         }
 
         /// <summary>Invoked when the user presses a key.</summary>
@@ -331,6 +353,25 @@ namespace UserInterface.Views
                 MainView.MasterView.ShowError(ex);
             }
 
+            return true;
+        }
+
+        protected override bool OnScrollEvent(EventScroll e)
+        {
+            int delta;
+#if NETFRAMEWORK
+            delta = e.Direction == Gdk.ScrollDirection.Down ? -120 : 120;
+#else
+            if (e.Direction == Gdk.ScrollDirection.Smooth)
+                delta = e.DeltaY < 0 ? mouseWheelScrollRows : -mouseWheelScrollRows;
+            else
+                delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
+#endif
+            if (delta < 0)
+                ScrollDown(-delta);
+            else
+                ScrollUp(delta);
+            Refresh();
             return true;
         }
 
@@ -428,69 +469,75 @@ namespace UserInterface.Views
             {
                 var text = DataProvider.GetCellContents(columnIndex, rowIndex);
                 var cellBounds = CalculateBounds(columnIndex, rowIndex);
-
-                if (text == null)
-                    text = string.Empty;
-
-                cr.Rectangle(cellBounds.ToClippedRectangle(Width, Height));
-                cr.Clip();
-
-                cr.LineWidth = lineWidth;
-
-                cr.Rectangle(cellBounds.ToRectangle());
-                if (!CellPainter.PaintCell(columnIndex, rowIndex))
+                if (cellBounds != null)
                 {
-                    //cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
-                    //cr.Stroke();
-                }
-                else
-                {
-                    // Draw the filled in cell.
-#if NETCOREAPP
-                    this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
-                    this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width, cellBounds.Height);
-                    var c = this.StyleContext.GetColor(this.StyleContext.State);
-                    cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
-#else
-                    cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
-                    cr.Fill();
-                    cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
+                    if (text == null)
+                        text = string.Empty;
 
-#endif
-                    // Draw cell outline.
-                    if (ShowLines)
+                    cr.Rectangle(cellBounds.ToClippedRectangle(Width-20, Height));
+                    cr.Clip();
+
+                    cr.LineWidth = lineWidth;
+
+                    cr.Rectangle(cellBounds.ToRectangle());
+                    if (!CellPainter.PaintCell(columnIndex, rowIndex))
                     {
-                        cr.Rectangle(cellBounds.ToRectangle());
-                        cr.Stroke();
-                    }
-
-                    //Set text font options for cell.
-                    var layout = this.CreatePangoLayout(text);
-                    layout.FontDescription = new Pango.FontDescription();
-                    if (CellPainter.TextItalics(columnIndex, rowIndex))
-                        layout.FontDescription.Style = Pango.Style.Italic;
-                    if (CellPainter.TextBold(columnIndex, rowIndex))
-                        layout.FontDescription.Weight = Pango.Weight.Bold;
-                    layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
-                    
-                    var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
-                    maxHeight = 10;
-
-                    if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
-                    {
-                        // left justify
-                        cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
-                        cr.TextPath(text);
+                        //cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
+                        //cr.Stroke();
                     }
                     else
                     {
-                        // right justify
-                        var textExtents = cr.TextExtents(text);
-                        cr.MoveTo(cellBounds.Right - ColumnPadding - inkRectangle.Width, cellBounds.Top);
-                        Pango.CairoHelper.ShowLayout(cr, layout);
+                        // Draw the filled in cell.
+#if NETCOREAPP
+                    this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
+                    this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
+                    var c = this.StyleContext.GetColor(this.StyleContext.State);
+                    cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
+#else
+                        cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
+                        cr.Fill();
+                        cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
+
+#endif
+                        // Draw cell outline.
+                        if (ShowLines)
+                        {
+                            cr.Rectangle(cellBounds.ToRectangle());
+                            cr.Stroke();
+                        }
+
+                        //Set text font options for cell.
+                        var layout = this.CreatePangoLayout(text);
+                        layout.FontDescription = new Pango.FontDescription();
+                        if (CellPainter.TextItalics(columnIndex, rowIndex))
+                            layout.FontDescription.Style = Pango.Style.Italic;
+                        if (CellPainter.TextBold(columnIndex, rowIndex))
+                            layout.FontDescription.Weight = Pango.Weight.Bold;
+                        layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
+
+                        var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
+                        maxHeight = 10;
+
+                        if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
+                        {
+                            // left justify
+                            cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
+                            cr.TextPath(text);
+                        }
+                        else
+                        {
+                            // right justify
+                            var textExtents = cr.TextExtents(text);
+                            cr.MoveTo(cellBounds.Right - ColumnPadding - inkRectangle.Width, cellBounds.Top);
+                            Pango.CairoHelper.ShowLayout(cr, layout);
+                        }
                     }
+                    cr.ResetClip();
+#if NETCOREAPP
+                    this.StyleContext.State = StateFlags.Normal;
+#endif
+
                 }
-                cr.ResetClip();
             }
             catch (Exception ex)
             {

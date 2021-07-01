@@ -8,7 +8,7 @@ namespace UserInterface.Views
     public class SingleCellSelect : ISheetSelection
     {
         /// <summary>The sheet widget.</summary>
-        private SheetView sheet;
+        private SheetWidget sheet;
 
         /// <summary>The index of the current selected column.</summary>
         private int selectedColumnIndex;
@@ -18,7 +18,7 @@ namespace UserInterface.Views
 
         /// <summary>Constructor.</summary>
         /// <param name="sheetView">The sheet widget.</param>
-        public SingleCellSelect(SheetView sheetView)
+        public SingleCellSelect(SheetWidget sheetView)
         {
             sheet = sheetView;
             selectedColumnIndex = 0;

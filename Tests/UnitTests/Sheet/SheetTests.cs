@@ -25,7 +25,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -69,7 +69,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -114,7 +114,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -162,7 +162,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;
@@ -208,7 +208,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;
@@ -255,7 +255,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetView();
+            var sheet = new SheetWidget();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;

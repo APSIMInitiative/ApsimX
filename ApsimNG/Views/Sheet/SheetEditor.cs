@@ -6,7 +6,7 @@ namespace UserInterface.Views
     class SheetEditor : ISheetEditor
     {
         /// <summary>The sheet widget.</summary>
-        private readonly SheetView sheet;
+        private readonly SheetWidget sheet;
 
         /// <summary>The gtk entry box used when editing a sheet cell.</summary>
         private Entry entry;
@@ -16,7 +16,7 @@ namespace UserInterface.Views
 
         /// <summary>Constructor.</summary>
         /// <param name="sheetView">The sheet widget.</param>
-        public SheetEditor(SheetView sheetView)
+        public SheetEditor(SheetWidget sheetView)
         {
             sheet = sheetView;
             sheet.KeyPress += OnKeyPressEvent;

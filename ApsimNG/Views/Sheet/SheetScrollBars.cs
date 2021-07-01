@@ -7,10 +7,7 @@ namespace UserInterface.Views
     public class SheetScrollBars
     {
         /// <summary>The sheet widget.</summary>
-        private SheetView sheet;
-
-        /// <summary>A container for both scroll bars at fixed xy locations.</summary>
-        private Fixed fix;
+        private SheetWidget sheet;
 
         /// <summary>The horizontal scroll bar</summary>
         private HScrollbar horizontalScrollbar;
@@ -20,13 +17,17 @@ namespace UserInterface.Views
 
         /// <summary>Constructor.</summary>
         /// <param name="sheetView">The sheet widget.</param>
-        public SheetScrollBars(SheetView sheetView)
+        public SheetScrollBars(SheetWidget sheetView)
         {
             sheet = sheetView;
             sheet.Initialised += OnSheetInitialised;
             sheet.ScrolledHorizontally += OnSheetScrolled;
             sheet.ScrolledVertically += OnSheetScrolled;
+            Initialise();
         }
+
+        /// <summary>A container for the sheet and scroll bars.</summary>
+        public Widget MainWidget { get; private set; }
 
         /// <summary>The width in pixels of a scroll bar.</summary>
         public int ScrollBarWidth { get; set; } = 20;
@@ -44,32 +45,48 @@ namespace UserInterface.Views
         /// <param name="e">The event arguments.</param>
         private void OnSheetInitialised(object sender, EventArgs e)
         {
-            sheet.Width -= ScrollBarWidth;
-            AddScollBars();
-            sheet.Refresh();
+            SetScrollbarAdjustments();
+            //sheet.Width -= ScrollBarWidth;
+            //AddScollBars();
+            //sheet.Refresh();
         }
 
         /// <summary>A scroll bars to the sheet widget.</summary>
-        private void AddScollBars()
+        private void Initialise()
         {
-            var horizontalAdjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenColumns + 1, 1, 1, 1);
+            //// Remove existing child.
+            //if (sheet.Children.Length > 0)
+            //    sheet.Remove(sheet.Children[0]);
+
+            var horizontalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
             horizontalScrollbar = new HScrollbar(horizontalAdjustment);
             horizontalScrollbar.Value = 0;
             horizontalScrollbar.ValueChanged += OnHorizontalScrollbarChanged;
-            horizontalScrollbar.SetSizeRequest(sheet.Width, ScrollBarWidth);
+            //horizontalScrollbar.SetSizeRequest(sheet.Width, ScrollBarWidth);
 
-            var verticalAdjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenRows + 1, 1, 1, 1);
+            var verticalAdjustment = new Adjustment(1, 0, 100, 1, 1, 1);
             verticalScrollbar = new VScrollbar(verticalAdjustment);
             verticalScrollbar.Value = 0;
             verticalScrollbar.ValueChanged += OnVerticalScrollbarChanged;
-            verticalScrollbar.SetSizeRequest(ScrollBarWidth, sheet.Height);
+            //verticalScrollbar.SetSizeRequest(ScrollBarWidth, sheet.Height);
 
-            fix = new Fixed();
-            fix.Put(horizontalScrollbar, 0, sheet.Height);
-            fix.Put(verticalScrollbar, sheet.Width/* - ScrollBarWidth*/, 0);
+            var hbox = new HBox();
+            var vbox = new VBox();
 
-            sheet.Add(fix);
-            sheet.ShowAll();
+            hbox.PackEnd(verticalScrollbar, false, true, 0);
+            hbox.PackStart(sheet, true, true, 0);
+
+            vbox.PackEnd(horizontalScrollbar, false, true, 0);
+            vbox.PackStart(hbox, true, true, 0);
+
+            MainWidget = vbox;
+        }
+
+        private void SetScrollbarAdjustments()
+        {
+            horizontalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenColumns + 1, 1, 1, 1);
+            verticalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenRows + 1, 1, 1, 1);
+
         }
 
         /// <summary>Invoked when the sheet has been scrolled.</summary>
