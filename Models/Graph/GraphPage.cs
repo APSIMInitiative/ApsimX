@@ -148,6 +148,8 @@
                 if (d.InScopeSimulationNames != null)
                     allSimulationNamesInScope.AddRange(d.InScopeSimulationNames);
             var inScopeSimulationNames = allSimulationNamesInScope.Distinct();
+            if (!inScopeSimulationNames.Any())
+                inScopeSimulationNames = null;
 
             foreach (var tableName in allTableNames)
             {

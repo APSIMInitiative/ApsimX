@@ -294,8 +294,8 @@ namespace UnitTests.Storage
         {
             throw new NotImplementedException();
         }
-		
-        public IRunnable Clean(List<string> names)
+
+        public void Clean(IEnumerable<string> names, bool wait)
         {
             throw new NotImplementedException();
         }

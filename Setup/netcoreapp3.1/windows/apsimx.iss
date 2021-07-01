@@ -13,6 +13,10 @@
 #else
 #define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\netcoreapp3.1\win-x64\publish\Models.exe", PRODUCT_VERSION) 
 #endif
+#define GtkVer "3.24.20"
+#define GtkArchive "gtk-" + GtkVer + ".zip"
+#define GtkInstallPath "{localappdata}\Gtk\" + GtkVer
+
 [Setup]
 AppName=APSIM
 AppVerName=APSIM v{#AppVerNo}
@@ -37,9 +41,123 @@ VersionInfoCompany=APSIM Initiative4
 VersionInfoDescription=Apsim Modelling
 VersionInfoProductName=Apsim
 VersionInfoProductVersion={#AppVerNo}
-
+UsedUserAreasWarning=no
 
 [Code]
+var
+    DownloadPage: TDownloadWizardPage;
+
+function NeedToInstallGtk() : Boolean;
+begin
+    // Need to install gtk iff the appropriate directory doesn't exist.
+    result := not DirExists(ExpandConstant('{#GtkInstallPath}'));
+end;
+function OnDownloadProgress(const Url, FileName: String; const Progress, ProgressMax: Int64): Boolean;
+begin
+    if Progress = ProgressMax then
+        Log(Format('Successfully downloaded file to {tmp}: %s', [FileName]));
+    Result:= True;
+end;
+
+procedure InitializeWizard;
+begin
+    DownloadPage := CreateDownloadPage(SetupMessage(msgWizardPreparing), SetupMessage(msgPreparingDesc), @OnDownloadProgress);
+end;
+
+// https://stackoverflow.com/questions/6065364/how-to-get-inno-setup-to-unzip-a-file-it-installed-all-as-part-of-the-one-insta
+procedure UnZip(zipPath, targetPath: string);
+var
+    shell: Variant;
+    zipFile: Variant;
+    targetFolder: Variant;
+    child: Variant;
+    numItems, i: Integer;
+begin
+    shell := CreateOleObject('Shell.Application');
+    zipFile := shell.NameSpace(zipPath);
+    if VarIsClear(zipFile) then
+        RaiseException(Format('Zip file "%s" does not exist or cannot be opened', [zipPath]));
+    targetFolder := shell.NameSpace(targetPath);
+    if VarIsClear(targetFolder) then
+        RaiseException(Format('Target path "%s" does not exist', [targetPath]));
+
+    numItems := zipFile.Items().Count;
+    for i := 0 to numItems - 1 do
+    begin
+        child := zipFile.Items().Item(i);
+        DownloadPage.SetText('Installing Gtk+ runtime...', Format('Extracting %s...', [child.Name]));
+        DownloadPage.SetProgress(i, numItems);
+        // The flags passed into this function are described here:
+        // https://docs.microsoft.com/en-us/windows/win32/shell/folder-copyhere
+        // 4 - Do not display a progress dialog box.
+        // 16 - Respond with "Yes to All" for any dialog box that is displayed.
+        targetFolder.CopyHere(child, {4 or} 16);
+        if DownloadPage.AbortedByUser then
+            break;
+    end;
+end;
+
+function InstallGtk(): Boolean;
+begin
+    DownloadPage.AbortButton.Caption := 'Cancel';
+    DownloadPage.Clear;
+    DownloadPage.Add(ExpandConstant('https://github.com/GtkSharp/Dependencies/raw/master/{#GtkArchive}'), ExpandConstant('{#GtkArchive}'), '');
+    DownloadPage.Show;
+    try
+        try
+            DownloadPage.Download();
+            CreateDir(ExpandConstant('{#GtkInstallPath}'));
+            UnZip(ExpandConstant('{tmp}\{#GtkArchive}'), ExpandConstant('{#GtkInstallPath}'));
+            DeleteFile('{tmp}\{#GtkArchive}');
+            Result:= True;
+        except
+            if DownloadPage.AbortedByUser then
+            begin
+                Log('Download aborted by user.');
+                SuppressibleMsgBox('Download aborted by user.', mbCriticalError, MB_OK, IDOK);
+            end
+            else
+                SuppressibleMsgBox(AddPeriod(GetExceptionMessage), mbCriticalError, MB_OK, IDOK);
+            DelTree(ExpandConstant('{#GtkInstallPath}'), True, True, True);
+            Result:= False;
+        end;
+    finally
+        DownloadPage.Hide;
+    end;
+end;
+
+function NextButtonClick(CurPageID: Integer): Boolean;
+var
+    doInstall: Integer;
+begin
+    if CurPageID = wpSelectDir then
+    begin
+        if NeedToInstallGtk() then
+        begin
+            Log(ExpandConstant('Gtk directory {#GtkInstallPath} does not exist. Need to ask user if they want to install it...'));
+            doInstall := MsgBox('Setup has detected that the required Gtk runtime is not installed. Do you wish to have it automatically downloaded (~50MB) and installed? The user interface will not run if this is not installed.', mbConfirmation, MB_YESNO);
+            if doInstall = IDYES then
+            begin
+                Log('User chose to have gtk automatically installed. Performing installation now...');
+                Result := InstallGtk()
+            end
+            else
+            begin
+                Log('User chose not to have gtk automatically installed.');
+                // Continue installation if user doesn't want to install gtk.
+                Result := True;
+            end;
+        end
+        else
+        begin
+            Log(ExpandConstant('Gtk is already installed at {#GtkInstallPath}'));
+            Result:= True;
+        end;
+    end
+    else
+        Result := True;
+end;
+
 // https://stackoverflow.com/questions/37825650/compare-version-strings-in-inno-setup
 // 
 // Returns 0, if the versions are equal.

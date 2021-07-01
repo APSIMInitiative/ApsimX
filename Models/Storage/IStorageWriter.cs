@@ -92,6 +92,7 @@
         /// Create a db clean command.
         /// </summary>
         /// <param name="names">A list of simulation names that are about to run.</param>
-        IRunnable Clean(List<string> names);
+        /// <param name="wait">Wait for the clean operation to finish?</param>
+        void Clean(IEnumerable<string> names, bool wait);
     }
 }
