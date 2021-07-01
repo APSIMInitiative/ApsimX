@@ -201,7 +201,9 @@ namespace UserInterface.Views
         /// <param name="numRows">Number of rows to scroll.</param>
         public void ScrollDown(int numRows = 1)
         {
-            NumberHiddenRows = Math.Min(NumberHiddenRows + numRows, MaximumNumberHiddenRows);
+            var bottomFullyVisibleRowIndex = FullyVisibleRowIndexes.Last();
+            if (bottomFullyVisibleRowIndex < DataProvider.RowCount - 1)
+                NumberHiddenRows++;
         }
 
         /// <summary>Scroll the sheet down one page of rows.</summary>

@@ -176,7 +176,7 @@ namespace UserInterface.Views
         {
             string filter = GetFilter();
 
-            var data = dataStore.GetDataUsingSql($"SELECT rowid FROM keyset WHERE rowid >= {from} ORDER BY rowid LIMIT {count}");
+            var data = dataStore.GetDataUsingSql($"SELECT rowid FROM keyset WHERE rowid >= {from+1} ORDER BY rowid LIMIT {count}");
             var rowIds = DataTableUtilities.GetColumnAsIntegers(data, "rowid");
             var rowIdsCSV = StringUtilities.Build(rowIds, ",");
 
