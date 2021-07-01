@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -31,7 +32,8 @@
         /// A list of jobs current running. 
         /// We keep track of this to allow us to query how much of each job has been completed
         /// </summary>
-        public List<IRunnable> SimsRunning { get; private set; } = new List<IRunnable>();
+        /// <remarks>Using ImmutableList here for thread safety.</remarks>
+        public ImmutableList<IRunnable> SimsRunning { get; private set; } = ImmutableList<IRunnable>.Empty;
 
         /// <summary>
         /// Lock object controlling access to SimsRunning list
@@ -174,7 +176,7 @@
                 if (!(job is JobRunnerSleepJob))
                     lock (runningLock)
                     {
-                        SimsRunning.Add(job);
+                        SimsRunning = SimsRunning.Add(job);
                     }
 
                 var startTime = DateTime.Now;
@@ -198,7 +200,7 @@
                     lock (runningLock)
                     {
                         NumJobsCompleted++;
-                        SimsRunning.Remove(job);
+                        SimsRunning = SimsRunning.Remove(job);
                     }
             }
             finally
