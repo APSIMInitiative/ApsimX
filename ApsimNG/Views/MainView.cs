@@ -174,6 +174,12 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
+#if NETCOREAPP
+            // Normally, one would specify the style class in the UI (.glade) file.
+            // However, doing so breaks gtk2-compatibility, so for now, we will just
+            // set the style class in code.
+            progressBar.StyleContext.AddClass("fat-progress-bar");
+#endif
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -230,14 +236,6 @@
 
 #if NETCOREAPP
             LoadStylesheets();
-
-            CssProvider provider = new CssProvider();
-            StringBuilder css = new StringBuilder();
-            css.AppendLine("progress, trough {");
-            css.AppendLine($"min-height: 34px;");
-            css.Append("}");
-            provider.LoadFromData(css.ToString());
-            progressBar.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
 #endif
         }
 
