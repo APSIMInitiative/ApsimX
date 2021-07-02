@@ -194,7 +194,7 @@ namespace UserInterface.Views
         /// <param name="numRows">Number of rows to scroll.</param>
         public void ScrollUp(int numRows = 1)
         {
-            NumberHiddenRows = Math.Max(NumberHiddenRows -= numRows, 0);
+            NumberHiddenRows = Math.Max(NumberHiddenRows - numRows, 0);
         }
 
         /// <summary>Scroll the sheet down one row.</summary>
@@ -370,9 +370,9 @@ namespace UserInterface.Views
                 delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
 #endif
             if (delta < 0)
-                ScrollDown(-delta);
+                ScrollDown();
             else
-                ScrollUp(delta);
+                ScrollUp();
             Refresh();
             return true;
         }

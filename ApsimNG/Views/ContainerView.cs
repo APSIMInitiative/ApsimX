@@ -5,7 +5,7 @@ namespace UserInterface.Views
     /// <summary>A container view.</summary>
     public class ContainerView : ViewBase
     {
-        VBox container;
+        Box container;
 
         /// <summary>Constructor</summary>
         public ContainerView() { }
@@ -24,7 +24,7 @@ namespace UserInterface.Views
 
         protected override void Initialise(ViewBase ownerView, GLib.Object gtkControl)
         {
-            container = (VBox)gtkControl;
+            container = (Box)gtkControl;
         }
 
         public void Add(Widget child)

@@ -18,11 +18,4 @@ https://developer.gnome.org/gtk3/stable/chap-css-properties.html
     color: #ffffff;             /* white */
 }
 
-scrollbar, scrollbar button, scrollbar slider {
-    min-width: 8px;
-    min-height: 8px;
-}
 
-progressbar.fat-progress-bar progress, progressbar.fat-progress-bar trough {
-    min-height: 34px;
-}
