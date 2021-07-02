@@ -243,7 +243,12 @@
 #if NETCOREAPP
         private void LoadStylesheets()
         {
-            var cssName = Configuration.Settings.DarkTheme ? "dark" : "light";
+            LoadStylesheet("global");
+            LoadStylesheet(Configuration.Settings.DarkTheme ? "dark" : "light");
+        }
+
+        private void LoadStylesheet(string cssName)
+        {
             string css = ReflectionUtilities.GetResourceAsString($"ApsimNG.Resources.Style.{cssName}.css");
             CssProvider provider = new CssProvider();
             if (!provider.LoadFromData(css))
