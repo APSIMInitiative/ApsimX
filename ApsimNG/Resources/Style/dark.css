@@ -13,7 +13,7 @@ https://developer.gnome.org/gtk3/stable/chap-css-properties.html
 }
 
 /* Styling for sheet header rows */
-.sheet:insensitive {
+.sheet:disabled {
     background-color: #404040;  /* dark gray */
     color: #ffffff;             /* white */
 }
