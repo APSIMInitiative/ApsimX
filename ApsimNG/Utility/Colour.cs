@@ -48,7 +48,7 @@ namespace Utility
         /// <returns>The same colour as a Cairo.Color.</returns>
         public static Cairo.Color ToCairo(Color colour)
         {
-            return new Cairo.Color(colour.A, colour.R, colour.G, colour.B);
+            return new Cairo.Color(colour.R / 255.0, colour.G / 255.0, colour.B / 255.0);
         }
 
         /// <summary>
