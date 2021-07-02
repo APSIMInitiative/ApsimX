@@ -86,7 +86,7 @@
                 else if (rowIndex < sheet.NumberFrozenRows)
                     return new Cairo.Color(102 / 255.0, 102 / 255.0, 102 / 255.0);  // dark grey
                 else
-                    return new Cairo.Color(0, 0, 0); // black
+                    return Utility.Colour.ToCairo(sheet.Style.Background(Gtk.StateType.Normal));
             }
             else
             {
