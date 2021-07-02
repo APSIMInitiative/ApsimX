@@ -235,7 +235,13 @@ namespace UserInterface.Views
         public bool CellHitTest(int pixelX, int pixelY, out int columnIndex, out int rowIndex)
         {
             columnIndex = 0;
-            rowIndex = VisibleRowIndexes.ElementAt(pixelY / RowHeight);
+            int index = pixelY / RowHeight;
+            if (index >= VisibleRowIndexes.Count())
+            {
+                rowIndex = 0;
+                return false;
+            }
+            rowIndex = VisibleRowIndexes.ElementAt(index);
             int leftPixelX = 0;
             foreach (int colIndex in VisibleColumnIndexes)
             {
