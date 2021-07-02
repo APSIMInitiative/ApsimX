@@ -526,19 +526,18 @@ namespace UserInterface.Views
                         var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
                         maxHeight = 10;
 
+                        // Vertically center the text.
+                        double y = cellBounds.Top + (cellBounds.Height - maxHeight) / 2;
+
+                        // Horizontal alignment is determined by the cell painter.
+                        double x;
                         if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
-                        {
-                            // left justify
-                            cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
-                            cr.TextPath(text);
-                        }
+                            x = cellBounds.Left + ColumnPadding;
                         else
-                        {
-                            // right justify
-                            var textExtents = cr.TextExtents(text);
-                            cr.MoveTo(cellBounds.Right - ColumnPadding - inkRectangle.Width, cellBounds.Top);
-                            Pango.CairoHelper.ShowLayout(cr, layout);
-                        }
+                            x = cellBounds.Right - ColumnPadding - inkRectangle.Width;
+
+                        cr.MoveTo(x, y);
+                        Pango.CairoHelper.ShowLayout(cr, layout);
                     }
                     cr.ResetClip();
 #if NETCOREAPP
