@@ -9,10 +9,10 @@ namespace Models.Storage
     internal class CleanCommand : IRunnable
     {
         private DataStoreWriter writer;
-        private List<string> names;
-        private List<int> ids;
+        private IEnumerable<string> names;
+        private IEnumerable<int> ids;
 
-        public CleanCommand(DataStoreWriter dataStoreWriter, List<string> names, List<int> ids)
+        public CleanCommand(DataStoreWriter dataStoreWriter, IEnumerable<string> names, IEnumerable<int> ids)
         {
             writer = dataStoreWriter;
             this.names = names;
@@ -28,6 +28,14 @@ namespace Models.Storage
         /// Returns the job's progress as a real number in range [0, 1].
         /// </summary>
         public double Progress { get { return 0; } }
+
+        /// <summary>
+        /// Prepare the IRunnable instance to be run.
+        /// </summary>
+        public void Prepare()
+        {
+            // Nothing to do.
+        }
 
         /// <summary>Called to run the command. Can throw on error.</summary>
         /// <param name="cancelToken">Is cancellation pending?</param>

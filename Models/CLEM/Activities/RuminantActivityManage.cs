@@ -152,6 +152,14 @@ namespace Models.CLEM.Activities
         public bool MarkAgeWeightMalesForSale { get; set; }
 
         /// <summary>
+        /// Castrate grow out males (steers, bullocks)
+        /// </summary>
+        [Category("Grow out herd", "Males")]
+        [Description("Castrate grow out males")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool CastrateGrowOutMales { get; set; }
+
+        /// <summary>
         /// Male selling age (months)
         /// </summary>
         [Category("Grow out herd", "Males")]
@@ -659,6 +667,8 @@ namespace Models.CLEM.Activities
                 {
                     ind.Location = ((ind is RuminantFemale) ? grazeStoreGrowOutFemales : grazeStoreGrowOutMales);
                     ind.AddAttribute("GrowOut");
+                    // do not castrate her as we may need to keep some of this months pool as replacement breeders
+                    // see replacement sire section in timingOK
                 }
 
                 growOutHerd = this.CurrentHerd(true).Where(a => a.AttributeExists("GrowOut")).ToList();
@@ -770,7 +780,7 @@ namespace Models.CLEM.Activities
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
                             }
-                            // if still insufficent, look into current growing out herd for replacement
+                            // if still insufficent, look into current growing out herd for replacement before they are castrated below
                             // try get best male from grow out herd (not castrated)
                             // only consider individuals that will mature in next 12 months
                             foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(numberToBuy))
@@ -787,6 +797,13 @@ namespace Models.CLEM.Activities
                             // we can now move to buy or if purchasing is off we'll need to set aside a number of younger males and wait for them to grow
 
                             // remaining males assumed to be too small, so await next time-step
+                        }
+
+                        // time to castrate any males that have not been assigned as replacement breeders from this years young male pool
+                        // get grow-out males that are not castrated and not marked as replacement breeder
+                        foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && !a.ReplacementBreeder && !a.AttributeExists("Castrated")))
+                        {
+                            male.AddAttribute("Castrated");
                         }
 
                         // if still insufficient buy sires.
@@ -818,7 +835,6 @@ namespace Models.CLEM.Activities
                             {
                                 ind.Location = grazeStoreSires;
                                 ind.SaleFlag = HerdChangeReason.SirePurchase;
-                                ind.Sire = true;
                                 ind.ID = 0;
                                 ind.PurchaseAge = ind.Age;
 

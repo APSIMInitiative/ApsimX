@@ -3,6 +3,7 @@
     using APSIM.Shared.JobRunning;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using System;
     using System.Collections.Generic;
     using System.Data;
@@ -19,10 +20,11 @@
         private object lockObject = new object();
 
         /// <summary>A list of all write commands.</summary>
+        /// <remarks>NEVER modify this without first acquiring a lock on <see cref="lockObject" />.</remarks>
         private List<IRunnable> commands = new List<IRunnable>();
 
         /// <summary>A sleep job to stop the job runner from exiting.</summary>
-        private IRunnable sleepJob = new JobRunnerSleepJob();
+        private IRunnable sleepJob = new EmptyJob();
 
         /// <summary>The runner used to run commands on a worker thread.</summary>
         private JobRunner commandRunner;
@@ -171,8 +173,7 @@
             if (commandRunner != null)
             {
                 // Make sure all existing writing has completed.
-                while (commands.Count > 0 || !idle)
-                    Thread.Sleep(100);
+                SpinWait.SpinUntil(() => commands.Count < 1 && idle);
             }
         }
 
@@ -198,7 +199,7 @@
                     WaitForIdle();
 
                     stopping = true;
-                    commandRunner.Stop();
+                    commandRunner?.Stop();
                     commandRunner = null;
                     commands.Clear();
                     simulationIDs.Clear();
@@ -225,20 +226,28 @@
                     if (commands.Count > 0)
                     {
                         command = commands[0];
+                        // The WaitForIdle() function will wait until there are no jobs
+                        // and idle is set to true. Therefore, we should update the value
+                        // of idle *before* removing this command from the commands list.
+                        // Otherwise, we could end up in a situation where idle is (briefly)
+                        // set to true (because a command was recently added), and the commands
+                        // list is empty, which would cause WaitForIdle() to return, even
+                        // though the job runner actually hasn't finished running this command.
+                        idle = command == null;
                         commands.RemoveAt(0);
                     }
+                    else
+                        idle = true;
                 }
 
                 // If nothing was found to run then return a sleep job 
                 // so that the job runner doesn't exit.
                 if (command == null)
                 {
-                    idle = true;
                     yield return sleepJob;
                 }
                 else
                 {
-                    idle = false;
                     somethingHasBeenWriten = true;
                     yield return command;
                 }
@@ -257,7 +266,8 @@
                 // The call to Start may fail if the database is corrupt, which may well be why we want to empty it.
                 // For that reason, catch any exceptions and proceed.
             }
-            commands.Add(new EmptyCommand(Connection));
+            lock (lockObject)
+                commands.Add(new EmptyCommand(Connection));
             Stop();
         }
 
@@ -267,7 +277,8 @@
         public void AddCheckpoint(string name, IEnumerable<string> filesToStore = null)
         {
             Start();
-            commands.Add(new AddCheckpointCommand(this, name, filesToStore));
+            lock (lockObject)
+                commands.Add(new AddCheckpointCommand(this, name, filesToStore));
             Stop();
         }
 
@@ -289,7 +300,8 @@
         public void RevertCheckpoint(string name)
         {
             Start();
-            commands.Add(new RevertCheckpointCommand(this, GetCheckpointID(name)));
+            lock (lockObject)
+                commands.Add(new RevertCheckpointCommand(this, GetCheckpointID(name)));
             Stop();
         }
 
@@ -434,13 +446,28 @@
         /// Create a db clean command.
         /// </summary>
         /// <param name="names">A list of simulation names that are about to run.</param>
-        public IRunnable Clean(List<string> names)
+        public IRunnable Clean(IEnumerable<string> names)
         {
             var ids = new List<int>();
             foreach (var name in names)
                 if (simulationIDs.TryGetValue(name, out SimulationDetails details))
                     ids.Add(details.ID);
             return new CleanCommand(this, names, ids);
+        }
+
+        /// <summary>
+        /// Initiate a clean of the database.
+        /// </summary>
+        /// <param name="names">Simulation names to be cleaned.</param>
+        /// <param name="wait">Wait for the clean operation to finish?</param>
+        public void Clean(IEnumerable<string> names, bool wait)
+        {
+            if (wait)
+                Start();
+            lock (lockObject)
+                commands.Add(Clean(names));
+            if (wait)
+                Stop();
         }
 
         /// <summary>Create a command runner one hasn't already been created.</summary>

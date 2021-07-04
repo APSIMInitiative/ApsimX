@@ -15,6 +15,14 @@
         {
             doThrow = throws;
         }
+        /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
+        {
+            // Do nothing.
+        }
+
         public void Run(CancellationTokenSource cancelToken)
         {
             Thread.Sleep(50);

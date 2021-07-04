@@ -225,7 +225,7 @@
                 fieldNames = fieldNamesInTable;
             fieldNames = new string[] { "CheckpointID", "SimulationID" }
                               .Union(fieldNames)
-                              .Intersect(fieldNamesInTable)
+                              .Intersect(fieldNamesInTable, StringComparer.OrdinalIgnoreCase)
                               .Enclose("\"", "\"");
 
             var firebirdFirstStatement = string.Empty;

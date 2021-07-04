@@ -309,10 +309,11 @@
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
-                    filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
+                    if (fieldsThatExist.Contains("SimulationID"))
+                        filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
-                filter = filter.Replace('\"', '\'');
+                filter = filter?.Replace('\"', '\'');
                 View = new DataView(data);
                 View.RowFilter = filter;
 
@@ -432,10 +433,25 @@
                 // Remove brackets.
                 localFilter = localFilter.Replace("(", "");
                 localFilter = localFilter.Replace(")", "");
+                localFilter = localFilter.Replace("[", "");
+                localFilter = localFilter.Replace("]", "");
 
                 // Look for individual filter clauses (e.g. A = B).
                 string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
                 match = Regex.Match(localFilter, clausePattern);
+                while (match.Success)
+                {
+                    if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))
+                    {
+                        fieldNames.Add(match.Groups["FieldName"].Value);
+                        localFilter = localFilter.Remove(match.Index, match.Length);
+                    }
+                    match = Regex.Match(localFilter, clausePattern);
+                }
+
+                // Look for LIKE keyword
+                string likePattern = @"(?<FieldName>\S+)\s+LIKE";
+                match = Regex.Match(localFilter, likePattern);
                 while (match.Success)
                 {
                     if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))
