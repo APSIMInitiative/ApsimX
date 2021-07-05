@@ -158,8 +158,10 @@ namespace Models.CLEM.Resources
                         // get matching labour types
                         // use activity uid to ensure unique for this request
                         List<LabourType> items = (resourceGroup as Labour).Items;
-                        items = items.Filter(request.FilterDetails.FirstOrDefault() as Model);
-                        items = items.Where(a => a.LastActivityRequestID != request.ActivityID).ToList();
+                        items = items.Filter(request.FilterDetails.FirstOrDefault() as Model)
+                            .Where(a => a.LastActivityRequestID != request.ActivityID)
+                            .ToList();
+
                         if (items.Where(a => a.Amount >= request.Required).Count()>0)
                         {
                             // get labour least available but with the amount needed
@@ -530,7 +532,7 @@ namespace Models.CLEM.Resources
                     if (model != null)
                     {
                         // get the resource holder to use for this request
-                        // not it is either this class or the holder for the market place required.
+                        // note it is either this class or the holder for the market place required.
                         ResourcesHolder resHolder = model.Parent.Parent as ResourcesHolder;
 
                         // check if transmutations provided
@@ -561,45 +563,53 @@ namespace Models.CLEM.Resources
 
                                 // get transcost resource
                                 IResourceType transResource = null;
-                                if (transcost.ResourceType.Name != "Labour")
+                                if (transcost.ResourceType != null && transcost.ResourceType.Name != "Labour")
                                 {
                                     transResource = resHolder.GetResourceItem(request.ActivityModel, transcost.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                                 }
 
-                                if (!queryOnly)
+                                if (transResource != null) // need to remove found resource for transmutation
                                 {
-                                    // remove cost
-                                    // create new request for this transmutation cost
-                                    ResourceRequest transRequest = new ResourceRequest
+                                    if (!queryOnly)
                                     {
-                                        RelatesToResource = request.ResourceTypeName,
-                                        Required = transmutationCost,
-                                        ResourceType = transcost.ResourceType,
-                                        ActivityModel = request.ActivityModel,
-                                        Category = "Transmutation",
-                                    };
+                                        // remove cost
+                                        // create new request for this transmutation cost
+                                        ResourceRequest transRequest = new ResourceRequest
+                                        {
+                                            RelatesToResource = request.ResourceTypeName,
+                                            Required = transmutationCost,
+                                            ResourceType = transcost.ResourceType,
+                                            ActivityModel = request.ActivityModel,
+                                            Category = "Transmutation",
+                                        };
 
-                                    // used to pass request, but this is not the transmutation cost
+                                        // used to pass request, but this is not the transmutation cost
 
-                                    if (transcost.ResourceType.Name == "Labour")
-                                    {
-                                        transRequest.ResourceType = typeof(Labour);
-                                        transRequest.FilterDetails = (transcost as IModel).FindAllChildren<LabourFilterGroup>().ToList<object>();
-                                        CLEMActivityBase.TakeLabour(transRequest, true, transRequest.ActivityModel, this, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                                        if (transcost.ResourceType.Name == "Labour")
+                                        {
+                                            transRequest.ResourceType = typeof(Labour);
+                                            transRequest.FilterDetails = (transcost as IModel).FindAllChildren<LabourFilterGroup>().ToList<object>();
+                                            CLEMActivityBase.TakeLabour(transRequest, true, transRequest.ActivityModel, this, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                                        }
+                                        else
+                                        {
+                                            transResource.Remove(transRequest);
+                                        }
                                     }
                                     else
                                     {
-                                        transResource.Remove(transRequest);
+                                        double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType && a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
+                                        if (transmutationCost + activityCost <= transResource.Amount)
+                                        {
+                                            request.TransmutationPossible = true;
+                                            break;
+                                        }
                                     }
-                                }
+
+                                } 
                                 else
                                 {
-                                    double activityCost = requests.Where(a => a.ResourceType == transcost.ResourceType && a.ResourceTypeName == transcost.ResourceTypeName).Sum(a => a.Required);
-                                    if (transmutationCost + activityCost <= transResource.Amount)
-                                    {
-                                        request.TransmutationPossible = true;
-                                        break;
-                                    }
+                                    request.TransmutationPossible = true;
                                 }
                             }
                             if(!queryOnly)

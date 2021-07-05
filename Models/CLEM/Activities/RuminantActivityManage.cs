@@ -152,6 +152,14 @@ namespace Models.CLEM.Activities
         public bool MarkAgeWeightMalesForSale { get; set; }
 
         /// <summary>
+        /// Castrate grow out males (steers, bullocks)
+        /// </summary>
+        [Category("Grow out herd", "Males")]
+        [Description("Castrate grow out males")]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool CastrateGrowOutMales { get; set; }
+
+        /// <summary>
         /// Male selling age (months)
         /// </summary>
         [Category("Grow out herd", "Males")]
@@ -321,7 +329,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreedingCondition });
                 var purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                var filteredPurchases = purchases.Filter(group);
+                var filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
@@ -352,7 +360,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Female", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreeder });
                 purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                filteredPurchases = purchases.Filter(group);
+                filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumProportionBreedersPerPurchase > 0)
@@ -659,6 +667,8 @@ namespace Models.CLEM.Activities
                 {
                     ind.Location = ((ind is RuminantFemale) ? grazeStoreGrowOutFemales : grazeStoreGrowOutMales);
                     ind.AddAttribute("GrowOut");
+                    // do not castrate her as we may need to keep some of this months pool as replacement breeders
+                    // see replacement sire section in timingOK
                 }
 
                 growOutHerd = this.CurrentHerd(true).Where(a => a.AttributeExists("GrowOut")).ToList();
@@ -770,7 +780,7 @@ namespace Models.CLEM.Activities
                                 numberMaleSiresInHerd++;
                                 numberToBuy--;
                             }
-                            // if still insufficent, look into current growing out herd for replacement
+                            // if still insufficent, look into current growing out herd for replacement before they are castrated below
                             // try get best male from grow out herd (not castrated)
                             // only consider individuals that will mature in next 12 months
                             foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(numberToBuy))
@@ -787,6 +797,13 @@ namespace Models.CLEM.Activities
                             // we can now move to buy or if purchasing is off we'll need to set aside a number of younger males and wait for them to grow
 
                             // remaining males assumed to be too small, so await next time-step
+                        }
+
+                        // time to castrate any males that have not been assigned as replacement breeders from this years young male pool
+                        // get grow-out males that are not castrated and not marked as replacement breeder
+                        foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && !a.ReplacementBreeder && !a.AttributeExists("Castrated")))
+                        {
+                            male.AddAttribute("Castrated");
                         }
 
                         // if still insufficient buy sires.
@@ -818,7 +835,6 @@ namespace Models.CLEM.Activities
                             {
                                 ind.Location = grazeStoreSires;
                                 ind.SaleFlag = HerdChangeReason.SirePurchase;
-                                ind.Sire = true;
                                 ind.ID = 0;
                                 ind.PurchaseAge = ind.Age;
 
@@ -872,17 +888,18 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = herd.Filter(item);
+                        List<Ruminant> herdToSell = herd.FilterRuminants(item).ToList();
+                        int sellNum = herdToSell.Count();
                         int cnt = 0;
-                        while (cnt < herdToSell.Count() && excessBreeders > 0)
+                        while (cnt < sellNum && excessBreeders > 0)
                         {
-                            if (herd[cnt] is RuminantFemale)
+                            if (herdToSell[cnt] is RuminantFemale)
                             {
-                                if ((herd[cnt] as RuminantFemale).IsBreeder)
+                                if ((herdToSell[cnt] as RuminantFemale).IsBreeder)
                                 {
-                                    if (herd[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
+                                    if (herdToSell[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
                                     {
-                                        herd[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                        herdToSell[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
                                         excessBreeders--;
                                     }
                                 }

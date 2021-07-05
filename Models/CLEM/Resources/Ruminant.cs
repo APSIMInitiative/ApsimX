@@ -282,7 +282,7 @@ namespace Models.CLEM.Resources
                         }
                         else
                         {
-                            return "Steer";
+                            return "PreBreeder";
                         }
                     }
                 }

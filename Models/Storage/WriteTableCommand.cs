@@ -20,6 +20,9 @@
         /// <summary>The details of tables in the database.</summary>
         private Dictionary<string, DatabaseTableDetails> tables = new Dictionary<string, DatabaseTableDetails>(StringComparer.OrdinalIgnoreCase);
 
+        /// <summary>Delete the existing rows first?</summary>
+        private bool deleteExistingRows;
+
         public string Name { get { return "Write table"; } }
 
         /// <summary>
@@ -30,10 +33,20 @@
         /// <summary>Constructor</summary>
         /// <param name="databaseConnection">The database connection to write to.</param>
         /// <param name="dataToWrite">Data to write to table.</param>
-        public WriteTableCommand(IDatabaseConnection databaseConnection, DataTable dataToWrite)
+        /// <param name="deleteOldData">Delete the existing rows first?</param>
+        public WriteTableCommand(IDatabaseConnection databaseConnection, DataTable dataToWrite, bool deleteOldData)
         {
             this.connection = databaseConnection;
             this.dataToWrite = dataToWrite;
+            this.deleteExistingRows = deleteOldData;
+        }
+
+        /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
+        {
+            // Do nothing.
         }
 
         /// <summary>Called to run the command. Can throw on error.</summary>
@@ -59,6 +72,9 @@
                 try
                 {
                     connection.BeginTransaction();
+
+                    if (deleteExistingRows)
+                        connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}]");
 
                     // Write all rows.
                     foreach (DataRow row in dataToWrite.Rows)

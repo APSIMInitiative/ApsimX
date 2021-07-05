@@ -776,12 +776,10 @@
         public void TestOverridingInMultiplePaddocks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Factorial.MultiPaddockFactorOverride.apsimx");
-            Simulations sims = FileFormat.ReadFromString<Simulations>(json, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations sims = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             Runner runner = new Runner(sims);
-            errors = runner.Run();
+            List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
         }

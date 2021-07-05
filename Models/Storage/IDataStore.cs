@@ -1,7 +1,9 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using Models.Core;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>An interface  for reading and writing to/from a database.</summary>
     public interface IDataStore : IDisposable

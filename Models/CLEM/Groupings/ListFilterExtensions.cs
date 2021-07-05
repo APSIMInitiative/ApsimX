@@ -6,6 +6,7 @@ using System.Text;
 using System.Linq.Expressions;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
@@ -15,155 +16,105 @@ namespace Models.CLEM.Groupings
     public static class ListFilterExtensions
     {
         /// <summary>
-        /// Filter extensions for labour
+        /// Converts a filter expression to a rule
         /// </summary>
-        public static List<LabourType> Filter(this IEnumerable<LabourType> individuals, Model filterGroup)
+        /// <param name="filter">The filter to be converted</param>
+        private static Rule ToRule(this IFilter filter)
         {
-            var rules = new List<Rule>();
-            foreach (LabourFilter filter in filterGroup.FindAllChildren<LabourFilter>())
-            {
-                ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-                // create rule list
-                rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
-            }
-
-            if ((filterGroup as IFilterGroup).CombinedRules is null)
-            {
-                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<LabourType>(), rules);
-            }
-
-            return GetItemsThatMatchAll<LabourType>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<LabourType, bool>>).ToList<LabourType>();
+            ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
+            // create rule list
+            return new Rule(filter.ParameterName, op, filter.Value);
         }
 
         /// <summary>
-        /// Filter extensions for herd list
+        /// Filter the source using any valid models in the given model
         /// </summary>
-        public static List<Ruminant> Filter(this IEnumerable<Ruminant> individuals, IModel filterGroup)
+        public static IEnumerable<T> Filter<T>(this IEnumerable<T> source, IModel model)
         {
-            double proportionToUse = (filterGroup as IFilterGroup).Proportion;
-            if (proportionToUse <= 0)
-            {
-                proportionToUse = 1;
-            }
+            var rules = model.FindAllChildren<IFilter>().Select(ToRule);
+            var combined = (model as IFilterGroup)?.CombinedRules ?? CompileRule<T>(rules);
 
-            bool femaleProperties = false;
-            bool maleProperties = false;
-            var rules = new List<Rule>();
-            foreach (RuminantFilter filter in filterGroup.FindAllChildren<RuminantFilter>())
-            {
-                ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-                // create rule list
-                string gender = "";
-                switch (filter.Parameter)
-                {
-                    case RuminantFilterParameters.IsDraught:
-                    case RuminantFilterParameters.IsSire:
-                    case RuminantFilterParameters.IsCastrate:
-                        maleProperties = true;
-                        gender = "Male";
-                        break;
-                    case RuminantFilterParameters.IsBreeder:
-                    case RuminantFilterParameters.IsPregnant:
-                    case RuminantFilterParameters.IsLactating:
-                    case RuminantFilterParameters.IsPreBreeder:
-                    case RuminantFilterParameters.MonthsSinceLastBirth:
-                        femaleProperties = true;
-                        gender = "Female";
-                        break;
-                    default:
-                        break;
-                }
-                if(gender != "")
-                {
-                    RuminantFilter fltr = new RuminantFilter()
-                    {
-                        Parameter = RuminantFilterParameters.Gender,
-                        Operator = FilterOperators.Equal,
-                        Value = gender
-                    };
-                    rules.Add(new Rule(fltr.Parameter.ToString(), (ExpressionType)Enum.Parse(typeof(ExpressionType), fltr.Operator.ToString()), fltr.Value));
-                }
-                rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
-            }
-
-            if (femaleProperties && maleProperties)
-            {
-                return new List<Ruminant>();
-            }
+            if (combined is List<Func<T, bool>> predicates && predicates.Any())
+                return GetItemsThatMatchAll(source, predicates);
             else
-            {
-                if (femaleProperties)
-                {
-                    if ((filterGroup as IFilterGroup).CombinedRules is null)
-                    {
-                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantFemale>(), rules);
-                    }
-                    var result =  GetItemsThatMatchAll<RuminantFemale>(individuals.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantFemale, bool>>);
-                    if(proportionToUse < 1)
-                    {
-                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
-                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
-                    }
-                    else
-                    {
-                        return result.ToList<Ruminant>();
-                    }
-                }
-                else if (maleProperties)
-                {
-                    if ((filterGroup as IFilterGroup).CombinedRules is null)
-                    {
-                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<RuminantMale>(), rules);
-                    }
-                    var result = GetItemsThatMatchAll<RuminantMale>(individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>(), (filterGroup as IFilterGroup).CombinedRules as List<Func<RuminantMale, bool>>);
-                    if (proportionToUse < 1)
-                    {
-                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
-                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
-                    }
-                    else
-                    {
-                        return result.ToList<Ruminant>();
-                    }
-                }
-                else
-                {
-                    if ((filterGroup as IFilterGroup).CombinedRules is null)
-                    {
-                        (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<Ruminant>(), rules);
-                    }
-                    var result = GetItemsThatMatchAll<Ruminant>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<Ruminant, bool>>);
-                    if (proportionToUse < 1)
-                    {
-                        int numberToUse = Convert.ToInt32(Math.Ceiling(result.Count() / proportionToUse));
-                        return result.OrderBy(x => RandomNumberGenerator.Generator.Next()).Take(numberToUse).ToList<Ruminant>();
-                    }
-                    else
-                    {
-                        return result.ToList<Ruminant>();
-                    }
-                }
-            }
+                return source;
         }
 
         /// <summary>
-        /// Filter extensions for other animals cohort list
+        /// Filter a collection of ruminants by the parameters defined in the filter group
         /// </summary>
-        public static List<OtherAnimalsTypeCohort> Filter(this IEnumerable<OtherAnimalsTypeCohort> individuals, Model filterGroup)
+        public static IEnumerable<Ruminant> FilterRuminants(this IEnumerable<Ruminant> individuals, IFilterGroup group)
         {
-            var rules = new List<Rule>();
-            foreach (OtherAnimalsFilter filter in filterGroup.FindAllChildren<OtherAnimalsFilter>())
+            var filters = group.FindAllChildren<RuminantFilter>();
+            
+            string TestGender(RuminantFilter filter, string gender)
             {
-                ExpressionType op = (ExpressionType)Enum.Parse(typeof(ExpressionType), filter.Operator.ToString());
-                // create rule list
-                rules.Add(new Rule(filter.Parameter.ToString(), op, filter.Value));
+                /* CONDITIONAL LOGIC IS ORDER DEPENDENT, DO NOT REARRANGE */
+
+                // Gender is already determined
+                if (gender == "Both")
+                    return gender;
+
+                // If gender is undetermined, use the filter gender
+                if (gender == "Either")
+                    return filter.Gender;
+
+                // No need to change gender if parameter is genderless
+                if (filter.Gender == "Either")
+                    return gender;
+
+                // If the genders do not match, return both
+                if (filter.Gender != gender)
+                    return "Both";
+                // If the genders match, return the current gender
+                else
+                    return gender;
             }
 
-            if ((filterGroup as IFilterGroup).CombinedRules is null)
-            {
-                (filterGroup as IFilterGroup).CombinedRules = CompileRule(new List<OtherAnimalsTypeCohort>(), rules);
-            }
-            return GetItemsThatMatchAll<OtherAnimalsTypeCohort>(individuals, (filterGroup as IFilterGroup).CombinedRules as List<Func<OtherAnimalsTypeCohort, bool>>).ToList<OtherAnimalsTypeCohort>();
+            // Which gender do the parameters belong to
+            string genders = filters.Aggregate("Either", (s, f) => TestGender(f, s));
+            group.CombinedRules = filters.Select(f => f.ToRule());
+
+            // There will be no ruminants with parameters belonging to both genders
+            IEnumerable<Ruminant> result = new List<Ruminant>();
+
+            if (genders == "Either")
+                result = individuals;
+
+            else if (genders == "Female")
+                result = individuals.OfType<RuminantFemale>();
+
+            else if (genders == "Male")
+                result = individuals.OfType<RuminantMale>();
+
+            else
+                return result;
+
+            double proportion = group.Proportion <= 0 ? 1 : group.Proportion;
+            int number = Convert.ToInt32(Math.Ceiling(proportion * individuals.Count()));
+
+            var sorts = group.FindAllChildren<ISort>();
+
+            return result.Filter(group).Sort(sorts).Take(number);
+        }
+
+        /// <summary>
+        /// Order a collection based on the given sorting parameters
+        /// </summary>
+        /// <param name="source">The items to sort</param>
+        /// <param name="sorts">The parameters to sort by</param>
+        /// <returns></returns>
+        public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source, IEnumerable<ISort> sorts)
+        {
+            var sorted = source.OrderBy(i => 1);
+
+            if (!sorts.Any())
+                return sorted;
+
+            foreach (ISort sort in sorts)
+                sorted = (sort.SortDirection == System.ComponentModel.ListSortDirection.Ascending) ? sorted.ThenBy(sort.OrderRule) : sorted.ThenByDescending(sort.OrderRule);
+
+            return sorted;
         }
 
         private class Rule
@@ -182,45 +133,40 @@ namespace Models.CLEM.Groupings
 
         private static IEnumerable<T> GetItemsThatMatchAny<T>(this IEnumerable<T> source, IEnumerable<Func<T, bool>> predicates)
         {
-            return source.Where(t => predicates.Any(predicate => predicate(t)));
+            return source?.Where(t => predicates.Any(predicate => predicate(t)));
         }
 
         private static IEnumerable<T> GetItemsThatMatchAll<T>(this IEnumerable<T> source, IEnumerable<Func<T, bool>> predicates)
         {
-            return source.Where(t => predicates.All(predicate => predicate(t)));
+            
+            return source?.Where(t => predicates.All(predicate => predicate(t)));
         }
 
-        private static List<Func<T, bool>> CompileRule<T>(List<T> targetEntity, List<Rule> rules)
+        private static List<Func<T, bool>> CompileRule<T>(IEnumerable<Rule> rules)
         {
             // Credit for this function goes to Cole Francis, Architect
             // The pre-compiled rules type
             // https://mobiusstraits.com/2015/08/12/expression-trees/
 
-            var compiledRules = new List<Func<T, bool>>();
-
-            // Loop through the rules and compile them against the properties of the supplied shallow object 
-            rules.ForEach(rule =>
+            // Loop through the rules and compile them against the properties of the supplied shallow object
+            var compiledRules = rules.Select(rule =>
             {
                 var genericType = Expression.Parameter(typeof(T));
                 var key = Expression.Property(genericType, rule.ComparisonPredicate);
                 var propertyType = typeof(T).GetProperty(rule.ComparisonPredicate).PropertyType;
-                object ce;
-                if (propertyType.BaseType.Name == "Enum")
-                {
-                    ce = Enum.Parse(propertyType, rule.ComparisonValue, true);
-                }
-                else
-                {
-                    ce = Convert.ChangeType(rule.ComparisonValue, propertyType);
-                }
+
+                object ce = propertyType.BaseType.Name == "Enum"                
+                    ? Enum.Parse(propertyType, rule.ComparisonValue, true)         
+                    : Convert.ChangeType(rule.ComparisonValue, propertyType);
+                
                 var value = Expression.Constant(ce);
                 var binaryExpression = Expression.MakeBinary(rule.ComparisonOperator, key, value);
 
-                compiledRules.Add(Expression.Lambda<Func<T, bool>>(binaryExpression, genericType).Compile());
+                return Expression.Lambda<Func<T, bool>>(binaryExpression, genericType).Compile();
             });
 
             // Return the compiled rules to the caller
-            return compiledRules;
+            return compiledRules.ToList();
         }
 
     }

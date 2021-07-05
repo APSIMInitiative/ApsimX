@@ -33,9 +33,6 @@
         /// <summary>A private reference to the view this presenter will talk to.</summary>
         private IMainView view;
 
-        /// <summary>The path last used to open the examples</summary>
-        private string lastExamplesPath;
-
         /// <summary>A list of presenters for tabs on the right.</summary>
         private List<IPresenter> presenters2 = new List<IPresenter>();
 
@@ -212,16 +209,17 @@
         /// </summary>
         public void ClearStatusPanel()
         {
-            view.ShowMessage(string.Empty, Simulation.ErrorLevel.Information);
+            view.ClearStatusPanel();
         }
 
         /// <summary>
         /// Add a status message. A message of null will clear the status message.
-        /// For error messages, use <see cref="ShowError(Exception)"/>.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="messageType">The error level value</param>
-        public void ShowMessage(string message, Simulation.MessageType messageType)
+        /// <param name="overwrite">Overwrite existing messages?</param>
+        public void ShowMessage(string message, Simulation.MessageType messageType, bool overwrite = true)
         {
             Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
 
@@ -230,7 +228,12 @@
             else if (messageType == Simulation.MessageType.Warning)
                 errorType = Simulation.ErrorLevel.Warning;
 
-            this.view.ShowMessage(message, errorType);
+            this.view.ShowMessage(message, errorType, overwrite);
+        }
+
+        public void HideProgressBar()
+        {
+            view.HideProgressBar();
         }
         
         /// <summary>
@@ -256,7 +259,7 @@
 
         /// <summary>
         /// Displays a simple error message in the status bar, without a 'more information' button.
-        /// If you've just caught an exception, <see cref="ShowError(Exception)"/> is probably a better method to use.
+        /// If you've just caught an exception, <see cref="ShowError(Exception, bool)"/> is probably a better method to use.
         /// </summary>
         /// <param name="error"></param>
         public void ShowError(string error)
@@ -269,7 +272,8 @@
         /// Displays an error message in the status bar, along with a button which brings up more info.
         /// </summary>
         /// <param name="error">The error to be displayed.</param>
-        public void ShowError(Exception error)
+        /// <param name="overwrite">Overwrite any existing error messages?</param>
+        public void ShowError(Exception error, bool overwrite = true)
         {
             if (error != null)
             {
@@ -281,7 +285,7 @@
                 else
                 {
                     LastError = new List<string> { error.ToString() };
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error);
+                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
             }
             else
@@ -348,11 +352,22 @@
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">The progress</param>
+        /// <param name="progress">The progress (0 - 1)</param>
         /// <param name="showStopButton">Should a stop button be displayed as well?</param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent, showStopButton);
+            this.view.ShowProgress(progress, showStopButton);
+        }
+
+        /// <summary>
+        /// Add a status message. A message of null will clear the status message.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
+        /// </summary>
+        /// <param name="message">The message test</param>
+        /// <param name="messageType">The error level value</param>
+        public void ShowProgressMessage(string message)
+        {
+            view.ShowProgressMessage(message);
         }
 
         /// <summary>
@@ -464,13 +479,8 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    List<Exception> creationExceptions;
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, out creationExceptions);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
-                    if (creationExceptions.Count > 0)
-                    {
-                        ShowError(creationExceptions);
-                    }
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
@@ -891,8 +901,7 @@
         /// <param name="onLeftTabControl">If true a tab will be added to the left hand tab control.</param>
         private void OpenApsimXFromMemoryInTab(string name, string contents, bool onLeftTabControl)
         {
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(contents, out creationExceptions);
+            var simulations = FileFormat.ReadFromString<Simulations>(contents, e => throw e, true);
             this.CreateNewTab(name, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
         }
 
@@ -934,7 +943,6 @@
                 this.presenters2.Add(newPresenter);
             }
 
-            XmlDocument doc = new XmlDocument();
             newPresenter.Attach(simulations, newView, null);
 
             this.view.AddTab(name, null, newView.MainWidget, onLeftTabControl);
@@ -963,7 +971,7 @@
         {
             try
             {
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx");
+                string fileName = this.AskUserForOpenFileName("ApsimX files|*.apsimx");
                 if (fileName != null)
                 {
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);
@@ -1198,25 +1206,11 @@
         {
             try
             {
-                string initialPath;
-
-                if ((this.lastExamplesPath != null) && (this.lastExamplesPath.Length > 0) && Directory.Exists(this.lastExamplesPath))
-                {
-                    initialPath = this.lastExamplesPath; // use the last used path in this session
-                }
-                else
-                {
-                    // use an examples directory relative to this assembly
-                    initialPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                    initialPath = Path.GetFullPath(Path.Combine(initialPath, "..", "Examples"));
-                }
-
-                string fileName = this.AskUserForOpenFileName("*.apsimx|*.apsimx", initialPath);
+                string initialPath = PathUtilities.GetAbsolutePath(Path.Combine("%root%", "Examples"), null);
+                string fileName = AskUserForOpenFileName("ApsimX files|*.apsimx", initialPath);
 
                 if (fileName != null)
                 {
-                    this.lastExamplesPath = Path.GetDirectoryName(fileName);
-
                     // ensure that they are saved in another file before running by opening them in memory
                     StreamReader reader = new StreamReader(fileName);
                     bool onLeftTabControl = this.view.IsControlOnLeft(sender);

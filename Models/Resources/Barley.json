@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 130,
+  "Version": 136,
   "Name": "Simulations",
   "Children": [
     {
@@ -1219,6 +1219,45 @@
               "$type": "Models.PMF.Phen.ZadokPMF, Models",
               "Name": "Zadok",
               "Children": [],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nA function is used to provide emergence date as days after sowing(DAS).\r\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
@@ -6388,7 +6427,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedLagAcceleration",
+                  "Name": "LagAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -7055,7 +7094,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedSenAcceleration",
+                  "Name": "SenescenceAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -10262,7 +10301,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 9",
-                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
                     "[Phenology].VrnSensitivity.FixedValue = 1.33",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
@@ -10322,7 +10361,7 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 6",
-                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].PpSensitivity.FixedValue = 3",
                     "[Phenology].VrnSensitivity.FixedValue = 3",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
@@ -10569,7 +10608,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                                {
+                {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 8",
@@ -10649,7 +10688,7 @@
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 9.66",
                     "[Phenology].PpSensitivity.FixedValue = 0.33",
-                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
+                    "[Phenology].VrnSensitivity.FixedValue = 8",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10674,7 +10713,7 @@
                   "Enabled": true,
                   "ReadOnly": false
                 },
-                                {
+                {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].MinimumLeafNumber.FixedValue = 7",

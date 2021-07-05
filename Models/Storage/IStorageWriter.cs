@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.JobRunning;
     using System.Collections.Generic;
     using System.Data;
 
@@ -26,7 +27,8 @@
         /// Write a table of data. Uses the TableName property of the specified DataTable.
         /// </summary>
         /// <param name="data">The data to write.</param>
-        void WriteTable(DataTable data);
+        /// <param name="deleteAllData">Delete all data before writing table?</param>
+        void WriteTable(DataTable data, bool deleteAllData = false);
 
         /// <summary>
         /// Deletes a table from the database.
@@ -85,5 +87,12 @@
         /// <param name="folderName">The name of the folder the simulation belongs in.</param>
         /// <returns>Always returns a number.</returns>
         int GetSimulationID(string simulationName, string folderName);
+
+        /// <summary>
+        /// Create a db clean command.
+        /// </summary>
+        /// <param name="names">A list of simulation names that are about to run.</param>
+        /// <param name="wait">Wait for the clean operation to finish?</param>
+        void Clean(IEnumerable<string> names, bool wait);
     }
 }
