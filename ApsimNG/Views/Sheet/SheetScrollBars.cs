@@ -86,7 +86,8 @@ namespace UserInterface.Views
         {
             horizontalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenColumns + 1, 1, 1, 1);
             verticalScrollbar.Adjustment = new Adjustment(1, 0, sheet.MaximumNumberHiddenRows + 1, 1, 1, 1);
-
+            horizontalScrollbar.Value = 0;
+            verticalScrollbar.Value = 0;
         }
 
         /// <summary>Invoked when the sheet has been scrolled.</summary>
