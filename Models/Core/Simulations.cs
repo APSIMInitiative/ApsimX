@@ -287,7 +287,7 @@ namespace Models.Core
                     // Prepare the simulation for running - this perform misc cleanup tasks such
                     // as removing disabled models, standardising the soil, resolving links, etc.
                     clonedSimulation.Prepare();
-
+                    FindInScope<IDataStore>().Writer.Stop();
                     // Now use the path to get the model we want to document.
                     modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
