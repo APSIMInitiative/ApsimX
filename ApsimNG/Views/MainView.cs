@@ -220,8 +220,15 @@
             // Can't set font until widgets are initialised.
             if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
             {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-                ChangeFont(font);
+                try
+                {
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    ChangeFont(font);
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             }
 
             //window1.ShowAll();
