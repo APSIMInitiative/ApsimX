@@ -168,6 +168,7 @@
                 {
                     Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                    runner.ErrorHandler = e => explorerPresenter.MainPresenter.ShowError(e, false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
                 }
