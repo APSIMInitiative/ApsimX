@@ -186,6 +186,10 @@ namespace UnitTests
             }
             return ids;
         }
+		
+		public void ExecuteSql(string sql)
+        {
+            throw new NotImplementedException();
+        }
     }
-
 }
