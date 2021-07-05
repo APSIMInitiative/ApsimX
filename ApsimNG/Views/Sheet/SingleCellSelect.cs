@@ -94,9 +94,13 @@ namespace UserInterface.Views
         {
             if (evnt.Type == EventType.ButtonPress)
             {
-                if (sheet.CellHitTest((int)evnt.X, (int)evnt.Y, out selectedColumnIndex, out selectedRowIndex) &&
-                    selectedRowIndex >= sheet.NumberFrozenRows)
+                int colIndex;
+                int rowIndex;
+                if (sheet.CellHitTest((int)evnt.X, (int)evnt.Y, out colIndex, out rowIndex) &&
+                    rowIndex >= sheet.NumberFrozenRows)
                 {
+                    selectedColumnIndex = colIndex;
+                    selectedRowIndex = rowIndex;
                     sheet.GrabFocus();
                     sheet.Refresh();
                 }
