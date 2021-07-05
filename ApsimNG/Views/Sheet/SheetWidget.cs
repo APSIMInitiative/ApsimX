@@ -235,7 +235,13 @@ namespace UserInterface.Views
         public bool CellHitTest(int pixelX, int pixelY, out int columnIndex, out int rowIndex)
         {
             columnIndex = 0;
-            rowIndex = VisibleRowIndexes.ElementAt(pixelY / RowHeight);
+            int index = pixelY / RowHeight;
+            if (index >= VisibleRowIndexes.Count())
+            {
+                rowIndex = 0;
+                return false;
+            }
+            rowIndex = VisibleRowIndexes.ElementAt(index);
             int leftPixelX = 0;
             foreach (int colIndex in VisibleColumnIndexes)
             {
@@ -520,19 +526,18 @@ namespace UserInterface.Views
                         var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
                         maxHeight = 10;
 
+                        // Vertically center the text.
+                        double y = cellBounds.Top + (cellBounds.Height - maxHeight) / 2;
+
+                        // Horizontal alignment is determined by the cell painter.
+                        double x;
                         if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
-                        {
-                            // left justify
-                            cr.MoveTo(cellBounds.Left + ColumnPadding, cellBounds.Top + cellBounds.Height - maxHeight);
-                            cr.TextPath(text);
-                        }
+                            x = cellBounds.Left + ColumnPadding;
                         else
-                        {
-                            // right justify
-                            var textExtents = cr.TextExtents(text);
-                            cr.MoveTo(cellBounds.Right - ColumnPadding - inkRectangle.Width, cellBounds.Top);
-                            Pango.CairoHelper.ShowLayout(cr, layout);
-                        }
+                            x = cellBounds.Right - ColumnPadding - inkRectangle.Width;
+
+                        cr.MoveTo(x, y);
+                        Pango.CairoHelper.ShowLayout(cr, layout);
                     }
                     cr.ResetClip();
 #if NETCOREAPP
