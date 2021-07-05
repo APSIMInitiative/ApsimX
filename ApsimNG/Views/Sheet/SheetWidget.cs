@@ -434,9 +434,15 @@ namespace UserInterface.Views
             // Keep incrementing the number of hidden columns until the column
             // is fully visible.
             NumberHiddenColumns = 0;
-            while (!FullyVisibleColumnIndexes.Contains(columnIndex))
+            while (NumberHiddenColumns < DataProvider.ColumnCount-1 && !FullyVisibleColumnIndexes.Contains(columnIndex))
                 NumberHiddenColumns++;
 
+            if (NumberHiddenColumns == DataProvider.ColumnCount - 1)
+            {
+                NumberHiddenColumns = savedNumberHiddenColumns + 1; // No hidden columns as there isn't room to display any.
+                NumberFrozenColumns = 0;
+            }
+            
             int returnColumnNumber = NumberHiddenColumns;
             NumberHiddenColumns = savedNumberHiddenColumns;
             return returnColumnNumber;
