@@ -497,10 +497,10 @@ namespace UserInterface.Views
                     {
                         // Draw the filled in cell.
 #if NETCOREAPP
-                    this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
-                    this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
-                    var c = this.StyleContext.GetColor(this.StyleContext.State);
-                    cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
+                        this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
+                        this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
+                        var c = this.StyleContext.GetColor(this.StyleContext.State);
+                        cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
 #else
                         cr.SetSourceColor(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
                         cr.Fill();
@@ -523,11 +523,8 @@ namespace UserInterface.Views
                             layout.FontDescription.Weight = Pango.Weight.Bold;
                         layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
 
-                        var maxHeight = cr.TextExtents("j").Height - cr.TextExtents("D").Height;
-                        maxHeight = 10;
-
                         // Vertically center the text.
-                        double y = cellBounds.Top + (cellBounds.Height - maxHeight) / 2;
+                        double y = cellBounds.Top + (cellBounds.Height - logicalRectangle.Height) / 2;
 
                         // Horizontal alignment is determined by the cell painter.
                         double x;
