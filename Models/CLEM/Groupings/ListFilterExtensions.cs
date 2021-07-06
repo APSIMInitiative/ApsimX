@@ -73,7 +73,7 @@ namespace Models.CLEM.Groupings
 
             // Which gender do the parameters belong to
             string genders = filters.Aggregate("Either", (s, f) => TestGender(f, s));
-            group.CombinedRules = filters.Select(f => f.ToRule());
+            //group.CombinedRules = filters.Select(f => f.ToRule());
 
             // There will be no ruminants with parameters belonging to both genders
             IEnumerable<Ruminant> result = new List<Ruminant>();
@@ -86,7 +86,6 @@ namespace Models.CLEM.Groupings
 
             else if (genders == "Male")
                 result = individuals.OfType<RuminantMale>();
-
             else
                 return result;
 
