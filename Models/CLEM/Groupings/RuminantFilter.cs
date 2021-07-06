@@ -93,6 +93,17 @@ namespace Models.CLEM.Groupings
             {
                 switch (parameter)
                 {
+                    case RuminantFilterParameters.Gender:
+                        if(Value.ToUpper() == "MALE" & Operator == FilterOperators.Equal)
+                        {
+                            return "Male";
+                        }
+                        if (Value.ToUpper() == "FEMALE" & Operator == FilterOperators.NotEqual)
+                        {
+                            return "Male";
+                        }
+                        return "Female";
+
                     case RuminantFilterParameters.IsDraught:
                     case RuminantFilterParameters.IsSire:
                     case RuminantFilterParameters.IsCastrate:
