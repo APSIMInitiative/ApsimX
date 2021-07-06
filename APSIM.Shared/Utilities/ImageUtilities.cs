@@ -9,8 +9,9 @@
     public class ImageUtilities
     {
         /// <summary>
-        /// Resize the specified image, returning a new one. Will keep the
-        /// aspect ratio.
+        /// Resize the specified image ensuring that it fits within the specified target
+        /// width and height without changing the aspect ratio. The return value will
+        /// be a new image instance.
         /// </summary>
         /// <param name="image">The image to resize.</param>
         /// <param name="targetWidth">The width to aim for when rescaling.</param>

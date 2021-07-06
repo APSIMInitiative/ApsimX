@@ -63,10 +63,7 @@ namespace APSIM.Interop.Documentation.Extensions
         /// <param name="options">PDF Generation options.</param>
         public static void Add(this Section section, APSIM.Services.Documentation.Paragraph paragraph, PdfOptions options)
         {
-            MarkdownParser parser = new MarkdownParser(options.ImagePath);
-            IMarkdownRenderer renderer = new MarkdownPdfRenderer(section.Document);
-            foreach (IMarkdownTag tag in parser.Parse(paragraph.Text))
-                tag.Render(renderer);
+            
         }
     }
 }

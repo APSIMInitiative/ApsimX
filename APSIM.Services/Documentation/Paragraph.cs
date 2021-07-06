@@ -13,6 +13,6 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="text">The paragraph text.</param>
         /// <param name="indent">Indentation level.</param>
-        public Paragraph(string text, int indent = 0) : base(indent) => Text = text;
+        public Paragraph(string text, uint indent = 0) : base(indent) => Text = text;
     }
 }

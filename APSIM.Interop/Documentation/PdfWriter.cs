@@ -2,8 +2,10 @@ using APSIM.Services.Documentation;
 using System;
 using System.Collections.Generic;
 using APSIM.Shared.Utilities;
-using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Documentation.Helpers;
+using APSIM.Interop.Documentation.Renderers;
+using System.Linq;
+using APSIM.Interop.Markdown.Renderers;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
@@ -21,7 +23,7 @@ namespace APSIM.Interop.Documentation
     /// <summary>
     /// This class will generate a PDF file from a collection of tags.
     /// </summary>
-    public static class PdfWriter
+    public class PdfWriter
     {
 #if NETCOREAPP
         /// <summary>
@@ -33,16 +35,40 @@ namespace APSIM.Interop.Documentation
                 ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<Rgba32>();
         }
 #endif
+
         /// <summary>
-        /// Convert a given list of tags into a PDF document and
-        /// save the document to the given path.
+        /// Cache for looking up renderers based on tag type.
         /// </summary>
-        /// <param name="fileName">File name of the generated pdf.</param>
-        /// <param name="tags">Tags to be converted to a PDF.</param>
-        /// <param name="options">PDF Generation options.</param>
-        public static void Write(string fileName, IEnumerable<ITag> tags)
+        /// <typeparam name="Type">Tag type.</typeparam>
+        /// <typeparam name="ITagRenderer">Renderer instance capable of rendering the matching type.</typeparam>
+        /// <returns></returns>
+        private Dictionary<Type, ITagRenderer> renderersLookup = new Dictionary<Type, ITagRenderer>();
+
+        /// <summary>
+        /// Renderers which this PDF writer will use to write the tags to the PDF document.
+        /// </summary>
+        private IEnumerable<ITagRenderer> renderers = DefaultRenderers();
+
+        /// <summary>
+        /// PDF generation options.
+        /// </summary>
+        private PdfOptions options;
+
+        /// <summary>
+        /// Construct a <see cref="PdfWriter" /> instance with default settings.
+        /// </summary>
+        public PdfWriter()
         {
-            Write(fileName, tags, PdfOptions.Default);
+            options = PdfOptions.Default;
+        }
+
+        /// <summary>
+        /// Construct a <see cref="PdfWriter" /> instance with a custom image search path.
+        /// </summary>
+        /// <param name="options">PDF generation options.</param>
+        public PdfWriter(PdfOptions options)
+        {
+            this.options = options;
         }
 
         /// <summary>
@@ -51,8 +77,7 @@ namespace APSIM.Interop.Documentation
         /// </summary>
         /// <param name="fileName">File name of the generated pdf.</param>
         /// <param name="tags">Tags to be converted to a PDF.</param>
-        /// <param name="options">PDF Generation options.</param>
-        public static void Write(string fileName, IEnumerable<ITag> tags, PdfOptions options)
+        public void Write(string fileName, IEnumerable<ITag> tags)
         {
             // This is a bit tricky on non-Windows platforms. 
             // Normally PdfSharp tries to get a Windows DC for associated font information
@@ -64,14 +89,34 @@ namespace APSIM.Interop.Documentation
 
             Document pdf = CreateStandardDocument();
             pdf.AddSection();
+            PdfRenderer pdfRenderer = new PdfRenderer(pdf);
 
             foreach (ITag tag in tags)
-                pdf.LastSection.Add(tag, options);
+                Write(tag, pdfRenderer);
 
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
             renderer.Document = pdf;
             renderer.RenderDocument();
             renderer.Save(fileName);
+        }
+
+        /// <summary>
+        /// Find an appropriate tag renderer, and use it to render the
+        /// given tag to the PDF document.
+        /// </summary>
+        /// <param name="tag">Tag to be rendered.</param>
+        /// <param name="pdfRenderer">PDF renderer to be used by the tag renderer.</param>
+        private void Write(ITag tag, PdfRenderer pdfRenderer)
+        {
+            Type tagType = tag.GetType();
+            if (!renderersLookup.TryGetValue(tagType, out ITagRenderer tagRenderer))
+            {
+                tagRenderer = renderers.FirstOrDefault(r => r.CanRender(tag));
+                if (tagRenderer == null)
+                    throw new NotImplementedException($"Unknown tag type {tag.GetType()}: no matching renderers found.");
+                renderersLookup[tagType] = tagRenderer;
+            }
+            tagRenderer.Render(tag, pdfRenderer);
         }
 
         private static Document CreateStandardDocument()
@@ -83,6 +128,18 @@ namespace APSIM.Interop.Documentation
             document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
 
             return document;
+        }
+
+        /// <summary>
+        /// Get the default tag renderers.
+        /// </summary>
+        private static IEnumerable<ITagRenderer> DefaultRenderers()
+        {
+            List<ITagRenderer> result = new List<ITagRenderer>(7);
+            result.Add(new HeadingTagRenderer());
+            result.Add(new ImageTagRenderer());
+            result.Add(new ParagraphTagRenderer());
+            return result;
         }
     }
 }

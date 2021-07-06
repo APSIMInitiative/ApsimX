@@ -46,7 +46,7 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             yield return new Heading(Name, indent, headingLevel);
             yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*", indent);
@@ -57,7 +57,7 @@ namespace Models.Functions
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
 
-        private APSIM.Services.Documentation.Graph CreateGraph(int indent = 0)
+        private APSIM.Services.Documentation.Graph CreateGraph(uint indent = 0)
         {
             // fixme - this is basically identical to what we've got in the linear interp code.
             var series = new APSIM.Services.Graphing.Series[1];

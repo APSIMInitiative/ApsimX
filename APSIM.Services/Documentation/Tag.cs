@@ -7,17 +7,15 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// Indentation level of the tag.
         /// </summary>
-        public int Indentation { get; private set; }
+        public uint Indentation { get; private set; }
 
         /// <summary>
         /// Indent the tag by N levels (relative to current indentation).
         /// </summary>
         /// <param name="n">Number of levels by which the tag will be further indented.</param>
-        public virtual void Indent(int n)
+        public virtual void Indent(uint n)
         {
-            int indent = Indentation + n;
-            if (indent < 0)
-                throw new ArgumentException("Indentation level must be positive");
+            uint indent = Indentation + n;
             Indentation = indent;
         }
 
@@ -25,10 +23,8 @@ namespace APSIM.Services.Documentation
         /// Constructs a Tag instance.
         /// </summary>
         /// <param name="indent">Indentation level.</param>
-        public Tag(int indent)
+        public Tag(uint indent)
         {
-            if (indent < 0)
-                throw new ArgumentException("Indentation level must be positive");
             Indentation = indent;
         }
     }

@@ -8,28 +8,23 @@ namespace APSIM.Services.Documentation
     public class Heading : Tag
     {
         /// <summary>Heading level.</summary>
-        private int headingLevel;
+        private uint headingLevel;
 
         /// <summary>The heading text</summary>
         public string Text { get; private set; }
 
         /// <summary>The heading level.</summary>
-        public int HeadingLevel
+        public uint HeadingLevel
         {
             get => headingLevel;
-            set
-            {
-                if (value <= 0)
-                    throw new ArgumentException($"Heading level must be greater than zero (was {value})");
-                headingLevel = value;
-            }
+            set => headingLevel = value;
         }
 
         /// <summary>
         /// Indent the heading and increase the heading level.
         /// </summary>
         /// <param name="n">The relative change in heading level/indentation.</param>
-        public override void Indent(int n)
+        public override void Indent(uint n)
         {
             base.Indent(n);
             HeadingLevel += n;
@@ -41,10 +36,10 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="text">The heading text.</param>
         /// <param name="indent">Indentation level.</param>
-        public Heading(string text, int indent = 0) : base(indent)
+        public Heading(string text, uint indent = 0) : base(indent)
         {
             Text = text;
-            HeadingLevel = indent + 1;
+            HeadingLevel = (uint)indent + 1;
         }
 
         /// <summary>
@@ -53,7 +48,7 @@ namespace APSIM.Services.Documentation
         /// <param name="text">The heading text.</param>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">The heading level.</param>
-        public Heading(string text, int indent, int headingLevel) : base(indent)
+        public Heading(string text, uint indent, uint headingLevel) : base(indent)
         {
             Text = text;
             HeadingLevel = headingLevel;

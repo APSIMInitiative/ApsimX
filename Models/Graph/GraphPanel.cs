@@ -140,7 +140,7 @@ namespace Models
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             // tbi
             yield break;

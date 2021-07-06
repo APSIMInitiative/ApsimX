@@ -5,12 +5,12 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// Indentation level of the tag.
         /// </summary>
-        int Indentation { get; }
+        uint Indentation { get; }
 
         /// <summary>
         /// Indent the tag by N levels (relative to current indentation).
         /// </summary>
         /// <param name="n">Number of levels by which the tag will be further indented.</param>
-        void Indent(int n);
+        void Indent(uint n);
     }
 }

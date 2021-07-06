@@ -541,7 +541,7 @@
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public virtual IEnumerable<ITag> Document(int indent, int headingLevel)
+        public virtual IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             yield return new Heading(Name, indent, headingLevel);
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()), indent);

@@ -312,6 +312,6 @@ namespace Models.Core
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        IEnumerable<ITag> Document(int indent, int headingLevel);
+        IEnumerable<ITag> Document(uint indent, uint headingLevel);
     }
 }

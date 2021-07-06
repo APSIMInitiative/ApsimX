@@ -572,7 +572,7 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             foreach (ITag tag in base.Document(indent, headingLevel))
                 yield return tag;

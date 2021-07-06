@@ -87,7 +87,7 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             yield return new Paragraph($"*{Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(XProperty, ".Value()")}*", indent);
             yield return new Paragraph($"*Trigger value {XTrigger} Gradient {Slope}*", indent);

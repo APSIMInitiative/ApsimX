@@ -13,7 +13,7 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="data">Data to be displayed in the table.</param>
         /// <param name="indent">Indentation level.</param>
-        public Table(DataView data, int indent = 0) : base(indent)
+        public Table(DataView data, uint indent = 0) : base(indent)
         {
             this.data = data;
         }
@@ -23,7 +23,7 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="data">Data to be displayed in the table.</param>
         /// <param name="indent">Indentation level.</param>
-        public Table(DataTable data, int indent = 0) : base(indent)
+        public Table(DataTable data, uint indent = 0) : base(indent)
         {
             this.data = new DataView(data);
         }

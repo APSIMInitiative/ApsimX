@@ -11,6 +11,6 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="image">The image.</param>
         /// <param name="indent">Indentation level.</param>
-        public Image(System.Drawing.Image image, int indent = 0) : base(indent) => Raster = image;
+        public Image(System.Drawing.Image image, uint indent = 0) : base(indent) => Raster = image;
     }
 }

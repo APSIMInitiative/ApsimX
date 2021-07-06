@@ -48,7 +48,7 @@ namespace Models.Functions
         /// Create a table which can be passed into autodocs.
         /// </summary>
         /// <param name="indent"></param>
-        public APSIM.Services.Documentation.Table ToTable(int indent = 0)
+        public APSIM.Services.Documentation.Table ToTable(uint indent = 0)
         {
             DataTable table = new DataTable(Name);
             // Using the string datatype gives us control over how the numbers

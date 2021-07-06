@@ -114,7 +114,7 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             // fixme - the graph and table should be next to each other.
             yield return new Paragraph($"*{Name}* is calculated using linear interpolation", indent);
@@ -122,7 +122,7 @@ namespace Models.Functions
             yield return CreateGraph(indent);
         }
 
-        private APSIM.Services.Documentation.Graph CreateGraph(int indent = 0)
+        private APSIM.Services.Documentation.Graph CreateGraph(uint indent = 0)
         {
             var series = new APSIM.Services.Graphing.Series[1];
             // fixme: colour

@@ -91,7 +91,7 @@ namespace Models.Functions
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             yield return new Heading(Name, indent, headingLevel);
             yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below and set to zero each time the {ResetStageName} is passed.", indent);

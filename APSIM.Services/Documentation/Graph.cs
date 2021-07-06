@@ -35,7 +35,7 @@ namespace APSIM.Services.Documentation
         /// <param name="series">The series to be shown on the graph.</param>
         /// <param name="axes">The axes on the graph.</param>
         /// /// <param name="legend">Legend configuration.</param>
-        public Graph(IEnumerable<Series> series, IEnumerable<Axis> axes, LegendConfiguration legend, int indent = 0) : base(indent)
+        public Graph(IEnumerable<Series> series, IEnumerable<Axis> axes, LegendConfiguration legend, uint indent = 0) : base(indent)
         {
             Series = series;
             Legend = legend;

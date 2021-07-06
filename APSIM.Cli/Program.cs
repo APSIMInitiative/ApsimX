@@ -66,7 +66,8 @@ namespace APSIM.Cli
                 model.Links.Resolve(model, true, true, true);
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
-                PdfWriter.Write(pdfFile, GetTags(model), new PdfOptions(directory));
+                PdfWriter writer = new PdfWriter(new PdfOptions(directory));
+                writer.Write(pdfFile, GetTags(model));
             }
         }
 

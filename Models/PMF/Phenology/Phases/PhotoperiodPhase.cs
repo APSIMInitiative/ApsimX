@@ -93,7 +93,7 @@ namespace Models.PMF.Phen
         /// </summary>
         /// <param name="indent">Indentation level.</param>
         /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(int indent, int headingLevel)
+        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
         {
             // Add a heading.
             yield return new Heading($"{Name} Phase", headingLevel);

@@ -1286,7 +1286,7 @@
                 }
 
                 if (biomassRemovalModel != null)
-                    biomassRemovalModel.Document(indent, headingLevel + 1);
+                    biomassRemovalModel.Document((uint)indent, (uint)headingLevel + 1);
             }
         }
     }
