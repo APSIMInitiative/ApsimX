@@ -89,11 +89,18 @@ namespace APSIM.Interop.Documentation
 
             Document pdf = CreateStandardDocument();
             pdf.AddSection();
-            PdfRenderer pdfRenderer = new PdfRenderer(pdf);
+            PdfRenderer pdfRenderer = new PdfRenderer(pdf, options);
 
             foreach (ITag tag in tags)
                 Write(tag, pdfRenderer);
 
+#if NETCOREAPP
+            var paragraphs = new List<MigraDocCore.DocumentObjectModel.Paragraph>();
+            foreach (MigraDocCore.DocumentObjectModel.Section section in pdf.Sections)
+                foreach (var paragraph in section.Elements.OfType<MigraDocCore.DocumentObjectModel.Paragraph>())
+                    paragraphs.Add(paragraph);
+            MigraDocCore.DocumentObjectModel.Visitors.PdfFlattenVisitor visitor = new MigraDocCore.DocumentObjectModel.Visitors.PdfFlattenVisitor();
+#endif
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
             renderer.Document = pdf;
             renderer.RenderDocument();
@@ -108,6 +115,17 @@ namespace APSIM.Interop.Documentation
         /// <param name="pdfRenderer">PDF renderer to be used by the tag renderer.</param>
         private void Write(ITag tag, PdfRenderer pdfRenderer)
         {
+            ITagRenderer tagRenderer = GetTagRenderer(tag);
+            tagRenderer.Render(tag, pdfRenderer);
+        }
+
+        /// <summary>
+        /// Get a tag renderer capcable of rendering the given tag.
+        /// Throws if no suitable renderer is found.
+        /// </summary>
+        /// <param name="tag">The tag to be rendered.</param>
+        private ITagRenderer GetTagRenderer(ITag tag)
+        {
             Type tagType = tag.GetType();
             if (!renderersLookup.TryGetValue(tagType, out ITagRenderer tagRenderer))
             {
@@ -116,7 +134,7 @@ namespace APSIM.Interop.Documentation
                     throw new NotImplementedException($"Unknown tag type {tag.GetType()}: no matching renderers found.");
                 renderersLookup[tagType] = tagRenderer;
             }
-            tagRenderer.Render(tag, pdfRenderer);
+            return tagRenderer;
         }
 
         private static Document CreateStandardDocument()

@@ -4,6 +4,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using APSIM.Interop.Documentation;
+using APSIM.Interop.Markdown.Renderers.Blocks;
+using APSIM.Interop.Markdown.Renderers.Inlines;
 using APSIM.Shared.Utilities;
 using Markdig.Renderers;
 using Markdig.Syntax;
@@ -77,9 +80,26 @@ namespace APSIM.Interop.Markdown.Renderers
         /// Create a <see cref="PdfRenderer" /> instance.
         /// </summary>
         /// <param name="doc"></param>
-        public PdfRenderer(Document doc)
+        public PdfRenderer(Document doc, PdfOptions options)
         {
             document = doc;
+
+            ObjectRenderers.Add(new AutolinkInlineRenderer());
+            ObjectRenderers.Add(new CodeInlineRenderer());
+            ObjectRenderers.Add(new EmphasisInlineRenderer());
+            ObjectRenderers.Add(new HtmlEntityInlineRenderer());
+            ObjectRenderers.Add(new HtmlInlineRenderer());
+            ObjectRenderers.Add(new LineBreakInlineRenderer());
+            ObjectRenderers.Add(new LinkInlineRenderer(options.ImagePath));
+            ObjectRenderers.Add(new LiteralInlineRenderer());
+
+            ObjectRenderers.Add(new CodeBlockRenderer());
+            ObjectRenderers.Add(new HeadingBlockRenderer());
+            ObjectRenderers.Add(new HtmlBlockRenderer());
+            ObjectRenderers.Add(new ListBlockRenderer());
+            ObjectRenderers.Add(new ParagraphBlockRenderer());
+            ObjectRenderers.Add(new QuoteBlockRenderer());
+            ObjectRenderers.Add(new ThematicBreakBlockRenderer());
         }
 
         /// <summary>
@@ -215,7 +235,10 @@ namespace APSIM.Interop.Markdown.Renderers
         private void AppendText(string text, TextStyle textStyle, Paragraph paragraph)
         {
             if (linkState == null)
-                paragraph.AddFormattedText(text, CreateStyle(textStyle));
+            {
+                string style = CreateStyle(textStyle);
+                paragraph.AddFormattedText(text, style);
+            }
             else
                 ((Link)linkState).LinkObject.AddFormattedText(text, CreateStyle(textStyle));
         }
@@ -295,7 +318,11 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <param name="newParagraph">Create a new paragraph (true) or the most recent paragraph (false)?</param>
         private Paragraph GetParagraph(bool newParagraph)
         {
-            return newParagraph ? document.LastSection.LastParagraph : document.LastSection.AddParagraph();
+            if (newParagraph)
+                return document.LastSection.AddParagraph();
+            else
+                return document.LastSection.LastParagraph;
+            // return newParagraph ? document.LastSection.AddParagraph() : document.LastSection.LastParagraph;
         }
 
         /// <summary>
@@ -327,7 +354,12 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Get the aggregated style from the style stack.
         /// </summary>
-        private TextStyle GetNestedStyle() => styleStack.Aggregate((x, y) => x | y);
+        private TextStyle GetNestedStyle()
+        {
+            if (styleStack.Any())
+                return styleStack.Aggregate((x, y) => x | y);
+            return TextStyle.Normal;
+        }
 
         /// <summary>
         /// Create a style in the document corresponding to the given
@@ -340,7 +372,9 @@ namespace APSIM.Interop.Markdown.Renderers
             string name = GetStyleName(style);
             if (string.IsNullOrEmpty(name))
                 return document.Styles.Normal.Name;
-            Style documentStyle = document.Styles.AddStyle(name, document.Styles.Normal.Name);
+            Style documentStyle = document.Styles[name];
+            if (documentStyle == null)
+                documentStyle = document.Styles.AddStyle(name, document.Styles.Normal.Name);
             //else /* if (!string.IsNullOrEmpty(baseName)) */
             //{
             //    documentStyle = document.Styles[name];
@@ -381,6 +415,8 @@ namespace APSIM.Interop.Markdown.Renderers
                 documentStyle.Font.Color = new Color(0x08, 0x08, 0xef);
                 documentStyle.Font.Underline = Underline.Single;
             }
+            if (headingLevel != null)
+                documentStyle.Font.Size = GetFontSizeForHeading((uint)headingLevel);
 
             return name;
         }
@@ -399,6 +435,8 @@ namespace APSIM.Interop.Markdown.Renderers
             string result = style.ToString().Replace(", ", "");
             if (linkState != null)
                 result += "Link";
+            if (headingLevel != null)
+                result += $"Heading{headingLevel}";
             return result;
         }
     
