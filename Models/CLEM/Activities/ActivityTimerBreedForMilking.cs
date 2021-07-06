@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
         {
             breederGroup = new RuminantGroup();
             breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value = "Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
+            breederGroup.Children.Add(new RuminantFilter() { Name = "breedtype", Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
             // TODO: add sort by condition
 
             // get details from parent breeding activity
@@ -111,6 +111,79 @@ namespace Models.CLEM.Activities
             // cut and carry event to ensure this is determined before breeding event
 
             // calculate whether activity is needed this time step (IndividualsToBreed contains breeders)
+            int numberNeeded = 0;
+            IndividualsToBreed = null;
+
+            int breedingSpreadMonths = 2;
+
+            // get all breeders currently in the population
+            // TODO: remove oftype when sex determination fixed
+
+            List<Ruminant> pp = controlledMatingParent.CurrentHerd(true);
+            var qq = pp.FilterRuminants(breederGroup);
+
+            var breedersList = controlledMatingParent.CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>();
+
+            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= breedParams.MaximumAgeMating);
+            if (!breedersNotTooOldToMate.Any())
+            {
+                return;
+            }
+
+            // this needs to be calculated here at this time with current herd size
+            // this count excludes those too old to be mated from breed param settings
+            int maxBreedersPerCycle = Math.Max(1, Convert.ToInt32(Math.Ceiling((double)breedersNotTooOldToMate.Count() / milkingsPerConceptionsCycle)));
+
+            // get females currently lactating
+            breederGroup.FindChild<RuminantFilter>("breedtype").Parameter = RuminantFilterParameters.IsLactating;
+            var lactatingList = breedersList.Filter(breederGroup);
+            if (lactatingList.Any() && lactatingList.Max(a => a.Age - a.AgeAtLastBirth) < startBreedCycleGestationOffsett)
+            {
+                // the max lactation period of lactating females is less than the time to start breeding for future cycle
+                // return with no individuals in the IndividualsToBreed list
+                return;
+            }
+
+            // get breeders currently pregnant
+            breederGroup.FindChild<RuminantFilter>("breedtype").Parameter = RuminantFilterParameters.IsPregnant;
+            var pregnantList = breedersList.Filter(breederGroup);
+
+            // get individuals in first lactation cycle of gestation
+            double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
+
+            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation);
+            if (firstCycleList.Any() && (firstCycleList.Count() < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
+            {
+                // if where less than the spread months from the max pregnancy found
+                numberNeeded = maxBreedersPerCycle - firstCycleList.Count();
+            }
+
+            if(numberNeeded > 0)
+            {
+                // return the number needed of breeders able to mate in this timestep
+                IndividualsToBreed = breedersNotTooOldToMate.Where(a => a.IsAbleToBreed).Take(numberNeeded);
+
+                // report activity performed details.
+                ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
+                {
+                    Activity = new BlankActivity()
+                    {
+                        Status = ActivityStatus.Timer,
+                        Name = this.Name,
+                    }
+                };
+                activitye.Activity.SetGuID(this.UniqueID);
+                this.OnActivityPerformed(activitye);
+            }
+        }
+
+        private void OldMethod1()
+        {
+            // first attempt 
+            // not working across all cases
+            // stored here in case this approach is needed later.
+
+            // calculate whether activity is needed this time step (IndividualsToBreed contains breeders)
             IndividualsToBreed = null;
 
             // get all breeders less than the max breed age for controlled mating
@@ -123,7 +196,7 @@ namespace Models.CLEM.Activities
 
                 // should always have max in state ready for next cycle 
                 int numberPreparingForNextLactationCycle;
-                if(startBreedCycleGestationOffsett <= 0)
+                if (startBreedCycleGestationOffsett <= 0)
                 {
                     numberPreparingForNextLactationCycle = IndividualsToBreed.Where(a => a.IsPregnant && a.Age - a.AgeAtLastConception <= (pregnancyDuration + startBreedCycleGestationOffsett)).Count();
                 }
@@ -132,8 +205,8 @@ namespace Models.CLEM.Activities
                     numberPreparingForNextLactationCycle = IndividualsToBreed.Where(a => a.IsPregnant | (a.IsLactating && a.Age - a.AgeAtLastBirth <= startBreedCycleGestationOffsett)).Count();
                 }
 
-                int numberNeeded = Math.Max(0, maxBreedersPerCycle - numberPreparingForNextLactationCycle); 
-                if(numberNeeded > 0)
+                int numberNeeded = Math.Max(0, maxBreedersPerCycle - numberPreparingForNextLactationCycle);
+                if (numberNeeded > 0)
                 {
                     // reduce to ready to breed, including the resting period after lactation
                     IndividualsToBreed = IndividualsToBreed.Where(a => a.IsAbleToBreed && (a.Age - a.AgeAtLastBirth >= shortenLactationMonths + RestMonths)).Take(numberNeeded);
