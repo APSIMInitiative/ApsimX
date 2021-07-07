@@ -49,16 +49,12 @@ namespace UserInterface.Presenters
 
                 // Generate the table using the model
                 pivot = clemPresenter.clemModel as ReportPivot;
-                gridView.DataSource = pivot.GenerateTable();
                 gridPresenter.Attach(null, gridView, clemPresenter.explorerPresenter);
 
                 // Attach the view to display data
-
                 clem = clemPresenter.view as CLEMView;
                 clem.AddTabView("Data", gridView);
                 clemPresenter.presenterList.Add("Data", this);
-
-                //clem.TabSelected += Refresh;
             }
             catch (Exception err)
             {

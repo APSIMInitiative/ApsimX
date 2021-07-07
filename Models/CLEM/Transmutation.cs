@@ -185,8 +185,9 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(ResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        string[] memberNames = new string[] { "ResourceGroup" };
-                        results.Add(new ValidationResult("Could not find resource [r=" + ResourceTypeName.Split('.').First() + "] in transmutation cost", memberNames));
+                        Summary.WriteWarning(this, $"Could not find resource group [r={ResourceTypeName.Split('.').First()}] in transmutation cost [{this.Name}]{Environment.NewLine}Finances will not be considered or limit this transmutation ");
+                        //string[] memberNames = new string[] { "ResourceGroup" };
+                        //results.Add(new ValidationResult("Could not find resource [r=" + ResourceTypeName.Split('.').First() + "] in transmutation cost", memberNames));
                     }
                     else
                     {

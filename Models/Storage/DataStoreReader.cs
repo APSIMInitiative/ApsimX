@@ -225,7 +225,7 @@
                 fieldNames = fieldNamesInTable;
             fieldNames = new string[] { "CheckpointID", "SimulationID" }
                               .Union(fieldNames)
-                              .Intersect(fieldNamesInTable)
+                              .Intersect(fieldNamesInTable, StringComparer.OrdinalIgnoreCase)
                               .Enclose("\"", "\"");
 
             var firebirdFirstStatement = string.Empty;
@@ -281,10 +281,10 @@
                       $" FROM {tableName}";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
-            if (Connection is SQLite && count > 0)
-                sql += $" LIMIT {count} OFFSET {from}";
             if (orderByFields.Count > 0)
                 sql += $" ORDER BY {orderByFields.Enclose("\"", "\"").Join(",")}";
+            if (Connection is SQLite && count > 0)
+                sql += $" LIMIT {count} OFFSET {from}";
 
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);
@@ -356,9 +356,9 @@
         /// <param name="filterClause">The clause to add e.g. Exp = 'Exp1'.</param>
         private string AddToFilter(string filter, string filterClause)
         {
-            if (filterClause != null)
+            if (!string.IsNullOrEmpty(filterClause))
             {
-                if (filter == null)
+                if (string.IsNullOrEmpty(filter))
                     return filterClause;
                 else
                     return filter + " AND " + filterClause;
@@ -388,6 +388,13 @@
             {
                 return null;
             }
+        }
+
+        /// <summary>Execute sql.</summary>
+        /// <param name="sql">The SQL.</param>
+        public void ExecuteSql(string sql)
+        {
+            Connection.ExecuteQuery(sql);
         }
 
         /// <summary>

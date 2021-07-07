@@ -36,6 +36,10 @@ namespace Models.Storage
         /// <returns></returns>
         DataTable GetDataUsingSql(string sql);
 
+        /// <summary>Execute sql.</summary>
+        /// <param name="sql">The SQL.</param>
+        void ExecuteSql(string sql);
+
         /// <summary>
         /// Obtain the units for a column of data
         /// </summary>

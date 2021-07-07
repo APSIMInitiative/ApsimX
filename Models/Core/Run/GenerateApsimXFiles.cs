@@ -17,8 +17,8 @@
     public class GenerateApsimXFiles
     {
         /// <summary>A delegate that gets called to indicate progress during an operation.</summary>
-        /// <param name="percent">Percentage compete.</param>
-        public delegate void OnProgress(int percent);
+        /// <param name="progress">Progress (0 - 1).</param>
+        public delegate void OnProgress(double progress);
 
         /// <summary>
         /// Generates .apsimx files for each simulation in a runner.
@@ -90,7 +90,7 @@
                     errors.Add(err);
                 }
 
-                progressCallBack?.Invoke(Convert.ToInt32(100 * (i + 1) / simulations.Count));
+                progressCallBack?.Invoke(1.0 * (i + 1) / simulations.Count);
                 i++;
             }
             return errors;

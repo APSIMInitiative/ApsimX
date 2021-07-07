@@ -12,47 +12,40 @@ namespace Models.CLEM.Resources
     {
         /// <summary>
         /// Indicates if individual is breeding sire
-        /// </summary>
-        public bool Sire { get; set; }
-
-        /// <summary>
-        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age
         /// </summary>
         public bool IsSire 
         {
             get
             {
-                if(ReplacementBreeder)
+                if(!AttributeExists("Castrated"))
                 {
-                    if(Age >= BreedParams.MinimumAge1stMating)
+                    if (Age >= BreedParams.MinimumAge1stMating)
                     {
-                        Sire = true;
                         ReplacementBreeder = false;
+                        return true;
                     }
                 }
-                return Sire;
+                return false;
             }
         }
 
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
-        public bool IsCastrated { get; set; }
-
-
-        /// <summary>
-        /// Indicates if individual is draught animal
-        /// </summary>
-        public bool IsDraught { get; set; }
+        public bool IsCastrated 
+        { 
+            get
+            {
+                return AttributeExists("Castrated");
+            }
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
         {
-            Sire = false;
-            IsDraught = false;
-            IsCastrated = false;
         }
 
     }

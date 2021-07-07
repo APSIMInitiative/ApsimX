@@ -49,6 +49,12 @@
         }
 
         /// <summary>
+        /// If provided, this will be invoked whenever an error occurs.
+        /// </summary>
+        /// <value></value>
+        public Action<Exception> ErrorHandler { get; set; }
+
+        /// <summary>
         /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
         /// </summary>
         public double Progress
@@ -352,6 +358,8 @@
                 if (ExceptionsThrown == null)
                     ExceptionsThrown = new List<Exception>();
                 ExceptionsThrown.Add(err);
+                if (ErrorHandler != null)
+                    ErrorHandler(err);
             }
         }
 

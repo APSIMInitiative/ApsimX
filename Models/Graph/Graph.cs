@@ -190,6 +190,7 @@
         /// <summary>
         /// Descriptions of simulations that are in scope.
         /// </summary>
+        [JsonIgnore]
         public List<SimulationDescription> SimulationDescriptions { get; set; }
 
         /// <summary>Gets the definitions to graph.</summary>

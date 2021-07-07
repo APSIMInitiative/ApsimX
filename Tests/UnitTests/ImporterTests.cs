@@ -336,7 +336,6 @@
 
             var m = sims.Children[0].Children[0] as MicroClimate;
             Assert.IsNotNull(m);
-            Assert.AreEqual(m.soil_albedo, 0.23);
             Assert.AreEqual(m.a_interception, 0.1);
             Assert.AreEqual(m.b_interception, 0.2);
             Assert.AreEqual(m.c_interception, 0.3);

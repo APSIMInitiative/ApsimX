@@ -27,6 +27,10 @@
         [Link]
         private IWeather weather = null;
 
+        /// <summary>The soil water model</summary>
+        [Link]
+        private ISoilWater soilWater = null;
+
         /// <summary>The sun set angle (degrees)</summary>
         private const double sunSetAngle = 0.0;
 
@@ -65,12 +69,6 @@
         [Bounds(Lower = 0.0, Upper = 20.0)]
         [Units("mm")]
         public double d_interception { get; set; }
-
-        /// <summary>Gets or sets the soil_albedo.</summary>
-        [Description("Soil albedo")]
-        [Bounds(Lower = 0.0, Upper = 1.0)]
-        [Units("MJ/MJ")]
-        public double soil_albedo { get; set; }
 
         /// <summary>Fraction of solar radiation reaching the soil surface that results in soil heating</summary>
         [Description("Fraction of solar radiation reaching the soil surface that results in soil heating")]
@@ -264,7 +262,7 @@
             // Light distribution is now complete so calculate remaining micromet equations
             foreach (var ZoneMC in microClimatesZones)
             {
-                ZoneMC.CalculateEnergyTerms(soil_albedo);
+                ZoneMC.CalculateEnergyTerms(soilWater.Salb);
                 ZoneMC.CalculateLongWaveRadiation(dayLengthLight, dayLengthEvap);
                 ZoneMC.CalculateSoilHeatRadiation(SoilHeatFluxFraction);
                 ZoneMC.CalculateGc(dayLengthEvap);

@@ -209,7 +209,7 @@
         /// </summary>
         public void ClearStatusPanel()
         {
-            view.ShowMessage(string.Empty, Simulation.ErrorLevel.Information);
+            view.ClearStatusPanel();
         }
 
         /// <summary>
@@ -218,7 +218,8 @@
         /// </summary>
         /// <param name="message">The message test</param>
         /// <param name="messageType">The error level value</param>
-        public void ShowMessage(string message, Simulation.MessageType messageType)
+        /// <param name="overwrite">Overwrite existing messages?</param>
+        public void ShowMessage(string message, Simulation.MessageType messageType, bool overwrite = true)
         {
             Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
 
@@ -227,7 +228,12 @@
             else if (messageType == Simulation.MessageType.Warning)
                 errorType = Simulation.ErrorLevel.Warning;
 
-            this.view.ShowMessage(message, errorType);
+            this.view.ShowMessage(message, errorType, overwrite);
+        }
+
+        public void HideProgressBar()
+        {
+            view.HideProgressBar();
         }
         
         /// <summary>
@@ -279,7 +285,7 @@
                 else
                 {
                     LastError = new List<string> { error.ToString() };
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite);
+                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
             }
             else
@@ -346,11 +352,22 @@
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">The progress</param>
+        /// <param name="progress">The progress (0 - 1)</param>
         /// <param name="showStopButton">Should a stop button be displayed as well?</param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
-            this.view.ShowProgress(percent, showStopButton);
+            this.view.ShowProgress(progress, showStopButton);
+        }
+
+        /// <summary>
+        /// Add a status message. A message of null will clear the status message.
+        /// For error messages, use <see cref="ShowError(Exception, bool)"/>.
+        /// </summary>
+        /// <param name="message">The message test</param>
+        /// <param name="messageType">The error level value</param>
+        public void ShowProgressMessage(string message)
+        {
+            view.ShowProgressMessage(message);
         }
 
         /// <summary>
@@ -463,7 +480,6 @@
                 try
                 {
                     Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
-                    simulations.OnInitialisationError = e => ShowError(e, false);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
