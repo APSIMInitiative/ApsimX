@@ -206,6 +206,12 @@ namespace Models.CLEM.Activities
         {
             activities = FindAllChildren<IModel>().ToList(); // = Children;
             BindEvents(activities);
+            int index = 0;
+            foreach (var activity in FindAllDescendants<CLEMActivityBase>())
+            {
+                activity.SetGuID($"{index.ToString().PadLeft(8,'0')}-0000-0000-0000-000000000000");
+                index++;
+            }
         }
 
         /// <summary>

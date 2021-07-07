@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMMilking(object sender, EventArgs e)
         {
             // take all milk
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList();
+            IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating);
             double milkTotal = herd.Sum(a => a.MilkCurrentlyAvailable);
             if (milkTotal > 0)
             {
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantFemale female in herd)
                 {
                     female.TakeMilk(female.MilkCurrentlyAvailable * labourLimit, MilkUseReason.Milked);
-                    this.Status = ActivityStatus.Success;
+                    this.Status = (labourLimit < 1)?ActivityStatus.Partial:ActivityStatus.Success;
                 }
             }
             else

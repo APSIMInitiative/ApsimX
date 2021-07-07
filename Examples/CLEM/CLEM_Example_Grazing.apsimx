@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 130,
+  "ExplorerWidth": 287,
+  "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -539,10 +539,10 @@
                                     },
                                     {
                                       "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 14,
+                                      "Parameter": 15,
                                       "Operator": 0,
                                       "Value": "True",
-                                      "Name": "36months",
+                                      "Name": "isSire",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -853,6 +853,7 @@
                           "MaximumSiresPerPurchase": 1,
                           "ContinuousMaleSales": false,
                           "MarkAgeWeightMalesForSale": true,
+                          "CastrateGrowOutMales": true,
                           "MaleSellingAge": 18.0,
                           "MaleSellingWeight": 350.0,
                           "SellFemalesLikeMales": true,
@@ -1175,6 +1176,7 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "SimulationDescriptions": null,
                       "Name": "Income vs Expenses",
                       "Children": [
                         {
@@ -1312,6 +1314,7 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "SimulationDescriptions": null,
                       "Name": "Animal numbers vs Feed available",
                       "Children": [
                         {
@@ -1449,6 +1452,7 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
+                      "SimulationDescriptions": null,
                       "Name": "Graph_Pasture Growth vs Grazing",
                       "Children": [
                         {

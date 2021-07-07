@@ -110,8 +110,6 @@ namespace Models.CLEM.Resources
                                     // if next new female set up some details
                                     if (breedFemales[0].ID != previousRuminantID)
                                     {
-                                        breedFemales[0].DryBreeder = false;
-
                                         //Initialise female milk production in at birth so ready for sucklings to consume
                                         double milkTime = (suckling.Age * 30.4) + 15; // +15 equivalent to mid month production
 
@@ -181,7 +179,6 @@ namespace Models.CLEM.Resources
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
                     foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
                     {
-                        female.DryBreeder = true;
                         // generalised curve
                         double currentIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
                         // restrict minimum period between births (previously +61)
@@ -332,7 +329,7 @@ namespace Models.CLEM.Resources
                 return 0;
             }
 
-            var values = Herd.Where( a => (ignoreNotFound & a.GetAttributeValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.GetAttributeValue(tag)?.storedValue));
+            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
             if (values.Count() == 0)
             {
                 return 0;

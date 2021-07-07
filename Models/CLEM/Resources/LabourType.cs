@@ -26,6 +26,12 @@ namespace Models.CLEM.Resources
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// A list of attributes added to this individual
+        /// </summary>
+        [JsonIgnore]
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
+
+        /// <summary>
         /// Unit type
         /// </summary>
         public string Units { get { return "NA"; } }
