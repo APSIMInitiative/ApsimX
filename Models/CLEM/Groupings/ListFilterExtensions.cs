@@ -73,7 +73,9 @@ namespace Models.CLEM.Groupings
 
             // Which gender do the parameters belong to
             string genders = filters.Aggregate("Either", (s, f) => TestGender(f, s));
-            //group.CombinedRules = filters.Select(f => f.ToRule());
+            
+            // TODO: MS. This is wrong I believe, but removing it leads to errors as the properties cannot be found in RuminantFemale when looking in Ruminant.
+            group.CombinedRules = filters.Select(f => f.ToRule());
 
             // There will be no ruminants with parameters belonging to both genders
             IEnumerable<Ruminant> result = new List<Ruminant>();
