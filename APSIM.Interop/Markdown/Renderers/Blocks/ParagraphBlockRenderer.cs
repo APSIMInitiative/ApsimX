@@ -15,8 +15,9 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// <param name="paragraph">The paragraph block to be renderered.</param>
         protected override void Write(PdfRenderer renderer, ParagraphBlock paragraph)
         {
-            renderer.AppendText("", TextStyle.Normal, true);
+            renderer.StartNewParagraph();
             renderer.WriteChildren(paragraph.Inline);
+            renderer.StartNewParagraph();
         }
     }
 }

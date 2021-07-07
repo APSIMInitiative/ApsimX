@@ -14,7 +14,9 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// <param name="obj">The code inline object to be renderered.</param>
         protected override void Write(PdfRenderer renderer, CodeInline obj)
         {
-            renderer.AppendText(obj.Content, TextStyle.Code, true);
+            // todo: what is a code inline, and how should it be rendered?
+            // For now, treat it like any other inline, but with code style.
+            renderer.AppendText(obj.Content, TextStyle.Code);
         }
     }
 }

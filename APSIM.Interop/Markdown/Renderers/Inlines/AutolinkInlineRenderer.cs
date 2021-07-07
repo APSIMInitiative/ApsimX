@@ -17,8 +17,8 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         {
             string prefix = obj.IsEmail ? "mailto:" : "";
             string uri = $"{prefix}{obj.Url}";
-            renderer.SetLinkState(uri, false);
-            renderer.AppendText(uri, TextStyle.Normal, false);
+            renderer.SetLinkState(uri);
+            renderer.AppendText(uri, TextStyle.Normal);
             renderer.ClearLinkState();
         }
     }

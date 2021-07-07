@@ -14,7 +14,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// <param name="obj">The literal inline object to be renderered.</param>
         protected override void Write(PdfRenderer renderer, LiteralInline obj)
         {
-            renderer.AppendText(obj.Content.ToString(), TextStyle.Normal, false);
+            renderer.AppendText(obj.Content.ToString(), TextStyle.Normal);
         }
     }
 }

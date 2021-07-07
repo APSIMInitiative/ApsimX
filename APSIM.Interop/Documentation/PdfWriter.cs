@@ -88,7 +88,6 @@ namespace APSIM.Interop.Documentation
                 GlobalFontSettings.FontResolver = new FontResolver();
 
             Document pdf = CreateStandardDocument();
-            pdf.AddSection();
             PdfRenderer pdfRenderer = new PdfRenderer(pdf, options);
 
             foreach (ITag tag in tags)
@@ -144,7 +143,9 @@ namespace APSIM.Interop.Documentation
             document.DefaultPageSetup.LeftMargin = Unit.FromCentimeter(1);
             document.DefaultPageSetup.TopMargin = Unit.FromCentimeter(1);
             document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
+            document.Styles.Normal.ParagraphFormat.SpaceAfter = Unit.FromPoint(10);
 
+            document.AddSection().AddParagraph();
             return document;
         }
 

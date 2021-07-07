@@ -4,9 +4,11 @@ using APSIM.Interop.Markdown;
 using APSIM.Services.Documentation;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
+using Table = MigraDocCore.DocumentObjectModel.Tables.Table;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 #else
 using MigraDoc.DocumentObjectModel;
+using Table = MigraDoc.DocumentObjectModel.Tables.Table;
 using Paragraph = MigraDoc.DocumentObjectModel.Paragraph;
 #endif
 
@@ -64,6 +66,18 @@ namespace APSIM.Interop.Documentation.Extensions
         public static void Add(this Section section, APSIM.Services.Documentation.Paragraph paragraph, PdfOptions options)
         {
             
+        }
+
+        /// <summary>
+        /// Get the last table in the section. Throws if section contains no tables.
+        /// </summary>
+        /// <param name="section">A section.</param>
+        internal static Table GetLastTable(this Section section)
+        {
+            var table = section.LastTable;
+            if (table == null)
+                throw new InvalidOperationException("Section contains no tables.");
+            return table;
         }
     }
 }

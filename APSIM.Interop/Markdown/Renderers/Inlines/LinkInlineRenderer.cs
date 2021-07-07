@@ -37,13 +37,14 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
             if (link.IsImage)
             {
                 Image image = GetImage(uri);
-                renderer.AppendImage(image, false);
-                // todo: image caption (alt text is stored as the children of the link object).
+                renderer.AppendImage(image);
+                // The assumption here is that any children of the image are the image's caption.
+                renderer.StartNewParagraph();
                 renderer.WriteChildren(link);
             }
             else
             {
-                renderer.SetLinkState(uri, false);
+                renderer.SetLinkState(uri);
                 renderer.WriteChildren(link);
                 renderer.ClearLinkState();
             }

@@ -15,10 +15,13 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// <param name="quote">The quote block to be renderered.</param>
         protected override void Write(PdfRenderer renderer, QuoteBlock quote)
         {
-            renderer.AppendText("", TextStyle.Normal, true);
+            renderer.StartNewParagraph();
+
             renderer.PushStyle(TextStyle.Quote);
             renderer.WriteChildren(quote);
             renderer.PopStyle();
+
+            renderer.StartNewParagraph();
         }
     }
 }

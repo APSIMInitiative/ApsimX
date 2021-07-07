@@ -18,7 +18,8 @@ namespace APSIM.Interop.Documentation.Renderers
         protected override void Render(Image image, PdfRenderer renderer)
         {
             // Add the image to a new paragraph.
-            renderer.AppendImage(image.Raster, true);
+            renderer.StartNewParagraph();
+            renderer.AppendImage(image.Raster);
         }
     }
 }

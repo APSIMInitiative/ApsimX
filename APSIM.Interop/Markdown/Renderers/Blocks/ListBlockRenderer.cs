@@ -15,7 +15,7 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// <param name="html">The list block to be renderered.</param>
         protected override void Write(PdfRenderer renderer, ListBlock list)
         {
-            renderer.AppendText("", TextStyle.Normal, true);
+            renderer.StartNewParagraph();
 
             int i = 1;
             // Implicit cast from Block to ListItemBlock here. Markdig's builtin html
@@ -23,16 +23,23 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
             foreach (ListItemBlock child in list)
             {
                 // Write the bullet.
-                string bullet = list.IsOrdered ? i.ToString() : list.BulletType.ToString();
-                renderer.AppendText($" {bullet} ", TextStyle.Normal, false);
+                // todo: should use proper indentation (\t) here.
+                string bullet = list.IsOrdered ? $"{i}." : list.BulletType.ToString();
 
-                // Write the list item. Hopefully nothing in the block writes to a new paragraph.
+                // Calling StartListItem() will prevent the list item's contents
+                // from creating a new paragraph.
+                renderer.StartListItem($" {bullet} ");
+
+                // Write the contents of the list item.
                 renderer.WriteChildren(child);
 
                 // Write a newline character. We don't want multiple list items on the same line.
-                renderer.AppendText(Environment.NewLine, TextStyle.Normal, false);
+                // renderer.AppendText(Environment.NewLine, TextStyle.Normal, false);
+                renderer.FinishListItem();
+
                 i++;
             }
+            renderer.StartNewParagraph();
         }
     }
 }

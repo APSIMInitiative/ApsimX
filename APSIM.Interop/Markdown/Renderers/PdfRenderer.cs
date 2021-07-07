@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,13 +11,17 @@ using APSIM.Interop.Markdown.Renderers.Inlines;
 using APSIM.Shared.Utilities;
 using Markdig.Renderers;
 using Markdig.Syntax;
+using APSIM.Interop.Documentation.Extensions;
+using APSIM.Interop.Markdown.Renderers.Extras;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
+using MigraDocCore.DocumentObjectModel.Tables;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using static MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes.ImageSource;
 using Color = MigraDocCore.DocumentObjectModel.Color;
 #else
 using MigraDoc.DocumentObjectModel;
+using MigraDoc.DocumentObjectModel.Tables;
 using Color = MigraDoc.DocumentObjectModel.Color;
 using System.Drawing.Imaging;
 #endif
@@ -77,6 +82,25 @@ namespace APSIM.Interop.Markdown.Renderers
         private uint? headingLevel = null;
 
         /// <summary>
+        /// Are we currently in a list item? If so, calls to <see cref="StartNewParagraph"/>
+        /// won't actually create a new paragraph.
+        /// </summary>
+        private bool inListItem = false;
+
+        /// <summary>
+        /// Are we currently writing to a table cell?
+        /// </summary>
+        private bool inTableCell = false;
+
+        /// <summary>
+        /// Index of the current table cell being edited.
+        /// </summary>
+        /// <remarks>
+        /// The way in which table cells are handled by migradoc is quite strange.
+        /// </remarks>
+        private int tableCellIndex = 0;
+
+        /// <summary>
         /// Create a <see cref="PdfRenderer" /> instance.
         /// </summary>
         /// <param name="doc"></param>
@@ -100,6 +124,10 @@ namespace APSIM.Interop.Markdown.Renderers
             ObjectRenderers.Add(new ParagraphBlockRenderer());
             ObjectRenderers.Add(new QuoteBlockRenderer());
             ObjectRenderers.Add(new ThematicBreakBlockRenderer());
+
+            ObjectRenderers.Add(new TableCellRenderer());
+            ObjectRenderers.Add(new TableRowRenderer());
+            ObjectRenderers.Add(new TableRenderer());
         }
 
         /// <summary>
@@ -144,15 +172,14 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <see cref="ClearLinkState"/>.
         /// </summary>
         /// <param name="linkUri">Link URI.</param>
-        /// <param name="newParagraph">Should the link be added to a new paragraph (true) or the last paragraph (false)?</param>
-        public void SetLinkState(string linkUri, bool newParagraph)
+        public void SetLinkState(string linkUri)
         {
             if (linkState != null)
                 throw new NotImplementedException("Nested links are not supported.");
             linkState = new Link()
             {
                 Uri = linkUri,
-                LinkObject = GetParagraph(newParagraph).AddHyperlink("")
+                LinkObject = GetLastParagraph().AddHyperlink("")
             };
         }
 
@@ -193,28 +220,138 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Start a new list item. Every call to this function must have a matching
+        /// call to <see cref="FinishListItem()" />.
+        /// </summary>
+        /// <param name="bulletPointSymbol">The bullet point symbol to be used for the list item.</param>
+        public void StartListItem(string bulletPointSymbol)
+        {
+            if (inListItem)
+                throw new NotImplementedException("Nested lists not implemented (or programmer is missing a call to FinishListItem())");
+            inListItem = true;
+            GetLastParagraph().AddText(bulletPointSymbol);
+        }
+
+        /// <summary>
+        /// Finish a list item.
+        /// </summary>
+        public void FinishListItem()
+        {
+            if (!inListItem)
+                throw new NotImplementedException("Nested lists not implemented (or programmer is missing a call to StartListItem())");
+            inListItem = false;
+            GetLastParagraph().AddText(Environment.NewLine);
+        }
+
+        /// <summary>
         /// Append text to the PDF document.
         /// </summary>
         /// <param name="text">Text to be appended.</param>
         /// <param name="textStyle">Style to be applied to the text.</param>
-        /// <param name="newParagraph">Should the text be added to a new paragraph (true) or the last paragraph (false)?</param>
-        public void AppendText(string text, TextStyle textStyle, bool newParagraph)
+        public void AppendText(string text, TextStyle textStyle)
         {
-            if (linkState != null && newParagraph)
-                throw new InvalidOperationException("Unable to append text to new paragraph when linkState is set. Renderer is missing a call to ClearLinkState().");
-            AppendText(text, textStyle, GetParagraph(newParagraph));
+            AppendText(text, textStyle, GetLastParagraph());
         }
 
         /// <summary>
         /// Append an image to the PDF document.
         /// </summary>
         /// <param name="image">Image to be appended.</param>
-        /// <param name="newParagraph">Should the image be added to a new paragraph (true) or the last paragraph (false)?</param>
-        public void AppendImage(Image image, bool newParagraph)
+        public void AppendImage(Image image)
         {
-            if (linkState != null && newParagraph)
-                throw new InvalidOperationException("Unable to append text to new paragraph when linkState is set. Renderer is missing a call to ClearLinkState().");
-            AppendImage(image, GetParagraph(newParagraph));
+            AppendImage(image, GetLastParagraph());
+        }
+
+        /// <summary>
+        /// Create a new table with the specified number of columns.
+        /// </summary>
+        /// <param name="numColumns">Number of columns in the table.</param>
+        public void StartTable(int numColumns)
+        {
+            if (inTableCell)
+                throw new NotImplementedException("Nested tables not implemented.");
+            Table table = GetLastSection().AddTable();
+            for (int i = 0; i < numColumns; i++)
+                table.Columns.AddColumn();
+        }
+
+        /// <summary>
+        /// Start a new row in the current table.
+        /// </summary>
+        /// <param name="header"></param>
+        public void StartTableRow(bool header)
+        {
+            try
+            {
+                if (inTableCell)
+                    // The other possibility is that the renderer is missing a call to FinishCell().
+                    throw new NotImplementedException("Nested tables not implemented");
+
+                Table table = GetLastSection().GetLastTable();
+                if (table.Columns.Count == 0)
+                    throw new InvalidOperationException("Table contains no columns");
+
+                Row row = table.AddRow();
+                if (header)
+                    ApplyRowHeaderStyle(row);
+
+                tableCellIndex = 0;
+            }
+            catch (Exception err)
+            {
+                throw new Exception("Unable to create a new table row", err);
+            }
+        }
+
+        /// <summary>
+        /// Start editing a table cell.
+        /// </summary>
+        public void StartTableCell()
+        {
+            if (inTableCell)
+                // An exception here may be a bit harsh.
+                throw new Exception($"Programmer is missing a call to FinishTableCell().");
+
+            // todo: Do we need to add cells to the row?
+            inTableCell = true;
+        }
+
+        /// <summary>
+        /// Finish editing a table cell.
+        /// </summary>
+        public void FinishTableCell()
+        {
+            if (!inTableCell)
+                throw new Exception($"Programmer is missing a call to StartTableCell().");
+            inTableCell = false;
+            tableCellIndex++;
+        }
+
+        /// <summary>
+        /// Append a table to the PDF document.
+        /// </summary>
+        /// <param name="data">Table to be appended.</param>
+        public void AppendTable(DataTable data)
+        {
+            Table table = GetLastSection().AddTable();
+
+            // Add the columns.
+            foreach (DataColumn column in data.Columns)
+                table.AddColumn();
+
+            // Add a row containing column headings.
+            Row row = table.AddRow();
+            ApplyRowHeaderStyle(row);
+            for (int i = 0; i < data.Columns.Count; i++)
+                row[i].AddParagraph(data.Columns[i].ColumnName);
+
+            // Add the data.
+            foreach (DataRow dataRow in data.Rows)
+            {
+                row = table.AddRow();
+                for (int i = 0; i < data.Columns.Count; i++)
+                    row[i].AddParagraph(dataRow[i]?.ToString() ?? "");
+            }
         }
 
         /// <summary>
@@ -223,7 +360,30 @@ namespace APSIM.Interop.Markdown.Renderers
         public void AppendHorizontalRule()
         {
             Style hrStyle = GetHRStyle();
-            document.LastSection.LastParagraph.Format = hrStyle.ParagraphFormat;
+            GetLastParagraph().Format = hrStyle.ParagraphFormat;
+        }
+
+        /// <summary>
+        /// Start a new paragraph. Will do nothing if the last paragraph is empty.
+        /// </summary>
+        public void StartNewParagraph()
+        {
+            if (linkState != null)
+                throw new InvalidOperationException("Unable to append text to new paragraph when linkState is set (how can a link span multiple paragraphs?). Renderer is missing a call to ClearLinkState().");
+            if (!inListItem)
+            {
+                // Only add a new paragraph if the last paragraph contains any text.
+                Paragraph lastParagraph = GetLastParagraph();
+                IEnumerable<Text> textElements = lastParagraph.Elements.OfType<FormattedText>().SelectMany(f => f.Elements.OfType<Text>()).Union(lastParagraph.Elements.OfType<Text>());
+                if (textElements.Any(t => !string.IsNullOrEmpty(t.Content)))
+                {
+                    Section section = GetLastSection();
+                    if (inTableCell)
+                        section.GetLastTable().GetLastRow().Cells[tableCellIndex].AddParagraph();
+                    else
+                        section.AddParagraph();
+                }
+            }
         }
 
         /// <summary>
@@ -313,16 +473,38 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
-        /// Get the paragraph specified by the newParagraph argument.
+        /// Return the last paragraph in the document. Adds a new paragraph if none
+        /// exist in the document.
         /// </summary>
-        /// <param name="newParagraph">Create a new paragraph (true) or the most recent paragraph (false)?</param>
-        private Paragraph GetParagraph(bool newParagraph)
+        private Paragraph GetLastParagraph()
         {
-            if (newParagraph)
-                return document.LastSection.AddParagraph();
+            Section section = GetLastSection();
+            if (inTableCell)
+            {
+                Cell cell = section.GetLastTable().GetLastRow().Cells[tableCellIndex];
+                Paragraph paragraph = cell.Elements.OfType<Paragraph>().LastOrDefault();
+                if (paragraph == null)
+                    return cell.AddParagraph();
+                else
+                    return paragraph;
+            }
             else
-                return document.LastSection.LastParagraph;
-            // return newParagraph ? document.LastSection.AddParagraph() : document.LastSection.LastParagraph;
+            {
+                if (section.LastParagraph == null)
+                    return section.AddParagraph();
+                return section.LastParagraph;   
+            }
+        }
+
+        /// <summary>
+        /// Return the last section in the document. Adds a new section if none exist
+        /// in the document.
+        /// </summary>
+        private Section GetLastSection()
+        {
+            if (document.LastSection == null)
+                return document.AddSection();
+            return document.LastSection;
         }
 
         /// <summary>
@@ -457,6 +639,19 @@ namespace APSIM.Interop.Markdown.Renderers
             style.ParagraphFormat.LineSpacing = 0;
             style.ParagraphFormat.SpaceBefore = 15;
             return style;
+        }
+    
+        /// <summary>
+        /// Make a row appear as a table header row.
+        /// </summary>
+        /// <param name="row">The row to be modified.</param>
+        private void ApplyRowHeaderStyle(Row row)
+        {
+            row.HeadingFormat = true;
+            row.Shading.Color = Colors.LightBlue;
+            row.Format.Alignment = ParagraphAlignment.Left;
+            row.VerticalAlignment = VerticalAlignment.Center;
+            // row.Format.Font.Bold = true;
         }
     }
 }

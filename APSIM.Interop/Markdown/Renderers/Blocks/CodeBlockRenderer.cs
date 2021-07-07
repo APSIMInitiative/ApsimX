@@ -14,12 +14,15 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// <param name="codeBlock">The code block to be renderered.</param>
         protected override void Write(PdfRenderer renderer, CodeBlock codeBlock)
         {
+            renderer.StartNewParagraph();
+
             // We could set the language if CodeBlock is of type FencedCodeBlock.
             // string lang = (codeBlock as FencedCode)?.Info;
-            renderer.AppendText("", TextStyle.Normal, true);
             renderer.PushStyle(TextStyle.Code);
             renderer.WriteChildren(codeBlock.Inline);
             renderer.PopStyle();
+
+            renderer.StartNewParagraph();
         }
     }
 }

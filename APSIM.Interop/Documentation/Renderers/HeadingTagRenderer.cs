@@ -18,9 +18,14 @@ namespace APSIM.Interop.Documentation.Renderers
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
         protected override void Render(Heading heading, PdfRenderer renderer)
         {
+            // Start a new paragraph before and after this tag.
+            renderer.StartNewParagraph();
+
             renderer.SetHeadingLevel(heading.HeadingLevel);
-            renderer.AppendText(heading.Text, Markdown.TextStyle.Normal, true);
+            renderer.AppendText(heading.Text, Markdown.TextStyle.Normal);
             renderer.ClearHeadingLevel();
+
+            renderer.StartNewParagraph();
         }
     }
 }
