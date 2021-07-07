@@ -12,7 +12,7 @@ namespace APSIM.Interop.Markdown.Renderers.Extras
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="row">The table row to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, TableRow row)
+        protected override void Write(PdfBuilder renderer, TableRow row)
         {
             renderer.StartTableRow(row.IsHeader);
             renderer.WriteChildren(row);

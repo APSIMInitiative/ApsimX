@@ -5,7 +5,7 @@ using APSIM.Services.Documentation;
 namespace APSIM.Interop.Documentation.Renderers
 {
     /// <summary>
-    /// A class which can use a <see cref="PdfRenderer" /> to render an
+    /// A class which can use a <see cref="PdfBuilder" /> to render an
     /// <see cref="ITag" /> to a PDF document.
     /// </summary>
     /// <typeparam name="T">The type of tag which this class can render.</typeparam>
@@ -16,7 +16,7 @@ namespace APSIM.Interop.Documentation.Renderers
         /// </summary>
         /// <param name="heading">Tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        protected override void Render(Heading heading, PdfRenderer renderer)
+        protected override void Render(Heading heading, PdfBuilder renderer)
         {
             // Start a new paragraph before and after this tag.
             renderer.StartNewParagraph();

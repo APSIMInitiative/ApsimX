@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="heading">The heading block to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, HeadingBlock heading)
+        protected override void Write(PdfBuilder renderer, HeadingBlock heading)
         {
             if (heading.Level < 0)
                 throw new InvalidOperationException($"Heading level is negative (heading text: '{heading}')");

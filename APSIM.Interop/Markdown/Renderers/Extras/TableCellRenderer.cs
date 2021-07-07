@@ -12,7 +12,7 @@ namespace APSIM.Interop.Markdown.Renderers.Extras
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="cell">The table cell to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, TableCell cell)
+        protected override void Write(PdfBuilder renderer, TableCell cell)
         {
             renderer.StartTableCell();
             // todo: cells spanning multiple rows/columns.

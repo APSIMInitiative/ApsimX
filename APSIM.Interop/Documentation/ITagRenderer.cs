@@ -4,7 +4,7 @@ using APSIM.Services.Documentation;
 namespace APSIM.Interop.Documentation
 {
     /// <summary>
-    /// This interface describes a class which can use a <see cref="PdfRenderer" />
+    /// This interface describes a class which can use a <see cref="PdfBuilder" />
     /// to render an <see cref="ITag" /> to a PDF document.
     /// </summary>
     internal interface ITagRenderer
@@ -20,6 +20,6 @@ namespace APSIM.Interop.Documentation
         /// </summary>
         /// <param name="tag">Tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        void Render(ITag tag, PdfRenderer renderer);
+        void Render(ITag tag, PdfBuilder renderer);
     }
 }

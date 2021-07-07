@@ -88,7 +88,7 @@ namespace APSIM.Interop.Documentation
                 GlobalFontSettings.FontResolver = new FontResolver();
 
             Document pdf = CreateStandardDocument();
-            PdfRenderer pdfRenderer = new PdfRenderer(pdf, options);
+            PdfBuilder pdfRenderer = new PdfBuilder(pdf, options);
 
             foreach (ITag tag in tags)
                 Write(tag, pdfRenderer);
@@ -112,7 +112,7 @@ namespace APSIM.Interop.Documentation
         /// </summary>
         /// <param name="tag">Tag to be rendered.</param>
         /// <param name="pdfRenderer">PDF renderer to be used by the tag renderer.</param>
-        private void Write(ITag tag, PdfRenderer pdfRenderer)
+        private void Write(ITag tag, PdfBuilder pdfRenderer)
         {
             ITagRenderer tagRenderer = GetTagRenderer(tag);
             tagRenderer.Render(tag, pdfRenderer);

@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="html">The list block to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, ListBlock list)
+        protected override void Write(PdfBuilder renderer, ListBlock list)
         {
             renderer.StartNewParagraph();
 

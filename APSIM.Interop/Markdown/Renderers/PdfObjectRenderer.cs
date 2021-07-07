@@ -7,7 +7,7 @@ namespace APSIM.Interop.Markdown.Renderers
     /// Base class for renderers of markdown objects to a PDF document.
     /// </summary>
     /// <typeparam name="T">The type of markdown object to be rendererd.</typeparam>
-    public abstract class PdfObjectRenderer<T> : MarkdownObjectRenderer<PdfRenderer, T> where T : MarkdownObject
+    public abstract class PdfObjectRenderer<T> : MarkdownObjectRenderer<PdfBuilder, T> where T : MarkdownObject
     {
     }
 }

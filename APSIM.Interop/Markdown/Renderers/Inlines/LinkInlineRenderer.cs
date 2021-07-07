@@ -31,7 +31,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="link">The link object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, LinkInline link)
+        protected override void Write(PdfBuilder renderer, LinkInline link)
         {
             string uri = link.GetDynamicUrl != null ? link.GetDynamicUrl() ?? link.Url : link.Url;
             if (link.IsImage)

@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="obj">The autolink inline object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, AutolinkInline obj)
+        protected override void Write(PdfBuilder renderer, AutolinkInline obj)
         {
             string prefix = obj.IsEmail ? "mailto:" : "";
             string uri = $"{prefix}{obj.Url}";

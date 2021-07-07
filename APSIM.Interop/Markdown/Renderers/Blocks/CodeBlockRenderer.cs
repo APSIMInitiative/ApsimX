@@ -12,7 +12,7 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="codeBlock">The code block to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, CodeBlock codeBlock)
+        protected override void Write(PdfBuilder renderer, CodeBlock codeBlock)
         {
             renderer.StartNewParagraph();
 

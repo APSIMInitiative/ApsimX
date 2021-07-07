@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="obj">The HtmlEntityInline object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, HtmlEntityInline obj)
+        protected override void Write(PdfBuilder renderer, HtmlEntityInline obj)
         {
             renderer.AppendText(obj.Transcoded.Text, TextStyle.Normal);
         }

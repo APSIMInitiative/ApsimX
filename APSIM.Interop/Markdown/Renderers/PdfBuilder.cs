@@ -33,7 +33,7 @@ namespace APSIM.Interop.Markdown.Renderers
     /// It's used by tag renderers and our custom markdown object
     /// renderers.
     /// </summary>
-    public class PdfRenderer : RendererBase
+    public class PdfBuilder : RendererBase
     {
         private struct Link
         {
@@ -101,10 +101,10 @@ namespace APSIM.Interop.Markdown.Renderers
         private int tableCellIndex = 0;
 
         /// <summary>
-        /// Create a <see cref="PdfRenderer" /> instance.
+        /// Create a <see cref="PdfBuilder" /> instance.
         /// </summary>
         /// <param name="doc"></param>
-        public PdfRenderer(Document doc, PdfOptions options)
+        public PdfBuilder(Document doc, PdfOptions options)
         {
             document = doc;
 

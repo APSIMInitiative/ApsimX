@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="obj">The HtmlInline object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, HtmlInline obj)
+        protected override void Write(PdfBuilder renderer, HtmlInline obj)
         {
             // todo - this should probably render the HTML tags to the PDF somehow.
             renderer.AppendText(obj.Tag, TextStyle.Normal);

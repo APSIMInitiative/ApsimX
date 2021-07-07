@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="obj">The LineBreakInline object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, LineBreakInline obj)
+        protected override void Write(PdfBuilder renderer, LineBreakInline obj)
         {
             // Html version of this class has an option to render soft line breaks
             // as a hard line break. We could implement something similar.

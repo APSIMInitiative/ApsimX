@@ -7,7 +7,7 @@ using Markdig.Syntax;
 namespace APSIM.Interop.Documentation.Renderers
 {
     /// <summary>
-    /// A class which can use a <see cref="PdfRenderer" /> to render an
+    /// A class which can use a <see cref="PdfBuilder" /> to render an
     /// <see cref="ITag" /> to a PDF document.
     /// </summary>
     /// <typeparam name="T">The type of tag which this class can render.</typeparam>
@@ -26,7 +26,7 @@ namespace APSIM.Interop.Documentation.Renderers
         /// </summary>
         /// <param name="paragraph">Paragraph tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        protected override void Render(Paragraph paragraph, PdfRenderer renderer)
+        protected override void Render(Paragraph paragraph, PdfBuilder renderer)
         {
             // Add the Paragraph to a new paragraph.
             MarkdownDocument document = MarkdownParser.Parse(paragraph.Text, pipeline);

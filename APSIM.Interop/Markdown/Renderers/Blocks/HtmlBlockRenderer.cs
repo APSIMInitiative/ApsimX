@@ -12,7 +12,7 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="html">The html block to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, HtmlBlock html)
+        protected override void Write(PdfBuilder renderer, HtmlBlock html)
         {
             renderer.WriteChildren(html.Inline);
         }

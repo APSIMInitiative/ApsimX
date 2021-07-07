@@ -13,7 +13,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// </summary>
         /// <param name="renderer">The PDF renderer.</param>
         /// <param name="obj">The emphasis inline object to be renderered.</param>
-        protected override void Write(PdfRenderer renderer, EmphasisInline obj)
+        protected override void Write(PdfBuilder renderer, EmphasisInline obj)
         {
             renderer.PushStyle(CreateStyle(obj.DelimiterChar, obj.DelimiterCount));
             renderer.WriteChildren(obj);
