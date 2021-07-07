@@ -460,7 +460,7 @@ namespace Models.CLEM.Activities
             // TODO: castrates available but not implemented
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
             {
                 sme = 1.15;
             }

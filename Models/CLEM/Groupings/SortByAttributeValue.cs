@@ -39,7 +39,7 @@ namespace Models.CLEM.Groupings
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
-        public object OrderRule<T>(T t) =>  (t as Ruminant).GetAttributeValue(AttributeName);
+        public object OrderRule<T>(T t) =>  (t as Ruminant).Attributes.GetValue(AttributeName);
 
         /// <summary>
         /// Convert sort to string

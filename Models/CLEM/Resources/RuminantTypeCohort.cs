@@ -172,6 +172,7 @@ namespace Models.CLEM.Resources
                         if (this.Gender == Sex.Male)
                         {
                             RuminantMale ruminantMale = ruminantBase as RuminantMale;
+                            ruminantMale.Attributes.Add("Sire");
                         }
                         else
                         {
@@ -185,7 +186,6 @@ namespace Models.CLEM.Resources
                     if (this.Gender == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                        ruminantFemale.DryBreeder = true;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
                     }
@@ -193,7 +193,7 @@ namespace Models.CLEM.Resources
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
                     {
-                        ruminant.AddAttribute(item.AttributeName, item.GetRandomSetAttribute());
+                        ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
                     }
 
                     individuals.Add(ruminantBase as Ruminant);

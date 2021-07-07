@@ -226,7 +226,7 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns

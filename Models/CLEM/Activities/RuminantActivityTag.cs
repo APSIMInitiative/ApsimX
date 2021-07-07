@@ -82,11 +82,11 @@ namespace Models.CLEM.Activities
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
                     {
-                        numberToTag += herd.FilterRuminants(item).Where(a => !a.AttributeExists(TagLabel)).Count();
+                        numberToTag += herd.FilterRuminants(item).Where(a => !a.Attributes.Exists(TagLabel)).Count();
                     }
                     else
                     {
-                        numberToTag += herd.FilterRuminants(item).Where(a => a.AttributeExists(TagLabel)).Count();
+                        numberToTag += herd.FilterRuminants(item).Where(a => a.Attributes.Exists(TagLabel)).Count();
                     }
                 }
             }
@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
-                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.AttributeExists(TagLabel): a.AttributeExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
                             {
@@ -161,10 +161,10 @@ namespace Models.CLEM.Activities
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.AddAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.RemoveAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                             }
                             numberToTag--;
@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
                     }
                     if(filterGroupsCount == 0)
                     {
-                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.AttributeExists(TagLabel) : a.AttributeExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if (this.Status != ActivityStatus.Partial)
                             {
@@ -182,10 +182,10 @@ namespace Models.CLEM.Activities
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.AddAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.RemoveAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                             }
                             numberToTag--;

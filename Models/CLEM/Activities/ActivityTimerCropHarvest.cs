@@ -36,6 +36,7 @@ namespace Models.CLEM.Activities
         [Description("Offset from harvest to begin activity (-ve before, 0 harvest, +ve after)")]
         [Required]
         public int OffsetMonthHarvestStart { get; set; }
+
         /// <summary>
         /// Months before harvest to stop performing activities
         /// </summary>
@@ -119,8 +120,8 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-                        activitye.Activity.SetGuID(this.UniqueID);
-                        this.OnActivityPerformed(activitye);
+                        //activitye.Activity.SetGuID(this.UniqueID);
+                        //this.OnActivityPerformed(activitye);
                         lastStatus = true;
                         return true;
                     }

@@ -86,7 +86,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Get a random realisation of the set value based on Value and Standard deviation 
         /// </summary>
-        public CLEMAttribute GetRandomSetAttribute()
+        public IndividualAttribute GetRandomSetAttribute()
         {
             double value = Value;
             double randStdNormal = 0;
@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
             }
             value = (float)Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
 
-            return new CLEMAttribute()
+            return new IndividualAttribute()
             {
                 InheritanceStyle = InheritanceStyle,
                 storedValue = value
