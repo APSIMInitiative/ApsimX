@@ -35,11 +35,11 @@ namespace APSIM.Server.IO
             if (port > int.MaxValue)
                 throw new ArgumentOutOfRangeException($"Cannot listen on port {port} (port number is too high)");
             this.verbose = verbose;
-            IPAddress address;
-            if (!string.IsNullOrWhiteSpace(ipAddress))
-                address = IPAddress.Parse(ipAddress);
-            else
-                address = IPAddress.Parse("127.0.0.1");
+
+            if (string.IsNullOrWhiteSpace(ipAddress))
+                ipAddress = "127.0.0.1";
+
+            IPAddress address = IPAddress.Parse(ipAddress);
             IPEndPoint endpoint = new IPEndPoint(address, (int)port);
 
             // Create a TCP socket.
@@ -80,8 +80,6 @@ namespace APSIM.Server.IO
                 connection.Dispose();
             if (server.Connected)
                 server.Disconnect(true);
-            else
-                throw new InvalidOperationException("Unable to disconnect from client: no client is connected");
         }
 
         /// <summary>
