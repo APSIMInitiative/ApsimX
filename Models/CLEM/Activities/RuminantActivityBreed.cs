@@ -379,11 +379,11 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-                    numberServiced = 1;
+                    numberServiced = 0;
                     foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                     {
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
-                        if (numberServiced <= numberPossible)
+                        if (numberServiced < numberPossible)
                         {
                             // calculate conception
                             double conceptionRate = ConceptionRate(female, out status);
@@ -426,7 +426,7 @@ namespace Models.CLEM.Activities
                     // report a natural mating locations for transparency via a message
                     if (numberServiced > 0 & !useControlledMating)
                     {
-                        string warning = "Natural (uncontrolled) mating ocurred in [r=" + location.Key + "]";
+                        string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
                         if (!Warnings.Exists(warning))
                         {
                             Warnings.Add(warning);
