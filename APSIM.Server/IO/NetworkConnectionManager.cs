@@ -28,14 +28,18 @@ namespace APSIM.Server.IO
         /// Create a new <see cref="LocalSocketConnection" /> instance.
         /// </summary>
         /// <param name="verbose">Print verbose diagnostics to stdout?</param>
+        /// <param name="ipAddress">IP Address on which to listen for connections.</param>
         /// <param name="port">Port on which to listen for connections.</param>
-        public NetworkSocketConnection(bool verbose, uint port)
+        public NetworkSocketConnection(bool verbose, string ipAddress, uint port)
         {
             if (port > int.MaxValue)
                 throw new ArgumentOutOfRangeException($"Cannot listen on port {port} (port number is too high)");
             this.verbose = verbose;
-
-            IPAddress address = new IPAddress(new byte[] { 127, 0, 0, 1 });
+            IPAddress address;
+            if (!string.IsNullOrWhiteSpace(ipAddress))
+                address = IPAddress.Parse(ipAddress);
+            else
+                address = IPAddress.Parse("127.0.0.1");
             IPEndPoint endpoint = new IPEndPoint(address, (int)port);
 
             // Create a TCP socket.

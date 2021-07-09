@@ -103,7 +103,7 @@ namespace APSIM.Server
                 case CommunicationMode.Native:
                     return new LocalSocketConnection("testpipe", options.Verbose);
                 case CommunicationMode.Network:
-                    return new NetworkSocketConnection(options.Verbose, options.Port);
+                    return new NetworkSocketConnection(options.Verbose, options.IPAddress, options.Port);
                 default:
                     throw new NotImplementedException();
             }

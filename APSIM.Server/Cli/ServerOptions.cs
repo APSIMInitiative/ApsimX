@@ -58,6 +58,11 @@ namespace APSIM.Server.Cli
         [Option('p', "port", HelpText = "Port number on which to listen for connections. Only used when accepting connections over network", Default = (uint)27746)]
         public uint Port { get; set; }
 
+        /// <summary>IP Address on which to listen for connections.</summary>
+        /// <value></value>
+        [Option('a', "address", HelpText = "IP Address on which to listen for connections")]
+        public string IPAddress { get; set; }
+
         /// <summary>
         /// Concrete examples shown in help text.
         /// </summary>
