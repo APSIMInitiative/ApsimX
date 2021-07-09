@@ -27,8 +27,36 @@ namespace APSIM.Server.Cli
         /// When in managed mode, sent objects will be serialised. When in native mode, sent
         /// objects will be converted to a binary array. Actually, this kind of needs more thought.
         /// </remarks>
-        [Option('m', "communication-mode", HelpText = "This deteremines how data is sent/received over the socket.", Default = CommunicationMode.Managed)]
-        public CommunicationMode Mode { get; set; }
+        public CommunicationMode Mode
+        {
+            get
+            {
+                if (ManagedMode)
+                    return CommunicationMode.Managed;
+                if (NativeMode)
+                    return CommunicationMode.Native;
+                if (NetworkMode)
+                    return CommunicationMode.Network;
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>Expect communications from a managed local client.</summary>
+        [Option('m', "managed", SetName = "comms-mode", HelpText = "Expect communications from a managed local client")]
+        public bool ManagedMode { get; set; }
+
+        /// <summary>Expect communications from a native local client.</summary>
+        [Option('n', "native", SetName = "comms-mode", HelpText = "Expect communications from a native local client")]
+        public bool NativeMode { get; set; }
+
+        /// <summary>Expect communications from a native remote client over a network connection.</summary>
+        [Option('r', "network", SetName = "comms-mode", HelpText = "Expect communications from a native client over a network connection")]
+        public bool NetworkMode { get; set; }
+
+        /// <summary>Port number on which to listen for connections.</summary>
+        // todo: validation rules, maybe add a "network" comms mode???
+        [Option('p', "port", HelpText = "Port number on which to listen for connections. Only used when accepting connections over network", Default = (uint)27746)]
+        public uint Port { get; set; }
 
         /// <summary>
         /// Concrete examples shown in help text.
@@ -38,8 +66,9 @@ namespace APSIM.Server.Cli
         {
             get
             {
-                yield return new Example("Normal usage", new ServerOptions() { File = "file.apsimx" });
-                yield return new Example("Comms with a native client", new ServerOptions() { File = "file.apsimx", Mode = CommunicationMode.Native });
+                yield return new Example("Normal usage", new ServerOptions() { File = "file.apsimx", ManagedMode = true });
+                yield return new Example("Comms with a local native client", new ServerOptions() { File = "file.apsimx", NativeMode = true });
+                yield return new Example("Comms with a native client over the network", new ServerOptions() { File = "file.apsimx", NetworkMode = true });
             }
         }
     }

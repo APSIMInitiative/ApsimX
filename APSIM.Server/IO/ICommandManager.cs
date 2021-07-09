@@ -4,25 +4,14 @@ using APSIM.Server.Commands;
 namespace APSIM.Server.IO
 {
     /// <summary>
-    /// An interface for a socket connection for communication between
-    /// the apsim server and a client.
+    /// An interface for classes which can send/receive commands.
     /// </summary>
-    public interface ISocketConnection : IDisposable
+    public interface ICommandManager
     {
-        /// <summary>
-        /// Wait for a client to connect.
-        /// </summary>
-        void WaitForConnection();
-    
         /// <summary>
         /// Wait for a command from the conencted client.
         /// </summary>
         ICommand WaitForCommand();
-
-        /// <summary>
-        /// Disconnect from the currently connected client.
-        /// </summary>
-        void Disconnect();
 
         /// <summary>
         /// Called when a command finishes.

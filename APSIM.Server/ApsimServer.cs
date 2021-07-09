@@ -55,7 +55,7 @@ namespace APSIM.Server
             {
                 if (options.Verbose)
                     Console.WriteLine($"Starting server...");
-                using (ISocketConnection conn = CreateConnection())
+                using (IConnectionManager conn = CreateConnection())
                 {
                     while (true)
                     {
@@ -94,20 +94,22 @@ namespace APSIM.Server
             }
         }
 
-        private ISocketConnection CreateConnection()
+        private IConnectionManager CreateConnection()
         {
             switch (options.Mode)
             {
                 case CommunicationMode.Managed:
                     throw new NotImplementedException();
                 case CommunicationMode.Native:
-                    return new NativeSocketConnection("testpipe", options.Verbose);
+                    return new LocalSocketConnection("testpipe", options.Verbose);
+                case CommunicationMode.Network:
+                    return new NetworkSocketConnection(options.Verbose, options.Port);
                 default:
                     throw new NotImplementedException();
             }
         }
 
-        private void RunCommand(ICommand command, ISocketConnection connection)
+        private void RunCommand(ICommand command, IConnectionManager connection)
         {
             if (options.Verbose)
                 Console.WriteLine($"Received command {command}. Running command...");

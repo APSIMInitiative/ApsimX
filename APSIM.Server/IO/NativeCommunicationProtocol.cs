@@ -12,16 +12,14 @@ using Models.Core.Run;
 namespace APSIM.Server.IO
 {
     /// <summary>
-    /// This class encapsulates the comms from an apsim server instance to a native client.
+    /// This class handles the communications protocol with a native client.
+    /// It doesn't make any particular assumptions about the connection medium.
     /// </summary>
-    public class NativeSocketConnection : ISocketConnection, IDisposable
+    public class NativeCommunicationProtocol : ICommandManager
     {
-        private bool verbose;
-        private const string commandRun = "RUN";
-        private const string commandRead = "READ";
-        private const string ack = "ACK";
-        private const string fin = "FIN";
-
+        /// <summary>
+        /// These are the parameter types supported by the comms protocol.
+        /// </summary>
         private enum ParamType
         {
             Integer = 0,
@@ -31,33 +29,21 @@ namespace APSIM.Server.IO
             String = 4
         }
 
-        private NamedPipeServerStream pipe;
+        private const string commandRun = "RUN";
+        private const string commandRead = "READ";
+        private const string ack = "ACK";
+        private const string fin = "FIN";
+        private Stream connection;
 
         /// <summary>
-        /// Create a new <see cref="NativeSocketConnection" /> instance.
+        /// Create a new <see cref="NativeCommunicationProtocol" /> instance which uses the
+        /// specified connection stream.
         /// </summary>
-        /// <param name="name">Name to use for the named pipe.</param>
-        /// <param name="verbose">Print verbose diagnostics to stdout?</param>
-        public NativeSocketConnection(string name, bool verbose)
+        /// <param name="conn"></param>
+        public NativeCommunicationProtocol(Stream conn)
         {
-            pipe = new NamedPipeServerStream(name, PipeDirection.InOut, 1);
-            this.verbose = verbose;
+            connection = conn;
         }
-
-        public void Dispose()
-        {
-            pipe.Dispose();
-        }
-
-        /// <summary>
-        /// Wait for a client to connect.
-        /// </summary>
-        public void WaitForConnection() => pipe.WaitForConnection();
-
-        /// <summary>
-        /// Disconnect from the currently connected client.
-        /// </summary>
-        public void Disconnect() => pipe.Disconnect();
 
         /// <summary>
         /// Wait for a command from the conencted client.
@@ -80,12 +66,39 @@ namespace APSIM.Server.IO
                 }
                 else
                 {
-                    if (verbose)
-                        Console.WriteLine($"Message from client: {input}");
+                    // if (verbose)
+                    //     Console.WriteLine($"Message from client: {input}");
                     SendMessage(ack);
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Invoked when a command finishes running.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="error">Error encountered by the command.</param>
+        public void OnCommandFinished(ICommand command, Exception error = null)
+        {
+            if (error == null)
+            {
+                if (command is ReadCommand reader)
+                {
+                    foreach (string param in reader.Parameters)
+                    {
+                        if (reader.Result.Columns[param] == null)
+                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
+                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                        SendArray(data);
+                        ValidateResponse(ReadString(), ack);
+                    }
+                }
+                else
+                    SendMessage(fin);
+            }
+            else
+                SendMessage(error.ToString());
         }
 
         /// <summary>
@@ -117,28 +130,6 @@ namespace APSIM.Server.IO
             }
 
             return new ReadCommand(table, parameters);
-        }
-
-        public void OnCommandFinished(ICommand command, Exception error = null)
-        {
-            if (error == null)
-            {
-                if (command is ReadCommand reader)
-                {
-                    foreach (string param in reader.Parameters)
-                    {
-                        if (reader.Result.Columns[param] == null)
-                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
-                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
-                        SendArray(data);
-                        ValidateResponse(ReadString(), ack);
-                    }
-                }
-                else
-                    SendMessage(fin);
-            }
-            else
-                SendMessage(error.ToString());
         }
 
         public IEnumerable<IReplacement> ReadChanges()
@@ -190,27 +181,27 @@ namespace APSIM.Server.IO
                 throw new Exception($"Expected {expected} but received {actual}");
         }
 
-        public void SendMessage(string message)
+        private void SendMessage(string message)
         {
             byte[] buffer = Encoding.Default.GetBytes(message);
-            PipeUtilities.SendToPipe(pipe, buffer);
+            PipeUtilities.SendToPipe(connection, buffer);
         }
 
         public int ReadInt()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             return BitConverter.ToInt32(buffer);
         }
 
         public double ReadDouble()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             return BitConverter.ToDouble(buffer);
         }
 
         public object ReadBool()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             return BitConverter.ToBoolean(buffer);
         }
 
@@ -222,39 +213,39 @@ namespace APSIM.Server.IO
     
         public string ReadString()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(pipe);
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             if (buffer == null)
                 return null;
             return Encoding.Default.GetString(buffer);
         }
 
-        public void SendInt(int value)
+        private void SendInt(int value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(pipe, buffer);
+            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        public void SendDouble(double value)
+        private void SendDouble(double value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(pipe, buffer);
+            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        public void SendBool(bool value)
+        private void SendBool(bool value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(pipe, buffer);
+            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        public void SendDate(DateTime value)
+        private void SendDate(DateTime value)
         {
             // tbi - need to give this one some thought.
             throw new NotImplementedException();
         }
     
-        public void SendArray(Array data)
+        private void SendArray(Array data)
         {
-            PipeUtilities.SendToPipe(pipe, GetBytes(data));
+            PipeUtilities.SendToPipe(connection, GetBytes(data));
         }
 
         private byte[] GetBytes(Array data)

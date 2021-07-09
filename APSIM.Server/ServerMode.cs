@@ -3,6 +3,7 @@ namespace APSIM.Server
     public enum CommunicationMode
     {
         Managed,
-        Native
+        Native,
+        Network
     }
 }
