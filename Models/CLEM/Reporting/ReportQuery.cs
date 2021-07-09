@@ -36,28 +36,15 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            if (SQL != "")
+            var storage = FindInScope<IDataStore>();
+            if (storage != null)
             {
-                var storage = FindInScope<IDataStore>();
-                AddView(storage, Name, SQL);
-                return storage.Reader.GetDataUsingSql(SQL);
+                if(SaveView(storage))
+                {
+                    return storage.Reader.GetDataUsingSql(SQL);
+                }
             }
-            else
-            {
-                return new DataTable();
-            }
-        }
-
-        private void AddView(IDataStore data, string name, string sql)
-        {
-            try
-            {
-                data.AddView(Name, SQL);
-            }
-            catch (Exception ex)
-            {
-                throw new ApsimXException(this, $"Error trying to execute SQL query for [{this.Name}]: {ex.Message}");
-            }
+            return new DataTable();
         }
 
         /// <summary>
@@ -66,10 +53,24 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            if (SQL != "")
+            if(!SaveView(dataStore))
             {
-                AddView(dataStore, Name, SQL);
+                throw new ApsimXException(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
             }
+        }
+
+        private bool SaveView(IDataStore store)
+        {
+            if (SQL != null && SQL != "")
+            {
+                if ((store.Reader as DataStoreReader).TestSql(SQL))
+                {
+                    store.AddView(Name, SQL);
+                    return true;
+                }
+                return false;
+            }
+            return true;
         }
     }
 }
