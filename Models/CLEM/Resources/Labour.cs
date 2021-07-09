@@ -158,6 +158,7 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
             {
+                IndividualAttribute att = new IndividualAttribute() { storedValue = labourChildModel.Name };
                 if (UseCohorts)
                 {
                     LabourType labour = new LabourType()
@@ -171,6 +172,7 @@ namespace Models.CLEM.Resources
                         Name = labourChildModel.Name,
                         Hired = labourChildModel.Hired
                     };
+                    labour.Attributes.Add("Group", att);
                     labour.TransactionOccurred += Resource_TransactionOccurred;
                     Items.Add(labour);
                 }
@@ -190,6 +192,7 @@ namespace Models.CLEM.Resources
                             Name = labourChildModel.Name + ((labourChildModel.Individuals > 1) ? "_" + (i + 1).ToString() : ""),
                             Hired = labourChildModel.Hired
                         };
+                        labour.Attributes.Add("Group", att);
                         labour.TransactionOccurred += Resource_TransactionOccurred;
                         Items.Add(labour);
                     }

@@ -31,5 +31,10 @@ namespace UnitTests.Core
                 return Values[namePath];
             return null;
         }
+
+        public IVariable GetObjectProperties(string namePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

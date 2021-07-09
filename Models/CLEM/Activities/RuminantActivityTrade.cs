@@ -217,7 +217,6 @@ namespace Models.CLEM.Activities
                                 break;
                             case Sex.Female:
                                 RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                                ruminantFemale.DryBreeder = true;
                                 ruminantFemale.WeightAtConception = ruminant.Weight;
                                 ruminantFemale.NumberOfBirths = 0;
                                 break;
