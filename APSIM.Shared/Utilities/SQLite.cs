@@ -473,6 +473,7 @@ namespace APSIM.Shared.Utilities
             //prepare the statement
             IntPtr stmHandle = Prepare(query);
             int code = sqlite3_step(stmHandle);
+            sqlite3_finalize(stmHandle);
             return (code == SQLITE_DONE);
         }
 
