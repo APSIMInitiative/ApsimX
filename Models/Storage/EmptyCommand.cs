@@ -42,23 +42,32 @@
             if (database == null)
                 return;
 
+            bool deleteEverything = false;
             if (database.TableExists("_Checkpoints"))
             {
                 var checkpointData = new DataView(database.ExecuteQuery("SELECT * FROM [_Checkpoints]"));
-                checkpointData.RowFilter = "Name='Current'";
-                if (checkpointData.Count == 1)
+                if (checkpointData.Table.Rows.Count == 1)
+                    deleteEverything = true;
+                else
                 {
-                    int checkId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
-
-                    // Delete current data from all tables.
-                    foreach (string tableName in database.GetTableNames())
+                    checkpointData.RowFilter = "Name='Current'";
+                    if (checkpointData.Count == 1)
                     {
-                        if (!tableName.StartsWith("_") && database.TableExists(tableName))
-                            database.ExecuteNonQuery(string.Format("DELETE FROM [{0}] WHERE [CheckpointID]={1}", tableName, checkId));
+                        int checkId = Convert.ToInt32(checkpointData[0]["ID"], CultureInfo.InvariantCulture);
+
+                        // Delete current data from all tables.
+                        foreach (string tableName in database.GetTableNames())
+                        {
+                            if (!tableName.StartsWith("_") && database.TableExists(tableName))
+                                database.ExecuteNonQuery(string.Format("DELETE FROM [{0}] WHERE [CheckpointID]={1}", tableName, checkId));
+                        }
                     }
                 }
             }
             else
+                deleteEverything = true;
+
+            if (deleteEverything)
             {
                 // No checkpoint information, so get rid of everything
                 // Delete current data from all tables.
