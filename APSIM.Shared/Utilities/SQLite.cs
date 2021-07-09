@@ -457,6 +457,25 @@ namespace APSIM.Shared.Utilities
             Finalize(stmHandle);
         }
 
+        /// <summary>Determines if a select query returns successfully</summary>
+        /// <param name="query">SQL query to test</param>
+        public bool TestQuery(string query)
+        {
+            if (!_open)
+                throw new SQLiteException("SQLite database is not open.");
+
+            // do not allow testing of modifying sql
+            if(new List<string>() { "drop", "create" }.Any(query.ToLower().Contains))
+            {
+                return false;
+            }
+
+            //prepare the statement
+            IntPtr stmHandle = Prepare(query);
+            int code = sqlite3_step(stmHandle);
+            return (code == SQLITE_DONE);
+        }
+
         private class Column
         {
             public string name;
@@ -832,7 +851,7 @@ namespace APSIM.Shared.Utilities
             return tableNames.Contains(tableName);
         }
 
-        /// <summary>Does the specified table exist?</summary>
+        /// <summary>Does the specified view exist?</summary>
         /// <param name="viewName">The view name to look for</param>
         public bool ViewExists(string viewName)
         {

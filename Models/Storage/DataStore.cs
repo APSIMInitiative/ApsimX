@@ -279,7 +279,7 @@
         }
 
         /// <summary>
-        /// Add a select based view to the data table for SQLite datastores
+        /// Add a select based view to the SQLite datastore
         /// </summary>
         /// <param name="name">name of the view</param>
         /// <param name="selectSQL">select SQL statement</param>
@@ -291,7 +291,15 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+                // test sql is valid before committing
+                if (dbReader.TestSql(selectSQL))
+                {
+                    connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+                }
+                else
+                {
+                    throw new Exception($"Invalid SQL: Unable to execute SQL statement for new view [{name}]");
+                }
             }
             else
             {
