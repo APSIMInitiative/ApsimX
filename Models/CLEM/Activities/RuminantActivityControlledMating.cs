@@ -45,6 +45,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityControlledMating()
         {
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Livestock.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

@@ -43,6 +43,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         private FinanceType bankAccount;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourActivityPayHired()
+        {
+            TransactionCategory = "Labour";
+        }
+
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -64,17 +72,13 @@ namespace Models.CLEM.Activities
             GetResourcesRequiredForActivity();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.Warning;
@@ -133,20 +137,13 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return new GetDaysLabourRequiredReturnArgs(0, "Hire labour", null);
+            return new GetDaysLabourRequiredReturnArgs(0, TransactionCategory, null);
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
@@ -171,16 +168,13 @@ namespace Models.CLEM.Activities
                 Required = total,
                 ResourceTypeName = this.AccountName,
                 ActivityModel = this,
-                Category = "Hire labour"
+                Category = TransactionCategory
             }
             );
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
@@ -216,11 +210,7 @@ namespace Models.CLEM.Activities
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ";

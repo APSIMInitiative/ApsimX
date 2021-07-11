@@ -25,7 +25,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
     [ValidParent(ParentType = typeof(RuminantActivityMilking))]
-    [ValidParent(ParentType = typeof(RuminantActivitySellDryBreeders))]
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(ManureActivityCollectAll))]
     [ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
@@ -163,11 +162,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -210,19 +205,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

@@ -79,8 +79,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Adjust resources for activity based on shortfalls
+        /// constructor
         /// </summary>
+        public ResourceActivityProcess()
+        {
+            TransactionCategory = "Process";
+        }
+
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // get labour shortfall
@@ -103,9 +109,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Perform activity
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             // processed resource should already be taken
@@ -122,11 +126,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Work out the amount of labour required for this activity
-        /// </summary>
-        /// <param name="requirement"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
@@ -149,13 +149,10 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Process", (resourceTypeCreatedModel as CLEMModel).NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (resourceTypeCreatedModel as CLEMModel).NameWithParent);
         }
 
-        /// <summary>
-        /// Resources needed for Activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
@@ -205,7 +202,7 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = item.BankAccount.Name,
                         ActivityModel = this,
                         FilterDetails = null,
-                        Category = item.Name,
+                        Category = TransactionCategory,
                         RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                     );
@@ -223,7 +220,7 @@ namespace Models.CLEM.Activities
                         ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
                         ResourceTypeName = (resourceTypeProcessModel as Model).Name,
                         ActivityModel = this,
-                        Category = "Processed",
+                        Category = TransactionCategory,
                         RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                 );
@@ -231,38 +228,25 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Resources needed for initialisation
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
            return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -270,11 +254,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

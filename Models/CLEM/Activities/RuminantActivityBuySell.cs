@@ -36,6 +36,14 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount = null;
         private TruckingSettings trucking = null;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityBuySell()
+        {
+            TransactionCategory = "Livestock.Manage";
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -194,7 +202,7 @@ namespace Models.CLEM.Activities
                 if (trucking != null)
                 {
                     expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                    expenseRequest.Category = "Transport sales";
+                    expenseRequest.Category = trucking.TransactionCategory;
                     bankAccount.Remove(expenseRequest);
                 }
 
@@ -217,7 +225,7 @@ namespace Models.CLEM.Activities
                         default:
                             throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
                     }
-                    expenseRequest.Category = item.Category;
+                    expenseRequest.Category = item.TransactionCategory;
                     // uses bank account specified in the RuminantActivityFee
                     item.BankAccount.Remove(expenseRequest);
                 }
@@ -225,7 +233,7 @@ namespace Models.CLEM.Activities
                 // add and remove from bank
                 if(saleValue > 0)
                 {
-                    bankAccount.Add(saleValue, this, this.PredictedHerdName, "Sales");
+                    bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
                 }
             }
         }
@@ -294,7 +302,7 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Required = cost,
                     AllowTransmutation = false,
-                    Category =  "Purchases",
+                    Category =  TransactionCategory,
                     RelatesToResource = this.PredictedHerdName
                 };
                 bankAccount.Remove(purchaseRequest);
@@ -427,7 +435,7 @@ namespace Models.CLEM.Activities
                         ActivityModel = this,
                         Required = cost,
                         AllowTransmutation = false,
-                        Category = "Purchases",
+                        Category = TransactionCategory,
                         RelatesToResource = this.PredictedHerdName
                     };
                     bankAccount.Remove(purchaseRequest);
@@ -455,7 +463,7 @@ namespace Models.CLEM.Activities
                     if (trucking != null)
                     {
                         expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                        expenseRequest.Category = "Transport purchases";
+                        expenseRequest.Category = trucking.TransactionCategory;
                         bankAccount.Remove(expenseRequest);
 
                         if (expenseRequest.Required > expenseRequest.Available)
@@ -475,20 +483,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
@@ -522,58 +523,41 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Buy-Sell", this.PredictedHerdName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
             return; 
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -581,11 +565,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
