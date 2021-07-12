@@ -61,16 +61,14 @@ namespace Models.Functions.DemandFunctions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            foreach (ITag tag in base.Document(indent, headingLevel))
+            foreach (ITag tag in base.GetTags())
                 yield return tag;
 
             string organName = FindAncestor<IOrgan>().Name;
-            yield return new Paragraph($"*{Name} = [{organName}].maximumNconc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*", indent);
-            yield return new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch.", indent);
+            yield return new Paragraph($"*{Name} = [{organName}].maximumNconc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*");
+            yield return new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch.");
         }
     }
 }

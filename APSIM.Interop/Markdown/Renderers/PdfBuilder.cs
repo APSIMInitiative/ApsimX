@@ -30,11 +30,15 @@ namespace APSIM.Interop.Markdown.Renderers
 {
     /// <summary>
     /// This class exposes an API for building a PDF document.
-    /// It's used by tag renderers and our custom markdown object
-    /// renderers.
+    /// It's used by the tag renderers and markdown object renderers.
     /// </summary>
     public class PdfBuilder : RendererBase
     {
+        /// <summary>
+        /// This struct describes a link in the PDF document. This provides
+        /// a convenient way to insert multiple pieces of formatted text
+        /// into a single migradoc hyperlink object.
+        /// </summary>
         private struct Link
         {
             /// <summary>
@@ -60,6 +64,8 @@ namespace APSIM.Interop.Markdown.Renderers
 
         /// <summary>
         /// Style stack. This is used to manage styles for nested inline/block elements.
+        /// This is exposed via the <see cref="PushStyle(TextStyle)"/> and 
+        /// <see cref="PopStyle"/> functions.
         /// </summary>
         /// <typeparam name="TextStyle">Text styles.</typeparam>
         private Stack<TextStyle> styleStack = new Stack<TextStyle>();
@@ -241,6 +247,18 @@ namespace APSIM.Interop.Markdown.Renderers
                 throw new NotImplementedException("Nested lists not implemented (or programmer is missing a call to StartListItem())");
             inListItem = false;
             GetLastParagraph().AddText(Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Append text to the PDF document, and create a bookmark to the text.
+        /// </summary>
+        /// <param name="text">Text to be appended.</param>
+        /// <param name="textStyle">Style to be applied to the text.</param>
+        public void AppendTextWithBookmark(string text, TextStyle textStyle)
+        {
+            Paragraph paragraph = GetLastParagraph();
+            AppendText(text, textStyle, paragraph);
+            paragraph.AddBookmark(text);
         }
 
         /// <summary>
@@ -579,6 +597,8 @@ namespace APSIM.Interop.Markdown.Renderers
                 documentStyle.Font.Subscript = true;
             if ( (style & TextStyle.Quote) == TextStyle.Quote)
             {
+                // todo: vertical dark-grey bar to the left of the text.
+
                 // Shading shading = new Shading();
                 // shading.Color = new MigraDocCore.DocumentObjectModel.Color(122, 130, 139);
                 // documentStyle.ParagraphFormat.Shading = shading;
@@ -598,7 +618,10 @@ namespace APSIM.Interop.Markdown.Renderers
                 documentStyle.Font.Underline = Underline.Single;
             }
             if (headingLevel != null)
+            {
                 documentStyle.Font.Size = GetFontSizeForHeading((uint)headingLevel);
+                documentStyle.Font.Bold = true;
+            }
 
             return name;
         }

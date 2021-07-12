@@ -155,7 +155,7 @@ namespace APSIM.Interop.Documentation
         private static IEnumerable<ITagRenderer> DefaultRenderers()
         {
             List<ITagRenderer> result = new List<ITagRenderer>(7);
-            result.Add(new HeadingTagRenderer());
+            // result.Add(new HeadingTagRenderer());
             result.Add(new ImageTagRenderer());
             result.Add(new ParagraphTagRenderer());
             return result;

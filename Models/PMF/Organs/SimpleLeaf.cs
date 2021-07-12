@@ -1103,6 +1103,7 @@
             Allocated.StorageN -= nitrogen.Reallocation;
         }
 
+/*
         /// <summary>
         /// Writes documentation for this function by adding to the list of documentation tags.
         /// </summary>
@@ -1289,5 +1290,6 @@
                     biomassRemovalModel.Document((uint)indent, (uint)headingLevel + 1);
             }
         }
+        */
     }
 }

@@ -60,19 +60,14 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            // Add a heading.
-            yield return new Heading(Name, indent, headingLevel);
-
-            yield return new Paragraph($"If {PropertyName} = {StringValue} Then", indent);
-            foreach (ITag tag in TrueValue.Document(indent + 1, headingLevel + 1))
+            yield return new Paragraph($"If {PropertyName} = {StringValue} Then");
+            foreach (ITag tag in TrueValue.GetTags())
                 yield return tag;
 
-            yield return new Paragraph("Else", indent);
-            foreach (ITag tag in FalseValue.Document(indent + 1, headingLevel + 1))
+            yield return new Paragraph("Else");
+            foreach (ITag tag in FalseValue.GetTags())
                 yield return tag;
         }
     }

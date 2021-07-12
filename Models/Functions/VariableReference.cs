@@ -70,12 +70,10 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
             string variable = StringUtilities.RemoveTrailingString(VariableName, ".Value()");
-            yield return new Paragraph($"*{Name} = {variable}*", indent);
+            yield return new Paragraph($"*{Name} = {variable}*");
         }
 
     }

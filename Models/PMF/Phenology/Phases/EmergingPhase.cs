@@ -150,17 +150,20 @@ namespace Models.PMF.Phen
         {
             Target = ShootLag + data.Depth * ShootRate;
         }
-       
+
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override ITag Document()
         {
-            // add a heading
-            yield return new Heading($"{Name} Phase", indent, headingLevel);
+            return new Section($"{Name} Phase", GetTags());
+        }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> GetTags()
+        {
             // Write description of this class.
             StringBuilder paragraph = new StringBuilder();
             paragraph.AppendLine($"This phase goes from {Start} to {End} and simulates time to emergence as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
@@ -169,11 +172,9 @@ namespace Models.PMF.Phen
             paragraph.AppendLine($"    *ShootRate* = {ShootRate} (deg day/mm),");
             paragraph.AppendLine($"    *ShootLag* = {ShootLag} (deg day), ");
             paragraph.AppendLine($"and *SowingDepth* (mm) is sent from the manager with the sowing event.");
-            yield return new Paragraph(paragraph.ToString(), indent);
-
-            // write intro to children
-            // ?
-            yield return new Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:", indent);
+            yield return new Paragraph(paragraph.ToString());
+            yield return new Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:");
+            // write intro to children?
         }
     }
 }

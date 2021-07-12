@@ -6,7 +6,7 @@ namespace APSIM.Services.Documentation
     /// <summary>
     /// A graph tag.
     /// </summary>
-    public class GraphPage : Tag
+    public class GraphPage : ITag
     {
         /// <summary>
         /// The graphs to be displayed.
@@ -18,6 +18,6 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="graphs">Graphs to be displayed.</param>
         /// <param name="indent">Indentation level.</param>
-        public GraphPage(IEnumerable<Graph> graphs, uint indent = 0) : base(indent) => Graphs = graphs;
+        public GraphPage(IEnumerable<Graph> graphs) => Graphs = graphs;
     }
 }

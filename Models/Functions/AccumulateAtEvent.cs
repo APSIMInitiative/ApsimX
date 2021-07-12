@@ -64,12 +64,9 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below between the {StartStageName} and {EndStageName} stages. Function values added to the accumulate total each day are:", indent);
+            yield return new Paragraph($"**{Name}** is a daily accumulation of the values of functions listed below between the {StartStageName} and {EndStageName} stages. Function values added to the accumulate total each day are:");
         }
 
         ///7. Private methods

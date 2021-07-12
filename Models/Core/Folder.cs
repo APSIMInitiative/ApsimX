@@ -41,19 +41,14 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            // Add a heading.
-            yield return new Heading(Name, indent, headingLevel);
-
             if (ShowPageOfGraphs)
             {
                 if (FindAllChildren<Experiment>().Any())
                 {
                     // Write Phase Table.
-                    yield return new Paragraph("**List of experiments.**", indent);
+                    yield return new Paragraph("**List of experiments.**");
                     DataTable table = new DataTable();
                     table.Columns.Add("Experiment Name", typeof(string));
                     table.Columns.Add("Design (Number of Treatments)", typeof(string));
@@ -73,18 +68,17 @@
                         row[1] = design;
                         table.Rows.Add(row);
                     }
-                    yield return new Table(table, indent);
-
+                    yield return new Table(table);
                 }
                 var children = FindAllChildren<Models.Graph>().ToList();
                 int graphsPerPage = 6;
                 var graphs = new List<APSIM.Services.Documentation.Graph>();
                 for (int i = 0; i < children.Count; i++)
                 {
-                    graphs.Add(children[i].ToGraph(indent));
+                    graphs.Add(children[i].ToGraph());
                     if (graphs.Count == graphsPerPage)
                     {
-                        yield return new GraphPage(graphs, indent);
+                        yield return new GraphPage(graphs);
                         graphs.Clear();
                     }
                 }

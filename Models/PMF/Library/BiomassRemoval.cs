@@ -221,11 +221,9 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            foreach (ITag tag in base.Document(indent, headingLevel))
+            foreach (ITag tag in base.GetTags())
                 yield return tag;
 
             DataTable data = new DataTable();
@@ -246,7 +244,7 @@
                 row["% Dead To Residue"] = removal.FractionDeadToResidue * 100;
             }
 
-            yield return new Table(data, indent);
+            yield return new Table(data);
         }
     }
 }

@@ -3,7 +3,7 @@ namespace APSIM.Services.Documentation
     /// <summary>
     /// Describes an auto-doc paragraph command.
     /// </summary>
-    public class Paragraph : Tag
+    public class Paragraph : ITag
     {
         /// <summary>The paragraph text.</summary>
         public string Text { get; private set; }
@@ -11,8 +11,7 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// Initializes a new instance of the <see cref="Paragraph"/> class.
         /// </summary>
-        /// <param name="text">The paragraph text.</param>
-        /// <param name="indent">Indentation level.</param>
-        public Paragraph(string text, uint indent = 0) : base(indent) => Text = text;
+        /// <param name="text">The paragraph contents.</param>
+        public Paragraph(string text) => Text = text;
     }
 }

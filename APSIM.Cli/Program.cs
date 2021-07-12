@@ -74,8 +74,7 @@ namespace APSIM.Cli
         private static IEnumerable<ITag> GetTags(IModel model)
         {
             if (model.IncludeInDocumentation)
-                foreach (ITag tag in model.Document())
-                    yield return tag;
+                yield return model.Document();
             foreach (IModel child in model.Children)
                 foreach (ITag tag in GetTags(child))
                     yield return tag;

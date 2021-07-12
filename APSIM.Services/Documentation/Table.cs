@@ -3,7 +3,7 @@ using System.Data;
 namespace APSIM.Services.Documentation
 {
     /// <summary>Describes an auto-doc table command.</summary>
-    public class Table : Tag
+    public class Table : ITag
     {
         /// <summary>The data to show in the table.</summary>
         private DataView data;
@@ -12,8 +12,7 @@ namespace APSIM.Services.Documentation
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="data">Data to be displayed in the table.</param>
-        /// <param name="indent">Indentation level.</param>
-        public Table(DataView data, uint indent = 0) : base(indent)
+        public Table(DataView data)
         {
             this.data = data;
         }
@@ -22,8 +21,7 @@ namespace APSIM.Services.Documentation
         /// Initializes a new instance of the <see cref="Table"/> class.
         /// </summary>
         /// <param name="data">Data to be displayed in the table.</param>
-        /// <param name="indent">Indentation level.</param>
-        public Table(DataTable data, uint indent = 0) : base(indent)
+        public Table(DataTable data)
         {
             this.data = new DataView(data);
         }

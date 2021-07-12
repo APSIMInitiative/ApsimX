@@ -457,14 +457,12 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Paragraph($"The {Name} model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.", indent);
+            yield return new Paragraph($"The {Name} model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
 
             // Write Plant Model Table
-            yield return new Paragraph("**List of Plant Model Components.**", indent);
+            yield return new Paragraph("**List of Plant Model Components.**");
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
@@ -479,7 +477,7 @@
                     tableData.Rows.Add(row);
                 }
             }
-            yield return new Table(tableData, indent);
+            yield return new Table(tableData);
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>

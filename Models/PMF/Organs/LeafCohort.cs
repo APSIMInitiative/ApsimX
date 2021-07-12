@@ -1265,12 +1265,9 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"Area = {Area}", indent);
+            yield return new Paragraph($"Area = {Area}");
         }
     }
 }

@@ -157,17 +157,15 @@ namespace Models.PMF
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            foreach (ITag tag in base.Document(indent, headingLevel))
+            foreach (ITag tag in base.GetTags())
                 yield return tag;
 
-            yield return new Paragraph($"{Name} summarises the following biomass objects:", indent);
+            yield return new Paragraph($"{Name} summarises the following biomass objects:");
 
             string st = string.Join(Environment.NewLine, Propertys.Select(p => $"* {p}"));
-            yield return new Paragraph(st, indent);
+            yield return new Paragraph(st);
         }
     }
 }

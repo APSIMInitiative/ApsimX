@@ -534,17 +534,17 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        public IEnumerable<ITag> Document() => Document(0, 1);
+        public virtual ITag Document()
+        {
+            return new Section(Name, GetTags());
+        }
 
         /// <summary>
-        /// Document the model.
+        /// Get a list of tags which describe the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public virtual IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public virtual IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()), indent);
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
         }
     }
 }

@@ -50,18 +50,13 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
 
             if (ChildFunctions == null || ChildFunctions.Count < 1)
                 yield break;
-
-            // add a heading.
-            yield return new Heading(Name, indent, headingLevel);
 
             string lhs;
             if (ChildFunctions[0] is VariableReference)
@@ -79,11 +74,11 @@ namespace Models.Functions
             else
                 throw new Exception($"Unknown model type '{ChildFunctions[1].GetType().Name}'");
 
-            yield return new Paragraph($"IF {lhs} < {rhs} THEN", indent);
-            foreach (ITag tag in ChildFunctions[2].Document(indent + 1, headingLevel))
+            yield return new Paragraph($"IF {lhs} < {rhs} THEN");
+            foreach (ITag tag in ChildFunctions[2].GetTags())
                 yield return tag;
-            yield return new Paragraph("ELSE", indent);
-            foreach (ITag tag in ChildFunctions[3].Document(indent + 1, headingLevel + 1))
+            yield return new Paragraph("ELSE");
+            foreach (ITag tag in ChildFunctions[3].GetTags())
                 yield return tag;
         }
     }

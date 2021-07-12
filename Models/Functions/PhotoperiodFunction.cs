@@ -61,13 +61,11 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            foreach (ITag tag in base.Document(indent, headingLevel))
+            foreach (ITag tag in base.GetTags())
                 yield return tag;
-            yield return new Paragraph($"*Twilight = {Twilight} (degrees)*", indent);
+            yield return new Paragraph($"*Twilight = {Twilight} (degrees)*");
         }
     }
 }

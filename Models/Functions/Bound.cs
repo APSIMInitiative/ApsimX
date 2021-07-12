@@ -38,29 +38,25 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>();
             foreach (IFunction child in ChildFunctions)
             {
                 if (child != Lower && child != Upper)
                 {
-                    yield return new Paragraph($"{Name} is the value of {child.Name} bound between a lower and upper bound where:", indent);
-                    foreach (ITag tag in child.Document(indent + 1, headingLevel + 1))
+                    yield return new Paragraph($"{Name} is the value of {child.Name} bound between a lower and upper bound where:");
+                    foreach (ITag tag in child.GetTags())
                         yield return tag;
                     break;
                 }
             }
             if (Lower != null)
-                foreach (ITag tag in Lower.Document(indent + 1, headingLevel + 1))
+                foreach (ITag tag in Lower.GetTags())
                     yield return tag;
             if (Upper != null)
-                foreach (ITag tag in Upper.Document(indent + 1, headingLevel + 1))
+                foreach (ITag tag in Upper.GetTags())
                     yield return tag;
         }
     }

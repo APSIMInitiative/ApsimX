@@ -76,13 +76,10 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
             if (FindAllChildren<IFunction>().Count() == 1)
-                yield return new Paragraph($"{Name} is calculated from a moving sum of {ChildFunction}.Name over a series of {NumberOfDays} days.", indent);
+                yield return new Paragraph($"{Name} is calculated from a moving sum of {ChildFunction}.Name over a series of {NumberOfDays} days.");
         }
     }
 }

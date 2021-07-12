@@ -299,19 +299,15 @@ namespace Models.Core
         /// </summary>
         void OnPreLink();
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
+        /// <summary>Document the model.</summary>
         /// <remarks>
         /// It is a mistake to call this method without first resolving links.
         /// </remarks>
-        IEnumerable<ITag> Document();
+        ITag Document();
 
         /// <summary>
-        /// Document the model.
+        /// fixme
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        IEnumerable<ITag> Document(uint indent, uint headingLevel);
+        IEnumerable<ITag> GetTags();
     }
 }

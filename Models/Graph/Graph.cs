@@ -335,13 +335,13 @@
         /// <summary>
         /// Generated a 'standardised' graph.
         /// </summary>
-        public APSIM.Services.Documentation.Graph ToGraph(uint indent = 0)
+        public APSIM.Services.Documentation.Graph ToGraph()
         {
             LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition);
-            return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend, indent);
+            return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend);
         }
 
-        // public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        // public override IEnumerable<ITag> GetTags()
         // {
         //     yield return ToGraph();
         // }

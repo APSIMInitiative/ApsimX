@@ -1,57 +1,43 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Services.Documentation.Extensions;
 
 namespace APSIM.Services.Documentation
 {
     /// <summary>
-    /// Describes an auto-doc heading command.
+    /// This class describes a section in a document - it has a title and contains
+    /// multiple child tags.
     /// </summary>
-    public class Heading : Tag
+    public class Section : ITag
     {
-        /// <summary>Heading level.</summary>
-        private uint headingLevel;
+        /// <summary>Child tags.</summary>
+        public IEnumerable<ITag> Children { get; private set; }
 
-        /// <summary>The heading text</summary>
-        public string Text { get; private set; }
+        /// <summary>The section title.</summary>
+        public string Title { get; private set; }
 
-        /// <summary>The heading level.</summary>
-        public uint HeadingLevel
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Section"/> class.
+        /// </summary>
+        /// <param name="title">The section title.</param>
+        /// <param name="children">The child tags.</param>
+        public Section(string title, IEnumerable<ITag> children)
         {
-            get => headingLevel;
-            set => headingLevel = value;
+            Title = title;
+            this.Children = children;
         }
 
         /// <summary>
-        /// Indent the heading and increase the heading level.
+        /// Create a <see cref="Section"/> instance with a single child.
         /// </summary>
-        /// <param name="n">The relative change in heading level/indentation.</param>
-        public override void Indent(uint n)
+        /// <param name="title">The section title.</param>
+        /// <param name="children">The child tags.</param>
+        public Section(string title, ITag child)
         {
-            base.Indent(n);
-            HeadingLevel += n;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Heading"/> class.
-        /// Heading level is set to indent + 1.
-        /// </summary>
-        /// <param name="text">The heading text.</param>
-        /// <param name="indent">Indentation level.</param>
-        public Heading(string text, uint indent = 0) : base(indent)
-        {
-            Text = text;
-            HeadingLevel = (uint)indent + 1;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Heading"/> class.
-        /// </summary>
-        /// <param name="text">The heading text.</param>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">The heading level.</param>
-        public Heading(string text, uint indent, uint headingLevel) : base(indent)
-        {
-            Text = text;
-            HeadingLevel = headingLevel;
+            Title = title;
+            Children = child.ToEnumerable();
         }
     }
 }

@@ -112,14 +112,12 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
             // fixme - the graph and table should be next to each other.
-            yield return new Paragraph($"*{Name}* is calculated using linear interpolation", indent);
-            yield return XYPairs.ToTable(indent);
-            yield return CreateGraph(indent);
+            yield return new Paragraph($"*{Name}* is calculated using linear interpolation");
+            yield return XYPairs.ToTable();
+            yield return CreateGraph();
         }
 
         private APSIM.Services.Documentation.Graph CreateGraph(uint indent = 0)

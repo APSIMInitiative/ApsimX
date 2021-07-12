@@ -221,15 +221,10 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            // Add a heading.
-            yield return new Heading(Name, indent, headingLevel);
-
             // Write Phase Table
-            yield return new Paragraph($"**Destination of C from {Name}**", indent);
+            yield return new Paragraph($"**Destination of C from {Name}**");
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Destination Pool", typeof(string));
             tableData.Columns.Add("Carbon Fraction", typeof(string));
@@ -243,7 +238,7 @@
                     tableData.Rows.Add(row);
                 }
 
-            yield return new Table(tableData, indent);
+            yield return new Table(tableData);
         }
     }
 }

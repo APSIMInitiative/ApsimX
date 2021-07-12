@@ -45,13 +45,10 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.", indent);
-            yield return new Paragraph($"*MaximumVPDWeight = {MaximumVPDWeight}*", indent);
+            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.");
+            yield return new Paragraph($"*MaximumVPDWeight = {MaximumVPDWeight}*");
         }
     }
 }

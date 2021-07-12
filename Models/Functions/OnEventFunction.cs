@@ -62,8 +62,9 @@ namespace Models.Functions
         {
             _Value = PreEventValue.Value();
         }
-            /// <summary>Gets the value.</summary>
-            public double Value(int arrayIndex = -1)
+
+        /// <summary>Gets the value.</summary>
+        public double Value(int arrayIndex = -1)
         {
             return _Value;
         }
@@ -71,24 +72,19 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            // add a heading.
-            yield return new Heading(Name, indent, headingLevel);
-
             if (PreEventValue != null)
             {
-                yield return new Paragraph($"Before {SetEvent}", indent);
-                foreach (ITag tag in PreEventValue.Document(indent + 1, headingLevel + 1))
+                yield return new Paragraph($"Before {SetEvent}");
+                foreach (ITag tag in PreEventValue.GetTags())
                     yield return tag;
             }
 
             if (PostEventValue != null)
             {
-                yield return new Paragraph($"On {SetEvent} the value is set to:", indent);
-                foreach (ITag tag in PostEventValue.Document(indent + 1, headingLevel + 1))
+                yield return new Paragraph($"On {SetEvent} the value is set to:");
+                foreach (ITag tag in PostEventValue.GetTags())
                     yield return tag;
             }
         }

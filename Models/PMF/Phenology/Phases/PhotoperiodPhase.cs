@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace Models.PMF.Phen
 {
@@ -91,17 +92,13 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            // Add a heading.
-            yield return new Heading($"{Name} Phase", headingLevel);
-
             // Write description of this class.
-            yield return new Paragraph($"This phase goes from {Start} to {End}. " +
-               $"The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing). " +
-               $"The base model uses a critical photoperiod of {CricialPhotoperiod} hours ({PPDirection}).", indent);
+            StringBuilder text = new StringBuilder($"This phase goes from {Start} to {End}. ");
+            text.Append("The phase ends when photoperiod has a reaches a critical photoperiod with a given direction (Increasing/Decreasing). ");
+            text.Append($"The base model uses a critical photoperiod of {CricialPhotoperiod} hours ({PPDirection}).");
+            yield return new Paragraph(text.ToString());
         }
     }
 }

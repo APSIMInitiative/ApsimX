@@ -44,16 +44,13 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*", indent);
-            yield return new Paragraph($"*aximumTemperatureWeighting = {MaximumTemperatureWeighting}*", indent);
+            yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*");
+            yield return new Paragraph($"*aximumTemperatureWeighting = {MaximumTemperatureWeighting}*");
             // fixme - the graph and table should be next to each other.
-            yield return XYPairs.ToTable(indent);
-            yield return CreateGraph(indent);
+            yield return XYPairs.ToTable();
+            yield return CreateGraph();
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
 
@@ -66,7 +63,7 @@ namespace Models.Functions
             axes[0] = new APSIM.Services.Graphing.Axis("Average Temperature (°C)", APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
             axes[1] = new APSIM.Services.Graphing.Axis(Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft);
-            return new APSIM.Services.Documentation.Graph(series, axes, legend, indent);
+            return new APSIM.Services.Documentation.Graph(series, axes, legend);
         }
     }
 }

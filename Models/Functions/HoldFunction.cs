@@ -63,13 +63,10 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
             if (ValueToHold != null)
-                yield return new Paragraph($"{Name} is the same as {ValueToHold.Name} until it reaches {WhenToHold} stage when it fixes its value", indent);
+                yield return new Paragraph($"{Name} is the same as {ValueToHold.Name} until it reaches {WhenToHold} stage when it fixes its value");
         }
 
         /// <summary>Get value</summary>

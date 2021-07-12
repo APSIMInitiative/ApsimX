@@ -37,12 +37,9 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            yield return new Heading(Name, indent, headingLevel);
-            yield return new Paragraph($"{Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.", indent);
+            yield return new Paragraph($"{Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.");
         }
     }
 }

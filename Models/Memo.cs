@@ -17,15 +17,19 @@
         public string Text { get; set; }
 
         /// <summary>
+        /// Document the memo model.
+        /// </summary>
+        public override ITag Document()
+        {
+            return new Paragraph(Text);
+        }
+
+        /// <summary>
         /// Document the model.
         /// </summary>
-        /// <param name="indent">Indentation level.</param>
-        /// <param name="headingLevel">Heading level.</param>
-        public override IEnumerable<ITag> Document(uint indent, uint headingLevel)
+        public override IEnumerable<ITag> GetTags()
         {
-            if (!string.IsNullOrEmpty(Text))
-                yield return new Paragraph(Text);
-            yield break;
+            yield return Document();
         }
     }
 }
