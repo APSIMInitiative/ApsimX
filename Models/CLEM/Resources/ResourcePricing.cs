@@ -1,5 +1,7 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +32,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Includes option to specify sale and purchase pricing")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
-    public class ResourcePricing : CLEMModel
+    public class ResourcePricing : CLEMModel, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Number of resource units per packet
@@ -60,6 +62,10 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
         [Required]
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
+        
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
         /// <summary>
         /// Constructor
@@ -67,6 +73,35 @@ namespace Models.CLEM.Resources
         public ResourcePricing()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount, IModel model)
+        {
+            if (LastPriceChange is null)
+            {
+                LastPriceChange = new ResourcePriceChangeDetails();
+            }
+            LastPriceChange.PreviousPrice = PricePerPacket;
+            LastPriceChange.CurrentPrice = amount;
+            LastPriceChange.ChangedPriceModel = model;
+
+            PricePerPacket = amount;
+
+            // price change event
+            OnPriceChanged(new PriceChangeEventArgs() {  Details = LastPriceChange });
+        }
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
         }
 
         #region descriptive summary

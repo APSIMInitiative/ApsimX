@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
@@ -23,7 +24,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel, IFilterGroup
+    public class AnimalPriceGroup: CLEMModel, IFilterGroup, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
@@ -58,12 +59,51 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public double Proportion { get; set; }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
         protected AnimalPriceGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount)
+        {
+            Value = amount;
+        }
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount, IModel model)
+        {
+            if (LastPriceChange is null)
+            {
+                LastPriceChange = new ResourcePriceChangeDetails();
+            }
+            LastPriceChange.PreviousPrice = Value;
+            LastPriceChange.CurrentPrice = amount;
+            LastPriceChange.ChangedPriceModel = model;
+
+            Value = amount;
+
+            // price change event
+            OnPriceChanged(new PriceChangeEventArgs() { Details = LastPriceChange });
+        }
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -200,7 +240,8 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
-        } 
+        }
+
         #endregion
     }
 }
