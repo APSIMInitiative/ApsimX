@@ -861,17 +861,13 @@ namespace APSIM.Interop.Markdown.Renderers
                 documentStyle.Font.Subscript = true;
             if ( (style & TextStyle.Quote) == TextStyle.Quote)
             {
-                // todo: vertical dark-grey bar to the left of the text.
-
-                // Shading shading = new Shading();
-                // shading.Color = new MigraDocCore.DocumentObjectModel.Color(122, 130, 139);
-                // documentStyle.ParagraphFormat.Shading = shading;
                 documentStyle.ParagraphFormat.FirstLineIndent = Unit.FromPoint(10);
                 documentStyle.Font.Color = new Color(122, 130, 139);
                 documentStyle.ParagraphFormat.Borders.Left.Visible = true;
                 documentStyle.ParagraphFormat.Borders.Left.Color = Colors.DarkGray;
                 documentStyle.ParagraphFormat.Borders.Left.Width = Unit.FromPoint(1);
-                // documentStyle.ParagraphFormat.Borders.DistanceFromLeft = Unit.FromPoint(1);
+                documentStyle.ParagraphFormat.Borders.DistanceFromBottom = Unit.FromPoint(5);
+                documentStyle.ParagraphFormat.SpaceAfter = Unit.FromPoint(5);
             }
             if ( (style & TextStyle.Code) == TextStyle.Code)
             {
