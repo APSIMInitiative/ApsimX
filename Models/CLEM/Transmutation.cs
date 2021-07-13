@@ -31,6 +31,7 @@ namespace Models.CLEM
         public Transmutation()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+            TransactionCategory = "Transmutation";
         }
 
         /// <summary>
