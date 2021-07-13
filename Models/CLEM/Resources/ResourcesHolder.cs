@@ -11,6 +11,7 @@ using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -25,7 +26,7 @@ namespace Models.CLEM.Resources
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
-    public class ResourcesHolder: CLEMModel, IValidatableObject
+    public class ResourcesHolder: CLEMModel, IValidatableObject, IReportPricingChange
     {
         /// <summary>
         /// List of the all the Resource Groups.
@@ -507,7 +508,26 @@ namespace Models.CLEM.Resources
             {
                 FoundMarket = this.Parent as Market;
             }
+
+            // link to price change in all descendents
+            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            {
+                childModel.PriceChangeOccurred += Resource_PricingChangeOccurred;
+            }
+
             InitialiseResourceGroupList();
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            {
+                childModel.PriceChangeOccurred -= Resource_PricingChangeOccurred;
+            }
         }
 
         /// <summary>
@@ -624,6 +644,32 @@ namespace Models.CLEM.Resources
 
             }
         }
+
+        #region Report pricing change
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
+        }
+
+        private void Resource_PricingChangeOccurred(object sender, EventArgs e)
+        {
+            LastPriceChange = (e as PriceChangeEventArgs).Details;
+            OnPriceChanged(e as PriceChangeEventArgs);
+        }
+
+        #endregion
 
         #region validation
 
