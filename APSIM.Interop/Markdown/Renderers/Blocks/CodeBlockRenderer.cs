@@ -1,3 +1,4 @@
+using APSIM.Interop.Markdown.Extensions;
 using Markdig.Syntax;
 
 namespace APSIM.Interop.Markdown.Renderers.Blocks
@@ -14,15 +15,18 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
         /// <param name="codeBlock">The code block to be renderered.</param>
         protected override void Write(PdfBuilder renderer, CodeBlock codeBlock)
         {
-            renderer.StartNewParagraph();
+            if (codeBlock.Lines.Lines != null)
+            {
+                renderer.StartNewParagraph();
 
-            // We could set the language if CodeBlock is of type FencedCodeBlock.
-            // string lang = (codeBlock as FencedCode)?.Info;
-            renderer.PushStyle(TextStyle.Code);
-            renderer.WriteChildren(codeBlock.Inline);
-            renderer.PopStyle();
+                // We could set the language if CodeBlock is of type FencedCodeBlock.
+                // string lang = (codeBlock as FencedCode)?.Info;
+                renderer.PushStyle(TextStyle.Code);
+                renderer.WriteLeafInlines(codeBlock);
+                renderer.PopStyle();
 
-            renderer.StartNewParagraph();
+                renderer.StartNewParagraph();
+            }
         }
     }
 }

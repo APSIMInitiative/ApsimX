@@ -13,14 +13,13 @@ using Models.Storage;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
+using APSIM.Services.Documentation;
 
 namespace Models.Core
 {
     /// <summary>
     /// # [Name]
-    /// Encapsulates a collection of simulations. It is responsible for creating this collection,
-    /// changing the structure of the components within the simulations, renaming components, adding
-    /// new ones, deleting components. The user interface talks to an instance of this class.
+    /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
     [ScopedModel]
@@ -247,6 +246,23 @@ namespace Models.Core
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
             
             return fileNames;
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override ITag Document()
+        {
+            return new Section(GetTags());
+        }
+
+        /// <summary>
+        /// Get a list of tags which describe the model.
+        /// </summary>
+        public override IEnumerable<ITag> GetTags()
+        {
+            yield return new Image("AIBanner.png");
+            yield return new Paragraph(ApsimVersion);
         }
 
         /// <summary>Documents the specified model.</summary>

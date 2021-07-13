@@ -13,17 +13,20 @@ using Markdig.Renderers;
 using Markdig.Syntax;
 using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown.Renderers.Extras;
+using APSIM.Interop.Documentation.Renderers;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using static MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes.ImageSource;
 using Color = MigraDocCore.DocumentObjectModel.Color;
+using PdfSharpCore.Drawing;
 #else
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using Color = MigraDoc.DocumentObjectModel.Color;
 using System.Drawing.Imaging;
+using PdfSharp.Drawing;
 #endif
 
 namespace APSIM.Interop.Markdown.Renderers
@@ -58,9 +61,36 @@ namespace APSIM.Interop.Markdown.Renderers
         private const double pointsToPixels = 96.0 / 72;
 
         /// <summary>
+        /// Padding between the table columns (proportional to column width).
+        /// </summary>
+        private const double columnPadding = 0.5;
+
+        /// <summary>
+        /// This is used for measure text extents in table cells,
+        /// as MigraDoc does not support automatic column widths.
+        /// </summary>
+        private static readonly XGraphics graphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
+
+        /// <summary>
         /// The PDF Document.
         /// </summary>
         private Document document;
+
+        /// <summary>
+        /// Keeps track of whether we need to start a new paragraph.
+        /// </summary>
+        /// <remarks>
+        /// Certain object renderers need to ensure that their content goes into its own
+        /// unique paragraph - and that subsequent renderers will be unable to write to
+        /// this paragraph. To this end, they will call <see cref="StartNewParagraph"/>
+        /// before and after writing their child objects to the paragraph. This causes a
+        /// problem in table cells however, because an empty paragraph will cause the cell
+        /// height to be far too high. This flag is a workaround for the issue; New
+        /// paragraphs are only actually created when they are required (in calls to
+        /// <see cref="GetLastParagraph"/>), iff this flag is set to true. Calls to
+        /// <see cref="StartNewParagraph"/> simply set this to true.
+        /// <remarks>
+        private bool startNewParagraph;
 
         /// <summary>
         /// Style stack. This is used to manage styles for nested inline/block elements.
@@ -107,12 +137,33 @@ namespace APSIM.Interop.Markdown.Renderers
         private int tableCellIndex = 0;
 
         /// <summary>
+        /// When a heading is added to the document, these indices are used as
+        /// the heading number (e.g. if the stack contains 1, 2, and 3, the
+        /// heading will be written as "1.2.3. Heading Text").
+        /// </summary>
+        private Stack<uint> headingIndices = new Stack<uint>();
+
+        /// <summary>
+        /// Cache for looking up renderers based on tag type.
+        /// </summary>
+        /// <typeparam name="Type">Tag type.</typeparam>
+        /// <typeparam name="ITagRenderer">Renderer instance capable of rendering the matching type.</typeparam>
+        /// <returns></returns>
+        private Dictionary<Type, ITagRenderer> renderersLookup = new Dictionary<Type, ITagRenderer>();
+
+        /// <summary>
+        /// Renderers which this PDF writer will use to write the tags to the PDF document.
+        /// </summary>
+        private IEnumerable<ITagRenderer> renderers = DefaultRenderers();
+
+        /// <summary>
         /// Create a <see cref="PdfBuilder" /> instance.
         /// </summary>
         /// <param name="doc"></param>
         public PdfBuilder(Document doc, PdfOptions options)
         {
             document = doc;
+            headingIndices.Push(0);
 
             ObjectRenderers.Add(new AutolinkInlineRenderer());
             ObjectRenderers.Add(new CodeInlineRenderer());
@@ -185,7 +236,8 @@ namespace APSIM.Interop.Markdown.Renderers
             linkState = new Link()
             {
                 Uri = linkUri,
-                LinkObject = GetLastParagraph().AddHyperlink("")
+                // todo: Implement other link types (ie local files)
+                LinkObject = GetLastParagraph().AddHyperlink(linkUri, HyperlinkType.Web)
             };
         }
 
@@ -202,9 +254,50 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Increment the heading depth. (e.g. to create a subheading.)
+        /// </summary>
+        public void PushSubHeading()
+        {
+            headingIndices.Push(0);
+        }
+
+        /// <summary>
+        /// Decrement the heading depth. (E.g. when finished with a subsection.)
+        /// </summary>
+        public void PopSubHeading()
+        {
+            headingIndices.Pop();
+        }
+
+        /// <summary>
+        /// Add a heading. This method is provided for convenience, but doesn't
+        /// substyles in parts of the heading.
+        /// </summary>
+        /// <remarks>
+        /// To add custom styling to parts of the heading, use:
+        /// - <see cref="SetHeadingLevel"/>
+        /// - <see cref="AppendText"/>
+        /// - <see cref="ClearHeadingLevel"/>
+        /// </remarks>
+        /// <param name="text">Heading text.</param>
+        public void AppendHeading(string text)
+        {
+            if (headingIndices.Count < 1)
+                // Should maybe be a Debug.WriteLine();
+                throw new InvalidOperationException("Programmer is missing a call to ClearHeadingLevel()");
+
+            SetHeadingLevel((uint)headingIndices.Count);
+            AppendText(text, TextStyle.Normal);
+            ClearHeadingLevel();
+        }
+
+        /// <summary>
         /// Set the heading level. All calls to this function should be accompanied
         /// by a call to <see cref="ClearHeadingLevel" />. It is an error to set the
         /// heading level if the heading level is already set (ie nested headings).
+        /// 
+        /// For subheadings (e.g. 1.2.3), use <see cref="PushSubHeading()"/> and
+        /// <see cref="PopSubHeading"/>.
         /// </summary>
         /// <param name="headingLevel">Heading level.</param>
         public void SetHeadingLevel(uint headingLevel)
@@ -212,6 +305,13 @@ namespace APSIM.Interop.Markdown.Renderers
             if (this.headingLevel != null)
                 throw new NotImplementedException("Nested headings not supported.");
             this.headingLevel = headingLevel;
+
+            // Increment the last heading index.
+            if (headingIndices.Any())
+                headingIndices.Push(headingIndices.Pop() + 1);
+            else
+                headingIndices.Push(1);
+            WriteHeadingIndices();
         }
 
         /// <summary>
@@ -282,6 +382,8 @@ namespace APSIM.Interop.Markdown.Renderers
 
         /// <summary>
         /// Create a new table with the specified number of columns.
+        /// Any calls to <see cref="StartTable"/> *must* have a matching call
+        /// to <see cref="FinishTable"/>.
         /// </summary>
         /// <param name="numColumns">Number of columns in the table.</param>
         public void StartTable(int numColumns)
@@ -289,8 +391,79 @@ namespace APSIM.Interop.Markdown.Renderers
             if (inTableCell)
                 throw new NotImplementedException("Nested tables not implemented.");
             Table table = GetLastSection().AddTable();
+            table.KeepTogether = true;
+            table.Borders.Color = Colors.Black;
+            table.Borders.Width = 0.5;
             for (int i = 0; i < numColumns; i++)
                 table.Columns.AddColumn();
+        }
+
+        /// <summary>
+        /// Finish the given table. This indicates that any subsequent content
+        /// is to be written after the table, rather than into the table.
+        /// Any calls to <see cref="StartTable"/> *must* have a matching call
+        /// to <see cref="FinishTable"/>.
+        /// </summary>
+        public void FinishTable()
+        {
+            // Now that all of the table cells have been rendered, we should
+            // adjust the width partitioning. By default, all columns are given
+            // equal width, but this is often wasteful.
+            //
+            // First, we find the widest cell in each column and record its
+            // width. If the sum of these widths is less than the total page
+            // width, then we can allocate these widths and be done with it.
+            // Otherwise, we allocate widths based on the ratio of the column's
+            // width demand to the total width demand, as a proportion of total
+            // page width.
+            Table table = GetLastSection().GetLastTable();
+            List<double> maxWidths = Enumerable.Repeat<double>(0, table.Columns.Count).ToList();
+
+            // fixme: this font size doesn't account for the different text
+            // sizes/formats that the contents of the cells can use.
+            double fontSize = document.Styles.Normal.Font.Size;
+            string fontName = document.Styles.Normal.Font.Name;
+            XFont gdiFont = new XFont(fontName, fontSize);
+
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                for (int j = 0; j < table.Columns.Count; j++)
+                {
+                    Cell cell = table.Rows[i][j];
+                    IEnumerable<Paragraph> paragraphs = cell.Elements.OfType<Paragraph>();
+                    string text = string.Join("", paragraphs.Select(p => p.GetRawText()));
+                    Unit width = Unit.FromPoint(graphics.MeasureString(text, gdiFont).Width);
+
+                    double lineSpace = gdiFont.GetHeight();
+                    int cellSpace = gdiFont.FontFamily.GetLineSpacing(XFontStyle.Regular);
+                    int cellAscent = gdiFont.FontFamily.GetCellAscent(XFontStyle.Regular);
+                    int cellDescent = gdiFont.FontFamily.GetCellDescent(XFontStyle.Regular);
+                    int cellLeading = cellSpace - cellAscent - cellDescent;
+                    
+                    // Get effective ascent
+                    double ascent = lineSpace * cellAscent / cellSpace;
+                    // graphics.DrawRectangle(XBrushes.Bisque, x, y - ascent, size.Width, ascent);
+                    
+                    // Get effective descent
+                    double descent = lineSpace * cellDescent / cellSpace;
+                    // graphics.DrawRectangle(XBrushes.LightGreen, x, y, size.Width, descent);
+                    
+                    // Get effective leading
+                    double leading = lineSpace * cellLeading / cellSpace;
+                    // graphics.DrawRectangle(XBrushes.Yellow, x, y + descent, size.Width, leading);
+
+                    if (width > maxWidths[j] / (1 + columnPadding))
+                        maxWidths[j] = width * (1 + columnPadding);
+                }
+            }
+
+            double totalWidth = maxWidths.Sum();
+            GetPageSize(GetLastSection(), out double pageWidth, out _);
+            pageWidth /= pointsToPixels;
+            if (totalWidth > pageWidth)
+                maxWidths = maxWidths.Select(w => pageWidth * w / totalWidth).ToList();
+            for (int i = 0; i < maxWidths.Count; i++)
+                table.Columns[i].Width = maxWidths[i];
         }
 
         /// <summary>
@@ -341,6 +514,18 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             if (!inTableCell)
                 throw new Exception($"Programmer is missing a call to StartTableCell().");
+
+            // Cell cell = GetLastSection().GetLastTable().GetLastRow().Cells[tableCellIndex];
+            // for (int i = cell.Elements.Count - 1; i >= 0; i--)
+            // {
+            //     if (cell.Elements[i] is Paragraph paragraph)
+            //     {
+            //         IEnumerable<Text> textElements = paragraph.GetTextElements();
+            //         if (textElements.All(t => string.IsNullOrWhiteSpace(t.Content)))
+            //             cell.Elements.RemoveObjectAt(i);
+            //         break;
+            //     }
+            // }
             inTableCell = false;
             tableCellIndex++;
         }
@@ -377,8 +562,8 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         public void AppendHorizontalRule()
         {
-            Style hrStyle = GetHRStyle();
-            GetLastParagraph().Format = hrStyle.ParagraphFormat;
+            Style hrStyle = GetHorizontalRuleStyle();
+            GetLastParagraph().Format = hrStyle.ParagraphFormat.Clone();
         }
 
         /// <summary>
@@ -388,20 +573,81 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             if (linkState != null)
                 throw new InvalidOperationException("Unable to append text to new paragraph when linkState is set (how can a link span multiple paragraphs?). Renderer is missing a call to ClearLinkState().");
+
+            // Never start a new paragraph while partway through a list item.
+            // Need to rethink this, as it might have some unintended consequences
+            // for certain object renderers (is a table allowed in a list item?).
             if (!inListItem)
+                startNewParagraph = true;
+        }
+
+        /// <summary>
+        /// Create a new paragraph and return it. If the most recent paragraph
+        /// in the current context is empty, that paragraph will be returned
+        /// instead, and a new paragraph will not be created or added to the
+        /// document.
+        /// </summary>
+        private Paragraph CreateNewParagraph()
+        {
+            // Only add a new paragraph if the last paragraph contains any text.
+            Paragraph lastParagraph = GetLastParagraph();
+            IEnumerable<Text> textElements = lastParagraph.GetTextElements();
+            if (lastParagraph.IsEmpty())
+                return lastParagraph;
+            else
             {
-                // Only add a new paragraph if the last paragraph contains any text.
-                Paragraph lastParagraph = GetLastParagraph();
-                IEnumerable<Text> textElements = lastParagraph.Elements.OfType<FormattedText>().SelectMany(f => f.Elements.OfType<Text>()).Union(lastParagraph.Elements.OfType<Text>());
-                if (textElements.Any(t => !string.IsNullOrEmpty(t.Content)))
-                {
-                    Section section = GetLastSection();
-                    if (inTableCell)
-                        section.GetLastTable().GetLastRow().Cells[tableCellIndex].AddParagraph();
-                    else
-                        section.AddParagraph();
-                }
+                Section section = GetLastSection();
+                if (inTableCell)
+                    return section.GetLastTable().GetLastRow().Cells[tableCellIndex].AddParagraph();
+                else
+                    return section.AddParagraph();
             }
+        }
+
+        /// <summary>
+        /// Find an appropriate tag renderer, and use it to render the
+        /// given tag to the PDF document.
+        /// </summary>
+        /// <param name="tag">Tag to be rendered.</param>
+        public void Write(APSIM.Services.Documentation.ITag tag)
+        {
+            ITagRenderer tagRenderer = GetTagRenderer(tag);
+            tagRenderer.Render(tag, this);
+        }
+
+        private void WriteHeadingIndices()
+        {
+            AppendText($"{string.Join(".", headingIndices)} ", TextStyle.Normal);
+        }
+
+        /// <summary>
+        /// Get a tag renderer capcable of rendering the given tag.
+        /// Throws if no suitable renderer is found.
+        /// </summary>
+        /// <param name="tag">The tag to be rendered.</param>
+        private ITagRenderer GetTagRenderer(APSIM.Services.Documentation.ITag tag)
+        {
+            Type tagType = tag.GetType();
+            if (!renderersLookup.TryGetValue(tagType, out ITagRenderer tagRenderer))
+            {
+                tagRenderer = renderers.FirstOrDefault(r => r.CanRender(tag));
+                if (tagRenderer == null)
+                    throw new NotImplementedException($"Unknown tag type {tag.GetType()}: no matching renderers found.");
+                renderersLookup[tagType] = tagRenderer;
+            }
+            return tagRenderer;
+        }
+
+        /// <summary>
+        /// Get the default tag renderers.
+        /// </summary>
+        private static IEnumerable<ITagRenderer> DefaultRenderers()
+        {
+            List<ITagRenderer> result = new List<ITagRenderer>(7);
+            result.Add(new ImageTagRenderer());
+            result.Add(new ParagraphTagRenderer());
+            result.Add(new SectionTagRenderer());
+            return result;
         }
 
         /// <summary>
@@ -415,6 +661,19 @@ namespace APSIM.Interop.Markdown.Renderers
             if (linkState == null)
             {
                 string style = CreateStyle(textStyle);
+                // We need to copy the paragraph format from the style to the paragraph,
+                // otherwise it won't have an effect in paragraphs containing >1 text element.
+                // Copy the paragraph format from the style, but not the font. The font should
+                // be retrieved on a per-FormattedText instance basis. Otherwise, the font
+                // of the last FormattedText in the paragraph will overwrite that of all others
+                // in the paragraph. Technically, by doing this we're overwriting the paragraph
+                // format of all earlier FormattedTexts anyway, but this is the best workaround
+                // I could find.
+                var font = paragraph.Format.Font.Clone();
+                paragraph.Format = document.Styles[style].ParagraphFormat.Clone();
+                paragraph.Format.Font = font;
+
+                paragraph.Format.FirstLineIndent = document.Styles[style].ParagraphFormat.FirstLineIndent;
                 paragraph.AddFormattedText(text, style);
             }
             else
@@ -496,6 +755,11 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         private Paragraph GetLastParagraph()
         {
+            if (startNewParagraph)
+            {
+                startNewParagraph = false;
+                return CreateNewParagraph();
+            }
             Section section = GetLastSection();
             if (inTableCell)
             {
@@ -602,20 +866,32 @@ namespace APSIM.Interop.Markdown.Renderers
                 // Shading shading = new Shading();
                 // shading.Color = new MigraDocCore.DocumentObjectModel.Color(122, 130, 139);
                 // documentStyle.ParagraphFormat.Shading = shading;
-                documentStyle.ParagraphFormat.LeftIndent = Unit.FromCentimeter(1);
+                documentStyle.ParagraphFormat.FirstLineIndent = Unit.FromPoint(10);
                 documentStyle.Font.Color = new Color(122, 130, 139);
+                documentStyle.ParagraphFormat.Borders.Left.Visible = true;
+                documentStyle.ParagraphFormat.Borders.Left.Color = Colors.DarkGray;
+                documentStyle.ParagraphFormat.Borders.Left.Width = Unit.FromPoint(1);
+                // documentStyle.ParagraphFormat.Borders.DistanceFromLeft = Unit.FromPoint(1);
             }
             if ( (style & TextStyle.Code) == TextStyle.Code)
             {
                 // TBI - shading, syntax highlighting?
-                documentStyle.Font.Name = "monospace";
+                documentStyle.Font.Name = "courier";
+                documentStyle.ParagraphFormat.Borders.Width = Unit.FromPoint(0.5);
+                documentStyle.ParagraphFormat.Borders.Color = Colors.DarkGray;
+                documentStyle.ParagraphFormat.Borders.Visible = true;
+                Unit padding = Unit.FromPoint(10);
+                documentStyle.ParagraphFormat.Borders.DistanceFromBottom = padding;
+                documentStyle.ParagraphFormat.Borders.DistanceFromTop = padding;
+                documentStyle.ParagraphFormat.Borders.DistanceFromLeft = padding;
+                documentStyle.ParagraphFormat.Borders.DistanceFromRight = padding;
             }
             // todo: do we need to set link style here?
             if (linkState != null)
             {
                 // Links can be blue and underlined.
                 documentStyle.Font.Color = new Color(0x08, 0x08, 0xef);
-                documentStyle.Font.Underline = Underline.Single;
+                // documentStyle.Font.Underline = Underline.Single;
             }
             if (headingLevel != null)
             {
@@ -649,7 +925,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// Get a horizontal rule style.
         /// </summary>
         /// <returns></returns>
-        private Style GetHRStyle()
+        private Style GetHorizontalRuleStyle()
         {
             string styleName = "HorizontalRule";
             if (document.Styles[styleName] != null)
@@ -674,7 +950,14 @@ namespace APSIM.Interop.Markdown.Renderers
             row.Shading.Color = Colors.LightBlue;
             row.Format.Alignment = ParagraphAlignment.Left;
             row.VerticalAlignment = VerticalAlignment.Center;
-            // row.Format.Font.Bold = true;
+            row.Format.Font.Bold = true;
+            for (int i = 0; i < row.Table.Columns.Count; i++)
+            {
+                Cell cell = row.Cells[i];
+                cell.Format.Font.Bold = true;
+                cell.Format.Alignment = ParagraphAlignment.Left;
+                cell.VerticalAlignment = VerticalAlignment.Center;
+            }
         }
     }
 }

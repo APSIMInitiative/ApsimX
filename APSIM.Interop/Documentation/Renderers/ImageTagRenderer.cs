@@ -19,7 +19,8 @@ namespace APSIM.Interop.Documentation.Renderers
         {
             // Add the image to a new paragraph.
             renderer.StartNewParagraph();
-            renderer.AppendImage(image.Raster);
+            renderer.AppendImage(image.GetRaster());
+            renderer.StartNewParagraph();
         }
     }
 }

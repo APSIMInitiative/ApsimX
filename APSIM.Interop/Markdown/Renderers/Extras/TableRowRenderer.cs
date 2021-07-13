@@ -14,8 +14,12 @@ namespace APSIM.Interop.Markdown.Renderers.Extras
         /// <param name="row">The table row to be renderered.</param>
         protected override void Write(PdfBuilder renderer, TableRow row)
         {
+            if (row.IsHeader)
+                renderer.PushStyle(TextStyle.Strong);
             renderer.StartTableRow(row.IsHeader);
             renderer.WriteChildren(row);
+            if (row.IsHeader)
+                renderer.PopStyle();
         }
     }
 }

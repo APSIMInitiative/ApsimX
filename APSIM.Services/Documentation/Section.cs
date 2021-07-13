@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using APSIM.Services.Documentation.Extensions;
 
 namespace APSIM.Services.Documentation
@@ -21,7 +20,7 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// Initializes a new instance of the <see cref="Section"/> class.
         /// </summary>
-        /// <param name="title">The section title.</param>
+        /// <param name="title">The section title. Can be null.</param>
         /// <param name="children">The child tags.</param>
         public Section(string title, IEnumerable<ITag> children)
         {
@@ -30,9 +29,19 @@ namespace APSIM.Services.Documentation
         }
 
         /// <summary>
+        /// Initializes a new <see cref="Section"/> with no title.
+        /// </summary>
+        /// <param name="children">The child tags.</param>
+        public Section(IEnumerable<ITag> children)
+        {
+            Title = null;
+            this.Children = children;
+        }
+
+        /// <summary>
         /// Create a <see cref="Section"/> instance with a single child.
         /// </summary>
-        /// <param name="title">The section title.</param>
+        /// <param name="title">The section title. Can be null.</param>
         /// <param name="children">The child tags.</param>
         public Section(string title, ITag child)
         {

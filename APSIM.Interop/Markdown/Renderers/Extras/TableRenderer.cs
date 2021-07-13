@@ -16,6 +16,7 @@ namespace APSIM.Interop.Markdown.Renderers.Extras
         {
             renderer.StartTable(table.ColumnDefinitions.Count);
             renderer.WriteChildren(table);
+            renderer.FinishTable();
         }
     }
 }

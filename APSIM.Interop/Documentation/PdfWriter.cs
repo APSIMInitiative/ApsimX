@@ -37,19 +37,6 @@ namespace APSIM.Interop.Documentation
 #endif
 
         /// <summary>
-        /// Cache for looking up renderers based on tag type.
-        /// </summary>
-        /// <typeparam name="Type">Tag type.</typeparam>
-        /// <typeparam name="ITagRenderer">Renderer instance capable of rendering the matching type.</typeparam>
-        /// <returns></returns>
-        private Dictionary<Type, ITagRenderer> renderersLookup = new Dictionary<Type, ITagRenderer>();
-
-        /// <summary>
-        /// Renderers which this PDF writer will use to write the tags to the PDF document.
-        /// </summary>
-        private IEnumerable<ITagRenderer> renderers = DefaultRenderers();
-
-        /// <summary>
         /// PDF generation options.
         /// </summary>
         private PdfOptions options;
@@ -91,49 +78,12 @@ namespace APSIM.Interop.Documentation
             PdfBuilder pdfRenderer = new PdfBuilder(pdf, options);
 
             foreach (ITag tag in tags)
-                Write(tag, pdfRenderer);
+                pdfRenderer.Write(tag);
 
-#if NETCOREAPP
-            var paragraphs = new List<MigraDocCore.DocumentObjectModel.Paragraph>();
-            foreach (MigraDocCore.DocumentObjectModel.Section section in pdf.Sections)
-                foreach (var paragraph in section.Elements.OfType<MigraDocCore.DocumentObjectModel.Paragraph>())
-                    paragraphs.Add(paragraph);
-            MigraDocCore.DocumentObjectModel.Visitors.PdfFlattenVisitor visitor = new MigraDocCore.DocumentObjectModel.Visitors.PdfFlattenVisitor();
-#endif
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
             renderer.Document = pdf;
             renderer.RenderDocument();
             renderer.Save(fileName);
-        }
-
-        /// <summary>
-        /// Find an appropriate tag renderer, and use it to render the
-        /// given tag to the PDF document.
-        /// </summary>
-        /// <param name="tag">Tag to be rendered.</param>
-        /// <param name="pdfRenderer">PDF renderer to be used by the tag renderer.</param>
-        private void Write(ITag tag, PdfBuilder pdfRenderer)
-        {
-            ITagRenderer tagRenderer = GetTagRenderer(tag);
-            tagRenderer.Render(tag, pdfRenderer);
-        }
-
-        /// <summary>
-        /// Get a tag renderer capcable of rendering the given tag.
-        /// Throws if no suitable renderer is found.
-        /// </summary>
-        /// <param name="tag">The tag to be rendered.</param>
-        private ITagRenderer GetTagRenderer(ITag tag)
-        {
-            Type tagType = tag.GetType();
-            if (!renderersLookup.TryGetValue(tagType, out ITagRenderer tagRenderer))
-            {
-                tagRenderer = renderers.FirstOrDefault(r => r.CanRender(tag));
-                if (tagRenderer == null)
-                    throw new NotImplementedException($"Unknown tag type {tag.GetType()}: no matching renderers found.");
-                renderersLookup[tagType] = tagRenderer;
-            }
-            return tagRenderer;
         }
 
         private static Document CreateStandardDocument()
@@ -141,24 +91,13 @@ namespace APSIM.Interop.Documentation
             Document document = new Document();
 
             document.DefaultPageSetup.LeftMargin = Unit.FromCentimeter(1);
+            document.DefaultPageSetup.RightMargin = Unit.FromCentimeter(1);
             document.DefaultPageSetup.TopMargin = Unit.FromCentimeter(1);
             document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
             document.Styles.Normal.ParagraphFormat.SpaceAfter = Unit.FromPoint(10);
 
             document.AddSection().AddParagraph();
             return document;
-        }
-
-        /// <summary>
-        /// Get the default tag renderers.
-        /// </summary>
-        private static IEnumerable<ITagRenderer> DefaultRenderers()
-        {
-            List<ITagRenderer> result = new List<ITagRenderer>(7);
-            // result.Add(new HeadingTagRenderer());
-            result.Add(new ImageTagRenderer());
-            result.Add(new ParagraphTagRenderer());
-            return result;
         }
     }
 }

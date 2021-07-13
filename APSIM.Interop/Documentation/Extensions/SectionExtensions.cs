@@ -2,16 +2,20 @@ using System;
 using APSIM.Interop.Documentation.Helpers;
 using APSIM.Interop.Markdown;
 using APSIM.Services.Documentation;
+using System.Collections.Generic;
+using System.Linq;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using Table = MigraDocCore.DocumentObjectModel.Tables.Table;
 using Section = MigraDocCore.DocumentObjectModel.Section;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
+using Image = MigraDocCore.DocumentObjectModel.Shapes.Image;
 #else
 using MigraDoc.DocumentObjectModel;
 using Table = MigraDoc.DocumentObjectModel.Tables.Table;
 using Section = MigraDoc.DocumentObjectModel.Section;
 using Paragraph = MigraDoc.DocumentObjectModel.Paragraph;
+using Image = MigraDoc.DocumentObjectModel.Shapes.Image;
 #endif
 
 namespace APSIM.Interop.Documentation.Extensions
@@ -80,6 +84,26 @@ namespace APSIM.Interop.Documentation.Extensions
             if (table == null)
                 throw new InvalidOperationException("Section contains no tables.");
             return table;
+        }
+
+        internal static bool IsEmpty(this Paragraph paragraph)
+        {
+            if (paragraph.Elements.OfType<Image>().Any())
+                return false;
+            IEnumerable<Text> textElements = paragraph.GetTextElements();
+            return textElements.All(t => string.IsNullOrEmpty(t.Content));
+        }
+
+        internal static IEnumerable<Text> GetTextElements(this Paragraph paragraph)
+        {
+            IEnumerable<Text> raw = paragraph.Elements.OfType<Text>();
+            IEnumerable<Text> formatted = paragraph.Elements.OfType<FormattedText>().SelectMany(f => f.Elements.OfType<Text>());
+            return formatted.Union(raw);
+        }
+
+        internal static string GetRawText(this Paragraph paragraph)
+        {
+            return string.Join("", paragraph.GetTextElements().Select(t => t.Content));
         }
     }
 }
