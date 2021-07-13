@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using System;
 
 namespace Models.CLEM.Resources
@@ -20,7 +21,7 @@ namespace Models.CLEM.Resources
         public double CurrentPrice { get; set; }
 
         /// <summary>
-        /// Previous price
+        /// Model making change
         /// </summary>
         public IModel ChangedPriceModel { get; set; }
     }

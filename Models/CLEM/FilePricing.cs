@@ -30,7 +30,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This component uses a pricing input file to manage prices throughout the simulation")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/DataReaders/PricingDataReader.htm")]
+    [HelpUri(@"Content/Features/DataReaders/PriceDataReader.htm")]
     public class FilePricing : CLEMModel, IValidatableObject
     {
         [Link]
