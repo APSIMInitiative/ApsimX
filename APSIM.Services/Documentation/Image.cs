@@ -19,11 +19,22 @@ namespace APSIM.Services.Documentation
                 return raster;
             if (string.IsNullOrWhiteSpace(resourceName))
                 throw new InvalidOperationException("Unable to load image: resource name not specified");
-            using (Stream stream = LoadFromResource(resourceName))
+            return LoadFromResource(resourceName);
+
+        }
+
+        /// <summary>
+        /// Load an image from the given resource name.
+        /// Will attempt to locate the resource in various assemblies.
+        /// </summary>
+        /// <param name="resourceName">Resource file name.</param>
+        public static System.Drawing.Image LoadFromResource(string resourceName)
+        {
+            using (Stream stream = GetStreamFromResource(resourceName))
                 return System.Drawing.Image.FromStream(stream);
         }
 
-        private static Stream LoadFromResource(string resourceName)
+        private static Stream GetStreamFromResource(string resourceName)
         {
             foreach (Assembly assembly in GetAssemblies())
             {

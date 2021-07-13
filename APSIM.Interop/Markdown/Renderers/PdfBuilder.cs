@@ -391,9 +391,7 @@ namespace APSIM.Interop.Markdown.Renderers
             if (inTableCell)
                 throw new NotImplementedException("Nested tables not implemented.");
             Table table = GetLastSection().AddTable();
-            table.KeepTogether = true;
-            table.Borders.Color = Colors.Black;
-            table.Borders.Width = 0.5;
+            ApplyTableStyle(table);
             for (int i = 0; i < numColumns; i++)
                 table.Columns.AddColumn();
         }
@@ -537,6 +535,7 @@ namespace APSIM.Interop.Markdown.Renderers
         public void AppendTable(DataTable data)
         {
             Table table = GetLastSection().AddTable();
+            ApplyTableStyle(table);
 
             // Add the columns.
             foreach (DataColumn column in data.Columns)
@@ -646,6 +645,8 @@ namespace APSIM.Interop.Markdown.Renderers
             List<ITagRenderer> result = new List<ITagRenderer>(7);
             result.Add(new ImageTagRenderer());
             result.Add(new ParagraphTagRenderer());
+            result.Add(new TableTagRenderer());
+            result.Add(new GraphTagRenderer());
             result.Add(new SectionTagRenderer());
             return result;
         }
@@ -935,7 +936,18 @@ namespace APSIM.Interop.Markdown.Renderers
             style.ParagraphFormat.SpaceBefore = 15;
             return style;
         }
-    
+
+        /// <summary>
+        /// Apply the "standard" table style to the given table.
+        /// </summary>
+        /// <param name="table"></param>
+        private static void ApplyTableStyle(Table table)
+        {
+            table.KeepTogether = true;
+            table.Borders.Color = Colors.Black;
+            table.Borders.Width = 0.5;
+        }
+
         /// <summary>
         /// Make a row appear as a table header row.
         /// </summary>

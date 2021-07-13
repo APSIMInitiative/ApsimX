@@ -6,7 +6,7 @@ namespace APSIM.Services.Documentation
     public class Table : ITag
     {
         /// <summary>The data to show in the table.</summary>
-        private DataView data;
+        public DataTable Data { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Table"/> class.
@@ -14,7 +14,7 @@ namespace APSIM.Services.Documentation
         /// <param name="data">Data to be displayed in the table.</param>
         public Table(DataView data)
         {
-            this.data = data;
+            Data = data.ToTable();
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace APSIM.Services.Documentation
         /// <param name="data">Data to be displayed in the table.</param>
         public Table(DataTable data)
         {
-            this.data = new DataView(data);
+            Data = data;
         }
     }
 }

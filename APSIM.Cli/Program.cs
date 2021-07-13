@@ -57,9 +57,11 @@ namespace APSIM.Cli
 
         private static void Document(DocumentOptions options)
         {
-            IEnumerable<string> files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive));
-            if (files == null || !files.Any())
+            if (options.Files == null || !options.Files.Any())
                 throw new ArgumentException($"No files were specified");
+            IEnumerable<string> files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive));
+            if (!files.Any())
+                files = options.Files;
             foreach (string file in files)
             {
                 Simulations model = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);

@@ -149,6 +149,7 @@
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
+                        newModel.IncludeInDocumentation = false;
                         Structure.Add(newModel, this);
                     }
                 }

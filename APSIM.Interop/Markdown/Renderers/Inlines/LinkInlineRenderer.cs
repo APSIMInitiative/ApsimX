@@ -64,19 +64,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
                 using (Bitmap bmp = new Bitmap(path))
                     return new Bitmap(bmp);
             }
-
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string[] resourceNamesToTry = new string[2]
-            {
-                uri,
-                $"ApsimNG.Resources.{uri}"
-            };
-            foreach (string resourceName in resourceNamesToTry)
-                if (assembly.GetManifestResourceInfo(resourceName) != null)
-                    using (Stream imageStream = assembly.GetManifestResourceStream(resourceName))
-                        return Image.FromStream(imageStream);
-
-            throw new Exception($"Unable to resolve image URI {uri}");
+            return APSIM.Services.Documentation.Image.LoadFromResource(uri);
         }
     }
 }
