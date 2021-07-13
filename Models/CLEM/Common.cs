@@ -688,7 +688,21 @@ namespace Models.CLEM
         /// Use boolean of whether the attribute exists on the individual
         /// </summary>
         Exists
+    }
 
+    /// <summary>
+    /// The style of accessing date
+    /// </summary>
+    public enum DateStyle
+    {
+        /// <summary>
+        /// Accept single datestamp (CulturalInvariant)
+        /// </summary>
+        DateStamp,
+        /// <summary>
+        /// Use Year and Month entries
+        /// </summary>
+        YearAndMonth
     }
 
 }
