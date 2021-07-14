@@ -20,7 +20,7 @@ namespace APSIM.Interop.Documentation.Renderers
         {
             // If the section contains no content (child tags), then don't
             // bother writing the heading.
-            if (section.Children.Any())
+            if (!section.IsEmpty())
             {
                 // Add a heading at the current heading level.
                 if (!string.IsNullOrEmpty(section.Title))

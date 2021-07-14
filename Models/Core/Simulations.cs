@@ -255,7 +255,8 @@ namespace Models.Core
         {
             yield return new Image("AIBanner.png");
             yield return new Paragraph(ApsimVersion);
-            yield return new Section(Children.SelectMany(c => c.Document()));
+            foreach (ITag tag in Children.SelectMany(c => c.Document()))
+                yield return tag;
         }
 
         /// <summary>Documents the specified model.</summary>

@@ -49,5 +49,24 @@ namespace APSIM.Services.Documentation
             Title = title;
             Children = child.ToEnumerable();
         }
+
+        public bool IsEmpty()
+        {
+            foreach (ITag tag in Children)
+            {
+                if (tag is Section section)
+                {
+                    // If the child section is non-empty, then this
+                    // section is non-empty.
+                    if (!section.IsEmpty())
+                        return false;
+                }
+                else
+                    // If the section contains any children which aren't
+                    // a section, then this section is non-empty.
+                    return false;
+            }
+            return true;
+        }
     }
 }
