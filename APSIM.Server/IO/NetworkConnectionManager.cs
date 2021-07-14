@@ -49,6 +49,9 @@ namespace APSIM.Server.IO
             // For now, we set max # pending connections to 1.
             // todo: this should probably be a user parameter.
             server.Listen(1);
+
+            if (verbose)
+                Console.WriteLine($"Listening on {endpoint}...");
         }
 
         /// <summary>
