@@ -121,7 +121,7 @@ namespace Models.CLEM.Resources
         {
             foreach (var attribute in mandatoryAttributes)
             {
-                if(!ind.AttributeExists(attribute))
+                if(!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
                     if (!Warnings.Exists(warningString))

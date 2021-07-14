@@ -41,8 +41,7 @@
             Directory.SetCurrentDirectory(tempFolder);
 
             string xml = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimTests.xml");
-            List<Exception> creationExceptions;
-            simulations = FileFormat.ReadFromString<Simulations>(xml, out creationExceptions);
+            simulations = FileFormat.ReadFromString<Simulations>(xml, e => throw e, false);
             this.simulation = this.simulations.Children[0] as Simulation;
         }
 

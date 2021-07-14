@@ -69,6 +69,8 @@
                      AppliesTo = new Type[] { typeof(DataStore) })]
         public void EmptyDataStore(object sender, EventArgs e)
         {
+            explorerPresenter.MainPresenter.ShowWaitCursor(true);
+            explorerPresenter.MainPresenter.ShowMessage("Emptying datastore...", Simulation.MessageType.Information);
             try
             {
                 storage.Writer.Empty();
@@ -79,6 +81,8 @@
             {
                 explorerPresenter.MainPresenter.ShowError(err);
             }
+            explorerPresenter.MainPresenter.ShowMessage("Empty datastore complete", Simulation.MessageType.Information);
+            explorerPresenter.MainPresenter.ShowWaitCursor(false);
         }
 
         /// <summary>
@@ -164,6 +168,7 @@
                 {
                     Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
+                    runner.ErrorHandler = e => explorerPresenter.MainPresenter.ShowError(e, false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
                 }

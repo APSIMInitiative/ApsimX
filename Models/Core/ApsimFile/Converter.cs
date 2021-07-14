@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 136; } }
+        public static int LatestVersion { get { return 137; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3493,11 +3493,47 @@
         }
 
         /// <summary>
-        /// Rename Models.Axis to APSIM.Services.Graphing.Axis.
+        /// Rename memos' MemoText property to Text. This is only relevant when
+        /// importing files from old apsim (hopefully). It's really a cludge to
+        /// work around a bug in the xml to json converter which I'm not brave
+        /// enough to change.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion135(JObject root, string fileName)
+        {
+            foreach (JObject memo in JsonUtilities.ChildrenRecursively(root, "Memo"))
+                JsonUtilities.RenameProperty(memo, "MemoText", "Text");
+        }
+
+        /// <summary>
+        /// Replace XmlIgnore attributes with JsonIgnore attributes in manager scripts.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion136(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed = manager.Replace("[XmlIgnore]", "[JsonIgnore]");
+                changed |= manager.Replace("[System.Xml.Serialization.XmlIgnore]", "[JsonIgnore]");
+                if (changed)
+                {
+                    manager.AddUsingStatement("Newtonsoft.Json");
+                    manager.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Changes to facilitate the autodocs refactor:
+        /// - Rename Models.Axis to APSIM.Services.Graphing.Axis.
+        /// - Copy the value of all folders' IncludeInDocumentation property
+        ///   into their new ShowInDocs property.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion137(JObject root, string fileName)
         {
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {
@@ -3519,16 +3555,7 @@
                         axis["Interval"] = null;
                 }
             }
-        }
 
-        /// <summary>
-        /// Copy the value of all folders' IncludeInDocumentation property
-        /// into their new ShowInDocs property.
-        /// </summary>
-        /// <param name="root">Root node.</param>
-        /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion136(JObject root, string fileName)
-        {
             foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
                 folder["ShowInDocs"] = folder["IncludeInDocumentation"];
         }

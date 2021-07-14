@@ -65,15 +65,15 @@
             Directory.CreateDirectory(path);
 
             // Create a list of progress ints.
-            var progress = new List<int>();
+            var progress = new List<double>();
 
             // Create a runner for our folder.
             Runner runner = new Runner(folder);
             GenerateApsimXFiles.Generate(runner, path, (s) => { progress.Add(s); });
 
             Assert.AreEqual(progress.Count, 2);
-            Assert.AreEqual(progress[0], 50);
-            Assert.AreEqual(progress[1], 100);
+            Assert.AreEqual(progress[0], 0.5);
+            Assert.AreEqual(progress[1], 1);
 
             var generatedFiles = Directory.GetFiles(path).OrderBy(x => x).ToArray();
             Assert.AreEqual(generatedFiles.Length, 2);
@@ -143,9 +143,7 @@
             {
                 GenerateApsimXFiles.Generate(runner, temp, _ => {});
                 string file = Path.Combine(temp, "exptx1.apsimx");
-                sims = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
-                if (errors != null && errors.Count > 0)
-                    throw errors[0];
+                sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
                 Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
             }
             finally

@@ -385,6 +385,14 @@ namespace Models.Optimisation
         }
 
         /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
+        {
+            // Do nothing.
+        }
+
+        /// <summary>
         /// Run the optimization (and wait for it to finish).
         /// </summary>
         /// <param name="cancelToken">Cancellation token.</param>
@@ -424,15 +432,19 @@ namespace Models.Optimisation
                 apsimxFileDir = FindAncestor<Simulation>()?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
+
+            IDataStore storage = FindInScope<IDataStore>();
+            bool firstFile = true;
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
                 if (Path.GetExtension(file) == ".Rdata")
                 {
-                    IDataStore storage = FindInScope<IDataStore>();
                     if (storage != null && storage.Writer != null)
                     {
                         output = ReadRData(file);
-                        storage.Writer.WriteTable(output);
+
+                        storage.Writer.WriteTable(output, deleteAllData:firstFile);
+                        firstFile = false;
                     }
                 }
                 if (!string.IsNullOrEmpty(apsimxFileDir))
@@ -471,9 +483,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
             
             // Apply the optimal values to the cloned simulations.
             clonedSims = EditFile.ApplyChanges(clonedSims, optimalValues);
@@ -485,7 +495,7 @@ namespace Models.Optimisation
 
             // Run the child models of the cloned CroptimizR.
             Runner runner = new Runner(clonedSims);
-            errors = runner.Run();
+            List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
             storage.Writer.AddCheckpoint(checkpointName);

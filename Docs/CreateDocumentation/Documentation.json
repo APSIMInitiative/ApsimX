@@ -56,7 +56,7 @@
                     ]
                 },
                 {
-                    "Name": "Agroforestry (under review)",
+                    "Name": "Agroforestry",
                     "Documents": [
                         {
                             "Name": "PDF",
@@ -108,15 +108,6 @@
                             "Name": "PDF",
                             "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx",
                             "ModelNameToDocument": "Chickpea"
-                        }
-                    ]
-                },
-                {
-                    "Name": "Clock",
-                    "Documents": [
-                        {
-                            "Name": "PDF",
-                            "FileName": "Tests/Validation/Clock/Clock.apsimx"
                         }
                     ]
                 },
@@ -195,15 +186,15 @@
                     ]
                 },
                 {
-                    "Name": "Nutrient (under review)",
+                    "Name": "Nutrient",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Nutrient/Nutrient.apsimx"
+                            "FileName": "Tests/Validation/Nutrient/Nutrient.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Nutrient/Nutrient.apsimx",
+                            "FileName": "Tests/Validation/Nutrient/Nutrient.apsimx",
                             "ModelNameToDocument": "Nutrient"
                         }
                     ]
@@ -250,6 +241,20 @@
                         }
                     ]
                 },
+                {
+                    "Name": "Pinus (Under Review)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Pinus/Pinus.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Pinus/Pinus.apsimx",
+                            "ModelNameToDocument": "Pinus"
+                        }
+                    ]
+                },                
                 {
                     "Name": "Plantain",
                     "Documents": [

@@ -1,10 +1,9 @@
 ﻿namespace Models
 {
     using APSIM.Shared.Utilities;
-    using Models.CLEM;
     using Models.Core;
     using Models.Core.Run;
-    using Models.Factorial;
+    using Newtonsoft.Json;
     using Storage;
     using System;
     using System.Collections.Generic;
@@ -21,9 +20,6 @@
     [Serializable]
     public class Series : Model, IGraphable
     {
-        [NonSerialized]
-        private List<SimulationDescription> simulationDescriptions;
-
         /// <summary>Constructor for a series</summary>
         public Series()
         {
@@ -109,12 +105,13 @@
 
         /// <summary>Optional data filter.</summary>
         public string Filter { get; set; }
-        
+
         /// <summary>A list of all descriptor names that can be listed as 'vary by' in markers/line types etc.</summary>
         public IEnumerable<string> GetDescriptorNames(IStorageReader reader)
         {
+            var simulationDescriptions = GraphPage.FindSimulationDescriptions(this);
             var names = new List<string>();
-            foreach (var simulationDescription in FindSimulationDescriptions())
+            foreach (var simulationDescription in simulationDescriptions)
                 names.AddRange(simulationDescription.Descriptors.Select(d => d.Name));
             names.Add("Graph series");
 
@@ -129,17 +126,17 @@
 
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="reader">A storage reader.</param>
+        /// <param name="simulationDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter"></param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader reader, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader reader, 
+                                                                     List<SimulationDescription> simulationDescriptions, 
+                                                                     List<string> simulationFilter = null)
         {
-            List<SeriesDefinition> seriesDefinitions = new List<SeriesDefinition>();
+            var seriesDefinitions = new List<SeriesDefinition>();
 
             // If this series doesn't have a table name then it must be getting its data from other models.
             if (TableName == null)
-            {
                 seriesDefinitions.Add(new SeriesDefinition(this, "Current", colModifier:0, markerModifier: 0));
-                seriesDefinitions[0].ReadData(reader, simulationDescriptions);
-            }
             else
             {
                 int checkpointNumber = 0;
@@ -155,7 +152,6 @@
 
                         // TableName exists so get the vary by fields and the simulation descriptions.
                         var varyByFieldNames = GetVaryByFieldNames();
-                        simulationDescriptions = FindSimulationDescriptions();
                         if (simulationFilter == null)
                             simulationFilter = simulationDescriptions.Select(d => d.Name).Distinct().ToList();
 
@@ -184,18 +180,24 @@
                         foreach (var seriesDefinition in seriesDefinitions)
                             painter.Paint(seriesDefinition);
 
-                        // Tell each series definition to read its data.
-                        foreach (var seriesDefinition in seriesDefinitions)
-                            seriesDefinition.ReadData(reader, simulationDescriptions);
-
-                        // Remove series that have no data.
-                        seriesDefinitions.RemoveAll(d => !MathUtilities.ValuesInArray(d.X) || !MathUtilities.ValuesInArray(d.Y));
-
                         checkpointNumber++;
                     }
                 }
             }
+            return seriesDefinitions;
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="reader">A storage reader.</param>
+        /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
+        /// <param name="seriesDefinitions">A list of series definitions.</param>
+        /// <param name="simulationFilter"></param>
+        public void CreateChildSeriesDefinitions(IStorageReader reader, List<SimulationDescription> simulationDescriptions, 
+                                                 List<SeriesDefinition> seriesDefinitions, 
+                                                 List<string> simulationFilter = null)
+        {
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable graphable in FindAllChildren<IGraphable>())
             {
@@ -203,11 +205,9 @@
                 if (graphable is ICachableGraphable cachable)
                     definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
                 else
-                    definitions = graphable.GetSeriesDefinitions(reader, simulationFilter);
+                    definitions = graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
                 seriesDefinitions.AddRange(definitions);
             }
-
-            return seriesDefinitions;
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
@@ -368,63 +368,6 @@
             }
             simulationDescriptions.Clear();
             simulationDescriptions.AddRange(newList);
-        }
-
-        /// <summary>
-        /// Find and return a list of all simulation descriptions.
-        /// </summary>
-        public List<SimulationDescription> FindSimulationDescriptions()
-        {
-            // Find a parent that heads the scope that we're going to graph
-            IModel parent = FindParent();
-
-            List<SimulationDescription> simulationDescriptions = null;
-            do
-            {
-                // Create a list of all simulation/zone objects that we're going to graph.
-                simulationDescriptions = GetSimulationDescriptionsUnderModel(parent);
-                parent = parent.Parent;
-            }
-            while (simulationDescriptions.Count == 0 && parent != null);
-            return simulationDescriptions;
-        }
-
-        /// <summary>
-        /// Get a list of simulation descriptions that are a child of the specified model.
-        /// </summary>
-        /// <param name="model">The model and it's child models to scan.</param>
-        private List<SimulationDescription> GetSimulationDescriptionsUnderModel(IModel model)
-        {
-            var simulationDescriptions = new List<SimulationDescription>();
-            if (model is ISimulationDescriptionGenerator)
-                simulationDescriptions.AddRange((model as ISimulationDescriptionGenerator).GenerateSimulationDescriptions());
-            else
-            {
-                foreach (IModel child in model.Children)
-                {
-                    if (child is Simulation || child is ISimulationDescriptionGenerator || child is Folder)
-                        simulationDescriptions.AddRange(GetSimulationDescriptionsUnderModel(child));
-                }
-            }
-            return simulationDescriptions;
-        }
- 
-        /// <summary>Find a parent to base our series on.</summary>
-        private IModel FindParent()
-        {
-            Type[] parentTypesToMatch = new Type[] { typeof(Simulation), typeof(Zone), typeof(ZoneCLEM), typeof(Experiment),
-                                                     typeof(Folder), typeof(Simulations) };
-
-            IModel obj = Parent;
-            do
-            {
-                foreach (Type typeToMatch in parentTypesToMatch)
-                    if (typeToMatch.IsAssignableFrom(obj.GetType()))
-                        return obj;
-                obj = obj.Parent;
-            }
-            while (obj != null);
-            return obj;
         }
 
         /// <summary>Get series definition painter.</summary>

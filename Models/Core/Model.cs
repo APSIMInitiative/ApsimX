@@ -46,7 +46,7 @@
         /// Gets or sets the parent of the model.
         /// </summary>
         [JsonIgnore]
-        public IModel Parent { get { return modelParent; } set { modelParent = value; } }
+        public virtual IModel Parent { get { return modelParent; } set { modelParent = value; } }
 
         /// <summary>
         /// Gets or sets a value indicating whether a model is hidden from the user.

@@ -34,9 +34,29 @@
         [NonSerialized]
         private DataStoreWriter dbWriter = new DataStoreWriter();
 
+        private bool useInMemoryDB;
+
         [JsonIgnore]
         private string fileName;
 
+        /// <summary>
+        /// Controls whether the database connection is an in-memory DB.
+        /// </summary>
+        [JsonIgnore]
+        public bool UseInMemoryDB
+        {
+            get
+            {
+                return useInMemoryDB;
+            }
+            set
+            {
+                useInMemoryDB = value;
+                Close();
+                UpdateFileName();
+                Open();
+            }
+        }
         /// <summary>
         /// Selector for the database type. Set in the constructors.
         /// </summary>
@@ -70,6 +90,23 @@
 
         /// <summary>Get a writer to perform write operations on the datastore.</summary>
         public IStorageWriter Writer { get { return dbWriter; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [JsonIgnore]
+        public override IModel Parent
+        {
+            get
+            {
+                return base.Parent;
+            }
+            set
+            {
+                base.Parent = value;
+                OnCreated();
+            }
+        }
 
         /// <summary>Constructor</summary>
         public DataStore()
@@ -168,7 +205,7 @@
             if (connection == null)
                 Open();
         }
-        
+
         /// <summary>
         /// Updates the file name of the database file, based on the file name
         /// of the parent Simulations object.
@@ -184,7 +221,9 @@
             // parent simulation's filename (which should be the same anyway).
             Simulation simulation = FindAncestor<Simulation>();
 
-            if (simulations != null && simulations.FileName != null)
+            if (useInMemoryDB)
+                FileName = ":memory:";
+            else if (simulations != null && simulations.FileName != null)
                 FileName = Path.ChangeExtension(simulations.FileName, extension);
             else if (simulation != null && simulation.FileName != null)
                 FileName = Path.ChangeExtension(simulation.FileName, extension);
@@ -208,6 +247,8 @@
             Exception caughtException = null;
             try
             {
+                if (dbReader == null)
+                    dbReader = new DataStoreReader();
                 dbReader.SetConnection(connection);
             }
             catch (Exception e)
@@ -216,6 +257,8 @@
             }
             try
             {
+                if (dbWriter == null)
+                    dbWriter = new DataStoreWriter();
                 dbWriter.SetConnection(connection);
             }
             catch (Exception e)

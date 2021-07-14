@@ -26,6 +26,12 @@ namespace Models.CLEM.Resources
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// A list of attributes added to this individual
+        /// </summary>
+        [JsonIgnore]
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
+
+        /// <summary>
         /// Unit type
         /// </summary>
         public string Units { get { return "NA"; } }
@@ -318,6 +324,11 @@ namespace Models.CLEM.Resources
             if (request.Required == 0)
             {
                 return;
+            }
+
+            if (this.Individuals > 1)
+            {
+                throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
             }
 
             double amountRemoved = request.Required;

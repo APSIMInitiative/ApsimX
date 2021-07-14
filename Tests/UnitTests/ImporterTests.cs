@@ -336,7 +336,6 @@
 
             var m = sims.Children[0].Children[0] as MicroClimate;
             Assert.IsNotNull(m);
-            Assert.AreEqual(m.soil_albedo, 0.23);
             Assert.AreEqual(m.a_interception, 0.1);
             Assert.AreEqual(m.b_interception, 0.2);
             Assert.AreEqual(m.c_interception, 0.3);
@@ -369,6 +368,18 @@
             Simulations sims = importer.CreateSimulationsFromXml(oldXml);
 
             Assert.IsNotNull(sims);
+        }
+
+        [Test]
+        public void EnsureMemoImports()
+        {
+            string oldXml = "<folder><simulation><memo>hello there</memo></simulation></folder>";
+
+            var importer = new Importer();
+            Simulations sims = importer.CreateSimulationsFromXml(oldXml);
+            Memo memo = sims.Children[0].Children[0] as Memo;
+            Assert.NotNull(memo);
+            Assert.AreEqual("hello there", memo.Text, "Failed to import memo message from .apsim file");
         }
     }
 }

@@ -77,6 +77,12 @@
         /// <summary>Capture and store summary text?</summary>
         public bool CaptureSummaryText { get; set; } = true;
 
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs args)
+        {
+            messages = null;
+        }
+
         /// <summary>Event handler to create initialise</summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>

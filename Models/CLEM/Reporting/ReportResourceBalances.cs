@@ -31,6 +31,8 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private ResourcesHolder Resources = null;
+        [Link]
+        private Summary Summary = null;
 
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
@@ -91,7 +93,7 @@ namespace Models.CLEM.Reporting
                             CLEMModel model = Resources.GetResourceGroupByName(this.VariableNames[i]) as CLEMModel;
                             if (model == null)
                             {
-                                throw new ApsimXException(this, String.Format("@error:Invalid resource group [r={0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.VariableNames[i], this.Name));
+                                Summary.WriteWarning(this, $"Invalid resource group [r={this.VariableNames[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
                             }
                             else
                             {

@@ -10,6 +10,10 @@
     using Newtonsoft.Json;
     using APSIM.Services.Graphing;
     using APSIM.Services.Documentation;
+    using Models.Core.Run;
+    using Models.CLEM;
+    using APSIM.Shared.Utilities;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a graph
@@ -72,6 +76,12 @@
         /// </summary>
         public bool LegendOutsideGraph { get; set; }
 
+        /// <summary>
+        /// Descriptions of simulations that are in scope.
+        /// </summary>
+        [JsonIgnore]
+        public List<SimulationDescription> SimulationDescriptions { get; set; }
+
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
@@ -80,9 +90,15 @@
         {
             EnsureAllAxesExist();
 
-            return FindAllChildren<IGraphable>()
-                        .Where(g => g.Enabled)
-                        .SelectMany(g => g.GetSeriesDefinitions(storage, simulationFilter));
+            var series = FindAllChildren<Series>().Where(g => g.Enabled);
+            var definitions = new List<SeriesDefinition>();
+            foreach (var s in series)
+            {
+                var seriesDefinitions = s.CreateSeriesDefinitions(storage, SimulationDescriptions, simulationFilter);
+                definitions.AddRange(seriesDefinitions);
+            }
+
+            return definitions;
         }
 
         /// <summary>Gets the annotations to graph.</summary>

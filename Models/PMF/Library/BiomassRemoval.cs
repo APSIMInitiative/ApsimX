@@ -78,6 +78,8 @@
 
                     // Pass the detaching biomass to surface organic matter model.
                     //TODO: in reality, the dead material is different from the live, so it would be better to add them as separate pools to SurfaceOM
+                    if (plant.PlantType == null)
+                        throw new Exception($"PlantType is null in plant {plant.Name}. The most likely cause is the use of an unofficial/unreleased plant model.");
                     surfaceOrganicMatter.Add(detaching.Wt * 10.0, detaching.N * 10.0, 0.0, plant.PlantType, Name);
 
                     if (writeToSummary)

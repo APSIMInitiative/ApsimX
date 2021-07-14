@@ -167,6 +167,9 @@
                 this.view.Tree.ExpandNodes(file.ExpandedNodes);
 
             this.PopulateMainMenu();
+
+            // After opening a file, ensure that the root node is selected.
+            SelectNode(ApsimXFile, false);
         }
 
         /// <summary>

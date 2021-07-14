@@ -7,6 +7,7 @@
     /// <summary>
     /// This class encapsulates an instruction to replace a model.
     /// </summary>
+    [Serializable]
     public class ModelReplacement : IReplacement
     {
         /// <summary>

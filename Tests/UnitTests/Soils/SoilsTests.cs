@@ -83,10 +83,7 @@
         public void TestSoilWithNullProperties()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Resources.NullSample.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
-
-            if (fileErrors != null && fileErrors.Count > 0)
-                throw fileErrors[0];
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.

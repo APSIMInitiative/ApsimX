@@ -101,7 +101,9 @@
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter).ToArray();
+                var page = new GraphPage();
+                page.Graphs.Add(graph);
+                SeriesDefinitions = page.GetAllSeriesDefinitions(graph, storage?.Reader, SimulationFilter)[0].SeriesDefinitions;
             }
             catch (SQLiteException e)
             {

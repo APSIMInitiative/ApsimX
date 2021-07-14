@@ -12,6 +12,7 @@ using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
 using APSIM.Services.Graphing;
+using Models.Core.Run;
 
 namespace UserInterface.Presenters
 {
@@ -220,11 +221,15 @@ namespace UserInterface.Presenters
                     {
                         if (!storage.TryGetSimulationID(sim, out int _))
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
-                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim }).ToList();
+
+                        var graphPage = new GraphPage();
+                        graphPage.Graphs.Add(graph);
+                        var definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
+
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
-                        panel.Cache[sim][i] = definitions;
+                        panel.Cache[sim][i] = definitions[0].SeriesDefinitions;
                     }
                     tab.AddGraph(graph, panel.Cache[sim][i]);
                 }
