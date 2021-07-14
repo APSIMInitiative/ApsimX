@@ -76,20 +76,29 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
+        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+
+        /// <inheritdoc/>
+        public double CurrentPrice { get { return PricePerPacket; } }
+
+        /// <inheritdoc/>
+        public double PreviousPrice { get; set; }
+
+        /// <inheritdoc/>
         public event EventHandler PriceChangeOccurred;
 
         /// <inheritdoc/>
         public void SetPrice(double amount, IModel model)
         {
+            PreviousPrice = CurrentPrice;
+            PricePerPacket = amount;
+
             if (LastPriceChange is null)
             {
                 LastPriceChange = new ResourcePriceChangeDetails();
             }
-            LastPriceChange.PreviousPrice = PricePerPacket;
-            LastPriceChange.CurrentPrice = amount;
-            LastPriceChange.ChangedPriceModel = model;
-
-            PricePerPacket = amount;
+            LastPriceChange.ChangedBy = model;
+            LastPriceChange.PriceChanged = this;
 
             // price change event
             OnPriceChanged(new PriceChangeEventArgs() {  Details = LastPriceChange });

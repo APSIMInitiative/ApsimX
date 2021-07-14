@@ -11,19 +11,14 @@ namespace Models.CLEM.Resources
     public class ResourcePriceChangeDetails
     {
         /// <summary>
-        /// Previous price
+        /// Pricing component
         /// </summary>
-        public double PreviousPrice { get; set; }
-
-        /// <summary>
-        /// Current price
-        /// </summary>
-        public double CurrentPrice { get; set; }
+        public IResourcePricing PriceChanged { get; set; }
 
         /// <summary>
         /// Model making change
         /// </summary>
-        public IModel ChangedPriceModel { get; set; }
+        public IModel ChangedBy { get; set; }
     }
 
     /// <summary>

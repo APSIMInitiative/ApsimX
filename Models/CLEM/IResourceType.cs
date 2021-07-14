@@ -51,5 +51,10 @@ namespace Models.CLEM
         /// Get the units of measure this resource.
         /// </summary>
         string Units { get; }
+
+        /// <summary>
+        /// Name of model
+        /// </summary>
+        string Name { get; set; }
     }
 }

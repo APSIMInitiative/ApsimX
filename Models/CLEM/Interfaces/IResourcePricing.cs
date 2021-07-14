@@ -19,11 +19,37 @@ namespace Models.CLEM.Interfaces
         PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
+        /// Previous price
+        /// </summary>
+        double PreviousPrice { get; set; }
+
+        /// <summary>
+        /// Current price
+        /// </summary>
+        double CurrentPrice { get; }
+
+        /// <summary>
         /// A method to set the current price
         /// </summary>
         /// <param name="amount">New price</param>
         /// <param name="model">Modifying model</param>
         void SetPrice(double amount, IModel model);
+
+        /// <summary>
+        /// Resource
+        /// </summary>
+        IResourceType Resource { get; }
+
+        /// <summary>
+        /// Name of model
+        /// </summary>
+        string Name { get; set; }
+
+        /// <summary>
+        /// Full name of model
+        /// </summary>
+        string NameWithParent { get; }
+
     }
 
     /// <summary>

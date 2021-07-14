@@ -63,6 +63,9 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
+        /// <inheritdoc/>
+        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -81,17 +84,24 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
+        public double CurrentPrice { get { return Value; } }
+
+        /// <inheritdoc/>
+        public double PreviousPrice { get; set; }
+
+
+        /// <inheritdoc/>
         public void SetPrice(double amount, IModel model)
         {
+            PreviousPrice = CurrentPrice;
+            Value = amount;
+
             if (LastPriceChange is null)
             {
                 LastPriceChange = new ResourcePriceChangeDetails();
             }
-            LastPriceChange.PreviousPrice = Value;
-            LastPriceChange.CurrentPrice = amount;
-            LastPriceChange.ChangedPriceModel = model;
-
-            Value = amount;
+            LastPriceChange.ChangedBy = model;
+            LastPriceChange.PriceChanged = this;
 
             // price change event
             OnPriceChanged(new PriceChangeEventArgs() { Details = LastPriceChange });
