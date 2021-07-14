@@ -291,14 +291,15 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                // test sql is valid before committing
-                if (dbReader.TestSql(selectSQL))
+                try
                 {
+                    dbReader.ExecuteSql(selectSQL);
                     connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
                 }
-                else
+                catch (Exception)
                 {
-                    throw new Exception($"Invalid SQL: Unable to execute SQL statement for new view [{name}]");
+                    // ignore and do not create view with invalid sql
+                    // prevents column collection exceptions in create datastore on loading the simulation in future
                 }
             }
             else

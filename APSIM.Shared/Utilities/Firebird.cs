@@ -1102,16 +1102,6 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public bool TestQuery(string query)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// A class for quick mapping between column name and column number
         /// </summary>
         class ColumnNameMap

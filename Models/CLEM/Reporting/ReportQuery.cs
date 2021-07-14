@@ -2,7 +2,9 @@
 using Models.Core.Attributes;
 using Models.Storage;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace Models.CLEM.Reporting
 {
@@ -19,6 +21,8 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private IDataStore dataStore = null;
+        [Link]
+        private Summary summary = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes
@@ -55,22 +59,26 @@ namespace Models.CLEM.Reporting
         {
             if(!SaveView(dataStore))
             {
-                throw new ApsimXException(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
+                summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided \r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
             }
         }
 
         private bool SaveView(IDataStore store)
         {
-            if (SQL != null && SQL != "")
+            try
             {
-                if ((store.Reader as DataStoreReader).TestSql(SQL))
+                if (SQL != null && SQL != "")
                 {
+                    (store.Reader as DataStoreReader).ExecuteSql(SQL);
                     store.AddView(Name, SQL);
-                    return true;
                 }
-                return false;
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.ToString());
+            }
+            return false;
         }
     }
 }

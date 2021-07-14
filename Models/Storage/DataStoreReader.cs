@@ -390,12 +390,6 @@
             }
         }
 
-        /// <param name="sql">The SQL.</param>
-        /// <returns>Whether SQL is OK</returns>
-        public bool TestSql(string sql)
-        {
-            return Connection.TestQuery(sql);
-        }
         /// <summary>Execute sql.</summary>
         /// <param name="sql">The SQL.</param>
         public void ExecuteSql(string sql)

@@ -66,12 +66,6 @@ namespace APSIM.Shared.Utilities
         /// <param name="query"></param>
         void ExecuteNonQuery(string query);
 
-        /// <summary>
-        /// Determines if a select query is valid
-        /// </summary>
-        /// <param name="query"></param>
-        bool TestQuery(string query);
-
         /// <summary>Return a list of column names.</summary>
         /// <param name="tableName">Name of the table.</param>
         /// <returns>A list of column names in column order (uppercase)</returns>
