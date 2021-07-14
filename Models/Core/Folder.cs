@@ -86,10 +86,10 @@
             // Write page of graphs.
             if (ShowInDocs)
             {
-                var childGraphs = FindAllChildren<Models.Graph>().Select(g => g.ToGraph());
+                var childGraphs = GetChildGraphs();
                 while (childGraphs.Any())
                 {
-                    yield return new GraphPage(childGraphs.Take(GraphsPerPage));
+                    yield return new APSIM.Services.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
                     childGraphs = childGraphs.Skip(GraphsPerPage);
                 }
             }
@@ -103,6 +103,23 @@
             foreach (Folder folder in FindAllChildren<Folder>())
                 foreach (ITag tag in folder.Document())
                     yield return tag;
+        }
+
+        private IEnumerable<APSIM.Services.Documentation.Graph> GetChildGraphs()
+        {
+            var result = new List<APSIM.Services.Documentation.Graph>();
+            foreach (var graph in FindAllChildren<Models.Graph>())
+            {
+                try
+                {
+                    result.Add(graph.ToGraph());
+                }
+                catch (Exception err)
+                {
+                    Console.Error.WriteLine(err);
+                }
+            }
+            return result;
         }
     }
 }

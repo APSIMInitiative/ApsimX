@@ -14,6 +14,7 @@ using Markdig.Syntax;
 using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown.Renderers.Extras;
 using APSIM.Interop.Documentation.Renderers;
+using System.Diagnostics;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
@@ -258,7 +259,19 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         public void PushSubHeading()
         {
-            headingIndices.Push(1);
+            // It's possible to increment the heading depth twice in a row.
+            // This would mean going from "1. ..." to "1.1.1. ...". To
+            // allow this, we eneed to increment the toplevel heading index
+            // iff it's zero. Normally the index is only incremented from zero
+            // when we write the first heading at that particular depth. In
+            // this case, there is no section 1.1, so we need to increment it
+            // manually in order to prevent section 1.0.1 from occurring.
+            if (headingIndices.Peek() == 0)
+                IncrementHeadingIndex();
+
+            headingIndices.Push(0);
+            // Nothing else should be written to the previous paragraph.
+            startNewParagraph = true;
         }
 
         /// <summary>
@@ -266,7 +279,15 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         public void PopSubHeading()
         {
+            if (headingIndices.Count <= 1)
+                throw new InvalidOperationException("Unable to decrement heading depth: already at the toplevel");
             headingIndices.Pop();
+
+            // We do not increment the heading indices at this time.
+            // That will occur immediately before the heading is written.
+
+            // Nothing else should be written to the previous paragraph.
+            startNewParagraph = true;
         }
 
         /// <summary>
@@ -289,6 +310,7 @@ namespace APSIM.Interop.Markdown.Renderers
             SetHeadingLevel((uint)headingIndices.Count);
             AppendText(text, TextStyle.Normal);
             ClearHeadingLevel();
+            startNewParagraph = true;
         }
 
         /// <summary>
@@ -306,12 +328,28 @@ namespace APSIM.Interop.Markdown.Renderers
                 throw new NotImplementedException("Nested headings not supported.");
             this.headingLevel = headingLevel;
 
-            // Increment the last heading index.
+            // We can't increment the heading level after writing the heading, because
+            // the user may want to add subheadings under this particular heading index.
+            // Therefore, we need to increment the topmost heading index before writing
+            // the heading text.
+            IncrementHeadingIndex();
+            WriteHeadingIndices();
+        }
+
+        /// <summary>
+        /// Increment the topmost heading index.
+        /// </summary>
+        private void IncrementHeadingIndex()
+        {
             if (headingIndices.Any())
                 headingIndices.Push(headingIndices.Pop() + 1);
             else
-                headingIndices.Push(1);
-            WriteHeadingIndices();
+            {
+                // This shouldn't happen in normal execution, but it could
+                // occur due to programming error.
+                Debug.WriteLine($"WARNING: heading index stack is empty. Programmer likely has mismatched calls to PushSubHeading() or PopSubHeading()");
+                headingIndices.Push(0);
+            }
         }
 
         /// <summary>
@@ -430,28 +468,10 @@ namespace APSIM.Interop.Markdown.Renderers
                     Cell cell = table.Rows[i][j];
                     IEnumerable<Paragraph> paragraphs = cell.Elements.OfType<Paragraph>();
                     string text = string.Join("", paragraphs.Select(p => p.GetRawText()));
-                    Unit width = Unit.FromPoint(graphics.MeasureString(text, gdiFont).Width);
+                    Unit width = (1 + columnPadding) * Unit.FromPoint(graphics.MeasureString(text, gdiFont).Width);
 
-                    double lineSpace = gdiFont.GetHeight();
-                    int cellSpace = gdiFont.FontFamily.GetLineSpacing(XFontStyle.Regular);
-                    int cellAscent = gdiFont.FontFamily.GetCellAscent(XFontStyle.Regular);
-                    int cellDescent = gdiFont.FontFamily.GetCellDescent(XFontStyle.Regular);
-                    int cellLeading = cellSpace - cellAscent - cellDescent;
-                    
-                    // Get effective ascent
-                    double ascent = lineSpace * cellAscent / cellSpace;
-                    // graphics.DrawRectangle(XBrushes.Bisque, x, y - ascent, size.Width, ascent);
-                    
-                    // Get effective descent
-                    double descent = lineSpace * cellDescent / cellSpace;
-                    // graphics.DrawRectangle(XBrushes.LightGreen, x, y, size.Width, descent);
-                    
-                    // Get effective leading
-                    double leading = lineSpace * cellLeading / cellSpace;
-                    // graphics.DrawRectangle(XBrushes.Yellow, x, y + descent, size.Width, leading);
-
-                    if (width > maxWidths[j] / (1 + columnPadding))
-                        maxWidths[j] = width * (1 + columnPadding);
+                    if (width > maxWidths[j])
+                        maxWidths[j] = width;
                 }
             }
 
@@ -787,7 +807,15 @@ namespace APSIM.Interop.Markdown.Renderers
         private Section GetLastSection()
         {
             if (document.LastSection == null)
-                return document.AddSection();
+            {
+                Section section = document.AddSection();
+                // Due to what I would consider a bug in migradoc, a section's
+                // elements collection is not initialised until we access it,
+                // by either adding something, or just reading its value. Failure
+                // to do one of these things will result in a NullReferenceException
+                // being thrown if we, for example, try to get the last paragraph.
+                _ = section.Elements;
+            }
             return document.LastSection;
         }
 

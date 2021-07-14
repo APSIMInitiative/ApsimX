@@ -10,7 +10,6 @@
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using Newtonsoft.Json;
     using APSIM.Services.Graphing;
 
     /// <summary>The class represents a single series on a graph</summary>

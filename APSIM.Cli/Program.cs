@@ -64,7 +64,7 @@ namespace APSIM.Cli
                 files = options.Files;
             foreach (string file in files)
             {
-                Simulations model = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
+                Simulations model = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
                 // model.Links.Resolve(model, true, true, true);
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
