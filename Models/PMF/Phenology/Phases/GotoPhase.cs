@@ -30,9 +30,14 @@ namespace Models.PMF.Phen
         [Description("Start")]
         public string Start { get; set; }
 
-        /// <summary>The end</summary>
-        [Description("End")]
-        public string End { get; set; }
+        /// <summary>The end stage name.</summary>
+        public string End
+        {
+            get
+            {
+                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+            }
+        }
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
