@@ -138,7 +138,7 @@ namespace Models
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // tbi
             yield break;

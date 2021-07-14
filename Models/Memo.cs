@@ -17,19 +17,11 @@
         public string Text { get; set; }
 
         /// <summary>
-        /// Document the memo model.
-        /// </summary>
-        public override ITag Document()
-        {
-            return new Paragraph(Text);
-        }
-
-        /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
-            yield return Document();
+            yield return new Paragraph(Text);
         }
     }
 }

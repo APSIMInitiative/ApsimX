@@ -92,7 +92,7 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // Write description of this class.
             StringBuilder text = new StringBuilder($"This phase goes from {Start} to {End}. ");

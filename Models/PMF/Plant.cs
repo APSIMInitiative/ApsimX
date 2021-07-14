@@ -457,7 +457,7 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             yield return new Paragraph($"The {Name} model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
 

@@ -157,9 +157,9 @@ namespace Models.PMF
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.GetTags())
+            foreach (ITag tag in base.Document())
                 yield return tag;
 
             yield return new Paragraph($"{Name} summarises the following biomass objects:");

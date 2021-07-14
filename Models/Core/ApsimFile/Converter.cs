@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 135; } }
+        public static int LatestVersion { get { return 136; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3519,6 +3519,18 @@
                         axis["Interval"] = null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Copy the value of all folders' IncludeInDocumentation property
+        /// into their new ShowInDocs property.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion136(JObject root, string fileName)
+        {
+            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+                folder["ShowInDocs"] = folder["IncludeInDocumentation"];
         }
 
         /// <summary>

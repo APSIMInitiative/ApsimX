@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Services.Documentation;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Newtonsoft.Json;
@@ -254,6 +255,15 @@
             {
                 throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Override the Document() function but do nothing.
+        /// This model does not show any documentation.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield break;
         }
     }
 }

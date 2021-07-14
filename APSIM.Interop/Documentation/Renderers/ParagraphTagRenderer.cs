@@ -29,8 +29,11 @@ namespace APSIM.Interop.Documentation.Renderers
         protected override void Render(Paragraph paragraph, PdfBuilder renderer)
         {
             // Add the Paragraph to a new paragraph.
-            MarkdownDocument document = MarkdownParser.Parse(paragraph.Text, pipeline);
-            renderer.Render(document);
+            if (!string.IsNullOrWhiteSpace(paragraph.Text))
+            {
+                MarkdownDocument document = MarkdownParser.Parse(paragraph.Text, pipeline);
+                renderer.Render(document);
+            }
         }
     }
 }

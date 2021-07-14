@@ -249,20 +249,13 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override ITag Document()
-        {
-            return new Section(GetTags());
-        }
-
-        /// <summary>
         /// Get a list of tags which describe the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             yield return new Image("AIBanner.png");
             yield return new Paragraph(ApsimVersion);
+            yield return new Section(Children.SelectMany(c => c.Document()));
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -307,8 +300,6 @@ namespace Models.Core
 
                     // resolve all links in cloned simulation.
                     Links.Resolve(clonedSimulation, true);
-
-                    modelToDocument.IncludeInDocumentation = true;
 
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);

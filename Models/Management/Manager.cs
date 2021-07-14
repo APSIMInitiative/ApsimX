@@ -149,7 +149,6 @@
                     if (newModel != null)
                     {
                         newModel.IsHidden = true;
-                        newModel.IncludeInDocumentation = false;
                         Structure.Add(newModel, this);
                     }
                 }
@@ -228,20 +227,6 @@
                                              ReflectionUtilities.ObjectToString(value)));
                     }
                 }
-            }
-        }
-
-        /// <summary>Ovewrite default auto-doc.</summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

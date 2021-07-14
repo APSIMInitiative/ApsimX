@@ -63,7 +63,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             if (ValueToHold != null)
                 yield return new Paragraph($"{Name} is the same as {ValueToHold.Name} until it reaches {WhenToHold} stage when it fixes its value");

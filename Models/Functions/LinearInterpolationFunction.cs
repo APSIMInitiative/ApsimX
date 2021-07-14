@@ -112,7 +112,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // fixme - the graph and table should be next to each other.
             yield return new Paragraph($"*{Name}* is calculated using linear interpolation");

@@ -60,14 +60,14 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             yield return new Paragraph($"If {PropertyName} = {StringValue} Then");
-            foreach (ITag tag in TrueValue.GetTags())
+            foreach (ITag tag in TrueValue.Document())
                 yield return tag;
 
             yield return new Paragraph("Else");
-            foreach (ITag tag in FalseValue.GetTags())
+            foreach (ITag tag in FalseValue.Document())
                 yield return tag;
         }
     }

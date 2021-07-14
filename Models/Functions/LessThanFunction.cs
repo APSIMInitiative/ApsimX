@@ -50,7 +50,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>().ToList();
@@ -75,10 +75,10 @@ namespace Models.Functions
                 throw new Exception($"Unknown model type '{ChildFunctions[1].GetType().Name}'");
 
             yield return new Paragraph($"IF {lhs} < {rhs} THEN");
-            foreach (ITag tag in ChildFunctions[2].GetTags())
+            foreach (ITag tag in ChildFunctions[2].Document())
                 yield return tag;
             yield return new Paragraph("ELSE");
-            foreach (ITag tag in ChildFunctions[3].GetTags())
+            foreach (ITag tag in ChildFunctions[3].Document())
                 yield return tag;
         }
     }

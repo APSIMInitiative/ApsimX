@@ -121,12 +121,12 @@
             IModel dataStore = explorerPresenter.ApsimXFile.FindChild("DataStore");
             if (dataStore != null)
             {
-                IEnumerable<Tests> tests = dataStore.FindAllInScope<Tests>().Where(m => m.IncludeInDocumentation);
+                IEnumerable<Tests> tests = dataStore.FindAllInScope<Tests>()/*.Where(m => m.IncludeInDocumentation)*/;
                 if (tests.Count() > 0)
                     tags.Add(new AutoDocumentation.Heading("Statistics", 2));
 
-                foreach (Tests test in tests)
-                    test.Document(tags, 3, 0);
+                // foreach (Tests test in tests)
+                //     test.Document(tags, 3, 0);
             }
         }
 

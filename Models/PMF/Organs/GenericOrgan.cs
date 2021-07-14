@@ -548,10 +548,10 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // Add heading and description.
-            foreach (ITag tag in base.GetTags())
+            foreach (ITag tag in base.Document())
                 yield return tag;
 
             // List the parameters, properties, and processes from this organ that need to be documented:
@@ -581,7 +581,7 @@
             else
             {
                 yield return new Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.");
-                foreach (ITag tag in nDemandSwitch.GetTags())
+                foreach (ITag tag in nDemandSwitch.Document())
                     yield return tag;
             }
 
@@ -595,34 +595,34 @@
             yield return new Section("Senescence and Detachment", DocumentSenescence());
             
             if (biomassRemovalModel != null)
-                foreach (ITag tag in biomassRemovalModel.GetTags())
+                foreach (ITag tag in biomassRemovalModel.Document())
                     yield return tag;
         }
 
         private IEnumerable<ITag> DocumentDMDemand(IModel dmDemands)
         {
             yield return new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.");
-            foreach (ITag tag in dmDemands.GetTags())
+            foreach (ITag tag in dmDemands.Document())
                 yield return tag;
         }
 
         private IEnumerable<ITag> DocumentNDemand(IModel nDemands)
         {
             yield return new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.");
-            foreach (ITag tag in nDemands.GetTags())
+            foreach (ITag tag in nDemands.Document())
                 yield return tag;
         }
 
         private IEnumerable<ITag> DocumentNConcentrationThresholds()
         {
             IModel minNConc = FindChild("MinimumNConc");
-            foreach (ITag tag in minNConc.GetTags())
+            foreach (ITag tag in minNConc.Document())
                 yield return tag;
             IModel critNConc = FindChild("CriticalNConc");
-            foreach (ITag tag in critNConc.GetTags())
+            foreach (ITag tag in critNConc.Document())
                 yield return tag;
             IModel maxNConc = FindChild("MaximumNConc");
-            foreach (ITag tag in maxNConc.GetTags())
+            foreach (ITag tag in maxNConc.Document())
                 yield return tag;
         }
     
@@ -639,7 +639,7 @@
             else
             {
                 yield return new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.");
-                foreach (ITag tag in dmReallocFactor.GetTags())
+                foreach (ITag tag in dmReallocFactor.Document())
                     yield return tag;
             }
             IModel dmRetransFactor = FindChild("DMRetranslocationFactor");
@@ -653,7 +653,7 @@
             else
             {
                 yield return new Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.");
-                foreach (ITag tag in dmRetransFactor.GetTags())
+                foreach (ITag tag in dmRetransFactor.Document())
                     yield return tag;
             }
         }
@@ -671,7 +671,7 @@
             else
             {
                 yield return new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.");
-                foreach (ITag tag in nReallocFactor.GetTags())
+                foreach (ITag tag in nReallocFactor.Document())
                     yield return tag;
             }
             IModel nRetransFactor = FindChild("NRetranslocationFactor");
@@ -685,7 +685,7 @@
             else
             {
                 yield return new Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.");
-                foreach (ITag tag in nRetransFactor.GetTags())
+                foreach (ITag tag in nRetransFactor.Document())
                     yield return tag;
             }
         }
@@ -703,7 +703,7 @@
             else
             {
                 yield return new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.");
-                foreach (ITag tag in senescenceRate.GetTags())
+                foreach (ITag tag in senescenceRate.Document())
                     yield return tag;
             }
 
@@ -718,7 +718,7 @@
             else
             {
                 yield return new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.");
-                foreach (ITag tag in detachmentRate.GetTags())
+                foreach (ITag tag in detachmentRate.Document())
                     yield return tag;
             }
         }

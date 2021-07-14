@@ -645,27 +645,13 @@
             }
         }
 
-        public bool ShowIncludeInDocumentationChecked()
-        {
-            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'Include in documentation' menu item.
-        /// </summary>
-        public bool IncludeInDocumentationChecked()
-        {
-            IModel model = explorerPresenter.CurrentNode as IModel;
-            return (model != null) ? model.IncludeInDocumentation : false;
-        }
-
         /// <summary>
         /// Event handler for checkbox for 'Include in documentation' menu item.
         /// </summary>
         public bool ShowPageOfGraphsChecked()
         {
             Folder folder = explorerPresenter.CurrentNode as Folder;
-            return (folder != null) ? folder.ShowPageOfGraphs : false;
+            return (folder != null) ? folder.ShowInDocs : false;
         }
 
         /// <summary>
@@ -871,43 +857,6 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle = true, FollowsSeparator = true)]
-        public void IncludeInDocumentation(object sender, EventArgs e)
-        {
-            try
-            {
-                IModel model = explorerPresenter.CurrentNode as IModel;
-                model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
-
-                foreach (IModel child in model.FindAllDescendants())
-                    child.IncludeInDocumentation = model.IncludeInDocumentation;
-                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        [ContextMenu(MenuName = "Show documentation status", IsToggle = true)]
-        public void ShowIncludeInDocumentation(object sender, EventArgs e)
-        {
-            try
-            {
-                explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for 'Include in documentation'
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
                      AppliesTo = new Type[] { typeof(Folder) },
                      FollowsSeparator = true)]
@@ -916,9 +865,7 @@
             try
             {
                 Folder folder = explorerPresenter.CurrentNode as Folder;
-                folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
-                foreach (Folder child in folder.FindAllDescendants<Folder>())
-                    child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
+                folder.ShowInDocs = !folder.ShowInDocs;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             }
             catch (Exception err)
@@ -926,7 +873,6 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
 
         [ContextMenu(MenuName = "Find All References",
                      ShortcutKey = "Shift + F12",

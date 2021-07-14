@@ -37,7 +37,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             yield return new Paragraph($"{Name} is calculated using specific values or functions for various growth phases.  The function will use a value of zero for phases not specified below.");
         }

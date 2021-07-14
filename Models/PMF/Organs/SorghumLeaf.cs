@@ -1568,42 +1568,42 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // Add a heading and description.
-            foreach (ITag tag in base.GetTags())
+            foreach (ITag tag in base.Document())
                 yield return tag;
 
             // List the parameters, properties, and processes from this organ that need to be documented:
 
             // Document initial DM weight.
             IModel iniWt = FindChild("initialWtFunction");
-            foreach (ITag tag in iniWt.GetTags())
+            foreach (ITag tag in iniWt.Document())
                 yield return tag;
 
             // Document DM demands.
             List<ITag> dmDemandsTags = new List<ITag>();
             dmDemandsTags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool."));
             IModel dmDemands = FindChild("dmDemands");
-            dmDemandsTags.AddRange(dmDemands.GetTags());
+            dmDemandsTags.AddRange(dmDemands.Document());
             yield return new Section("Dry Matter Demand", dmDemandsTags);
 
             // Document N demands.
             List<ITag> nDemandTags = new List<ITag>();
             nDemandTags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool."));
             IModel nDemands = FindChild("nDemands");
-            nDemandTags.AddRange(nDemands.GetTags());
+            nDemandTags.AddRange(nDemands.Document());
             yield return new Section("Nitrogen Demand", nDemandTags);
 
             // Document N concentration thresholds.
             IModel minNConc = FindChild("MinimumNConc");
-            foreach (ITag tag in minNConc.GetTags())
+            foreach (ITag tag in minNConc.Document())
                 yield return tag;
             IModel critNConc = FindChild("CriticalNConc");
-            foreach (ITag tag in critNConc.GetTags())
+            foreach (ITag tag in critNConc.Document())
                 yield return tag;
             IModel maxNConc = FindChild("MaximumNConc");
-            foreach (ITag tag in maxNConc.GetTags())
+            foreach (ITag tag in maxNConc.Document())
                 yield return tag;
             IModel nDemandSwitch = FindChild("NitrogenDemandSwitch");
             if (nDemandSwitch is Constant nDemandConst)
@@ -1620,7 +1620,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.");
-                foreach (ITag tag in nDemandSwitch.GetTags())
+                foreach (ITag tag in nDemandSwitch.Document())
                     yield return tag;
             }
 
@@ -1637,7 +1637,7 @@ namespace Models.PMF.Organs
             else
             {
                 dmSupplyTags.Add(new Paragraph($"The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor."));
-                dmSupplyTags.AddRange(dmReallocFactor.GetTags());
+                dmSupplyTags.AddRange(dmReallocFactor.Document());
             }
             yield return new Section("Dry Matter Supply", dmSupplyTags);
 
@@ -1653,13 +1653,13 @@ namespace Models.PMF.Organs
             else
             {
                 dmRetranslocationTags.Add(new Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor."));
-                dmRetranslocationTags.AddRange(dmRetransFactor.GetTags());
+                dmRetranslocationTags.AddRange(dmRetransFactor.Document());
             }
             yield return new Section("DM Retranslocation Factor", dmRetranslocationTags);
 
             // Document photosynthesis.
             IModel photosynthesisModel = FindChild("Photosynthesis");
-            yield return new Section("Photosynthesis", photosynthesisModel.GetTags());
+            yield return new Section("Photosynthesis", photosynthesisModel.Document());
 
             // Document N supplies.
             List<ITag> nSupplyTags = new List<ITag>();
@@ -1674,7 +1674,7 @@ namespace Models.PMF.Organs
             else
             {
                 nSupplyTags.Add(new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor."));
-                nSupplyTags.AddRange(nReallocFactor.GetTags());
+                nSupplyTags.AddRange(nReallocFactor.Document());
             }
             yield return new Section("Nitrogen Supply", nSupplyTags);
 
@@ -1690,7 +1690,7 @@ namespace Models.PMF.Organs
             else
             {
                 nRetranslocationTags.Add(new Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor."));
-                nRetranslocationTags.AddRange(nRetransFactor.GetTags());
+                nRetranslocationTags.AddRange(nRetransFactor.Document());
             }
             yield return new Section("Nitrogen Retranslocation Factor", nRetranslocationTags);
 
@@ -1701,18 +1701,18 @@ namespace Models.PMF.Organs
             if (laiF != null)
             {
                 canopyTags.Add(new Paragraph($"{Name} has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation."));
-                canopyTags.AddRange(laiF.GetTags());
+                canopyTags.AddRange(laiF.Document());
             }
             else
             {
                 canopyTags.Add(new Paragraph($"{Name} has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation"));
-                canopyTags.AddRange(coverF.GetTags());
+                canopyTags.AddRange(coverF.Document());
             }
             IModel exctF = FindChild("ExtinctionCoefficientFunction");
-            canopyTags.AddRange(exctF.GetTags());
+            canopyTags.AddRange(exctF.Document());
 
             IModel heightF = FindChild("HeightFunction");
-            canopyTags.AddRange(heightF.GetTags());
+            canopyTags.AddRange(heightF.Document());
             yield return new Section("Canopy Properties", canopyTags);
 
             // Document senescence and detachment.
@@ -1728,7 +1728,7 @@ namespace Models.PMF.Organs
             else
             {
                 senescenceTags.Add(new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate."));
-                senescenceTags.AddRange(senescenceRate.GetTags());
+                senescenceTags.AddRange(senescenceRate.Document());
             }
 
             IModel detRate = FindChild("DetachmentRateFunction");
@@ -1742,11 +1742,11 @@ namespace Models.PMF.Organs
             else
             {
                 senescenceTags.Add(new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction."));
-                senescenceTags.AddRange(detRate.GetTags());
+                senescenceTags.AddRange(detRate.Document());
             }
 
             if (biomassRemovalModel != null)
-                senescenceTags.AddRange(biomassRemovalModel.GetTags());
+                senescenceTags.AddRange(biomassRemovalModel.Document());
 
             yield return new Section("Senescence and Detachment", senescenceTags);
         }

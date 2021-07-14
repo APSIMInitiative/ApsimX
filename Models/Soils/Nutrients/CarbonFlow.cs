@@ -221,7 +221,7 @@
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // Write Phase Table
             yield return new Paragraph($"**Destination of C from {Name}**");

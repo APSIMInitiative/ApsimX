@@ -1,11 +1,14 @@
 ﻿namespace Models.Factorial
 {
+    using APSIM.Services.Documentation;
+    using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.Run;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// # [Name]
@@ -73,6 +76,49 @@
                     yield return simDescription;
                 }
             }
+        }
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, DocumentChildren());
+        }
+
+        /// <summary>
+        /// Document the appropriate children of the experiment (memos,
+        /// graphs, and folders).
+        /// </summary>
+        private IEnumerable<ITag> DocumentChildren()
+        {
+            IEnumerable<ITag> result = DocumentChildren<Memo>();
+            result = result.AppendMany(DocumentChildren<Models.Graph>());
+            result = result.AppendMany(DocumentChildren<Folder>());
+            return result;
+        }
+
+        /// <summary>
+        /// Get a human-readable description of the experiment (e.g. "NRate x Water").
+        /// </summary>
+        public string GetDesign()
+        {
+            Factors factors = FindChild<Factors>();
+            StringBuilder design = new StringBuilder(GetTreatmentDescription(factors));
+            foreach (Permutation permutation in factors.FindAllChildren<Permutation>())
+                design.Append(GetTreatmentDescription(permutation));
+
+            var simulationNames = GenerateSimulationDescriptions().Select(s => s.Name);
+            design.Append($" ({simulationNames.Count()})");
+            return design.ToString();
+        }
+
+        private string GetTreatmentDescription(IModel factors)
+        {
+            return string.Join(" x ", factors.FindAllChildren<Factor>().Select(f => f.Name));
         }
 
         /// <summary>

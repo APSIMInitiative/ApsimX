@@ -61,9 +61,9 @@ namespace Models.Functions.DemandFunctions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.GetTags())
+            foreach (ITag tag in base.Document())
                 yield return tag;
 
             string organName = FindAncestor<IOrgan>().Name;

@@ -570,9 +570,9 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.GetTags())
+            foreach (ITag tag in base.Document())
                 yield return tag;
 
             // Document DM demands.
@@ -583,13 +583,13 @@ namespace Models.PMF.Organs
 
             // Document N concentration thresholds.
             // todo: Should these be in their own section?
-            foreach (ITag tag in minimumNConc.GetTags())
+            foreach (ITag tag in minimumNConc.Document())
                 yield return tag;
 
-            foreach (ITag tag in criticalNConc.GetTags())
+            foreach (ITag tag in criticalNConc.Document())
                 yield return tag;
 
-            foreach (ITag tag in maximumNConc.GetTags())
+            foreach (ITag tag in maximumNConc.Document())
                 yield return tag;
 
             IModel nDemandSwitch = FindChild("NitrogenDemandSwitch");
@@ -609,7 +609,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     yield return new Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.");
-                    foreach (ITag tag in nDemandSwitch.GetTags())
+                    foreach (ITag tag in nDemandSwitch.Document())
                         yield return tag;
                 }
             }
@@ -625,14 +625,14 @@ namespace Models.PMF.Organs
             // Document N fixation.
             IModel fixationRate = FindChild("FixationRate");
             if (fixationRate != null)
-                foreach (ITag tag in fixationRate.GetTags())
+                foreach (ITag tag in fixationRate.Document())
                     yield return tag;
 
             // Document senescence and detachment.
             yield return new Section("Senescence and Detachment", DocumentSenescenceRate());
 
             if (biomassRemovalModel != null)
-                foreach (ITag tag in biomassRemovalModel.GetTags())
+                foreach (ITag tag in biomassRemovalModel.Document())
                     yield return tag;
         }
 
@@ -648,7 +648,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.");
-                foreach (ITag tag in senescenceRate.GetTags())
+                foreach (ITag tag in senescenceRate.Document())
                     yield return tag;
             }
 
@@ -662,7 +662,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.");
-                foreach (ITag tag in detachmentRateFunction.GetTags())
+                foreach (ITag tag in detachmentRateFunction.Document())
                     yield return tag;
             }
         }
@@ -670,14 +670,14 @@ namespace Models.PMF.Organs
         private IEnumerable<ITag> DocumentDMDemands()
         {
             yield return new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.");
-            foreach (ITag tag in dmDemands.GetTags())
+            foreach (ITag tag in dmDemands.Document())
                 yield return tag;
         }
 
         private IEnumerable<ITag> DocumentNDemand()
         {
             yield return new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.");
-            foreach (ITag tag in nDemands.GetTags())
+            foreach (ITag tag in nDemands.Document())
                 yield return tag;
         }
 
@@ -693,7 +693,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.");
-                foreach (ITag tag in dmReallocationFactor.GetTags())
+                foreach (ITag tag in dmReallocationFactor.Document())
                     yield return tag;
             }
 
@@ -707,7 +707,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.");
-                foreach (ITag tag in dmRetranslocationFactor.GetTags())
+                foreach (ITag tag in dmRetranslocationFactor.Document())
                     yield return tag;
             }
         }
@@ -724,7 +724,7 @@ namespace Models.PMF.Organs
             else
             {
                 yield return new Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.");
-                foreach (ITag tag in nReallocationFactor.GetTags())
+                foreach (ITag tag in nReallocationFactor.Document())
                     yield return tag;
             }
 
@@ -741,7 +741,7 @@ namespace Models.PMF.Organs
                 else
                 {
                     yield return new Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.");
-                    foreach (ITag tag in nRetransFactor.GetTags())
+                    foreach (ITag tag in nRetransFactor.Document())
                         yield return tag;
                 }
             }

@@ -70,7 +70,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             string variable = StringUtilities.RemoveTrailingString(VariableName, ".Value()");
             yield return new Paragraph($"*{Name} = {variable}*");

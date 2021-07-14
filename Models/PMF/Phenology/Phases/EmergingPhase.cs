@@ -154,16 +154,11 @@ namespace Models.PMF.Phen
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override ITag Document()
+        public override IEnumerable<ITag> Document()
         {
-            return new Section($"{Name} Phase", GetTags());
-        }
+            List<ITag> documentation = new List<ITag>();
+            documentation.AddRange(DocumentChildren<Memo>());
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
-        public override IEnumerable<ITag> GetTags()
-        {
             // Write description of this class.
             StringBuilder paragraph = new StringBuilder();
             paragraph.AppendLine($"This phase goes from {Start} to {End} and simulates time to emergence as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
@@ -172,9 +167,12 @@ namespace Models.PMF.Phen
             paragraph.AppendLine($"    *ShootRate* = {ShootRate} (deg day/mm),");
             paragraph.AppendLine($"    *ShootLag* = {ShootLag} (deg day), ");
             paragraph.AppendLine($"and *SowingDepth* (mm) is sent from the manager with the sowing event.");
-            yield return new Paragraph(paragraph.ToString());
-            yield return new Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:");
-            // write intro to children?
+            documentation.Add(new Paragraph(paragraph.ToString()));
+            IFunction thermalTime = FindChild<IFunction>("ThermalTime");
+            documentation.Add(new Paragraph($"Progress toward emergence is driven by thermal time accumulation{(thermalTime == null ? "" : ", where thermal time is calculated as:")}."));
+            if (thermalTime != null)
+                documentation.AddRange(thermalTime.Document());
+            yield return new Section($"{Name} Phase", documentation);
         }
     }
 }

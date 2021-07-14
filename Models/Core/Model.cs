@@ -29,7 +29,6 @@
             this.Name = GetType().Name;
             this.IsHidden = false;
             this.Children = new List<IModel>();
-            IncludeInDocumentation = true;
             Enabled = true;
         }
 
@@ -54,11 +53,6 @@
         /// </summary>
         [JsonIgnore]
         public bool IsHidden { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
-        /// </summary>
-        public bool IncludeInDocumentation { get; set; }
 
         /// <summary>
         /// A cleanup routine, in which we clear our child list recursively
@@ -532,19 +526,33 @@
         }
 
         /// <summary>
-        /// Document the model.
+        /// Document the model, and any child models which should be documented.
         /// </summary>
-        public virtual ITag Document()
-        {
-            return new Section(Name, GetTags());
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public virtual IEnumerable<ITag> Document()
+        {   
+            yield return new Section(Name, GetModelDescription());
         }
 
         /// <summary>
-        /// Get a list of tags which describe the model.
+        /// Get a description of the model from the summary and remarks
+        /// xml documentation comments in the source code.
         /// </summary>
-        public virtual IEnumerable<ITag> GetTags()
+        protected IEnumerable<ITag> GetModelDescription()
         {
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+            yield return new Paragraph(CodeDocumentation.GetRemarks(GetType()));
+        }
+
+        /// <summary>
+        /// Document all child models of a given type.
+        /// </summary>
+        /// <typeparam name="T">The type of models to be documented.</typeparam>
+        protected IEnumerable<ITag> DocumentChildren<T>() where T : IModel
+        {
+            return FindAllChildren<T>().SelectMany(m => m.Document());
         }
     }
 }

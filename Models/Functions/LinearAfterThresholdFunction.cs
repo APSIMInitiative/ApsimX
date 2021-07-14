@@ -85,7 +85,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             yield return new Paragraph($"*{Name}* is calculated as a function of *{StringUtilities.RemoveTrailingString(XProperty, ".Value()")}*");
             yield return new Paragraph($"*Trigger value {XTrigger} Gradient {Slope}*");

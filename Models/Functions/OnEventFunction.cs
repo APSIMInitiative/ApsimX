@@ -72,19 +72,19 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             if (PreEventValue != null)
             {
                 yield return new Paragraph($"Before {SetEvent}");
-                foreach (ITag tag in PreEventValue.GetTags())
+                foreach (ITag tag in PreEventValue.Document())
                     yield return tag;
             }
 
             if (PostEventValue != null)
             {
                 yield return new Paragraph($"On {SetEvent} the value is set to:");
-                foreach (ITag tag in PostEventValue.GetTags())
+                foreach (ITag tag in PostEventValue.Document())
                     yield return tag;
             }
         }

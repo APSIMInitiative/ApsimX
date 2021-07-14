@@ -1,6 +1,5 @@
 ﻿namespace Models.Core
 {
-    using Models.Core.Run;
     using Models.Factorial;
     using Models;
     using Models.PMF;
@@ -29,75 +28,81 @@
     [ValidParent(ParentType = typeof(BiomassTypeArbitrator))]
     public class Folder : Model
     {
-        /// <summary>Show page of graphs?</summary>
-        public bool ShowPageOfGraphs { get; set; }
+        /// <summary>Show in the autodocs?</summary>
+        /// <remarks>
+        /// Apparently, not all folders of graphs are intended to be shown in the autodocs.
+        /// Hence, this flag.
+        /// </remarks>
+        [Description("Include in documentation?")]
+        public bool ShowInDocs { get; set; }
 
-        /// <summary>Constructor</summary>
-        public Folder()
+        /// <summary>Number of graphs to show per page.</summary>
+        [Description("Number of graphs to show per page")]
+        public int GraphsPerPage { get; set; } = 6;
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
         {
-            ShowPageOfGraphs = true;
+            yield return new Section(Name, DocumentChildren());
         }
 
         /// <summary>
-        /// Document the model.
+        /// Document the appropriate child models (in this case, memos,
+        /// experiments, graphs, and folders).
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        private IEnumerable<ITag> DocumentChildren()
         {
-            if (ShowPageOfGraphs)
+            // Write memos.
+            foreach (Memo memo in FindAllChildren<Memo>())
+                foreach (ITag tag in memo.Document())
+                    yield return tag;
+
+            // Write experiment descriptions. We don't call experiment.Document() here,
+            // because we want to just show the experiment design (a string) and put it
+            // inside a table cell.
+            IEnumerable<Experiment> experiments = FindAllChildren<Experiment>();
+            if (experiments.Any())
             {
-                if (FindAllChildren<Experiment>().Any())
+                yield return new Paragraph("**List of experiments.**");
+                DataTable table = new DataTable();
+                table.Columns.Add("Experiment Name", typeof(string));
+                table.Columns.Add("Design (Number of Treatments)", typeof(string));
+
+                foreach (Experiment experiment in experiments)
                 {
-                    // Write Phase Table.
-                    yield return new Paragraph("**List of experiments.**");
-                    DataTable table = new DataTable();
-                    table.Columns.Add("Experiment Name", typeof(string));
-                    table.Columns.Add("Design (Number of Treatments)", typeof(string));
-
-                    foreach (IModel child in FindAllChildren<Experiment>())
-                    {
-                        Factors Factors = child.FindChild<Factors>();
-                        string design = GetTreatmentDescription(Factors);
-                        foreach (Permutation permutation in Factors.FindAllChildren<Permutation>())
-                            design += GetTreatmentDescription(permutation);
-
-                        var simulationNames = (child as Experiment).GenerateSimulationDescriptions().Select(s => s.Name);
-                        design += " (" + simulationNames.ToArray().Length + ")";
-
-                        DataRow row = table.NewRow();
-                        row[0] = child.Name;
-                        row[1] = design;
-                        table.Rows.Add(row);
-                    }
-                    yield return new Table(table);
+                    DataRow row = table.NewRow();
+                    row[0] = experiment.Name;
+                    row[1] = experiment.GetDesign();
+                    table.Rows.Add(row);
                 }
-                var children = FindAllChildren<Models.Graph>().ToList();
-                int graphsPerPage = 6;
-                var graphs = new List<APSIM.Services.Documentation.Graph>();
-                for (int i = 0; i < children.Count; i++)
-                {
-                    graphs.Add(children[i].ToGraph());
-                    if (graphs.Count == graphsPerPage)
-                    {
-                        yield return new GraphPage(graphs);
-                        graphs.Clear();
-                    }
-                }
-                if (graphs.Count > 0)
-                    yield return new GraphPage(graphs);
-                graphs.Clear();
+                yield return new Table(table);
             }
-        }
 
-        private string GetTreatmentDescription(IModel factors)
-        {
-            string design = "";
-            foreach (Factor factor in factors.FindAllChildren<Factor>())
+            // Write page of graphs.
+            if (ShowInDocs)
             {
-                if (design != "")
-                    design += " x ";
-                design += factor.Name;
+                var childGraphs = FindAllChildren<Models.Graph>().Select(g => g.ToGraph());
+                while (childGraphs.Any())
+                {
+                    yield return new GraphPage(childGraphs.Take(GraphsPerPage));
+                    childGraphs = childGraphs.Skip(GraphsPerPage);
+                }
             }
-            return design;
+
+            // Document experiments individually.
+            foreach (Experiment experiment in experiments)
+                foreach (ITag tag in experiment.Document())
+                    yield return tag;
+
+            // Document child folders.
+            foreach (Folder folder in FindAllChildren<Folder>())
+                foreach (ITag tag in folder.Document())
+                    yield return tag;
         }
     }
 }

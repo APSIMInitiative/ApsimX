@@ -1,3 +1,4 @@
+using System.Linq;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
 
@@ -17,19 +18,24 @@ namespace APSIM.Interop.Documentation.Renderers
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
         protected override void Render(Section section, PdfBuilder renderer)
         {
-            // Add a heading at the current heading level.
-            if (!string.IsNullOrEmpty(section.Title))
-                renderer.AppendHeading(section.Title);
+            // If the section contains no content (child tags), then don't
+            // bother writing the heading.
+            if (section.Children.Any())
+            {
+                // Add a heading at the current heading level.
+                if (!string.IsNullOrEmpty(section.Title))
+                    renderer.AppendHeading(section.Title);
 
-            // Increment the heading level, so that any child tags' headings
-            // are written as subheadings.
-            renderer.PushSubHeading();
+                // Increment the heading level, so that any child tags' headings
+                // are written as subheadings.
+                renderer.PushSubHeading();
 
-            // Add child tags.
-            foreach (ITag child in section.Children)
-                renderer.Write(child);
+                // Add child tags.
+                foreach (ITag child in section.Children)
+                    renderer.Write(child);
 
-            renderer.PopSubHeading();
+                renderer.PopSubHeading();
+            }
         }
     }
 }

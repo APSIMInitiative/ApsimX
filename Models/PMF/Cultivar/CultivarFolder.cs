@@ -19,7 +19,7 @@ namespace Models.PMF
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             // Write a sorted list of cultivar names.
             List<string> cultivarNames = FindAllChildren<Cultivar>().SelectMany(c => c.GetNames()).ToList();

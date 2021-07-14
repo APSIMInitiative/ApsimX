@@ -258,7 +258,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         public void PushSubHeading()
         {
-            headingIndices.Push(0);
+            headingIndices.Push(1);
         }
 
         /// <summary>
@@ -616,7 +616,7 @@ namespace APSIM.Interop.Markdown.Renderers
 
         private void WriteHeadingIndices()
         {
-            AppendText($"{string.Join(".", headingIndices)} ", TextStyle.Normal);
+            AppendText($"{string.Join(".", headingIndices.Reverse())} ", TextStyle.Normal);
         }
 
         /// <summary>
@@ -647,6 +647,7 @@ namespace APSIM.Interop.Markdown.Renderers
             result.Add(new ParagraphTagRenderer());
             result.Add(new TableTagRenderer());
             result.Add(new GraphTagRenderer());
+            result.Add(new GraphPageTagRenderer());
             result.Add(new SectionTagRenderer());
             return result;
         }

@@ -162,7 +162,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             string st = Expression.Replace(".Value()", "");
             st = st.Replace("*", "x");

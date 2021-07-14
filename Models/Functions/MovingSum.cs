@@ -76,7 +76,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             if (FindAllChildren<IFunction>().Count() == 1)
                 yield return new Paragraph($"{Name} is calculated from a moving sum of {ChildFunction}.Name over a series of {NumberOfDays} days.");

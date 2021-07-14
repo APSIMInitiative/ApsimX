@@ -21,5 +21,18 @@ namespace APSIM.Shared.Extensions.Collections
             while (enumerator.MoveNext())
                 yield return enumerator.Current;
         }
+
+        /// <summary>
+        /// Appndend a collection of items to another collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="appendee">The collection to be appended.</param>
+        public static IEnumerable<T> AppendMany<T>(this IEnumerable<T> collection, IEnumerable<T> appendee)
+        {
+            foreach (T item in collection)
+                yield return item;
+            foreach (T item in appendee)
+                yield return item;
+        }
     }
 }

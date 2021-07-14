@@ -38,7 +38,7 @@ namespace Models.Functions
         /// <summary>
         /// Document the model.
         /// </summary>
-        public override IEnumerable<ITag> GetTags()
+        public override IEnumerable<ITag> Document()
         {
             if (ChildFunctions == null)
                 ChildFunctions = FindAllChildren<IFunction>();
@@ -47,16 +47,16 @@ namespace Models.Functions
                 if (child != Lower && child != Upper)
                 {
                     yield return new Paragraph($"{Name} is the value of {child.Name} bound between a lower and upper bound where:");
-                    foreach (ITag tag in child.GetTags())
+                    foreach (ITag tag in child.Document())
                         yield return tag;
                     break;
                 }
             }
             if (Lower != null)
-                foreach (ITag tag in Lower.GetTags())
+                foreach (ITag tag in Lower.Document())
                     yield return tag;
             if (Upper != null)
-                foreach (ITag tag in Upper.GetTags())
+                foreach (ITag tag in Upper.Document())
                     yield return tag;
         }
     }

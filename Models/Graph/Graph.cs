@@ -333,17 +333,38 @@
         }
 
         /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
+        {
+            try
+            {
+                return new[] { ToGraph() };
+            }
+            catch (Exception err)
+            {
+                Console.Error.WriteLine(err);
+                return Enumerable.Empty<ITag>();
+            }
+        }
+
+        /// <summary>
         /// Generated a 'standardised' graph.
         /// </summary>
         public APSIM.Services.Documentation.Graph ToGraph()
         {
-            LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition);
-            return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend);
+            try
+            {
+                LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition);
+                return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Unable to draw graph {FullPath}", err);
+            }
         }
-
-        // public override IEnumerable<ITag> GetTags()
-        // {
-        //     yield return ToGraph();
-        // }
     }
 }

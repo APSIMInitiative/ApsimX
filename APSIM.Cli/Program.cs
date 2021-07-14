@@ -52,7 +52,7 @@ namespace APSIM.Cli
 
         private static void Run(RunOptions options)
         {
-
+            throw new NotImplementedException();
         }
 
         private static void Document(DocumentOptions options)
@@ -65,21 +65,12 @@ namespace APSIM.Cli
             foreach (string file in files)
             {
                 Simulations model = FileFormat.ReadFromFile<Simulations>(file, out List<Exception> errors);
-                model.Links.Resolve(model, true, true, true);
+                // model.Links.Resolve(model, true, true, true);
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory));
-                writer.Write(pdfFile, GetTags(model));
+                writer.Write(pdfFile, model.Document());
             }
-        }
-
-        private static IEnumerable<ITag> GetTags(IModel model)
-        {
-            if (model.IncludeInDocumentation)
-                yield return model.Document();
-            foreach (IModel child in model.Children)
-                foreach (ITag tag in GetTags(child))
-                    yield return tag;
         }
     }
 }
