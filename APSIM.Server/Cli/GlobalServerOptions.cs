@@ -47,7 +47,7 @@ namespace APSIM.Server.Cli
         public string SocketName { get; set; }
 
         /// <summary>Port number on which to listen for connections.</summary>
-        [Option('p', "port", HelpText = "Port number on which to listen for connections. Only used when accepting connections over network", Default = (uint)27746)]
+        [Option('p', "port", HelpText = "Port number on which to listen for connections. Only used when accepting connections over network", Default = 27746u)]
         public uint Port { get; set; }
 
         /// <summary>IP Address on which to listen for connections.</summary>

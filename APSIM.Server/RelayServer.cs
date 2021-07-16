@@ -57,6 +57,7 @@ namespace APSIM.Server
         private readonly string instanceName;
         private readonly string podNamespace;
         private IEnumerable<V1Pod> pods;
+        private string tempInputFiles;
 
         /// <summary>
         /// Create a job manager instance.
@@ -144,6 +145,9 @@ namespace APSIM.Server
         /// <param name="client">The kubernetes client to be used.</param>
         private IEnumerable<V1Pod> InitialiseWorkers()
         {
+            // Copy the input files to a writable location.
+            EnsureInputsAreWritable();
+
             // Split apsimx file into smaller chunks.
             IEnumerable<string> generatedFiles = SplitApsimXFile(options.File, options.WorkerCpuCount);
             if (options.Verbose)
@@ -157,8 +161,12 @@ namespace APSIM.Server
                     throw new InvalidOperationException($"Input file {options.File} contains no simulations.");
             }
 
+            // If this is not running inside a pod, then we need to create a
+            // namespace for the worker pods. Otherwise, the assumption is that
+            // this pod is running inside the desired namespace.
             // Create a new namespace in which to store the pods.
-            V1Namespace result = client.CreateNamespace(CreateStandardNamespace());
+            if (!options.InPod)
+                client.CreateNamespace(CreateStandardNamespace());
 
             if (options.Verbose)
                 Console.WriteLine("Launching pods...");
@@ -171,7 +179,7 @@ namespace APSIM.Server
 
             // Create pods in the current namespace.
             // todo: use async API
-            pods = pods.Select(p => client.CreateNamespacedPod(p, result.Metadata.Name)).ToList();
+            pods = pods.Select(p => client.CreateNamespacedPod(p, podNamespace)).ToList();
 
             if (options.Verbose)
                 Console.WriteLine($"Created {pods.Count} pod{(pods.Count == 1 ? "" : "s")}.");
@@ -186,6 +194,29 @@ namespace APSIM.Server
                 pods = GetPods().ToList();
 
             return pods;
+        }
+
+        /// <summary>
+        /// Copy the input files to a writable location.
+        /// This will update the value of options.File.
+        /// </summary>
+        private void EnsureInputsAreWritable()
+        {
+            if (!File.Exists(options.File))
+                throw new FileNotFoundException($"Input file {options.File} does not exist");
+            string inputsDirectory = Path.GetDirectoryName(options.File);
+            if (Directory.EnumerateDirectories(inputsDirectory).Any())
+                throw new InvalidOperationException("Found a child directory inside inputs directory. Please use a flat list of files for now.");
+
+            tempInputFiles = Path.Combine(Path.GetTempPath(), $"input-files-{Guid.NewGuid()}");
+            Directory.CreateDirectory(tempInputFiles);
+            foreach (string file in Directory.EnumerateFiles(inputsDirectory))
+            {
+                string rawFileName = Path.GetFileName(file);
+                string newFileName = Path.Combine(tempInputFiles, rawFileName);
+                File.Copy(file, newFileName);
+            }
+            options.File = Path.Combine(Path.GetTempPath(), Path.GetFileName(options.File));
         }
 
         /// <summary>
@@ -224,13 +255,10 @@ namespace APSIM.Server
         private V1Pod CreatePod(string file, string podName)
         {
             // todo: pod labels
-            Guid podID = Guid.NewGuid();
-            Dictionary<string, string> labels = new Dictionary<string, string>();
-            labels["pod-id"] = podID.ToString();
-            V1ObjectMeta metadata = new V1ObjectMeta(name: $"apsim-worker-{podID}", labels: labels);
+            V1ObjectMeta metadata = new V1ObjectMeta(name: podName);
             V1Volume volume = InputFilesVolume(file);
             V1PodSpec spec = new V1PodSpec(
-                containers: new[] { ApsimServerContainer(file, volume.Name) },
+                containers: new[] { ApsimServerContainer($"{podName}-container", file, volume.Name) },
                 volumes: new[] { volume }
             );
             return new V1Pod(apiVersion, Kind.Pod.ToString(), metadata, spec);
@@ -257,9 +285,10 @@ namespace APSIM.Server
         /// Get the containers run in a worker node (pod).
         /// Currently this is a single apsiminitiative/apsimng-server container.
         /// </summary>
+        /// <param name="name">Display name for the container.</parama>
         /// <param name="file">The input file on which the container should run.</param>
         /// <param name="inputsVolume">Name of the volume containing the input files.</param>
-        private V1Container ApsimServerContainer(string file, string inputsVolume)
+        private V1Container ApsimServerContainer(string name, string file, string inputsVolume)
         {
             string fileName = Path.GetFileName(file);
             const string mountPath = "/inputs";
@@ -277,7 +306,7 @@ namespace APSIM.Server
                 // 
                 // This little dance that we do here with the input files is to work around write
                 // permissions (or lack thereof) on the volume mount.
-                $"mkdir /input-files && cp {mountPath}/* /input-files/ && /apsim/apsim-server -vkrnf /input-files/{fileName} -a 0.0.0.0 -p {portNo}"
+                $"mkdir /input-files && cp {mountPath}/* /input-files/ && /apsim/apsim-server listen -vkrnf /input-files/{fileName} -a 0.0.0.0 -p {portNo}"
             };
 
             V1VolumeMount volume = new V1VolumeMount(
@@ -286,7 +315,7 @@ namespace APSIM.Server
             );
 
             return new V1Container(
-                $"apsim-worker-container-{Guid.NewGuid()}",
+                name,
                 image: imageName,
                 command: new string[] { "/bin/sh" },
                 args: args,
@@ -317,6 +346,8 @@ namespace APSIM.Server
                 Console.WriteLine("Deleting namespace...");
             client.DeleteNamespace(podNamespace);
             client.Dispose();
+            if (!string.IsNullOrEmpty(tempInputFiles) && Directory.Exists(tempInputFiles))
+                Directory.Delete(tempInputFiles, true);
         }
     }
 }

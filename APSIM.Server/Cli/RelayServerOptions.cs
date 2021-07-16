@@ -9,7 +9,7 @@ namespace APSIM.Server.Cli
     public class RelayServerOptions : GlobalServerOptions
     {
         /// <summary>Number of vCPUs per worker node.</summary>
-        [Option('c', "cpu-count", HelpText = "Number of vCPUs per worker node", Default = 1)]
+        [Option('c', "cpu-count", HelpText = "Number of vCPUs per worker node", Default = 1u)]
         public uint WorkerCpuCount { get; set; }
 
         /// <summary>Is the server running in a kubernetes pod?</summary>
