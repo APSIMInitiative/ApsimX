@@ -23,6 +23,7 @@ namespace APSIM.Server.IO
         private Socket server;
         private NetworkStream connection;
         private ICommandManager comms;
+        private Protocol connectionType;
 
         /// <summary>
         /// Create a new <see cref="LocalSocketConnection" /> instance.
@@ -30,11 +31,13 @@ namespace APSIM.Server.IO
         /// <param name="verbose">Print verbose diagnostics to stdout?</param>
         /// <param name="ipAddress">IP Address on which to listen for connections.</param>
         /// <param name="port">Port on which to listen for connections.</param>
-        public NetworkSocketConnection(bool verbose, string ipAddress, uint port)
+        /// <param name="protocol">Communications protocol.</param>
+        public NetworkSocketConnection(bool verbose, string ipAddress, uint port, Protocol protocol)
         {
             if (port > int.MaxValue)
                 throw new ArgumentOutOfRangeException($"Cannot listen on port {port} (port number is too high)");
             this.verbose = verbose;
+            this.connectionType = protocol;
 
             if (string.IsNullOrWhiteSpace(ipAddress))
                 ipAddress = "127.0.0.1";
@@ -70,7 +73,12 @@ namespace APSIM.Server.IO
         public void WaitForConnection()
         {
             connection = new NetworkStream(server.Accept(), true);
-            comms = new NativeCommunicationProtocol(connection);
+            if (connectionType == Protocol.Native)
+                comms = new NativeCommunicationProtocol(connection);
+            else if (connectionType == Protocol.Managed)
+                comms = new ManagedCommunicationProtocol(connection);
+            else
+                throw new NotImplementedException($"Unknown connection type {connectionType}");
         }
 
         /// <summary>
@@ -96,5 +104,14 @@ namespace APSIM.Server.IO
         /// <param name="command">The command.</param>
         /// <param name="error">Error encountered by the command.</param>
         public void OnCommandFinished(ICommand command, Exception error = null) => comms.OnCommandFinished(command, error);
+
+        /// <summary>
+        /// Send a command to the connected client.
+        /// </summary>
+        /// <param name="command">The command to be sent.</param>
+        public void SendCommand(ICommand command)
+        {
+            comms.SendCommand(command);
+        }
     }
 }

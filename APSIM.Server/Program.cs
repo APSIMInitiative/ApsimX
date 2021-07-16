@@ -19,8 +19,9 @@ namespace APSIM.Server
             {
                 config.AutoHelp = true;
                 config.HelpWriter = Console.Out;
-            }).ParseArguments<ServerOptions>(args)
-              .WithParsed(Run)
+            }).ParseArguments<GlobalServerOptions, RelayServerOptions>(args)
+              .WithParsed<GlobalServerOptions>(Run)
+              .WithParsed<RelayServerOptions>(Run)
               .WithNotParsed(HandleParseError);
             return exitCode;
         }
@@ -29,11 +30,29 @@ namespace APSIM.Server
         /// Start the server with the given options.
         /// </summary>
         /// <param name="options">Options specified by the user (via CLI).</param>
-        private static void Run(ServerOptions options)
+        private static void Run(GlobalServerOptions options)
         {
             try
             {
                 ApsimServer server = new ApsimServer(options);
+                server.Run();
+            }
+            catch (Exception error)
+            {
+                Console.Error.WriteLine(error.ToString());
+                exitCode = 1;
+            }
+        }
+
+        /// <summary>
+        /// Start the server with the given options.
+        /// </summary>
+        /// <param name="options">Options specified by the user (via CLI).</param>
+        private static void Run(RelayServerOptions options)
+        {
+            try
+            {
+                ApsimServer server = new RelayServer(options);
                 server.Run();
             }
             catch (Exception error)

@@ -14,7 +14,7 @@ namespace APSIM.Server.IO
     /// <summary>
     /// This class encapsulates the comms from an apsim server instance to a native client.
     /// </summary>
-    public class LocalSocketConnection : IConnectionManager, IDisposable
+    public class LocalSocketConnection : IConnectionManager, ICommandManager, IDisposable
     {
         private bool verbose;
 
@@ -26,13 +26,23 @@ namespace APSIM.Server.IO
         /// </summary>
         /// <param name="name">Name to use for the named pipe.</param>
         /// <param name="verbose">Print verbose diagnostics to stdout?</param>
-        public LocalSocketConnection(string name, bool verbose)
+        /// <param name="protocol">The communciations protocol.</param>
+        public LocalSocketConnection(string name, bool verbose, Protocol protocol)
         {
             pipe = new NamedPipeServerStream(name, PipeDirection.InOut, 1);
-            comms = new NativeCommunicationProtocol(pipe);
             this.verbose = verbose;
+
+            if (protocol == Protocol.Native)
+                comms = new NativeCommunicationProtocol(pipe);
+            else if (protocol == Protocol.Managed)
+                comms = new ManagedCommunicationProtocol(pipe);
+            else
+                throw new NotImplementedException($"Unknown protocol type {protocol}");
         }
 
+        /// <summary>
+        /// Dispose of unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             comms = null;
@@ -60,5 +70,11 @@ namespace APSIM.Server.IO
         /// <param name="command">The command.</param>
         /// <param name="error">Error encountered by the command.</param>
         public void OnCommandFinished(ICommand command, Exception error = null) => comms.OnCommandFinished(command, error);
+
+        /// <summary>
+        /// Send a command to the connected client.
+        /// </summary>
+        /// <param name="command">The command to be sent.</param>
+        public void SendCommand(ICommand command) => comms.SendCommand(command);
     }
 }

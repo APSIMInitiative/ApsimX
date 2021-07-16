@@ -22,7 +22,7 @@ namespace APSIM.Server
         /// <summary>
         /// Server options.
         /// </summary>
-        private ServerOptions options;
+        private GlobalServerOptions options;
 
         /// <summary>
         /// The simulations object.
@@ -36,7 +36,7 @@ namespace APSIM.Server
         /// Create an <see cref="ApsimServer" /> instance.
         /// </summary>
         /// <param name="file">.apsimx file to be run.</param>
-        public ApsimServer(ServerOptions options)
+        public ApsimServer(GlobalServerOptions options)
         {
             this.options = options;
             sims = FileFormat.ReadFromFile<Simulations>(options.File, e => throw e, false);
@@ -49,7 +49,7 @@ namespace APSIM.Server
         /// <summary>
         /// Run the apsim server. This will block the calling thread.
         /// </summary>
-        public void Run()
+        public virtual void Run()
         {
             try
             {
@@ -94,22 +94,42 @@ namespace APSIM.Server
             }
         }
 
+        /// <summary>
+        /// Create a connection manager based on the user options.
+        /// </summary>
         private IConnectionManager CreateConnection()
         {
-            switch (options.Mode)
-            {
-                case CommunicationMode.Managed:
-                    throw new NotImplementedException();
-                case CommunicationMode.Native:
-                    return new LocalSocketConnection("testpipe", options.Verbose);
-                case CommunicationMode.Network:
-                    return new NetworkSocketConnection(options.Verbose, options.IPAddress, options.Port);
-                default:
-                    throw new NotImplementedException();
-            }
+            Protocol protocol = GetProtocol();
+            if (options.LocalMode)
+                return new LocalSocketConnection(options.SocketName, options.Verbose, protocol);
+            if (options.RemoteMode)
+                return new NetworkSocketConnection(options.Verbose, options.IPAddress, options.Port, protocol);
+            // We shouldn't be able to reach here from the CLI, but if the class is
+            // instantiated in code, this could certainly occur.
+            throw new NotImplementedException("Unknown connection type. Use either local or remote mode.");
         }
 
-        private void RunCommand(ICommand command, IConnectionManager connection)
+        /// <summary>
+        /// Get the protocol type from the user options.
+        /// </summary>
+        private Protocol GetProtocol()
+        {
+            if (options.NativeMode)
+                return Protocol.Native;
+            if (options.ManagedMode)
+                return Protocol.Managed;
+            // The command line arguments parser should prevent us from reaching this point,
+            // but theoretically the options object can be contructed and passed around
+            // in code without invoking the parser.
+            throw new NotImplementedException($"Unknown protocol type. Use either native or managed mode");
+        }
+
+        /// <summary>
+        /// Run a command received from a given connection manager.
+        /// </summary>
+        /// <param name="command">Command to be run.</param>
+        /// <param name="connection">Connection on which we received the command.</param>
+        protected virtual void RunCommand(ICommand command, IConnectionManager connection)
         {
             if (options.Verbose)
                 Console.WriteLine($"Received command {command}. Running command...");

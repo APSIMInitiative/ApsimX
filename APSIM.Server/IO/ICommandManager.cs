@@ -4,22 +4,9 @@ using APSIM.Server.Commands;
 namespace APSIM.Server.IO
 {
     /// <summary>
-    /// An interface for classes which can send/receive commands.
+    /// An interface for a class which can send and receive commands.
     /// </summary>
-    public interface ICommandManager
+    public interface ICommandManager : ICommandSource, ICommandSink
     {
-        /// <summary>
-        /// Wait for a command from the conencted client.
-        /// </summary>
-        ICommand WaitForCommand();
-
-        /// <summary>
-        /// Called when a command finishes.
-        /// The expectation is that the client will need to be signalled
-        /// somehow when this occurs.
-        /// </summary>
-        /// <param name="command">The command that was run.</param>
-        /// <param name="error">Error details (if command failed). If command succeeded, this will be null.</param>
-        void OnCommandFinished(ICommand command, Exception error = null);
     }
 }

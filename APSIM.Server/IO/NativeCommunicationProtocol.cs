@@ -266,5 +266,10 @@ namespace APSIM.Server.IO
             else
                 throw new NotImplementedException();
         }
+
+        public void SendCommand(ICommand command)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
