@@ -179,39 +179,52 @@
             fileChooser.AddFilter(allFilter);
 
             fileChooser.SetCurrentFolder(InitialDirectory);
+            fileChooser.DoOverwriteConfirmation = true;
 
-            string[] fileNames = new string[0];
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileNames = fileChooser.Filenames;
-
-            // The Gtk FileChooser does NOT automatically append extensions based on the currently selected filter
-            // We need to do this somewhat manually when saving files.
-            //
-            // Note that the following makes the assumption that specified filters have the form "*.ext".
-            //
-            // It is perhaps unclear whether, when the filename does not have the selected filter's extension,
-            // an existing extension should be replaced, or added to. That is, if the selected filter
-            // is "*.apsimx" and the user has provided the name "Wheat.json", should the returned name be 
-            // "Wheat.apsimx" or "Wheat.json.apsimx"? I have elected to append, rather than replace.
-            // There is also the question of whether case differences should be considered or not.
-
-            if (Action == FileActionType.Save && fileChooser.Filter != allFilter && specParts != null)
+            bool tryAgain;
+            string[] fileNames;
+            do
             {
-                string filterName = fileChooser.Filter.Name;
-                for (int i = 0; i < specParts.Length; i += 2)
+                fileNames = new string[0];
+                if (fileChooser.Run() == (int)ResponseType.Accept)
+                    fileNames = fileChooser.Filenames;
+
+                // The Gtk FileChooser does NOT automatically append extensions based on the currently selected filter
+                // We need to do this somewhat manually when saving files.
+                //
+                // Note that the following makes the assumption that specified filters have the form "*.ext".
+                //
+                // It is perhaps unclear whether, when the filename does not have the selected filter's extension,
+                // an existing extension should be replaced, or added to. That is, if the selected filter
+                // is "*.apsimx" and the user has provided the name "Wheat.json", should the returned name be 
+                // "Wheat.apsimx" or "Wheat.json.apsimx"? I have elected to append, rather than replace.
+                // There is also the question of whether case differences should be considered or not.
+
+                
+                tryAgain = false;
+                if (Action == FileActionType.Save && fileChooser.Filter != allFilter && specParts != null)
                 {
-                    if (filterName == specParts[i])
-                    { 
-                        string filterExt = Path.GetExtension(specParts[i + 1]);
-                        for (int j = 0; j < fileNames.Length; j++)
+                    string filterName = fileChooser.Filter.Name;
+                    for (int i = 0; i < specParts.Length; i += 2)
+                    {
+                        if (filterName == specParts[i])
                         {
-                            if (!Path.GetExtension(fileNames[j]).Equals(filterExt, StringComparison.CurrentCultureIgnoreCase))
-                                fileNames[j] = fileNames[j] + filterExt;
+                            string filterExt = Path.GetExtension(specParts[i + 1]);
+                            for (int j = 0; j < fileNames.Length; j++)
+                            {
+                                if (!Path.GetExtension(fileNames[j]).Equals(filterExt, StringComparison.CurrentCultureIgnoreCase))
+                                    fileNames[j] = fileNames[j] + filterExt;
+                            }
+                            if (File.Exists(fileNames.FirstOrDefault()))
+                            {
+                                tryAgain = true;
+                                fileChooser.SetFilename(fileChooser.Filename + filterExt);
+                            }
+                            break; // We've applied one extension; let's not risk trying to apply another
                         }
-                        break; // We've applied one extension; let's not risk trying to apply another
                     }
                 }
-            }
+            } while (tryAgain);
 #if NETFRAMEWORK
             fileChooser.Cleanup();
 #else
@@ -219,6 +232,7 @@
 #endif
             return fileNames;
         }
+
 #if NETFRAMEWORK
         /// <summary>
         /// Ask user for a filename to open on Windows.
