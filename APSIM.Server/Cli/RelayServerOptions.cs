@@ -13,7 +13,7 @@ namespace APSIM.Server.Cli
         public uint WorkerCpuCount { get; set; }
 
         /// <summary>Is the server running in a kubernetes pod?</summary>
-        [Option('p', "in-pod", HelpText = "Set this if the server is running in a kubernetes pod.", Default = false)]
+        [Option("in-pod", HelpText = "Set this if the server is running in a kubernetes pod.", Default = false)]
         public bool InPod { get; set; }
 
         /// <summary>
