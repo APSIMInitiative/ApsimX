@@ -176,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
+            GenerateApsimXFiles.Generate(run, 1, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
