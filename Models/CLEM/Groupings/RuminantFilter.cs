@@ -23,6 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(RuminantActivityGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 3, "Now uses IsState() terminology for all state filter properties")]
     [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
