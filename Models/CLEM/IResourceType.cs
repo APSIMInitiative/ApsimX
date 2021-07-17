@@ -48,6 +48,11 @@ namespace Models.CLEM
         ResourcePricing Price(PurchaseOrSalePricingStyleType priceType);
 
         /// <summary>
+        /// Value of the resource
+        /// </summary>
+        double? Value { get; }
+
+        /// <summary>
         /// Get the units of measure this resource.
         /// </summary>
         string Units { get; }

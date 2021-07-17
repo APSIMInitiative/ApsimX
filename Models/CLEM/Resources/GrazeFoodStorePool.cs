@@ -87,6 +87,18 @@ namespace Models.CLEM.Resources
             return null;
         }
 
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Get the amount of the last gain in this resource 
         /// </summary>

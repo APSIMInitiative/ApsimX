@@ -105,6 +105,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
         /// Monthly dietary components
         /// </summary>
         public List<LabourDietComponent> DietaryComponentList { get; set; }
