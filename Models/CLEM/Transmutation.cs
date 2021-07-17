@@ -42,6 +42,12 @@ namespace Models.CLEM
         public double AmountPerUnitPurchase { get; set; }
 
         /// <summary>
+        /// Allow purchases to be in partial units (e.g. transmutate exactly what is needed
+        /// </summary>
+        [Description("Only work in whole units")]
+        public bool WorkInWholeUnits { get; set; }
+
+        /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
         [Description("Category for transactions")]
@@ -346,7 +352,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
-    [Description("This Transmutation cost uses the pricing drfined for the given resource.")]
+    [Description("This Transmutation cost uses the pricing defined for the given resource.")]
     [HelpUri(@"Content/Features/Transmutation/TransmutationCostUsePricing.htm")]
     public class TransmutationCostUsePricing : CLEMModel, IValidatableObject, ITransmutationCost
     {

@@ -75,6 +75,28 @@ namespace Models.CLEM.Resources
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
         }
 
+        /// <summary>
+        /// Calulate the value of an amount of resource 
+        /// </summary>
+        /// <param name="amount">Amount of resource to value</param>
+        /// <param name="respectUseWholePacket">Determing if purchase in whole packets is to be obeyed in calculation</param>
+        public double CalculateValue(double amount, bool respectUseWholePacket = true)
+        {
+            if (PurchaseOrSale == PurchaseOrSalePricingStyleType.Sale)
+            {
+                throw new ApsimXException(this, "Cannot calculate the purchase price based on a sale pricing");
+            }
+            else
+            {
+                var packets = (amount / PacketSize);
+                if(respectUseWholePacket && UseWholePackets)
+                {
+                    packets = Math.Truncate(packets);
+                }
+                return packets * PricePerPacket;
+            }
+        }
+
         /// <inheritdoc/>
         public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
 

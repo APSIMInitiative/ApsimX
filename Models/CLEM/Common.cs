@@ -705,4 +705,61 @@ namespace Models.CLEM
         YearAndMonth
     }
 
+    /// <summary>
+    /// Style to report transactions involving individuals in herd
+    /// </summary>
+    public enum RuminantTransactionsGroupingStyle
+    {
+        /// <summary>
+        /// Combine all individuals
+        /// </summary>
+        Combined,
+        /// <summary>
+        /// Grouped by pricing groups
+        /// </summary>
+        ByPriceGroup,
+        /// <summary>
+        /// Grouped by class
+        /// </summary>
+        ByClass,
+        /// <summary>
+        /// Grouped by class and sex
+        /// </summary>
+        BySexAndClass,
+    }
+
+    /// <summary>
+    /// General classes of ruminants
+    /// </summary>
+    public enum RuminantClass
+    {
+        /// <summary>
+        /// Calf
+        /// </summary>
+        Calf,
+        /// <summary>
+        /// Weaner
+        /// </summary>
+        Weaner,
+        /// <summary>
+        /// PreBreeder
+        /// </summary>
+        PreBreeder,
+        /// <summary>
+        /// Breeder
+        /// </summary>
+        Breeder,
+        /// <summary>
+        /// Castrate
+        /// </summary>
+        Castrate,
+        /// <summary>
+        /// Sire
+        /// </summary>
+        Sire
+    }
+
+
 }
+
+

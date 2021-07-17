@@ -21,6 +21,31 @@ namespace Models.CLEM.Resources
         private double adultEquivalent;
 
         /// <summary>
+        /// Get the value to use for the transaction style requested
+        /// </summary>
+        /// <param name="transactionStyle">Style of transaction grouping</param>
+        /// <param name="pricingStyle">Style of pricing if necessary</param>
+        /// <returns>Label to group by</returns>
+        public string GetTransactionCategory(RuminantTransactionsGroupingStyle transactionStyle, PurchaseOrSalePricingStyleType pricingStyle = PurchaseOrSalePricingStyleType.Both)
+        {
+            string result = "N/A";
+            switch (transactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    return "All";
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    return BreedParams.ValueofIndividual(this, pricingStyle).Name;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    return this.Category;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    return this.FullCategory;
+                default:
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// A list of attributes added to this individual
         /// </summary>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
@@ -271,13 +296,13 @@ namespace Models.CLEM.Resources
                         }
                         else if((this as RuminantMale).IsCastrated)
                         {
-                            return "Castraded";
+                            return "Castrate";
                         }
                         else
                         {
                             if((this as RuminantMale).IsWildBreeder)
                             {
-                                return "WildBreeder";
+                                return "Breeder";
                             }
                             else
                             {
@@ -286,6 +311,17 @@ namespace Models.CLEM.Resources
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Determine the category of this individual with sex
+        /// </summary>
+        public string FullCategory
+        {
+            get
+            {
+                return $"{Category}{Gender}";
             }
         }
 

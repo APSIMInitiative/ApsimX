@@ -566,9 +566,14 @@ namespace Models.CLEM.Resources
                                 if (transcost is TransmutationCostUsePricing)
                                 {
                                     // use pricing details if needed
-                                    unitsize = (transcost as TransmutationCostUsePricing).Pricing.PacketSize;
+                                    var pricing = (transcost as TransmutationCostUsePricing).Pricing;
+                                    unitsize = pricing.PacketSize;
                                 }
-                                unitsNeeded = Math.Ceiling((request.Required - request.Available) / unitsize);
+                                unitsNeeded = (request.Required - request.Available) / unitsize;
+                                if(trans.WorkInWholeUnits)
+                                {
+                                    unitsNeeded = Math.Ceiling(unitsNeeded);
+                                }
 
                                 double transmutationCost;
                                 if (transcost is TransmutationCostUsePricing)

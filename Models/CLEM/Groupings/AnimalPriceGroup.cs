@@ -48,6 +48,23 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
+        /// Calulate the value of an individual
+        /// </summary>
+        /// <param name="ind"></param>
+        /// <returns></returns>
+        public double CalculateValue(object ind)
+        {
+            if(ind is Ruminant)
+            {
+                return Value * ((PricingStyle == PricingStyleType.perKg) ? (ind as Ruminant).Weight : 1.0);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
         [JsonIgnore]
