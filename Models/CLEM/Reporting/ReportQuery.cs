@@ -13,7 +13,7 @@ namespace Models.CLEM.Reporting
     [ViewName("UserInterface.Views.CLEMView")]
     [PresenterName("UserInterface.Presenters.ReportQueryPresenter")]
     [ValidParent(ParentType = typeof(Report))]
-    [Description("Queries a report")]
+    [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
     public class ReportQuery : Model, ICLEMUI
     {
