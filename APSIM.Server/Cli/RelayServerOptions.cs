@@ -19,7 +19,7 @@ namespace APSIM.Server.Cli
         /// <summary>
         /// Kubernetes namespace in which this pod is running. If --in-pod is set, this is also required.
         /// </summary>
-        [Option('n', "namespace", HelpText = "Kubernetes namespace in which this pod is running. If --in-pod is set, this is also required.")]
+        [Option("namespace", HelpText = "Kubernetes namespace in which this pod is running. If --in-pod is set, this is also required.")]
         public string Namespace { get; set; }
     }
 }
