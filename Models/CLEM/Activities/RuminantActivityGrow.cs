@@ -503,7 +503,7 @@ namespace Models.CLEM.Activities
                 // limit calf intake of milk per day
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
-                energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * ind.AgeZeroCorrected);
+                energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
                 ind.EnergyBalance = energyMilkConsumed - energyMaintenance + energyMetablicFromIntake;
                 ind.EnergyIntake = energyMilkConsumed + energyMetablicFromIntake;
                 ind.EnergyFetus = 0;

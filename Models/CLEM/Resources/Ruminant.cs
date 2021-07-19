@@ -122,7 +122,6 @@ namespace Models.CLEM.Resources
             {
                 age = value;
                 normalisedWeight = CalculateNormalisedWeight(age);
-                //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -157,13 +156,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>Months</units>
         public double PurchaseAge { get; set; }
-
-        /// <summary>
-        /// Will return 0.1 if Age is 0 for calculations (Months)
-        /// </summary>
-        /// <units>Months</units>
-        public double AgeZeroCorrected
-        {  get { return ((Age == 0) ? 0.1 : Age); } }
 
         /// <summary>
         /// Weight (kg)
@@ -233,6 +225,17 @@ namespace Models.CLEM.Resources
             get
             {
                 return NormalisedAnimalWeight == 0 ? 1 : Weight / NormalisedAnimalWeight;
+            }
+        }
+
+        /// <summary>
+        /// The current weight as a proportion of Standard Reference Weight
+        /// </summary>
+        public double ProportionOfSRW
+        {
+            get
+            {
+                return Weight / StandardReferenceWeight;
             }
         }
 
@@ -352,18 +355,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-
-        /// <summary>
-        /// The current weight as a proportion of Standard Reference Weight
-        /// </summary>
-        public double ProportionOfSRW
-        {
-            get
-            {
-                return Weight / StandardReferenceWeight;
-            }
-        }
-
         /// <summary>
         /// Current monthly intake store
         /// </summary>
@@ -435,7 +426,7 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// Determines if the change resson is her positive or negative
+        /// Determines if the change reason is positive or negative
         /// </summary>
         public int PopulationChangeDirection
         {
@@ -473,10 +464,10 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// SaleFlag as string for reports
-        /// </summary>
-        public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
+        ///// <summary>
+        ///// SaleFlag as string for reports
+        ///// </summary>
+        //public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
 
         /// <summary>
         /// Is the individual currently marked for sale?
@@ -509,7 +500,7 @@ namespace Models.CLEM.Resources
         public double EnergyIntake { get; set; }
 
         /// <summary>
-        /// Indicates if this individual has died
+        /// Indicates if this individual has died before removal from herd
         /// </summary>
         public bool Died { get; set; }
 
@@ -541,7 +532,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return normalisedWeight;
-                //return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
