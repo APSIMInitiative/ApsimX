@@ -10,10 +10,10 @@ namespace Models.PMF.Phen
         string Name { get; }
         
         /// <summary>The start</summary>
-        string Start { get; set; }
+        string Start { get; }
 
         /// <summary>The end</summary>
-        string End { get; set; }
+        string End { get; }
 
         /// <summary>This function returns a non-zero value if the phase target is met today </summary>
         bool DoTimeStep(ref double PropOfDayToUse);
