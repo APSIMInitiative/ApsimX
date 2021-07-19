@@ -418,6 +418,11 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
+                // get clock
+                IModel parentSim = FindAncestor<Simulation>();
+
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim));
+
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
                 {
@@ -425,13 +430,11 @@ namespace Models.CLEM
                     htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
                     htmlWriter.Write(this.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(this));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
                 }
-
-                // get clock
-                IModel parentSim = FindAncestor<Simulation>();
 
                 // find random number generator
                 RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
@@ -452,6 +455,9 @@ namespace Models.CLEM
                         htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     }
                     htmlWriter.Write("\r\n</div>");
+
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd));
+
                     htmlWriter.Write("\r\n</div>");
                 }
 
@@ -482,6 +488,9 @@ namespace Models.CLEM
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                     }
                     htmlWriter.Write("\r\n</div>");
+
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk));
+
                     htmlWriter.Write("\r\n</div>");
                     htmlWriter.Write("\r\n</div>");
                 }
