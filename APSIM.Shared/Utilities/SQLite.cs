@@ -832,7 +832,7 @@ namespace APSIM.Shared.Utilities
             return tableNames.Contains(tableName);
         }
 
-        /// <summary>Does the specified table exist?</summary>
+        /// <summary>Does the specified view exist?</summary>
         /// <param name="viewName">The view name to look for</param>
         public bool ViewExists(string viewName)
         {

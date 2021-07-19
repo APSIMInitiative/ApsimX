@@ -279,7 +279,7 @@
         }
 
         /// <summary>
-        /// Add a select based view to the data table for SQLite datastores
+        /// Add a select based view to the SQLite datastore
         /// </summary>
         /// <param name="name">name of the view</param>
         /// <param name="selectSQL">select SQL statement</param>
@@ -291,7 +291,16 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+                try
+                {
+                    dbReader.ExecuteSql(selectSQL);
+                    connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
+                }
+                catch (Exception)
+                {
+                    // ignore and do not create view with invalid sql
+                    // prevents column collection exceptions in create datastore on loading the simulation in future
+                }
             }
             else
             {
