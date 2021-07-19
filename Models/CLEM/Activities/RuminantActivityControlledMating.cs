@@ -45,6 +45,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityControlledMating()
         {
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Livestock.Manage";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -80,7 +81,7 @@ namespace Models.CLEM.Activities
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedingParent.PredictedHerdBreed}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         #region validation

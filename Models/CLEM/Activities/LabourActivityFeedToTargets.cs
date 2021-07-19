@@ -83,6 +83,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         public Market Market { get; private set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourActivityFeedToTargets()
+        {
+            TransactionCategory = "Labour.Feed";
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -94,10 +102,7 @@ namespace Models.CLEM.Activities
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             if (people is null | food is null)
@@ -299,7 +304,7 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
-                            Category = "Food purchase",
+                            Category = TransactionCategory,
                             MarketTransactionMultiplier = 1
                         };
                         bankAccount.Remove(marketRequest);
@@ -313,7 +318,7 @@ namespace Models.CLEM.Activities
                         Required = amount * financeLimit,
                         ResourceTypeName = item.Key.Name,
                         ActivityModel = this,
-                        Category = "Consumption"
+                        Category = TransactionCategory
                     });
                 }
             }
@@ -366,7 +371,7 @@ namespace Models.CLEM.Activities
                                     Required = amountfood,
                                     ResourceTypeName = purchase.FoodStoreName.Split('.')[1],
                                     ActivityModel = this,
-                                    Category = "Consumption"
+                                    Category = TransactionCategory
                                 });
                             }
                             else
@@ -383,11 +388,7 @@ namespace Models.CLEM.Activities
             return requests;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
@@ -431,9 +432,7 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             if(LabourLimitProportion < 1)
@@ -450,9 +449,7 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             // add all provided requests to the individuals intake pools.
@@ -587,7 +584,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
-                                Category = "Sell excess",
+                                Category = TransactionCategory,
                                 RelatesToResource = foodStore.NameWithParent,
                                 MarketTransactionMultiplier = this.FarmMultiplier
                             };
@@ -601,11 +598,11 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,
                                     AllowTransmutation = false,
-                                    Category = $"Sales",
+                                    Category = TransactionCategory,
                                     RelatesToResource = foodStore.NameWithParent,
                                     MarketTransactionMultiplier = this.FarmMultiplier
                                 };
-                                bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, "Sales");
+                                bankAccount.Add(purchaseFinance, this, foodStore.NameWithParent, TransactionCategory);
                             }
                         } 
                     }
@@ -613,38 +610,25 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -692,16 +676,12 @@ namespace Models.CLEM.Activities
             }
 
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -745,19 +725,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

@@ -11,6 +11,7 @@ using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -25,7 +26,7 @@ namespace Models.CLEM.Resources
     [Description("This holds all resource groups used in the CLEM simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcesHolder.htm")]
-    public class ResourcesHolder: CLEMModel, IValidatableObject
+    public class ResourcesHolder: CLEMModel, IValidatableObject, IReportPricingChange
     {
         /// <summary>
         /// List of the all the Resource Groups.
@@ -507,7 +508,26 @@ namespace Models.CLEM.Resources
             {
                 FoundMarket = this.Parent as Market;
             }
+
+            // link to price change in all descendents
+            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            {
+                childModel.PriceChangeOccurred += Resource_PricingChangeOccurred;
+            }
+
             InitialiseResourceGroupList();
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (IReportPricingChange childModel in this.FindAllDescendants<IReportPricingChange>())
+            {
+                childModel.PriceChangeOccurred -= Resource_PricingChangeOccurred;
+            }
         }
 
         /// <summary>
@@ -546,9 +566,14 @@ namespace Models.CLEM.Resources
                                 if (transcost is TransmutationCostUsePricing)
                                 {
                                     // use pricing details if needed
-                                    unitsize = (transcost as TransmutationCostUsePricing).Pricing.PacketSize;
+                                    var pricing = (transcost as TransmutationCostUsePricing).Pricing;
+                                    unitsize = pricing.PacketSize;
                                 }
-                                unitsNeeded = Math.Ceiling((request.Required - request.Available) / unitsize);
+                                unitsNeeded = (request.Required - request.Available) / unitsize;
+                                if(trans.WorkInWholeUnits)
+                                {
+                                    unitsNeeded = Math.Ceiling(unitsNeeded);
+                                }
 
                                 double transmutationCost;
                                 if (transcost is TransmutationCostUsePricing)
@@ -580,7 +605,7 @@ namespace Models.CLEM.Resources
                                             Required = transmutationCost,
                                             ResourceType = transcost.ResourceType,
                                             ActivityModel = request.ActivityModel,
-                                            Category = "Transmutation",
+                                            Category = trans.TransactionCategory,
                                         };
 
                                         // used to pass request, but this is not the transmutation cost
@@ -615,7 +640,7 @@ namespace Models.CLEM.Resources
                             if(!queryOnly)
                             {
                                 // Add resource
-                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, request.ResourceTypeName, "Transmutation");
+                                (model as IResourceType).Add(unitsNeeded * trans.AmountPerUnitPurchase, request.ActivityModel, request.ResourceTypeName, trans.TransactionCategory);
                             }
                         }
                     }
@@ -624,6 +649,32 @@ namespace Models.CLEM.Resources
 
             }
         }
+
+        #region Report pricing change
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
+        }
+
+        private void Resource_PricingChangeOccurred(object sender, EventArgs e)
+        {
+            LastPriceChange = (e as PriceChangeEventArgs).Details;
+            OnPriceChanged(e as PriceChangeEventArgs);
+        }
+
+        #endregion
 
         #region validation
 
@@ -652,29 +703,19 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             return "<h1>Resources summary</h1>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "\r\n<div class=\"resource\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";

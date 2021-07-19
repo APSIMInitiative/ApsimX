@@ -22,6 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
+    [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
@@ -35,6 +36,14 @@ namespace Models.CLEM.Activities
 
         private FinanceType bankAccount = null;
         private TruckingSettings trucking = null;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityBuySell()
+        {
+            TransactionCategory = "Livestock.Manage";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -129,6 +138,8 @@ namespace Models.CLEM.Activities
                 return;
             }
 
+            List<Ruminant> soldIndividuals = new List<Ruminant>();
+
             if (trucking == null)
             {
                 // no trucking just sell
@@ -136,8 +147,13 @@ namespace Models.CLEM.Activities
                 foreach (var ind in herd)
                 {
                     aESum += ind.AdultEquivalent;
-                    saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                    var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                    if (pricing != null)
+                    {
+                        saleValue += pricing.CalculateValue(ind);
+                    }
                     saleWeight += ind.Weight;
+                    soldIndividuals.Add(ind);
                     ruminantHerd.RemoveRuminant(ind, this);
                     head++;
                 }
@@ -162,8 +178,13 @@ namespace Models.CLEM.Activities
                                 head++;
                                 aESum += ind.AdultEquivalent;
                                 load450kgs += ind.Weight / 450.0;
-                                saleValue += ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                                var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                                if (pricing != null)
+                                {
+                                    saleValue += pricing.CalculateValue(ind);
+                                }
                                 saleWeight += ind.Weight;
+                                soldIndividuals.Add(ind);
                                 ruminantHerd.RemoveRuminant(ind, this);
 
                                 //TODO: work out what to do with suckling calves still with mothers if mother sold.
@@ -182,6 +203,8 @@ namespace Models.CLEM.Activities
                     Status = (this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).Count() == 0) ? ActivityStatus.Success : ActivityStatus.Warning;
                 }
             }
+            
+            
             if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
             {
                 ResourceRequest expenseRequest = new ResourceRequest
@@ -194,10 +217,31 @@ namespace Models.CLEM.Activities
                 if (trucking != null)
                 {
                     expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                    expenseRequest.Category = "Transport sales";
+                    expenseRequest.Category = trucking.TransactionCategory;
                     bankAccount.Remove(expenseRequest);
                 }
 
+                // perform payments by transaction grouping
+                // uses a list of individuals that were taken from the herd
+
+                // calculate aEsum and saleValue form the above list for use below
+                // currently done above but can be shifted to calc from grouped indiv
+
+                // add and remove from bank
+                if (saleValue > 0)
+                {
+                    //bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
+                    var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(soldIndividuals, PurchaseOrSalePricingStyleType.Sale);
+                    foreach (var item in groupedIndividuals)
+                    {
+                        foreach (var item2 in item.RuminantTypeGroup)
+                        {
+                            bankAccount.Add(item2.TotalPrice, this, item.RuminantTypeName, $"{TransactionCategory}.{item2.GroupName}");
+                        }
+                    }
+                }
+
+                // perform activity fee payments
                 foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
                 {
                     switch (item.PaymentStyle)
@@ -217,15 +261,9 @@ namespace Models.CLEM.Activities
                         default:
                             throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
                     }
-                    expenseRequest.Category = item.Category;
+                    expenseRequest.Category = item.TransactionCategory;
                     // uses bank account specified in the RuminantActivityFee
                     item.BankAccount.Remove(expenseRequest);
-                }
-
-                // add and remove from bank
-                if(saleValue > 0)
-                {
-                    bankAccount.Add(saleValue, this, this.PredictedHerdName, "Sales");
                 }
             }
         }
@@ -244,6 +282,12 @@ namespace Models.CLEM.Activities
                     this.Status = ActivityStatus.Success;
                 }
             }
+            else
+            {
+                return;
+            }
+
+            List<Ruminant> boughtIndividuals = new List<Ruminant>();
 
             double fundsAvailable = 0;
             if (bankAccount != null)
@@ -258,18 +302,26 @@ namespace Models.CLEM.Activities
                 if (bankAccount != null)  // perform with purchasing
                 {
                     double value = 0;
+                    AnimalPriceGroup pricing = null;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
                     {
-                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase,  RuminantFilterParameters.IsSire, "true");
+                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
                     }
                     else
                     {
-                        value = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
+                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
                     }
+                    if (pricing != null)
+                    {
+                        value = pricing.CalculateValue(newind);
+                    }
+
                     if (cost + value <= fundsAvailable && fundsexceeded == false)
                     {
+                        boughtIndividuals.Add(newind);
                         ruminantHerd.PurchaseIndividuals.Remove(newind);
                         newind.ID = ruminantHerd.NextUniqueID;
+
                         ruminantHerd.AddRuminant(newind, this);
                         cost += value;
                     }
@@ -281,6 +333,7 @@ namespace Models.CLEM.Activities
                 }
                 else // no financial transactions
                 {
+                    boughtIndividuals.Add(newind);
                     ruminantHerd.PurchaseIndividuals.Remove(newind);
                     newind.ID = ruminantHerd.NextUniqueID;
                     ruminantHerd.AddRuminant(newind, this);
@@ -294,10 +347,22 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     Required = cost,
                     AllowTransmutation = false,
-                    Category =  "Purchases",
+                    Category =  TransactionCategory,
                     RelatesToResource = this.PredictedHerdName
                 };
-                bankAccount.Remove(purchaseRequest);
+
+                //bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
+                var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
+                foreach (var item in groupedIndividuals)
+                {
+                    foreach (var item2 in item.RuminantTypeGroup)
+                    {
+                        purchaseRequest.Required = item2.TotalPrice??0;
+                        purchaseRequest.Category = $"{TransactionCategory}.{item2.GroupName}";
+                        bankAccount.Remove(purchaseRequest);
+//                        bankAccount.Add(item2.TotalPrice, this, item.RuminantTypeName, $"{TransactionCategory}.{item2.GroupName}");
+                    }
+                }
 
                 // report any financial shortfall in purchases
                 if (shortfall > 0)
@@ -337,6 +402,8 @@ namespace Models.CLEM.Activities
                 return;
             }
 
+            List<Ruminant> boughtIndividuals = new List<Ruminant>();
+
             // if purchase herd > min loads before allowing trucking
             if (herd.Select(a => a.Weight / 450.0).Sum() / trucking.Number450kgPerTruck >= trucking.MinimumTrucksBeforeBuying)
             {
@@ -359,17 +426,24 @@ namespace Models.CLEM.Activities
                             if (bankAccount != null)  // perform with purchasing
                             {
                                 double value = 0;
+                                AnimalPriceGroup pricing = null;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
                                 {
-                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
+                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
                                 }
                                 else
                                 {
-                                    value = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
+                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
                                 }
+                                if (pricing != null)
+                                {
+                                    value = pricing.CalculateValue(ind);
+                                }
+
                                 if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
                                     ind.ID = ruminantHerd.NextUniqueID;
+                                    boughtIndividuals.Add(ind);
                                     ruminantHerd.AddRuminant(ind, this);
                                     ruminantHerd.PurchaseIndividuals.Remove(ind);
                                     cost += value;
@@ -383,6 +457,7 @@ namespace Models.CLEM.Activities
                             else // no financial transactions
                             {
                                 ind.ID = ruminantHerd.NextUniqueID;
+                                boughtIndividuals.Add(ind);
                                 ruminantHerd.AddRuminant(ind, this);
                                 ruminantHerd.PurchaseIndividuals.Remove(ind);
                             }
@@ -427,10 +502,20 @@ namespace Models.CLEM.Activities
                         ActivityModel = this,
                         Required = cost,
                         AllowTransmutation = false,
-                        Category = "Purchases",
+                        Category = TransactionCategory,
                         RelatesToResource = this.PredictedHerdName
                     };
-                    bankAccount.Remove(purchaseRequest);
+
+                    var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
+                    foreach (var item in groupedIndividuals)
+                    {
+                        foreach (var item2 in item.RuminantTypeGroup)
+                        {
+                            purchaseRequest.Required = item2.TotalPrice??0;
+                            purchaseRequest.Category = $"{TransactionCategory}.{item2.GroupName}";
+                            bankAccount.Remove(purchaseRequest);
+                        }
+                    }
 
                     // report any financial shortfall in purchases
                     if (shortfall > 0)
@@ -455,7 +540,7 @@ namespace Models.CLEM.Activities
                     if (trucking != null)
                     {
                         expenseRequest.Required = trucks * trucking.DistanceToMarket * trucking.CostPerKmTrucking;
-                        expenseRequest.Category = "Transport purchases";
+                        expenseRequest.Category = trucking.TransactionCategory;
                         bankAccount.Remove(expenseRequest);
 
                         if (expenseRequest.Required > expenseRequest.Available)
@@ -475,20 +560,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
@@ -522,70 +600,53 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Buy-Sell", this.PredictedHerdName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
             return; 
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        #region transactions
+
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
+        #endregion
+
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
