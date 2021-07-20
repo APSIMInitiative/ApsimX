@@ -99,6 +99,11 @@ namespace Models.CLEM.Resources
         public Sex Gender { get; set; }
 
         /// <summary>
+        /// Sex if individual
+        /// </summary>
+        public Sex Sex { get { return (this is RuminantFemale)?Sex.Female:Sex.Male; } }
+
+        /// <summary>
         /// Gender as string for reports
         /// </summary>
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
