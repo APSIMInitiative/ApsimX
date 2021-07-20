@@ -469,11 +469,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        ///// <summary>
-        ///// SaleFlag as string for reports
-        ///// </summary>
-        //public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
-
         /// <summary>
         /// Is the individual currently marked for sale?
         /// </summary>
