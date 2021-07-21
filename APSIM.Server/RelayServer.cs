@@ -214,7 +214,10 @@ namespace APSIM.Server
                 string extension = Path.GetExtension(file);
                 string[] dontCopy = new[] { ".db", ".db-wal", ".db-shm" };
                 if (!dontCopy.Contains(extension))
+                {
+                    WriteToLog($"Copying {file} to {newFileName}");
                     File.Copy(file, newFileName);
+                }
             }
             relayOptions.File = Path.Combine(tempInputFiles, Path.GetFileName(relayOptions.File));
             WriteToLog($"Moved input file to {relayOptions.File}");
