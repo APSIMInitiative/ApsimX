@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -216,7 +217,31 @@ namespace APSIM.Server
                 if (!dontCopy.Contains(extension))
                 {
                     WriteToLog($"Copying {file} to {newFileName}");
-                    File.Copy(file, newFileName);
+                    try
+                    {
+                        File.Copy(file, newFileName);
+                    }
+                    catch (Exception err)
+                    {
+                        Process proc = null;
+                        try
+                        {
+                            proc = Process.Start("/bin/chmod", $"a+x {inputsDirectory}");
+                            proc.WaitForExit();
+                        }
+                        catch (Exception err2)
+                        {
+                            throw new AggregateException($"Unable to chmod OR copy file (stdout = {proc.StandardOutput}, stderr = {proc.StandardError})", new[] { err, err2 });
+                        }
+                        try
+                        {
+                            File.Copy(file, newFileName);
+                        }
+                        catch (Exception err2)
+                        {
+                            throw new AggregateException($"chmod worked, but didn't help", new[] { err, err2 });
+                        }
+                    }
                 }
             }
             relayOptions.File = Path.Combine(tempInputFiles, Path.GetFileName(relayOptions.File));
