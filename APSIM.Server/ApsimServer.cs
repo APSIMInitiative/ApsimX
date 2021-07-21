@@ -22,7 +22,7 @@ namespace APSIM.Server
         /// <summary>
         /// Server options.
         /// </summary>
-        private GlobalServerOptions options;
+        protected GlobalServerOptions options;
 
         /// <summary>
         /// The simulations object.
@@ -45,6 +45,8 @@ namespace APSIM.Server
             jobRunner = new ServerJobRunner();
             runner.Use(jobRunner);
         }
+
+        protected ApsimServer() { }
 
         /// <summary>
         /// Run the apsim server. This will block the calling thread.

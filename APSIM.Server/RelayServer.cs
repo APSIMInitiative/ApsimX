@@ -51,7 +51,7 @@ namespace APSIM.Server
 
         // State
         private readonly Kubernetes client;
-        private readonly RelayServerOptions options;
+        private readonly RelayServerOptions relayOptions;
         private readonly string owner = "drew"; // todo: This should be specified in options.
         private readonly Guid jobID;
         private readonly string instanceName;
@@ -64,10 +64,11 @@ namespace APSIM.Server
         /// </summary>
         /// <param name="options">User options.</param>
         /// <param name="clientGenerator">Kubernetes client generator.</param>
-        public RelayServer(RelayServerOptions options) : base((GlobalServerOptions)options)
+        public RelayServer(RelayServerOptions options) : base()
         {
+            this.options = (GlobalServerOptions)options;
             WriteToLog("Job manager started");
-            this.options = options;
+            this.relayOptions = options;
             jobID = Guid.NewGuid();
             IKubernetesClientGenerator clientGenerator;
             if (options.InPod)
@@ -110,7 +111,7 @@ namespace APSIM.Server
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
                     throw new NotImplementedException("Pod IP not set.");
                 // Create a new socket connection to the pod.
-                NetworkSocketConnection conn = new NetworkSocketConnection(options.Verbose, pod.Status.PodIP, portNo, Protocol.Native);
+                NetworkSocketConnection conn = new NetworkSocketConnection(relayOptions.Verbose, pod.Status.PodIP, portNo, Protocol.Native);
 
                 // Relay the command to the pod.
                 conn.SendCommand(command);
@@ -151,20 +152,20 @@ namespace APSIM.Server
             EnsureInputsAreWritable();
 
             // Split apsimx file into smaller chunks.
-            IEnumerable<string> generatedFiles = SplitApsimXFile(options.File, options.WorkerCpuCount);
+            IEnumerable<string> generatedFiles = SplitApsimXFile(relayOptions.File, relayOptions.WorkerCpuCount);
             if (generatedFiles.Any())
             {
                 int n = generatedFiles.Count();
                 WriteToLog($"Split input file into {n} chunk{(n == 1 ? "" : "s")}.");
             }
             else
-                throw new InvalidOperationException($"Input file {options.File} contains no simulations.");
+                throw new InvalidOperationException($"Input file {relayOptions.File} contains no simulations.");
 
             // If this is not running inside a pod, then we need to create a
             // namespace for the worker pods. Otherwise, the assumption is that
             // this pod is running inside the desired namespace.
             // Create a new namespace in which to store the pods.
-            if (!options.InPod)
+            if (!relayOptions.InPod)
                 client.CreateNamespace(CreateStandardNamespace());
 
             WriteToLog("Launching pods...");
@@ -198,9 +199,9 @@ namespace APSIM.Server
         /// </summary>
         private void EnsureInputsAreWritable()
         {
-            if (!File.Exists(options.File))
-                throw new FileNotFoundException($"Input file {options.File} does not exist");
-            string inputsDirectory = Path.GetDirectoryName(options.File);
+            if (!File.Exists(relayOptions.File))
+                throw new FileNotFoundException($"Input file {relayOptions.File} does not exist");
+            string inputsDirectory = Path.GetDirectoryName(relayOptions.File);
             if (Directory.EnumerateDirectories(inputsDirectory).Any())
                 throw new InvalidOperationException("Found a child directory inside inputs directory. Please use a flat list of files for now.");
 
@@ -210,9 +211,13 @@ namespace APSIM.Server
             {
                 string rawFileName = Path.GetFileName(file);
                 string newFileName = Path.Combine(tempInputFiles, rawFileName);
-                File.Copy(file, newFileName);
+                string extension = Path.GetExtension(file);
+                string[] dontCopy = new[] { ".db", ".db-wal", ".db-shm" };
+                if (!dontCopy.Contains(extension))
+                    File.Copy(file, newFileName);
             }
-            options.File = Path.Combine(Path.GetTempPath(), Path.GetFileName(options.File));
+            relayOptions.File = Path.Combine(tempInputFiles, Path.GetFileName(relayOptions.File));
+            WriteToLog($"Moved input file to {relayOptions.File}");
         }
 
         /// <summary>
