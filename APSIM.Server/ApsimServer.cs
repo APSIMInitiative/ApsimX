@@ -53,25 +53,21 @@ namespace APSIM.Server
         {
             try
             {
-                if (options.Verbose)
-                    Console.WriteLine($"Starting server...");
+                WriteToLog($"Starting server...");
                 using (IConnectionManager conn = CreateConnection())
                 {
                     while (true)
                     {
                         try
                         {
-                            if (options.Verbose)
-                                Console.WriteLine("Waiting for connections...");
+                            WriteToLog("Waiting for connections...");
                             conn.WaitForConnection();
-                            if (options.Verbose)
-                                Console.WriteLine("Client connected to server.");
+                            WriteToLog("Client connected to server.");
                             ICommand command;
                             while ( (command = conn.WaitForCommand()) != null)
                                 RunCommand(command, conn);
 
-                            if (options.Verbose)
-                                Console.WriteLine($"Connection closed by client.");
+                            WriteToLog($"Connection closed by client.");
 
                             // If we don't want to keep the server alive we can exit now.
                             // Otherwise we will go back and wait for another connection.
@@ -81,8 +77,7 @@ namespace APSIM.Server
                         }
                         catch (IOException)
                         {
-                            if (options.Verbose)
-                                Console.WriteLine("Pipe is broken. Closing connection...");
+                            WriteToLog("Pipe is broken. Closing connection...");
                             conn.Disconnect();
                         }
                     }
@@ -131,16 +126,14 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected virtual void RunCommand(ICommand command, IConnectionManager connection)
         {
-            if (options.Verbose)
-                Console.WriteLine($"Received command {command}. Running command...");
+            WriteToLog($"Received command {command}. Running command...");
             try
             {
                 // Clone the simulations object before running the command.
                 var timer = Stopwatch.StartNew();
                 command.Run(runner, jobRunner, sims.FindChild<Models.Storage.IDataStore>());
                 timer.Stop();
-                if (options.Verbose)
-                    Console.WriteLine($"Command ran in {timer.ElapsedMilliseconds}ms");
+                WriteToLog($"Command ran in {timer.ElapsedMilliseconds}ms");
                 connection.OnCommandFinished(command);
                 
             }
@@ -150,6 +143,18 @@ namespace APSIM.Server
                     Console.Error.WriteLine(err);
                 connection.OnCommandFinished(command, err);
             }
+        }
+
+        /// <summary>
+        /// Write a message to the log.
+        /// </summary>
+        /// <param name="message">The message to be written.</param>
+        protected void WriteToLog(string message)
+        {
+            if (options.Verbose)
+                Console.WriteLine(message);
+            else
+                Console.WriteLine($"Verbose mode is disabled but here ya go anyway: {message}");
         }
     }
 }

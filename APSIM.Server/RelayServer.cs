@@ -66,6 +66,7 @@ namespace APSIM.Server
         /// <param name="clientGenerator">Kubernetes client generator.</param>
         public RelayServer(RelayServerOptions options) : base((GlobalServerOptions)options)
         {
+            WriteToLog("Job manager started");
             this.options = options;
             jobID = Guid.NewGuid();
             IKubernetesClientGenerator clientGenerator;
@@ -91,6 +92,7 @@ namespace APSIM.Server
             pods = InitialiseWorkers();
 
             // tbi: go into relay mode
+            WriteToLog("Starting relay server...");
             base.Run();
         }
 
@@ -122,16 +124,14 @@ namespace APSIM.Server
         {
             if (pods == null)
             {
-                if (options.Verbose)
-                    Console.WriteLine("No pods to delete");
+                WriteToLog("No pods to delete");
                 return;
             }
             if (client == null)
                 // The client is readonly so this shouldn't really be possible.
                 throw new InvalidOperationException($"Unable to cleanup pods: client is null");
 
-            if (options.Verbose)
-                Console.WriteLine("Deleting pods...");
+            WriteToLog("Deleting pods...");
             foreach (V1Pod pod in pods)
                 // need to check this
                 client.DeleteNamespacedPod(pod.Metadata.Name, podNamespace);
@@ -145,21 +145,20 @@ namespace APSIM.Server
         /// <param name="client">The kubernetes client to be used.</param>
         private IEnumerable<V1Pod> InitialiseWorkers()
         {
+            WriteToLog("Initialising workers...");
+
             // Copy the input files to a writable location.
             EnsureInputsAreWritable();
 
             // Split apsimx file into smaller chunks.
             IEnumerable<string> generatedFiles = SplitApsimXFile(options.File, options.WorkerCpuCount);
-            if (options.Verbose)
+            if (generatedFiles.Any())
             {
-                if (generatedFiles.Any())
-                {
-                    int n = generatedFiles.Count();
-                    Console.WriteLine($"Split input file into {n} chunk{(n == 1 ? "" : "s")}.");
-                }
-                else
-                    throw new InvalidOperationException($"Input file {options.File} contains no simulations.");
+                int n = generatedFiles.Count();
+                WriteToLog($"Split input file into {n} chunk{(n == 1 ? "" : "s")}.");
             }
+            else
+                throw new InvalidOperationException($"Input file {options.File} contains no simulations.");
 
             // If this is not running inside a pod, then we need to create a
             // namespace for the worker pods. Otherwise, the assumption is that
@@ -168,8 +167,7 @@ namespace APSIM.Server
             if (!options.InPod)
                 client.CreateNamespace(CreateStandardNamespace());
 
-            if (options.Verbose)
-                Console.WriteLine("Launching pods...");
+            WriteToLog("Launching pods...");
 
             // Create pod templates.
             uint i = 0;
@@ -181,11 +179,9 @@ namespace APSIM.Server
             // todo: use async API
             pods = pods.Select(p => client.CreateNamespacedPod(p, podNamespace)).ToList();
 
-            if (options.Verbose)
-                Console.WriteLine($"Created {pods.Count} pod{(pods.Count == 1 ? "" : "s")}.");
+            WriteToLog($"Created {pods.Count} pod{(pods.Count == 1 ? "" : "s")}.");
 
-            if (options.Verbose)
-                Console.WriteLine($"Waiting for pods to start...");
+            WriteToLog($"Waiting for pods to start...");
 
             // Busy wait while any pods are still in the "Pending" phase.
             // This ensures that the returned pods have certain metadata
@@ -342,8 +338,7 @@ namespace APSIM.Server
         public void Dispose()
         {
             RemoveWorkers();
-            if (options.Verbose)
-                Console.WriteLine("Deleting namespace...");
+            WriteToLog("Deleting namespace...");
             client.DeleteNamespace(podNamespace);
             client.Dispose();
             if (!string.IsNullOrEmpty(tempInputFiles) && Directory.Exists(tempInputFiles))
