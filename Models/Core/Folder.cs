@@ -107,19 +107,22 @@
 
         private IEnumerable<APSIM.Services.Documentation.Graph> GetChildGraphs()
         {
-            var result = new List<APSIM.Services.Documentation.Graph>();
-            foreach (var graph in FindAllChildren<Models.Graph>())
+            var graphs = new List<APSIM.Services.Documentation.Graph>();
+            var page = new Models.GraphPage();
+            page.Graphs.AddRange(FindAllChildren<Models.Graph>().Where(g => g.Enabled));
+            var storage = FindInScope<Models.Storage.IDataStore>();
+            foreach (var map in page.GetAllSeriesDefinitions(this, storage.Reader))
             {
                 try
                 {
-                    result.Add(graph.ToGraph());
+                    graphs.Add(map.Graph.ToGraph(map.SeriesDefinitions));
                 }
                 catch (Exception err)
                 {
                     Console.Error.WriteLine(err);
                 }
             }
-            return result;
+            return graphs;
         }
     }
 }

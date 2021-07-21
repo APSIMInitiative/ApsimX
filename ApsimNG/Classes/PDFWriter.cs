@@ -35,6 +35,7 @@
     using UserInterface.Interfaces;
     using UserInterface.Extensions;
     using Markdig;
+    using APSIM.Interop.Utility;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.

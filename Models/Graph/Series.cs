@@ -200,12 +200,19 @@
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable graphable in FindAllChildren<IGraphable>())
             {
-                IEnumerable<SeriesDefinition> definitions;
-                if (graphable is ICachableGraphable cachable)
-                    definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
-                else
-                    definitions = graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
-                seriesDefinitions.AddRange(definitions);
+                try
+                {
+                    IEnumerable<SeriesDefinition> definitions;
+                    if (graphable is ICachableGraphable cachable)
+                        definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
+                    else
+                        definitions = graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
+                    seriesDefinitions.AddRange(definitions);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Unable to render graphable object {graphable.FullPath}", err);
+                }
             }
         }
 

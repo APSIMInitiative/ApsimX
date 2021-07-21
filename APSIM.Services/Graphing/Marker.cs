@@ -31,5 +31,22 @@ namespace APSIM.Services.Graphing
             Size = size;
             SizeModifier = modifier;
         }
+
+        /// <summary>
+        /// Is this a "filled" marker type? (filled as in filled with colour)
+        /// </summary>
+        public bool IsFilled()
+        {
+            switch (Type)
+            {
+                case MarkerType.FilledCircle:
+                case MarkerType.FilledDiamond:
+                case MarkerType.FilledSquare:
+                case MarkerType.FilledTriangle:
+                    return true;
+                default:
+                    return false;
+            }
+        }
     }    
 }

@@ -37,16 +37,6 @@ namespace APSIM.Services.Graphing
         {
             LineConfig = line;
             MarkerConfig = marker;
-            /*
-             string title,
-             IEnumerable x,
-             IEnumerable y,
-             string xFieldName,
-             string yFieldName,
-             Models.Axis.AxisType xAxisType,
-             Models.Axis.AxisType yAxisType,
-             bool showOnLegend
-            */
         }
     }
 }

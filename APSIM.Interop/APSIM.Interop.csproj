@@ -11,6 +11,8 @@
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
     <PackageReference Include="Markdig" Version="0.22.1" />
+    <PackageReference Include="MathNet.Numerics" Version="4.11.0" />
+    <PackageReference Include="Svg" Version="3.2.3" />
     <EmbeddedResource Include="Resources\**" />
   </ItemGroup>
 

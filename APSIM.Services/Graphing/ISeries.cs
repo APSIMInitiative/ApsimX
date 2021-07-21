@@ -1,0 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+
+namespace APSIM.Services.Graphing
+{
+    /// <summary>
+    /// Contains options common to all graph series.
+    /// </summary>
+    /// <remarks>
+    /// Double vs datetime
+    /// line vs area vs bar vs box/whisker
+    /// </remarks>
+    public interface ISeries
+    {
+        /// <summary>Name of the series.</summary>
+        string Title { get; }
+
+        /// <summary>Colour of the series.</summary>
+        Color Colour { get; }
+
+        /// <summary>Should this series appear in the legend?</summary>
+        bool ShowOnLegend { get; }
+    }
+}

@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.JobRunning;
+﻿using APSIM.Services.Documentation;
+using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Soils.Standardiser;
@@ -338,6 +339,17 @@ namespace Models.Core
         protected override Locater Locator()
         {
             return Locater;
+        }
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, DocumentChildren<Graph>());
         }
     }
 }

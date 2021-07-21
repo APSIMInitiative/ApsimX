@@ -1,5 +1,10 @@
+using System.IO;
+using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
+using OxyPlot;
+using Image = System.Drawing.Image;
+using APSIM.Interop.Utility;
 
 namespace APSIM.Interop.Documentation.Renderers
 {
@@ -17,7 +22,14 @@ namespace APSIM.Interop.Documentation.Renderers
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
         protected override void Render(Graph graph, PdfBuilder renderer)
         {
-            // throw new System.NotImplementedException();
+            renderer.GetPageSize(out double width, out double height);
+            renderer.StartNewParagraph();
+
+            // Give the graph the full page width.
+            // Calculate height from width width aspect ratio of 16:9.
+            double aspectRatio = 16d / 9d;
+            renderer.AppendImage(graph.ToImage(width, width / aspectRatio));
+            renderer.StartNewParagraph();
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Utility
         /// <returns>The same colour as a Cairo.Color.</returns>
         public static OxyColor ToOxy(Color colour)
         {
-            return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+            return APSIM.Interop.Graphing.EnumerationExtensions.ToOxyColour(colour);
         }
 
         /// <summary>

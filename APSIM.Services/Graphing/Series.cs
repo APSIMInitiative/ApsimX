@@ -9,7 +9,7 @@ namespace APSIM.Services.Graphing
     /// <summary>
     /// Contains options common to all graph series.
     /// </summary>
-    public class Series
+    public class Series : ISeries
     {
         /// <summary>
         /// Name of the series.

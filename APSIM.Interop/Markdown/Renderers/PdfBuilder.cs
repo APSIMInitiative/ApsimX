@@ -15,6 +15,7 @@ using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown.Renderers.Extras;
 using APSIM.Interop.Documentation.Renderers;
 using System.Diagnostics;
+using APSIM.Interop.Utility;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
@@ -601,6 +602,16 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Get the page width and height in pixels.
+        /// </summary>
+        /// <param name="width">Page width.</param>
+        /// <param name="height">Page height.</param>
+        public void GetPageSize(out double width, out double height)
+        {
+            GetPageSize(GetLastSection(), out width, out height);
+        }
+
+        /// <summary>
         /// Create a new paragraph and return it. If the most recent paragraph
         /// in the current context is empty, that paragraph will be returned
         /// instead, and a new paragraph will not be created or added to the
@@ -634,6 +645,9 @@ namespace APSIM.Interop.Markdown.Renderers
             tagRenderer.Render(tag, this);
         }
 
+        /// <summary>
+        /// Write the heading indices (e.g. 1.2.3.2).
+        /// </summary>
         private void WriteHeadingIndices()
         {
             AppendText($"{string.Join(".", headingIndices.Reverse())} ", TextStyle.Normal);

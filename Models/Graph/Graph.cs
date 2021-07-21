@@ -162,11 +162,31 @@
         }
 
         /// <summary>
+        /// Get all series definitions using the GraphPage API - which will
+        /// load the series' data in parallel.
+        /// </summary>
+        private IEnumerable<SeriesDefinition> GetSeriesDefinitions()
+        {
+            // Using the graphpage API - this will load each series' data in parallel.
+            GraphPage page = new GraphPage();
+            page.Graphs.Add(this);
+            return page.GetAllSeriesDefinitions(Parent, FindInScope<IDataStore>()?.Reader).FirstOrDefault()?.SeriesDefinitions;
+        }
+
+        /// <summary>
         /// Get a list of 'standardised' series objects which are to be shown on the graph.
         /// </summary>
         public IEnumerable<APSIM.Services.Graphing.Series> GetSeries()
         {
-            IEnumerable<SeriesDefinition> definitions = GetDefinitionsToGraph(FindInScope<IDataStore>()?.Reader);
+            return GetSeries(GetSeriesDefinitions());
+        }
+
+        /// <summary>
+        /// Get a list of 'standardised' series objects which are to be shown on the graph.
+        /// </summary>
+        /// <param name="definitions"></param>
+        public IEnumerable<APSIM.Services.Graphing.Series> GetSeries(IEnumerable<SeriesDefinition> definitions)
+        {
             List<APSIM.Services.Graphing.Series> series = new List<APSIM.Services.Graphing.Series>();
             foreach (SeriesDefinition definition in definitions)
             {
@@ -202,8 +222,8 @@
                                                    marker,
                                                    LineThickness.Normal,
                                                    LineThickness.Normal,
-                                                   definition.XError.Cast<object>().ToList(),
-                                                   definition.YError.Cast<object>().ToList()));
+                                                   definition.XError?.Cast<object>()?.ToList(),
+                                                   definition.YError?.Cast<object>()?.ToList()));
                 }
                 else if (definition.Type == SeriesType.Region)
                 {
@@ -372,10 +392,20 @@
         /// </summary>
         public APSIM.Services.Documentation.Graph ToGraph()
         {
+            return ToGraph(GetSeriesDefinitions());
+        }
+
+        /// <summary>
+        /// Generated a 'standardised' graph, using the given series definitions.
+        /// This is used to speed up the loading of pages of graphs - where we
+        /// will load data for all series definitions in parallel ahead of time.
+        /// </summary>
+        public APSIM.Services.Documentation.Graph ToGraph(IEnumerable<SeriesDefinition> definitions)
+        {
             try
             {
-                LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition);
-                return new APSIM.Services.Documentation.Graph(GetSeries(), Axis, legend);
+                LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition, !LegendOutsideGraph);
+                return new APSIM.Services.Documentation.Graph(GetSeries(definitions), Axis, legend);
             }
             catch (Exception err)
             {
