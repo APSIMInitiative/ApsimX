@@ -12,6 +12,8 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using Models.Core.Run;
 using Models.Storage;
+using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {
@@ -20,11 +22,13 @@ namespace Models.CLEM.Reporting
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
-    [PresenterName("UserInterface.Presenters.ReportPresenter")]
+    [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
     [Description("This report automatically generates a current balance column for each CLEM Resource Type\r\nassociated with the CLEM Resource Groups specified (name only) in the variable list.")]
+    [Version(1, 0, 3, "Respects herd transaction style in reporting herd breakdown columns")]
+    [Version(1, 0, 2, "Includes value as reportable columns")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
     public class ReportResourceBalances: Models.Report
@@ -33,6 +37,64 @@ namespace Models.CLEM.Reporting
         private ResourcesHolder Resources = null;
         [Link]
         private Summary Summary = null;
+
+        /// <summary>
+        /// Gets or sets report groups for outputting
+        /// </summary>
+        [Description("Resource groups")]
+        //[Display(Type = DisplayType.MultiLineText)]
+        [Category("General", "Resources")]
+        public override string[] VariableNames { get; set; }
+
+        /// <summary>
+        /// Gets or sets event names for outputting
+        /// </summary>
+        [JsonIgnore]
+        [Description("")]
+        public override string[] EventNames { get; set; }
+
+        /// <summary>
+        /// Report balances of amount
+        /// </summary>
+        [Category("Report", "General")]
+        [Description("Report physical amount")]
+        public bool ReportAmount { get; set; }
+
+        /// <summary>
+        /// Report balances of value
+        /// </summary>
+        [Category("Report", "Economics")]
+        [Description("Report dollar value")]
+        public bool ReportValue { get; set; }
+
+        /// <summary>
+        /// Report balances of animal equivalents
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Report ruminant Adult Equivalents")]
+        public bool ReportAnimalEquivalents { get; set; }
+
+        /// <summary>
+        /// Report balances of animal weight
+        /// </summary>
+        [Category("Report", "Ruminants")]
+        [Description("Report Ruminant total weight")]
+        public bool ReportAnimalWeight { get; set; }
+
+        /// <summary>
+        /// Report available land as balance
+        /// </summary>
+        [Category("Report", "Land")]
+        [Description("Report Land as area present")]
+        public bool ReportLandEntire { get; set; }
+
+        /// <summary>
+        /// Report available labour in individuals
+        /// </summary>
+        [Category("Report", "Land")]
+        [Description("Report Labour as individuals")]
+        public bool ReportLabourIndividuals { get; set; }
+
 
         /// <summary>The columns to write to the data store.</summary>
         [NonSerialized]
@@ -60,17 +122,29 @@ namespace Models.CLEM.Reporting
         [Link]
         private IEvent events = null;
 
+        private IEnumerable<IActivityTimer> timers;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ReportResourceBalances()
+        {
+            ReportAmount = true;
+        }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
-        [EventSubscribe("Commencing")]
+        [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
+            timers = FindAllChildren<IActivityTimer>();
+
             dataToWriteToDb = null;
             // sanitise the variable names and remove duplicates
             
             List<string> variableNames = new List<string>();
-            if (VariableNames.Where(a => a.Contains("[Clock].Today")).Count() == 0)
+            if (VariableNames.Where(a => a.Contains("[Clock].Today")).Any() is false)
             {
                 variableNames.Add("[Clock].Today as Date");
             }
@@ -99,9 +173,21 @@ namespace Models.CLEM.Reporting
                             {
                                 if (model.GetType().Name == "Labour")
                                 {
+                                    string amountStr = "Amount";
+                                    if (ReportLabourIndividuals)
+                                    {
+                                        amountStr = "Individuals";
+                                    }
+
                                     for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items[" + (j+1).ToString() + "].AvailableDays as " + (model as Labour).Items[j].Name);
+                                        if (ReportAmount)
+                                        {
+                                            variableNames.Add("[Resources]." + this.VariableNames[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
+                                        }
+
+                                        //TODO: what economic metric is needed for labour
+                                        //TODO: add ability to report labour value if required
                                     }
                                 }
                                 else
@@ -115,16 +201,48 @@ namespace Models.CLEM.Reporting
                                             case "FinanceType":
                                                 amountStr = "Balance";
                                                 break;
-                                            case "LabourType":
-                                                amountStr = "AvailableDays";
+                                            case "LandType":
+                                                if (ReportLandEntire)
+                                                {
+                                                    amountStr = "LandArea";
+                                                }
                                                 break;
                                             default:
                                                 break;
                                         }
-                                        variableNames.Add($"[Resources].{this.VariableNames[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }");
-                                        if(item.GetType().Name == "RuminantType")
+                                        if (item.GetType().Name == "RuminantType")
                                         {
-                                            variableNames.Add("[Resources]." + this.VariableNames[i] + "." + item.Name + ".AmountAE as TotalAE");
+                                            // add each variable needed
+                                            foreach (var category in (model as RuminantHerd).GetReportingGroups(item as RuminantType))
+                                            {
+                                                if (ReportAmount)
+                                                {
+                                                    variableNames.Add($"[Resources].{this.VariableNames[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").Count as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Count");
+                                                }
+                                                if (ReportAnimalEquivalents)
+                                                {
+                                                    variableNames.Add($"[Resources].{this.VariableNames[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalAE as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.AE");
+                                                }
+                                                if (ReportAnimalWeight)
+                                                {
+                                                    variableNames.Add($"[Resources].{this.VariableNames[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Weight");
+                                                }
+                                                if (ReportValue)
+                                                {
+                                                    variableNames.Add($"[Resources].{this.VariableNames[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Value");
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (ReportAmount)
+                                            {
+                                                variableNames.Add($"[Resources].{this.VariableNames[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
+                                            }
+                                            if (ReportValue & item.GetType().Name != "FinanceType")
+                                            {
+                                                variableNames.Add($"[Resources].{this.VariableNames[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.VariableNames[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
+                                            }
                                         }
                                     }
                                 }
@@ -164,6 +282,14 @@ namespace Models.CLEM.Reporting
                 storage.Writer.WriteTable(dataToWriteToDb);
             }
             dataToWriteToDb = null;
+        }
+        /// <inheritdoc/>
+        public override void DoOutputEvent(object sender, EventArgs e)
+        {
+            if (timers == null || timers.Sum(a => (a.ActivityDue ? 1 : 0)) > 0)
+            {
+                DoOutput();
+            }
         }
 
         /// <summary>A method that can be called by other models to perform a line of output.</summary>
@@ -227,25 +353,6 @@ namespace Models.CLEM.Reporting
             DayAfterLastOutput = clock.Today.AddDays(1);
         }
 
-        /// <summary>Create a text report from tables in this data store.</summary>
-        /// <param name="storage">The data store.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IDataStore storage, string fileName)
-        {
-            // Write out each table for this simulation.
-            foreach (string tableName in storage.Reader.TableNames)
-            {
-                DataTable data = storage.Reader.GetData(tableName);
-                if (data != null && data.Rows.Count > 0)
-                {
-                    SortColumnsOfDataTable(data);
-                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                    report.Close();
-                }
-            }
-        }
-
         /// <summary>Sort the columns alphabetically</summary>
         /// <param name="table">The table to sort</param>
         private static void SortColumnsOfDataTable(DataTable table)
@@ -270,13 +377,6 @@ namespace Models.CLEM.Reporting
             {
                 table.Columns[i].SetOrdinal(++ordinal);
             }
-        }
-
-
-        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public new void DoOutputEvent(object sender, EventArgs e)
-        {
-            DoOutput();
         }
 
         /// <summary>

@@ -386,10 +386,10 @@
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.GenderAsString as Sex",
+                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Gender as Sex",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlagAsString as Reason",
+                    "[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlag as Reason",
                     "[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change"
                   ],
                   "EventNames": [

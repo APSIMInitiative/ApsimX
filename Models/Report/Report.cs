@@ -67,14 +67,14 @@ namespace Models
         /// </summary>
         [Summary]
         [Description("Output variables")]
-        public string[] VariableNames { get; set; }
+        public virtual string[] VariableNames { get; set; }
 
         /// <summary>
         /// Gets or sets event names for outputting
         /// </summary>
         [Summary]
         [Description("Output frequency")]
-        public string[] EventNames { get; set; }
+        public virtual string[] EventNames { get; set; }
 
         /// <summary>
         /// Date of the day after last time report did write to storage.
@@ -298,7 +298,7 @@ namespace Models
 
 
         /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public void DoOutputEvent(object sender, EventArgs e)
+        public virtual void DoOutputEvent(object sender, EventArgs e)
         {
             DoOutput();
         }
