@@ -31,30 +31,30 @@ namespace Models
 
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
-        private ReportData dataToWriteToDb = null;
+        protected ReportData dataToWriteToDb = null;
 
         /// <summary>List of strings representing dates to report on.</summary>
-        private List<string> dateStringsToReportOn = new List<string>();
+        protected List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
-        private Simulation simulation = null;
+        protected Simulation simulation = null;
 
         /// <summary>Link to a clock model.</summary>
         [Link]
-        private IClock clock = null;
+        protected IClock clock = null;
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        private IDataStore storage = null;
+        protected IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
-        private ILocator locator = null;
+        protected ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
-        private IEvent events = null;
+        protected IEvent events = null;
 
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
@@ -66,15 +66,13 @@ namespace Models
         /// Gets or sets variable names for outputting
         /// </summary>
         [Summary]
-        [Description("Output variables")]
-        public virtual string[] VariableNames { get; set; }
+        public string[] VariableNames { get; set; }
 
         /// <summary>
         /// Gets or sets event names for outputting
         /// </summary>
         [Summary]
-        [Description("Output frequency")]
-        public virtual string[] EventNames { get; set; }
+        public string[] EventNames { get; set; }
 
         /// <summary>
         /// Date of the day after last time report did write to storage.
@@ -91,7 +89,7 @@ namespace Models
         /// <param name="sender">Sender object..</param>
         /// <param name="args">Event data.</param>
         [EventSubscribe("FinalInitialise")]
-        private void OnFinalInitialise(object sender, EventArgs args)
+        protected void OnFinalInitialise(object sender, EventArgs args)
         {
             DayAfterLastOutput = clock.Today;
         }
@@ -122,7 +120,7 @@ namespace Models
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("DoReport")]
-        private void OnDoReport(object sender, EventArgs e)
+        protected void OnDoReport(object sender, EventArgs e)
         {
             foreach (var dateString in dateStringsToReportOn)
             {
@@ -194,7 +192,7 @@ namespace Models
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        protected void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
                 storage.Writer.WriteTable(dataToWriteToDb);
@@ -278,7 +276,7 @@ namespace Models
 
         /// <summary>Sort the columns alphabetically</summary>
         /// <param name="table">The table to sort</param>
-        private static void SortColumnsOfDataTable(DataTable table)
+        protected static void SortColumnsOfDataTable(DataTable table)
         {
             var columnArray = new DataColumn[table.Columns.Count];
             table.Columns.CopyTo(columnArray, 0);
@@ -356,7 +354,7 @@ namespace Models
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
-        private void AddExperimentFactorLevels()
+        protected void AddExperimentFactorLevels()
         {
             if (simulation.Descriptors != null)
             {
@@ -368,7 +366,7 @@ namespace Models
         }
 
         /// <summary>Store descriptors in DataStore.</summary>
-        private void StoreFactorsInDataStore()
+        protected void StoreFactorsInDataStore()
         {
             if (storage != null && simulation != null && simulation.Descriptors != null)
             {
