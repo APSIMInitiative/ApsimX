@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using APSIM.Interop.Utility;
 using APSIM.Services.Documentation;
 using APSIM.Services.Graphing;
@@ -38,7 +41,8 @@ namespace APSIM.Interop.Graphing
             // Apply font
             plot.TitleFont = font;
             plot.LegendFont = font;
-            // plot.Title = graph.Title;
+            plot.PlotAreaBorderThickness = new OxyThickness(0);
+            plot.Title = graph.Title;
 
             return plot;
         }
@@ -59,7 +63,16 @@ namespace APSIM.Interop.Graphing
                 double heightPt = height / pointsToPixels;
 
                 // Write the image to a memory stream in SVG format.
-                SvgExporter.Export(graph.ToPlotModel(), stream, widthPt, heightPt, false);
+                SvgExporter exporter = new SvgExporter();
+                exporter.Width = widthPt;
+                exporter.Height = heightPt;
+#if NETCOREAPP
+                // This is a workaround for a bug in oxyplot's svg exporter;
+                // Without this, the vertical alignment of axis tick labels
+                // is incorrect (they are rendered too high).
+                exporter.UseVerticalTextAlignmentWorkaround = true;
+#endif
+                exporter.Export(graph.ToPlotModel(), stream);
                 stream.Seek(0, SeekOrigin.Begin);
 
                 // Setting height to 0 will cause the aspect ratio to be preserved.

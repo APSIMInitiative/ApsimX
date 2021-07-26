@@ -1,4 +1,6 @@
+using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
+using APSIM.Interop.Utility;
 using APSIM.Services.Documentation;
 
 namespace APSIM.Interop.Documentation.Renderers
@@ -17,11 +19,17 @@ namespace APSIM.Interop.Documentation.Renderers
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
         protected override void Render(GraphPage page, PdfBuilder renderer)
         {
-            // throw new System.NotImplementedException();
-            // foreach (Graph graph in page.Graphs)
-            // {
+            renderer.GetPageSize(out double width, out double height);
+            // Let image width = half page width.
+            width /= 2;
+            // 6 graphs per page - 2 columns of 3 rows.
+            // Therefore each graph gets 1/3 total page height.
+            height /= 3;
 
-            // }
+            renderer.StartNewParagraph();
+            foreach (Graph graph in page.Graphs)
+                renderer.AppendImage(ImageUtilities.ResizeImage(graph.ToImage(900, 600), width, height));
+            renderer.StartNewParagraph();
         }
     }
 }

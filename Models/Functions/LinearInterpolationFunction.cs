@@ -129,7 +129,7 @@ namespace Models.Functions
             axes[0] = new APSIM.Services.Graphing.Axis(XVariableName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
             axes[1] = new APSIM.Services.Graphing.Axis(Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
             var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft, true);
-            return new APSIM.Services.Documentation.Graph(series, axes, legend);
+            return new APSIM.Services.Documentation.Graph(Name, series, axes, legend);
         }
     }
 }

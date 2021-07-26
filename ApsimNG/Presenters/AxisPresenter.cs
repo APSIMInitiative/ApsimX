@@ -40,7 +40,7 @@
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
-            this.view.IsDateAxis = axis.DateTimeAxis;
+            // this.view.IsDateAxis = false/*axis.DateTimeAxis*/ // fixme;
 
             // Tell the view to populate the axis.
             PopulateView();
@@ -80,9 +80,9 @@
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
-            view.SetMinimum(axis.Minimum ?? double.NaN, axis.DateTimeAxis);
-            view.SetMaximum(axis.Maximum ?? double.NaN, axis.DateTimeAxis);
-            view.SetInterval(axis.Interval ?? double.NaN, axis.DateTimeAxis);
+            view.SetMinimum(axis.Minimum ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.SetMaximum(axis.Maximum ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.SetInterval(axis.Interval ?? double.NaN, false/*axis.DateTimeAxis*/);
         }
         
         /// <summary>

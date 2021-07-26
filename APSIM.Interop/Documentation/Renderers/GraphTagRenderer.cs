@@ -1,10 +1,6 @@
-using System.IO;
 using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
-using OxyPlot;
-using Image = System.Drawing.Image;
-using APSIM.Interop.Utility;
 
 namespace APSIM.Interop.Documentation.Renderers
 {
@@ -16,18 +12,22 @@ namespace APSIM.Interop.Documentation.Renderers
     internal class GraphTagRenderer : TagRendererBase<Graph>
     {
         /// <summary>
+        /// The graph will always be given full page width. The graph's
+        /// height will be calculated using this aspect ratio. This
+        /// could be made into a user-settable property.
+        /// </summary>
+        private const double aspectRatio = 16d / 9d;
+
+        /// <summary>
         /// Render the given graph tag to the PDF document.
         /// </summary>
         /// <param name="graph">Graph tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
         protected override void Render(Graph graph, PdfBuilder renderer)
         {
-            renderer.GetPageSize(out double width, out double height);
-            renderer.StartNewParagraph();
+            renderer.GetPageSize(out double width, out _);
 
-            // Give the graph the full page width.
-            // Calculate height from width width aspect ratio of 16:9.
-            double aspectRatio = 16d / 9d;
+            renderer.StartNewParagraph();
             renderer.AppendImage(graph.ToImage(width, width / aspectRatio));
             renderer.StartNewParagraph();
         }

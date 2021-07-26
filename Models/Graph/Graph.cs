@@ -405,7 +405,7 @@
             try
             {
                 LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition, !LegendOutsideGraph);
-                return new APSIM.Services.Documentation.Graph(GetSeries(definitions), Axis, legend);
+                return new APSIM.Services.Documentation.Graph(Name, GetSeries(definitions), Axis, legend);
             }
             catch (Exception err)
             {

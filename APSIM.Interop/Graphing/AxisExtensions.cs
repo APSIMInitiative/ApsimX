@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using APSIM.Interop.Graphing.Axes;
 using OxyPlot.Axes;
 using Axis = OxyPlot.Axes.Axis;
 using AxisPosition = OxyPlot.Axes.AxisPosition;
@@ -17,8 +20,7 @@ namespace APSIM.Interop.Graphing
             Axis result;
             if (axis.DateTimeAxis)
             {
-                result = new DateTimeAxis();
-                ((DateTimeAxis)result).StringFormat = "dd/MM/yyyy";
+                result = new SmartDateTimeAxis();
             }
             else
                 result = new LinearAxis();
@@ -42,18 +44,6 @@ namespace APSIM.Interop.Graphing
                 else
                     result.Maximum = max;
             }
-
-            if (axis.Inverted)
-            {
-                result.StartPosition = 1;
-                result.EndPosition = 0;
-            }
-            else
-            {
-                result.StartPosition = 0;
-                result.EndPosition = 1;
-            }
-
             if (axis.Interval is double interval)
             {
                 if (double.IsNaN(interval))
@@ -61,19 +51,22 @@ namespace APSIM.Interop.Graphing
                 else
                 {
                     if (axis.DateTimeAxis)
-                    {
-                        DateTimeIntervalType intervalType = (DateTimeIntervalType)interval;
-                        ((DateTimeAxis)result).IntervalType = intervalType;
-                        ((DateTimeAxis)result).MinorIntervalType = intervalType - 1;
-                    }
-                    else
-                        result.MajorStep = interval;
+                        Debug.WriteLine("WARNING: Axis interval is set manually on a date axis - need to double check the implementation.");
+                    result.MajorStep = interval;
                 }
             }
+
+            if (axis.Inverted)
+            {
+                result.StartPosition = 1;
+                result.EndPosition = 0;
+            }
+
+            // There are many other options which could be exposed to the user.
             result.MinorTickSize = 0;
-            // result.AxislineStyle = OxyPlot.LineStyle.Solid;
-            // result.AxisTitleDistance = 10;
-            result.AxisTickToLabelDistance = result.MajorTickSize;
+            result.AxisTitleDistance = 10;
+            result.AxislineStyle = OxyPlot.LineStyle.Solid;
+
             return result;
         }
 

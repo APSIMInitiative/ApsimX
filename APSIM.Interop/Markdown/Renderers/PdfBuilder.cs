@@ -604,8 +604,13 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Get the page width and height in pixels.
         /// </summary>
-        /// <param name="width">Page width.</param>
-        /// <param name="height">Page height.</param>
+        /// <remarks>
+        /// This is required by any tag renderer which needs to generate
+        /// an image in memory (e.g. graphs, nutrient directed graph,
+        /// map component, etc).
+        /// </remarks>
+        /// <param name="width">Page width (in px).</param>
+        /// <param name="height">Page height (in px).</param>
         public void GetPageSize(out double width, out double height)
         {
             GetPageSize(GetLastSection(), out width, out height);
