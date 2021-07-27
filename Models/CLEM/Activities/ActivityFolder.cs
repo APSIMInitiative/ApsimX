@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
@@ -26,7 +27,7 @@ namespace Models.CLEM.Activities
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>
-        public override string TransactionCategory { get; set; }
+        public new string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
