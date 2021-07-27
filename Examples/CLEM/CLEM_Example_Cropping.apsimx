@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -655,7 +655,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": null,
+                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Tomato Paste",
                       "Children": [
@@ -1738,7 +1738,7 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                      "TransactionCategory": null,
+                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Manage crops",
                       "Children": [
@@ -1939,7 +1939,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                                  "TransactionCategory": null,
+                                  "TransactionCategory": "Folder",
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Name": "Harvest activities",
                                   "Children": [
@@ -2217,7 +2217,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
-                                  "TransactionCategory": null,
+                                  "TransactionCategory": "Folder",
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Name": "Harvest activities",
                                   "Children": [

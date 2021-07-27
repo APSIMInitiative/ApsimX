@@ -26,12 +26,19 @@ namespace Models.CLEM.Activities
     public class ActivityFolder : CLEMActivityBase
     {
         /// <inheritdoc/>
-        [JsonIgnore]
-        public new string TransactionCategory { get; set; }
+        public override string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
         public new OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityFolder()
+        {
+            TransactionCategory = "Folder";
+        }
 
         /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
