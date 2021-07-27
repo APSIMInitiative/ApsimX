@@ -45,7 +45,7 @@ namespace Models.CLEM.Reporting
         //[Display(Type = DisplayType.MultiLineText)]
         [Category("General", "Resources")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "At least one Resource group must be provided for the Balances Report")]
-        public string[] ResourceGroupsToRport { get; set; }
+        public string[] ResourceGroupsToReport { get; set; }
 
         /// <summary>
         /// Report balances of amount
@@ -105,7 +105,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToRport is null)
+            if (ResourceGroupsToReport is null)
                 return; 
             
             timers = FindAllChildren<IActivityTimer>();
@@ -114,30 +114,30 @@ namespace Models.CLEM.Reporting
             // sanitise the variable names and remove duplicates
             
             List<string> variableNames = new List<string>();
-            if (ResourceGroupsToRport.Where(a => a.Contains("[Clock].Today")).Any() is false)
+            if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
             {
                 variableNames.Add("[Clock].Today as Date");
             }
 
-            if (ResourceGroupsToRport != null)
+            if (ResourceGroupsToReport != null)
             {
-                for (int i = 0; i < this.ResourceGroupsToRport.Length; i++)
+                for (int i = 0; i < this.ResourceGroupsToReport.Length; i++)
                 {
                     // each variable name is now a ResourceGroup
-                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.ResourceGroupsToRport[i].Trim()) != -1;
-                    if (!isDuplicate && this.ResourceGroupsToRport[i] != string.Empty)
+                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.ResourceGroupsToReport[i].Trim()) != -1;
+                    if (!isDuplicate && this.ResourceGroupsToReport[i] != string.Empty)
                     {
-                        if (this.ResourceGroupsToRport[i].StartsWith("["))
+                        if (this.ResourceGroupsToReport[i].StartsWith("["))
                         {
-                            variableNames.Add(this.ResourceGroupsToRport[i]);
+                            variableNames.Add(this.ResourceGroupsToReport[i]);
                         }
                         else
                         {
                             // check it is a ResourceGroup
-                            CLEMModel model = Resources.GetResourceGroupByName(this.ResourceGroupsToRport[i]) as CLEMModel;
+                            CLEMModel model = Resources.GetResourceGroupByName(this.ResourceGroupsToReport[i]) as CLEMModel;
                             if (model == null)
                             {
-                                Summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToRport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
+                                Summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
                             }
                             else
                             {
@@ -153,7 +153,7 @@ namespace Models.CLEM.Reporting
                                     {
                                         if (ReportAmount)
                                         {
-                                            variableNames.Add("[Resources]." + this.ResourceGroupsToRport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
+                                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
                                         }
 
                                         //TODO: what economic metric is needed for labour
@@ -187,19 +187,19 @@ namespace Models.CLEM.Reporting
                                             {
                                                 if (ReportAmount)
                                                 {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").Count as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Count");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").Count as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Count");
                                                 }
                                                 if (ReportAnimalEquivalents)
                                                 {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalAE as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.AE");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalAE as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.AE");
                                                 }
                                                 if (ReportAnimalWeight)
                                                 {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Weight");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Weight");
                                                 }
                                                 if (ReportValue)
                                                 {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Value");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Value");
                                                 }
                                             }
                                         }
@@ -207,11 +207,11 @@ namespace Models.CLEM.Reporting
                                         {
                                             if (ReportAmount)
                                             {
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
                                             }
                                             if (ReportValue & item.GetType().Name != "FinanceType")
                                             {
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToRport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToRport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
                                             }
                                         }
                                     }
@@ -248,7 +248,7 @@ namespace Models.CLEM.Reporting
         public override void DoOutputEvent(object sender, EventArgs e)
         {
             //  support timers
-            if (timers == null || timers.Sum(a => (a.ActivityDue ? 1 : 0)) > 0)
+            if (timers is null || !timers.Any() || timers.Sum(a => (a.ActivityDue ? 1 : 0)) > 0)
             {
                 DoOutput();
             }
