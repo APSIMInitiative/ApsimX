@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 90,
+  "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -17,6 +17,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "GrowCrop",
       "Children": [
         {
@@ -54,10 +56,12 @@
           "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
           "EcologicalIndicatorsCalculationMonth": 12,
+          "AutoCreateDescriptiveSummary": false,
           "Area": 0.0,
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "ModelSummaryStyle": 7,
           "Name": "CLEM",
           "Children": [
             {
@@ -70,6 +74,7 @@
               "MonthColumnName": "Month",
               "AmountColumnName": "AmtKg",
               "PercentNitrogenColumnName": null,
+              "HarvestTypeColumnName": null,
               "Name": "FileCrop",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -86,6 +91,7 @@
               "MonthColumnName": "Month",
               "AmountColumnName": "AmtKg",
               "PercentNitrogenColumnName": null,
+              "HarvestTypeColumnName": null,
               "Name": "FileCropResidue",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -108,6 +114,7 @@
                       "PortionBuildings": 0.0,
                       "ProportionOfTotalArea": 1.0,
                       "SoilType": "3",
+                      "LastGain": 0.0,
                       "Name": "Field",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -129,6 +136,7 @@
                       "DMD": 51.0,
                       "Nitrogen": 1.5,
                       "StartingAmount": 0.0,
+                      "LastGain": 0.0,
                       "Name": "Maize grain",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -141,6 +149,7 @@
                       "DMD": 46.0,
                       "Nitrogen": 1.0,
                       "StartingAmount": 0.0,
+                      "LastGain": 0.0,
                       "Name": "Maize residue",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -168,6 +177,7 @@
                   "LandItemNameToUse": "Land.Field",
                   "AreaRequested": 1.0,
                   "UseAreaAvailable": true,
+                  "TransactionCategory": "Crop",
                   "OnPartialResourcesAvailableAction": 0,
                   "Name": "Manage maize",
                   "Children": [
@@ -179,6 +189,7 @@
                       "ProportionKept": 1.0,
                       "TreesPerHa": 0.0,
                       "UnitsToHaConverter": 0.0,
+                      "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Manage grain",
                       "Children": [
@@ -190,6 +201,7 @@
                           "ProportionKept": 1.0,
                           "TreesPerHa": 0.0,
                           "UnitsToHaConverter": 0.0,
+                          "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Manage residue",
                           "Children": [],
@@ -219,9 +231,13 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
                   "VariableNames": [
                     "AnimalFoodStore"
                   ],
+                  "ReportLossesAsNegative": false,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "AnimalFoodStoreLedger",
@@ -232,9 +248,13 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
                   "VariableNames": [
                     "Land"
                   ],
+                  "ReportLossesAsNegative": false,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "LandLedger",
@@ -245,6 +265,15 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                  "ResourceGroupsToReport": [
+                    "AnimalFoodStore"
+                  ],
+                  "ReportAmount": true,
+                  "ReportValue": false,
+                  "ReportAnimalEquivalents": false,
+                  "ReportAnimalWeight": false,
+                  "ReportLandEntire": false,
+                  "ReportLabourIndividuals": false,
                   "VariableNames": [
                     "[Clock].Today as Date",
                     "AnimalFoodStore"
@@ -261,6 +290,11 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                  "CreateHTML": false,
+                  "RotateReport": false,
+                  "AutoCreateHTML": false,
+                  "SelectedTab": null,
+                  "ModelSummaryStyle": 0,
                   "VariableNames": null,
                   "EventNames": null,
                   "GroupByVariableName": null,
@@ -299,6 +333,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Graph_AnimalFoodStoreBalance",
