@@ -19,7 +19,7 @@ namespace APSIM.Interop.Graphing
         protected override Series Export(ErrorSeries series)
         {
             var result = new OxyPlot.Series.ScatterErrorSeries();
-            result.ItemsSource = GetDataPoints(series.X, series.Y);
+            result.ItemsSource = GetErrorDataPoints(series.X, series.Y, series.XError, series.YError);
             if (series.ShowOnLegend)
                 result.Title = series.Title;
 
@@ -28,13 +28,14 @@ namespace APSIM.Interop.Graphing
             // result.Stroke = series.LineConfig.Colour.ToOxyPlotColour();
 
             // Marker type/thickness
+            // fixme - this is all duplicated from LineSeries.
             result.MarkerType = series.MarkerConfig.Type.ToOxyPlotMarkerType();
             result.MarkerSize = series.MarkerConfig.Size.ToOxyPlotMarkerSize() * series.MarkerConfig.SizeModifier;
             if (series.MarkerConfig.IsFilled())
                 result.MarkerFill = series.Colour.ToOxyColour();
 
             result.ErrorBarStrokeThickness = series.BarThickness.ToOxyPlotThickness();
-            
+            // TBI: stopper thickness            
 
             // Colour
             result.ErrorBarColor = series.Colour.ToOxyColour();

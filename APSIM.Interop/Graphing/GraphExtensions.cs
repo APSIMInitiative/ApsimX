@@ -21,8 +21,15 @@ namespace APSIM.Interop.Graphing
         /// Convert the given apsim graph to an oxyplot <see cref="PlotModel"/>.
         /// </summary>
         /// <param name="graph">The graph to be converted.</param>
-        public static IPlotModel ToPlotModel(this Graph graph)
+        public static IPlotModel ToPlotModel(this IGraph graph)
         {
+            if (graph.Axes == null)
+                throw new NullReferenceException("Graph has no axes");
+            if (graph.Legend == null)
+                throw new NullReferenceException("Graph has no legend configuration");
+            if (graph.Series == null)
+                throw new NullReferenceException("Graph has no series");
+
             PlotModel plot = new PlotModel();
 
             // Axes
@@ -55,6 +62,17 @@ namespace APSIM.Interop.Graphing
         /// <param name="height">Desired height of the image (in px).</param>
         public static Image ToImage(this Graph graph, double width, double height)
         {
+            return graph.ToPlotModel().ToImage(width, height);
+        }
+
+        /// <summary>
+        /// Export a graph to an image.
+        /// </summary>
+        /// <param name="graph">Graph to be converted.</param>
+        /// <param name="width">Desired width of the image (in px).</param>
+        /// <param name="height">Desired height of the image (in px).</param>
+        public static Image ToImage(this IPlotModel graph, double width, double height)
+        {
             using (Stream stream = new MemoryStream())
             {
                 // SvgExporter wants dimensions in points.
@@ -72,7 +90,7 @@ namespace APSIM.Interop.Graphing
                 // is incorrect (they are rendered too high).
                 exporter.UseVerticalTextAlignmentWorkaround = true;
 #endif
-                exporter.Export(graph.ToPlotModel(), stream);
+                exporter.Export(graph, stream);
                 stream.Seek(0, SeekOrigin.Begin);
 
                 // Setting height to 0 will cause the aspect ratio to be preserved.

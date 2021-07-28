@@ -3,7 +3,7 @@ namespace APSIM.Services.Graphing
     /// <summary>
     /// Graph legend configuration options.
     /// </summary>
-    public class LegendConfiguration
+    public class LegendConfiguration : ILegendConfiguration
     {
         /// <summary>
         /// Legend orientation.

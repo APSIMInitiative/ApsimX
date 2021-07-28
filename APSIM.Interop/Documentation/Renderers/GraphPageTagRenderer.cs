@@ -1,3 +1,4 @@
+using System.Linq;
 using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Interop.Utility;
@@ -28,8 +29,24 @@ namespace APSIM.Interop.Documentation.Renderers
 
             renderer.StartNewParagraph();
             foreach (Graph graph in page.Graphs)
-                renderer.AppendImage(ImageUtilities.ResizeImage(graph.ToImage(900, 600), width, height));
+            {
+                var model = graph.ToPlotModel();
+                if (model is OxyPlot.PlotModel plot)
+                    FixSizing(ref plot);
+
+                renderer.AppendImage(model.ToImage(width, height/*width * 2 / 3*/));
+            }
             renderer.StartNewParagraph();
+        }
+
+        private void FixSizing(ref OxyPlot.PlotModel model)
+        {
+            foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
+                series.MarkerSize = 2;
+            model.DefaultFontSize = 10;
+            foreach (var axis in model.Axes)
+                axis.FontSize = 10;
+            model.TitleFontSize = 10;
         }
     }
 }

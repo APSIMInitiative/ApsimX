@@ -21,5 +21,11 @@ namespace APSIM.Services.Graphing
 
         /// <summary>Should this series appear in the legend?</summary>
         bool ShowOnLegend { get; }
+
+        /// <summary>X-axis data.</summary>
+        IEnumerable<object> X { get; }
+
+        /// <summary>Y-axis data.</summary>
+        IEnumerable<object> Y { get; }
     }
 }

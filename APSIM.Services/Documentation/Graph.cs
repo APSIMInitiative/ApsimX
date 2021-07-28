@@ -12,7 +12,7 @@ namespace APSIM.Services.Documentation
     /// todo:
     /// - caption?
     /// </remarks>
-    public class Graph : ITag
+    public class Graph : ITag, IGraph
     {
         /// <summary>
         /// The series to be shown on the graph.
@@ -28,7 +28,7 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// Legend configuration.
         /// </summary>
-        public LegendConfiguration Legend { get; private set; }
+        public ILegendConfiguration Legend { get; private set; }
 
         /// <summary>
         /// Graph Title.

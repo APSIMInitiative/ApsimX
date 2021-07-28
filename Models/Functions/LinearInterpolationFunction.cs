@@ -124,7 +124,7 @@ namespace Models.Functions
         {
             var series = new APSIM.Services.Graphing.Series[1];
             // fixme: colour
-            series[0] = new APSIM.Services.Graphing.Series(Name, ColourUtilities.ChooseColour(4), false, XYPairs.X, XYPairs.Y);
+            series[0] = new APSIM.Services.Graphing.LineSeries(Name, ColourUtilities.ChooseColour(4), false, XYPairs.X, XYPairs.Y, new APSIM.Services.Graphing.Line(APSIM.Services.Graphing.LineType.Solid, APSIM.Services.Graphing.LineThickness.Normal), new APSIM.Services.Graphing.Marker(APSIM.Services.Graphing.MarkerType.None, APSIM.Services.Graphing.MarkerSize.Normal, 1));
             var axes = new APSIM.Services.Graphing.Axis[2];
             axes[0] = new APSIM.Services.Graphing.Axis(XVariableName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
             axes[1] = new APSIM.Services.Graphing.Axis(Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);

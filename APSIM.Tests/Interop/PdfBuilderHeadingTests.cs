@@ -8,6 +8,7 @@ using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
 using Text = MigraDocCore.DocumentObjectModel.Text;
+
 namespace APSIM.Tests.Interop.Documentation
 {
     /// <summary>
