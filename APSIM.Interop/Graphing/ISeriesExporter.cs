@@ -7,7 +7,7 @@ namespace APSIM.Interop.Graphing
     /// An interface for a class which can export an apsim series
     /// into an oxyplot series.
     /// </summary>
-    public interface ISeriesExporter
+    internal interface ISeriesExporter
     {
         /// <summary>
         /// Can this class export the given series?

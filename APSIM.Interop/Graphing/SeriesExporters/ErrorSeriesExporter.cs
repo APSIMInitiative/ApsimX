@@ -68,6 +68,8 @@ namespace APSIM.Interop.Graphing
                 }
                 else if (xValues.Count == xErrorValues.Count)
                 {
+                    if (yErrorValues.Count != 0)
+                        throw new ArgumentException($"Number of y error values ({yErrorValues.Count}) does not match number of datapoints or x error values ({xValues.Count})");
                     // We have error data for x series.
                     List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
                     for (int i = 0; i < xValues.Count; i++)
@@ -77,10 +79,12 @@ namespace APSIM.Interop.Graphing
                 }
                 else if (yValues.Count == yErrorValues.Count)
                 {
+                    if (xErrorValues.Count != 0)
+                        throw new ArgumentException($"Number of x error values ({xErrorValues.Count}) does not match number of datapoints or y error values ({xValues.Count})");
                     // We have error data for y series.
                     List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
                     for (int i = 0; i < xValues.Count; i++)
-                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]))
+                        if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(yErrorValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, yErrorValues[i], 0));
                     return points;
                 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace APSIM.Services.Graphing
 {
@@ -50,8 +51,34 @@ namespace APSIM.Services.Graphing
         {
             BarThickness = barThickness;
             StopperThickness = stopperThickness;
-            XError = xError;
-            YError = yError;
+            XError = xError ?? Enumerable.Empty<object>();
+            YError = yError ?? Enumerable.Empty<object>();
+        }
+
+        /// <summary>
+        /// Initialise an ErrorSeries instance.
+        /// </summary>
+        /// <param name="title">Name of the series.</param>
+        /// <param name="colour">Colour of the series.</param>
+        /// <param name="showLegend">Should this series appear in the legend?</param>
+        /// <param name="x">X-axis data.</param>
+        /// <param name="y">Y-axis data.</param>
+        public ErrorSeries(string title,
+                           Color colour,
+                           bool showLegend,
+                           IEnumerable<double> x,
+                           IEnumerable<double> y,
+                           Line line,
+                           Marker marker,
+                           LineThickness barThickness,
+                           LineThickness stopperThickness,
+                           IEnumerable<double> xError,
+                           IEnumerable<double> yError) : base(title, colour, showLegend, x, y, line, marker)
+        {
+            BarThickness = barThickness;
+            StopperThickness = stopperThickness;
+            XError = xError?.Cast<object>() ?? Enumerable.Empty<object>();
+            YError = yError?.Cast<object>() ?? Enumerable.Empty<object>();
         }
     }    
 }

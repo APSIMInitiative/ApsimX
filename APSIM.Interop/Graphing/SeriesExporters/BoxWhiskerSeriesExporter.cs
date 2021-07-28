@@ -12,7 +12,7 @@ namespace APSIM.Interop.Graphing
     /// <summary>
     /// This class can export an apsim box and whisker series to an oxyplot series.
     /// </summary>
-    public class BoxWhiskerSeriesExporter : SeriesExporterBase<BoxWhiskerSeries>
+    internal class BoxWhiskerSeriesExporter : SeriesExporterBase<BoxWhiskerSeries>
     {
         /// <summary>
         /// Export the box and whisker series to an oxyplot series.
