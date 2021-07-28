@@ -213,12 +213,14 @@
                             for (int j = 0; j < fileNames.Length; j++)
                             {
                                 if (!Path.GetExtension(fileNames[j]).Equals(filterExt, StringComparison.CurrentCultureIgnoreCase))
+                                {
                                     fileNames[j] = fileNames[j] + filterExt;
-                            }
-                            if (File.Exists(fileNames.FirstOrDefault()))
-                            {
-                                tryAgain = true;
-                                fileChooser.SetFilename(fileChooser.Filename + filterExt);
+                                    if (File.Exists(fileNames[j]))
+                                    {
+                                        tryAgain = true;
+                                        fileChooser.SetFilename(fileChooser.Filename + filterExt);
+                                    }
+                                }
                             }
                             break; // We've applied one extension; let's not risk trying to apply another
                         }
