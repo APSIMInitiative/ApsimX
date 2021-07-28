@@ -192,20 +192,19 @@
         /// <param name="simulationDescriptions">A list of simulation descriptions.</param>
         /// <param name="seriesDefinitions">A list of series definitions.</param>
         /// <param name="simulationFilter"></param>
-        public void CreateChildSeriesDefinitions(IStorageReader reader, List<SimulationDescription> simulationDescriptions, 
-                                                 List<SeriesDefinition> seriesDefinitions, 
+        public IEnumerable<SeriesDefinition> CreateChildSeriesDefinitions(IStorageReader reader, List<SimulationDescription> simulationDescriptions, 
+                                                 IEnumerable<SeriesDefinition> seriesDefinitions, 
                                                  List<string> simulationFilter = null)
         {
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable graphable in FindAllChildren<IGraphable>())
             {
-                IEnumerable<SeriesDefinition> definitions;
                 if (graphable is ICachableGraphable cachable)
-                    definitions = cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
+                    return cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
                 else
-                    definitions = graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
-                seriesDefinitions.AddRange(definitions);
+                    return graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
             }
+            return Enumerable.Empty<SeriesDefinition>();
         }
 
         /// <summary>Called by the graph presenter to get a list of all annotations to put on the graph.</summary>
