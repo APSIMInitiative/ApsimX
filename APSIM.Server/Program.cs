@@ -34,8 +34,11 @@ namespace APSIM.Server
         {
             try
             {
-                ApsimServer server = new ApsimServer(options);
-                server.Run();
+                if (!(options is RelayServerOptions))
+                {
+                    ApsimServer server = new ApsimServer(options);
+                    server.Run();
+                }
             }
             catch (Exception error)
             {
