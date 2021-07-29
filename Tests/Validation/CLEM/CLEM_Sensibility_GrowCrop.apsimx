@@ -232,12 +232,13 @@
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                   "ReportStyle": 0,
-                  "VariableNames": [
-                    "AnimalFoodStore"
-                  ],
+                  "ResourceGroupsToReport": "AnimalFoodStore",
                   "ReportLossesAsNegative": false,
                   "IncludePrice": false,
                   "IncludeConversions": false,
+                  "VariableNames": [
+                    "AnimalFoodStore"
+                  ],
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "AnimalFoodStoreLedger",
@@ -249,12 +250,13 @@
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                   "ReportStyle": 0,
-                  "VariableNames": [
-                    "Land"
-                  ],
+                  "ResourceGroupsToReport": "Land",
                   "ReportLossesAsNegative": false,
                   "IncludePrice": false,
                   "IncludeConversions": false,
+                  "VariableNames": [
+                    "Land"
+                  ],
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "LandLedger",
