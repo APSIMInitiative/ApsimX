@@ -31,36 +31,38 @@ namespace Models
 
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
-        protected ReportData dataToWriteToDb = null;
+        private ReportData dataToWriteToDb = null;
 
         /// <summary>List of strings representing dates to report on.</summary>
-        protected List<string> dateStringsToReportOn = new List<string>();
+        private List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
-        protected Simulation simulation = null;
+        private Simulation simulation = null;
 
         /// <summary>Link to a clock model.</summary>
         [Link]
-        protected IClock clock = null;
+        private IClock clock = null;
 
         /// <summary>Link to a storage service.</summary>
         [Link]
-        protected IDataStore storage = null;
+        private IDataStore storage = null;
 
         /// <summary>Link to a locator service.</summary>
         [Link]
-        protected ILocator locator = null;
+        private ILocator locator = null;
 
         /// <summary>Link to an event service.</summary>
         [Link]
-        protected IEvent events = null;
+        [NonSerialized]
+        private IEvent events = null;
 
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [JsonIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] 
+        public int ActiveTabIndex = 0;
 
         /// <summary>
         /// Gets or sets variable names for outputting
@@ -102,18 +104,16 @@ namespace Models
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
-            // Cleanup event names.
-            EventNames = TidyUpEventNames();
+            //// Cleanup event names.
+            //EventNames = TidyUpEventNames();
 
-            // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
+            //// Tidy up variable/event names.
+            //VariableNames = TidyUpVariableNames();
 
-            // Locate reporting variables.
-            FindVariableMembers();
+            //// Locate reporting variables.
+            //FindVariableMembers();
 
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
+            SubscribeToEvents();
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
@@ -130,10 +130,29 @@ namespace Models
         }
 
         /// <summary>
+        /// Subscribe to events provided
+        /// </summary>
+        protected void SubscribeToEvents()
+        {
+            // Cleanup event names.
+            EventNames = TidyUpEventNames();
+
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+
+            // Locate reporting variables.
+            FindVariableMembers();
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+                events.Subscribe(eventName, DoOutputEvent);
+        }
+
+        /// <summary>
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
         /// <returns></returns>
-        protected string[] TidyUpEventNames()
+        private string[] TidyUpEventNames()
         {
             List<string> eventNames = new List<string>();
             for (int i = 0; i < EventNames?.Length; i++)
@@ -160,7 +179,7 @@ namespace Models
         /// <summary>
         /// Sanitises the variable names and removes duplicates/comments.
         /// </summary>
-        protected string[] TidyUpVariableNames()
+        private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
             IModel zone = FindAncestor<Zone>();
@@ -276,7 +295,7 @@ namespace Models
 
         /// <summary>Sort the columns alphabetically</summary>
         /// <param name="table">The table to sort</param>
-        protected static void SortColumnsOfDataTable(DataTable table)
+        private static void SortColumnsOfDataTable(DataTable table)
         {
             var columnArray = new DataColumn[table.Columns.Count];
             table.Columns.CopyTo(columnArray, 0);
@@ -304,7 +323,7 @@ namespace Models
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        protected void FindVariableMembers()
+        private void FindVariableMembers()
         {
             this.Columns = new List<IReportColumn>();
 
@@ -337,7 +356,7 @@ namespace Models
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        protected void FindFromTo(out string from, out string to)
+        private void FindFromTo(out string from, out string to)
         {
             // Find the first aggregation column.
             var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));
@@ -354,7 +373,7 @@ namespace Models
         }
 
         /// <summary>Add the experiment factor levels as columns.</summary>
-        protected void AddExperimentFactorLevels()
+        private void AddExperimentFactorLevels()
         {
             if (simulation.Descriptors != null)
             {
@@ -366,7 +385,7 @@ namespace Models
         }
 
         /// <summary>Store descriptors in DataStore.</summary>
-        protected void StoreFactorsInDataStore()
+        private void StoreFactorsInDataStore()
         {
             if (storage != null && simulation != null && simulation.Descriptors != null)
             {
