@@ -811,12 +811,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "ProductStore"
-                      ],
+                      "ResourceGroupsToReport": "ProductStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "ProductStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "ProductsLedger",
@@ -828,12 +829,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Finances"
-                      ],
+                      "ResourceGroupsToReport": "Finances",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Finances"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
@@ -845,12 +847,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Labour"
-                      ],
+                      "ResourceGroupsToReport": "Labour",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Labour"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "LabourLedger",
@@ -2491,12 +2494,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Labour"
-                      ],
+                      "ResourceGroupsToReport": "Labour",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Labour"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "LabourLedger",
@@ -2508,12 +2512,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Finances"
-                      ],
+                      "ResourceGroupsToReport": "Finances",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Finances"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
@@ -2525,12 +2530,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "ProductStore"
-                      ],
+                      "ResourceGroupsToReport": "ProductStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "ProductStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "ProductStoreLedger",

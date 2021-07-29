@@ -1075,12 +1075,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "GrazeFoodStore"
-                      ],
+                      "ResourceGroupsToReport": "GrazeFoodStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "GrazeFoodStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "GrazeFoodStoreLedger",
@@ -1092,12 +1093,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "AnimalFoodStore"
-                      ],
+                      "ResourceGroupsToReport": "AnimalFoodStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "AnimalFoodStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "AnimalFoodLedger",
@@ -1109,12 +1111,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Finances"
-                      ],
+                      "ResourceGroupsToReport": "Finances",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Finances"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
@@ -1126,12 +1129,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Ruminants"
-                      ],
+                      "ResourceGroupsToReport": "Ruminants",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Ruminants"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "HerdLedger",
