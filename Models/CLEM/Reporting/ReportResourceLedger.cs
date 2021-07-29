@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {
@@ -40,11 +41,13 @@ namespace Models.CLEM.Reporting
         public ReportTransactionStyle ReportStyle { get; set; }
 
         /// <summary>
-        /// Gets or sets variable names for output
+        /// Gets or sets report groups for outputting
         /// </summary>
-        [Summary]
-        [Description("Resource group name")]
-        public new string[] VariableNames { get; set; }
+        [Description("Resource group")]
+        [Category("General", "Resources")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourceGroupsAvailable")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "A single Resource group must be provided for the Ledger Report")]
+        public string ResourceGroupsToReport { get; set; }
 
         /// <summary>
         /// Report all losses as -ve values
@@ -67,12 +70,6 @@ namespace Models.CLEM.Reporting
         [Description("Include all unit conversions")]
         public bool IncludeConversions { get; set; }
 
-        /// <summary>
-        /// Gets or sets event names for outputting
-        /// </summary>
-        [JsonIgnore]
-        public new string[] EventNames { get; set; }
-
         [Link]
         private ResourcesHolder Resources = null;
 
@@ -94,125 +91,130 @@ namespace Models.CLEM.Reporting
             // check if running from a CLEM.Market
             bool market = (FindAncestor<Zone>().GetType() == typeof(Market));
 
-            dataToWriteToDb = null;
-            // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
                 "[Clock].Today as Date"
             };
-            if (VariableNames != null && VariableNames.Count() > 0)
-            {
-                if(VariableNames.Count() > 1)
-                {
-                    Summary.WriteWarning(this, String.Format("Multiple resource groups not permitted in ReportResourceLedger [{0}]\r\nAdditional entries have been ignored", this.Name));
-                }
+            List<string> eventNames = new List<string>();
 
-                for (int i = 0; i < 1; i++)
+            if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
+            {
+                // check it is a ResourceGroup
+                CLEMModel model = Resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
+                if (model == null)
                 {
-                    // each variable name is now a ResourceGroup
-                    bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
-                    if (!isDuplicate && this.VariableNames[i] != string.Empty)
+                    Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
+                }
+                else
+                {
+                    bool pricingIncluded = false;
+                    if (model.GetType() == typeof(RuminantHerd))
                     {
-                        // check it is a ResourceGroup
-                        CLEMModel model = Resources.GetResourceGroupByName(this.VariableNames[i]) as CLEMModel;
-                        if (model == null)
+                        pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
+
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.ID as uID");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Breed as Breed");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Gender as Sex");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Age as Age");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Weight as Weight");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.SaleFlag as Category");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Category as Class");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.HerdName as RelatesTo");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
+
+                        // ToDo: add pricing for ruminants including buy and sell pricing
+                        // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
+                    }
+                    else
+                    {
+                        pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
+
+                        if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                         {
-                            Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.VariableNames[i], this.Name));
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Gain as Gain");
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.Loss * {lossModifier} as Loss");
                         }
                         else
                         {
-                            bool pricingIncluded = false;
-                            if (model.GetType() == typeof(RuminantHerd))
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.TransactionType as Type");
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.AmountModifiedForLoss({ReportLossesAsNegative}) as Amount");
+                        }
+
+                        // get all converters for this type of resource
+                        if (IncludeConversions)
+                        {
+                            var converterList = model.FindAllDescendants<ResourceUnitsConverter>().Select(a => a.Name).Distinct();
+                            if (converterList != null)
                             {
-                                pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
-
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.ID as uID");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Breed as Breed");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Gender as Sex");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Age as Age");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Weight as Weight");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.SaleFlag as Category");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.Category as Class");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.HerdName as RelatesTo");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
-
-                                // ToDo: add pricing for ruminants including buy and sell pricing
-                                // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
-                            }
-                            else
-                            {
-                                pricingIncluded = model.FindAllDescendants<ResourcePricing>().Where(a => a.Enabled).Count() > 0;
-
-                                if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Gain as Gain");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + $".LastTransaction.Loss * {lossModifier} as Loss");
-                                }
-                                else
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.TransactionType as Type");
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + $".LastTransaction.AmountModifiedForLoss({ReportLossesAsNegative}) as Amount");
-                                }
-
-                                // get all converters for this type of resource
-                                if (IncludeConversions)
-                                {
-                                    var converterList = model.FindAllDescendants<ResourceUnitsConverter>().Select(a => a.Name).Distinct();
-                                    if (converterList != null)
-                                    {
-                                        foreach (var item in converterList)
-                                        {
-                                            if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
-                                            {
-                                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + $",\"gain\",{ReportLossesAsNegative}) as " + item + "_Gain");
-                                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + $",\"loss\",{ReportLossesAsNegative}) as " + item + "_Loss");
-                                            }
-                                            else
-                                            {
-                                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ConvertTo(" + item + $"\", {ReportLossesAsNegative}) as " + item + "_Amount");
-                                            }
-                                        }
-                                    } 
-                                }
-
-                                // add pricing
-                                if (IncludePrice && pricingIncluded)
+                                foreach (var item in converterList)
                                 {
                                     if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                                     {
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + $".LastTransaction.ConvertTo(\"$gain\",\"gain\", {ReportLossesAsNegative}) as Price_Gain");
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + $".LastTransaction.ConvertTo(\"$loss\",\"loss\", {ReportLossesAsNegative}) as Price_Loss"); 
+                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"gain\",{ReportLossesAsNegative}) as " + item + "_Gain");
+                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"loss\",{ReportLossesAsNegative}) as " + item + "_Loss");
                                     }
                                     else
                                     {
-                                        variableNames.Add("[Resources]." + this.VariableNames[i] + $".LastTransaction.ConvertTo(\"$gain\", {ReportLossesAsNegative}) as Price_Amount");
+                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $"\", {ReportLossesAsNegative}) as " + item + "_Amount");
                                     }
                                 }
+                            } 
+                        }
 
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.ResourceType.Name as Resource");
-                                // if this is a multi CLEM model simulation then add a new column with the parent Zone name
-                                if(FindAncestor<Simulation>().FindChild<Market>()!=null)
-                                {
-                                    variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.CLEMParentName as Source");
-                                }
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Activity.Name as Activity");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.RelatesToResource as RelatesTo");
-                                variableNames.Add("[Resources]." + this.VariableNames[i] + ".LastTransaction.Category as Category");
+                        // add pricing
+                        if (IncludePrice && pricingIncluded)
+                        {
+                            if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
+                            {
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.ConvertTo(\"$gain\",\"gain\", {ReportLossesAsNegative}) as Price_Gain");
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.ConvertTo(\"$loss\",\"loss\", {ReportLossesAsNegative}) as Price_Loss"); 
+                            }
+                            else
+                            {
+                                variableNames.Add("[Resources]." + this.ResourceGroupsToReport + $".LastTransaction.ConvertTo(\"$gain\", {ReportLossesAsNegative}) as Price_Amount");
                             }
                         }
+
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ResourceType.Name as Resource");
+                        // if this is a multi CLEM model simulation then add a new column with the parent Zone name
+                        if(FindAncestor<Simulation>().FindChild<Market>()!=null)
+                        {
+                            variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Activity.CLEMParentName as Source");
+                        }
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Activity.Name as Activity");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.RelatesToResource as RelatesTo");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.Category as Category");
                     }
                 }
-                events.Subscribe("[Resources]." + this.VariableNames[0] + ".TransactionOccurred", DoOutputEvent);
+                eventNames.Add("[Resources]." + this.ResourceGroupsToReport + ".TransactionOccurred");
             }
-            // Tidy up variable/event names.
-            base.VariableNames = variableNames.ToArray();
+
             VariableNames = variableNames.ToArray();
-            base.VariableNames = TidyUpVariableNames();
-            VariableNames = base.VariableNames;
-            base.EventNames = TidyUpEventNames();
-            EventNames = base.EventNames;
-            this.FindVariableMembers();
+            EventNames = eventNames.ToArray();
+            SubscribeToEvents();
+        }
+
+        /// <summary>
+        /// return a list of resource group cpmponents available
+        /// </summary>
+        /// <returns>A list of names of components</returns>
+        public IEnumerable<string> GetResourceGroupsAvailable()
+        {
+            List<string> results = new List<string>();
+            Zone zone = this.FindAncestor<Zone>();
+            if (!(zone is null))
+            {
+                ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
+                if (!(resources is null))
+                {
+                    foreach (var model in resources.FindAllChildren<ResourceBaseWithTransactions>())
+                    {
+                        results.Add(model.Name);
+                    }
+                }
+            }
+            return results.AsEnumerable();
         }
 
     }

@@ -105,14 +105,11 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("FinalInitialise")] // "Commencing"
         private void OnCommencing(object sender, EventArgs e)
         {
-            if (ResourceGroupsToReport is null)
+            if (ResourceGroupsToReport is null || !ResourceGroupsToReport.Any() )
                 return; 
             
             timers = FindAllChildren<IActivityTimer>();
 
-            dataToWriteToDb = null;
-            // sanitise the variable names and remove duplicates
-            
             List<string> variableNames = new List<string>();
             if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
             {
@@ -222,26 +219,12 @@ namespace Models.CLEM.Reporting
                 }
             }
             VariableNames = variableNames.ToArray();
-            // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
-            this.FindVariableMembers();
-
-            if (EventNames.Length == 0 || EventNames[0] == "")
+            // Subscribe to events.
+            if (EventNames == null || EventNames.Count() == 0)
             {
-                events.Subscribe("[Clock].CLEMEndOfTimeStep", DoOutputEvent);
+                EventNames = new string[] { "[Clock].CLEMHerdSummary" };
             }
-            else
-            {
-                // Subscribe to events.
-                foreach (string eventName in EventNames)
-                {
-                    if (eventName != string.Empty)
-                    {
-                        events.Subscribe(eventName.Trim(), DoOutputEvent);
-                    }
-                }
-            }
+            SubscribeToEvents();
         }
 
         /// <inheritdoc/>

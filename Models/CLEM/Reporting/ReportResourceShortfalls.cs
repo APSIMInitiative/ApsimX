@@ -20,7 +20,7 @@ namespace Models.CLEM.Reporting
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.ReportView")]
-    [PresenterName("UserInterface.Presenters.ReportPresenter")]
+    [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
@@ -35,8 +35,6 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            dataToWriteToDb = null;
-            // sanitise the variable names and remove duplicates
             List<string> variableNames = new List<string>
             {
                 "[Clock].Today as Date",
@@ -51,18 +49,12 @@ namespace Models.CLEM.Reporting
 
             // Tidy up variable/event names.
             VariableNames = variableNames.ToArray();
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
-            this.FindVariableMembers();
 
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-            {
-                if (eventName != string.Empty)
-                {
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            //VariableNames = TidyUpVariableNames();
+            //EventNames = TidyUpEventNames();
+            //this.FindVariableMembers();
+
+            SubscribeToEvents();
         }
 
     }

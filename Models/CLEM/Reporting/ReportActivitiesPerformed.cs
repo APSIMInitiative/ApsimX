@@ -79,8 +79,6 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            dataToWriteToDb = null;
-
             base.VariableNames = new string[]
             {
                 "[Clock].Today as Date",
@@ -89,21 +87,8 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastActivityPerformed.UniqueID as UniqueID"
             };
 
-            base.EventNames = new string[] { "[Activities].ActivityPerformed" };
-
-            // Tidy up variable/event names.
-            base.VariableNames = TidyUpVariableNames();
-            base.EventNames = TidyUpEventNames();
-            base.FindVariableMembers();
-
-            // Subscribe to events.
-            foreach (string eventName in base.EventNames)
-            {
-                if (eventName != string.Empty)
-                {
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            EventNames = new string[] { "[Activities].ActivityPerformed" };
+            SubscribeToEvents();
         }
 
         #region create html report
