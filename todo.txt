@@ -1,3 +1,8 @@
+- Pull requests working
+- Release .net core
+- stats.apsim.info (CI/CD)
+
+
 Questions:
 
 - BiomassRemoval.cs: can description in document() method be moved into class description?
