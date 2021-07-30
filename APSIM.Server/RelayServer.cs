@@ -196,6 +196,21 @@ namespace APSIM.Server
             // Monitor the pods for some time.
             int seconds = 10;
             MonitorPods(seconds * 1000);
+            EnsureWorkersHaveWrittenOutput();
+        }
+
+        private void EnsureWorkersHaveWrittenOutput()
+        {
+            foreach (string worker in workers)
+                EnsureWorkerHasWrittenOutput(worker);
+        }
+
+        private void EnsureWorkerHasWrittenOutput(string podName)
+        {
+            string container = GetContainerName(podName);
+            string log = GetLog(podNamespace, podName, container);
+            if (string.IsNullOrEmpty(log))
+                throw new Exception($"Pod {podName} has not written output after receiving start signal.");
         }
 
         /// <summary>
@@ -225,11 +240,16 @@ namespace APSIM.Server
         {
             // testme
             WriteToLog($"Sending start signal to pod {podName}");
-            ExecAsyncCallback action = (_, __, ___) => Task.CompletedTask;
+            string file = Path.GetTempFileName();
+            using (File.Create(file)) { }
+            V1Pod pod = GetWorkerPod(podName);
             string container = GetContainerName(podName);
-            string[] cmd = new[] { "touch", containerStartFile };
-            CancellationToken token = new CancellationTokenSource().Token;
-            client.NamespacedPodExecAsync(podName, podNamespace, container, cmd, false, action, token);
+            client.CopyFileToPod(pod, container, file, containerStartFile);
+            // ExecAsyncCallback action = (_, __, ___) => Task.CompletedTask;
+            // string container = GetContainerName(podName);
+            // string[] cmd = new[] { "touch", containerStartFile };
+            // CancellationToken token = new CancellationTokenSource().Token;
+            // client.NamespacedPodExecAsync(podName, podNamespace, container, cmd, false, action, token);
         }
 
         /// <summary>
