@@ -74,7 +74,7 @@ namespace UserInterface.Views
         /// <summary>Cleanup the instance.</summary>
         public void Cleanup()
         {
-            dataStore.ExecuteSql("DROP TABLE keyset");
+            dataStore.ExecuteSql("DROP TABLE IF EXISTS keyset");
         }
 
         /// <summary>Invoked when the paging is about to start.</summary>
