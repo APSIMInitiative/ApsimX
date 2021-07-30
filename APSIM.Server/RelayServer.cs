@@ -12,6 +12,7 @@ using APSIM.Server.IO;
 using k8s;
 using k8s.Models;
 using Models.Core.Run;
+using APSIM.Server.Extensions;
 
 namespace APSIM.Server
 {
@@ -44,6 +45,8 @@ namespace APSIM.Server
         private const string managedBy = "ApsimClusterJobManager";
         private const string imageName = "apsiminitiative/apsimng-server";
         private const string inputsVolumeName = "apsim-inputs-files";
+        private const string containerStartFile = "/start";
+        private const string workerInputsPath = "/inputs";
 
         /// <summary>
         /// Port number used for socket connections to the worker pods.
@@ -57,8 +60,11 @@ namespace APSIM.Server
         private readonly Guid jobID;
         private readonly string instanceName;
         private readonly string podNamespace;
-        private IEnumerable<V1Pod> pods;
-        private string tempInputFiles;
+
+        /// <summary>
+        /// Names of the worker pods.
+        /// </summary>
+        private IEnumerable<string> workers;
 
         /// <summary>
         /// Create a job manager instance.
@@ -91,7 +97,7 @@ namespace APSIM.Server
 
         public override void Run()
         {
-            pods = InitialiseWorkers();
+            InitialiseWorkers();
 
             // tbi: go into relay mode
             WriteToLog("Starting relay server...");
@@ -107,8 +113,9 @@ namespace APSIM.Server
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
             // Relay the command to all workers.
-            foreach (V1Pod pod in pods)
+            foreach (string podName in workers)
             {
+                V1Pod pod = GetWorkerPod(podName);
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
                     throw new NotImplementedException("Pod IP not set.");
                 // Create a new socket connection to the pod.
@@ -120,39 +127,28 @@ namespace APSIM.Server
         }
 
         /// <summary>
-        /// Delete all worker nodes.
+        /// Get the worker pod with the given name.
         /// </summary>
-        private void RemoveWorkers()
+        /// <param name="podName">Name of the worker pod.</param>
+        private V1Pod GetWorkerPod(string podName)
         {
-            if (pods == null)
-            {
-                WriteToLog("No pods to delete");
-                return;
-            }
-            if (client == null)
-                // The client is readonly so this shouldn't really be possible.
-                throw new InvalidOperationException($"Unable to cleanup pods: client is null");
-
-            WriteToLog("Deleting pods...");
-            foreach (V1Pod pod in pods)
-                // need to check this
-                client.DeleteNamespacedPod(pod.Metadata.Name, podNamespace);
-
-            pods = null;
+            return client.ReadNamespacedPod(podName, podNamespace);
         }
 
         /// <summary>
         /// Initialise the worker nodes.
         /// </summary>
         /// <param name="client">The kubernetes client to be used.</param>
-        private IEnumerable<V1Pod> InitialiseWorkers()
+        private void InitialiseWorkers()
         {
             WriteToLog("Initialising workers...");
 
-            // Copy the input files to a writable location.
-            EnsureInputsAreWritable();
-
             // Split apsimx file into smaller chunks.
+            string inputsPath = Path.GetDirectoryName(options.File);
+            // Get a list of support files (.met files, .xlsx, ...). These are all
+            // other input files required by the .apsimx file. They are just the
+            // sibling files of the input file.
+            IEnumerable<string> supportFiles = Directory.EnumerateFiles(inputsPath, "*", SearchOption.AllDirectories).Except(new[] { options.File });
             IEnumerable<string> generatedFiles = SplitApsimXFile(relayOptions.File, relayOptions.WorkerCpuCount);
             if (generatedFiles.Any())
             {
@@ -173,88 +169,157 @@ namespace APSIM.Server
 
             // Create pod templates.
             uint i = 0;
-            List<V1Pod> pods = new List<V1Pod>();
+            Dictionary<string, string> pods = new Dictionary<string, string>();
             foreach (string file in generatedFiles)
-                pods.Add(CreatePod(file, $"worker-{i++}"));
-
-            // Create pods in the current namespace.
-            // todo: use async API
-            pods = pods.Select(p => client.CreateNamespacedPod(p, podNamespace)).ToList();
-
-            WriteToLog($"Created {pods.Count} pod{(pods.Count == 1 ? "" : "s")}.");
-
-            WriteToLog($"Waiting for pods to start...");
-
-            // Busy wait while any pods are still in the "Pending" phase.
-            // This ensures that the returned pods have certain metadata
-            // populated such as host IP address.
-            while (!pods.Any(p => p.Status.Phase == "Pending"))
-                pods = GetPods().ToList();
-
-            return pods;
-        }
-
-        /// <summary>
-        /// Copy the input files to a writable location.
-        /// This will update the value of options.File.
-        /// </summary>
-        private void EnsureInputsAreWritable()
-        {
-            if (!File.Exists(relayOptions.File))
-                throw new FileNotFoundException($"Input file {relayOptions.File} does not exist");
-            string inputsDirectory = Path.GetDirectoryName(relayOptions.File);
-            if (Directory.EnumerateDirectories(inputsDirectory).Any())
-                throw new InvalidOperationException("Found a child directory inside inputs directory. Please use a flat list of files for now.");
-
-            tempInputFiles = Path.Combine(Path.GetTempPath(), $"input-files-{Guid.NewGuid()}");
-            Directory.CreateDirectory(tempInputFiles);
-            foreach (string file in Directory.EnumerateFiles(inputsDirectory))
             {
-                string rawFileName = Path.GetFileName(file);
-                string newFileName = Path.Combine(tempInputFiles, rawFileName);
-                string extension = Path.GetExtension(file);
-                string[] dontCopy = new[] { ".db", ".db-wal", ".db-shm" };
-                if (!dontCopy.Contains(extension))
-                {
-                    WriteToLog($"Copying {file} to {newFileName}");
-                    try
-                    {
-                        File.Copy(file, newFileName);
-                    }
-                    catch (Exception err)
-                    {
-                        Process proc = null;
-                        try
-                        {
-                            proc = Process.Start("/bin/chmod", $"a+x {inputsDirectory}");
-                            proc.WaitForExit();
-                        }
-                        catch (Exception err2)
-                        {
-                            throw new AggregateException($"Unable to chmod OR copy file (stdout = {proc.StandardOutput}, stderr = {proc.StandardError})", new[] { err, err2 });
-                        }
-                        try
-                        {
-                            File.Copy(file, newFileName);
-                        }
-                        catch (Exception err2)
-                        {
-                            throw new AggregateException($"chmod worked, but didn't help", new[] { err, err2 });
-                        }
-                    }
-                }
+                string podName = $"worker-{i++}";
+                pods.Add(podName, file);
+                CreateWorkerPod(file, podName);
             }
-            relayOptions.File = Path.Combine(tempInputFiles, Path.GetFileName(relayOptions.File));
-            WriteToLog($"Moved input file to {relayOptions.File}");
+            workers = pods.Select(k => k.Key).ToArray();
+            WriteToLog($"Successfully created {pods.Count} pod{(pods.Count == 1 ? "" : "s")}.");
+
+            // Wait for worker containers to launch.
+            WaitForWorkersToLaunch(10 * 1000);
+
+            // Send input files to pods.
+            // The keys here are the pod names
+            // The values are the pod's input file.
+            // todo: create a struct to hold this?
+            WriteToLog("Sending input files to pods...");
+            foreach (KeyValuePair<string, string> pod in pods)
+            {
+                SendFilesToPod(pod.Key, supportFiles.Append(pod.Value), workerInputsPath);
+                SendStartSignalToPod(pod.Key);
+            }
+
+            // Monitor the pods for some time.
+            int seconds = 10;
+            MonitorPods(seconds * 1000);
         }
 
         /// <summary>
-        /// Get all worker pods in the namespace.
+        /// Monitor the worker pods for the given duration, and throw
+        /// if any of the pods have failed.
         /// </summary>
-        /// <returns></returns>
-        private IEnumerable<V1Pod> GetPods()
+        /// <param name="duration">Time period for which to montior pods (in ms).</param>
+        private void MonitorPods(int duration)
         {
-            return client.ListNamespacedPod(podNamespace).Items;
+            CancellationTokenSource source = new CancellationTokenSource(duration);
+            while (!source.IsCancellationRequested)
+                foreach (string worker in workers)
+                    VerifyPodHealth(worker);
+        }
+
+        /// <summary>
+        /// Send the "start" signal to the pod.
+        /// </summary>
+        /// <remarks>
+        /// When we start a worker pod, it goes into a busy wait until we
+        /// copy the input files into the pod. This function tells the pod
+        /// to end its busy wait (presumably because the input files have)
+        /// already been copied into the pod.
+        /// </remarks>
+        /// <param name="podName">Name of the pod.</param>
+        private void SendStartSignalToPod(string podName)
+        {
+            // testme
+            WriteToLog($"Sending start signal to pod {podName}");
+            ExecAsyncCallback action = (_, __, ___) => Task.CompletedTask;
+            string container = GetContainerName(podName);
+            string[] cmd = new[] { "touch", containerStartFile };
+            CancellationToken token = new CancellationTokenSource().Token;
+            client.NamespacedPodExecAsync(podName, podNamespace, container, cmd, false, action, token);
+        }
+
+        /// <summary>
+        /// Send the given files to the pod at the specified location.
+        /// </summary>
+        /// <param name="podName">Name of the pod into which files will be copied.</param>
+        /// <param name="files">Files to be copied into the pod.</param>
+        /// <param name="destinationDirectory">Directory on the pod into which the files will be copied.</param>
+        private void SendFilesToPod(string podName, IEnumerable<string> files, string destinationDirectory)
+        {
+            WriteToLog($"Sending inputs to pod {podName}...");
+            foreach (string file in files)
+            {
+                WriteToLog($"Sending input file {file} to pod {podName}...");
+                V1Pod pod = GetWorkerPod(podName);
+                string destination = Path.Combine(destinationDirectory, Path.GetFileName(file));
+                client.CopyFileToPod(pod, GetContainerName(podName), file, destination);
+            }
+        }
+
+        private void WaitForWorkersToLaunch(int maxTimePerPod)
+        {
+            WriteToLog($"Waiting for pods to start...");
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            foreach (string worker in workers)
+            {
+                source.CancelAfter(maxTimePerPod);
+                VerifyPodHealth(worker, source.Token);
+                WriteToLog($"Pod {worker} is now online and waiting for input files.");
+            }
+        }
+
+        /// <summary>
+        /// This function will monitor the job manager pod's health for the specified
+        /// period of time. An exception will be thrown if the pod fails to start.
+        /// </summary>
+        private void VerifyPodHealth(string podName, CancellationToken cancellationToken)
+        {
+            WriteToLog("Verifying pod health...");
+            while (!cancellationToken.IsCancellationRequested)
+                VerifyPodHealth(podName);
+        }
+
+        /// <summary>
+        /// Check that a pod is healthy. Throw if not.
+        /// </summary>
+        /// <param name="podName">Name of the pod to check.</param>
+        private void VerifyPodHealth(string podName)
+        {
+            V1ContainerState state = GetPodState(podName);
+            if (state.Running != null)
+                return;
+            if (state.Terminated != null)
+            {
+                // Get console output from the container.
+                string log = GetLog(podNamespace, podName, GetContainerName(podName));
+                throw new Exception($"Pod {podName} failed to start (Reason = {state.Terminated.Reason}, Message = {state.Terminated.Message}).\nContainer log:\n{log}");
+            }
+            if (state.Waiting != null && state.Waiting.Reason != "ContainerCreating")
+                // todo: verify that this is correct...are there other waiting reasons???
+                throw new Exception($"Worker pod {podName} failed to start. Reason={state.Waiting.Reason}. Message={state.Waiting.Message}");
+        }
+
+        /// <summary>
+        /// Get the state of the given worker pod. Can throw but will never return null.
+        /// </summary>
+        /// <param name="podName">Name of the pod.</param>
+        private V1ContainerState GetPodState(string podName)
+        {
+            V1Pod pod = GetWorkerPod(podName);
+            string container = GetContainerName(podName);
+            V1ContainerState state = pod.Status.ContainerStatuses.FirstOrDefault(c => c.Name == container)?.State;
+            if (state == null)
+                throw new Exception($"Unable to read state of pod {podName} - pod has no container state for the {container} container");
+            return state;
+        }
+
+        /// <summary>
+        /// Read console output from a particular container in a pod.
+        /// </summary>
+        /// <param name="podNamespace">Namespace of the pod.</param>
+        /// <param name="podName">Pod name.</param>
+        /// <param name="containerName">Container name.</param>
+        /// <returns></returns>
+        private string GetLog(string podNamespace, string podName, string containerName)
+        {
+            using (Stream logStream = client.ReadNamespacedPodLog(podName, podNamespace, containerName, previous: true))
+                using (StreamReader reader = new StreamReader(logStream))
+                    return reader.ReadToEnd();
         }
 
         /// <summary>
@@ -277,37 +342,41 @@ namespace APSIM.Server
         }
 
         /// <summary>
+        /// Create and launch a worker pod which runs on the given input file.
+        /// </summary>
+        /// <param name="file">Input file for the pod.</param>
+        /// <param name="podName">Name of the worker pod.</param>
+        private void CreateWorkerPod(string file, string podName)
+        {
+            V1Pod template = CreateWorkerPodTemplate(file, podName);
+            client.CreateNamespacedPod(template, podNamespace);
+            WriteToLog($"Successfully launched pod {podName}.");
+        }
+
+        /// <summary>
         /// Create a pod for running the given file.
         /// </summary>
         /// <param name="file">The .apsimx file which the pod should run.</param>
+        /// <param name="supportFiles">Other misc input files (e.g. met file) which are required to run the main .apsimx file.</param>
         /// <param name="workerCpuCount">The number of vCPUs for the worker container in the pod. This should probably be equal to the number of simulations in the .apsimx file.</param>
-        private V1Pod CreatePod(string file, string podName)
+        private V1Pod CreateWorkerPodTemplate(string file, string podName)
         {
             // todo: pod labels
             V1ObjectMeta metadata = new V1ObjectMeta(name: podName);
-            V1Volume volume = InputFilesVolume(file);
-            V1PodSpec spec = new V1PodSpec(
-                containers: new[] { ApsimServerContainer($"{podName}-container", file, volume.Name) },
-                volumes: new[] { volume }
-            );
+            V1PodSpec spec = new V1PodSpec()
+            {
+                Containers = new[] { ApsimServerContainer(GetContainerName(podName), file) }
+            };
             return new V1Pod(apiVersion, Kind.Pod.ToString(), metadata, spec);
         }
 
         /// <summary>
-        /// Create a V1Volume instance for the input file.
+        /// Get the name of the apsim-server container running in a given pod.
         /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        private V1Volume InputFilesVolume(string file)
+        /// <param name="podName">Name of the pod.</param>
+        private string GetContainerName(string podName)
         {
-            V1HostPathVolumeSource hostVolume = new V1HostPathVolumeSource(
-                path: Path.GetDirectoryName(file),
-                type: "Directory"
-            );
-            return new V1Volume(
-                name: $"{inputsVolumeName}-{Guid.NewGuid()}",
-                hostPath: hostVolume
-            );
+            return $"{podName}-container";
         }
 
         /// <summary>
@@ -316,39 +385,21 @@ namespace APSIM.Server
         /// </summary>
         /// <param name="name">Display name for the container.</parama>
         /// <param name="file">The input file on which the container should run.</param>
-        /// <param name="inputsVolume">Name of the volume containing the input files.</param>
-        private V1Container ApsimServerContainer(string name, string file, string inputsVolume)
+        private V1Container ApsimServerContainer(string name, string file)
         {
             string fileName = Path.GetFileName(file);
-            const string mountPath = "/inputs";
             // fixme - this is hacky and nasty
             string[] args = new[]
             {
                 "-c",
-                // We run the server instances with the following settings:
-                // -v: verbose mode
-                // -k: keep-alive mode, because we don't maintain connections with the pods at all times.
-                // -r: remote connection type, because we will be connecting over network socket
-                // -n: native communications protocol, because I haven't implemented the managed version yet
-                // -f: pointing to this particular input file
-                // Listening on 0.0.0.0, using the same port no for all pods. This could be configurable
-                // 
-                // This little dance that we do here with the input files is to work around write
-                // permissions (or lack thereof) on the volume mount.
-                $"mkdir /input-files && cp {mountPath}/* /input-files/ && /apsim/apsim-server listen -vkrnf /input-files/{fileName} -a 0.0.0.0 -p {portNo}"
+                $"mkdir -p {workerInputsPath} && until [ -f {containerStartFile} ]; do sleep 1; done; echo File upload complete, starting server && /apsim/apsim-server listen -vkrnf {workerInputsPath}/{fileName} -a 0.0.0.0 -p {portNo}"
             };
-
-            V1VolumeMount volume = new V1VolumeMount(
-                mountPath: mountPath,
-                name: inputsVolume
-            );
 
             return new V1Container(
                 name,
                 image: imageName,
                 command: new string[] { "/bin/sh" },
-                args: args,
-                volumeMounts: new List<V1VolumeMount>() { volume }
+                args: args
             );
         }
 
@@ -359,7 +410,6 @@ namespace APSIM.Server
         /// <param name="simsPerFile">The number of simulations to add to each generated file.</param>
         private static IEnumerable<string> SplitApsimXFile(string inputFile, uint simsPerFile)
         {
-            // tbi - for now just return the original file
             string outputPath = Path.GetDirectoryName(inputFile);
             return GenerateApsimXFiles.SplitFile(inputFile, simsPerFile, outputPath, _ => {}, true);
         }
@@ -370,12 +420,10 @@ namespace APSIM.Server
         /// </summary>
         public void Dispose()
         {
-            RemoveWorkers();
+            // RemoveWorkers();
             WriteToLog("Deleting namespace...");
             client.DeleteNamespace(podNamespace);
             client.Dispose();
-            if (!string.IsNullOrEmpty(tempInputFiles) && Directory.Exists(tempInputFiles))
-                Directory.Delete(tempInputFiles, true);
         }
     }
 }
