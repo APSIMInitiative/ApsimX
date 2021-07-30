@@ -104,15 +104,6 @@ namespace Models
         [EventSubscribe("SubscribeToEvents")]
         private void OnConnectToEvents(object sender, EventArgs args)
         {
-            //// Cleanup event names.
-            //EventNames = TidyUpEventNames();
-
-            //// Tidy up variable/event names.
-            //VariableNames = TidyUpVariableNames();
-
-            //// Locate reporting variables.
-            //FindVariableMembers();
-
             SubscribeToEvents();
         }
 
