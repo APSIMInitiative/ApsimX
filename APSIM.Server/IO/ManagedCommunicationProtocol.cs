@@ -34,7 +34,7 @@ namespace APSIM.Server.IO
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command)
         {
-            throw new NotImplementedException();
+            PipeUtilities.SendObjectToPipe(stream, command);
         }
 
         /// <summary>
@@ -42,7 +42,23 @@ namespace APSIM.Server.IO
         /// </summary>
         public ICommand WaitForCommand()
         {
-            throw new NotImplementedException();
+            object resp = PipeUtilities.GetObjectFromPipe(stream);
+            if (resp is ICommand command)
+                return command;
+            if (resp is Exception exception)
+                // fixme - could be another sort of error
+                throw new Exception("Received exception while waiting for a command", exception);
+            if (resp is string message)
+            {
+                // We've received a string (message); dump the message to stdout,
+                // then wait for the next input. This shouldn't really happen,
+                // but I'm going to leave this in here for now.
+                // todo: should we send a response? Usually the other end will wait
+                // for some sort of response after sending something...
+                Console.WriteLine($"Received message: {message}");
+                return WaitForCommand();
+            }
+            throw new Exception($"Unexpected input from pipe; expected a command, but got {resp}");
         }
 
         /// <summary>
@@ -54,7 +70,23 @@ namespace APSIM.Server.IO
         /// <param name="error">Error details (if command failed). If command succeeded, this will be null.</param>
         public void OnCommandFinished(ICommand command, Exception error = null)
         {
-            throw new NotImplementedException();
+            if (error == null)
+            {
+                if (command is ReadCommand reader)
+                {
+                    foreach (string param in reader.Parameters)
+                    {
+                        if (reader.Result.Columns[param] == null)
+                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
+                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                        PipeUtilities.SendObjectToPipe(stream, data);
+                    }
+                }
+                else
+                    PipeUtilities.SendObjectToPipe(stream, "FIN");
+            }
+            else
+                PipeUtilities.SendObjectToPipe(stream, error);
         }
     }
 }
