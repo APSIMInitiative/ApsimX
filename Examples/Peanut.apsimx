@@ -150,7 +150,7 @@
               "VariableNames": [
                 "[Clock].Today",
                 "[Peanut].Pod.Wt",
-                "[Peanut].AflotoxinPercentage"
+                "[Peanut].AflotoxinRisk"
               ],
               "EventNames": [
                 "[Peanut].Harvesting"
