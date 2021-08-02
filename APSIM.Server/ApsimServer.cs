@@ -87,7 +87,7 @@ namespace APSIM.Server
             }
             finally
             {
-                sims.FindChild<Models.Storage.IDataStore>().Close();
+                sims?.FindChild<Models.Storage.IDataStore>()?.Close();
             }
         }
 
