@@ -3,8 +3,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <BaseOutputPath>../../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,24 +12,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <EmbeddedResource Include="**\*.xml" />
+    <EmbeddedResource Include="**\*.xml" />
     <EmbeddedResource Include="**\*.json" />
-	  <EmbeddedResource Include="**\*.apsim" />
-	  <EmbeddedResource Include="**\*.apsimx" />
-	  <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="**\*.apsim" />
+    <EmbeddedResource Include="**\*.apsimx" />
+    <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
     <EmbeddedResource Include="**\*.Expected.txt" />
   </ItemGroup>
 
   <ItemGroup>
-	  <!-- Project references -->
+    <!-- Project references -->
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj" />
-	  <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
-	  <ProjectReference Include="..\..\Models\Models.csproj" />
-	
+    <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
+    <ProjectReference Include="..\..\Models\Models.csproj" />
+    <ProjectReference Include="..\..\APSIM.Server\APSIM.Server.csproj" />
+
     <!-- nuget -->
-	  <PackageReference Include="NUnit" Version="3.12.0" />
-	  <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
   </ItemGroup>
 </Project>

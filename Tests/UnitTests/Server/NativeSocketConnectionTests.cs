@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Linq;
 using System.Text;
 
-namespace APSIM.Tests
+namespace UnitTests.Server
 {
     [TestFixture]
     public class NativeSocketConnectionTests
