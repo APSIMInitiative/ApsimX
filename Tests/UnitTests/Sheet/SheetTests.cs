@@ -10,7 +10,6 @@
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
-    using UserInterface.Extensions;
     using UserInterface.Views;
 
     [TestFixture]

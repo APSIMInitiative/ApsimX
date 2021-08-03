@@ -1,4 +1,6 @@
-﻿namespace UserInterface.Views
+﻿using Cairo;
+
+namespace UserInterface.Views
 {
     /// <summary>Encapsulates the xy pixel bounds of a sheet cell.</summary>
     public class CellBounds
@@ -33,5 +35,22 @@
 
         /// <summary>The bottom right corner y position of the cell in pixels</summary>
         public int Bottom => Top + Height;
+
+        /// <summary>Convert the cell bounds into a Cairo rectange.</summary>
+        public Rectangle ToRectangle()
+        {
+            return new Rectangle(Left, Top, Width, Height);
+        }
+
+        /// <summary>Converts the cell bounds into a Cairo rectange clipped to a window width and height.</summary>
+        /// <param name="windowWidth">Width of a window in pixels.</param>
+        /// <param name="windowHeight">Height of a window in pixels.</param>
+        public Rectangle ToClippedRectangle(int windowWidth, int windowHeight)
+        {
+            if (Right > windowWidth || Bottom > windowHeight)
+                return new Rectangle(Left, Top, windowWidth - Left, windowHeight - Top);
+            else
+                return ToRectangle();
+        }
     }
 }
