@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 126,
+  "ExplorerWidth": 285,
+  "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -166,6 +166,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Resources.Labour, Models",
+                      "UseCohorts": false,
                       "AllowAging": true,
                       "Name": "Labour",
                       "Children": [
@@ -246,6 +247,7 @@
                               "UseWholePackets": false,
                               "PricePerPacket": 200.0,
                               "PurchaseOrSale": 2,
+                              "PreviousPrice": 0.0,
                               "Name": "Pricing",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -281,6 +283,7 @@
                               "UseWholePackets": true,
                               "PricePerPacket": 2.5,
                               "PurchaseOrSale": 2,
+                              "PreviousPrice": 0.0,
                               "Name": "Pricing",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -324,6 +327,7 @@
                       "LandItemNameToUse": "Land.Field",
                       "AreaRequested": 1.0,
                       "UseAreaAvailable": false,
+                      "TransactionCategory": "Crop",
                       "OnPartialResourcesAvailableAction": 2,
                       "Name": "Manage Maize",
                       "Children": [
@@ -335,12 +339,13 @@
                           "ProportionKept": 1.0,
                           "TreesPerHa": 0.0,
                           "UnitsToHaConverter": 0.0,
+                          "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Grow maize crop",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                              "Category": "Harvest",
+                              "TransactionCategory": "Crop.[Task]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Name": "Harvest",
                               "Children": [
@@ -489,6 +494,7 @@
                       "ResourceTypeName": "ProductStore.Maize",
                       "SellStyle": 1,
                       "Value": 1.0,
+                      "TransactionCategory": "Sales",
                       "OnPartialResourcesAvailableAction": 2,
                       "Name": "Sell Maize",
                       "Children": [],
@@ -501,6 +507,7 @@
                       "LandItemNameToUse": "Land.Field",
                       "AreaRequested": 0.2,
                       "UseAreaAvailable": false,
+                      "TransactionCategory": "Crop",
                       "OnPartialResourcesAvailableAction": 2,
                       "Name": "Manage Vegetables",
                       "Children": [
@@ -512,6 +519,7 @@
                           "ProportionKept": 0.8,
                           "TreesPerHa": 0.0,
                           "UnitsToHaConverter": 0.0,
+                          "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Grow tomatoes",
                           "Children": [
@@ -580,6 +588,7 @@
                               "ProportionKept": 0.8,
                               "TreesPerHa": 0.0,
                               "UnitsToHaConverter": 0.0,
+                              "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Name": "Grow cucumbers",
                               "Children": [
@@ -646,6 +655,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Tomato Paste",
                       "Children": [
@@ -655,11 +665,13 @@
                           "ResourceTypeCreatedName": "ProductStore.TomatoPaste",
                           "ConversionRate": 0.1,
                           "Reserve": 0.0,
+                          "TransactionCategory": "Process",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Make tomato paste",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.ResourceActivityFee, Models",
+                              "TransactionCategory": "Expense",
                               "AccountName": "Finances.General account",
                               "PaymentStyle": 1,
                               "Amount": 0.2,
@@ -738,6 +750,7 @@
                           "ResourceTypeName": "ProductStore.TomatoPaste",
                           "SellStyle": 1,
                           "Value": 1.0,
+                          "TransactionCategory": "Sales",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Sell tomato paste",
                           "Children": [
@@ -797,6 +810,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "ProductStore",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "ProductStore"
                       ],
@@ -810,6 +828,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "Finances",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -823,6 +846,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "Labour",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "Labour"
                       ],
@@ -836,6 +864,18 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                      "ResourceGroupsToReport": [
+                        "Land",
+                        "Finances",
+                        "Labour",
+                        "ProductStore"
+                      ],
+                      "ReportAmount": true,
+                      "ReportValue": false,
+                      "ReportAnimalEquivalents": false,
+                      "ReportAnimalWeight": false,
+                      "ReportLandEntire": false,
+                      "ReportLabourIndividuals": false,
                       "VariableNames": [
                         "Labour",
                         "ProductStore",
@@ -917,6 +957,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Account balance",
@@ -1042,6 +1083,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Income sources",
@@ -1138,6 +1180,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Tomato paste _ Sales vs Expenses",
@@ -1244,6 +1287,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Maize grain",
@@ -1340,6 +1384,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Tomatoes and Cucumbers",
@@ -1571,6 +1616,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Resources.Labour, Models",
+                      "UseCohorts": false,
                       "AllowAging": true,
                       "Name": "Labour",
                       "Children": [
@@ -1640,6 +1686,7 @@
                               "UseWholePackets": false,
                               "PricePerPacket": 234.0,
                               "PurchaseOrSale": 0,
+                              "PreviousPrice": 0.0,
                               "Name": "WheatPrice",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1664,6 +1711,7 @@
                               "UseWholePackets": false,
                               "PricePerPacket": 219.0,
                               "PurchaseOrSale": 0,
+                              "PreviousPrice": 0.0,
                               "Name": "SorghumPrice",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1693,6 +1741,7 @@
                   "Children": [
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                      "TransactionCategory": "Folder",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Manage crops",
                       "Children": [
@@ -1701,6 +1750,7 @@
                           "LandItemNameToUse": "Land.Padd1",
                           "AreaRequested": 80.0,
                           "UseAreaAvailable": false,
+                          "TransactionCategory": "Crop",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Manage rotation",
                           "Children": [
@@ -1712,12 +1762,13 @@
                               "ProportionKept": 1.0,
                               "TreesPerHa": 0.0,
                               "UnitsToHaConverter": 0.0,
+                              "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 0,
                               "Name": "Manage Wheat",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                  "Category": "Preparing",
+                                  "TransactionCategory": "Crop.[Task]",
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Name": "Prepare wheat",
                                   "Children": [
@@ -1775,7 +1826,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                  "Category": "Planting",
+                                  "TransactionCategory": "Crop.[Task]",
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Name": "Plant wheat",
                                   "Children": [
@@ -1833,7 +1884,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                  "Category": "Spraying",
+                                  "TransactionCategory": "Crop.[Task]",
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Name": "Weed spray wheat",
                                   "Children": [
@@ -1891,12 +1942,13 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                                  "TransactionCategory": "Folder",
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Name": "Harvest activities",
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                      "Category": "Harvesting",
+                                      "TransactionCategory": "Crop.[Task]",
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Name": "Harvest wheat",
                                       "Children": [
@@ -1943,7 +1995,7 @@
                                           "PaymentStyle": 0,
                                           "Amount": 40.0,
                                           "BankAccount": null,
-                                          "Category": "Harvesting",
+                                          "TransactionCategory": "Crop.[Activity]",
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Name": "Wheat harvest costs",
                                           "Children": [],
@@ -1957,7 +2009,7 @@
                                           "PaymentStyle": 1,
                                           "Amount": 175.0,
                                           "BankAccount": null,
-                                          "Category": "Harvesting",
+                                          "TransactionCategory": "Crop.[Activity]",
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Name": "Wheat variable costs",
                                           "Children": [],
@@ -1972,7 +2024,7 @@
                                     },
                                     {
                                       "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                      "Category": "Transporting",
+                                      "TransactionCategory": "Crop.[Task]",
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Name": "Transport wheat",
                                       "Children": [
@@ -2046,12 +2098,13 @@
                               "ProportionKept": 1.0,
                               "TreesPerHa": 0.0,
                               "UnitsToHaConverter": 0.0,
+                              "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Name": "Manage Sorghum",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                  "Category": "Planting",
+                                  "TransactionCategory": "Crop.[Task]",
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Name": "Plant sorghum",
                                   "Children": [
@@ -2109,7 +2162,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                  "Category": "Spraying",
+                                  "TransactionCategory": "Crop.[Task]",
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Name": "Spray weeds sorghum",
                                   "Children": [
@@ -2167,12 +2220,13 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                                  "TransactionCategory": "Folder",
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Name": "Harvest activities",
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                      "Category": "Harvesting",
+                                      "TransactionCategory": "Crop.[Task]",
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Name": "Harvest sorghum",
                                       "Children": [
@@ -2219,7 +2273,7 @@
                                           "PaymentStyle": 1,
                                           "Amount": 55.0,
                                           "BankAccount": null,
-                                          "Category": "Harvesting",
+                                          "TransactionCategory": "Crop.[Activity]",
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Name": "Sorghum harvest costs",
                                           "Children": [],
@@ -2233,7 +2287,7 @@
                                           "PaymentStyle": 1,
                                           "Amount": 218.0,
                                           "BankAccount": null,
-                                          "Category": "Harvesting",
+                                          "TransactionCategory": "Crop.[Activity]",
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Name": "Sorghum variable costs",
                                           "Children": [],
@@ -2248,7 +2302,7 @@
                                     },
                                     {
                                       "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                                      "Category": "Transporting",
+                                      "TransactionCategory": "Crop.[Task]",
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Name": "Transport sorghum",
                                       "Children": [
@@ -2325,6 +2379,7 @@
                           "ResourceTypeName": "ProductStore.Wheat",
                           "SellStyle": 0,
                           "Value": 5000.0,
+                          "TransactionCategory": "Sales",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Sell wheat",
                           "Children": [],
@@ -2338,6 +2393,7 @@
                           "ResourceTypeName": "ProductStore.Sorghum",
                           "SellStyle": 4,
                           "Value": 0.1,
+                          "TransactionCategory": "Sales",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Sell sorghum",
                           "Children": [
@@ -2389,6 +2445,18 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                      "ResourceGroupsToReport": [
+                        "Land",
+                        "Finances",
+                        "Labour",
+                        "ProductStore"
+                      ],
+                      "ReportAmount": true,
+                      "ReportValue": false,
+                      "ReportAnimalEquivalents": false,
+                      "ReportAnimalWeight": false,
+                      "ReportLandEntire": false,
+                      "ReportLabourIndividuals": false,
                       "VariableNames": [
                         "Labour",
                         "ProductStore",
@@ -2425,6 +2493,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "Labour",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "Labour"
                       ],
@@ -2438,6 +2511,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "Finances",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -2451,6 +2529,11 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ReportStyle": 0,
+                      "ResourceGroupsToReport": "ProductStore",
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeConversions": false,
                       "VariableNames": [
                         "ProductStore"
                       ],
@@ -2509,6 +2592,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Income and Expenses",
@@ -2605,6 +2689,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Crop Yields",
@@ -2701,6 +2786,7 @@
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
+                      "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Labour requirements",

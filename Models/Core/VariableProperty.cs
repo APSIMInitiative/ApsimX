@@ -362,52 +362,58 @@
                     obj = ProcessPropertyOfArrayElement();
                 else
                     obj = this.property.GetValue(this.Object, null);
-                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
-                    && obj != null 
-                    && obj is IList)
+                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
                 {
-                    IList array = obj as IList;
-                    if (array.Count == 0)
-                        return null;
+                    if (obj is IList array)
+                    {
+                        if (array.Count == 0)
+                            return null;
 
-                    // Get the type of the items in the array.
-                    Type elementType;
-                    if (array.GetType().HasElementType)
-                        elementType = array.GetType().GetElementType();
+                        // Get the type of the items in the array.
+                        Type elementType;
+                        if (array.GetType().HasElementType)
+                            elementType = array.GetType().GetElementType();
+                        else
+                        {
+                            Type[] genericArguments = array.GetType().GetGenericArguments();
+                            if (genericArguments.Length > 0)
+                                elementType = genericArguments[0];
+                            else
+                                throw new Exception("Unknown type of array");
+                        }
+
+                        int startIndex = lowerArraySpecifier;
+                        if (startIndex == -1)
+                            startIndex = 1;
+
+                        int endIndex = upperArraySpecifier;
+                        if (endIndex == -1)
+                            endIndex = array.Count;
+
+                        int numElements = endIndex - startIndex + 1;
+                        Array values = Array.CreateInstance(elementType, numElements);
+                        for (int i = startIndex; i <= endIndex; i++)
+                        {
+                            int index = i - startIndex;
+                            if (i < 1 || i > array.Count)
+                                throw new Exception("Array index out of bounds while getting variable: " + this.Name);
+
+                            values.SetValue(array[i - 1], index);
+                        }
+                        if (values.Length == 1)
+                        {
+                            return values.GetValue(0);
+                        }
+
+                        return values;
+                    }
                     else
                     {
-                        Type[] genericArguments = array.GetType().GetGenericArguments();
-                        if (genericArguments.Length > 0)
-                            elementType = genericArguments[0];
-                        else
-                            throw new Exception("Unknown type of array");
+                        int index = lowerArraySpecifier != 0 ? lowerArraySpecifier : upperArraySpecifier;
+                        throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
                     }
-
-                    int startIndex = lowerArraySpecifier;
-                    if (startIndex == -1)
-                        startIndex = 1;
-
-                    int endIndex = upperArraySpecifier;
-                    if (endIndex == -1)
-                        endIndex = array.Count;
-
-                    int numElements = endIndex - startIndex + 1;
-                    Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = startIndex; i <= endIndex; i++)
-                    {
-                        int index = i - startIndex;
-                        if (i < 1 || i > array.Count)
-                            throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-
-                        values.SetValue(array[i - 1], index);
-                    }
-                    if (values.Length == 1)
-                    {
-                        return values.GetValue(0);
-                    }
-
-                    return values;
                 }
+                
 
                 return obj;
             }
