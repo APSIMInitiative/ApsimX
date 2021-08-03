@@ -10,6 +10,8 @@ using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.Globalization;
 using Models.CLEM.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Resources
 {
@@ -18,14 +20,23 @@ namespace Models.CLEM.Resources
     /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyCategorisedView")]
-    [PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.PropertyCategorisedView")]
+    //[PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
+        /// <summary>
+        /// Transaction grouping style
+        /// </summary>
+        [Description("Herd transactions grouping style")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Herd transactions grouping style required")]
+        public RuminantTransactionsGroupingStyle TransactionStyle { get; set; }
+
         /// <summary>
         /// Current state of this resource.
         /// </summary>
@@ -110,8 +121,6 @@ namespace Models.CLEM.Resources
                                     // if next new female set up some details
                                     if (breedFemales[0].ID != previousRuminantID)
                                     {
-                                        breedFemales[0].DryBreeder = false;
-
                                         //Initialise female milk production in at birth so ready for sucklings to consume
                                         double milkTime = (suckling.Age * 30.4) + 15; // +15 equivalent to mid month production
 
@@ -181,7 +190,6 @@ namespace Models.CLEM.Resources
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
                     foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
                     {
-                        female.DryBreeder = true;
                         // generalised curve
                         double currentIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
                         // restrict minimum period between births (previously +61)
@@ -332,7 +340,7 @@ namespace Models.CLEM.Resources
                 return 0;
             }
 
-            var values = Herd.Where( a => (ignoreNotFound & a.GetAttributeValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.GetAttributeValue(tag)?.storedValue));
+            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
             if (values.Count() == 0)
             {
                 return 0;
@@ -385,6 +393,120 @@ namespace Models.CLEM.Resources
         /// </summary>
         public int NextUniqueID { get { return id++; } }
         private int id = 1;
+
+        #region group tracking
+
+        /// <summary>
+        /// Access to the herd grouped by transaction style for reporting in FinalizeTimeStep before EndTimeStep
+        /// </summary>
+        private IEnumerable<RuminantReportTypeDetails> groupedHerdForReporting;
+
+        /// <summary>
+        /// Overrides the base class method to allow for changes before end of month reporting
+        /// </summary>
+        [EventSubscribe("CLEMFinalizeTimeStep")]
+        private void OnCLeMFinalizeTimeStep(object sender, EventArgs e)
+        {
+            // group herd ready for reporting
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+        }
+
+        /// <summary>
+        /// Get the specific report group with details to report from the grouped herd
+        /// </summary>
+        /// <param name="ruminantTypeName">Name of ruminant type</param>
+        /// <param name="groupName">Name of group category</param>
+        /// <returns>The group details</returns>
+        public RuminantReportGroupDetails GetRuminantReportGroup(string ruminantTypeName, string groupName)
+        {
+            if(groupedHerdForReporting != null)
+            {
+                var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
+                if(rumGroup != null)
+                {
+                    var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
+                    if (catGroup != null)
+                    {
+                        return catGroup;
+                    }
+                }
+            }
+            return new RuminantReportGroupDetails();
+        }
+
+        /// <summary>
+        /// Generate the store for tracking individuals in groups for reporting
+        /// </summary>
+        /// <returns>Dicitonary of ResourceTypes and categories for each</returns>
+        public IEnumerable<string> GetReportingGroups(RuminantType ruminantType)
+        {
+            List<string> catNames = new List<string>();
+            switch (TransactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    catNames.Add("All");
+                    break;
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    var animalPricing = ruminantType.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                    if (animalPricing != null)
+                    {
+                        catNames.AddRange(animalPricing.FindAllChildren<AnimalPriceGroup>().Select(a => a.Name));
+                    }
+                    break;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
+                    break;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    var classes = Enum.GetNames(typeof(RuminantClass));
+                    foreach (var item in classes)
+                    {
+                        switch (item)
+                        {
+                            case "Castrate":
+                            case "Sire":
+                                catNames.Add($"{item}Male");
+                                break;
+                            default:
+                                catNames.Add($"{item}Female");
+                                catNames.Add($"{item}Male");
+                                break;
+                        }
+                    }
+                    break;
+            default:
+                    break;
+            }
+            return catNames;
+        }
+
+        /// <summary>
+        /// Group and summarize individuals by transaction style for reporting
+        /// </summary>
+        /// <param name="individuals">Individuals to summarize</param>
+        /// <param name="priceStyle">Price style to use</param>
+        /// <returns>A grouped summary of individuals</returns>
+        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle)
+        {
+            var groupedInd = from ind in individuals
+                                    group ind by ind.BreedParams.Name into breedGroup
+                                    select new RuminantReportTypeDetails()
+                                    {
+                                        RuminantTypeName = breedGroup.Key,
+                                        RuminantTypeGroup = from gind in breedGroup
+                                                 group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
+                                                 select new RuminantReportGroupDetails()
+                                                 {
+                                                     GroupName = catind.Key,
+                                                     Count = catind.Count(),
+                                                     TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
+                                                     TotalWeight = catind.Sum(a => a.Weight),
+                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle)?.CalculateValue(a))
+                                                 }
+                                    };
+            return groupedInd;
+        }
+
+        #endregion 
 
         #region Transactions
 
@@ -467,9 +589,88 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";
+            switch (TransactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    html += " into a single transaction per RuminantType.";
+                    break;
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    html += " by the pricing groups provided for the RuminantType.";
+                    break;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    html += " by the class of individual.";
+                    break;
+                default:
+                    break;
+            }
+            html += "</div>";
             return html;
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// A list of the ruminant type groups found in herd
+    /// </summary>
+    public class RuminantReportTypeDetails
+    {
+        /// <summary>
+        /// Name of ruminant type
+        /// </summary>
+        public string RuminantTypeName { get; set; }
+
+        /// <summary>
+        /// A list of all the details for the type
+        /// </summary>
+        public IEnumerable<RuminantReportGroupDetails> RuminantTypeGroup { get; set; }
+    }
+
+    /// <summary>
+    /// Details of a ruminant reporting group
+    /// </summary>
+    public class RuminantReportGroupDetails
+    {
+        /// <summary>
+        /// Name of group
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
+        /// Number of individuals
+        /// </summary>
+        public int? Count { get; set; }
+
+        /// <summary>
+        /// Sum of adult equivalents
+        /// </summary>
+        public double? TotalAdultEquivalent { get; set; }
+
+        /// <summary>
+        /// Sum of weight
+        /// </summary>
+        public double? TotalWeight { get; set; }
+
+        /// <summary>
+        /// Sum of price
+        /// </summary>
+        public double? TotalPrice { get; set; }
+
+        /// <summary>
+        /// Average adult equivalents
+        /// </summary>
+        public double? AverageAdultEquivalent { get; set; }
+
+        /// <summary>
+        /// Average weight
+        /// </summary>
+        public double? AverageWeight { get; set; }
+
+        /// <summary>
+        /// Average price
+        /// </summary>
+        public double? AveragePrice { get; set; }
+
     }
 }

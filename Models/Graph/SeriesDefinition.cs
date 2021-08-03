@@ -309,10 +309,11 @@
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
-                    filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
+                    if (fieldsThatExist.Contains("SimulationID"))
+                        filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
 
-                filter = filter.Replace('\"', '\'');
+                filter = filter?.Replace('\"', '\'');
                 View = new DataView(data);
                 View.RowFilter = filter;
 

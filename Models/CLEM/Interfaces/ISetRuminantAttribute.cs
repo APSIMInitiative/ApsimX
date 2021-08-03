@@ -15,7 +15,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Property to return a random assignment of the attribute
         /// </summary>
-        Resources.CLEMAttribute GetRandomSetAttribute();
+        Resources.IndividualAttribute GetRandomSetAttribute();
 
         /// <summary>
         /// Name to apply to the attribute

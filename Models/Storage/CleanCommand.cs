@@ -15,10 +15,10 @@ namespace Models.Storage
         };
 
         private DataStoreWriter writer;
-        private List<string> names;
-        private List<int> ids;
+        private IEnumerable<string> names;
+        private IEnumerable<int> ids;
 
-        public CleanCommand(DataStoreWriter dataStoreWriter, List<string> names, List<int> ids)
+        public CleanCommand(DataStoreWriter dataStoreWriter, IEnumerable<string> names, IEnumerable<int> ids)
         {
             writer = dataStoreWriter;
             this.names = names;

@@ -206,6 +206,12 @@ namespace Models.CLEM.Activities
         {
             activities = FindAllChildren<IModel>().ToList(); // = Children;
             BindEvents(activities);
+            int index = 0;
+            foreach (var activity in FindAllDescendants<CLEMActivityBase>())
+            {
+                activity.SetGuID($"{index.ToString().PadLeft(8,'0')}-0000-0000-0000-000000000000");
+                index++;
+            }
         }
 
         /// <summary>
@@ -302,29 +308,19 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             return "\r\n<h1>Activities summary</h1>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";

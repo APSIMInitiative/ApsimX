@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics;
     using System.IO;
     using System.Net;
     using System.Reflection;
@@ -202,15 +203,19 @@
                     if (documentObject["ModelNameToDocument"] == null)
                     {
                         Console.WriteLine("Creating documentation from " + fileName);
+                        var watch = Stopwatch.StartNew();
 
                         // Whole of simulation document.
                         var createDoc = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
                         createDoc.Do();
                         href = Path.GetFileName(createDoc.FileNameWritten);
+                        watch.Stop();
+                        Console.WriteLine($"Done. Elapsed time: {watch.Elapsed.TotalSeconds} seconds");
                     }
                     else
                     {
                         Console.WriteLine("Creating model description documentation from " + fileName);
+                        var watch = Stopwatch.StartNew();
 
                         // Specific model description documentation.
                         var modelNameToDocument = documentObject["ModelNameToDocument"].ToString();
@@ -221,6 +226,8 @@
                         var createDoc = new CreateParamsInputsOutputsDocCommand(explorerPresenter, model, destinationFolder, outputFileName);
                         createDoc.Do();
                         href = Path.GetFileName(createDoc.FileNameWritten);
+                        watch.Stop();
+                        Console.WriteLine($"Done. Elapsed time: {watch.Elapsed.TotalSeconds} seconds");
                     }
 
                     return string.Format("<p><a href=\"{0}/{1}\" target=\"_blank\">{2}</a></p>", destinationUrl, href, hrefName);

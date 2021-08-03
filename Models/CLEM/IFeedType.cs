@@ -33,5 +33,6 @@ namespace Models.CLEM
         /// Amount (kg)
         /// </summary>
         new double Amount { get; }
+
     }
 }

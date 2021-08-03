@@ -59,6 +59,14 @@ namespace Models.CLEM.Activities
         [Required]
         public bool InferStartupPregnancy { get; set; }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityBreed()
+        {
+            TransactionCategory = "Livestock.Manage";
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -310,9 +318,9 @@ namespace Models.CLEM.Activities
                         newCalfRuminant.SaleFlag = HerdChangeReason.Born;
 
                         // add attributes inherited from mother
-                        foreach (var attribute in female.Attributes)
+                        foreach (var attribute in female.Attributes.Items)
                         {
-                            newCalfRuminant.AddAttribute(attribute.Key, attribute.Value.GetInheritedAttribute() as ICLEMAttribute);
+                            newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
                         }
 
                         Resources.RuminantHerd().AddRuminant(newCalfRuminant, this);
@@ -334,14 +342,11 @@ namespace Models.CLEM.Activities
             {
                 // determined by controlled mating and subsequent timer (e.g. smart milking)
                 herd = controlledMating.BreedersToMate();
-                this.TriggerOnActivityPerformed();
             }
             else if (!useControlledMating && TimingOK)
             {
-                // whole herd for activity
+                // whole herd for activity including males
                 herd = CurrentHerd(true);
-                // report that this activity was performed as it does not use base GetResourcesRequired
-                this.TriggerOnActivityPerformed();
             }
 
             if (herd != null && herd.Count() > 0)
@@ -382,11 +387,11 @@ namespace Models.CLEM.Activities
                         }
                     }
 
-                    numberServiced = 1;
-                    foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                    numberServiced = 0;
+                    foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
                     {
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
-                        if (numberServiced <= numberPossible)
+                        if (numberServiced < numberPossible)
                         {
                             // calculate conception
                             double conceptionRate = ConceptionRate(female, out status);
@@ -429,7 +434,7 @@ namespace Models.CLEM.Activities
                     // report a natural mating locations for transparency via a message
                     if (numberServiced > 0 & !useControlledMating)
                     {
-                        string warning = "Natural (uncontrolled) mating ocurred in [r=" + location.Key + "]";
+                        string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
                         if (!Warnings.Exists(warning))
                         {
                             Warnings.Add(warning);
@@ -438,6 +443,8 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+            // report that this activity was performed as it does not use base GetResourcesRequired
+            this.TriggerOnActivityPerformed();
         }
 
         /// <summary>
@@ -447,7 +454,7 @@ namespace Models.CLEM.Activities
         /// <param name="maleAttributes">a list of available male attributes setters</param>
         private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes)
         {
-            foreach (var attribute in female.Attributes)
+            foreach (var attribute in female.Attributes.Items)
             {
                 var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
                 if(maleAttribute != null)
@@ -479,9 +486,9 @@ namespace Models.CLEM.Activities
         {
             if (male != null)
             {
-                foreach (var attribute in female.Attributes)
+                foreach (var attribute in female.Attributes.Items)
                 {
-                    var maleAttribute = male.GetAttributeValue(attribute.Key);
+                    var maleAttribute = male.Attributes.GetValue(attribute.Key);
                     if (maleAttribute != null)
                     {
                         if (attribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
@@ -554,10 +561,7 @@ namespace Models.CLEM.Activities
         }
 
 
-        /// <summary>
-        /// Property to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree
-        /// </summary>
-        /// <returns>T/F</returns>
+        /// <inheritdoc/>
         public override bool TimingOK
         {
             get
@@ -566,73 +570,49 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
@@ -658,25 +638,10 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</div>");
                 }
                 controlledMating = this.FindAllChildren<RuminantActivityControlledMating>().FirstOrDefault();
-                if (useControlledMating)
+                if (controlledMating is null)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("Breeding uses controlled mating as outlined in the component below");
-                    htmlWriter.Write("</div>");
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating");
-
-                    if (this.FindAllChildren<IActivityTimer>().Count() >= 1)
-                    {
-                        htmlWriter.Write(". The timer associated with this activity may restrict uncontrolled mating regardless of whether males and females of breeding condition are located together.");
-                    }
-                    else
-                    {
-                        htmlWriter.Write(" that will occur every month when males and females of breeding condition are located together.");
-                    }
+                    htmlWriter.Write("This simulation uses natural (uncontrolled) mating that will occur when males and females of breeding condition are located together");
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString(); 

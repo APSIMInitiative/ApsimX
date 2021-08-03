@@ -748,5 +748,12 @@ namespace Models
             Assert.AreEqual(storage.Get<double>("Total.DayOfYear"), new double[] { 55 });
         }
 
+        [Test]
+        public void ArrayIndexOnScalarIsIllegal()
+        {
+            report.VariableNames = new[] { "[Clock].Today.DayOfYear[1]" };
+            List<Exception> errors = runner.Run();
+            Assert.AreEqual(1, errors.Count);
+        }
     }
 }

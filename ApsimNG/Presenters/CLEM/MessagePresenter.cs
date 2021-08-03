@@ -52,24 +52,28 @@ namespace UserInterface.Presenters
             int maxErrors = 100;
             using (StringWriter markdownWriter = new StringWriter())
             {
+                int terminatedCount = 0;
                 // find IStorageReader of simulation
                 IModel simulation = model.FindAncestor<Simulation>();
-                IModel simulations = simulation.FindAncestor<Simulations>();
-                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
+                IDataStore ds = model.FindInScope<IDataStore>() as IDataStore;
                 if (ds == null)
                 {
                     return markdownWriter.ToString();
                 }
-                if (ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages") == null)
+
+                DataTable dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                if (dataTable == null)
                 {
+                    markdownWriter.Write("### Datastore is empty");
+                    markdownWriter.Write("  \r\n  \r\nNo simulation has been performed for this farm");
                     return markdownWriter.ToString();
                 }
-                DataRow[] dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select();
+                DataRow[] dataRows = dataTable.Select();
                 if (dataRows.Count() > 0)
                 {
-                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                    dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;
+                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;
+                    dataRows = dataRows.OrderBy(a => a[errorCol].ToString()).ToArray();
 
                     foreach (DataRow dr in dataRows)
                     {
@@ -157,7 +161,8 @@ namespace UserInterface.Presenters
                                 title = "Success";
                                 DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                                 int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
+                                terminatedCount = Math.Min(terminatedCount, dataRows2.Rows.Count - 1);
+                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[terminatedCount][clockCol].ToString());
                                 msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
 
                                 // check for resource shortfall and adjust information accordingly
@@ -172,6 +177,7 @@ namespace UserInterface.Presenters
                                         msgStr += "  \r\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
                                     }
                                 }
+                                terminatedCount++;
                             }
 
                             markdownWriter.Write("  \r\n### ");

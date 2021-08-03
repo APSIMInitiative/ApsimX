@@ -60,17 +60,6 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public string SelectedTab { get; set; }
 
-        [NonSerialized]
-        private ReportData dataToWriteToDb = null;
-
-        /// <summary>Link to a storage service.</summary>
-        [Link]
-        private IDataStore storage = null;
-
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        private IEvent events = null;
-
         /// <summary>
         /// Name of filename to save labour report
         /// </summary>
@@ -90,8 +79,6 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            dataToWriteToDb = null;
-
             base.VariableNames = new string[]
             {
                 "[Clock].Today as Date",
@@ -100,42 +87,17 @@ namespace Models.CLEM.Reporting
                 "[Activities].LastActivityPerformed.UniqueID as UniqueID"
             };
 
-            base.EventNames = new string[] { "[Activities].ActivityPerformed" };
-
-            // Tidy up variable/event names.
-            base.VariableNames = TidyUpVariableNames();
-            base.EventNames = TidyUpEventNames();
-            base.FindVariableMembers();
-
-            // Subscribe to events.
-            foreach (string eventName in base.EventNames)
-            {
-                if (eventName != string.Empty)
-                {
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            EventNames = new string[] { "[Activities].ActivityPerformed" };
+            SubscribeToEvents();
         }
-
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            if (dataToWriteToDb != null)
-            {
-                storage.Writer.WriteTable(dataToWriteToDb);
-            }
-            dataToWriteToDb = null;
-
-            // if auto create
-            if(AutoCreateHTML)
-            {
-//                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
-            }
-        }
-
 
         #region create html report
 
+        /// <summary>
+        /// Get the data for display
+        /// </summary>
+        /// <param name="dataStore">The datastore to use</param>
+        /// <returns>Data as a datatable</returns>
         private DataTable GetData(IDataStore dataStore)
         {
             DataTable data = null;
@@ -176,6 +138,11 @@ namespace Models.CLEM.Reporting
             return data;
         }
 
+        /// <summary>
+        /// Method to transpose columns
+        /// </summary>
+        /// <param name="dt">Data as DataTable</param>
+        /// <returns>Transposed DataTable</returns>
         private DataTable Transpose(DataTable dt)
         {
             DataTable dtNew = new DataTable();
@@ -216,7 +183,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <summary>
-        /// 
+        /// Method to create data table
         /// </summary>
         public DataTable CreateDataTable(IDataStore dataStore, string directoryPath, bool darkTheme)
         {
@@ -226,7 +193,7 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns

@@ -76,6 +76,14 @@ namespace Models.CLEM.Activities
         private AnimalFoodStoreType foodstore { get; set; }
         private ActivityCutAndCarryLimiter limiter;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public PastureActivityCutAndCarry()
+        {
+            TransactionCategory = "Pasture.Collect";
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -162,10 +170,7 @@ namespace Models.CLEM.Activities
             GetResourcesRequiredForActivity();
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> requestList = null;
@@ -183,7 +188,7 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Category = "Cut and carry",
+                        Category = TransactionCategory,
                         Required = AmountHarvested,
                         Resource = pasture,
                     }
@@ -192,11 +197,7 @@ namespace Models.CLEM.Activities
             return requestList;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
@@ -223,12 +224,10 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Cut and carry", pasture.NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // labour limiter
@@ -253,9 +252,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             FoodResourcePacket packet = new FoodResourcePacket()
@@ -265,7 +262,7 @@ namespace Models.CLEM.Activities
                 DMD = pasture.EstimateDMD(pasture.Nitrogen)
             };
 
-            foodstore.Add(packet, this,"", "Cut and carry");
+            foodstore.Add(packet, this,"", TransactionCategory);
         }
 
         private void PutPastureInStore()
@@ -336,13 +333,13 @@ namespace Models.CLEM.Activities
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Category = "Cut and carry",
+                        Category = TransactionCategory,
                         Required = AmountHarvested,
                         Resource = pasture
                     };
                     pasture.Remove(request);
 
-                    foodstore.Add(packet, this, "", "Cut and carry");
+                    foodstore.Add(packet, this, "", TransactionCategory);
                 }
                 SetStatusSuccess();
             }
@@ -373,38 +370,25 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -412,11 +396,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

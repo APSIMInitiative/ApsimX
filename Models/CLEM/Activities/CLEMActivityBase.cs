@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
@@ -21,6 +22,13 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public abstract class CLEMActivityBase: CLEMModel
     {
+        /// <summary>
+        /// Label to assign each transaction created by this activity in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        virtual public string TransactionCategory { get; set; }
+
         /// <summary>
         /// Link to resources
         /// </summary>
@@ -971,7 +979,6 @@ namespace Models.CLEM.Activities
         {
             ActivityPerformed?.Invoke(this, e);
         }
-
     }
 
     /// <summary>

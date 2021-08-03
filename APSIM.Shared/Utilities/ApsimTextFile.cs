@@ -722,7 +722,7 @@ namespace APSIM.Shared.Utilities
                 string ColumnName = table.Columns[col].ColumnName;
                 if (ColumnName.Equals("date", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if (ColumnTypes[col] == typeof(DateTime))
+                    if (table.Columns[col].DataType == typeof(DateTime) || ColumnTypes[col] == typeof(DateTime))
                         return (DateTime)table.Rows[rowIndex][col];
                     else
                         return DateTime.Parse(table.Rows[rowIndex][col].ToString(), CultureInfo.InvariantCulture);

@@ -201,6 +201,9 @@ namespace Models.CLEM
                     {
                         htmlWriter.Write(GetFullSummary(item, true, htmlString));
                     }
+
+                    htmlWriter.Write(AddMemosToSummary(model as IModel));
+
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
 
                     htmlWriter.Write(cm.ModelSummaryClosingTags(formatForParentControl));
@@ -222,6 +225,22 @@ namespace Models.CLEM
         public virtual string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>\r\n</div>";
+        }
+
+        /// <summary>
+        /// Create memos included for summary description
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static string AddMemosToSummary(IModel model)
+        {
+            string html = "";
+            foreach (var memo in model.FindAllChildren<Memo>())
+            {
+                html += "<div class='memo-container'><div class='memo-head'>Memo</div>";
+                html += $"<div class='memo-text'>{memo.Text}</div></div>";
+            }
+            return html;
         }
 
         /// <summary>
@@ -465,6 +484,10 @@ namespace Models.CLEM
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+                ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
+                ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin-bottom:10px; margin-top:10px;}" +
+                ".memo-head {background-color:DeepSkyBlue;padding:10px;color:white;font-weight:bold;}" +
+                ".memo-text {margin:auto;margin-left:15px;padding:5px;color:Black;}" +
                 ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
                 ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
