@@ -3450,7 +3450,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
               "Name": "RootShape",
               "Children": [],
               "IncludeInDocumentation": true,
