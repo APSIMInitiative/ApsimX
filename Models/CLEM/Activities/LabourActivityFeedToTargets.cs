@@ -250,6 +250,15 @@ namespace Models.CLEM.Activities
                     {
                         ResourcePricing price = foodParcels[parcelIndex].FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
                         double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / price.PacketSize * price.PricePerPacket;
+                        //if (cost > 0 && cost > fundsAvailable)
+                        //{
+                        //    // need to get some more money
+
+                        //    // sell cattle based on selling groups till run out of cattle or meet shortfall
+
+                        //    // adjust fundsAvailable with new money
+
+                        //}
                         if (cost > 0)
                         {
                             propToPrice = Math.Min(1, fundsAvailable / cost);
@@ -338,7 +347,7 @@ namespace Models.CLEM.Activities
 
                 // don't worry about money anymore. The over request will be handled by the transmutation.
                 // move through specified purchase list
-                foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().ToList())
+                foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
                 {
                     HumanFoodStoreType foodtype = resourcesHolder.GetResourceItem(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
                     if (foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
@@ -360,7 +369,7 @@ namespace Models.CLEM.Activities
                             intake += amountfood;
 
                             // find in requests or create a new one
-                            ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype) as ResourceRequest;
+                            ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype);
                             if (foodRequestFound is null)
                             {
                                 requests.Add(new ResourceRequest()
@@ -455,12 +464,12 @@ namespace Models.CLEM.Activities
             // add all provided requests to the individuals intake pools.
 
             List<LabourType> group = Resources.Labour().Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
-            double aE = group.Sum(a => a.AdultEquivalent);
+            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
             Status = ActivityStatus.NotNeeded;
-            if (group != null && group.Count > 0)
+            if (group != null && group.Any())
             {
                 var requests = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore));
-                if (requests.Count() > 0)
+                if (requests.Any())
                 {
                     foreach (ResourceRequest request in requests)
                     {
@@ -478,15 +487,10 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                List<LabourActivityFeedTarget> labourActivityFeedTargets = this.FindAllChildren<LabourActivityFeedTarget>().Cast<LabourActivityFeedTarget>().ToList();
-                if (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0)
-                {
+                if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;
-                }
                 else
-                {
                     this.Status = ActivityStatus.Success;
-                }
             }
             
         }
