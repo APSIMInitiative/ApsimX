@@ -5,6 +5,7 @@ using Gtk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UserInterface.Extensions;
 
 namespace UserInterface.Views
 {
