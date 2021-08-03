@@ -143,7 +143,9 @@
                             {
                                 TruncateDates(table);
 
-                                storage.Writer.WriteTable(table);
+                                // Don't delete previous data existing in this table. Doing so would
+                                // cause problems when merging sheets from multiple excel files.
+                                storage.Writer.WriteTable(table, false);
                                 storage.Writer.WaitForIdle();
                             }
                         }
