@@ -7,7 +7,7 @@
     /// Specifies that the related class should use the user interface view
     /// that has the specified name.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Class, Inherited = false)]
     public class DescriptionAttribute : System.Attribute
     {
         /// <summary>

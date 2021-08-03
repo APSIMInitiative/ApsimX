@@ -449,6 +449,8 @@
         public IRunnable Clean(IEnumerable<string> names)
         {
             var ids = new List<int>();
+            if (simulationIDs.Count == 0)
+                ReadExistingDatabase(Connection);
             foreach (var name in names)
                 if (simulationIDs.TryGetValue(name, out SimulationDetails details))
                     ids.Add(details.ID);

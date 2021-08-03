@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 287,
+  "ExplorerWidth": 285,
   "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -159,6 +159,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Resources.RuminantHerd, Models",
+                      "TransactionStyle": 0,
                       "Name": "Ruminants",
                       "Children": [
                         {
@@ -331,6 +332,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
@@ -354,6 +356,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.3,
                                   "PurchaseOrSale": 1,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
@@ -388,6 +391,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 2,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
@@ -422,6 +426,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
@@ -456,6 +461,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
@@ -490,6 +496,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.4,
                                   "PurchaseOrSale": 0,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
@@ -524,6 +531,7 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "PreviousPrice": 0.0,
                                   "Name": "Breeding Sires",
                                   "Children": [
                                     {
@@ -626,6 +634,8 @@
                             {
                               "$type": "Models.CLEM.Transmutation, Models",
                               "AmountPerUnitPurchase": 1000.0,
+                              "WorkInWholeUnits": false,
+                              "TransactionCategory": "Transmutation",
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -669,6 +679,7 @@
                       "LandItemNameToUse": "Land.Paddock1",
                       "AreaRequested": 100.0,
                       "UseAreaAvailable": true,
+                      "TransactionCategory": "Crop",
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Native Pasture on farm",
                       "Children": [
@@ -680,6 +691,7 @@
                           "ProportionKept": 1.0,
                           "TreesPerHa": 0.0,
                           "UnitsToHaConverter": 0.0,
+                          "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
@@ -694,6 +706,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                      "TransactionCategory": null,
                       "OnPartialResourcesAvailableAction": 0,
                       "Name": "Manage herd",
                       "Children": [
@@ -702,6 +715,7 @@
                           "EnergyGross": 18.4,
                           "MethaneStoreName": "Use store named Methane if present",
                           "OnPartialResourcesAvailableAction": 0,
+                          "TransactionCategory": "Livestock.Manage",
                           "Name": "Grow all ruminants",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -716,6 +730,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Move to pasture",
                           "Children": [
@@ -740,6 +755,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Grazing",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Graze all",
                           "Children": [],
@@ -756,6 +772,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Feed",
                           "OnPartialResourcesAvailableAction": 2,
                           "Name": "Feed hay",
                           "Children": [
@@ -780,6 +797,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Breed",
                           "Children": [
@@ -788,6 +806,7 @@
                               "HerdFilters": null,
                               "PredictedHerdName": null,
                               "PredictedHerdBreed": null,
+                              "TransactionCategory": "Livestock.Manage",
                               "OnPartialResourcesAvailableAction": 0,
                               "Name": "ControlledMating",
                               "Children": [
@@ -820,6 +839,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Wean",
                           "Children": [
@@ -869,6 +889,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Manage numbers",
                           "Children": [
@@ -947,6 +968,7 @@
                           "HerdFilters": null,
                           "PredictedHerdName": null,
                           "PredictedHerdBreed": null,
+                          "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Buy and sell",
                           "Children": [],
@@ -1004,6 +1026,16 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                      "ResourceGroupsToReport": [
+                        "GrazeFoodStore",
+                        "AnimalFoodStore"
+                      ],
+                      "ReportAmount": true,
+                      "ReportValue": false,
+                      "ReportAnimalEquivalents": false,
+                      "ReportAnimalWeight": false,
+                      "ReportLandEntire": false,
+                      "ReportLabourIndividuals": false,
                       "VariableNames": [
                         "Land",
                         "GrazeFoodStore",
@@ -1043,12 +1075,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "GrazeFoodStore"
-                      ],
+                      "ResourceGroupsToReport": "GrazeFoodStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "GrazeFoodStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "GrazeFoodStoreLedger",
@@ -1060,12 +1093,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "AnimalFoodStore"
-                      ],
+                      "ResourceGroupsToReport": "AnimalFoodStore",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "AnimalFoodStore"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "AnimalFoodLedger",
@@ -1077,12 +1111,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Finances"
-                      ],
+                      "ResourceGroupsToReport": "Finances",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Finances"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
@@ -1094,12 +1129,13 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                       "ReportStyle": 0,
-                      "VariableNames": [
-                        "Ruminants"
-                      ],
+                      "ResourceGroupsToReport": "Ruminants",
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
                       "IncludeConversions": false,
+                      "VariableNames": [
+                        "Ruminants"
+                      ],
                       "EventNames": null,
                       "GroupByVariableName": null,
                       "Name": "HerdLedger",
@@ -1176,7 +1212,6 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "SimulationDescriptions": null,
                       "Name": "Income vs Expenses",
                       "Children": [
                         {
@@ -1314,7 +1349,6 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "SimulationDescriptions": null,
                       "Name": "Animal numbers vs Feed available",
                       "Children": [
                         {
@@ -1452,7 +1486,6 @@
                       "AnnotationPosition": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
-                      "SimulationDescriptions": null,
                       "Name": "Graph_Pasture Growth vs Grazing",
                       "Children": [
                         {
