@@ -244,11 +244,9 @@ namespace Models.CLEM.Resources
                 else
                 {
                     return matchCriteria;
-                    //price = matchCriteria.Value * ((matchCriteria.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                 }
             }
             return null;
-            //return price;
         }
 
         #region validation

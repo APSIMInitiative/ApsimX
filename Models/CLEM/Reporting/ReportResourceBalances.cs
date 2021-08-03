@@ -31,7 +31,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Includes value as reportable columns")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceBalances.htm")]
-    public class ReportResourceBalances: Models.Report
+    public class ReportResourceBalances: Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder Resources = null;
@@ -88,6 +88,9 @@ namespace Models.CLEM.Reporting
         [Category("Report", "Land")]
         [Description("Report Labour as individuals")]
         public bool ReportLabourIndividuals { get; set; }
+
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
 
         private IEnumerable<IActivityTimer> timers;
 
@@ -222,7 +225,7 @@ namespace Models.CLEM.Reporting
             // Subscribe to events.
             if (EventNames == null || EventNames.Count() == 0)
             {
-                EventNames = new string[] { "[Clock].CLEMHerdSummary" };
+                EventNames = new string[] { "[Clock].CLEMFinalizeTimeStep" };
             }
             SubscribeToEvents();
         }

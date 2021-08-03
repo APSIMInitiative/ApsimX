@@ -55,9 +55,7 @@ namespace Models.CLEM.Reporting
         [Description("Automatically create HTML report at end of simulation")]
         public bool AutoCreateHTML { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
         /// <summary>

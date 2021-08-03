@@ -211,6 +211,8 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
+            // group herd ready for reporting
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -404,10 +406,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Overrides the base class method to allow for changes before end of month reporting
         /// </summary>
-        [EventSubscribe("CLEMFinalizeTimeStep")]
-        private void OnCLeMFinalizeTimeStep(object sender, EventArgs e)
+        [EventSubscribe("CLEMHerdSummary")]
+        private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             // group herd ready for reporting
+            // performed at herd summary to avoid end of step aging purchases etc
             groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
@@ -419,7 +422,7 @@ namespace Models.CLEM.Resources
         /// <returns>The group details</returns>
         public RuminantReportGroupDetails GetRuminantReportGroup(string ruminantTypeName, string groupName)
         {
-            if(groupedHerdForReporting != null)
+            if(groupedHerdForReporting.Any())
             {
                 var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
                 if(rumGroup != null)
@@ -431,7 +434,7 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
-            return new RuminantReportGroupDetails();
+            return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
         }
 
         /// <summary>
@@ -660,17 +663,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Average adult equivalents
         /// </summary>
-        public double? AverageAdultEquivalent { get; set; }
+        public double AverageAdultEquivalent { get { return (TotalAdultEquivalent??0.0) / Convert.ToDouble(Count??1); } }
 
         /// <summary>
         /// Average weight
         /// </summary>
-        public double? AverageWeight { get; set; }
+        public double AverageWeight { get { return (TotalWeight ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
 
         /// <summary>
         /// Average price
         /// </summary>
-        public double? AveragePrice { get; set; }
+        public double AveragePrice { get { return (TotalPrice ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
 
     }
 }

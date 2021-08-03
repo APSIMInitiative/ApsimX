@@ -114,23 +114,26 @@ namespace Models.CLEM.Activities
                 foreach (var ind in this.CurrentHerd(false).Where(a => a.Weaned == false))
                 {
                     bool readyToWean = false;
+                    string reason = "";
                     switch (Style)
                     {
                         case WeaningStyle.AgeOrWeight:
                             readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
+                            reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight": "Age") : "Weight";
                             break;
                         case WeaningStyle.AgeOnly:
                             readyToWean = (ind.Age >= WeaningAge);
+                            reason = "Age";
                             break;
                         case WeaningStyle.WeightOnly:
                             readyToWean = (ind.Weight >= WeaningWeight);
+                            reason = "Weight";
                             break;
                     }
 
                     if (readyToWean)
                     {
                         this.Status = ActivityStatus.Success;
-                        string reason = (ind.Age >= WeaningAge)? "Age" : "Weight";
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
