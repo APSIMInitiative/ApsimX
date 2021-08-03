@@ -694,17 +694,16 @@
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                var runner = new Runner(model);
-                List<Exception> errors = await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, p => MainPresenter.ShowProgress(p, false), true));
-
-                if (errors == null || errors.Count == 0)
+                try
                 {
+                    var runner = new Runner(model);
+                    await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, 1, path, p => MainPresenter.ShowProgress(p, false), true));
                     MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                     return true;
                 }
-                else
+                catch (Exception err)
                 {
-                    MainPresenter.ShowError(errors);
+                    MainPresenter.ShowError(err);
                     return false;
                 }
             }
