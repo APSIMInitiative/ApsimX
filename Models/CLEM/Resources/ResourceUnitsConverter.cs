@@ -1,12 +1,8 @@
-﻿using Models.CLEM.Activities;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Resources
 {

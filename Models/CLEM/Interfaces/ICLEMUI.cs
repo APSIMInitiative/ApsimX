@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Models.CLEM
+namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// Interface for UI parameters associated with models.

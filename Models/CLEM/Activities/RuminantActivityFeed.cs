@@ -1,14 +1,13 @@
 ﻿using Models.Core;
 using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using MathNet.Numerics;
 using System.IO;
 
 namespace Models.CLEM.Activities

@@ -1,13 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;

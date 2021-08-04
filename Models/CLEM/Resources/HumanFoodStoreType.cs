@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Newtonsoft.Json;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;

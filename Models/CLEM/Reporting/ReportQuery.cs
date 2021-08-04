@@ -1,10 +1,9 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 using Models.Storage;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 
 namespace Models.CLEM.Reporting
 {

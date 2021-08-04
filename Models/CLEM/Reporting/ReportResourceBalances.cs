@@ -2,18 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Models;
 using APSIM.Shared.Utilities;
 using System.Data;
-using System.IO;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
-using Models.Core.Run;
 using Models.Storage;
 using Newtonsoft.Json;
-using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {

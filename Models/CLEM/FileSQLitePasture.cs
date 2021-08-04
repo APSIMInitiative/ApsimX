@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Newtonsoft.Json;
 using Models.Core;
 using APSIM.Shared.Utilities;
-using Models.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using System.Globalization;
 using System.Linq;
 

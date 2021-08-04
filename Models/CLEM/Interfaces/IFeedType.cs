@@ -1,10 +1,7 @@
 ﻿using Models.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Models.CLEM
+namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// Interface for feet types

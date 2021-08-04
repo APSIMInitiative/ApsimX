@@ -1,13 +1,6 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using System;
 
-namespace Models.CLEM
+namespace Models.CLEM.Interfaces
 {
     /// <summary>
     /// Interface for Activities able to report performed event

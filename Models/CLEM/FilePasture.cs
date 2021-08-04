@@ -7,6 +7,7 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 using System.Globalization;
 
 namespace Models.CLEM

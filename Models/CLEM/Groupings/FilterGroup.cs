@@ -1,6 +1,5 @@
 ﻿using Models.CLEM.Groupings;
-using Models.CLEM.Resources;
-using Models.Core;
+using Models.CLEM.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,48 +9,6 @@ using System.Reflection;
 namespace Models.CLEM
 {
     /// <summary>
-    /// 
-    /// </summary>
-    public interface IFilterable
-    {
-
-    }
-
-    /// <summary>
-    /// The parent model for holding a collection of filters
-    /// </summary>
-    public interface IFilterGroup : IModel
-    {
-        /// <summary>
-        /// Maps the property name to its reflected PropertyInfo
-        /// </summary>
-        [JsonIgnore]
-        IEnumerable<string> Parameters { get; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        object CombinedRules { get; set; }
-
-        /// <summary>
-        /// The proportion of the filtered group to use
-        /// </summary>
-        double Proportion { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        PropertyInfo GetProperty(string name);
-
-        /// <summary>
-        /// Filters the source using the group items
-        /// </summary>
-        IEnumerable<T> Filter<T>(IEnumerable<T> source);
-    }
-
-    /// <summary>
     /// Implements IFilterGroup for a specific set of filter parameters
     /// </summary>
     [Serializable]
@@ -59,7 +16,7 @@ namespace Models.CLEM
         where TFilter : IFilterable
     {
         /// <summary>
-        /// 
+        /// The properties available for filtering
         /// </summary>
         [NonSerialized]
         protected Dictionary<string, PropertyInfo> properties;

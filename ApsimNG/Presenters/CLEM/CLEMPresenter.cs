@@ -1,5 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;

@@ -1,10 +1,7 @@
-﻿using Models.Core;
-using Models.CLEM.Activities;
+﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources

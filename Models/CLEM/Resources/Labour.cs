@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
-using Models.CLEM.Activities;
 using System.IO;
 using System.Reflection;
 
