@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability item with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
-    public class LabourAvailabilityItemMonthly : FilterGroup, ILabourSpecificationItem
+    public class LabourAvailabilityItemMonthly : FilterGroup<Labour>, ILabourSpecificationItem
     {
         /// <summary>
         /// Monthly values. 
@@ -142,26 +142,14 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                if (formatForParentControl)
-                {
-                    htmlWriter.Write("<tr><td>");
-                    if ((this.FindAllChildren<Filter>().Count() == 0))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
-                    }
-                }
-                return htmlWriter.ToString(); 
-            }
+            string html = formatForParentControl 
+                ? "<tr><td>" 
+                : "\r\n<div class=\"filterborder clearfix\">";
+
+                if (FindAllChildren<Filter>().Count() < 1)
+                    html += "<div class=\"filter\">Any labour</div>";
+
+                return html;            
         }
 
         /// <summary>

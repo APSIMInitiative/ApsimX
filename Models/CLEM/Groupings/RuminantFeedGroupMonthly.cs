@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly : FilterGroup, IValidatableObject
+    public class RuminantFeedGroupMonthly : FilterGroup<Ruminant>, IValidatableObject
     {
         /// <summary>
         /// Daily value to supply for each month

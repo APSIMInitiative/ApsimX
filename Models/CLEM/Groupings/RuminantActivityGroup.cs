@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM.Groupings
 {
@@ -24,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
-    public class RuminantActivityGroup : FilterGroup
+    public class RuminantActivityGroup : FilterGroup<Ruminant>
     {
         #region descriptive summary
 
@@ -77,10 +78,9 @@ namespace Models.CLEM.Groupings
         {
             string html = "";
             html += "\r\n<div class=\"filterborder filteractivityborder clearfix\">";
-            if (FindAllChildren<Filter>().Count() < 1)
-            {
+            if (FindAllChildren<Filter>().Count() < 1)            
                 html += "<div class=\"filter\">All individuals</div>";
-            }
+            
             return html;
         } 
         #endregion

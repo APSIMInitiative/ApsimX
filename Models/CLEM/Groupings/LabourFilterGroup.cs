@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFilterGroup.htm")]
-    public class LabourFilterGroup : FilterGroup
+    public class LabourFilterGroup : FilterGroup<Labour>
     {
         #region descriptive summary
 
@@ -74,18 +74,16 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.Parent.GetType() == typeof(LabourFilterGroup))
-            {
+            if (Parent.GetType() == typeof(LabourFilterGroup))            
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            }
+            
             html += "\r\n<div class=\"filterborder clearfix\">";
-            if (!(this.FindAllChildren<Filter>().Count() >= 1))
-            {
+
+            if (FindAllChildren<Filter>().Count() < 1)            
                 html += "<div class=\"filter\">Any labour</div>";
-            }
+            
             return html;
         } 
         #endregion
-
     }
 }

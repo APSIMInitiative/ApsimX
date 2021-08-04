@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup : FilterGroup
+    public class LabourFeedGroup : FilterGroup<Labour>
     {
         /// <summary>
         /// Value to supply for each month
@@ -121,10 +121,10 @@ namespace Models.CLEM.Groupings
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (this.FindAllChildren<Filter>().Count() == 0)
-                {
+
+                if (FindAllChildren<Filter>().Count() == 0)                
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                }
+                
                 return htmlWriter.ToString(); 
             }
         }

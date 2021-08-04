@@ -29,7 +29,7 @@ namespace Models.CLEM.Groupings
     [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantGroup : FilterGroup
+    public class RuminantGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// The reason for this filter group
@@ -108,20 +108,18 @@ namespace Models.CLEM.Groupings
                 if (Proportion < 1)
                 {
                     htmlWriter.Write("<div class=\"filter\">");
-                    if (Proportion <= 0)
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET%]</span>");
-                    }
-                    else
-                    {
+
+                    if (Proportion <= 0)                    
+                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET%]</span>");                    
+                    else                    
                         htmlWriter.Write($"{Proportion.ToString("P0")} of");
-                    }
+                    
                     htmlWriter.Write("</div>");
                 }
-                if (FindAllChildren<Filter>().Count() < 1)
-                {
+
+                if (FindAllChildren<Filter>().Count() < 1)                
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                }
+                
                 return htmlWriter.ToString(); 
             }
         } 

@@ -17,7 +17,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
     [Version(1, 0, 1, "")]
-    public class FodderLimitsFilterGroup : FilterGroup
+    public class FodderLimitsFilterGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// Monthly values to supply selected individuals

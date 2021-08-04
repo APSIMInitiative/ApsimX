@@ -132,9 +132,9 @@ namespace Models.CLEM.Activities
             feedToOverSatisfy = 0;
 
             // get list from filters
-            foreach (FilterGroup child in Children.OfType<RuminantFeedGroup>())
+            foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
             {
-                var selectedIndividuals = herd.FilterRuminants(child);
+                var selectedIndividuals = herd.FilterProportion(child);
 
                 switch (FeedStyle)
                 {
@@ -230,9 +230,9 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = CurrentHerd(false);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (FilterGroup child in Children.OfType<RuminantFeedGroup>())
+            foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
             {
-                var subherd = herd.FilterRuminants(child).ToList();
+                var subherd = herd.FilterProportion(child).ToList();
                 head += subherd.Count();
                 adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
             }
@@ -377,7 +377,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // get list from filters
-                foreach (FilterGroup child in Children.OfType<RuminantFeedGroup>())
+                foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
                 {
                     double value = 0;
                     if (child is RuminantFeedGroup)
@@ -389,7 +389,7 @@ namespace Models.CLEM.Activities
                         value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                     }
 
-                    foreach (Ruminant ind in herd.FilterRuminants(child))
+                    foreach (Ruminant ind in herd.FilterProportion(child))
                     {
                         switch (FeedStyle)
                         {

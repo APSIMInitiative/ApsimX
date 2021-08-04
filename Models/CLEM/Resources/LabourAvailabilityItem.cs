@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    public class LabourAvailabilityItem : FilterGroup, ILabourSpecificationItem
+    public class LabourAvailabilityItem : FilterGroup<Labour>, ILabourSpecificationItem
     {
         /// <summary>
         /// Single values 
@@ -118,23 +118,15 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
-                {
-                    htmlWriter.Write("<tr><td>");
-                    if ((this.FindAllChildren<Filter>().Count() == 0))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
-                    }
-                }
-                else
-                {
-                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                    {
-                        htmlWriter.Write("<div class=\"filter\">Any labour</div>");
-                    }
-                }
-                return htmlWriter.ToString(); 
+                if (formatForParentControl)                
+                    htmlWriter.Write("<tr><td>");                
+                else                
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");                    
+                
+                if (FindAllChildren<Filter>().Count() < 1)                
+                    htmlWriter.Write("<div class=\"filter\">Any labour</div>");
+                
+                return htmlWriter.ToString();
             }
         }
 

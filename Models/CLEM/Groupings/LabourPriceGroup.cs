@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : FilterGroup
+    public class LabourPriceGroup : FilterGroup<Labour>
     {
         /// <summary>
         /// Pay rate
@@ -102,22 +102,14 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (formatForParentControl)
-            {
+            if (formatForParentControl)            
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
-            else
-            {
-                html += "\r\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<Filter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
+            else            
+                html += "\r\n<div class=\"filterborder clearfix\">";            
+
+            if (FindAllChildren<Filter>().Count() < 1)
+                html += "<div class=\"filter\">All individuals</div>";
+
             return html;
         }
 

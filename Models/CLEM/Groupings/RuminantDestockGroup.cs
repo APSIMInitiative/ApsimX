@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
-    public class RuminantDestockGroup : FilterGroup, IValidatableObject
+    public class RuminantDestockGroup : FilterGroup<Ruminant>, IValidatableObject
     {
         /// <summary>
         /// Constructor
@@ -70,7 +70,7 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.FindAllChildren<Filter>().Count() >= 1)
+            if (FindAllChildren<Filter>().Count() >= 1)
             {
                 html += "\r\n</div>";
             }

@@ -159,7 +159,7 @@ namespace Models.CLEM.Resources
                         // get matching labour types
                         // use activity uid to ensure unique for this request
                         List<LabourType> items = (resourceGroup as Labour).Items;
-                        var group = request.FilterDetails.FirstOrDefault() as FilterGroup;
+                        var group = request.FilterDetails.FirstOrDefault() as IFilterGroup;
                         items = group.Filter(items)
                             .Where(a => a.LastActivityRequestID != request.ActivityID)
                             .ToList();

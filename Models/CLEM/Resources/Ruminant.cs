@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Reporting;
+using Models.CLEM.Reporting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Models.CLEM.Resources
     /// Object for an individual Ruminant Animal.
     /// </summary>
     [Serializable]
-    public class Ruminant
+    public class Ruminant : IFilterable
     {
         private RuminantFemale mother;
         private double weight;
@@ -88,6 +88,7 @@ namespace Models.CLEM.Resources
                 }
             }
         }
+
         /// <summary>
         /// Link to individual's mother
         /// </summary>
@@ -683,7 +684,6 @@ namespace Models.CLEM.Resources
             this.Cashmere = 0;
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
-
             this.Attributes = new IndividualAttributeList();
         }
     }

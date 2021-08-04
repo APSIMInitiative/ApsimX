@@ -15,7 +15,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
     [Version(1, 0, 1, "")]
-    public class OtherAnimalsFilterGroup : FilterGroup
+    public class OtherAnimalsFilterGroup : FilterGroup<Ruminant>
     {
         [Link]
         private ResourcesHolder Resources = null;

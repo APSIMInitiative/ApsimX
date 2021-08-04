@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFeedGroup.htm")]
-    public class RuminantFeedGroup: FilterGroup
+    public class RuminantFeedGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// Value to supply for each month
@@ -167,7 +167,7 @@ namespace Models.CLEM.Groupings
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (!(this.FindAllChildren<Filter>().Count() >= 1))
+                if (FindAllChildren<Filter>().Count() < 1)
                 {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                 }
