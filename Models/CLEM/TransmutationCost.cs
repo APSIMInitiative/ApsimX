@@ -45,7 +45,7 @@ namespace Models.CLEM
         /// <summary>
         /// Cost of transmutation
         /// </summary>
-        [Description("Cost per unit")]
+        [Description("Amount per unit required")]
         [Required, GreaterThanEqualValue(0)]
         public double CostPerUnit { get; set; }
 
