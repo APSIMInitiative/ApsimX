@@ -490,7 +490,7 @@ namespace UserInterface.Presenters
                 }
 
                 // add all rows for children
-                foreach (Model child in model.Children.Where(a => a.Enabled))
+                foreach (var child in model.Children.Where(a => a.Enabled))
                 {
                     tblstr.Write(TableRowMarkdown(child));
                 }

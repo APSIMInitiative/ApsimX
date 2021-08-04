@@ -325,67 +325,11 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                // sires
-                RuminantGroup group = new RuminantGroup();
-                group.Children.Add(new Filter { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
-                group.Children.Add(new Filter { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreedingCondition });
-                var purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                var filteredPurchases = purchases.FilterRuminants(group);
-                if (filteredPurchases.Count() <= 0)
-                {
-                    if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
-                    {
-                        string[] memberNames = new string[] { "No breeding males specified" };
-                        results.Add(new ValidationResult("No purchases specified by [r=SpecifyRuminant] represent breeding males required by this simulation.\r\nIf the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0]", memberNames));
-                    }
-                }
-                else
-                {
-                    double sumProportions = 0;
-                    foreach (var item in filteredPurchases)
-                    {
-                        var linkedItem = purchaseDetails.Where(a => a.ExampleRuminant == item).FirstOrDefault();
-                        linkedItem.Label = "MaleBreeder";
-                        sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
-                        linkedItem.CummulativeProbability = sumProportions;
-                    }
-                    if (sumProportions != 1)
-                    {
-                        string[] memberNames = new string[] { "Invalid proportions set" };
-                        results.Add(new ValidationResult("The proportions set in each [r=SpecifyRuminant] representing breeding males do not add up to 1.", memberNames));
-                    }
-                }
-
-                // breeders
-                group = new RuminantGroup();
-                group.Children.Add(new Filter { Value = "Female", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
-                group.Children.Add(new Filter { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreeder });
-                purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                filteredPurchases = purchases.FilterRuminants(group);
-                if (filteredPurchases.Count() <= 0)
-                {
-                    if (MaximumProportionBreedersPerPurchase > 0)
-                    {
-                        string[] memberNames = new string[] { "No breeding females specified" };
-                        results.Add(new ValidationResult("No purchases specified by [r=SpecifyRuminant] represent breeding females required by this simulation.\r\nIf the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
-                    }
-                }
-                else
-                {
-                    double sumProportions = 0;
-                    foreach (var item in filteredPurchases)
-                    {
-                        var linkedItem = purchaseDetails.FirstOrDefault(a => a.ExampleRuminant == item);
-                        linkedItem.Label = "FemaleBreeder";
-                        sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
-                        linkedItem.CummulativeProbability = sumProportions;
-                    }
-                    if (sumProportions != 1)
-                    {
-                        string[] memberNames = new string[] { "Invalid proportions set" };
-                        results.Add(new ValidationResult("The proportions set in each [r=SpecifyRuminant] representing breeding females do not add up to 1.", memberNames));
-                    }
-                }
+                if (ValidateSires() is ValidationResult sires)
+                    results.Add(sires);
+                
+                if (ValidateBreeders() is ValidationResult breeders)
+                    results.Add(breeders);
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails.Where(a => a.Label == "");
@@ -400,6 +344,84 @@ namespace Models.CLEM.Activities
             }
             return results;
         } 
+
+        private ValidationResult ValidateSires()
+        {            
+            var purchases = purchaseDetails.Select(a => a.ExampleRuminant)
+                .OfType<RuminantMale>()
+                .Where(m => m.IsAbleToBreed);
+
+            if (purchases.Count() <= 0)
+            {
+                if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
+                {
+                    string[] memberNames = new string[] { "No breeding males specified" };
+                    string error = "No purchases specified by [r=SpecifyRuminant] represent breeding males " +
+                        "required by this simulation.\r\nIf the purchase of males is not permitted then set " +
+                        "[MaximumSiresPerPurchase] to [0]";
+
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+            else
+            {
+                double sumProportions = 0;
+                foreach (var item in purchases)
+                {
+                    var linkedItem = purchaseDetails.Where(a => a.ExampleRuminant == item).FirstOrDefault();
+                    linkedItem.Label = "MaleBreeder";
+                    sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
+                    linkedItem.CummulativeProbability = sumProportions;
+                }
+                if (sumProportions != 1)
+                {
+                    string[] memberNames = new string[] { "Invalid proportions set" };
+                    string error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
+                        " males do not add up to 1.";
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+
+            return null;
+        }
+
+        private ValidationResult ValidateBreeders()
+        {
+            var purchases = purchaseDetails
+                .Select(a => a.ExampleRuminant)
+                .OfType<RuminantFemale>()
+                .Where(f => f.IsBreeder);
+
+            if (purchases.Count() <= 0 && MaximumProportionBreedersPerPurchase > 0)
+            {
+                string[] memberNames = new string[] { "No breeding females specified" };
+                var error = "No purchases specified by [r=SpecifyRuminant] represent breeding " +
+                    "females required by this simulation.\r\nIf the purchase of females is not" +
+                    " permitted then set [MaximumProportionBreedersPerPurchase] to [0]";
+                return new ValidationResult(error, memberNames);                
+            }
+            else
+            {
+                double sumProportions = 0;
+                foreach (var item in purchases)
+                {
+                    var linkedItem = purchaseDetails.FirstOrDefault(a => a.ExampleRuminant == item);
+                    linkedItem.Label = "FemaleBreeder";
+                    sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
+                    linkedItem.CummulativeProbability = sumProportions;
+                }
+
+                if (sumProportions != 1)
+                {
+                    string[] memberNames = new string[] { "Invalid proportions set" };
+                    var error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
+                        " females do not add up to 1.";
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+            return null;
+        }
+
         #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -903,7 +925,7 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = herd.FilterRuminants(item).ToList();
+                        List<Ruminant> herdToSell = herd.FilterProportion(item).ToList();
                         int sellNum = herdToSell.Count();
                         int cnt = 0;
                         while (cnt < sellNum && excessBreeders > 0)

@@ -28,7 +28,6 @@ namespace Models.CLEM.Activities
         [Link]
         private List<LabourRequirement> labour;
 
-        private RuminantGroup breederGroup;
         private List<SetAttributeWithValue> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
@@ -56,11 +55,6 @@ namespace Models.CLEM.Activities
         {
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
-
-            breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new Filter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new Filter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
-            // TODO: add sort by condition
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
 
@@ -118,20 +112,14 @@ namespace Models.CLEM.Activities
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
         private IEnumerable<RuminantFemale> GetBreeders()
         {
-            IEnumerable<RuminantFemale> breedersAvailable = null;
-
-            if (milkingTimer != null)
-            {
-                breedersAvailable = milkingTimer.IndividualsToBreed;
-            }
-            else
-            {
-                // return the full list of breeders currently able to breed
-                // controlled mating respects the max breeding age property of the breed, so reduce
-                // TODO: remove OfType when code handles adding gender property 
-                breedersAvailable = CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>().Where(a => a.Age <= breedParams.MaximumAgeMating);
-            }
-            return breedersAvailable;
+            // return the full list of breeders currently able to breed
+            // controlled mating respects the max breeding age property of the breed, so reduce
+            // TODO: remove OfType when code handles adding gender property 
+            return milkingTimer != null
+                ? milkingTimer.IndividualsToBreed
+                : CurrentHerd(true).OfType<RuminantFemale>()
+                    .Where(f => f.IsAbleToBreed)
+                    .Where(a => a.Age <= breedParams.MaximumAgeMating);
         }
 
         /// <summary>

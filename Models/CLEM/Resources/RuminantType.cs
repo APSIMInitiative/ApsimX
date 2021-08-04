@@ -160,7 +160,7 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.FilterRuminants(item).Count() == 1)
+                    if (animalList.FilterProportion(item).Count() == 1)
                     {
                         //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                         return item;
@@ -183,26 +183,30 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value)
         {
             double price = 0;
             if (PricingAvailable())
             {
-                string criteria = property.ToString().ToUpper() + ":" + value.ToUpper();
+                string criteria = property.ToUpper() + ":" + value.ToUpper();
                 List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+
+                var items = PriceList.FindAllChildren<AnimalPriceGroup>()
+                    .Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both);
+
+                foreach (AnimalPriceGroup item in items)
                 {
-                    if (animalList.FilterRuminants(item).Count() == 1 && matchIndividual == null)
+                    if (animalList.FilterProportion(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<Filter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.Parameter == property.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {

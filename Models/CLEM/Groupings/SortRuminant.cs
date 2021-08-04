@@ -1,10 +1,14 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Reflection;
+
+using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
 {
@@ -12,7 +16,7 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
@@ -23,19 +27,29 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 0, "")]
     public class SortRuminant : CLEMModel, IValidatableObject, ISort
     {
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public new IFilterGroup Parent
+        {
+            get => base.Parent as IFilterGroup;
+            set => base.Parent = value;
+        }
+
         /// <summary>
         /// Name of parameter to sort by
         /// </summary>
         [Description("Name of parameter to sort by")]
         [Required]
-        public RuminantFilterParameters Parameter { get; set; }
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
+        public string Parameter { get; set; }
+        private IEnumerable<string> GetParameters() => Parent.Parameters;
 
         /// <inheritdoc/>
         [Description("Sort direction")]
         public System.ComponentModel.ListSortDirection SortDirection { get; set; } = System.ComponentModel.ListSortDirection.Ascending;
 
         /// <inheritdoc/>
-        public object OrderRule<T>(T t) => typeof(T).GetProperty(Parameter.ToString()).GetValue(t, null);
+        public object OrderRule<T>(T t) => Parent.GetProperty(Parameter).GetValue(t, null);
 
         /// <summary>
         /// Convert sort to string
@@ -46,7 +60,7 @@ namespace Models.CLEM.Groupings
             using (StringWriter sortString = new StringWriter())
             {
                 sortString.Write("Sort by property ");
-                sortString.Write($"{Parameter.ToString()} value {SortDirection.ToString().ToLower()}");
+                sortString.Write($"{Parameter} value {SortDirection.ToString().ToLower()}");
                 return sortString.ToString();
             }
         }

@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
             List<Ruminant> herd = Resources.RuminantHerd().Herd;
             foreach (RuminantActivityGroup filter in HerdFilters)
             {
-                herd = herd.FilterRuminants(filter).ToList();
+                herd = herd.FilterProportion(filter).ToList();
             }
             return herd;
         }
@@ -148,25 +148,25 @@ namespace Models.CLEM.Activities
                 {
                     foreach (var filtergroup in this.HerdFilters)
                     {
-                        foreach (var filter in filtergroup.Children.Cast<Filter>())
+                        foreach (var filter in filtergroup.Children.OfType<FilterByProperty>())
                         {
-                            if (filter.Parameter is RuminantFilterParameters.Breed)
+                            if (filter.Parameter == "Breed")
                             {
-                                if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value && !allowMultipleBreeds)
+                                if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value.ToString() && !allowMultipleBreeds)
                                 {
                                     // multiple breeds in filter.
                                     throw new ApsimXException(this, "@error:Multiple breeds are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
                                 }
-                                PredictedHerdBreed = filter.Value;
+                                PredictedHerdBreed = filter.Value.ToString();
                             }
-                            if (filter.Parameter is RuminantFilterParameters.HerdName)
+                            if (filter.Parameter == "HerdName")
                             {
                                 if (PredictedHerdName != "N/A" && !allowMultipleHerds)
                                 {
                                     // multiple breeds in filter.
                                     throw new ApsimXException(this, "@error:Multiple herd names are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single herd for this activity.");
                                 }
-                                PredictedHerdName = filter.Value;
+                                PredictedHerdName = filter.Value.ToString();
                             }
                         }
                     }

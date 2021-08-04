@@ -11,6 +11,7 @@ using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Activities;
 using System.IO;
+using System.Reflection;
 
 namespace Models.CLEM.Resources
 {
@@ -24,7 +25,7 @@ namespace Models.CLEM.Resources
     [Description("This resource group holds all labour types (people) for the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IFilterable
     {
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
@@ -261,7 +262,7 @@ namespace Models.CLEM.Resources
             if (labour.LabourAvailability != null)
             {                
                 // check labour availability still ok
-                if (!(labour.LabourAvailability as FilterGroup).Filter(checkList).Any())
+                if (!(labour.LabourAvailability as IFilterGroup).Filter(checkList).Any())
                 {
                     labour.LabourAvailability = null;
                 }
@@ -272,7 +273,7 @@ namespace Models.CLEM.Resources
             {
                 foreach (var availItem in availabilityList.Children.OfType<ILabourSpecificationItem>())
                 {
-                    if ((availItem as FilterGroup).Filter(checkList).Any())
+                    if ((availItem as IFilterGroup).Filter(checkList).Any())
                     {
                         labour.LabourAvailability = availItem;
                         break;
@@ -379,12 +380,12 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public double PayRate(LabourType ind, LabourFilterParameters property, string value)
+        public double PayRate(LabourType ind, PropertyInfo property, string value)
         {
             double price = 0;
             if (PricingAvailable)
             {
-                string criteria = property.ToString().ToUpper() + ":" + value.ToUpper();
+                string criteria = property.Name.ToUpper() + ":" + value.ToUpper();
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 //find first pricing entry matching specific criteria
@@ -396,7 +397,7 @@ namespace Models.CLEM.Resources
                         matchIndividual = item;                    
 
                     // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<Filter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.Parameter.ToUpper() == property.Name.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -408,7 +409,7 @@ namespace Models.CLEM.Resources
                             if (!WarningsMultipleEntry.Contains(criteria))
                             {
                                 WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
+                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property.Name + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
                             }
                         }
                     }
@@ -417,7 +418,7 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property.Name + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
 
                     if (matchIndividual != null)
                     {
