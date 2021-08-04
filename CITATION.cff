@@ -1,5 +1,5 @@
 cff-version: 1.1.0
-message: "If you use this software, please cite it as below. The APSIM Initiative would also appreciate an acknowledgement in your research paper. See https://www.apsim.info/apsim-model/apsim-citation-and-acknowledgment"
+message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Holzworth"
   given-names: "Dean"
