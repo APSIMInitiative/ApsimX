@@ -1,5 +1,6 @@
 using System;
 using APSIM.Services.Graphing;
+using OxyPlot;
 using Series = OxyPlot.Series.Series;
 
 namespace APSIM.Interop.Graphing
@@ -31,6 +32,8 @@ namespace APSIM.Interop.Graphing
             result.MarkerSize = series.MarkerConfig.Size.ToOxyPlotMarkerSize() * series.MarkerConfig.SizeModifier;
             if (series.MarkerConfig.IsFilled())
                 result.MarkerFill = series.Colour.ToOxyColour();
+            else
+                result.MarkerFill = OxyColors.Undefined;
 
             // Colour
             result.Color = series.Colour.ToOxyColour();
