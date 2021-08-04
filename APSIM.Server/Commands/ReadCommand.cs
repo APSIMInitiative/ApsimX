@@ -53,5 +53,27 @@ namespace APSIM.Server.Commands
         {
             return $"{GetType().Name} with {Parameters.Count()} parameters";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ReadCommand command)
+            {
+                if (table != command.table)
+                    return false;
+                if (Parameters == null && command.Parameters == null)
+                    return true;
+                if (Parameters == null || command.Parameters == null)
+                    return false;
+                if (Parameters.Zip(command.Parameters, (x, y) => x != y).Any(x => x))
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (table, Parameters).GetHashCode();
+        }
     }
 }
