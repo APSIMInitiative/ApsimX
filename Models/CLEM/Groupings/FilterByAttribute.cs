@@ -1,14 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-
-using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
 {
@@ -45,7 +39,13 @@ namespace Models.CLEM.Groupings
         {
             Func<T, bool> lambda = t =>
             {
-                return false;
+                if (!(t is IAttributable attributable))
+                    return false;
+
+                if (!attributable.Attributes.Exists(Attribute))
+                    return false;
+
+                return attributable.Attributes.GetValue(Attribute).storedValue == Value;
             };
 
             return lambda;

@@ -1,10 +1,7 @@
-using Models.CLEM.Reporting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 using System.Globalization;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Resources
 {
@@ -12,7 +9,7 @@ namespace Models.CLEM.Resources
     /// Object for an individual Ruminant Animal.
     /// </summary>
     [Serializable]
-    public class Ruminant : IFilterable
+    public class Ruminant : IFilterable, IAttributable
     {
         private RuminantFemale mother;
         private double weight;
@@ -45,9 +42,7 @@ namespace Models.CLEM.Resources
             return result;
         }
 
-        /// <summary>
-        /// A list of attributes added to this individual
-        /// </summary>
+        /// <inheritdoc/>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
 
         /// <summary>
