@@ -138,7 +138,7 @@ namespace APSIM.Server
                 // Create a new socket connection to the pod.
                 string ip = pod.Status.PodIP;
                 WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
-                using (NetworkSocketConnection conn = new NetworkSocketConnection(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
                 {
                     // Relay the command to the pod.
                     conn.SendCommand(command);
