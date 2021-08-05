@@ -11,6 +11,7 @@ using APSIM.Server.Commands;
 using Models.Core.Run;
 using System.Collections.Generic;
 using Models.Core;
+using System.Data;
 
 namespace APSIM.Tests
 {
@@ -102,6 +103,34 @@ namespace APSIM.Tests
         {
             ICommand command = new ReadCommand(" the table to be read ", new[] { "a single parameter"});
             TestWrite(command);
+        }
+
+        /// <summary>
+        /// Test transmission of a datatable using the managed communication protocol.
+        /// </summary>
+        [Test]
+        public void TestSendDataTable()
+        {
+            DataTable expected = new DataTable("table name");
+            expected.Columns.Add("t", typeof(double));
+            expected.Columns.Add("x", typeof(double));
+            expected.Rows.Add(0d, 1d);
+            expected.Rows.Add(1d, 2d);
+            expected.Rows.Add(2d, 4d);
+
+            Task server = Task.Run(() =>
+            {
+                pipe.WaitForConnection();
+                DataTable table = (DataTable)protocol.Read();
+                Assert.AreEqual(expected.TableName, table.TableName);
+                Assert.AreEqual(expected.Columns.Count, table.Columns.Count);
+                Assert.AreEqual(expected.Rows.Count, table.Rows.Count);
+            });
+            using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))
+            {
+                client.Connect();
+                PipeUtilities.SendObjectToPipe(client, expected);
+            }
         }
 
         private void TestRead(ICommand target)

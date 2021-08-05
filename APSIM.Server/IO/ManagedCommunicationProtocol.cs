@@ -99,18 +99,18 @@ namespace APSIM.Server.IO
             {
                 if (command is ReadCommand reader)
                 {
-                    // PipeUtilities.SendObjectToPipe(stream, reader.Result);
-                    foreach (string param in reader.Parameters)
-                    {
-                        if (reader.Result.Columns[param] == null)
-                        {
-                            IEnumerable<string> columns = reader.Result.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
-                            string columnNames = string.Join(", ", columns);
-                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName} (table only has {reader.Result.Columns.Count} columns ({columnNames}) with {reader.Result.Rows.Count} rows)");
-                        }
-                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
-                        PipeUtilities.SendObjectToPipe(stream, data);
-                    }
+                    PipeUtilities.SendObjectToPipe(stream, reader.Result);
+                    // foreach (string param in reader.Parameters)
+                    // {
+                    //     if (reader.Result.Columns[param] == null)
+                    //     {
+                    //         IEnumerable<string> columns = reader.Result.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                    //         string columnNames = string.Join(", ", columns);
+                    //         throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName} (table only has {reader.Result.Columns.Count} columns ({columnNames}) with {reader.Result.Rows.Count} rows)");
+                    //     }
+                    //     Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                    //     PipeUtilities.SendObjectToPipe(stream, data);
+                    // }
                 }
                 else
                     PipeUtilities.SendObjectToPipe(stream, fin);
@@ -152,17 +152,20 @@ namespace APSIM.Server.IO
             if (command is RunCommand && (resp as string) != fin)
                 throw new Exception($"Unexpected response from server. Expected {fin}, got {resp}");
 
-            if (command is ReadCommand readCommand)
+            if (command is ReadCommand)
             {
-                DataTable result = new DataTable(readCommand.TableName);
-                foreach (string parameter in readCommand.Parameters)
-                {
-                    Array array = resp as Array;
-                    if (array == null)
-                       throw new Exception($"Unexpected response from server upon job completion. Expected array, got {resp}"); 
-                    Type elementType = array.GetType().GetElementType();
-                    DataTableUtilities.AddColumnOfObjects(result, parameter, array);
-                }
+                DataTable result = resp as DataTable;
+                if (result == null)
+                    throw new Exception($"Unexpected response from server upon job completion. Expected DataTable, got {resp}");
+                // DataTable result = new DataTable(readCommand.TableName);
+                // foreach (string parameter in readCommand.Parameters)
+                // {
+                //     Array array = resp as Array;
+                //     if (array == null)
+                //        throw new Exception($"Unexpected response from server upon job completion. Expected array, got {resp}"); 
+                //     Type elementType = array.GetType().GetElementType();
+                //     DataTableUtilities.AddColumnOfObjects(result, parameter, array);
+                // }
                 return result;
             }
 
