@@ -65,9 +65,7 @@ namespace Models.CLEM.Activities
             get
             {
                 if (activityChildren is null)
-                {
                     activityChildren = FindAllChildren<CLEMActivityBase>();
-                }
                 return activityChildren;
             }
         }
@@ -104,17 +102,12 @@ namespace Models.CLEM.Activities
             get
             {
                 if(parentZone is null)
-                {
                     parentZone = FindAncestor<ZoneCLEM>();
-                }
+
                 if(parentZone is null)
-                {
                     return 1;
-                }
                 else
-                {
                     return parentZone.FarmMultiplier;
-                }
             }
         }
 
@@ -134,9 +127,7 @@ namespace Models.CLEM.Activities
             {
                 // use timing to not perform activity based on Enabled state
                 if (!ActivityEnabled)
-                {
                     return false;
-                }
 
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
@@ -159,9 +150,7 @@ namespace Models.CLEM.Activities
         {
             // use timing to not perform activity based on Enabled state
             if (!ActivityEnabled)
-            {
                 return false;
-            }
 
             // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
             int result = 0;
@@ -202,9 +191,7 @@ namespace Models.CLEM.Activities
         public void SetStatusSuccess()
         {
             if(Status== ActivityStatus.NotNeeded)
-            {
                 Status = ActivityStatus.Success;
-            }
         }
 
         /// <summary>
@@ -219,9 +206,7 @@ namespace Models.CLEM.Activities
             if (simulation != null)
             {
                 foreach (Type type in typesToFind)
-                {
                     results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name));
-                }
             }
             return results.AsEnumerable();
         }
@@ -274,15 +259,11 @@ namespace Models.CLEM.Activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                {
                     activity.ReportAllAllActivitiesPerformed();
-                }
             }
             // call activity performed  for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in ActivityChildren)
-            {
                 activity.ReportAllAllActivitiesPerformed();
-            }
         }
 
         /// <summary>
@@ -308,17 +289,13 @@ namespace Models.CLEM.Activities
                 if (ActivityList != null)
                 {
                     foreach (CLEMActivityBase activity in ActivityList)
-                    {
                         activity.GetResourcesForAllActivityInitialisation();
-                    }
                 }
                 // get resources required for all children of type CLEMActivityBase
                 foreach (CLEMActivityBase activity in ActivityChildren)
                 {
                     if (activity.Enabled)
-                    {
                         activity.GetResourcesForAllActivityInitialisation();
-                    }
                 }
             }
         }
@@ -332,24 +309,18 @@ namespace Models.CLEM.Activities
             if (this.Enabled)
             {
                 if (TimingOK)
-                {
                     ResourcesForAllActivities(model);
-                }
                 else
                 {
                     this.Status = ActivityStatus.Ignored;
                     if (ActivityList != null)
                     {
                         foreach (CLEMActivityBase activity in ActivityList)
-                        {
                             activity.Status = ActivityStatus.Ignored;
-                        }
                     }
                     // get resources required for all children of type CLEMActivityBase
                     foreach (CLEMActivityBase activity in ActivityChildren)
-                    {
                         activity.Status = ActivityStatus.Ignored;
-                    }
                 }
             }
         }
@@ -373,15 +344,11 @@ namespace Models.CLEM.Activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                {
                     activity.GetResourcesForAllActivities(model);
-                }
             }
             // get resources required for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in ActivityChildren)
-            {
                 activity.GetResourcesForAllActivities(model);
-            }
         }
 
         /// <summary>
@@ -430,9 +397,7 @@ namespace Models.CLEM.Activities
                 // add any non-labour resources needed (from method in Activity code)
                 var requests = GetResourcesNeededForActivity();
                 if (requests != null)
-                {
                     ResourceRequestList.AddRange(requests);
-                }
 
                 // check availability
                 CheckResources(ResourceRequestList, Guid.NewGuid());
@@ -446,9 +411,7 @@ namespace Models.CLEM.Activities
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
                 if (tookRequestedResources || (ResourceRequestList.Count == 0))
-                {
                     DoActivity();
-                }
             }
         }
 
@@ -459,7 +422,7 @@ namespace Models.CLEM.Activities
         protected List<ResourceRequest> GetLabourResourcesNeededForActivity()
         {
             List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
-            foreach (LabourRequirement item in Children.Where(a => a.GetType() == typeof(LabourRequirement) | a.GetType().IsSubclassOf(typeof(LabourRequirement))))
+            foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
             {
                 GetDaysLabourRequiredReturnArgs daysResult = GetDaysLabourRequired(item);
                 if (daysResult.DaysNeeded > 0)
@@ -504,18 +467,14 @@ namespace Models.CLEM.Activities
             {
                 double proportion = 1.0;
                 if (ResourceRequestList == null)
-                {
                     return proportion;
-                }
 
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
-                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).ToList())
+                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
                 {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
-                    {
                         proportion *= item.Provided / item.Required;
-                    }
                 }
                 return proportion;
             }
@@ -530,9 +489,7 @@ namespace Models.CLEM.Activities
         {
             double proportion = 1.0;
             if (ResourceRequestList == null)
-            {
                 return proportion;
-            }
 
             double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
@@ -541,14 +498,10 @@ namespace Models.CLEM.Activities
                 if (resourceType == typeof(LabourType))
                 {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
-                    {
                         proportion *= item.Provided / item.Required;
-                    }
                 }
                 else // all other types
-                {
                     proportion *= item.Provided / item.Required;
-                }
             }
             return proportion;
         }
@@ -564,9 +517,7 @@ namespace Models.CLEM.Activities
                 foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
                 {
                     if (item.LabourShortfallAffectsActivity)
-                    {
                         return true;
-                    }
                 }
                 return false;
             }
@@ -591,9 +542,7 @@ namespace Models.CLEM.Activities
             if (current!=null)
             {
                 if (current.Parent is LabourRequirement)
-                {
                     lr = current.Parent as LabourRequirement;
-                }
                 else
                 {
                     // coming from Transmutation request
@@ -606,9 +555,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
                 lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault();
-            }
 
             int currentIndex = 0;
             if (current==null)
@@ -680,9 +627,7 @@ namespace Models.CLEM.Activities
                         foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson))) 
                         {
                             if (amountProvided >= amountNeeded)
-                            {
                                 break;
-                            }
 
                             double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
 
@@ -697,9 +642,7 @@ namespace Models.CLEM.Activities
                                 if (removeFromResource)
                                 {
                                     if(item.LastActivityRequestID != request.ActivityID)
-                                    {
                                         item.LastActivityRequestAmount = 0;
-                                    }
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
@@ -708,22 +651,16 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
-                            {
                                 currentIndex = request.FilterDetails.Count;
-                            }
                         }
                     }
                 }
                 currentIndex++;
                 var currentFilterGroups = current.FindAllChildren<LabourFilterGroup>();
                 if (currentFilterGroups.Any())
-                {
                     current = currentFilterGroups.FirstOrDefault();
-                }
                 else
-                {
                     current = null;
-                }
             }
             // report amount gained.
             return amountProvided;
@@ -750,9 +687,7 @@ namespace Models.CLEM.Activities
             }
 
             if(removeFromResource && request.Resource != null)
-            {
                 request.Resource.Remove(request);
-            }
 
             return request.Available;
         }
@@ -790,9 +725,7 @@ namespace Models.CLEM.Activities
                         request.Available = TakeLabour(request, false, this, Resources, this.OnPartialResourcesAvailableAction);
                     }
                     else
-                    {
                         request.Available = TakeNonLabour(request, false);
-                    }
                 }
             }
 
@@ -839,21 +772,15 @@ namespace Models.CLEM.Activities
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)
-                    {
                         marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
-                    }
                 }
                 else
-                {
                     OnShortfallOccurred(rrEventArgs);
-                }
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }
             if(!deficitFound)
-            {
                 this.Status = ActivityStatus.Success;
-            }
         }
 
         /// <summary>
@@ -867,9 +794,7 @@ namespace Models.CLEM.Activities
         {
             // no resources required or this is an Activity folder.
             if ((resourceRequestList == null)||(resourceRequestList.Count() ==0))
-            {
                 return false;
-            }
 
             // remove activity resources 
             // check if deficit and performWithPartial
@@ -879,9 +804,8 @@ namespace Models.CLEM.Activities
                 {
                     string resourcelist = "";
                     foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
-                    {
                         resourcelist += item.ResourceType.Name + ",";
-                    }
+
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
@@ -899,21 +823,15 @@ namespace Models.CLEM.Activities
                     if (request.ResourceType != null && Resources.GetResourceGroupByType(request.ResourceType) != null)
                     { 
                         if (request.ResourceType == typeof(Labour))
-                        {
                             // get available labour based on rules.
                             request.Available = TakeLabour(request, true, this, Resources, this.OnPartialResourcesAvailableAction);
-                        }
                         else
-                        {
                             request.Available = TakeNonLabour(request, true);
-                        }
                     }
                 }
             }
             else
-            {
                 Status = ActivityStatus.Ignored;
-            }
             return Status != ActivityStatus.Ignored;
         }
 
