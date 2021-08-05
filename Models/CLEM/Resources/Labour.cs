@@ -78,7 +78,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate resources
-            availabilityList = this.FindAllChildren<LabourAvailabilityList>().Cast<LabourAvailabilityList>().FirstOrDefault();
+            availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
 
             if (Clock.Today.Day != 1)
             {
@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
             adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
 
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().ToList())
             {
                 IndividualAttribute att = new IndividualAttribute() { storedValue = labourChildModel.Name };
                 if (UseCohorts)
@@ -201,7 +201,7 @@ namespace Models.CLEM.Resources
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (this.FindAllChildren<LabourPricing>().Count() > 0)
             {
-                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault()) as LabourPricing;
+                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
             }
         }
 
@@ -359,7 +359,7 @@ namespace Models.CLEM.Resources
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1)
                     {
@@ -392,7 +392,7 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>().Cast<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1 && matchIndividual == null)
                     {
@@ -400,7 +400,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<LabourFilter>().Cast<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {

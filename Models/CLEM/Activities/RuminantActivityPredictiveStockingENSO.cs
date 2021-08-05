@@ -228,8 +228,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
 
                 // calculate dry season pasture available for each managed paddock holding stock
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+                foreach (var newgroup in HerdResource.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
                 {
                     double aELocationNeeded = 0;
 
@@ -237,7 +236,7 @@ namespace Models.CLEM.Activities
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
                     double markedForSaleAE = newgroup.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
                     bool relationshipFound = false;
@@ -323,8 +322,7 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
             if (destockGroups.Count() == 0)
@@ -410,7 +408,7 @@ namespace Models.CLEM.Activities
                             throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
-                        Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);
+                        HerdResource.PurchaseIndividuals.Add(newIndividual);
                         double indAE = newIndividual.AdultEquivalent;
                         animalEquivalentsToBuy -= indAE;
                         sumAE += indAE;

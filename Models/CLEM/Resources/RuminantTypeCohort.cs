@@ -131,7 +131,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+                RuminantHerd ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
 
                 for (int i = 1; i <= number; i++)
                 {

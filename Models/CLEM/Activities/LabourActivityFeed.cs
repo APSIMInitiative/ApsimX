@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityFeed : CLEMActivityBase
     {
         private double feedRequired = 0;
+        private Labour labour;
 
         /// <summary>
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
@@ -69,6 +70,8 @@ namespace Models.CLEM.Activities
         {
             // locate FeedType resource
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            // locate labour resource
+            labour = Resources.FindResourceGroup<Labour>();
         }
 
         /// <inheritdoc/>
@@ -77,11 +80,11 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (LabourFeedGroup child in this.FindAllChildren<LabourFeedGroup>())
             {
-                double value = (child as LabourFeedGroup).Value;
+                double value = child.Value;
 
-                foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                foreach (LabourType ind in labour?.Items.Filter(child))
                 {
                     // feed limited to the daily intake per ae set in HumanFoodStoreType
                     switch (FeedStyle)
@@ -124,7 +127,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            List<LabourType> group = labour?.Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
             foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
@@ -195,8 +198,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
-            if (group != null && group.Count > 0)
+            IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
+            if (group != null && group.Any())
             {
                 // calculate feed limit
                 double feedLimit = 0.0;
@@ -213,11 +216,11 @@ namespace Models.CLEM.Activities
                     return;
                 }
 
-                foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+                foreach (LabourFeedGroup child in this.FindAllChildren<LabourFeedGroup>())
                 {
-                    double value = (child as LabourFeedGroup).Value;
+                    double value = child.Value;
 
-                    foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                    foreach (LabourType ind in labour?.Items.Filter(child))
                     {
                         switch (FeedStyle)
                         {

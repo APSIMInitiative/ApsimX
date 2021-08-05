@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentPasture = this.Parent as GrazeFoodStoreType;
-            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Count() >= 1;
+            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Any();
         }
 
         /// <summary>

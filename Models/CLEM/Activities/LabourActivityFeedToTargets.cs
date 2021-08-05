@@ -97,8 +97,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            people = Resources.Labour();
-            food = Resources.HumanFoodStore();
+            people = Resources.FindResourceGroup<Labour>();
+            food = Resources.FindResourceGroup<HumanFoodStore>();
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
         }
 
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
             double otherIntake = this.DailyIntakeOtherSources * aE * daysInMonth;
             otherIntake += peopleList.Sum(a => a.GetAmountConsumed());
 
-            List<LabourActivityFeedTarget> labourActivityFeedTargets = this.FindAllChildren<LabourActivityFeedTarget>().Cast<LabourActivityFeedTarget>().ToList();
+            List<LabourActivityFeedTarget> labourActivityFeedTargets = this.FindAllChildren<LabourActivityFeedTarget>().ToList();
 
             // determine targets
             foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
@@ -157,12 +157,12 @@ namespace Models.CLEM.Activities
             }
 
             // get max months before spoiling of all food stored (will be zero for non perishable food)
-            int maxFoodAge = food.FindAllChildren<HumanFoodStoreType>().Cast<HumanFoodStoreType>().Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
+            int maxFoodAge = food.FindAllChildren<HumanFoodStoreType>().Max(a => a.Pools.Select(b => a.UseByAge - b.Age).DefaultIfEmpty(0).Max());
 
             // create list of all food parcels
             List<HumanFoodParcel> foodParcels = new List<HumanFoodParcel>();
 
-            foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().Cast<HumanFoodStoreType>().ToList())
+            foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
             {
                 foreach (HumanFoodStorePool pool in foodStore.Pools)
                 {
@@ -188,7 +188,7 @@ namespace Models.CLEM.Activities
             ResourcesHolder resources = Resources.FoundMarket.Resources;
             if (resources != null)
             {
-                HumanFoodStore food = resources.HumanFoodStore();
+                HumanFoodStore food = resources.FindResourceGroup<HumanFoodStore>();
                 if (food != null)
                 {
                     foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>())
@@ -400,7 +400,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            List<LabourType> group = people?.Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
@@ -463,7 +463,7 @@ namespace Models.CLEM.Activities
         {
             // add all provided requests to the individuals intake pools.
 
-            List<LabourType> group = Resources.Labour().Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
+            List<LabourType> group = people?.Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
             double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
             Status = ActivityStatus.NotNeeded;
             if (group != null && group.Any())
@@ -514,7 +514,7 @@ namespace Models.CLEM.Activities
                 // determine AEs to be fed - NOTE does not account ofr aging in reserve calcualtion
                 double aE = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).Sum(a => a.AdultEquivalent);
 
-                LabourActivityFeedTarget feedTarget = this.FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault() as LabourActivityFeedTarget;
+                LabourActivityFeedTarget feedTarget = this.FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault();
 
                 for (int i = 1; i <= MonthsStorage; i++)
                 {
@@ -523,7 +523,7 @@ namespace Models.CLEM.Activities
                     target[i] = daysInMonth[i] * aE * feedTarget.TargetValue;
                 }
 
-                foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().Cast<HumanFoodStoreType>().ToList())
+                foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
                 {
                     double amountStored = 0;
                     double amountAvailable = foodStore.Pools.Sum(a => a.Amount);

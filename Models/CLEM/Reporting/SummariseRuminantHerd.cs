@@ -29,6 +29,8 @@ namespace Models.CLEM
         [Link]
         private ResourcesHolder Resources = null;
         private int timestep = 0;
+        private RuminantHerd ruminantHerd;
+
         /// <summary>
         /// Report item was generated event handler
         /// </summary>
@@ -65,12 +67,14 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
+
             // determine any herd filtering
             herdFilters = new List<RuminantGroup>();
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantGroup>().Cast<RuminantGroup>();
+                var filtergroup = current.Children.OfType<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
                     Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
@@ -102,7 +106,7 @@ namespace Models.CLEM
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             timestep++;
-            List<Ruminant> herd = Resources.RuminantHerd().Herd;
+            List<Ruminant> herd = ruminantHerd?.Herd;
             foreach (RuminantGroup filter in herdFilters)
             {
                 herd = herd.FilterRuminants(filter).ToList();

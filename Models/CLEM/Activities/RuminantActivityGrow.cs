@@ -36,6 +36,7 @@ namespace Models.CLEM.Activities
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
+        private RuminantHerd ruminantHerd;
 
         /// <summary>
         /// Gross energy content of forage (MJ/kg DM)
@@ -84,6 +85,7 @@ namespace Models.CLEM.Activities
                 methaneEmissions = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
             }
             manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
+            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
         }
 
         /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
@@ -92,7 +94,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Natural weaning takes place here before animals eat or take milk from mother.
@@ -122,7 +123,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMPotentialIntake")]
         private void OnCLEMPotentialIntake(object sender, EventArgs e)
         {
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // Calculate potential intake and reset stores
@@ -295,7 +295,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAnimalWeightGain")]
         private void OnCLEMAnimalWeightGain(object sender, EventArgs e)
         {
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = ruminantHerd.Herd;
 
             int cmonth = Clock.Today.Month;
@@ -438,7 +437,7 @@ namespace Models.CLEM.Activities
             if(manureStore!=null)
             {
                 // sort by animal location
-                foreach (var item in Resources.RuminantHerd().Herd.GroupBy(a => a.Location))
+                foreach (var item in ruminantHerd.Herd.GroupBy(a => a.Location))
                 {
                     double manureProduced = item.Sum(a => a.Intake * ((100 - a.DietDryMatterDigestibility) / 100));
                     manureStore.AddUncollectedManure(item.Key??"", manureProduced);
@@ -629,7 +628,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMAgeResources")]
         private void OnCLEMAgeResources(object sender, EventArgs e)
         {
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
             {
@@ -652,7 +650,6 @@ namespace Models.CLEM.Activities
             // juvenile (unweaned) death based on mothers weight &&
             // adult weight adjusted base mortality.
 
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
             List<Ruminant> herd = ruminantHerd.Herd;
 
             // weight based mortality

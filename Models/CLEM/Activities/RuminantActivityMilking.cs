@@ -106,7 +106,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

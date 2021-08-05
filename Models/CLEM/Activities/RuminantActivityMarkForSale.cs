@@ -101,7 +101,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             labourRequirement = requirement;
-            //double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded;
             switch (requirement.UnitType)
             {

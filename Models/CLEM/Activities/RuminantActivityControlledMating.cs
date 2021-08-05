@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParams = Resources.GetResourceItem(this, $"{HerdResource.Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         #region validation

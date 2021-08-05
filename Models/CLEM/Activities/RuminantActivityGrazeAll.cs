@@ -54,12 +54,13 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            if (Resources.GrazeFoodStore() != null)
+            GrazeFoodStore grazeFoodStore = Resources.FindResourceGroup<GrazeFoodStore>();
+            if (grazeFoodStore != null)
             {
                 this.InitialiseHerd(true, true);
                 // create activity for each pasture type (and common land) and breed at startup
                 // do not include common land pasture..
-                foreach (GrazeFoodStoreType pastureType in Resources.GrazeFoodStore().Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
+                foreach (GrazeFoodStoreType pastureType in grazeFoodStore.Children.Where(a => a.GetType() == typeof(GrazeFoodStoreType) || a.GetType() == typeof(CommonLandFoodStoreType)))
                 {
                     RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture
                     {
@@ -73,7 +74,7 @@ namespace Models.CLEM.Activities
                     ragp.Resources = this.Resources;
                     ragp.InitialiseHerd(true, true);
 
-                    foreach (RuminantType herdType in Resources.RuminantHerd().FindAllChildren<RuminantType>())
+                    foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
                     {
                         RuminantActivityGrazePastureHerd ragpb = new RuminantActivityGrazePastureHerd
                         {

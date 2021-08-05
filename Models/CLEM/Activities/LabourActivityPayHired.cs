@@ -38,10 +38,8 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
         private FinanceType bankAccount;
+        private Labour labour;
 
         /// <summary>
         /// Constructor
@@ -61,6 +59,8 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+
+            labour = Resources.FindResourceGroup<Labour>();
         }
 
         /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                     double currentCost = 0;
 
                     // step through all hired labour in order and set limiter where needed
-                    foreach (LabourType item in Resources.Labour().Items.Where(a => a.Hired))
+                    foreach (LabourType item in labour.Items.Where(a => a.Hired))
                     {
                         // get days needed
                         double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
@@ -149,7 +149,7 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
             int currentmonth = Clock.Today.Month;
             double total = 0;
-            foreach (LabourType item in Resources.Labour().Items.Where(a => a.Hired))
+            foreach (LabourType item in labour.Items.Where(a => a.Hired))
             {
                 // get days needed
                 double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
@@ -193,17 +193,25 @@ namespace Models.CLEM.Activities
             // make sure finance present
             // this is performed in the assignment of bankaccount in InitialiseActivity
 
-            // make sure labour hired present
-            if (Resources.Labour().Items.Where(a => a.Hired).Count() == 0)
+            if (labour is null)
             {
-                string[] memberNames = new string[] { "Hired labour" };
-                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
+                string[] memberNames = new string[] { "Labour" };
+                results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
             }
-            // make sure pay rates present
-            if (!Resources.Labour().PricingAvailable)
+            else
             {
-                string[] memberNames = new string[] { "Labour pay rate" };
-                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
+                // make sure labour hired present
+                if (labour.Items.Where(a => a.Hired).Count() == 0)
+                {
+                    string[] memberNames = new string[] { "Hired labour" };
+                    results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
+                }
+                // make sure pay rates present
+                if (!labour.PricingAvailable)
+                {
+                    string[] memberNames = new string[] { "Labour pay rate" };
+                    results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
+                }
             }
             return results;
         }

@@ -176,12 +176,6 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> requestList = null;
             if (AmountHarvested > 0)
             {
-                FoodResourcePacket packet = new FoodResourcePacket()
-                {
-                    Amount = AmountHarvested,
-                    PercentN = pasture.Nitrogen,
-                    DMD = pasture.EstimateDMD(pasture.Nitrogen)
-                };
                 requestList = new List<ResourceRequest>()
                 {
                     new ResourceRequest()

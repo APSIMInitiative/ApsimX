@@ -48,7 +48,7 @@ namespace Models.CLEM.Activities
         private RuminantActivityControlledMating controlledMating = null;
 
         /// <summary>
-        /// Records the nuber of individuals that conceived in the BreedingEvent for sub-components to work with.
+        /// Records the number of individuals that conceived in the BreedingEvent for sub-components to work with.
         /// </summary>
         public int NumberConceived { get; set; }
 
@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
             NumberConceived = 0;
 
             // get list of all pregnant females
-            List<RuminantFemale> pregnantherd = CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList();
+            List<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList();
 
             // determine all fetus and newborn mortality of all pregnant females.
             foreach (RuminantFemale female in pregnantherd)
@@ -308,7 +308,7 @@ namespace Models.CLEM.Activities
                         Ruminant newCalfRuminant = newCalf as Ruminant;
                         newCalfRuminant.HerdName = female.HerdName;
                         newCalfRuminant.Breed = female.BreedParams.Breed;
-                        newCalfRuminant.ID = Resources.RuminantHerd().NextUniqueID;
+                        newCalfRuminant.ID = HerdResource.NextUniqueID;
                         newCalfRuminant.Location = female.Location;
                         newCalfRuminant.Mother = female;
                         newCalfRuminant.Number = 1;
@@ -323,7 +323,7 @@ namespace Models.CLEM.Activities
                             newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
                         }
 
-                        Resources.RuminantHerd().AddRuminant(newCalfRuminant, this);
+                        HerdResource.AddRuminant(newCalfRuminant, this);
 
                         // add to sucklings
                         female.SucklingOffspringList.Add(newCalfRuminant);

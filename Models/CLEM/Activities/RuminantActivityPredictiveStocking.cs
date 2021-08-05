@@ -142,9 +142,8 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
+                foreach (var paddockGroup in HerdResource.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
                 {
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
@@ -225,8 +224,7 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
             foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
