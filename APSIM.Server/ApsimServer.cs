@@ -69,7 +69,24 @@ namespace APSIM.Server
                             while ( (command = GetCommand(conn)) != null)
                             {
                                 WriteToLog($"Received {command}");
-                                RunCommand(command, conn);
+                                try
+                                {
+                                    RunCommand(command, conn);
+                                }
+                                catch (IOException)
+                                {
+                                    // Broken pipe is handled further down.
+                                    throw;
+                                }
+                                catch (Exception error)
+                                {
+                                    // Other exceptions will usually be triggered by a
+                                    // problem executing the command. This shouldn't cause
+                                    // the server to crash.
+                                    // todo : custom exception type for comamnd failures?
+                                    WriteToLog($"{command} ran with errors:");
+                                    WriteToLog(error.ToString());
+                                }
                             }
 
                             WriteToLog($"Connection closed by client.");
