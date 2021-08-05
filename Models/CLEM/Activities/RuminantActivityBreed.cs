@@ -272,7 +272,7 @@ namespace Models.CLEM.Activities
             NumberConceived = 0;
 
             // get list of all pregnant females
-            IEnumerable<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant);
+            List<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList();
 
             // determine all fetus and newborn mortality of all pregnant females.
             foreach (RuminantFemale female in pregnantherd)
