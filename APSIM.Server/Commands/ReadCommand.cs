@@ -18,7 +18,7 @@ namespace APSIM.Server.Commands
         /// <summary>
         /// Name of the table from which parameters will be read.
         /// </summary>
-        private string table;
+        public string TableName { get; private set; }
 
         /// <summary>
         /// Parameter names to be read.
@@ -36,7 +36,7 @@ namespace APSIM.Server.Commands
         /// </summary>
         public ReadCommand(string tablename, IEnumerable<string> parameters)
         {
-            this.table = tablename;
+            this.TableName = tablename;
             this.Parameters = parameters;
         }
 
@@ -46,7 +46,7 @@ namespace APSIM.Server.Commands
         /// <param name="runner">Job runner.</param>
         public void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage)
         {
-            Result = storage.Reader.GetData(table, fieldNames: Parameters);
+            Result = storage.Reader.GetData(TableName, fieldNames: Parameters);
         }
 
         public override string ToString()
@@ -58,7 +58,7 @@ namespace APSIM.Server.Commands
         {
             if (obj is ReadCommand command)
             {
-                if (table != command.table)
+                if (TableName != command.TableName)
                     return false;
                 if (Parameters == null && command.Parameters == null)
                     return true;
@@ -73,7 +73,7 @@ namespace APSIM.Server.Commands
 
         public override int GetHashCode()
         {
-            return (table, Parameters).GetHashCode();
+            return (TableName, Parameters).GetHashCode();
         }
     }
 }
