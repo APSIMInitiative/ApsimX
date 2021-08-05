@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Activities
 {
@@ -22,22 +23,25 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
+        [JsonIgnore]
         public List<RuminantActivityGroup> HerdFilters { get; set; }
 
         /// <summary>
         /// Herd name determined for this activity
         /// </summary>
+        [JsonIgnore]
         public string PredictedHerdName { get; set; }
 
         /// <summary>
         /// Breed determined for this activity
         /// </summary>
+        [JsonIgnore]
         public string PredictedHerdBreed { get; set; }
-
 
         /// <summary>
         /// The herd resource for this simulation
         /// </summary>
+        [JsonIgnore]
         public RuminantHerd HerdResource { get; set; }
 
         private bool reportedRestrictedBreed = false;
