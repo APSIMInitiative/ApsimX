@@ -79,6 +79,10 @@ namespace APSIM.Server.IO
         public ICommand WaitForCommand()
         {
             object resp = Read();
+
+            if (resp == null)
+                return null;
+
             try
             {
                 PipeUtilities.SendObjectToPipe(stream, ack);
