@@ -136,7 +136,9 @@ namespace APSIM.Server
                     throw new NotImplementedException("Pod IP not set.");
 
                 // Create a new socket connection to the pod.
-                using (NetworkSocketConnection conn = new NetworkSocketConnection(relayOptions.Verbose, pod.Status.PodIP, portNo, Protocol.Managed))
+                string ip = pod.Status.PodIP;
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
+                using (NetworkSocketConnection conn = new NetworkSocketConnection(relayOptions.Verbose, ip, portNo, Protocol.Managed))
                 {
                     // Relay the command to the pod.
                     conn.SendCommand(command);

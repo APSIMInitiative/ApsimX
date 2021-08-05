@@ -67,7 +67,8 @@ namespace APSIM.Server.IO
         }
 
         /// <summary>
-        /// Send a command to the connected client.
+        /// Send a command to the connected client, and block until the
+        /// client has acknowledged receipt of the command.
         /// </summary>
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command) => comms.SendCommand(command);

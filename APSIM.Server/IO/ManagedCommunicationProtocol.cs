@@ -18,6 +18,7 @@ namespace APSIM.Server.IO
     public class ManagedCommunicationProtocol : ICommandManager
     {
         private Stream stream;
+        private const string ack = "ACK_MANAGED";
 
         /// <summary>
         /// Create a <see cref="ManagedCommunicationProtocol"/> instance.
@@ -29,12 +30,16 @@ namespace APSIM.Server.IO
         }
 
         /// <summary>
-        /// Send a command to the connected client.
+        /// Send a command to the connected client, and block until the
+        /// client has acknowledged receipt of the command.
         /// </summary>
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command)
         {
             PipeUtilities.SendObjectToPipe(stream, command);
+            object resp = Read();
+            if (!(resp is string msg) || msg != ack)
+                throw new Exception($"Unexpected response from server after sending command. Expected {ack}, got {resp}");
         }
 
         /// <summary>
@@ -42,7 +47,8 @@ namespace APSIM.Server.IO
         /// </summary>
         public ICommand WaitForCommand()
         {
-            object resp = PipeUtilities.GetObjectFromPipe(stream);
+            object resp = Read();
+            PipeUtilities.SendObjectToPipe(stream, ack);
             if (resp is ICommand command)
                 return command;
             if (resp is Exception exception)
@@ -87,6 +93,14 @@ namespace APSIM.Server.IO
             }
             else
                 PipeUtilities.SendObjectToPipe(stream, error);
+        }
+
+        /// <summary>
+        /// Read an object from the underlying stream.
+        /// </summary>
+        public object Read()
+        {
+            return PipeUtilities.GetObjectFromPipe(stream);
         }
     }
 }

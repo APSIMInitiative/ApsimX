@@ -9,7 +9,8 @@ namespace APSIM.Server.IO
     public interface ICommandSink
     {
         /// <summary>
-        /// Send a command to the connected client.
+        /// Send a command to the connected client, and block until the
+        /// client has acknowledged receipt of the command.
         /// </summary>
         /// <param name="command">The command to be sent.</param>
         void SendCommand(ICommand command);

@@ -72,7 +72,8 @@ namespace APSIM.Server.IO
         public void OnCommandFinished(ICommand command, Exception error = null) => comms.OnCommandFinished(command, error);
 
         /// <summary>
-        /// Send a command to the connected client.
+        /// Send a command to the connected client, and block until the
+        /// client has acknowledged receipt of the command.
         /// </summary>
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command) => comms.SendCommand(command);

@@ -112,10 +112,11 @@ namespace APSIM.Tests
                 Assert.AreEqual(target, protocol.WaitForCommand());
             });
 
-            using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.Out, PipeOptions.None))
+            using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))
             {
                 client.Connect();
                 PipeUtilities.SendObjectToPipe(client, target);
+                PipeUtilities.GetObjectFromPipe(client);
             }
             
             server.Wait();
@@ -129,10 +130,12 @@ namespace APSIM.Tests
                 protocol.SendCommand(target);
             });
 
-            using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.In, PipeOptions.None))
+            using (var client = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None))
             {
                 client.Connect();
-                Assert.AreEqual(target, PipeUtilities.GetObjectFromPipe(client));
+                object resp = PipeUtilities.GetObjectFromPipe(client);
+                PipeUtilities.SendObjectToPipe(client, "ACK_MANAGED");
+                Assert.AreEqual(target, resp);
             }
 
             server.Wait();
