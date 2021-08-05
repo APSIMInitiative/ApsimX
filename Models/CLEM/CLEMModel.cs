@@ -102,6 +102,23 @@ namespace Models.CLEM
             }
         }
 
+        private IEnumerable<IActivityTimer> activityTimers = null;
+
+        /// <summary>
+        /// A list of activity timers for this activity
+        /// </summary>
+        public IEnumerable<IActivityTimer> ActivityTimers
+        {
+            get
+            {
+                if (activityTimers is null)
+                {
+                    activityTimers = FindAllChildren<IActivityTimer>();
+                }
+                return activityTimers;
+            }
+        }
+
         /// <summary>
         /// Is timing ok for the current model
         /// </summary>

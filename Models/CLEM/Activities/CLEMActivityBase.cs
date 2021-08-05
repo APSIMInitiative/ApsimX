@@ -54,6 +54,24 @@ namespace Models.CLEM.Activities
         public ActivityStatus Status { get; set; }
 
         private bool enabled = true;
+
+        private IEnumerable<CLEMActivityBase> activityChildren = null;
+
+        /// <summary>
+        /// A list of activity base chldren for this activity
+        /// </summary>
+        public IEnumerable<CLEMActivityBase> ActivityChildren
+        {
+            get
+            {
+                if (activityChildren is null)
+                {
+                    activityChildren = FindAllChildren<CLEMActivityBase>();
+                }
+                return activityChildren;
+            }
+        }
+
         /// <summary>
         /// Current status of this activity
         /// </summary>
@@ -68,7 +86,7 @@ namespace Models.CLEM.Activities
             {
                 if(value!=enabled)
                 {
-                    foreach (var child in this.Children.OfType<CLEMActivityBase>())
+                    foreach (var child in this.FindAllChildren<CLEMActivityBase>())
                     {
                         child.ActivityEnabled = value;
                     }
@@ -125,7 +143,8 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM) & current.GetType() != typeof(Market))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    if(current is CLEMModel)
+                        result += (current as CLEMModel).ActivityTimers.Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
@@ -149,7 +168,8 @@ namespace Models.CLEM.Activities
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                if (current is CLEMModel)
+                    result += (current as CLEMModel).ActivityTimers.Sum(a => a.Check(date) ? 0 : 1);
                 current = current.Parent as IModel;
             }
             return (result == 0);
@@ -168,7 +188,8 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Count();
+                    if (current is CLEMModel)
+                        result += (current as CLEMModel).ActivityTimers.Count();
                     current = current.Parent as IModel;
                 }
                 return (result != 0);
@@ -199,7 +220,7 @@ namespace Models.CLEM.Activities
             {
                 foreach (Type type in typesToFind)
                 {
-                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name).ToList());
+                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name));
                 }
             }
             return results.AsEnumerable();
@@ -228,7 +249,7 @@ namespace Models.CLEM.Activities
                 }
             }
             // clear status for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            foreach (CLEMActivityBase activity in ActivityChildren)
             {
                 activity.Status = ActivityStatus.Ignored;
                 activity.ClearAllAllActivitiesPerformedStatus();
@@ -258,7 +279,7 @@ namespace Models.CLEM.Activities
                 }
             }
             // call activity performed  for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            foreach (CLEMActivityBase activity in ActivityChildren)
             {
                 activity.ReportAllAllActivitiesPerformed();
             }
@@ -292,7 +313,7 @@ namespace Models.CLEM.Activities
                     }
                 }
                 // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                foreach (CLEMActivityBase activity in ActivityChildren)
                 {
                     if (activity.Enabled)
                     {
@@ -325,7 +346,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                     // get resources required for all children of type CLEMActivityBase
-                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                    foreach (CLEMActivityBase activity in ActivityChildren)
                     {
                         activity.Status = ActivityStatus.Ignored;
                     }
@@ -357,7 +378,7 @@ namespace Models.CLEM.Activities
                 }
             }
             // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            foreach (CLEMActivityBase activity in ActivityChildren)
             {
                 activity.GetResourcesForAllActivities(model);
             }
@@ -443,13 +464,13 @@ namespace Models.CLEM.Activities
                 GetDaysLabourRequiredReturnArgs daysResult = GetDaysLabourRequired(item);
                 if (daysResult.DaysNeeded > 0)
                 {
-                    foreach (LabourFilterGroup fg in item.Children.OfType<LabourFilterGroup>())
+                    foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
                     {
                         int numberOfPpl = 1;
                         if (item.ApplyToAll)
                         {
                             // how many matches
-                            numberOfPpl = (Resources.GetResourceGroupByType(typeof(Labour)) as Labour).Items.Filter(fg).Count();
+                            numberOfPpl = Resources.FindResourceGroup<Labour>().Items.Filter(fg).Count();
                         }
                         for (int i = 0; i < numberOfPpl; i++)
                         {
@@ -540,7 +561,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                foreach (LabourRequirement item in Children.Where(a => a.GetType().IsSubclassOf(typeof(LabourRequirement))))
+                foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
                 {
                     if (item.LabourShortfallAffectsActivity)
                     {
@@ -564,7 +585,7 @@ namespace Models.CLEM.Activities
         {
             double amountProvided = 0;
             double amountNeeded = request.Required;
-            LabourFilterGroup current = request.FilterDetails.OfType<LabourFilterGroup>().FirstOrDefault() as LabourFilterGroup;
+            LabourFilterGroup current = request.FilterDetails.OfType<LabourFilterGroup>().FirstOrDefault();
 
             LabourRequirement lr;
             if (current!=null)
@@ -586,7 +607,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
+                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault();
             }
 
             int currentIndex = 0;
@@ -694,9 +715,10 @@ namespace Models.CLEM.Activities
                     }
                 }
                 currentIndex++;
-                if(current.Children.OfType<LabourFilterGroup>().Count() > 0)
+                var currentFilterGroups = current.FindAllChildren<LabourFilterGroup>();
+                if (currentFilterGroups.Any())
                 {
-                    current = current.Children.OfType<LabourFilterGroup>().FirstOrDefault();
+                    current = currentFilterGroups.FirstOrDefault();
                 }
                 else
                 {
