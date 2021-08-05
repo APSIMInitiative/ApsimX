@@ -126,12 +126,8 @@ namespace Models.CLEM
         {
             get
             {
-                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
-                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                return (res == 0);
+                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                return (result == 0);
             }
         }
 
