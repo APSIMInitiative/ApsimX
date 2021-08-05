@@ -140,8 +140,12 @@ namespace APSIM.Server
                 WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
                 using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
                 {
+                    WriteToLog("Connection established. Sending command...");
+
                     // Relay the command to the pod.
                     conn.SendCommand(command);
+
+                    WriteToLog("Closing connection...");
                 }
             }
         }

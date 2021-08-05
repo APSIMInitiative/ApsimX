@@ -67,7 +67,10 @@ namespace APSIM.Server
                             WriteToLog("Client connected to server.");
                             ICommand command;
                             while ( (command = conn.WaitForCommand()) != null)
+                            {
+                                WriteToLog($"Received {command}");
                                 RunCommand(command, conn);
+                            }
 
                             WriteToLog($"Connection closed by client.");
 
@@ -77,8 +80,9 @@ namespace APSIM.Server
                                 return;
                             conn.Disconnect();
                         }
-                        catch (IOException)
+                        catch (IOException err)
                         {
+                            WriteToLog(err.ToString());
                             WriteToLog("Pipe is broken. Closing connection...");
                             conn.Disconnect();
                         }
@@ -128,7 +132,6 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected virtual void RunCommand(ICommand command, IConnectionManager connection)
         {
-            WriteToLog($"Received command {command}. Running command...");
             try
             {
                 // Clone the simulations object before running the command.
