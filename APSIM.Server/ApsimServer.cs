@@ -66,7 +66,7 @@ namespace APSIM.Server
                             conn.WaitForConnection();
                             WriteToLog("Client connected to server.");
                             ICommand command;
-                            while ( (command = conn.WaitForCommand()) != null)
+                            while ( (command = GetCommand(conn)) != null)
                             {
                                 WriteToLog($"Received {command}");
                                 RunCommand(command, conn);
@@ -93,6 +93,12 @@ namespace APSIM.Server
             {
                 sims?.FindChild<Models.Storage.IDataStore>()?.Close();
             }
+        }
+
+        private ICommand GetCommand(IConnectionManager connection)
+        {
+            WriteToLog("Waiting for commands...");
+            return connection.WaitForCommand();
         }
 
         /// <summary>
