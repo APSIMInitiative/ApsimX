@@ -148,6 +148,7 @@ namespace APSIM.Server
                     WriteToLog("Closing connection...");
                 }
             }
+            connection.OnCommandFinished(command);
         }
 
         /// <summary>
