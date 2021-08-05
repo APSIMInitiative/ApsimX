@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);

@@ -239,7 +239,7 @@ namespace Models.CLEM
             // check filename exists
             if(!this.FileExists)
             {
-                throw new ApsimXException(this, "@error:The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
+                throw new ApsimXException(this, "The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
             }
 
             this.regionIndex = 0;

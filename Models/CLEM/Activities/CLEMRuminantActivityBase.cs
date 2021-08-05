@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
         {
             if (HerdFilters == null)
             {
-                throw new ApsimXException(this, "@error:Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perform InitialiseHerd() in CLEMInitialiseActivity for this activity. Please report this issue to CLEM developers.");
+                throw new ApsimXException(this, "Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perform InitialiseHerd() in CLEMInitialiseActivity for this activity. Please report this issue to CLEM developers.");
             }
             if(includeCheckHerdMeetsCriteria)
             {
@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
             }
             if(HerdResource == null)
             {
-                throw new ApsimXException(this, "@error:No ruminant herd has been defined for [a=" + this.Name + "]" + Environment.NewLine + "You need to add Ruminants to the resources section of this simulation setup.");
+                throw new ApsimXException(this, "No ruminant herd has been defined for [a=" + this.Name + "]" + Environment.NewLine + "You need to add Ruminants to the resources section of this simulation setup.");
             }
             IEnumerable<Ruminant> herd = HerdResource.Herd;
             foreach (RuminantActivityGroup filter in HerdFilters)
@@ -120,7 +120,7 @@ namespace Models.CLEM.Activities
             {
                 if (!allowMultipleBreeds)
                 {
-                    throw new ApsimXException(this, "@error:Multiple breeds were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
+                    throw new ApsimXException(this, "Multiple breeds were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 }
                 PredictedHerdBreed = "Multiple";
             }
@@ -128,7 +128,7 @@ namespace Models.CLEM.Activities
             {
                 if (!allowMultipleHerds)
                 {
-                    throw new ApsimXException(this, "@error:Multiple herd names were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                    throw new ApsimXException(this, "Multiple herd names were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
                 }
                 PredictedHerdName = "Multiple";
             }
@@ -143,7 +143,7 @@ namespace Models.CLEM.Activities
                 var ruminantTypeChildren = HerdResource.FindAllChildren<RuminantType>();
                 if (!ruminantTypeChildren.Any())
                 {
-                    throw new ApsimXException(this, "@error:No Ruminant Type exists for Activity [a=" + this.Name + "]"+Environment.NewLine+"Please supply a ruminant type in the Ruminant Group of the Resources");
+                    throw new ApsimXException(this, "No Ruminant Type exists for Activity [a=" + this.Name + "]"+Environment.NewLine+"Please supply a ruminant type in the Ruminant Group of the Resources");
                 }
                 // try use the only herd in the model
                 else if (ruminantTypeChildren.Count() == 1)
@@ -163,7 +163,7 @@ namespace Models.CLEM.Activities
                                 if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value && !allowMultipleBreeds)
                                 {
                                     // multiple breeds in filter.
-                                    throw new ApsimXException(this, "@error:Multiple breeds are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
+                                    throw new ApsimXException(this, "Multiple breeds are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
                                 }
                                 PredictedHerdBreed = filter.Value;
                             }
@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
                                 if (PredictedHerdName != "N/A" && !allowMultipleHerds)
                                 {
                                     // multiple breeds in filter.
-                                    throw new ApsimXException(this, "@error:Multiple herd names are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single herd for this activity.");
+                                    throw new ApsimXException(this, "Multiple herd names are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single herd for this activity.");
                                 }
                                 PredictedHerdName = filter.Value;
                             }
@@ -193,7 +193,7 @@ namespace Models.CLEM.Activities
                 // check for multiple breeds
                 if (herd.Select(a => a.Breed).Distinct().Count() > 1)
                 {
-                    throw new ApsimXException(this, "@error:Multiple breeds were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
+                    throw new ApsimXException(this, "Multiple breeds were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 }
                 // check for filter limited herd and set warning
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.Breed == PredictedHerdBreed);
@@ -208,7 +208,7 @@ namespace Models.CLEM.Activities
                 // check for multiple breeds
                 if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
                 {
-                    throw new ApsimXException(this, "@error:Multiple herd types were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
+                    throw new ApsimXException(this, "Multiple herd types were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
                 }
                 // check for filter limited herd and set warning
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.HerdName == PredictedHerdName);

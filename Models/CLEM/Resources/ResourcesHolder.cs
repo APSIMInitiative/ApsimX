@@ -129,13 +129,12 @@ namespace Models.CLEM.Resources
                 var resourceGroup = this.GetResourceGroupByType(request.ResourceType);
                 if(resourceGroup== null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources of type [r{0}] for [a={1}]", request.ResourceType, request.ActivityModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources of type [r{0}] for [a={1}]", request.ResourceType, request.ActivityModel.Name);
                     switch (missingResourceAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
                             throw new Exception(errorMsg);
                         case OnMissingResourceActionTypes.ReportWarning:
-                            errorMsg = errorMsg.Replace("@error:", "");
                             Summary.WriteWarning(request.ActivityModel, errorMsg);
                             break;
                         default:
@@ -206,7 +205,7 @@ namespace Models.CLEM.Resources
                 IModel resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
                     switch (missingResourceTypeAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -223,13 +222,12 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", resourceGroupType.ToString(), requestingModel.Name);
+                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", resourceGroupType.ToString(), requestingModel.Name);
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new Exception(errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        errorMsg = errorMsg.Replace("@error:", "");
                         Summary.WriteWarning(requestingModel, errorMsg);
                         break;
                     default:
@@ -258,7 +256,7 @@ namespace Models.CLEM.Resources
             string[] names = resourceGroupAndItem.Split('.');
             if(names.Count()!=2)
             {
-                string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
+                string errorMsg = String.Format("Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
                 throw new Exception(errorMsg);
             }
 
@@ -267,7 +265,7 @@ namespace Models.CLEM.Resources
                 IModel resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
                     switch (missingResourceTypeAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -284,13 +282,12 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", names[0], requestingModel.Name);
+                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", names[0], requestingModel.Name);
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new Exception(errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        errorMsg = errorMsg.Replace("@error:", "");
                         Summary.WriteWarning(requestingModel, errorMsg);
                         break;
                     default:
