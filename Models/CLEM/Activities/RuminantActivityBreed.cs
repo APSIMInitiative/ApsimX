@@ -384,7 +384,7 @@ namespace Models.CLEM.Activities
                     numberPossible = -1;
                     if (useControlledMating)
                     {
-                        numberPossible = Convert.ToInt32(location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
+                        numberPossible = Convert.ToInt32(location.OfType<RuminantFemale>().Count(), CultureInfo.InvariantCulture);
                     }
                     else
                     {
@@ -392,7 +392,7 @@ namespace Models.CLEM.Activities
                         // uncontrolled conception
                         if (location.GroupBy(a => a.Gender).Count() == 2)
                         {
-                            int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                            int maleCount = location.OfType<RuminantMale>().Count();
                             // get a list of males to provide attributes when incontrolled mating.
                             if(maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
                             {
