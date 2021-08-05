@@ -29,7 +29,7 @@ namespace APSIM.Server.Commands
         /// The result of the ReadCommand.
         /// Contains the data 
         /// </summary>
-        public DataTable Result { get; private set; }
+        public DataTable Result { get; set; }
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.

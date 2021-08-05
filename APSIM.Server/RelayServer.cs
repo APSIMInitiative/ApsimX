@@ -13,6 +13,8 @@ using k8s;
 using k8s.Models;
 using Models.Core.Run;
 using APSIM.Server.Extensions;
+using System.Data;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Server
 {
@@ -129,6 +131,12 @@ namespace APSIM.Server
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
             // Relay the command to all workers.
+            if (command is ReadCommand readCommand)
+            {
+                DoReadCommand(readCommand, connection);
+                return;
+            }
+
             foreach (string podName in workers)
             {
                 V1Pod pod = GetWorkerPod(podName);
@@ -140,14 +148,41 @@ namespace APSIM.Server
                 WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
                 using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
                 {
-                    WriteToLog("Connection established. Sending command...");
+                    WriteToLog($"Connection to {podName} established. Sending command...");
 
                     // Relay the command to the pod.
                     conn.SendCommand(command);
 
-                    WriteToLog("Closing connection...");
+                    WriteToLog($"Closing connection to {podName}...");
                 }
             }
+            connection.OnCommandFinished(command);
+        }
+
+        private void DoReadCommand(ReadCommand command, IConnectionManager connection)
+        {
+            List<DataTable> tables = new List<DataTable>();
+            foreach (string podName in workers)
+            {
+                V1Pod pod = GetWorkerPod(podName);
+                if (string.IsNullOrEmpty(pod.Status.PodIP))
+                    throw new NotImplementedException("Pod IP not set.");
+
+                // Create a new socket connection to the pod.
+                string ip = pod.Status.PodIP;
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                {
+                    WriteToLog($"Connection to {podName} established. Sending command...");
+
+                    // Relay the command to the pod.
+                    tables.Add(conn.ReadOutput(command));
+
+                    WriteToLog($"Closing connection to {podName}...");
+                }
+            }
+            WriteToLog("Merging DataTables...");
+            command.Result = DataTableUtilities.Merge(tables);
             connection.OnCommandFinished(command);
         }
 

@@ -72,5 +72,16 @@ namespace APSIM.Server.IO
         /// </summary>
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command) => comms.SendCommand(command);
+
+        /// <summary>
+        /// Read job output.
+        /// </summary>
+        /// <param name="command"></param>
+        public DataTable ReadOutput(ReadCommand command)
+        {
+            if (connectionType != Protocol.Managed)
+                throw new NotImplementedException("tbi");
+            return ((ManagedCommunicationProtocol)comms).ReadOutput(command);
+        }
     }
 }

@@ -37,40 +37,16 @@ namespace APSIM.Server.IO
         /// <param name="command">The command to be sent.</param>
         public void SendCommand(ICommand command)
         {
-            PipeUtilities.SendObjectToPipe(stream, command);
+            SendCommandValidateResponse(command);
+        }
 
-            // Server will send through ACK upon receipt of the command.
-            object resp = Read();
-            if (!(resp is string msg) || msg != ack)
-                throw new Exception($"Unexpected response from server after sending command. Expected {ack}, got {resp}");
-
-            // Server will send through another response upon completion of the command.
-            // If command is a RUN command, this will just be a simple FIN.
-            // If command is a READ command, this will be a DataTable.
-            // todo: work out best way to approach these different cases.
-            // for now, I'm just going to discard the result.
-            Console.WriteLine($"Server has received command. Waiting for server to finish running command...");
-            object finResp = Read();
-
-            // Validate the reponse from the server.
-            if (finResp == null)
-                throw new Exception($"Received null response from server upon job completion");
-
-            if (finResp is Exception err)
-                throw new Exception($"{command} ran with errors", err);
-
-            if (command is RunCommand && (finResp as string) != fin)
-                throw new Exception($"Unexpected response from server. Expected {fin}, got {finResp}");
-
-            if (command is ReadCommand)
-            {
-                DataTable table = finResp as DataTable;
-                if (table == null)
-                    throw new Exception($"Unexpected response from server upon job completion. Expected DataTable, got {finResp}");
-                Console.WriteLine($"Received table with {table.Columns.Count} columns and {table.Rows.Count} rows");
-            }
-            else if (command is RunCommand)
-                Console.WriteLine($"Server has completed {command}.");
+        /// <summary>
+        /// This is a convenience extension to the <see cref="ICommandManager"/> API.
+        /// </summary>
+        /// <param name="command">This details the parameters to be read.</param>
+        public DataTable ReadOutput(ReadCommand command)
+        {
+            return (DataTable)SendCommandValidateResponse(command);
         }
 
         /// <summary>
@@ -144,6 +120,41 @@ namespace APSIM.Server.IO
         public object Read()
         {
             return PipeUtilities.GetObjectFromPipe(stream);
+        }
+
+        private object SendCommandValidateResponse(ICommand command)
+        {
+            PipeUtilities.SendObjectToPipe(stream, command);
+
+            // Server will send through ACK upon receipt of the command.
+            object resp = Read();
+            if (!(resp is string msg) || msg != ack)
+                throw new Exception($"Unexpected response from server after sending command. Expected {ack}, got {resp}");
+
+            // Server will send through another response upon completion of the command.
+            // If command is a RUN command, this will just be a simple FIN.
+            // If command is a READ command, this will be a DataTable.
+            // todo: work out best way to approach these different cases.
+            // for now, I'm just going to discard the result.
+            resp = Read();
+            // Validate the reponse from the server.
+            if (resp == null)
+                throw new Exception($"Received null response from server upon job completion");
+
+            if (resp is Exception err)
+                throw new Exception($"{command} ran with errors", err);
+
+            if (command is RunCommand && (resp as string) != fin)
+                throw new Exception($"Unexpected response from server. Expected {fin}, got {resp}");
+
+            if (command is ReadCommand)
+            {
+                DataTable table = resp as DataTable;
+                if (table == null)
+                    throw new Exception($"Unexpected response from server upon job completion. Expected DataTable, got {resp}");
+            }
+
+            return resp;
         }
     }
 }
