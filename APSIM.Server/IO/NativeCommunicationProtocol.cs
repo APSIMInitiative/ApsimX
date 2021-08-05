@@ -210,7 +210,7 @@ namespace APSIM.Server.IO
             // tbi - need to give this one some thought.
             throw new NotImplementedException();
         }
-    
+
         public string ReadString()
         {
             byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
@@ -242,7 +242,7 @@ namespace APSIM.Server.IO
             // tbi - need to give this one some thought.
             throw new NotImplementedException();
         }
-    
+
         private void SendArray(Array data)
         {
             PipeUtilities.SendToPipe(connection, GetBytes(data));

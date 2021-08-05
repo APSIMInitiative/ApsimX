@@ -19,6 +19,7 @@ namespace APSIM.Server.IO
     {
         private Stream stream;
         private const string ack = "ACK_MANAGED";
+        private const string fin = "FIN_MANAGED";
 
         /// <summary>
         /// Create a <see cref="ManagedCommunicationProtocol"/> instance.
@@ -37,9 +38,31 @@ namespace APSIM.Server.IO
         public void SendCommand(ICommand command)
         {
             PipeUtilities.SendObjectToPipe(stream, command);
+
+            // Server will send through ACK upon receipt of the command.
             object resp = Read();
             if (!(resp is string msg) || msg != ack)
                 throw new Exception($"Unexpected response from server after sending command. Expected {ack}, got {resp}");
+
+            // Server will send through another response upon completion of the command.
+            // If command is a RUN command, this will just be a simple FIN.
+            // If command is a READ command, this will be a DataTable.
+            // todo: work out best way to approach these different cases.
+            // for now, I'm just going to discard the result.
+            object finResp = Read();
+            if (finResp == null)
+                throw new Exception($"Received null response from server upon job completion");
+            if (finResp is Exception err)
+                throw new Exception($"Command {command} ran with errors", err);
+            if (command is RunCommand && (finResp as string) != fin)
+                throw new Exception($"Unexpected response from server. Expected {fin}, got {finResp}");
+            if (command is ReadCommand)
+            {
+                DataTable table = finResp as DataTable;
+                if (table == null)
+                    throw new Exception($"Unexpected response from server upon job completion. Expected DataTable, got {finResp}");
+                Console.WriteLine($"Received table with {table.Columns.Count} columns and {table.Rows.Count} rows");
+            }
         }
 
         /// <summary>
@@ -89,7 +112,7 @@ namespace APSIM.Server.IO
                     }
                 }
                 else
-                    PipeUtilities.SendObjectToPipe(stream, "FIN");
+                    PipeUtilities.SendObjectToPipe(stream, fin);
             }
             else
                 PipeUtilities.SendObjectToPipe(stream, error);
