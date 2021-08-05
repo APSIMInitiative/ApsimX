@@ -154,19 +154,18 @@ namespace Models.CLEM.Activities
                                             maleBreeders = location.Where(a => a.Gender == Sex.Male).ToList();
                                         }
 
-                                        int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                                        int femaleCount = location.OfType<RuminantFemale>().Count();
                                         double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
 
                                         double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
 
                                         // only get non-pregnant females of breeding age at the time before the simulation included
-                                        var availableBreeders = location.Where(b => b.Gender == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
-                                            .Cast<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
+                                        var availableBreeders = location.OfType<RuminantFemale>().Where(b => !b.IsPregnant && b.Age + i >= b.BreedParams.MinimumAge1stMating);
 
                                         // only get selection of these of breeders available to spread conceptions
                                         // only 15% of breeding herd of age can conceive in any month or male limited proportion whichever is smaller
                                         int count = Convert.ToInt32(Math.Ceiling(availableBreeders.Count() * Math.Min(0.15, maleLimiter)), CultureInfo.InvariantCulture);
-                                        availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count).ToList();
+                                        availableBreeders = availableBreeders.OrderBy(x => RandomNumberGenerator.Generator.NextDouble()).Take(count);
 
                                         foreach (RuminantFemale female in availableBreeders)
                                         {
@@ -179,10 +178,8 @@ namespace Models.CLEM.Activities
 
                                                 // if mandatory attributes are present in the herd, save male value with female details.
                                                 if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
-                                                {
                                                     // randomly select male as father
                                                     AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)]);
-                                                }
 
                                                 // report conception status changed
                                                 female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
@@ -199,10 +196,8 @@ namespace Models.CLEM.Activities
                                                         {
                                                             female.OneOffspringDies();
                                                             if (female.NumberOfOffspring == 0)
-                                                            {
                                                                 // report conception status changed when last multiple birth dies.
                                                                 female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
-                                                            }
                                                         }
                                                     }
                                                 }
@@ -229,10 +224,8 @@ namespace Models.CLEM.Activities
 
                                                     // if mandatory attributes are present in the herd, save male value with female details.
                                                     if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
-                                                    {
                                                         // save all male attributes
                                                         AddMalesAttributeDetails(female, controlledMating.SireAttributes);
-                                                    }
 
                                                     // report conception status changed
                                                     female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
@@ -249,10 +242,8 @@ namespace Models.CLEM.Activities
                                                             {
                                                                 female.OneOffspringDies();
                                                                 if (female.NumberOfOffspring == 0)
-                                                                {
                                                                     // report conception status changed when last multiple birth dies.
                                                                     female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
-                                                                }
                                                             }
                                                         }
                                                     }
@@ -404,7 +395,7 @@ namespace Models.CLEM.Activities
                     }
 
                     numberServiced = 0;
-                    foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating).ToList())
+                    foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant & a.Age <= a.BreedParams.MaximumAgeMating))
                     {
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                         if (numberServiced < numberPossible)
