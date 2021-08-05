@@ -176,12 +176,20 @@ namespace APSIM.Server
                     WriteToLog($"Connection to {podName} established. Sending command...");
 
                     // Relay the command to the pod.
-                    tables.Add(conn.ReadOutput(command));
+                    try
+                    {
+                        tables.Add(conn.ReadOutput(command));
+                    }
+                    catch (Exception err)
+                    {
+                        WriteToLog($"Unable to read output from pod {podName}:");
+                        WriteToLog(err.ToString());
+                    }
 
                     WriteToLog($"Closing connection to {podName}...");
                 }
             }
-            WriteToLog("Merging DataTables...");
+            WriteToLog($"Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
             command.Result = DataTableUtilities.Merge(tables);
             connection.OnCommandFinished(command);
         }
