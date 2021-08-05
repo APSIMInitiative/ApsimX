@@ -42,6 +42,7 @@
         /// <param name="obj">The object to send.</param>
         public static void SendObjectToPipe(Stream pipeWriter, object obj)
         {
+            Console.WriteLine($"SEND {obj}");
             var objStream = ReflectionUtilities.BinarySerialise(obj) as MemoryStream;
 
             // Write the number of bytes
@@ -90,7 +91,9 @@
                 pipeReader.Read(buffer, 0, numBytes);
 
                 // Convert bytes to object.
-                return ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
+                object result = ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
+                Console.WriteLine($"RECV {result}");
+                return result;
             }
             return null;
         }

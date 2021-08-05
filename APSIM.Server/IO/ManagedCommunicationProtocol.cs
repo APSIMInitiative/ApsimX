@@ -99,6 +99,12 @@ namespace APSIM.Server.IO
             {
                 if (command is ReadCommand reader)
                 {
+                    if (reader.Result == null)
+                    {
+                        Exception err = new Exception("READ result is null");
+                        PipeUtilities.SendObjectToPipe(stream, err);
+                        throw err;
+                    }
                     PipeUtilities.SendObjectToPipe(stream, reader.Result);
                     // foreach (string param in reader.Parameters)
                     // {

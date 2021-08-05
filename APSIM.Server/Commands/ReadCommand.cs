@@ -47,6 +47,7 @@ namespace APSIM.Server.Commands
         public void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage)
         {
             Result = storage.Reader.GetData(TableName, fieldNames: Parameters);
+            Result.TableName = TableName;
         }
 
         public override string ToString()
