@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            List<Ruminant> testherd = this.CurrentHerd(true);
+            IEnumerable<Ruminant> testherd = this.CurrentHerd(true);
 
             // check if finance is available and warn if not supplying bank account.
             if (Resources.ResourceItemsExist<Finance>())

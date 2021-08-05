@@ -227,12 +227,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
             int head = 0;
             double adultEquivalents = 0;
             foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
-                var subherd = herd.FilterRuminants(child).ToList();
+                var subherd = herd.FilterRuminants(child);
                 head += subherd.Count();
                 adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
             }
@@ -356,8 +356,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            List<Ruminant> herd = CurrentHerd(false);
-            if (herd != null && herd.Count > 0)
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
+            if (herd != null && herd.Any())
             {
                 double feedLimit = 0.0;
 

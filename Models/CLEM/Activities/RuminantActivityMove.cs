@@ -140,34 +140,37 @@ namespace Models.CLEM.Activities
         {
             double daysNeeded = 0;
             double numberUnits = 0;
-            List<Ruminant> herd = this.CurrentHerd(false);
+            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-            switch (requirement.UnitType)
+            if (herd.Any())
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+                switch (requirement.UnitType)
+                {
+                    case LabourUnitType.Fixed:
+                        daysNeeded = requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perHead:
+                        numberUnits = head / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                        {
+                            numberUnits = Math.Ceiling(numberUnits);
+                        }
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    numberUnits = adultEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perAE:
+                        numberUnits = adultEquivalents / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                        {
+                            numberUnits = Math.Ceiling(numberUnits);
+                        }
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    default:
+                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                } 
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }

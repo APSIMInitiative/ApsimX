@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
             int head = herd.Where(a => a.Weaned == false).Count();
 
             double daysNeeded = 0;

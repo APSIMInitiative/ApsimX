@@ -86,14 +86,21 @@ namespace Models.CLEM.Activities
                 Summary.WriteWarning(this, $"Uncontrolled/natural breeding should occur every month. The timer associated with [a={this.Name}] may restrict uncontrolled mating regardless of whether males and females of breeding condition are located together.\r\nYou can also seperate genders by moving to different paddocks to manage the timing of natural mating or add a [a=RuminantActivityControlledMating] component to define controlled mating");
             }
 
+            // set up pre start conception status of breeders
+            IEnumerable<Ruminant> herd = CurrentHerd(true);
+
+            // report previous pregnancies as conceptions
+            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsPregnant))
+            {
+                // report conception status changed from those assigned calf at startup
+                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+            }
+
             // work out pregnancy status of initial herd
             if (InferStartupPregnancy)
             {
-                // set up pre start conception status of breeders
-                List<Ruminant> herd = CurrentHerd(true);
-
                 // only initialise if herd present
-                if (herd.Count() > 0)
+                if (herd.Any())
                 {
                     // go back (gestation - 1) months
                     // this won't include those individuals due to give birth on day 1.
@@ -104,6 +111,8 @@ namespace Models.CLEM.Activities
                     for (int i = monthsAgoStart; i <= monthsAgoStop; i++)
                     {
                         DateTime previousDate = Clock.Today.AddMonths(i);
+                        DateTime conceiveDate = Clock.Today.AddMonths(i);
+                        conceiveDate = new DateTime(conceiveDate.Year, conceiveDate.Month, DateTime.DaysInMonth(conceiveDate.Year, conceiveDate.Month));
 
                         // get list of all individuals of breeding age and condition
                         // grouped by location
@@ -176,11 +185,14 @@ namespace Models.CLEM.Activities
                                                 }
 
                                                 // report conception status changed
-                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                 // check for perenatal mortality
                                                 for (int j = i; j < monthsAgoStop; j++)
                                                 {
+                                                    DateTime lossDate = Clock.Today.AddMonths(i);
+                                                    lossDate = new DateTime(lossDate.Year, lossDate.Month, DateTime.DaysInMonth(lossDate.Year, lossDate.Month));
+
                                                     for (int k = 0; k < female.CarryingCount; i++)
                                                     {
                                                         if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
@@ -189,7 +201,7 @@ namespace Models.CLEM.Activities
                                                             if (female.NumberOfOffspring == 0)
                                                             {
                                                                 // report conception status changed when last multiple birth dies.
-                                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                                female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
                                                             }
                                                         }
                                                     }
@@ -201,8 +213,8 @@ namespace Models.CLEM.Activities
                                 // controlled conception
                                 else
                                 {
-                                    numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
-                                    foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                                    numberPossible = Convert.ToInt32(limiter * location.OfType<RuminantFemale>().Count(), CultureInfo.InvariantCulture);
+                                    foreach (RuminantFemale female in location.OfType<RuminantFemale>())
                                     {
                                         if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                         {
@@ -223,11 +235,14 @@ namespace Models.CLEM.Activities
                                                     }
 
                                                     // report conception status changed
-                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, Clock.Today));
+                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, conceiveDate));
 
                                                     // check for perenatal mortality
                                                     for (int j = i; j < monthsAgoStop; j++)
                                                     {
+                                                        DateTime lossDate = Clock.Today.AddMonths(i);
+                                                        lossDate = new DateTime(lossDate.Year, lossDate.Month, DateTime.DaysInMonth(lossDate.Year, lossDate.Month));
+
                                                         for (int k = 0; k < female.CarryingCount; k++)
                                                         {
                                                             if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
@@ -236,7 +251,7 @@ namespace Models.CLEM.Activities
                                                                 if (female.NumberOfOffspring == 0)
                                                                 {
                                                                     // report conception status changed when last multiple birth dies.
-                                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
+                                                                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, lossDate));
                                                                 }
                                                             }
                                                         }
@@ -266,7 +281,7 @@ namespace Models.CLEM.Activities
             NumberConceived = 0;
 
             // get list of all pregnant females
-            List<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant).ToList();
+            IEnumerable<RuminantFemale> pregnantherd = CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsPregnant);
 
             // determine all fetus and newborn mortality of all pregnant females.
             foreach (RuminantFemale female in pregnantherd)
@@ -278,7 +293,8 @@ namespace Models.CLEM.Activities
                 // needs to be calculated for each offspring carried.
                 for (int i = 0; i < female.CarryingCount; i++)
                 {
-                    if (RandomNumberGenerator.Generator.NextDouble() < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
+                    var rnd = RandomNumberGenerator.Generator.NextDouble();
+                    if (rnd < (female.BreedParams.PrenatalMortality / (female.BreedParams.GestationLength + 1)))
                     {
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
@@ -313,7 +329,7 @@ namespace Models.CLEM.Activities
                         newCalfRuminant.Mother = female;
                         newCalfRuminant.Number = 1;
                         newCalfRuminant.SetUnweaned();
-                        // calf weight from  Freer
+                        // calf weight from Freer
                         newCalfRuminant.PreviousWeight = newCalfRuminant.Weight;
                         newCalfRuminant.SaleFlag = HerdChangeReason.Born;
 

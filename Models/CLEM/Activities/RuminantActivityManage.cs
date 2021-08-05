@@ -423,8 +423,8 @@ namespace Models.CLEM.Activities
 
             decimal breederHerdSize = 0;
 
-            List<Ruminant> individuals = this.CurrentHerd(false);
-            if (individuals != null && individuals.Any())
+            IEnumerable<Ruminant> individuals = this.CurrentHerd(false);
+            if (individuals.Any())
             {
                 int numberAdded = 0;
                 RuminantType breedParams = individuals.FirstOrDefault().BreedParams;
@@ -437,7 +437,7 @@ namespace Models.CLEM.Activities
                     {
                         // breeders
                         int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
+                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
@@ -464,7 +464,7 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
-                            List<Ruminant> breeders = individuals.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
+                            var breeders = individuals.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in breeders)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;

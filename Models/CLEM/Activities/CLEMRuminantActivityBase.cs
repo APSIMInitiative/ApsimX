@@ -82,7 +82,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        public List<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria)
+        public IEnumerable<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria)
         {
             if (HerdFilters == null)
             {
@@ -96,10 +96,10 @@ namespace Models.CLEM.Activities
             {
                 throw new ApsimXException(this, "@error:No ruminant herd has been defined for [a=" + this.Name + "]" + Environment.NewLine + "You need to add Ruminants to the resources section of this simulation setup.");
             }
-            List<Ruminant> herd = HerdResource.Herd;
+            IEnumerable<Ruminant> herd = HerdResource.Herd;
             foreach (RuminantActivityGroup filter in HerdFilters)
             {
-                herd = herd.FilterRuminants(filter).ToList();
+                herd = herd.FilterRuminants(filter);
             }
             return herd;
         }
@@ -187,7 +187,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         private void CheckHerd()
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
             if (!allowMultipleBreeds)
             {
                 // check for multiple breeds

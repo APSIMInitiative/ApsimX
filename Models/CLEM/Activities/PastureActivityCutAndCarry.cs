@@ -263,7 +263,7 @@ namespace Models.CLEM.Activities
         {
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
-            List<Ruminant> herd = new List<Ruminant>();
+            IEnumerable<Ruminant> herd = null;
 
             if (this.TimingOK)
             {
