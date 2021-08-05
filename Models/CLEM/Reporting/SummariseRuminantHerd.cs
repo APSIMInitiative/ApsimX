@@ -106,11 +106,9 @@ namespace Models.CLEM
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             timestep++;
-            List<Ruminant> herd = ruminantHerd?.Herd;
+            IEnumerable<Ruminant> herd = ruminantHerd?.Herd;
             foreach (RuminantGroup filter in herdFilters)
-            {
-                herd = herd.FilterRuminants(filter).ToList();
-            }
+                herd = herd.FilterRuminants(filter);
 
             // group by breed
             foreach (var breedGroup in herd.GroupBy(a => a.Breed))
@@ -154,9 +152,7 @@ namespace Models.CLEM
 
                             // reset birth count
                             if (sexGroup.Key == Sex.Female)
-                            {
                                 ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
-                            }
                         }
                     }
                 }

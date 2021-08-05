@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
                     throw new ApsimXException(this, "@error:Multiple breeds were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 }
                 // check for filter limited herd and set warning
-                List<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.Breed == PredictedHerdBreed).ToList();
+                IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.Breed == PredictedHerdBreed);
                 if (fullHerd.Count() != herd.Count() && reportedRestrictedBreed)
                 {
                     Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));
@@ -211,7 +211,7 @@ namespace Models.CLEM.Activities
                     throw new ApsimXException(this, "@error:Multiple herd types were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
                 }
                 // check for filter limited herd and set warning
-                List<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.HerdName == PredictedHerdName).ToList();
+                IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.HerdName == PredictedHerdName);
                 if (fullHerd.Count() != herd.Count() && !reportedRestrictedHerd)
                 {
                     Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));

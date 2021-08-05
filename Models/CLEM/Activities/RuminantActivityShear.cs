@@ -142,14 +142,14 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            List<Ruminant> herd = CurrentHerd(false).OrderByDescending(a => a.Wool).ToList<Ruminant>();
-            if (herd != null && herd.Count > 0)
+            IEnumerable<Ruminant> herd = CurrentHerd(false).OrderByDescending(a => a.Wool);
+            if (herd.Any())
             {
                 double woolTotal = 0;
                 if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.LabourShortfallAffectsActivity))
                 {
                     woolTotal = herd.Sum(a => a.Wool);
-                    herd.ForEach(a => a.Wool = 0);
+                    herd.ToList().ForEach(a => a.Wool = 0);
                 }
                 else
                 {

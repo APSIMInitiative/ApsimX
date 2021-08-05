@@ -325,7 +325,7 @@ namespace Models.CLEM.Activities
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
-            if (destockGroups.Count() == 0)
+            if (!destockGroups.Any())
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
@@ -336,30 +336,29 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // remove individuals to sale as specified by destock groups
-            foreach (RuminantGroup item in destockGroups)
+            foreach (var item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item).FilterRuminants(item).FilterRuminants(item)
-                    .ToList();
+                    .FilterRuminants(item);
 
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsForSale > 0)
+                foreach (Ruminant ruminant in herd)
                 {
-                    if (herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsForSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsForSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsForSale <= 0)
-                {
-                    return 0;
+
+                    if (animalEquivalentsForSale <= 0)
+                    {
+                        this.Status = ActivityStatus.Success;
+                        return 0;
+                    }
                 }
             }
+
             return animalEquivalentsForSale;
 
             // handling of sucklings with sold female is in RuminantActivityBuySell

@@ -89,18 +89,16 @@ namespace Models.CLEM.Activities
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
                 };
                 if (ragpb.Resources == null)
-                {
                     ragpb.Resources = this.Resources;
-                }
+
                 if (ragpb.Clock == null)
-                {
                     ragpb.Clock = this.Clock;
-                }
+
                 ragpb.InitialiseHerd(true, true);
+
                 if (ActivityList == null)
-                {
                     ActivityList = new List<CLEMActivityBase>();
-                }
+
                 ActivityList.Add(ragpb);
                 ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
                 ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
@@ -121,9 +119,7 @@ namespace Models.CLEM.Activities
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
                 item.GetResourcesNeededForActivity();
                 if (item.ResourceRequestList != null && item.ResourceRequestList.Count > 0)
-                {
                     totalNeeded += item.ResourceRequestList[0].Required;
-                }
             }
 
             // Check available resources
@@ -132,22 +128,19 @@ namespace Models.CLEM.Activities
             double available = GrazeFoodStoreModel.Amount;
             double limit = 0;
             if(totalNeeded>0)
-            {
                 limit = Math.Min(1.0, available / totalNeeded);
-            }
 
             // apply limits to children
             foreach (RuminantActivityGrazePastureHerd item in ActivityList)
-            {
                 item.SetupPoolsAndLimits(limit);
-            }
+
             return ResourceRequestList;
         }
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name).ToList();
+            IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name);
             int head = herd.Count();
             double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
@@ -210,9 +203,7 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-            {
                 Status = ActivityStatus.NoTask;
-            }
             return;
         }
 

@@ -111,7 +111,7 @@ namespace Models.CLEM.Activities
             }
 
             List<LabourType> peopleList = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).ToList();
-            peopleList.Select(a => a.FeedToTargetIntake == 0);
+            peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
             double aE = peopleList.Sum(a => a.AdultEquivalent);

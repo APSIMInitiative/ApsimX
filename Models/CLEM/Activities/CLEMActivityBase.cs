@@ -493,7 +493,7 @@ namespace Models.CLEM.Activities
 
             double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType).ToList())
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
             {
                 if (resourceType == typeof(LabourType))
                 {
@@ -695,17 +695,17 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine resources available and perform transmutation if needed.
         /// </summary>
-        /// <param name="resourceRequestList">List of requests</param>
+        /// <param name="resourceRequests">List of requests</param>
         /// <param name="uniqueActivityID">Unique id for the activity</param>
-        public void CheckResources(List<ResourceRequest> resourceRequestList, Guid uniqueActivityID)
+        public void CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
         {
-            if ((resourceRequestList == null) || (resourceRequestList.Count() == 0))
+            if (resourceRequests is null || !resourceRequests.Any())
             {
                 this.Status = ActivityStatus.Success;
                 return;
             }
 
-            foreach (ResourceRequest request in resourceRequestList)
+            foreach (ResourceRequest request in resourceRequests)
             {
                 request.ActivityID = uniqueActivityID;
                 request.Available = 0;
@@ -730,9 +730,8 @@ namespace Models.CLEM.Activities
             }
 
             // are all resources available
-            List<ResourceRequest> shortfallRequests = resourceRequestList.Where(a => a.Required > a.Available).ToList();
-            int countShortfallRequests = shortfallRequests.Count();
-            if (countShortfallRequests > 0)
+            IEnumerable<ResourceRequest> shortfallRequests = resourceRequests.Where(a => a.Required > a.Available);
+            if (shortfallRequests.Any())
             {
                 // check what transmutations can occur
                 Resources.TransmutateShortfall(shortfallRequests, true);
@@ -743,14 +742,14 @@ namespace Models.CLEM.Activities
             bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
 
             // OR at least one transmutation successful and PerformWithPartialResources
-            if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+            if ((shortfallRequests.Any() && (shortfallRequests.Count() == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
                 // this uses the current zone resources, but will find markets if needed in the process
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
-                foreach (ResourceRequest request in resourceRequestList)
+                foreach (ResourceRequest request in resourceRequests)
                 {
                     // get resource
                     request.Available = 0;
@@ -764,7 +763,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
+            foreach (var item in resourceRequests.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 

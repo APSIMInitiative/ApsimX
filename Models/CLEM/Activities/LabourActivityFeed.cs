@@ -127,12 +127,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = labour?.Items.Where(a => a.Hired != true).ToList();
+            IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
             foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = group.Filter(child);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }

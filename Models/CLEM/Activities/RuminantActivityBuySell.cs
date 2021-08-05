@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
             // only perform this activity if timing ok, or selling required as a result of forces destock
             List<Ruminant> herd = new List<Ruminant>();
-            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
+            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Any())
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // get current untrucked list of animals flagged for sale

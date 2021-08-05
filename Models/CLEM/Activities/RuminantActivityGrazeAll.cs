@@ -155,8 +155,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "").ToList();
-
+            IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "");
             int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

@@ -86,7 +86,7 @@ namespace Models.CLEM.Activities
             // get amount of finance needed and provided
             double financeRequired = 0;
             double financeProvided = 0;
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)).ToList())
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)))
             {
                 financeRequired += item.Required;
                 financeProvided += item.Provided;
@@ -94,9 +94,7 @@ namespace Models.CLEM.Activities
             }
 
             if(financeRequired > 0)
-            {
                 Status = ActivityStatus.Success;
-            }
 
             // reduce limiters based on financial shortfall
             if (financeProvided < financeRequired)

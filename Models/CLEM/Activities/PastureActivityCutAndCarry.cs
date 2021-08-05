@@ -225,8 +225,8 @@ namespace Models.CLEM.Activities
         public override void AdjustResourcesNeededForActivity()
         {
             // labour limiter
-            var labourRequests = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).ToList();
-            if(labourRequests.Count>0)
+            var labourRequests = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour));
+            if(labourRequests.Any())
             {
                 double required = labourRequests.Sum(a => a.Required);
                 double provided = labourRequests.Sum(a => a.Provided);
@@ -257,92 +257,6 @@ namespace Models.CLEM.Activities
             };
 
             foodstore.Add(packet, this,"", TransactionCategory);
-        }
-
-        private void PutPastureInStore()
-        {
-            AmountHarvested = 0;
-            AmountAvailableForHarvest = 0;
-            IEnumerable<Ruminant> herd = null;
-
-            if (this.TimingOK)
-            {
-                // determine amount to be cut and carried
-                if (CutStyle != RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                {
-                    herd = CurrentHerd(false);
-                }
-                switch (CutStyle)
-                {
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        AmountHarvested += Supply * 30.4;
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * ind.Weight * 30.4;
-                        }
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * ind.PotentialIntake;
-                        }
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * (ind.PotentialIntake - ind.Intake);
-                        }
-                        break;
-                    default:
-                        throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, this.Name));
-                }
-
-                AmountAvailableForHarvest = AmountHarvested;
-                // reduce amount by limiter if present.
-                if (limiter != null)
-                {
-                    double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
-                    AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
-                    limiter.AddWeightCarried(AmountHarvested);
-                }
-
-                double labourlimiter = 1.0;
-
-
-                AmountHarvested *= labourlimiter;
-
-                if (AmountHarvested > 0)
-                {
-                    FoodResourcePacket packet = new FoodResourcePacket()
-                    {
-                        Amount = AmountHarvested,
-                        PercentN = pasture.Nitrogen,
-                        DMD = pasture.EstimateDMD(pasture.Nitrogen)
-                    };
-
-                    // take resource
-                    ResourceRequest request = new ResourceRequest()
-                    {
-                        ActivityModel = this,
-                        AdditionalDetails = this,
-                        Category = TransactionCategory,
-                        Required = AmountHarvested,
-                        Resource = pasture
-                    };
-                    pasture.Remove(request);
-
-                    foodstore.Add(packet, this, "", TransactionCategory);
-                }
-                SetStatusSuccess();
-            }
-            // report activity performed.
-            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-            {
-                Activity = this
-            };
-            this.OnActivityPerformed(activitye);
         }
 
         /// <summary>

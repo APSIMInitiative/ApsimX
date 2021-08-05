@@ -119,9 +119,7 @@ namespace Models.CLEM.Activities
                                 RuminantFemale female = ind as RuminantFemale;
                                 // check if mother with sucklings
                                 foreach (var suckling in female.SucklingOffspringList)
-                                {
                                     suckling.Location = pastureName;
-                                }
                             }
                         }
                     }

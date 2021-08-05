@@ -301,7 +301,7 @@ namespace Models.CLEM.Activities
 
             // grow individuals
 
-            List<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct().ToList();
+            IEnumerable<string> breeds = herd.Select(a => a.BreedParams.Name).Distinct();
             this.Status = ActivityStatus.NotNeeded;
 
             foreach (string breed in breeds)
@@ -694,12 +694,12 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0).ToList();
-            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            IEnumerable<RuminantFemale> mothersWithCalf = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0);
+            List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
-            if (wetMothersAvailable.Count() > 0)
+            if (wetMothersAvailable.Any())
             {
-                if(mothersWithCalf.Count() > 0)
+                if(mothersWithCalf.Any())
                 {
                     foreach (var deadMother in mothersWithCalf)
                     {

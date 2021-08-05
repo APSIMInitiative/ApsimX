@@ -435,12 +435,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Performs the transmutation of resources into a required resource
         /// </summary>
-        public void TransmutateShortfall(List<ResourceRequest> requests, bool queryOnly)
+        public void TransmutateShortfall(IEnumerable<ResourceRequest> requests, bool queryOnly)
         {
-            List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required > a.Available).ToList();
-
             // Search through all limited resources and determine if transmutation available
-            foreach (ResourceRequest request in shortfallRequests)
+            foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
                 // Check if transmutation would be successful 
                 if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))

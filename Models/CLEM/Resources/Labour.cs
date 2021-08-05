@@ -156,7 +156,7 @@ namespace Models.CLEM.Resources
             adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
 
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().ToList())
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
             {
                 IndividualAttribute att = new IndividualAttribute() { storedValue = labourChildModel.Name };
                 if (UseCohorts)
@@ -270,9 +270,9 @@ namespace Models.CLEM.Resources
             // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                foreach (Model availItem in availabilityList.Children.Where(a => typeof(LabourSpecificationItem).IsAssignableFrom(a.GetType())).ToList())
+                foreach (Model availItem in availabilityList.FindAllChildren<LabourSpecificationItem>())
                 {
-                    if (checkList.Filter(availItem).Count() > 0)
+                    if (checkList.Filter(availItem).Any())
                     {
                         labour.LabourAvailability = availItem as LabourSpecificationItem;
                         break;
@@ -509,7 +509,7 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
                 htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
                 htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-                foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>())
                 {
                     htmlWriter.Write("<tr>");
                     htmlWriter.Write("<td>" + labourType.Name + "</td>");
