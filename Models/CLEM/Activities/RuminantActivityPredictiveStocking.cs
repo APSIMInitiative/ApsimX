@@ -232,27 +232,25 @@ namespace Models.CLEM.Activities
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item)
-                    .ToList();
+                    .FilterRuminants(item);
 
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsforSale > 0)
+                foreach (Ruminant ruminant in herd)
                 {
-                    this.Status = ActivityStatus.Success;
-                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsforSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsforSale <= 0)
-                {
-                    AeDestocked = 0;
-                    this.Status = ActivityStatus.Success;
-                    return;
+
+                    if (animalEquivalentsforSale <= 0)
+                    {
+                        AeDestocked = 0;
+                        this.Status = ActivityStatus.Success;
+                        return;
+                    }
                 }
             }
+
             AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
             
