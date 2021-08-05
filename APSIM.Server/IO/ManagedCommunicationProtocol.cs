@@ -99,13 +99,18 @@ namespace APSIM.Server.IO
             {
                 if (command is ReadCommand reader)
                 {
-                    foreach (string param in reader.Parameters)
-                    {
-                        if (reader.Result.Columns[param] == null)
-                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
-                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
-                        PipeUtilities.SendObjectToPipe(stream, data);
-                    }
+                    PipeUtilities.SendObjectToPipe(stream, reader.Result);
+                    // foreach (string param in reader.Parameters)
+                    // {
+                    //     if (reader.Result.Columns[param] == null)
+                    //     {
+                    //         IEnumerable<string> columns = reader.Result.Columns.Cast<DataColumn>().Select(c => c.ColumnName);
+                    //         string columnNames = string.Join(", ", columns);
+                    //         throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName} (table only has {reader.Result.Columns.Count} columns ({columnNames}) with {reader.Result.Rows.Count} rows)");
+                    //     }
+                    //     Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                    //     PipeUtilities.SendObjectToPipe(stream, data);
+                    // }
                 }
                 else
                     PipeUtilities.SendObjectToPipe(stream, fin);
