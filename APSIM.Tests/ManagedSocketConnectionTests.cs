@@ -15,6 +15,15 @@ using System.Data;
 
 namespace APSIM.Tests
 {
+    /// <summary>
+    /// Unit tests for managed comms protocol.
+    /// </summary>
+    /// <remarks>
+    /// This is currently quick n dirty to verify that things basically work.
+    /// todo:
+    /// - mock out socket layer
+    /// - 
+    /// </remarks>
     [TestFixture]
     public class ManagedSocketConnectionTests
     {
@@ -165,6 +174,11 @@ namespace APSIM.Tests
                 object resp = PipeUtilities.GetObjectFromPipe(client);
                 PipeUtilities.SendObjectToPipe(client, "ACK_MANAGED");
                 Assert.AreEqual(target, resp);
+
+                if (target is RunCommand)
+                    PipeUtilities.SendObjectToPipe(client, "FIN_MANAGED");
+                if (target is ReadCommand readCommand)
+                    PipeUtilities.SendObjectToPipe(client, new DataTable(readCommand.TableName));
             }
 
             server.Wait();

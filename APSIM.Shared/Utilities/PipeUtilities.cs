@@ -4,6 +4,7 @@
     using System.IO;
     using System.IO.Pipes;
     using System.Runtime.Serialization;
+    using System.Security.Cryptography;
     using System.Text;
 
     /// <summary>
@@ -35,6 +36,29 @@
         //     return null;
         // }
 
+        private static MemoryStream SerialiseTo(object obj)
+        {
+            // Serialise the object, then encode the result in base64.
+            // This ensures that we can send the result over a network connection.
+            MemoryStream result = new MemoryStream();
+            using (Stream cryptoStream = new CryptoStream(result, new ToBase64Transform(), CryptoStreamMode.Write, leaveOpen: true))
+            {
+                using (Stream serialised = ReflectionUtilities.BinarySerialise(obj))
+                {
+                    serialised.Seek(0, SeekOrigin.Begin);
+                    serialised.CopyTo(cryptoStream);
+                }
+            }
+            return result;
+        }
+
+        private static object DeserialiseFrom(Stream stream)
+        {
+            // Decode from base64, then deserialise the result.
+            using (Stream cryptoStream = new CryptoStream(stream, new FromBase64Transform(), CryptoStreamMode.Read, leaveOpen: true))
+                return ReflectionUtilities.BinaryDeserialise(cryptoStream);
+        }
+
         /// <summary>
         /// Send an object to the specified anonymous out pipe.
         /// </summary>
@@ -43,34 +67,17 @@
         public static void SendObjectToPipe(Stream pipeWriter, object obj)
         {
             Console.WriteLine($"SEND {obj}");
-            var objStream = ReflectionUtilities.BinarySerialise(obj) as MemoryStream;
+            using (MemoryStream stream = SerialiseTo(obj))
+            {
+                // Write the number of bytes
+                var numBytes = Convert.ToInt32(stream.Length);
+                var intBuffer = BitConverter.GetBytes(numBytes);
+                pipeWriter.Write(intBuffer, 0, 4);
 
-            // Write the number of bytes
-            var numBytes = Convert.ToInt32(objStream.Length);
-            var intBuffer = BitConverter.GetBytes(numBytes);
-            pipeWriter.Write(intBuffer, 0, 4);
-
-            // Write the objStream.
-            pipeWriter.Write(objStream.ToArray(), 0, numBytes);
+                // Write the objStream.
+                pipeWriter.Write(stream.ToArray(), 0, numBytes);
+            }
         }
-
-        // /// <summary>
-        // /// Send an object to the specified anonymous out pipe.
-        // /// </summary>
-        // /// <param name="pipeWriter">The pipe to write to.</param>
-        // /// <param name="obj">The object to send.</param>
-        // public static void SendObjectToPipe(NamedPipeClientStream pipeWriter, object obj)
-        // {
-        //     var objStream = ReflectionUtilities.BinarySerialise(obj) as MemoryStream;
-
-        //     // Write the number of bytes
-        //     var numBytes = Convert.ToInt32(objStream.Length);
-        //     var intBuffer = BitConverter.GetBytes(numBytes);
-        //     pipeWriter.Write(intBuffer, 0, 4);
-
-        //     // Write the objStream.
-        //     pipeWriter.Write(objStream.ToArray(), 0, numBytes);
-        // }
 
         /// <summary>
         /// Get an object from the specified anonymous in pipe.
@@ -91,9 +98,12 @@
                 pipeReader.Read(buffer, 0, numBytes);
 
                 // Convert bytes to object.
-                object result = ReflectionUtilities.BinaryDeserialise(new MemoryStream(buffer));
-                Console.WriteLine($"RECV {result}");
-                return result;
+                using (MemoryStream stream = new MemoryStream(buffer))
+                {
+                    object result = DeserialiseFrom(stream);
+                    Console.WriteLine($"RECV {result}");
+                    return result;
+                }
             }
             return null;
         }
