@@ -104,6 +104,7 @@ namespace Models.CLEM.Groupings
         public double CurrentPrice { get { return Value; } }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public double PreviousPrice { get; set; }
 
 

@@ -74,31 +74,37 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The proportion of required graze that is available determined from parent activity arbitration
         /// </summary>
+        [JsonIgnore]
         public double GrazingCompetitionLimiter { get; set; }
 
         /// <summary>
         /// The biomass of pasture per hectare at start of allocation
         /// </summary>
+        [JsonIgnore]
         public double BiomassPerHectare { get; set; }
 
         /// <summary>
         /// Potential intake limiter based on pasture quality
         /// </summary>
+        [JsonIgnore]
         public double PotentialIntakePastureQualityLimiter { get; set; }
 
         /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double N { get; set; }
 
         /// <summary>
         /// Proportion of intake that can be taken from each pool
         /// </summary>
+        [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
         /// <summary>

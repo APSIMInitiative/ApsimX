@@ -286,6 +286,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount of last gain transaction
         /// </summary>
+        [JsonIgnore]
         public double LastGain { get; set; }
 
         /// <summary>

@@ -180,7 +180,17 @@
 
             // For each table in the database, read in field names.
             foreach (var tableName in Connection.GetTableAndViewNames())
-                tables.Add(tableName, Connection.GetTableColumns(tableName));
+            {
+//                tables.Add(tableName, Connection.GetTableColumns(tableName));
+                try
+                {
+                    tables.Add(tableName, Connection.GetTableColumns(tableName));
+                }
+                catch
+                {
+                    // ignore error or report to summary if available
+                }
+            }
 
             // Get the units table.
             units = GetData("_Units");
