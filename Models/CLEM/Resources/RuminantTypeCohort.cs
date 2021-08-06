@@ -31,9 +31,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Gender
         /// </summary>
@@ -131,7 +128,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
 
                 for (int i = 1; i <= number; i++)
                 {

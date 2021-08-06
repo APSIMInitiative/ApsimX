@@ -24,10 +24,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Finances/CalculateInterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
     {
-        /// <summary>
-        /// test for whether finances are included.
-        /// </summary>
-        private bool financesExist = false;
+        private Finance finance;
 
         /// <summary>
         /// Constructor
@@ -43,7 +40,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            financesExist = ((Resources.FinanceResource() != null));
+            finance = Resources.FindResourceGroup<Finance>();
         }
 
         /// <inheritdoc/>
@@ -86,10 +83,10 @@ namespace Models.CLEM.Activities
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
-            if (financesExist)
+            if (finance != null)
             {
                 // make interest payments on bank accounts
-                foreach (FinanceType accnt in Resources.FinanceResource().FindAllChildren<FinanceType>())
+                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                 {
                     if (accnt.Balance > 0)
                     {
@@ -165,7 +162,11 @@ namespace Models.CLEM.Activities
                 if (clemParent != null)
                 {
                     resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
-                    finance = resHolder.FinanceResource();
+                    finance = resHolder.FindResourceGroup<Finance>();
+                    if (!finance.Enabled)
+                    {
+                        finance = null;
+                    }
                 }
 
                 if (finance == null)
@@ -175,7 +176,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
+                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
                     {
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                         {

@@ -44,7 +44,6 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool OverwriteFlag { get; set; }
 
-        private int filterGroupsCount = 0;
         private int numberToTag = 0;
         private bool labourShortfall = false;
         private HerdChangeReason changeReason;
@@ -77,14 +76,14 @@ namespace Models.CLEM.Activities
 
         private int NumberToTag()
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
 
-            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
+            var filterGroups = FindAllChildren<RuminantGroup>();
             int number = 0;
-            if (filterGroupsCount > 0)
+            if (filterGroups.Any())
             {
                 number = 0;
-                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                foreach (RuminantGroup item in filterGroups)
                 {
                     number += herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
                 }
@@ -101,7 +100,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             labourRequirement = requirement;
-            //double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded;
             switch (requirement.UnitType)
             {
@@ -157,10 +155,12 @@ namespace Models.CLEM.Activities
                     numberToTag = updatedNumberToTag;
                 }
 
-                List<Ruminant> herd = CurrentHerd(false);
+                IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
                 {
-                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                    var filterGroups = FindAllChildren<RuminantGroup>();
+
+                    foreach (RuminantGroup item in filterGroups)
                     {
                         foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
@@ -169,7 +169,7 @@ namespace Models.CLEM.Activities
                             numberToTag--;
                         }
                     }
-                    if(filterGroupsCount == 0)
+                    if(!filterGroups.Any())
                     {
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {

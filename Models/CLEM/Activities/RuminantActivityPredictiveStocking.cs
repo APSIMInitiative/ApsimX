@@ -142,9 +142,8 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
+                foreach (var paddockGroup in HerdResource.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
                 {
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
@@ -225,8 +224,7 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
             foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
@@ -234,27 +232,25 @@ namespace Models.CLEM.Activities
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item)
-                    .ToList();
+                    .FilterRuminants(item);
 
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsforSale > 0)
+                foreach (Ruminant ruminant in herd)
                 {
-                    this.Status = ActivityStatus.Success;
-                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsforSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsforSale <= 0)
-                {
-                    AeDestocked = 0;
-                    this.Status = ActivityStatus.Success;
-                    return;
+
+                    if (animalEquivalentsforSale <= 0)
+                    {
+                        AeDestocked = 0;
+                        this.Status = ActivityStatus.Success;
+                        return;
+                    }
                 }
             }
+
             AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
             

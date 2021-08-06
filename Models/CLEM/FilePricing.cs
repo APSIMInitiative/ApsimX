@@ -118,7 +118,7 @@ namespace Models.CLEM
                 {
                     filename = "Not set";
                 }
-                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", filename, this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
 
@@ -275,14 +275,14 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, DateColumnName) == -1)
                     {
                         if (this.reader == null || this.reader.Constant(DateColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
                 }

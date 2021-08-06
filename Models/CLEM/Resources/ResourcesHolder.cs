@@ -32,26 +32,14 @@ namespace Models.CLEM.Resources
         /// List of the all the Resource Groups.
         /// </summary>
         [JsonIgnore]
-        private List<IModel> ResourceGroupList;
+        private IEnumerable<IModel> ResourceGroupList;
 
         private void InitialiseResourceGroupList()
         {
             if(ResourceGroupList == null)
             {
-                ResourceGroupList = this.FindAllChildren<IModel>().Where(a => a.Enabled).ToList();
+                ResourceGroupList = this.FindAllChildren<IModel>().Where(a => a.Enabled);
             }
-        }
-
-        private IModel GetGroupByName(string name)
-        {
-            InitialiseResourceGroupList();
-            return ResourceGroupList.Find(x => x.Name == name);
-        }
-
-        private IModel GetGroupByType(Type type)
-        {
-            InitialiseResourceGroupList();
-            return ResourceGroupList.Find(x => x.GetType() == type);
         }
 
         /// <summary>
@@ -70,14 +58,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
         /// </summary>
-        /// <param name="resourceGroupType"></param>
         /// <returns></returns>
-        public bool ResourceItemsExist(Type resourceGroupType)
+        public bool ResourceItemsExist<T>() 
         {
-            Model resourceGroup = this.FindAllChildren().Where(c => resourceGroupType.IsAssignableFrom(c.GetType())).FirstOrDefault() as Model;
-            if (resourceGroup != null && resourceGroup.Enabled)
+            var resourceGroup = this.FindAllChildren<T>().FirstOrDefault() as IModel;
+            if (resourceGroup != null)
             {
-                return resourceGroup.Children.Where(a => a.Enabled).Count() > 0;
+                return resourceGroup.Children.Where(a => a.GetType() != typeof(Memo)).Any();
             }
             return false;
         }
@@ -85,12 +72,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines whether resource group of the specified type exist 
         /// </summary>
-        /// <param name="resourceGroupType"></param>
         /// <returns></returns>
-        public bool ResourceGroupExist(Type resourceGroupType)
+        public bool ResourceGroupExists<T>()
         {
-            Model resourceGroup = this.FindAllChildren().Where(c => resourceGroupType.IsAssignableFrom(c.GetType())).FirstOrDefault() as Model;
-            return (resourceGroup != null && resourceGroup.Enabled);
+            return this.FindAllChildren<T>().Any();
+        }
+
+        /// <summary>
+        /// Returns resource group of the specified type if enabled 
+        /// </summary>
+        /// <returns></returns>
+        public T FindResourceGroup<T>()
+        {
+            return this.FindAllChildren<T>().FirstOrDefault(a => (a as IModel).Enabled);
         }
 
         /// <summary>
@@ -101,18 +95,18 @@ namespace Models.CLEM.Resources
         public object GetResourceGroupByName(string name)
         {
             InitialiseResourceGroupList();
-            return ResourceGroupList.Find(x => x.Name == name);
+            return ResourceGroupList.FirstOrDefault(x => x.Name == name); 
         }
 
         /// <summary>
         /// Get resource by type
         /// </summary>
-        /// <param name="resourceGroupType"></param>
+        /// <param name="resourceGroupType">Type of resource group</param>
         /// <returns></returns>
         public object GetResourceGroupByType(Type resourceGroupType)
         {
             InitialiseResourceGroupList();
-            return ResourceGroupList.Find(x => x.GetType() == resourceGroupType);
+            return ResourceGroupList.FirstOrDefault(a => a.GetType() == resourceGroupType);
         }
 
         /// <summary>
@@ -132,16 +126,15 @@ namespace Models.CLEM.Resources
                     throw new Exception(errorMsg);
                 }
 
-                IModel resourceGroup = this.GetGroupByType(request.ResourceType);
+                var resourceGroup = this.GetResourceGroupByType(request.ResourceType);
                 if(resourceGroup== null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources of type [r{0}] for [a={1}]", request.ResourceType, request.ActivityModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources of type [r{0}] for [a={1}]", request.ResourceType, request.ActivityModel.Name);
                     switch (missingResourceAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
                             throw new Exception(errorMsg);
                         case OnMissingResourceActionTypes.ReportWarning:
-                            errorMsg = errorMsg.Replace("@error:", "");
                             Summary.WriteWarning(request.ActivityModel, errorMsg);
                             break;
                         default:
@@ -212,7 +205,7 @@ namespace Models.CLEM.Resources
                 IModel resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
                     switch (missingResourceTypeAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -229,13 +222,12 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", resourceGroupType.ToString(), requestingModel.Name);
+                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", resourceGroupType.ToString(), requestingModel.Name);
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new Exception(errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        errorMsg = errorMsg.Replace("@error:", "");
                         Summary.WriteWarning(requestingModel, errorMsg);
                         break;
                     default:
@@ -264,17 +256,16 @@ namespace Models.CLEM.Resources
             string[] names = resourceGroupAndItem.Split('.');
             if(names.Count()!=2)
             {
-                string errorMsg = String.Format("@error:Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
+                string errorMsg = String.Format("Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
                 throw new Exception(errorMsg);
             }
 
-            Model resourceGroup = this.GetResourceGroupByName(names[0]) as Model;
-            if (resourceGroup != null)
+            if (this.GetResourceGroupByName(names[0]) is Model resourceGroup)
             {
                 IModel resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
                 if (resource == null)
                 {
-                    string errorMsg = String.Format("@error:Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
+                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
                     switch (missingResourceTypeAction)
                     {
                         case OnMissingResourceActionTypes.ReportErrorAndStop:
@@ -291,13 +282,12 @@ namespace Models.CLEM.Resources
             }
             else
             {
-                string errorMsg = String.Format("@error:Unable to locate resources of type [r={0}] for [a={1}]", names[0], requestingModel.Name);
+                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", names[0], requestingModel.Name);
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new Exception(errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        errorMsg = errorMsg.Replace("@error:", "");
                         Summary.WriteWarning(requestingModel, errorMsg);
                         break;
                     default:
@@ -350,7 +340,6 @@ namespace Models.CLEM.Resources
                 if (resType is null)
                 {
                     // add warning the market does not have the resource
-                    string zoneName = FindAncestor<Zone>().Name;
                     string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
                     if (!Warnings.Exists(warn) & Summary != null)
                     {
@@ -402,96 +391,6 @@ namespace Models.CLEM.Resources
             return resourseTypes.ToArray();
         }
 
-        /// <summary>
-        /// Get the Resource Group for Products
-        /// </summary>
-        /// <returns></returns>
-        public ProductStore Products()
-        {
-            return GetGroupByType(typeof(ProductStore)) as ProductStore;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for Animal Feed
-        /// </summary>
-        /// <returns></returns>
-        public AnimalFoodStore AnimalFoodStore()
-        {
-            return GetGroupByType(typeof(AnimalFoodStore)) as AnimalFoodStore;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for OtherAnimals
-        /// </summary>
-        /// <returns></returns>
-        public OtherAnimals OtherAnimalsStore()
-        {
-            return GetGroupByType(typeof(OtherAnimals)) as OtherAnimals;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for FoodStore
-        /// </summary>
-        /// <returns></returns>
-        public HumanFoodStore HumanFoodStore()
-        {
-            return GetGroupByType(typeof(HumanFoodStore)) as HumanFoodStore;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for GreenhouseGases
-        /// </summary>
-        /// <returns></returns>
-        public GreenhouseGases GreenhouseGases()
-        {
-            return GetGroupByType(typeof(GreenhouseGases)) as GreenhouseGases;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for Labour Family
-        /// </summary>
-        /// <returns></returns>
-        public Labour Labour()
-        {
-            return GetGroupByType(typeof(Labour)) as Labour;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for Land
-        /// </summary>
-        /// <returns></returns>
-        public Land Land()
-        {
-            return GetGroupByType(typeof(Land)) as Land;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for the GrazeFoodStore
-        /// </summary>
-        /// <returns></returns>
-        public GrazeFoodStore GrazeFoodStore()
-        {
-            return GetGroupByType(typeof(GrazeFoodStore)) as GrazeFoodStore;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for Ruminant Herd
-        /// </summary>
-        /// <returns></returns>
-        public RuminantHerd RuminantHerd()
-        {
-            return GetGroupByType(typeof(RuminantHerd)) as RuminantHerd;
-        }
-
-        /// <summary>
-        /// Get the Resource Group for Finances
-        /// </summary>
-        /// <returns></returns>
-        public Finance FinanceResource()
-        {
-            return GetGroupByType(typeof(Finance)) as Finance;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -502,7 +401,7 @@ namespace Models.CLEM.Resources
             if(!(this.Parent is Market))
             {
                 IModel parentSim = FindAncestor<Simulation>();
-                FoundMarket = parentSim.FindAllChildren<Market>().Where(a => a.Enabled).FirstOrDefault();
+                FoundMarket = parentSim.FindAllChildren<Market>().FirstOrDefault();
             }
             else
             {
@@ -533,12 +432,10 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Performs the transmutation of resources into a required resource
         /// </summary>
-        public void TransmutateShortfall(List<ResourceRequest> requests, bool queryOnly)
+        public void TransmutateShortfall(IEnumerable<ResourceRequest> requests, bool queryOnly)
         {
-            List<ResourceRequest> shortfallRequests = requests.Where(a => a.Required > a.Available).ToList();
-
             // Search through all limited resources and determine if transmutation available
-            foreach (ResourceRequest request in shortfallRequests)
+            foreach (ResourceRequest request in requests.Where(a => a.Required > a.Available))
             {
                 // Check if transmutation would be successful 
                 if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
@@ -560,7 +457,7 @@ namespace Models.CLEM.Resources
                         {
                             double unitsNeeded = 0;
                             // check if resources available for activity and transmutation
-                            foreach (ITransmutationCost transcost in trans.FindAllChildren<IModel>().Where(a => a is ITransmutationCost).Cast<ITransmutationCost>())
+                            foreach (ITransmutationCost transcost in trans.FindAllChildren<ITransmutationCost>())
                             {
                                 double unitsize = trans.AmountPerUnitPurchase;
                                 if (transcost is TransmutationCostUsePricing)
@@ -630,7 +527,6 @@ namespace Models.CLEM.Resources
                                             break;
                                         }
                                     }
-
                                 } 
                                 else
                                 {
@@ -644,9 +540,7 @@ namespace Models.CLEM.Resources
                             }
                         }
                     }
-
                 }
-
             }
         }
 

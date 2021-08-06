@@ -54,6 +54,22 @@ namespace Models.CLEM.Activities
         public ActivityStatus Status { get; set; }
 
         private bool enabled = true;
+
+        private IEnumerable<CLEMActivityBase> activityChildren = null;
+
+        /// <summary>
+        /// A list of activity base chldren for this activity
+        /// </summary>
+        public IEnumerable<CLEMActivityBase> ActivityChildren
+        {
+            get
+            {
+                if (activityChildren is null)
+                    activityChildren = FindAllChildren<CLEMActivityBase>();
+                return activityChildren;
+            }
+        }
+
         /// <summary>
         /// Current status of this activity
         /// </summary>
@@ -68,7 +84,7 @@ namespace Models.CLEM.Activities
             {
                 if(value!=enabled)
                 {
-                    foreach (var child in this.Children.OfType<CLEMActivityBase>())
+                    foreach (var child in this.FindAllChildren<CLEMActivityBase>())
                     {
                         child.ActivityEnabled = value;
                     }
@@ -86,17 +102,12 @@ namespace Models.CLEM.Activities
             get
             {
                 if(parentZone is null)
-                {
                     parentZone = FindAncestor<ZoneCLEM>();
-                }
+
                 if(parentZone is null)
-                {
                     return 1;
-                }
                 else
-                {
                     return parentZone.FarmMultiplier;
-                }
             }
         }
 
@@ -116,16 +127,15 @@ namespace Models.CLEM.Activities
             {
                 // use timing to not perform activity based on Enabled state
                 if (!ActivityEnabled)
-                {
                     return false;
-                }
 
                 // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
                 int result = 0;
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM) & current.GetType() != typeof(Market))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                    if(current is CLEMModel)
+                        result += (current as CLEMModel).ActivityTimers.Sum(a => a.ActivityDue ? 0 : 1);
                     current = current.Parent as IModel;
                 }
                 return (result == 0);
@@ -140,16 +150,15 @@ namespace Models.CLEM.Activities
         {
             // use timing to not perform activity based on Enabled state
             if (!ActivityEnabled)
-            {
                 return false;
-            }
 
             // sum all where true=0 and false=1 so that all must be zero to get a sum total of zero or there are no timers
             int result = 0;
             IModel current = this as IModel;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Sum(a => a.Check(date) ? 0 : 1);
+                if (current is CLEMModel)
+                    result += (current as CLEMModel).ActivityTimers.Sum(a => a.Check(date) ? 0 : 1);
                 current = current.Parent as IModel;
             }
             return (result == 0);
@@ -168,7 +177,8 @@ namespace Models.CLEM.Activities
                 IModel current = this as IModel;
                 while (current.GetType() != typeof(ZoneCLEM))
                 {
-                    result += current.Children.Where(a => a is IActivityTimer).Where(a => a.Enabled).Cast<IActivityTimer>().Count();
+                    if (current is CLEMModel)
+                        result += (current as CLEMModel).ActivityTimers.Count();
                     current = current.Parent as IModel;
                 }
                 return (result != 0);
@@ -181,9 +191,7 @@ namespace Models.CLEM.Activities
         public void SetStatusSuccess()
         {
             if(Status== ActivityStatus.NotNeeded)
-            {
                 Status = ActivityStatus.Success;
-            }
         }
 
         /// <summary>
@@ -198,9 +206,7 @@ namespace Models.CLEM.Activities
             if (simulation != null)
             {
                 foreach (Type type in typesToFind)
-                {
-                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name).ToList());
-                }
+                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name));
             }
             return results.AsEnumerable();
         }
@@ -228,7 +234,7 @@ namespace Models.CLEM.Activities
                 }
             }
             // clear status for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+            foreach (CLEMActivityBase activity in ActivityChildren)
             {
                 activity.Status = ActivityStatus.Ignored;
                 activity.ClearAllAllActivitiesPerformedStatus();
@@ -253,15 +259,11 @@ namespace Models.CLEM.Activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                {
                     activity.ReportAllAllActivitiesPerformed();
-                }
             }
             // call activity performed  for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-            {
+            foreach (CLEMActivityBase activity in ActivityChildren)
                 activity.ReportAllAllActivitiesPerformed();
-            }
         }
 
         /// <summary>
@@ -287,17 +289,13 @@ namespace Models.CLEM.Activities
                 if (ActivityList != null)
                 {
                     foreach (CLEMActivityBase activity in ActivityList)
-                    {
                         activity.GetResourcesForAllActivityInitialisation();
-                    }
                 }
                 // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
+                foreach (CLEMActivityBase activity in ActivityChildren)
                 {
                     if (activity.Enabled)
-                    {
                         activity.GetResourcesForAllActivityInitialisation();
-                    }
                 }
             }
         }
@@ -311,24 +309,18 @@ namespace Models.CLEM.Activities
             if (this.Enabled)
             {
                 if (TimingOK)
-                {
                     ResourcesForAllActivities(model);
-                }
                 else
                 {
                     this.Status = ActivityStatus.Ignored;
                     if (ActivityList != null)
                     {
                         foreach (CLEMActivityBase activity in ActivityList)
-                        {
                             activity.Status = ActivityStatus.Ignored;
-                        }
                     }
                     // get resources required for all children of type CLEMActivityBase
-                    foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-                    {
+                    foreach (CLEMActivityBase activity in ActivityChildren)
                         activity.Status = ActivityStatus.Ignored;
-                    }
                 }
             }
         }
@@ -352,15 +344,11 @@ namespace Models.CLEM.Activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                {
                     activity.GetResourcesForAllActivities(model);
-                }
             }
             // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in this.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))).ToList())
-            {
+            foreach (CLEMActivityBase activity in ActivityChildren)
                 activity.GetResourcesForAllActivities(model);
-            }
         }
 
         /// <summary>
@@ -409,9 +397,7 @@ namespace Models.CLEM.Activities
                 // add any non-labour resources needed (from method in Activity code)
                 var requests = GetResourcesNeededForActivity();
                 if (requests != null)
-                {
                     ResourceRequestList.AddRange(requests);
-                }
 
                 // check availability
                 CheckResources(ResourceRequestList, Guid.NewGuid());
@@ -425,9 +411,7 @@ namespace Models.CLEM.Activities
                 // if no resources required perform Activity if code is present.
                 // if resources are returned (all available or UseResourcesAvailable action) perform Activity
                 if (tookRequestedResources || (ResourceRequestList.Count == 0))
-                {
                     DoActivity();
-                }
             }
         }
 
@@ -438,18 +422,18 @@ namespace Models.CLEM.Activities
         protected List<ResourceRequest> GetLabourResourcesNeededForActivity()
         {
             List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
-            foreach (LabourRequirement item in Children.Where(a => a.GetType() == typeof(LabourRequirement) | a.GetType().IsSubclassOf(typeof(LabourRequirement))))
+            foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
             {
                 GetDaysLabourRequiredReturnArgs daysResult = GetDaysLabourRequired(item);
                 if (daysResult.DaysNeeded > 0)
                 {
-                    foreach (LabourFilterGroup fg in item.Children.OfType<LabourFilterGroup>())
+                    foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
                     {
                         int numberOfPpl = 1;
                         if (item.ApplyToAll)
                         {
                             // how many matches
-                            numberOfPpl = (Resources.GetResourceGroupByType(typeof(Labour)) as Labour).Items.Filter(fg).Count();
+                            numberOfPpl = Resources.FindResourceGroup<Labour>().Items.Filter(fg).Count();
                         }
                         for (int i = 0; i < numberOfPpl; i++)
                         {
@@ -483,18 +467,14 @@ namespace Models.CLEM.Activities
             {
                 double proportion = 1.0;
                 if (ResourceRequestList == null)
-                {
                     return proportion;
-                }
 
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
-                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).ToList())
+                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
                 {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
-                    {
                         proportion *= item.Provided / item.Required;
-                    }
                 }
                 return proportion;
             }
@@ -509,25 +489,19 @@ namespace Models.CLEM.Activities
         {
             double proportion = 1.0;
             if (ResourceRequestList == null)
-            {
                 return proportion;
-            }
 
             double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType).ToList())
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
             {
                 if (resourceType == typeof(LabourType))
                 {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
-                    {
                         proportion *= item.Provided / item.Required;
-                    }
                 }
                 else // all other types
-                {
                     proportion *= item.Provided / item.Required;
-                }
             }
             return proportion;
         }
@@ -540,12 +514,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                foreach (LabourRequirement item in Children.Where(a => a.GetType().IsSubclassOf(typeof(LabourRequirement))))
+                foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
                 {
                     if (item.LabourShortfallAffectsActivity)
-                    {
                         return true;
-                    }
                 }
                 return false;
             }
@@ -564,15 +536,13 @@ namespace Models.CLEM.Activities
         {
             double amountProvided = 0;
             double amountNeeded = request.Required;
-            LabourFilterGroup current = request.FilterDetails.OfType<LabourFilterGroup>().FirstOrDefault() as LabourFilterGroup;
+            LabourFilterGroup current = request.FilterDetails.OfType<LabourFilterGroup>().FirstOrDefault();
 
             LabourRequirement lr;
             if (current!=null)
             {
                 if (current.Parent is LabourRequirement)
-                {
                     lr = current.Parent as LabourRequirement;
-                }
                 else
                 {
                     // coming from Transmutation request
@@ -585,9 +555,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
-                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
-            }
+                lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault();
 
             int currentIndex = 0;
             if (current==null)
@@ -659,9 +627,7 @@ namespace Models.CLEM.Activities
                         foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson))) 
                         {
                             if (amountProvided >= amountNeeded)
-                            {
                                 break;
-                            }
 
                             double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
 
@@ -676,9 +642,7 @@ namespace Models.CLEM.Activities
                                 if (removeFromResource)
                                 {
                                     if(item.LastActivityRequestID != request.ActivityID)
-                                    {
                                         item.LastActivityRequestAmount = 0;
-                                    }
                                     item.LastActivityRequestID = request.ActivityID;
                                     item.LastActivityRequestAmount += amount;
                                     item.Remove(removeRequest);
@@ -687,21 +651,16 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
-                            {
                                 currentIndex = request.FilterDetails.Count;
-                            }
                         }
                     }
                 }
                 currentIndex++;
-                if(current.Children.OfType<LabourFilterGroup>().Count() > 0)
-                {
-                    current = current.Children.OfType<LabourFilterGroup>().FirstOrDefault();
-                }
+                var currentFilterGroups = current.FindAllChildren<LabourFilterGroup>();
+                if (currentFilterGroups.Any())
+                    current = currentFilterGroups.FirstOrDefault();
                 else
-                {
                     current = null;
-                }
             }
             // report amount gained.
             return amountProvided;
@@ -728,9 +687,7 @@ namespace Models.CLEM.Activities
             }
 
             if(removeFromResource && request.Resource != null)
-            {
                 request.Resource.Remove(request);
-            }
 
             return request.Available;
         }
@@ -738,17 +695,17 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Determine resources available and perform transmutation if needed.
         /// </summary>
-        /// <param name="resourceRequestList">List of requests</param>
+        /// <param name="resourceRequests">List of requests</param>
         /// <param name="uniqueActivityID">Unique id for the activity</param>
-        public void CheckResources(List<ResourceRequest> resourceRequestList, Guid uniqueActivityID)
+        public void CheckResources(IEnumerable<ResourceRequest> resourceRequests, Guid uniqueActivityID)
         {
-            if ((resourceRequestList == null) || (resourceRequestList.Count() == 0))
+            if (resourceRequests is null || !resourceRequests.Any())
             {
                 this.Status = ActivityStatus.Success;
                 return;
             }
 
-            foreach (ResourceRequest request in resourceRequestList)
+            foreach (ResourceRequest request in resourceRequests)
             {
                 request.ActivityID = uniqueActivityID;
                 request.Available = 0;
@@ -768,16 +725,13 @@ namespace Models.CLEM.Activities
                         request.Available = TakeLabour(request, false, this, Resources, this.OnPartialResourcesAvailableAction);
                     }
                     else
-                    {
                         request.Available = TakeNonLabour(request, false);
-                    }
                 }
             }
 
             // are all resources available
-            List<ResourceRequest> shortfallRequests = resourceRequestList.Where(a => a.Required > a.Available).ToList();
-            int countShortfallRequests = shortfallRequests.Count();
-            if (countShortfallRequests > 0)
+            IEnumerable<ResourceRequest> shortfallRequests = resourceRequests.Where(a => a.Required > a.Available);
+            if (shortfallRequests.Any())
             {
                 // check what transmutations can occur
                 Resources.TransmutateShortfall(shortfallRequests, true);
@@ -788,14 +742,14 @@ namespace Models.CLEM.Activities
             bool allTransmutationsSuccessful = (shortfallRequests.Where(a => a.TransmutationPossible == false && a.AllowTransmutation).Count() == 0);
 
             // OR at least one transmutation successful and PerformWithPartialResources
-            if (((countShortfallRequests > 0) && (countShortfallRequests == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
+            if ((shortfallRequests.Any() && (shortfallRequests.Count() == countTransmutationsSuccessful)) || (countTransmutationsSuccessful > 0 && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
             {
                 // do transmutations.
                 // this uses the current zone resources, but will find markets if needed in the process
                 Resources.TransmutateShortfall(shortfallRequests, false);
 
                 // recheck resource amounts now that resources have been topped up
-                foreach (ResourceRequest request in resourceRequestList)
+                foreach (ResourceRequest request in resourceRequests)
                 {
                     // get resource
                     request.Available = 0;
@@ -809,7 +763,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
+            foreach (var item in resourceRequests.Where(a => a.Required > a.Available))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
@@ -817,21 +771,15 @@ namespace Models.CLEM.Activities
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)
-                    {
                         marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
-                    }
                 }
                 else
-                {
                     OnShortfallOccurred(rrEventArgs);
-                }
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }
             if(!deficitFound)
-            {
                 this.Status = ActivityStatus.Success;
-            }
         }
 
         /// <summary>
@@ -845,9 +793,7 @@ namespace Models.CLEM.Activities
         {
             // no resources required or this is an Activity folder.
             if ((resourceRequestList == null)||(resourceRequestList.Count() ==0))
-            {
                 return false;
-            }
 
             // remove activity resources 
             // check if deficit and performWithPartial
@@ -857,9 +803,8 @@ namespace Models.CLEM.Activities
                 {
                     string resourcelist = "";
                     foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
-                    {
                         resourcelist += item.ResourceType.Name + ",";
-                    }
+
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
@@ -877,21 +822,15 @@ namespace Models.CLEM.Activities
                     if (request.ResourceType != null && Resources.GetResourceGroupByType(request.ResourceType) != null)
                     { 
                         if (request.ResourceType == typeof(Labour))
-                        {
                             // get available labour based on rules.
                             request.Available = TakeLabour(request, true, this, Resources, this.OnPartialResourcesAvailableAction);
-                        }
                         else
-                        {
                             request.Available = TakeNonLabour(request, true);
-                        }
                     }
                 }
             }
             else
-            {
                 Status = ActivityStatus.Ignored;
-            }
             return Status != ActivityStatus.Ignored;
         }
 

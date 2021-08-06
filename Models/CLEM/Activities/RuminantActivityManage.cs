@@ -423,13 +423,12 @@ namespace Models.CLEM.Activities
 
             decimal breederHerdSize = 0;
 
-            RuminantHerd herd = Resources.RuminantHerd();
-            List<Ruminant> rumHerd = this.CurrentHerd(false);
-            if (rumHerd != null && rumHerd.Count() > 0)
+            IEnumerable<Ruminant> individuals = this.CurrentHerd(false);
+            if (individuals.Any())
             {
                 int numberAdded = 0;
-                RuminantType breedParams = rumHerd.FirstOrDefault().BreedParams;
-                RuminantInitialCohorts cohorts = rumHerd.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault();
+                RuminantType breedParams = individuals.FirstOrDefault().BreedParams;
+                RuminantInitialCohorts cohorts = individuals.FirstOrDefault().BreedParams.FindAllChildren<RuminantInitialCohorts>().FirstOrDefault();
                 List<ISetAttribute> initialCohortAttributes = cohorts.FindAllChildren<ISetAttribute>().ToList();
 
                 if (cohorts != null)
@@ -438,7 +437,7 @@ namespace Models.CLEM.Activities
                     {
                         // breeders
                         int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge)).ToList();
+                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
@@ -450,7 +449,7 @@ namespace Models.CLEM.Activities
                                 foreach (var newind in item.CreateIndividuals(numberToAdd, initialCohortAttributes))
                                 {
                                     newind.SaleFlag = HerdChangeReason.FillInitialHerd;
-                                    herd.AddRuminant(newind, this);
+                                    HerdResource.AddRuminant(newind, this);
                                     numberAdded++;
                                 }
                             }
@@ -465,11 +464,11 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
-                            List<Ruminant> breeders = rumHerd.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
+                            var breeders = individuals.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in breeders)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
-                                herd.RemoveRuminant(item, this);
+                                HerdResource.RemoveRuminant(item, this);
                                 reduceBy--;
                             }
 
@@ -485,7 +484,6 @@ namespace Models.CLEM.Activities
                             }
                             breederHerdSize = maxBreeders;
                         }
-
                     }
 
                     // max sires
@@ -525,7 +523,7 @@ namespace Models.CLEM.Activities
                                     foreach (var newind in item.CreateIndividuals(Convert.ToInt32(Math.Round(numberToAdd * (item.Number / numberPresent)), CultureInfo.InvariantCulture), initialCohortAttributes))
                                     {
                                         newind.SaleFlag = HerdChangeReason.FillInitialHerd;
-                                        herd.AddRuminant(newind, this);
+                                        HerdResource.AddRuminant(newind, this);
                                         numberAdded++;
                                     }
                                 }
@@ -537,11 +535,11 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, numberPresent - SiresKept);
                             // reduce initial sire herd size
                             // randomly select the individuals to remove form the breeder herd
-                            List<RuminantMale> sires = rumHerd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
+                            List<RuminantMale> sires = individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
                             foreach (var item in sires)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
-                                herd.RemoveRuminant(item, this);
+                                HerdResource.RemoveRuminant(item, this);
                                 reduceBy--;
                             }
 
@@ -654,11 +652,10 @@ namespace Models.CLEM.Activities
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
             this.Status = ActivityStatus.NoTask;
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // remove only the individuals that are affected by this activity.
             // these are old purchases that were not made. This list will be regenerated in this method.
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed);
 
             List<Ruminant> herd = this.CurrentHerd(true).Where(a => !a.Attributes.Exists("GrowOut")).ToList();
             List<Ruminant> growOutHerd = new List<Ruminant>();
@@ -863,7 +860,7 @@ namespace Models.CLEM.Activities
                                     ind.Attributes.Add("Sire");
                                 }
                                 // add to purchase request list and await purchase in Buy/Sell
-                                ruminantHerd.PurchaseIndividuals.Add(ind);
+                                HerdResource.PurchaseIndividuals.Add(ind);
                                 maleBreedersRequired--;
                             }
                         }
@@ -1064,7 +1061,7 @@ namespace Models.CLEM.Activities
                                     ind.Wean(false, "Initial");
 
                                     // add to purchase request list and await purchase in Buy/Sell
-                                    ruminantHerd.PurchaseIndividuals.Add(ind);
+                                    HerdResource.PurchaseIndividuals.Add(ind);
                                     femaleBreedersRequired--;
                                 }
                             }
