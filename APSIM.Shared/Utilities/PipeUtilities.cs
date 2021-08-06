@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.IO.Pipes;
+    using System.Linq;
     using System.Runtime.Serialization;
     using System.Security.Cryptography;
     using System.Text;
@@ -66,7 +67,6 @@
         /// <param name="obj">The object to send.</param>
         public static void SendObjectToPipe(Stream pipeWriter, object obj)
         {
-            Console.WriteLine($"SEND {obj}");
             using (MemoryStream stream = SerialiseTo(obj))
             {
                 // Write the number of bytes
@@ -75,7 +75,9 @@
                 pipeWriter.Write(intBuffer, 0, 4);
 
                 // Write the objStream.
-                pipeWriter.Write(stream.ToArray(), 0, numBytes);
+                byte[] buf = stream.ToArray();
+                Console.WriteLine($"SEND {string.Join("-", buf.Select(b => $"{b:X2}"))}");
+                pipeWriter.Write(buf, 0, numBytes);
             }
         }
 
@@ -97,11 +99,13 @@
                 var buffer = new byte[numBytes];
                 pipeReader.Read(buffer, 0, numBytes);
 
+                Console.WriteLine($"RECV {string.Join("-", buffer.Select(b => $"{b:X2}"))}");
+
                 // Convert bytes to object.
                 using (MemoryStream stream = new MemoryStream(buffer))
                 {
                     object result = DeserialiseFrom(stream);
-                    Console.WriteLine($"RECV {result}");
+                    // Console.WriteLine($"RECV {result}");
                     return result;
                 }
             }
