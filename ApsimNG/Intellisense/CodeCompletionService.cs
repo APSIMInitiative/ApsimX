@@ -212,7 +212,6 @@ namespace UserInterface.Intellisense
                 typeof(Uri).Assembly, // System.dll
                 typeof(Enumerable).Assembly, // System.Core.dll
                 typeof(System.Xml.XmlDocument).Assembly, // System.Xml.dll
-                typeof(System.Drawing.Bitmap).Assembly, // System.Drawing.dll
                 typeof(Models.Core.IModel).Assembly, // Models.exe
                 typeof(APSIM.Shared.Utilities.StringUtilities).Assembly, // APSIM.Shared.dll
                 typeof(MathNet.Numerics.Combinatorics).Assembly, // MathNet.Numerics
