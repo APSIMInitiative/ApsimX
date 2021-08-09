@@ -5,6 +5,7 @@ namespace APSIM.Shared.Utilities
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Globalization;
+    using System.Text;
 
     /// <summary>
     /// Static functions for string manipulation
@@ -518,39 +519,32 @@ namespace APSIM.Shared.Utilities
         /// <returns>The return string</returns>
         public static string Build(IEnumerable values, string delimiter, string prefix = null, string suffix = null, string format = null)
         {
-            string returnString = string.Empty;
+            StringBuilder result = new StringBuilder();
+            bool first = true;
             foreach (object value in values)
             {
                 // Add in delimiter
-                if (returnString != string.Empty)
-                {
-                    returnString += delimiter;
-                }
+                if (!first)
+                    result.Append(delimiter);
+                else
+                    first = false;
 
                 // Add prefix
                 if (prefix != null)
-                {
-                    returnString += prefix;
-                }
+                    result.Append(prefix);
 
                 // Add value
                 if (format == null)
-                {
-                    returnString += value.ToString();
-                }
+                    result.Append(value.ToString());
                 else
-                {
-                    returnString += string.Format("{0:" + format + "}", value);
-                }
+                    result.Append(string.Format($"{{0:{format}}}", value));
 
                 // Add suffix
                 if (prefix != null)
-                {
-                    returnString += suffix;
-                }                
+                    result.Append(suffix);
             }
 
-            return returnString;
+            return result.ToString();
         }
 
         /// <summary>

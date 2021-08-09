@@ -321,7 +321,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreedingCondition });
                 var purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                var filteredPurchases = purchases.Filter(group);
+                var filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
@@ -352,7 +352,7 @@ namespace Models.CLEM.Activities
                 group.Children.Add(new RuminantFilter() { Value = "Female", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
                 group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreeder });
                 purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                filteredPurchases = purchases.Filter(group);
+                filteredPurchases = purchases.FilterRuminants(group);
                 if (filteredPurchases.Count() <= 0)
                 {
                     if (MaximumProportionBreedersPerPurchase > 0)
@@ -872,17 +872,18 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = herd.Filter(item);
+                        List<Ruminant> herdToSell = herd.FilterRuminants(item).ToList();
+                        int sellNum = herdToSell.Count();
                         int cnt = 0;
-                        while (cnt < herdToSell.Count() && excessBreeders > 0)
+                        while (cnt < sellNum && excessBreeders > 0)
                         {
-                            if (herd[cnt] is RuminantFemale)
+                            if (herdToSell[cnt] is RuminantFemale)
                             {
-                                if ((herd[cnt] as RuminantFemale).IsBreeder)
+                                if ((herdToSell[cnt] as RuminantFemale).IsBreeder)
                                 {
-                                    if (herd[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
+                                    if (herdToSell[cnt].SaleFlag != HerdChangeReason.ExcessBreederSale)
                                     {
-                                        herd[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
+                                        herdToSell[cnt].SaleFlag = HerdChangeReason.ExcessBreederSale;
                                         excessBreeders--;
                                     }
                                 }

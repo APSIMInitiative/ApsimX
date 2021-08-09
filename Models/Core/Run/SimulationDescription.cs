@@ -22,6 +22,7 @@
         private Simulation baseSimulation;
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
+        [NonSerialized]
         private List<IReplacement> replacementsToApply = new List<IReplacement>();
 
         /// <summary>Do we clone the simulation before running?</summary>

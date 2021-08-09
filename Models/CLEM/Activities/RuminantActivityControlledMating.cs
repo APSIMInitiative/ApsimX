@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
                 // get list of breeders using filtergroups to this activity
-                IEnumerable<Ruminant> herd = CurrentHerd(true).Filter(breederGroup);
+                IEnumerable<Ruminant> herd = CurrentHerd(true).FilterRuminants(breederGroup);
 
                 if (herd.Count() > 0)
                 {

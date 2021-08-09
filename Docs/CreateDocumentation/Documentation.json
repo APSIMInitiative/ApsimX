@@ -98,6 +98,20 @@
                     ]
                 },
                 {
+                    "Name": "Chickpea (Under Review)",
+                    "Documents": [
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx"
+                        },
+                        {
+                            "Name": "PDF",
+                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx",
+                            "ModelNameToDocument": "Chickpea"
+                        }
+                    ]
+                },
+                {
                     "Name": "Clock",
                     "Documents": [
                         {

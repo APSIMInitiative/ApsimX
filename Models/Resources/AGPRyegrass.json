@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 131,
+  "Version": 133,
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,6 @@
       "MinimumGreenWt": 100.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "WaterAvailableMethod": 0,
       "Name": "AGPRyegrass",
       "Children": [
         {
