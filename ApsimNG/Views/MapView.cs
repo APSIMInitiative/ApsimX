@@ -69,7 +69,7 @@
         /// 
         /// An earlier version of this unit made a call to SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems
         /// to obtain the co-ordinate systems. That call then attempted to generate a 3 MByte file with almost 4000 different
-        /// systems in it; we only needed 2. We can generate thowe we need from their WKT descriptions. If additions reference
+        /// systems in it; we only needed 2. We can generate those we need from their WKT descriptions. If additions reference
         /// systems are needed, their WKT descriptions should be available for download from spatialreference.org.
         /// </remarks>
         ///  
@@ -131,8 +131,8 @@
             {
                 if (map == null)
                     return 0;
-                return Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0;
-            }
+                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0, 2);
+             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
@@ -158,7 +158,7 @@
                 if (map == null)
                     return null;
                 Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
-                return new Map.Coordinate(centerLatLon.Y, centerLatLon.X);
+                return new Map.Coordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
             }
             set
             {

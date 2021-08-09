@@ -249,8 +249,8 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
+            // this event fires after Activity and Resource initialisation so that resources are available to check in the validation.
+            // Commencing is too early as Summary has not been created for reporting.
             // some values assigned in commencing will not be checked before processing, but will be caught here
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
@@ -381,7 +381,6 @@ namespace Models.CLEM
                             text = description.ToString();
                         }
                     }
-                    //string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     string error = String.Format("Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
                     {
@@ -418,6 +417,11 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
+                // get clock
+                IModel parentSim = FindAncestor<Simulation>();
+
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim));
+
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
                 {
@@ -425,13 +429,11 @@ namespace Models.CLEM
                     htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
                     htmlWriter.Write(this.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(this));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
                 }
-
-                // get clock
-                IModel parentSim = FindAncestor<Simulation>();
 
                 // find random number generator
                 RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
@@ -452,6 +454,9 @@ namespace Models.CLEM
                         htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     }
                     htmlWriter.Write("\r\n</div>");
+
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd));
+
                     htmlWriter.Write("\r\n</div>");
                 }
 
@@ -482,6 +487,9 @@ namespace Models.CLEM
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                     }
                     htmlWriter.Write("\r\n</div>");
+
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk));
+
                     htmlWriter.Write("\r\n</div>");
                     htmlWriter.Write("\r\n</div>");
                 }

@@ -75,11 +75,28 @@ namespace Models.CLEM.Resources
         public double Growth { get; set; }
 
         /// <summary>
+        /// Name of component
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// pricing
         /// </summary>
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
         {
             return null;
+        }
+
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
         }
 
         /// <summary>

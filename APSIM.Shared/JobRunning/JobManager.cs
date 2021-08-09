@@ -56,6 +56,16 @@
         {
             PostRun(args);
             Interlocked.Decrement(ref numJobsToRun);
+            // Modulus arithmetic. This is a hack to allow the server job runner
+            // to reuse the same job manager object across multiple runs. Ideally,
+            // this should all be refactored out, possibly by making PostAllRuns()
+            // get called from outside of this class, by something with enough
+            // context to know when it needs to be called. What should really happen
+            // is that the numJobsToRun variable gets set to NumJobs when a run
+            // (of all jobs 'owned' by this job manager) first starts.
+            // numJobsToRun should also probably be uint.
+            if (numJobsToRun < 0)
+                numJobsToRun = NumJobs - 1;
             if (numJobsToRun == 0)
             {
                 PostAllRuns();

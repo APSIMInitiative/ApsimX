@@ -141,23 +141,6 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Returns the index of an item.</summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        public TreeIter IndexOf(string text)
-        {
-            TreeIter iter;
-            if (listModel.GetIterFirst(out iter))
-            {
-                do
-                {
-                    if (text == (string)listModel.GetValue(iter, 1))
-                        return iter;
-                } while (listModel.IterNext(ref iter));
-            }
-            return TreeIter.Zero;
-        }
-
         /// <summary>Gets the disabled series names.</summary>
         /// <returns></returns>
         public string[] GetDisabledSeriesNames()

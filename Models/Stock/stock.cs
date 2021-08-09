@@ -2872,6 +2872,7 @@
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
                 StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINORG_FAECES, false, true, false, ref pools);
+                inorgpools[0] = new InorgFaeces();
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;
@@ -2934,6 +2935,7 @@
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
                 StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINORG_FAECES, true, true, false, ref pools);
+                inorgpools[0] = new InorgFaeces();
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;

@@ -205,7 +205,7 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                string errorMsg = "@error:There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
+                string errorMsg = "There was a problem with the SQLite database [o=" + FileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
             if(sQLiteReader.IsOpen)
@@ -254,7 +254,7 @@ namespace Models.CLEM
             }
             catch (Exception ex)
             {
-                ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\r\n" + ex.Message;
+                ErrorMessage = "There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name + "]\r\n" + ex.Message;
             }
 
             // check if Npct and harvestColumn column exists in database
@@ -286,7 +286,7 @@ namespace Models.CLEM
             }
             catch(Exception ex)
             {
-                string errorMsg = "@error:There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
+                string errorMsg = "There was a problem accessing the SQLite database [o=" + FullFileName + "] for [x=" + this.Name + "]\r\n" + ex.Message;
                 throw new ApsimXException(this, errorMsg);
             }
 

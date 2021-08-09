@@ -91,6 +91,12 @@
         /// <summary>Capture and store summary text?</summary>
         public bool CaptureSummaryText { get; set; } = true;
 
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs args)
+        {
+            messages = null;
+        }
+
         /// <summary>Event handler to create initialise</summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -107,8 +113,10 @@
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
+            // The messages table will be automatically cleaned prior to a simulation
+            // run, so we don't need to delete existing data in this call to WriteTable().
             if (messages != null)
-                storage?.Writer?.WriteTable(messages);
+                storage?.Writer?.WriteTable(messages, false);
         }
 
         /// <summary>Initialise the summary messages table.</summary>
@@ -257,7 +265,10 @@
                     }
                 }
             }
-            storage.Writer.WriteTable(initConditions);
+
+            // The initial conditions table will be automatically cleaned prior to a simulation
+            // run, so we don't need to delete existing data in this call to WriteTable().
+            storage.Writer.WriteTable(initConditions, false);
         }
         
         #region Static summary report generation

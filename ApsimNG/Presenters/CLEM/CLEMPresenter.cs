@@ -90,7 +90,7 @@ namespace UserInterface.Presenters
                     if (categoryAttributeFound)
                     {
                         propPresenterName = "UserInterface.Presenters.PropertyCategorisedPresenter";
-                        // need to set view accordingly
+                        viewName = "UserInterface.Views.PropertyCategorisedView";
                     }
 
                     // check if it has properties

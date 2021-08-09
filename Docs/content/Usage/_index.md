@@ -16,3 +16,4 @@ weight: 10
 * [Climate/Weather Data](/usage/met)
 * [Write manager scripts](/usage/writemanagerscript)
 * [Rotation Manager](/usage/rotationmanager)
+* [APSIM Server](/usage/server)

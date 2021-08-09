@@ -60,7 +60,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
+            double[] initialkgha = initial.GetType().GetProperty(Name)?.GetValue(initial) as double[];
             if (initialkgha == null)
                 kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else

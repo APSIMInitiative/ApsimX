@@ -12,47 +12,70 @@ namespace Models.CLEM.Resources
     {
         /// <summary>
         /// Indicates if individual is breeding sire
-        /// </summary>
-        public bool Sire { get; set; }
-
-        /// <summary>
-        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age
         /// </summary>
         public bool IsSire 
         {
             get
             {
-                if(ReplacementBreeder)
+                if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
                 {
-                    if(Age >= BreedParams.MinimumAge1stMating)
+                    if (Age >= BreedParams.MinimumAge1stMating)
                     {
-                        Sire = true;
                         ReplacementBreeder = false;
+                        return true;
                     }
                 }
-                return Sire;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
+        /// </summary>
+        public bool IsWildBreeder
+        {
+            get
+            {
+                if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                {
+                    if (Age >= BreedParams.MinimumAge1stMating)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
-        public bool IsCastrated { get; set; }
-
+        public bool IsCastrated 
+        { 
+            get
+            {
+                return Attributes.Exists("Castrated");
+            }
+        }
 
         /// <summary>
-        /// Indicates if individual is draught animal
+        /// Is this individual a valid breeder and in condition
         /// </summary>
-        public bool IsDraught { get; set; }
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return this.IsSire | this.IsWildBreeder;
+            }
+        }
 
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
         {
-            Sire = false;
-            IsDraught = false;
-            IsCastrated = false;
         }
 
     }

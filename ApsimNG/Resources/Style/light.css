@@ -1,0 +1,20 @@
+/*
+# Global Stylesheet, applied on all operating systems, on all themes
+
+For gtk3 css/styling info, see:
+https://developer.gnome.org/gtk3/stable/chap-css-overview.html
+https://developer.gnome.org/gtk3/stable/chap-css-properties.html
+*/
+
+/* Styling for a selected sheet cell */
+.sheet:selected {
+    background-color: #3584e4; /* blue*/
+    color: #000000; /* black */
+}
+
+/* Styling for sheet header rows */
+.sheet:disabled {
+    background-color: #949090; /* light gray */
+    color: #ffffff; /* white */
+}
+

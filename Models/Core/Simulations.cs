@@ -13,6 +13,7 @@ using Models.Storage;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
+using System.Threading.Tasks;
 
 namespace Models.Core
 {
@@ -156,7 +157,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -283,14 +284,15 @@ namespace Models.Core
 
                     Simulation clonedSimulation = simDescription.ToSimulation();
 
+                    // Prepare the simulation for running - this perform misc cleanup tasks such
+                    // as removing disabled models, standardising the soil, resolving links, etc.
+                    clonedSimulation.Prepare();
+                    FindInScope<IDataStore>().Writer.Stop();
                     // Now use the path to get the model we want to document.
                     modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
-
-                    // resolve all links in cloned simulation.
-                    Links.Resolve(clonedSimulation, true);
 
                     modelToDocument.IncludeInDocumentation = true;
 

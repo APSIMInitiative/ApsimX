@@ -393,6 +393,34 @@
         [Units("0-1")]
         public double[] RWC { get; private set; }
 
+        /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and depths in zones)</summary>
+        [Units("unitless")]
+        public double FASW
+        {
+            get
+            {
+                double fasw = 0;
+                double TotalArea = 0;
+
+                foreach (ZoneState Z in Zones)
+                {
+                    Zone zone = this.FindInScope(Z.Name) as Zone;
+                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
+                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
+                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
+                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
+                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
+                    TotalArea += zone.Area;
+
+                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
+                }    
+                    fasw = fasw / TotalArea;
+                return fasw;
+            }
+        }
+
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
         [Units("0-1")]
         public double WaterTensionFactor
@@ -951,6 +979,7 @@
             PlantZone.Clear();
             Zones.Clear();
             needToRecalculateLiveDead = true;
+            GrowthRespiration = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -1118,6 +1147,7 @@
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

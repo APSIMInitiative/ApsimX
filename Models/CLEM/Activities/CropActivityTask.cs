@@ -22,17 +22,10 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
-    public class CropActivityTask: CLEMActivityBase, IValidatableObject, ICategoryActivity
+    public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
         [Link]
         Clock Clock = null;
-
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of task for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
 
         private string RelatesToResourceName = "";
         private bool timingIssueReported = false;
@@ -43,12 +36,10 @@ namespace Models.CLEM.Activities
         protected CropActivityTask()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Crop.[Task]";
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
@@ -75,7 +66,7 @@ namespace Models.CLEM.Activities
             if (Clock.Today.Year * 100 + Clock.Today.Month == start)
             {
                 // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault() as ActivityTimerCropHarvest;
+                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
                 if (chtimer != null)
                 {
                     if (chtimer.ActivityPast)
@@ -91,11 +82,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double numberUnits;
@@ -160,57 +147,40 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
 
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, this.Category, RelatesToResourceName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, RelatesToResourceName);
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
@@ -247,11 +217,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -263,9 +229,9 @@ namespace Models.CLEM.Activities
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                    if (Category != null && Category != "")
+                    if (TransactionCategory != null && TransactionCategory != "")
                     {
-                        htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                        htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
                     }
                     else
                     {
