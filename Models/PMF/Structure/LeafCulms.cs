@@ -24,7 +24,7 @@ namespace Models.PMF.Struct
 	/// </remarks>
 	[Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
-	[ViewName("UserInterface.Views.GridView")]
+	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
@@ -259,11 +259,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltPotentialLAI;
+				return leaf.DltPotentialLAI;
 			}
 			set
 			{
-				leaf.dltPotentialLAI = value;
+				leaf.DltPotentialLAI = value;
 			}
 		}
 
@@ -274,11 +274,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltStressedLAI;
+				return leaf.DltStressedLAI;
 			}
 			set
 			{
-				leaf.dltStressedLAI = value;
+				leaf.DltStressedLAI = value;
 			}
 		}
 
