@@ -7,7 +7,7 @@
 # 2. Optional output file name. Default value is apsim-$version.dmg.
 
 # Exit immediately upon error
-set -e
+set -euo pipefail
 
 # Get version number (first argument).
 # Abort with error if no version number provided.
