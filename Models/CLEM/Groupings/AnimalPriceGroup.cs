@@ -56,7 +56,22 @@ namespace Models.CLEM.Groupings
         {
             if(ind is Ruminant)
             {
-                return Value * ((PricingStyle == PricingStyleType.perKg) ? (ind as Ruminant).Weight : 1.0);
+                double multiplier = 1;
+                switch (PricingStyle)
+                {
+                    case PricingStyleType.perHead:
+                        break;
+                    case PricingStyleType.perKg:
+                        multiplier = (ind as Ruminant).Weight;
+                        break;
+                    case PricingStyleType.perAE:
+                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        break;
+                    default:
+                        break;
+                }
+
+                return Value * multiplier;
             }
             else
             {
