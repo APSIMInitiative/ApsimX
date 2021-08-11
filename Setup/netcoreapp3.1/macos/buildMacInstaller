@@ -52,7 +52,7 @@ if [ -z "$GTK_DEPS" ]; then
     echo "GTK_DEPS variable is not set. Downloading depdendencies..."
     GTK_DEPS=$(mktemp XXXXXX.tar.gz)
     url="https://github.com/hol430/apsim-mac/raw/master/deps.tar.gz"
-    curl -o "$GTK_DEPS" "$url"
+    curl -Lo "$GTK_DEPS" "$url"
 fi
 test -f "$GTK_DEPS" || (echo "File not found: GTK_DEPS ($GTK_DEPS)")
 tar xzf "$GTK_DEPS" -C "$appdir/Resources/"
