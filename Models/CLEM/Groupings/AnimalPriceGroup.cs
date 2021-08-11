@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
-    [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
     public class AnimalPriceGroup: CLEMModel, IFilterGroup, IResourcePricing, IReportPricingChange
     {
         /// <summary>
