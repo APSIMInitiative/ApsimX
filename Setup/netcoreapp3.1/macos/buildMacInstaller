@@ -48,7 +48,9 @@ copy "$apsimx/APSIM.bib" $appdir/Resources/
 copy "$plist" $appdir/
 
 # Extract gtk deps
-if [ -z "$GTK_DEPS" ]; then
+DELETE_DEPS=0
+if [ -z ${GTK_DEPS+x} ]; then
+    DELETE_DEPS=1
     echo "GTK_DEPS variable is not set. Downloading depdendencies..."
     GTK_DEPS=$(mktemp XXXXXX.tar.gz)
     url="https://github.com/hol430/apsim-mac/raw/master/deps.tar.gz"
@@ -56,7 +58,7 @@ if [ -z "$GTK_DEPS" ]; then
 fi
 test -f "$GTK_DEPS" || (echo "File not found: GTK_DEPS ($GTK_DEPS)")
 tar xzf "$GTK_DEPS" -C "$appdir/Resources/"
-
+if [ $DELETE_DEPS -eq 1 ]; then rm "$GTK_DEPS"; fi
 # Now create the .dmg file.
 if [ $# -ge 2 ]; then
     outfile=$2
