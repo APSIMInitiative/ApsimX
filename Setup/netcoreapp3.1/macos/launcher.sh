@@ -28,7 +28,7 @@ bundle_data="$bundle_res"/share
 bundle_etc="$bundle_res"/etc
 
 # EXE_PATH is apsim's main entrypoint CLI.
-EXE_PATH="$bundle_res/apsim/ApsimNG"
+EXE_PATH="$bundle_res/bin/ApsimNG"
 
 # Add bundle lib path to LD_LIBRARY_PATH, so that the runtime
 # linker/loader is able to locate the bundled native gtk deps.
