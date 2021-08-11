@@ -121,7 +121,6 @@
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
                           "SoilType": "2",
-                          "LastGain": 0.0,
                           "Name": "Paddock1",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -145,7 +144,6 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 7.5,
                           "InterestRatePaid": 2.0,
-                          "LastGain": 0.0,
                           "Name": "General account",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -235,7 +233,6 @@
                           "MaximumMaleMatingsPerDay": 30.0,
                           "PrenatalMortality": 0.079,
                           "MethaneProductionCoefficient": 20.7,
-                          "LastGain": 0.0,
                           "Name": "Bos indicus",
                           "Children": [
                             {
@@ -332,7 +329,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
@@ -356,7 +352,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.3,
                                   "PurchaseOrSale": 1,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
@@ -391,7 +386,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 2,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
@@ -426,7 +420,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
@@ -461,7 +454,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
@@ -496,7 +488,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.4,
                                   "PurchaseOrSale": 0,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
@@ -531,7 +522,6 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
-                                  "PreviousPrice": 0.0,
                                   "Name": "Breeding Sires",
                                   "Children": [
                                     {
@@ -606,7 +596,6 @@
                           "CarryoverDetachRate": 0.12,
                           "IntakeTropicalQualityCoefficient": 0.16,
                           "IntakeQualityCoefficient": 1.7,
-                          "LastGain": 0.0,
                           "Name": "NativePasture",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -628,23 +617,26 @@
                           "DMD": 49.0,
                           "Nitrogen": 3.4,
                           "StartingAmount": 100.0,
-                          "LastGain": 0.0,
                           "Name": "Hay",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Transmutation, Models",
-                              "AmountPerUnitPurchase": 1000.0,
-                              "WorkInWholeUnits": false,
+                              "ResourceInShortfall": "AnimalFoodStore.Hay",
+                              "TransmutationPacketSize": 1000.0,
+                              "UseWholePackets": false,
                               "TransactionCategory": "Transmutation",
                               "Name": "Purchase",
                               "Children": [
                                 {
-                                  "$type": "Models.CLEM.TransmutationCost, Models",
-                                  "ResourceTypeName": "Finances.General account",
-                                  "CostPerUnit": 100.0,
-                                  "Name": "Money",
+                                  "$type": "Models.CLEM.Transmute, Models",
+                                  "TransmuteResourceTypeName": "Finances.General account",
+                                  "AmountPerPacket": 100.0,
+                                  "TransmuteStyle": 0,
+                                  "ResourceGroup": null,
+                                  "FinanceTypeForTransactionsName": "No transactions",
+                                  "Name": "Transmute",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
+                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
@@ -670,8 +662,6 @@
                 },
                 {
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
-                  "LastShortfallResourceRequest": null,
-                  "LastActivityPerformed": null,
                   "Name": "Activities",
                   "Children": [
                     {
@@ -690,7 +680,6 @@
                           "StoreItemName": "GrazeFoodStore.NativePasture",
                           "ProportionKept": 1.0,
                           "TreesPerHa": 0.0,
-                          "UnitsToHaConverter": 0.0,
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
                           "Name": "Native Pasture to GrazeFoodStore",
@@ -884,7 +873,6 @@
                             },
                             {
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
-                              "WeightWarningOccurred": false,
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
                               "Name": "Breeders",
@@ -911,7 +899,6 @@
                             },
                             {
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
-                              "WeightWarningOccurred": false,
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
                               "Name": "Sires",
@@ -1012,7 +999,7 @@
                       "ReportAnimalWeight": false,
                       "ReportLandEntire": false,
                       "ReportLabourIndividuals": false,
-                      "SelectedTab": null,
+                      "SelectedTab": "Properties",
                       "VariableNames": [
                         "Land",
                         "GrazeFoodStore",
