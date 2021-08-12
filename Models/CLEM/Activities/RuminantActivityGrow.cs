@@ -199,7 +199,7 @@ namespace Models.CLEM.Activities
                     potentialIntake = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
                     // Increase potential intake for lactating breeder
@@ -461,7 +461,7 @@ namespace Models.CLEM.Activities
             // TODO: castrates available but not implemented
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
             {
                 sme = 1.15;
             }
@@ -529,7 +529,7 @@ namespace Models.CLEM.Activities
                 double energyMilk = 0;
                 double energyFetus = 0;
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
@@ -697,8 +697,8 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            List<RuminantFemale> mothersWithCalf = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0).ToList();
-            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
+            List<RuminantFemale> mothersWithCalf = died.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0).ToList();
+            List<RuminantFemale> wetMothersAvailable = died.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Count() > 0)
             {

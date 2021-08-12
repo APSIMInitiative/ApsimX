@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
                     foreach (var sucklingList in sucklingGroups)
                     {
                         // get list of females of breeding age and condition
-                        List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+                        List<RuminantFemale> breedFemales = herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
 
                         if (breedFemales.Count() == 0)
                         {
@@ -188,7 +188,7 @@ namespace Models.CLEM.Resources
                     // assigning values for the remaining females who haven't just bred.
                     // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
-                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
+                    foreach (RuminantFemale female in herd.Where(a => a.Sex == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
                     {
                         // generalised curve
                         double currentIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
@@ -220,7 +220,7 @@ namespace Models.CLEM.Resources
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             // report all females of breeding age at end of simulation
-            foreach (RuminantFemale female in Herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
+            foreach (RuminantFemale female in Herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -274,7 +274,7 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind.Gender == Sex.Female)
+            if (ind.Sex == Sex.Female)
             {
                 foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
                 {
@@ -309,7 +309,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(te);
 
             // report female breeding stats if needed
-            if(ind.Gender == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
+            if(ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {

@@ -10,6 +10,9 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class RuminantMale: Ruminant
     {
+        /// <inheritdoc/>
+        public override Sex Sex => Sex.Male;
+
         /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
@@ -74,7 +77,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
+        public RuminantMale(RuminantType setParams, double setAge, double setWeight)
+            : base(setParams, setAge, setWeight)
         {
         }
 

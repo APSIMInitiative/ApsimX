@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMMilkProduction(object sender, EventArgs e)
         {
             // this method will ensure the milking status is defined for females after births when lactation is set and before milk production is determined
-            foreach (RuminantFemale item in this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList())
+            foreach (RuminantFemale item in this.CurrentHerd(true).Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true).ToList())
             {
                 // set these females to state milking performed so they switch to the non-suckling milk production curves.
                 item.MilkingPerformed = true;
@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
+            List<RuminantFemale> herd = this.CurrentHerd(true).Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsLactating == true & a.SucklingOffspringList.Count() == 0).ToList();
             int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)

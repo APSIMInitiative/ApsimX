@@ -109,8 +109,8 @@ namespace Models.CLEM.Activities
                         // grouped by location
                         var breeders = from ind in herd
                                        where
-                                       (ind.Gender == Sex.Male && ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
-                                       (ind.Gender == Sex.Female &&
+                                       (ind.Sex == Sex.Male && ind.Age + i >= ind.BreedParams.MinimumAge1stMating) ||
+                                       (ind.Sex == Sex.Female &&
                                        ind.Age + i >= ind.BreedParams.MinimumAge1stMating &&
                                        !(ind as RuminantFemale).IsPregnant
                                        )
@@ -135,23 +135,23 @@ namespace Models.CLEM.Activities
                                 if (!useControlledMating)
                                 {
                                     // check if males and females of breeding condition are together
-                                    if (location.GroupBy(a => a.Gender).Count() == 2)
+                                    if (location.GroupBy(a => a.Sex).Count() == 2)
                                     {
                                         // servicing rate
-                                        int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                                        int maleCount = location.Where(a => a.Sex == Sex.Male).Count();
                                         // get a list of males to provide attributes when incontrolled mating.
                                         if (maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
                                         {
-                                            maleBreeders = location.Where(a => a.Gender == Sex.Male).ToList();
+                                            maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
                                         }
 
-                                        int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                                        int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();
                                         double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
 
                                         double maleLimiter = Math.Min(1, matingsPossible / femaleCount);
 
                                         // only get non-pregnant females of breeding age at the time before the simulation included
-                                        var availableBreeders = location.Where(b => b.Gender == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
+                                        var availableBreeders = location.Where(b => b.Sex == Sex.Female && b.Age + i >= b.BreedParams.MinimumAge1stMating)
                                             .Cast<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
 
                                         // only get selection of these of breeders available to spread conceptions
@@ -201,8 +201,8 @@ namespace Models.CLEM.Activities
                                 // controlled conception
                                 else
                                 {
-                                    numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
-                                    foreach (RuminantFemale female in location.Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().ToList())
+                                    numberPossible = Convert.ToInt32(limiter * location.Where(a => a.Sex == Sex.Female).Count(), CultureInfo.InvariantCulture);
+                                    foreach (RuminantFemale female in location.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().ToList())
                                     {
                                         if (!female.IsPregnant && (female.Age - female.AgeAtLastBirth) * 30.4 >= female.BreedParams.MinimumDaysBirthToConception)
                                         {
@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
             NumberConceived = 0;
 
             // get list of all pregnant females
-            List<RuminantFemale> pregnantherd = CurrentHerd(true).Where(a => a.Gender == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList();
+            List<RuminantFemale> pregnantherd = CurrentHerd(true).Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsPregnant).ToList();
 
             // determine all fetus and newborn mortality of all pregnant females.
             foreach (RuminantFemale female in pregnantherd)
@@ -294,18 +294,11 @@ namespace Models.CLEM.Activities
                     int numberOfNewborn = female.CarryingCount;
                     for (int i = 0; i < numberOfNewborn; i++)
                     {
-                        object newCalf = null;
-                        bool isMale = (RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale);
+                        bool isMale = RandomNumberGenerator.Generator.NextDouble() <= female.BreedParams.ProportionOffspringMale;
+                        Sex sex = isMale ? Sex.Male : Sex.Female;
                         double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
-                        if (isMale)
-                        {
-                            newCalf = new RuminantMale(0, Sex.Male, weight, female.BreedParams);
-                        }
-                        else
-                        {
-                            newCalf = new RuminantFemale(0, Sex.Female, weight, female.BreedParams);
-                        }
-                        Ruminant newCalfRuminant = newCalf as Ruminant;
+                        
+                        Ruminant newCalfRuminant = Ruminant.Create(sex, female.BreedParams, 0, weight);
                         newCalfRuminant.HerdName = female.HerdName;
                         newCalfRuminant.Breed = female.BreedParams.Breed;
                         newCalfRuminant.ID = Resources.RuminantHerd().NextUniqueID;
@@ -368,21 +361,21 @@ namespace Models.CLEM.Activities
                     numberPossible = -1;
                     if (useControlledMating)
                     {
-                        numberPossible = Convert.ToInt32(location.Where(a => a.Gender == Sex.Female).Count(), CultureInfo.InvariantCulture);
+                        numberPossible = Convert.ToInt32(location.Where(a => a.Sex == Sex.Female).Count(), CultureInfo.InvariantCulture);
                     }
                     else
                     {
                         numberPossible = 0;
                         // uncontrolled conception
-                        if (location.GroupBy(a => a.Gender).Count() == 2)
+                        if (location.GroupBy(a => a.Sex).Count() == 2)
                         {
-                            int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
+                            int maleCount = location.Where(a => a.Sex == Sex.Male).Count();
                             // get a list of males to provide attributes when incontrolled mating.
                             if(maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
                             {
-                                maleBreeders = location.Where(a => a.Gender == Sex.Male).ToList();
+                                maleBreeders = location.Where(a => a.Sex == Sex.Male).ToList();
                             }
-                            int femaleCount = location.Where(a => a.Gender == Sex.Female).Count();
+                            int femaleCount = location.Where(a => a.Sex == Sex.Female).Count();
                             numberPossible = Convert.ToInt32(Math.Ceiling(maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30), CultureInfo.InvariantCulture);
                         }
                     }

@@ -9,7 +9,7 @@ namespace Models.CLEM.Resources
     /// Object for an individual Ruminant Animal.
     /// </summary>
     [Serializable]
-    public class Ruminant : IFilterable, IAttributable
+    public abstract class Ruminant : IFilterable, IAttributable
     {
         private RuminantFemale mother;
         private double weight;
@@ -90,19 +90,14 @@ namespace Models.CLEM.Resources
         public int MotherID { get; private set; }
 
         /// <summary>
-        /// Gender
+        /// Sex of individual
         /// </summary>
-        public Sex Gender { get; set; }
-
-        /// <summary>
-        /// Sex if individual
-        /// </summary>
-        public Sex Sex { get { return (this is RuminantFemale)?Sex.Female:Sex.Male; } }
+        public abstract Sex Sex { get; }
 
         /// <summary>
         /// Gender as string for reports
         /// </summary>
-        public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
+        public string GenderAsString { get { return Sex.ToString().Substring(0,1); } }
 
         /// <summary>
         /// Marked as a replacement breeder
@@ -325,7 +320,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return $"{Category}{Gender}";
+                return $"{Category}{Sex}";
             }
         }
 
@@ -508,7 +503,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Gender == Sex.Male)
+                if (Sex == Sex.Male)
                 {
                     return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
                 }
@@ -656,22 +651,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
+        public Ruminant(RuminantType setParams, double setAge, double setWeight)
         {
-            this.Gender = setGender;
             this.BreedParams = setParams;
             this.Age = setAge;
             this.AgeEnteredSimulation = setAge;
 
-            if (setWeight <= 0)
-            {
-                // use normalised weight
-                this.Weight = NormalisedAnimalWeight;
-            }
-            else
-            {
-                this.Weight = setWeight;
-            }
+            Weight = setWeight <= 0 ? NormalisedAnimalWeight : setWeight;
 
             this.PreviousWeight = this.Weight;
             this.Number = 1;
@@ -680,6 +666,17 @@ namespace Models.CLEM.Resources
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
+        }
+
+        /// <summary>
+        /// Factory for creating ruminants based on provided values
+        /// </summary>
+        public static Ruminant Create(Sex sex, RuminantType type, double age = 0, double weight = 0)
+        {
+            if (sex == Sex.Male)
+                return new RuminantMale(type, age, weight);
+            else
+                return new RuminantFemale(type, age, weight);
         }
     }
 

@@ -115,7 +115,7 @@ namespace Models.CLEM
                 foreach (var herdGroup in breedGroup.GroupBy(a => a.HerdName))
                 {
                     // group by sex
-                    foreach (var sexGroup in herdGroup.GroupBy(a => a.Gender))
+                    foreach (var sexGroup in herdGroup.GroupBy(a => a.Sex))
                     {
                         // weaned
                         foreach (var ageGroup in sexGroup.OrderBy(a => a.Age).GroupBy(a => Math.Truncate(a.Age / 12.0)))

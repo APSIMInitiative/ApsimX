@@ -11,7 +11,8 @@ namespace Models.CLEM.Resources
 
     public class RuminantFemale : Ruminant
     {
-        // Female Ruminant properties
+        /// <inheritdoc/>
+        public override Sex Sex => Sex.Female;
 
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
@@ -361,7 +362,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
+        public RuminantFemale(RuminantType setParams, double setAge, double setWeight) 
+            : base(setParams, setAge, setWeight)
         {
             SucklingOffspringList = new List<Ruminant>();
         }
