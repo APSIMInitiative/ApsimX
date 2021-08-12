@@ -177,11 +177,12 @@ namespace Models.CLEM
         {
             // get herd for transmutating
             ResourceGroup = Resources.FindResourceGroup<RuminantHerd>();
+            TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
             groupings = ResourceGroup.FindAllChildren<RuminantGroup>();
 
-            var shortfallResourceType = (TransmuteResourceType as IModel).FindAncestor<IResourceType>();
+            var shortfallResourceType = this.FindAncestor<IResourceType>();
             if (shortfallResourceType != null && TransmuteStyle == TransmuteStyle.UsePricing)
             {
                 shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);

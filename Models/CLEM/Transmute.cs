@@ -188,7 +188,7 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmutation cost [{this.Name}]{Environment.NewLine}Finances will not be considered or limit this transmutation ");
+                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation will not suceed without this resource");
                     }
                     else
                     {
@@ -196,7 +196,7 @@ namespace Models.CLEM
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };
-                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] in transmutation cost", memberNames));
+                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation will not suceed without this resource", memberNames));
                         }
                     }
                 }
@@ -209,7 +209,7 @@ namespace Models.CLEM
                 if (shortfallPricing is null)
                 {
                     string[] memberNames = new string[] { "Shortfall resource pricing" };
-                    results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmutation [{this.Name}]", memberNames));
+                    results.Add(new ValidationResult($"No resource pricing was found for [r={(parentResource as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the shortfall resource or use Direct transmute style", memberNames));
                 }
 
                 if (!(TransmuteResourceType is FinanceType))
@@ -217,7 +217,7 @@ namespace Models.CLEM
                     if (transmutePricing is null)
                     {
                         string[] memberNames = new string[] { "Transmute resource pricing" };
-                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmutation [{this.Name}]", memberNames));
+                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
                     }
                 }
             }
