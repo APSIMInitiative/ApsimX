@@ -129,10 +129,10 @@ namespace Models.PMF.Struct
 		private IFunction aX0 = null;
 
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction noSeed = null;
+		private IFunction leafNumSeed = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction initRate = null;
+		private IFunction leafInitRate = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction noRateChange1 = null;
@@ -443,8 +443,8 @@ namespace Models.PMF.Struct
 			{
 				LeafNoCorrection = leafNoCorrection,
 				AX0 = aX0,
-				NoSeed = noSeed,
-				InitRate = initRate,
+				NoSeed = leafNumSeed,
+				InitRate = leafInitRate,
 				AppearanceRate1 = appearanceRate1,
 				AppearanceRate2 = appearanceRate2,
 				AppearanceRate3 = appearanceRate3,

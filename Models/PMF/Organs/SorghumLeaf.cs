@@ -69,23 +69,23 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
         private IFunction dltTT { get; set; }
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction minLeafNo = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction minLeafNo = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction maxLeafNo = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction maxLeafNo = null;
 
         //[Link(Type = LinkType.Child, ByName = true)]
         //private IFunction ttEmergToFI = null;
 
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafInitRate = null;
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //private IFunction leafInitRate = null;
 
-        [Link(Type = LinkType.Scoped, ByName = true)]
-        private IFunction leafNumSeed = null;
+        //[Link(Type = LinkType.Scoped, ByName = true)]
+        //private IFunction leafNumSeed = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction SDRatio = null;
+        private IFunction SDRatioFunction = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frgr = null;
@@ -119,24 +119,24 @@ namespace Models.PMF.Organs
         private IFunction potentialBiomassTEFunction = null;
 
         /// <summary>Input for NewLeafSLN</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction newLeafSLN = null;
+        [Description("Input for NewLeafSLN")]
+        public double NewLeafSLN { get; set; } = 1.0;
 
         /// <summary>Input for TargetSLN</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction targetSLN = null;
 
         /// <summary>Input for SenescedLeafSLN.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senescedLeafSLN = null;
+        [Description("Senesced Leaf SLN")]
+        public double SenescedLeafSLN { get; set; } = 0.3;
 
         /// <summary>Intercept for N Dilutions</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nDilutionIntercept = null;
+        [Description("Intercept for N Dilutions")]
+        public double NDilutionIntercept { get; set; } = -0.0017;
 
         /// <summary>Slope for N Dilutions</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nDilutionSlope = null;
+        [Description("Slope for N Dilutions")]
+        public double NDilutionSlope { get; set; } = 0.0043;
 
         /// <summary>Slope for N Dilutions</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -166,7 +166,7 @@ namespace Models.PMF.Organs
         private IFunction senThreshold = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nPhotoStress = null;
+        private IFunction nPhotoStressFunction = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction leafNoDeadIntercept = null;
@@ -308,17 +308,17 @@ namespace Models.PMF.Organs
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        /// <summary> Number of leaf primordia present in seed. </summary>
-        public double SeedNo => leafNumSeed?.Value() ?? 0;
+        ///// <summary> Number of leaf primordia present in seed. </summary>
+        //public double SeedNo => leafNumSeed?.Value() ?? 0;
 
-        /// <summary> Degree days to initiate each leaf primordium until floral init (deg day). </summary>
-        public double LeafInitRate  => leafInitRate?.Value() ?? 0;
+        ///// <summary> Degree days to initiate each leaf primordium until floral init (deg day). </summary>
+        //public double LeafInitRate  => leafInitRate?.Value() ?? 0;
 
-        /// <summary> Min Leaf Number. </summary>
-        public double MinLeafNo => minLeafNo.Value();
+        ///// <summary> Min Leaf Number. </summary>
+        //public double MinLeafNo => minLeafNo.Value();
 
-        /// <summary> Max Leaf Number. </summary>
-        public double MaxLeafNo => maxLeafNo.Value();
+        ///// <summary> Max Leaf Number. </summary>
+        //public double MaxLeafNo => maxLeafNo.Value();
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -742,7 +742,7 @@ namespace Models.PMF.Organs
             double slnToday = calcSLN(laiToday, nGreenToday);
             
             var thermalTime = dltTT.Value();
-            var dilutionN = thermalTime * (nDilutionSlope.Value() * slnToday + nDilutionIntercept.Value()) * laiToday;
+            var dilutionN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
             dilutionN = Math.Max(dilutionN, 0);
             if (phenology.Between("Germination", "Flowering"))
             {
@@ -760,12 +760,12 @@ namespace Models.PMF.Organs
                     // Only half of the requiredN can be accounted for by reducing DltLAI
                     // If the RequiredN is large enough, it will result in 0 new growth
                     // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
-                    double n = DltLAI * newLeafSLN.Value();
+                    double n = DltLAI * NewLeafSLN;
                     double laiN = Math.Min(n, requiredN / 2.0);
                     // dh - we don't make this check in old apsim
                     if (MathUtilities.IsPositive(laiN))
                     {
-                        DltLAI = (n - laiN) / newLeafSLN.Value();
+                        DltLAI = (n - laiN) / NewLeafSLN;
                         if (forLeaf)
                         {
                             // should we update the StructuralDemand?
@@ -779,23 +779,23 @@ namespace Models.PMF.Organs
                 laiToday = calcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
-                var maxN = thermalTime * (nDilutionSlope.Value() * slnToday + nDilutionIntercept.Value()) * laiToday;
+                var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
                 maxN = Math.Max(maxN, 0);
                 requiredN = Math.Min(requiredN, maxN);
 
-                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - senescedLeafSLN.Value()), 0.0), 0.0);
+                double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
 
                 // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                senescenceLAI = Math.Min(senescenceLAI, Live.N * senescedLeafSLN.Value() - DltSenescedN);
+                senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
 
-                double newN = Math.Max(senescenceLAI * (slnToday - senescedLeafSLN.Value()), 0.0);
+                double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
                 DltRetranslocatedN -= newN;
                 nGreenToday += newN; // local variable
                 nProvided += newN;
                 DltSenescedLaiN += senescenceLAI;
 
                 DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                DltSenescedN += senescenceLAI * senescedLeafSLN.Value();
+                DltSenescedN += senescenceLAI * SenescedLeafSLN;
 
                 return nProvided;
             }
@@ -816,22 +816,22 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = thermalTime * (nDilutionSlope.Value() * slnToday + nDilutionIntercept.Value()) * laiToday;
+                    var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - senescedLeafSLN.Value()), 0.0), 0.0);
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
 
                     // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * senescedLeafSLN.Value() - DltSenescedN);
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
 
-                    double newN = Math.Max(senescenceLAI * (slnToday - senescedLeafSLN.Value()), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
 
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * senescedLeafSLN.Value();
+                    DltSenescedN += senescenceLAI * SenescedLeafSLN;
                     return nProvided;
                 }
                 else
@@ -846,22 +846,22 @@ namespace Models.PMF.Organs
                     laiToday = calcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
-                    var maxN = thermalTime * (nDilutionSlope.Value() * slnToday + nDilutionIntercept.Value()) * laiToday;
+                    var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
                     requiredN = Math.Min(requiredN, maxN);
 
-                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - senescedLeafSLN.Value()), 0.0), 0.0);
+                    double senescenceLAI = Math.Max(MathUtilities.Divide(requiredN, (slnToday - SenescedLeafSLN), 0.0), 0.0);
 
                     // dh - dltSenescedN *cannot* exceed Live.N. Therefore slai cannot exceed Live.N * senescedLeafSln - dltSenescedN
-                    senescenceLAI = Math.Min(senescenceLAI, Live.N * senescedLeafSLN.Value() - DltSenescedN);
+                    senescenceLAI = Math.Min(senescenceLAI, Live.N * SenescedLeafSLN - DltSenescedN);
 
-                    double newN = Math.Max(senescenceLAI * (slnToday - senescedLeafSLN.Value()), 0.0);
+                    double newN = Math.Max(senescenceLAI * (slnToday - SenescedLeafSLN), 0.0);
                     DltRetranslocatedN -= newN;
                     nGreenToday += newN;
                     nProvided += newN;
                     DltSenescedLaiN += senescenceLAI;
 
                     DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiN);
-                    DltSenescedN += senescenceLAI * senescedLeafSLN.Value();
+                    DltSenescedN += senescenceLAI * SenescedLeafSLN;
                     return nProvided;
                 }
             }
@@ -1017,7 +1017,7 @@ namespace Models.PMF.Organs
 
             avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
-            avSDRatio = updateAvSDRatio(SDRatio.Value(), 5);
+            avSDRatio = updateAvSDRatio(SDRatioFunction.Value(), 5);
             //// average of the last 10 days of laiEquilibWater`
             //laiEquilibWater.push_back(laiEquilibWaterToday);
             //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
@@ -1026,7 +1026,7 @@ namespace Models.PMF.Organs
             //avSD.push_back(plant->water->getSdRatio());
 
             double dltSlaiWater = 0.0;
-            if (SDRatio.Value() < senThreshold.Value())
+            if (SDRatioFunction.Value() < senThreshold.Value())
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
@@ -1303,11 +1303,6 @@ namespace Models.PMF.Organs
 
             calcSenescence();
 
-            //double slnToday = MathUtilities.Divide(Live.N, laiToday, 0.0);
-            //DltSenescedN = DltSenescedLai * Math.Max((slnToday - SenescedLeafSLN.Value()), 0.0);
-            //double slnToday = laiToday > 0.0 ? Live.N / laiToday : 0.0;
-            //var DltSenescedN = DltSenescedLai * Math.Max((slnToday - senescedLeafSLN), 0.0);
-
             //UpdateVars
             SenescedLai += DltSenescedLai;
             nDeadLeaves += dltDeadLeaves;
@@ -1334,7 +1329,7 @@ namespace Models.PMF.Organs
             CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
             //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
 
-            NitrogenPhotoStress = nPhotoStress.Value(); // Math.Max(photoStress, 0.0);
+            NitrogenPhotoStress = nPhotoStressFunction.Value(); // Math.Max(photoStress, 0.0);
 
             NitrogenPhenoStress = 1.0;
             if (phenology.Between("Emergence", "Flowering"))
@@ -1359,13 +1354,13 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void setNSupply(object sender, EventArgs e)
         {
-            var availableLaiN = DltLAI * newLeafSLN.Value();
+            var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = calcLAI();
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
-            var dilutionN = dltTT.Value() * ( nDilutionSlope.Value() * slnToday + nDilutionIntercept.Value()) * laiToday;
+            var dilutionN = dltTT.Value() * ( NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
 
             NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
