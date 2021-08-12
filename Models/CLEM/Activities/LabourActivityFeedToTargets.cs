@@ -2,6 +2,7 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -81,6 +82,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of market if present.
         /// </summary>
+        [JsonIgnore]
         public Market Market { get; private set; }
 
         /// <summary>

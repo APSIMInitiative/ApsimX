@@ -134,9 +134,7 @@ namespace Models.CLEM
             string[] filebits = (sender as Simulation).FileName.Split('.');
             wholeSimulationSummaryFile = filebits.First() + "." + "html";
             if (File.Exists(wholeSimulationSummaryFile))
-            {
                 File.Delete(wholeSimulationSummaryFile);
-            }
         }
 
         [EventSubscribe("Completed")]
@@ -144,29 +142,23 @@ namespace Models.CLEM
         {
             // if auto create summary 
             if (AutoCreateDescriptiveSummary)
-            {
-                if (!File.Exists(wholeSimulationSummaryFile))
-                {
-                    // create file as this is the first ZONE needing to create summary
+            if (!File.Exists(wholeSimulationSummaryFile))
                     System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
-                }
                 else
                 {
-                    // append new body to file
                     string html = File.ReadAllText(wholeSimulationSummaryFile);
                     using (StringWriter htmlWriter = new StringWriter())
                     {
                         int index = html.IndexOf("<!-- CLEMZoneBody -->");
                         if (index > 0)
                         {
-                            htmlWriter.Write(html.Substring(0, index-1));
+                            htmlWriter.Write(html.Substring(0, index - 1));
                             htmlWriter.Write(CLEMModel.CreateDescriptiveSummaryHTML(this, false, true));
                             htmlWriter.Write(html.Substring(index));
                             System.IO.File.WriteAllText(wholeSimulationSummaryFile, htmlWriter.ToString());
                         }
                     }
                 }
-            }
         }
 
 
@@ -186,9 +178,7 @@ namespace Models.CLEM
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (IsEcologicalIndicatorsCalculationMonth())
-            {
                 this.EcologicalIndicatorsNextDueDate = this.EcologicalIndicatorsNextDueDate.AddMonths(this.EcologicalIndicatorsCalculationInterval);
-            }
         }
 
         #region validation
@@ -260,38 +250,25 @@ namespace Models.CLEM
 
                 // get all validations 
                 if(Summary.Messages() != null)
-                {
                     foreach (DataRow item in Summary.Messages().Rows)
-                    {
                         if (item[3].ToString().StartsWith("Invalid"))
-                        {
                             error += "\r\n" + item[3].ToString();
-                        }
-                    }
-                }
                 throw new ApsimXException(this, error.Replace("&shy;","."));
             }
 
             if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
+            if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
             {
-                if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
-                {
-                    // go back from start month in intervals until
-                    DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
-                    {
-                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
-                    }
-                    EcologicalIndicatorsNextDueDate = trackDate;
-                }
-                else
-                {
-                    EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                    while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
-                    {
-                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
-                    }
-                }
+                DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                EcologicalIndicatorsNextDueDate = trackDate;
+            }
+            else
+            {
+                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
+                while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
             }
         }
 
@@ -307,50 +284,28 @@ namespace Models.CLEM
         {
             string starter = "[=";
             if(typeof(IResourceType).IsAssignableFrom(model.GetType()))
-            {
                 starter = "[r=";
-            }
             if (model.GetType() == typeof(ZoneCLEM))
-            {
                 starter = "[z=";
-            }
             if (model.GetType() == typeof(ResourcesHolder))
-            {
                 starter = "[rs=";
-            }
             if (model.GetType() == typeof(LabourRequirement))
-            {
                 starter = "[l=";
-            }
             if (model.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-            {
                 starter = "[r=";
-            }
             if (model.GetType() == typeof(ActivitiesHolder))
-            {
                 starter = "[as=";
-            }
             if (model.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-            {
                 starter = "[a=";
-            }
             if (model.GetType().Name.Contains("Group"))
-            {
                 starter = "[g=";
-            }
             if (model.GetType().Name.Contains("Timer"))
-            {
                 starter = "[t=";
-            }
             if (model.GetType().Name.Contains("Filter"))
-            {
                 starter = "[f=";
-            }
 
             if (model is CLEMModel)
-            {
                 (model as CLEMModel).CLEMParentName = parentZone.Name;
-            }
             modelPath += starter+model.Name+"]";
             modelPath = modelPath.Replace("][", "]&shy;[");
             bool valid = true;
@@ -358,9 +313,7 @@ namespace Models.CLEM
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
             if(model.Name.EndsWith(" "))
-            {
-                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] {"Name"}));
-            }
+                validationResults.Add(new ValidationResult("Component name cannot end with a space character", new string[] { "Name" }));
 
             if (validationResults.Count > 0)
             {
@@ -383,9 +336,7 @@ namespace Models.CLEM
                     }
                     string error = String.Format("Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
-                    {
-                        error += String.Format(Environment.NewLine + "DESCRIPTION: " + text );
-                    }
+                        error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
                     summary.WriteWarning(parentZone, error);
                 }
@@ -394,9 +345,7 @@ namespace Models.CLEM
             {
                 bool result = Validate(child, modelPath, parentZone, summary);
                 if (valid && !result)
-                {
                     valid = false;
-                }
             }
             return valid;
         }
@@ -404,13 +353,7 @@ namespace Models.CLEM
 
         #region Descriptive summary
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="useFullDescription">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -446,13 +389,9 @@ namespace Models.CLEM
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Random numbers are provided for this simultion.<br />");
                     if (rnd.Seed == 0)
-                    {
                         htmlWriter.Write("Every run of this simulation will be different.");
-                    }
                     else
-                    {
                         htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
-                    }
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd));
@@ -470,22 +409,14 @@ namespace Models.CLEM
                     htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This simulation runs from ");
                     if (clk.StartDate == null)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">[START DATE NOT SET]</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.StartDate.ToShortDateString() + "</span>");
-                    }
                     htmlWriter.Write(" to ");
                     if (clk.EndDate == null)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">[END DATE NOT SET]</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
-                    }
                     htmlWriter.Write("\r\n</div>");
 
                     htmlWriter.Write(CLEMModel.AddMemosToSummary(clk));
@@ -495,18 +426,12 @@ namespace Models.CLEM
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
-                {
                     htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
-                }
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Inner summary html
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -517,27 +442,21 @@ namespace Models.CLEM
 
                 ResourcesHolder resources = this.FindChild<ResourcesHolder>() as ResourcesHolder;
                 if(resources != null)
-                {
-                    if(resources.FoundMarket != null)
+                    if (resources.FoundMarket != null)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("This farm represents ");
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
-                }
 
                 if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Ecological indicators will be calculated every ");
                     if (EcologicalIndicatorsCalculationInterval <= 0)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET</span> months");
-                    }
                     else
-                    {
-                        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval==1)?"":"s")}" );
-                    }
+                        htmlWriter.Write($"<span class=\"setvalue\">{EcologicalIndicatorsCalculationInterval}</span> month{((EcologicalIndicatorsCalculationInterval == 1) ? "" : "s")}");
                     htmlWriter.Write($" starting at the end of {EcologicalIndicatorsCalculationMonth}</div>");
                 }
 
@@ -550,21 +469,13 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Closing tags for model summary html
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>\r\n</div>";
         }
 
-        /// <summary>
-        /// Opening tags for inner summary html
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string overall = "default";
@@ -580,39 +491,25 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Inner closing tags for summary html
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// inner opening tags for model summary html
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// inner opening tags before summary
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTagsBeforeSummary()
         {
             return "";
         }
 
-        /// <summary>
-        /// Model summary name type header
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryNameTypeHeader()
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -627,6 +524,12 @@ namespace Models.CLEM
                 htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
+        }
+
+        ///<inheritdoc/>
+        public string ModelSummaryNameTypeHeaderText()
+        {
+            return this.Name;
         }
         #endregion
 

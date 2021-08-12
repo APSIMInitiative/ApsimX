@@ -34,6 +34,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unit type
         /// </summary>
+        [JsonIgnore]
         public string Units { get { return "NA"; } }
 
         /// <summary>
@@ -119,6 +120,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Monthly dietary components
         /// </summary>
+        [JsonIgnore]
         public List<LabourDietComponent> DietaryComponentList { get; set; }
 
         /// <summary>

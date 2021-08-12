@@ -187,7 +187,11 @@ namespace Models.CLEM
         /// <summary>
         /// Value per kg live weight
         /// </summary>
-        perKg
+        perKg,
+        /// <summary>
+        /// Value per adult equivalent
+        /// </summary>
+        perAE,
     }
 
     /// <summary>
@@ -759,6 +763,20 @@ namespace Models.CLEM
         Sire
     }
 
+    /// <summary>
+    /// Style of Transmute
+    /// </summary>
+    public enum TransmuteStyle
+    {
+        /// <summary>
+        /// Direct transmute resource (B) to shortfall resource (A) e.g. barter
+        /// </summary>
+        Direct,
+        /// <summary>
+        /// Use pricing details of transmute resource (B) and shortfall resource (A) to calculate exchange rate
+        /// </summary>
+        UsePricing
+    }
 
 }
 

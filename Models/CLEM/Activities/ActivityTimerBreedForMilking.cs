@@ -64,6 +64,15 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public IEnumerable<RuminantFemale> IndividualsToBreed { get; set; } = null;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ActivityTimerBreedForMilking()
+        {
+            base.SetDefaults();
+        }
+
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

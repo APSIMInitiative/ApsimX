@@ -45,6 +45,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
+        [JsonIgnore]
         private List<RuminantGroup> herdFilters { get; set; }
 
         /// <summary>
