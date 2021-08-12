@@ -175,7 +175,19 @@
         /// <param name="tableName">Name of the table to be deleted.</param>
         public void DeleteTable(string tableName)
         {
-            Connection.ExecuteNonQuery($"DROP TABLE \"{tableName}\"");
+            string sql;
+            // If there is only 1 checkpointID in the database, we can just drop the table.
+            // If this table doesn't have a CheckpointID column, we also just drop the table.
+            // Otherwise, we delete all data corresponding to the "Current" checkpoint ID.
+            bool tableHasCheckpointID = Connection.GetColumns(tableName).Any(c => c.Item1 == "CheckpointID");
+            if (checkpointIDs.Count <= 1 || !tableHasCheckpointID)
+                sql = $"DROP TABLE \"{tableName}\"";
+            else
+            {
+                int currentCheckpointID = checkpointIDs["Current"].ID;
+                sql = $"DELETE FROM \"{tableName}\" WHERE CheckpointID = {currentCheckpointID}";
+            }
+            Connection.ExecuteNonQuery(sql);
             lock (lockObject)
                 if (!TablesModified.Contains(tableName))
                     TablesModified.Add(tableName);
