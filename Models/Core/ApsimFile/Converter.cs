@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 136; } }
+        public static int LatestVersion { get { return 137; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3523,6 +3523,17 @@
                     manager.Save();
                 }
             }
+        }
+
+        /// <summary>
+        /// Rename RootShapeCylindre to RootShapeCylinder.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion137(JObject root, string fileName)
+        {
+            foreach (JObject cylinder in JsonUtilities.ChildrenRecursively(root, "RootShapeCylindre"))
+                cylinder["$type"] = "Models.Functions.RootShape.RootShapeCylinder, Models";
         }
 
         /// <summary>

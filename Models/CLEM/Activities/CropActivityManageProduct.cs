@@ -365,11 +365,7 @@ namespace Models.CLEM.Activities
                 // don't rotate if no harvest tags or harvest type is not equal to "last"
                 if (!HarvestTagsUsed || NextHarvest.HarvestType == "last")
                 {
-                    // don't rotate activities that may have just had their enabled status changed in this timestep
-                    //if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
-                    //{
-                        parentManagementActivity.RotateCrop();
-                    //}
+                    parentManagementActivity.RotateCrop();
                 }
             }
         }
@@ -547,7 +543,7 @@ namespace Models.CLEM.Activities
                             this.Status = ActivityStatus.Partial;
                         }
 
-                        // now limit further by fees not paid
+                        // TODO: now limit further by fees not paid
                         double financeLimit = this.LimitProportion(typeof(Finance));
 
                         limiter.AddWeightCarried(AmountHarvested);

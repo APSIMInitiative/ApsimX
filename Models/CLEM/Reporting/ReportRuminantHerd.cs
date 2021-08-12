@@ -26,6 +26,7 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private ResourcesHolder Resources = null;
+        private RuminantHerd ruminantHerd;
 
         /// <summary>
         /// Report item was generated event handler
@@ -66,6 +67,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("CLEMValidate")]
         private void OncCLEMValidate(object sender, EventArgs e)
         {
+            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
             ReportHerd();
         }
 
@@ -83,7 +85,7 @@ namespace Models.CLEM.Reporting
                 // get all filter groups below.
                 foreach (var fgroup in allRumGroups)
                 {
-                    foreach (Ruminant item in Resources.RuminantHerd().Herd.FilterProportion(fgroup))
+                    foreach (Ruminant item in ruminantHerd?.Herd.FilterRuminants(fgroup))
                     {
                         ReportDetails = new RuminantReportItemEventArgs();
                         if (item is RuminantFemale)
@@ -100,7 +102,7 @@ namespace Models.CLEM.Reporting
             }
             else // no filter. Use entire herd
             {
-                foreach (Ruminant item in Resources.RuminantHerd().Herd)
+                foreach (Ruminant item in ruminantHerd?.Herd)
                 {
                     ReportDetails = new RuminantReportItemEventArgs();
                     if (item is RuminantFemale)

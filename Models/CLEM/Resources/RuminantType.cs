@@ -27,8 +27,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
-        [Link]
-        private ResourcesHolder Resources = null;
+        private RuminantHerd parentHerd = null;
 
         /// <summary>
         /// Unit type
@@ -64,6 +63,8 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            parentHerd = this.Parent as RuminantHerd;
+
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if(this.FindAllChildren<AnimalPricing>().Count() > 0)
             {
@@ -248,11 +249,9 @@ namespace Models.CLEM.Resources
                 else
                 {
                     return matchCriteria;
-                    //price = matchCriteria.Value * ((matchCriteria.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                 }
             }
             return null;
-            //return price;
         }
 
         #region validation
@@ -343,9 +342,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
                 }
                 return 0;
             }
@@ -358,9 +357,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
                 }
                 return 0;
             }

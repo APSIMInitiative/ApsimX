@@ -152,8 +152,7 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double multiplier = 0;
-            double addAmount = 0;
-
+            double addAmount;
             switch (resourceAmount.GetType().Name)
             {
                 case "Double":

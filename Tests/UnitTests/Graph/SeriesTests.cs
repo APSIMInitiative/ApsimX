@@ -597,7 +597,9 @@
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
 
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].SeriesDefinitions.Count, 3);
+            // There should be 3 series - the regression line, the 1:1 line, and the
+            // data series itself.
+            Assert.AreEqual(3, definitions[0].SeriesDefinitions.Count);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Series");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Type, SeriesType.Bar);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].X as double[], new double[] { 1, 2, 3, 4 });

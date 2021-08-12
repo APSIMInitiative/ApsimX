@@ -59,23 +59,17 @@ namespace Models.CLEM.Activities
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
 
             // get labour specifications
-            labour = this.FindAllChildren<LabourRequirement>().Cast<LabourRequirement>().ToList();
-            if (labour.Count() == 0)
-            {
-                labour = new List<LabourRequirement>();
-            }
+            labour = this.FindAllChildren<LabourRequirement>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)
-            {
                 Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
-            }
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.GetResourceItem(this, $"{Resources.RuminantHerd().Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParams = Resources.GetResourceItem(this, $"{HerdResource.Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         #region validation

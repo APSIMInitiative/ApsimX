@@ -202,7 +202,7 @@
 
                 
                 tryAgain = false;
-                if (Action == FileActionType.Save && fileChooser.Filter != allFilter && specParts != null)
+                if (ProcessUtilities.CurrentOS.IsWindows && Action == FileActionType.Save && fileChooser.Filter != allFilter && specParts != null)
                 {
                     string filterName = fileChooser.Filter.Name;
                     for (int i = 0; i < specParts.Length; i += 2)

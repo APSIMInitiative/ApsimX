@@ -119,8 +119,6 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-                        //activitye.Activity.SetGuID(this.UniqueID);
-                        //this.OnActivityPerformed(activitye);
                         lastStatus = true;
                         return true;
                     }

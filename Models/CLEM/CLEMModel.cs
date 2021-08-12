@@ -100,6 +100,23 @@ namespace Models.CLEM
             }
         }
 
+        private IEnumerable<IActivityTimer> activityTimers = null;
+
+        /// <summary>
+        /// A list of activity timers for this activity
+        /// </summary>
+        public IEnumerable<IActivityTimer> ActivityTimers
+        {
+            get
+            {
+                if (activityTimers is null)
+                {
+                    activityTimers = FindAllChildren<IActivityTimer>();
+                }
+                return activityTimers;
+            }
+        }
+
         /// <summary>
         /// Is timing ok for the current model
         /// </summary>
@@ -107,12 +124,8 @@ namespace Models.CLEM
         {
             get
             {
-                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
-                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                return (res == 0);
+                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                return (result == 0);
             }
         }
 

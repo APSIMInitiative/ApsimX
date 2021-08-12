@@ -223,7 +223,7 @@ namespace Models.CLEM.Activities
             if (gotLandRequested)
             {            
                 //get the units of area for this run from the Land resource parent.
-                unitsOfArea2Ha = Resources.Land().UnitsOfAreaToHaConversion;
+                unitsOfArea2Ha = Resources.FindResourceGroup<Land>().UnitsOfAreaToHaConversion;
 
                 // locate Pasture Type resource
                 LinkedNativeFoodType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
@@ -441,14 +441,15 @@ namespace Models.CLEM.Activities
 
         private double CalculateStockingRateRightNow()
         {
-            if (Resources.RuminantHerd() != null)
+            var herd = Resources.FindResourceGroup<RuminantHerd>();
+            if (herd != null)
             {
                 string paddock = FeedTypeName;
                 if(paddock.Contains("."))
                 {
                     paddock = paddock.Substring(paddock.IndexOf(".")+1);
                 }
-                return Resources.RuminantHerd().Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
+                return herd.Herd.Where(a => a.Location == paddock).Sum(a => a.AdultEquivalent) / (Area * unitsOfArea2Ha * ha2sqkm);
             }
             else
             {

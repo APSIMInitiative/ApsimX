@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);
@@ -228,8 +228,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
 
                 // calculate dry season pasture available for each managed paddock holding stock
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+                foreach (var newgroup in HerdResource.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
                 {
                     double aELocationNeeded = 0;
 
@@ -237,7 +236,7 @@ namespace Models.CLEM.Activities
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
                     double markedForSaleAE = newgroup.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
                     bool relationshipFound = false;
@@ -323,11 +322,10 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
-            if (destockGroups.Count() == 0)
+            if (!destockGroups.Any())
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
@@ -338,30 +336,29 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // remove individuals to sale as specified by destock groups
-            foreach (RuminantGroup item in destockGroups)
+            foreach (var item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterProportion(item).FilterProportion(item).FilterProportion(item)
-                    .ToList();
+                    .FilterRuminants(item);
 
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsForSale > 0)
+                foreach (Ruminant ruminant in herd)
                 {
-                    if (herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsForSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsForSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsForSale <= 0)
-                {
-                    return 0;
+
+                    if (animalEquivalentsForSale <= 0)
+                    {
+                        this.Status = ActivityStatus.Success;
+                        return 0;
+                    }
                 }
             }
+
             return animalEquivalentsForSale;
 
             // handling of sucklings with sold female is in RuminantActivityBuySell
@@ -410,7 +407,7 @@ namespace Models.CLEM.Activities
                             throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
-                        Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);
+                        HerdResource.PurchaseIndividuals.Add(newIndividual);
                         double indAE = newIndividual.AdultEquivalent;
                         animalEquivalentsToBuy -= indAE;
                         sumAE += indAE;

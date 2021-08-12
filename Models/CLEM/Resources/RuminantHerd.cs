@@ -89,7 +89,7 @@ namespace Models.CLEM.Resources
             {
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
-                if (herd.Count() > 0)
+                if (herd.Any())
                 {
                     // get list of all sucking individuals
                     var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.Age).OrderByDescending(a => a.Key);
@@ -97,11 +97,11 @@ namespace Models.CLEM.Resources
                     foreach (var sucklingList in sucklingGroups)
                     {
                         // get list of females of breeding age and condition
-                        List<RuminantFemale> breedFemales = herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
-                        if (breedFemales.Count() == 0)
+                        if (!breedFemales.Any())
                         {
-                            if (sucklingList.Count() > 0)
+                            if (sucklingList.Any())
                             {
                                 Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                 break;
@@ -188,7 +188,7 @@ namespace Models.CLEM.Resources
                     // assigning values for the remaining females who haven't just bred.
                     // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
-                    foreach (RuminantFemale female in herd.Where(a => a.Sex == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
+                    foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)))
                     {
                         // generalised curve
                         double currentIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
@@ -211,6 +211,8 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
+            // group herd ready for reporting
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -404,10 +406,11 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Overrides the base class method to allow for changes before end of month reporting
         /// </summary>
-        [EventSubscribe("CLEMFinalizeTimeStep")]
-        private void OnCLeMFinalizeTimeStep(object sender, EventArgs e)
+        [EventSubscribe("CLEMHerdSummary")]
+        private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             // group herd ready for reporting
+            // performed at herd summary to avoid end of step aging purchases etc
             groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
@@ -419,7 +422,7 @@ namespace Models.CLEM.Resources
         /// <returns>The group details</returns>
         public RuminantReportGroupDetails GetRuminantReportGroup(string ruminantTypeName, string groupName)
         {
-            if(groupedHerdForReporting != null)
+            if(groupedHerdForReporting.Any())
             {
                 var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
                 if(rumGroup != null)
@@ -431,7 +434,7 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
-            return new RuminantReportGroupDetails();
+            return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
         }
 
         /// <summary>
@@ -660,17 +663,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Average adult equivalents
         /// </summary>
-        public double? AverageAdultEquivalent { get; set; }
+        public double AverageAdultEquivalent { get { return (TotalAdultEquivalent??0.0) / Convert.ToDouble(Count??1); } }
 
         /// <summary>
         /// Average weight
         /// </summary>
-        public double? AverageWeight { get; set; }
+        public double AverageWeight { get { return (TotalWeight ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
 
         /// <summary>
         /// Average price
         /// </summary>
-        public double? AveragePrice { get; set; }
+        public double AveragePrice { get { return (TotalPrice ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
 
     }
 }

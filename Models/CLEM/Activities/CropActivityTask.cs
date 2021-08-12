@@ -66,7 +66,7 @@ namespace Models.CLEM.Activities
             if (Clock.Today.Year * 100 + Clock.Today.Month == start)
             {
                 // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault() as ActivityTimerCropHarvest;
+                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
                 if (chtimer != null)
                 {
                     if (chtimer.ActivityPast)

@@ -52,17 +52,14 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            List<Ruminant> testherd = this.CurrentHerd(true);
+            IEnumerable<Ruminant> testherd = this.CurrentHerd(true);
 
             // check if finance is available and warn if not supplying bank account.
-            if (Resources.ResourceGroupExist(typeof(Finance)))
+            if (Resources.ResourceItemsExist<Finance>())
             {
-                if (Resources.ResourceItemsExist(typeof(Finance)))
+                if (BankAccountName == "")
                 {
-                    if (BankAccountName == "")
-                    {
-                        Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
-                    }
+                    Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
                 }
             }
             if (BankAccountName != "")
@@ -76,8 +73,7 @@ namespace Models.CLEM.Activities
             // check if pricing is present
             if (bankAccount != null)
             {
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                var breeds = ruminantHerd.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
+                var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
                 {
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
@@ -115,8 +111,6 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NoTask;
 
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-
             int trucks = 0;
             double saleValue = 0;
             double saleWeight = 0;
@@ -125,7 +119,7 @@ namespace Models.CLEM.Activities
 
             // only perform this activity if timing ok, or selling required as a result of forces destock
             List<Ruminant> herd = new List<Ruminant>();
-            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Count() > 0)
+            if(this.TimingOK || this.CurrentHerd(false).Where(a => a.SaleFlag == HerdChangeReason.DestockSale).Any())
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // get current untrucked list of animals flagged for sale
@@ -154,7 +148,7 @@ namespace Models.CLEM.Activities
                     }
                     saleWeight += ind.Weight;
                     soldIndividuals.Add(ind);
-                    ruminantHerd.RemoveRuminant(ind, this);
+                    HerdResource.RemoveRuminant(ind, this);
                     head++;
                 }
             }
@@ -185,7 +179,7 @@ namespace Models.CLEM.Activities
                                 }
                                 saleWeight += ind.Weight;
                                 soldIndividuals.Add(ind);
-                                ruminantHerd.RemoveRuminant(ind, this);
+                                HerdResource.RemoveRuminant(ind, this);
 
                                 //TODO: work out what to do with suckling calves still with mothers if mother sold.
                             }
@@ -231,7 +225,7 @@ namespace Models.CLEM.Activities
                 if (saleValue > 0)
                 {
                     //bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
-                    var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(soldIndividuals, PurchaseOrSalePricingStyleType.Sale);
+                    var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(soldIndividuals, PurchaseOrSalePricingStyleType.Sale);
                     foreach (var item in groupedIndividuals)
                     {
                         foreach (var item2 in item.RuminantTypeGroup)
@@ -271,10 +265,9 @@ namespace Models.CLEM.Activities
         private void BuyWithoutTrucking()
         {
             // This activity will purchase animals based on available funds.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             // get current untrucked list of animal purchases
-            List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
+            List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
             if (herd.Count() > 0)
             {
                 if(this.Status!= ActivityStatus.Warning)
@@ -319,10 +312,10 @@ namespace Models.CLEM.Activities
                     if (cost + value <= fundsAvailable && fundsexceeded == false)
                     {
                         boughtIndividuals.Add(newind);
-                        ruminantHerd.PurchaseIndividuals.Remove(newind);
-                        newind.ID = ruminantHerd.NextUniqueID;
+                        HerdResource.PurchaseIndividuals.Remove(newind);
+                        newind.ID = HerdResource.NextUniqueID;
 
-                        ruminantHerd.AddRuminant(newind, this);
+                        HerdResource.AddRuminant(newind, this);
                         cost += value;
                     }
                     else
@@ -334,9 +327,9 @@ namespace Models.CLEM.Activities
                 else // no financial transactions
                 {
                     boughtIndividuals.Add(newind);
-                    ruminantHerd.PurchaseIndividuals.Remove(newind);
-                    newind.ID = ruminantHerd.NextUniqueID;
-                    ruminantHerd.AddRuminant(newind, this);
+                    HerdResource.PurchaseIndividuals.Remove(newind);
+                    newind.ID = HerdResource.NextUniqueID;
+                    HerdResource.AddRuminant(newind, this);
                 }
             }
 
@@ -352,7 +345,7 @@ namespace Models.CLEM.Activities
                 };
 
                 //bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
-                var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
+                var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
                 foreach (var item in groupedIndividuals)
                 {
                     foreach (var item2 in item.RuminantTypeGroup)
@@ -381,7 +374,6 @@ namespace Models.CLEM.Activities
         private void BuyWithTrucking()
         {
             // This activity will purchase animals based on available funds.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
             int trucks = 0;
             int head = 0;
@@ -396,7 +388,7 @@ namespace Models.CLEM.Activities
             bool fundsexceeded = false;
 
             // get current untrucked list of animal purchases
-            List<Ruminant> herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
+            List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
             if (herd.Count() == 0)
             {
                 return;
@@ -442,10 +434,10 @@ namespace Models.CLEM.Activities
 
                                 if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
-                                    ind.ID = ruminantHerd.NextUniqueID;
+                                    ind.ID = HerdResource.NextUniqueID;
                                     boughtIndividuals.Add(ind);
-                                    ruminantHerd.AddRuminant(ind, this);
-                                    ruminantHerd.PurchaseIndividuals.Remove(ind);
+                                    HerdResource.AddRuminant(ind, this);
+                                    HerdResource.PurchaseIndividuals.Remove(ind);
                                     cost += value;
                                 }
                                 else
@@ -456,10 +448,10 @@ namespace Models.CLEM.Activities
                             }
                             else // no financial transactions
                             {
-                                ind.ID = ruminantHerd.NextUniqueID;
+                                ind.ID = HerdResource.NextUniqueID;
                                 boughtIndividuals.Add(ind);
-                                ruminantHerd.AddRuminant(ind, this);
-                                ruminantHerd.PurchaseIndividuals.Remove(ind);
+                                HerdResource.AddRuminant(ind, this);
+                                HerdResource.PurchaseIndividuals.Remove(ind);
                             }
 
                         }
@@ -474,12 +466,12 @@ namespace Models.CLEM.Activities
                         break;
                     }
 
-                    herd = ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
+                    herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
                 }
 
                 if (Status != ActivityStatus.Warning)
                 {
-                    if(ruminantHerd.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
+                    if(HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
                     {
                         SetStatusSuccess();
                     }
@@ -506,7 +498,7 @@ namespace Models.CLEM.Activities
                         RelatesToResource = this.PredictedHerdName
                     };
 
-                    var groupedIndividuals = ruminantHerd.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
+                    var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(boughtIndividuals, PurchaseOrSalePricingStyleType.Purchase);
                     foreach (var item in groupedIndividuals)
                     {
                         foreach (var item2 in item.RuminantTypeGroup)
@@ -569,7 +561,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = Resources.RuminantHerd().Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
+            List<Ruminant> herd = HerdResource.Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
             double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;

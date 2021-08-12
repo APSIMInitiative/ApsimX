@@ -76,7 +76,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             // locate resources
-            availabilityList = this.FindAllChildren<LabourAvailabilityList>().Cast<LabourAvailabilityList>().FirstOrDefault();
+            availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
 
             if (Clock.Today.Day != 1)
             {
@@ -154,7 +154,7 @@ namespace Models.CLEM.Resources
             adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
 
             Items = new List<LabourType>();
-            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+            foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
             {
                 IndividualAttribute att = new IndividualAttribute() { storedValue = labourChildModel.Name };
                 if (UseCohorts)
@@ -199,7 +199,7 @@ namespace Models.CLEM.Resources
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (this.FindAllChildren<LabourPricing>().Count() > 0)
             {
-                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault()) as LabourPricing;
+                PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
             }
         }
 
@@ -268,9 +268,9 @@ namespace Models.CLEM.Resources
             // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                foreach (var availItem in availabilityList.Children.OfType<ILabourSpecificationItem>())
+                foreach (Model availItem in availabilityList.FindAllChildren<LabourSpecificationItem>())
                 {
-                    if ((availItem as IFilterGroup).Filter(checkList).Any())
+                    if (checkList.Filter(availItem).Any())
                     {
                         labour.LabourAvailability = availItem;
                         break;
@@ -357,7 +357,7 @@ namespace Models.CLEM.Resources
                 List<LabourType> labourList = new List<LabourType>() { ind };
 
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-                foreach (var item in PayList.FindAllChildren<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (item.Filter(labourList).Count() == 1)                    
                         return item.Value;
@@ -388,13 +388,13 @@ namespace Models.CLEM.Resources
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (var item in PayList.FindAllChildren<LabourPriceGroup>())
+                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (item.Filter(labourList).Count() == 1 && matchIndividual == null)                    
                         matchIndividual = item;                    
 
-                    // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.Parameter.ToUpper() == property.Name.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
+                    // check that pricing item meets the specified criteria.                    
+                    if (item.FindAllChildren<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {
@@ -503,7 +503,7 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"clearfix resourcebannerlight\">Labour types</div>");
                 htmlWriter.Write("\r\n<div class=\"resourcecontentlight\">");
                 htmlWriter.Write("<table><tr><th>Name</th><th>Gender</th><th>Age (yrs)</th><th>Number</th><th>Hired</th></tr>");
-                foreach (LabourType labourType in this.FindAllChildren<LabourType>().Cast<LabourType>().ToList())
+                foreach (LabourType labourType in this.FindAllChildren<LabourType>())
                 {
                     htmlWriter.Write("<tr>");
                     htmlWriter.Write("<td>" + labourType.Name + "</td>");

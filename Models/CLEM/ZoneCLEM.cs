@@ -247,8 +247,8 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
+            // this event fires after Activity and Resource initialisation so that resources are available to check in the validation.
+            // Commencing is too early as Summary has not been created for reporting.
             // some values assigned in commencing will not be checked before processing, but will be caught here
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
@@ -379,7 +379,6 @@ namespace Models.CLEM
                             text = description.ToString();
                         }
                     }
-                    //string error = String.Format("@validation:Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     string error = String.Format("Invalid parameter value in " + modelPath + "" + Environment.NewLine + "PARAMETER: " + validateError.MemberNames.FirstOrDefault());
                     if (text != "")
                     {

@@ -147,7 +147,7 @@ namespace Models.CLEM.Activities
             }
 
             // check pricing
-            if (!Resources.Labour().PricingAvailable)
+            if (!Resources.FindResourceGroup<Labour>().PricingAvailable)
             {
                 string[] memberNames = new string[] { "Labour pricing" };
                 results.Add(new ValidationResult(String.Format("[a={0}] requires a [r=LabourPricing] component to set the labour rates.\r\nThis activity will be ignored without this component.", this.Name), memberNames));

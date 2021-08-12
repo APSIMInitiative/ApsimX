@@ -80,17 +80,17 @@ namespace Models.CLEM.Resources
             // if market exists look for market pricing to override local pricing as all transactions will be through the market
             if (!((this.Parent.Parent as ResourcesHolder).FoundMarket is null) && this.MarketStoreExists)
             {
-                price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
+                price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || a.PurchaseOrSale == priceType) && a.TimingOK);
             }
             else
             {
-                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => ((a as ResourcePricing).PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | (a as ResourcePricing).PurchaseOrSale == priceType) && (a as ResourcePricing).TimingOK);
+                price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | a.PurchaseOrSale == priceType) && a.TimingOK);
             }
 
             if (price == null)
             {
                 // does simulation have finance
-                if (FindAncestor<ResourcesHolder>().FinanceResource() != null)
+                if (FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null)
                 {
                     string market = "";
                     if((this.Parent.Parent as ResourcesHolder).MarketPresent)
@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    if(FindAncestor<ResourcesHolder>().FinanceResource() != null && amount != 0)
+                    if(FindAncestor<ResourcesHolder>().FindResourceGroup<Finance>() != null && amount != 0)
                     {
                         string market = "";
                         if ((this.Parent.Parent as ResourcesHolder).MarketPresent)

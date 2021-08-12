@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 90,
+  "Version": 136,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -17,6 +17,8 @@
     },
     {
       "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
       "Name": "IndividualAnimal",
       "Children": [
         {
@@ -64,10 +66,12 @@
           "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
           "EcologicalIndicatorsCalculationMonth": 12,
+          "AutoCreateDescriptiveSummary": false,
           "Area": 0.0,
           "Slope": 0.0,
           "AspectAngle": 0.0,
           "Altitude": 50.0,
+          "ModelSummaryStyle": 7,
           "Name": "CLEM",
           "Children": [
             {
@@ -76,6 +80,7 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
+                  "TransactionStyle": 0,
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -103,6 +108,7 @@
                       "SRWGrowthScalar": 0.32,
                       "IntakeCoefficient": 0.024,
                       "IntakeIntercept": 1.7,
+                      "OverfeedPotentialIntakeModifier": 1.0,
                       "ProteinCoefficient": 120.0,
                       "ProteinDegradability": 0.9,
                       "BaseAnimalEquivalent": 450.0,
@@ -150,6 +156,7 @@
                       "MaximumMaleMatingsPerDay": 30.0,
                       "PrenatalMortality": 0.079,
                       "MethaneProductionCoefficient": 35.16,
+                      "LastGain": 0.0,
                       "Name": "Bos indicus",
                       "Children": [
                         {
@@ -197,16 +204,18 @@
                       "DMD": 45.0,
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
+                      "LastGain": 0.0,
                       "Name": "RiceStraw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Transmutation, Models",
                           "AmountPerUnitPurchase": 10000.0,
+                          "WorkInWholeUnits": false,
+                          "TransactionCategory": "Transmutation",
                           "Name": "Purchase",
                           "Children": [
                             {
                               "$type": "Models.CLEM.TransmutationCost, Models",
-                              "ResourceType": null,
                               "ResourceTypeName": "Finances.General account",
                               "CostPerUnit": 100.0,
                               "Name": "Money",
@@ -242,6 +251,7 @@
                       "WithdrawalLimit": 0.0,
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
+                      "LastGain": 0.0,
                       "Name": "General account",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -266,6 +276,7 @@
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
+                  "TransactionCategory": null,
                   "OnPartialResourcesAvailableAction": 0,
                   "Name": "Manage herd",
                   "Children": [
@@ -274,9 +285,11 @@
                       "FeedTypeName": "AnimalFoodStore.RiceStraw",
                       "ProportionTramplingWastage": 0.0,
                       "FeedStyle": 3,
+                      "StopFeedingWhenSatisfied": false,
                       "HerdFilters": null,
                       "PredictedHerdName": null,
                       "PredictedHerdBreed": null,
+                      "TransactionCategory": "Livestock.Feed",
                       "OnPartialResourcesAvailableAction": 2,
                       "Name": "Feed rice straw",
                       "Children": [
@@ -297,7 +310,9 @@
                     {
                       "$type": "Models.CLEM.Activities.RuminantActivityGrow, Models",
                       "EnergyGross": 18.8,
+                      "MethaneStoreName": "Use store named Methane if present",
                       "OnPartialResourcesAvailableAction": 0,
+                      "TransactionCategory": "Livestock.Manage",
                       "Name": "Grow all ruminants",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -404,6 +419,11 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
+                  "ResourceGroupsToReport": "Finances",
+                  "ReportLossesAsNegative": false,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
                   "VariableNames": [
                     "Finances"
                   ],
@@ -417,6 +437,16 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
+                  "ResourceGroupsToReport": [
+                    "AnimalFoodStore",
+                    "Finances"
+                  ],
+                  "ReportAmount": true,
+                  "ReportValue": false,
+                  "ReportAnimalEquivalents": false,
+                  "ReportAnimalWeight": false,
+                  "ReportLandEntire": false,
+                  "ReportLabourIndividuals": false,
                   "VariableNames": [
                     "[Clock].Today",
                     "AnimalFoodStore",
@@ -435,6 +465,11 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportActivitiesPerformed, Models",
+                  "CreateHTML": false,
+                  "RotateReport": false,
+                  "AutoCreateHTML": false,
+                  "SelectedTab": null,
+                  "ModelSummaryStyle": 0,
                   "VariableNames": null,
                   "EventNames": null,
                   "GroupByVariableName": null,
@@ -473,6 +508,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AnimalFoodStoreBalance",
@@ -540,6 +576,7 @@
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Liveweight_Individual",
@@ -607,6 +644,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WeightGain_Individual",
@@ -674,6 +712,7 @@
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "BankBalance",

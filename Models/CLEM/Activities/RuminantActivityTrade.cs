@@ -169,7 +169,7 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // remove any old potential sales from list as these will be updated here
-                Resources.RuminantHerd().PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
+                HerdResource.PurchaseIndividuals.RemoveAll(a => a.Breed == this.PredictedHerdBreed && a.SaleFlag == HerdChangeReason.TradePurchase);
 
                 foreach (SpecifyRuminant purchaseSpecific in this.FindAllChildren<SpecifyRuminant>())
                 {
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
                             female.NumberOfBirths = 0;
                         }
 
-                        Resources.RuminantHerd().PurchaseIndividuals.Add(ruminant);
+                        HerdResource.PurchaseIndividuals.Add(ruminant);
                         this.Status = ActivityStatus.Success;
                     }
                 }
