@@ -460,6 +460,12 @@ namespace Models.CLEM.Resources
                                         break;
                                     }
                                 }
+                                else
+                                {
+                                    // the transmute resource (B) was not found so we cannot complete this transmutation
+                                    allTransmutesSucceeed = false;
+                                    break;
+                                }
                             }
 
                             if (queryOnly)
@@ -476,71 +482,6 @@ namespace Models.CLEM.Resources
                                 // Add resource: tops up resource from tansmutation so available in CheckResources
                                 (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * transmutation.TransmutationPacketSize, request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                             }
-
-                            //double unitsize = transmute.ShortfallPacketSize;
-                            //unitsNeeded = (request.Required - request.Available) / unitsize;
-                            //if(transmutation.UseWholePackets)
-                            //{
-                            //    unitsNeeded = Math.Ceiling(unitsNeeded);
-                            //}
-
-                            //double cost = unitsNeeded * transmute.AmountPerPacket;
-
-                            //// get transmutation cost resource
-                            //IResourceType transmutedResourceType = null;
-                            //if (transmute.ResourceType != null && transmute.ResourceType != typeof(Labour))
-                            //{
-                            //    transmutedResourceType = resourceHolder.GetResourceItem(request.ActivityModel, transmute.TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
-                            //}
-
-                            //if (transmutedResourceType != null | transmute.ResourceType == typeof(Labour)) // need to remove found resource for transmutation
-                            //{
-                            //if (!queryOnly)
-                            //{
-                            //    // remove cost
-                            //    // create new request for this transmutation cost
-                            //    ResourceRequest transRequest = new ResourceRequest
-                            //    {
-                            //        RelatesToResource = request.ResourceTypeName,
-                            //        Required = cost,
-                            //        ResourceType = transmute.ResourceType,
-                            //        ActivityModel = request.ActivityModel,
-                            //        Category = transmutation.TransactionCategory,
-                            //    };
-
-                            //    // used to pass request, but this is not the transmutation cost
-                            //    if (transmute.ResourceType == typeof(Labour))
-                            //    {
-                            //        transRequest.FilterDetails = (transmute as IModel).FindAllChildren<LabourFilterGroup>().ToList<object>();
-                            //        CLEMActivityBase.TakeLabour(transRequest, true, transRequest.ActivityModel, this, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
-                            //    }
-                            //    else
-                            //    {
-                            //        transmutedResourceType.Remove(transRequest);
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    double activityCost = 0;
-                            //    if (transmute.ResourceType == typeof(Labour))
-                            //    {
-                            //        // TODO: calculate activity labour cost from filters
-                            //    }
-                            //    else
-                            //    {
-                            //        activityCost = requests.Where(a => a.ResourceType == transmute.ResourceType && a.ResourceTypeName == transmute.TransmuteResourceTypeName).Sum(a => a.Required);
-                            //    }
-                            //    if (cost + activityCost <= transmutedResourceType.Amount)
-                            //    {
-                            //        request.TransmutationPossible = true;
-                            //        break;
-                            //    }
-                            //}
-                            //} 
-                            //else
-                            //{
-                            //    request.TransmutationPossible = true;
-                            //}
                         }
                     }
                 }
