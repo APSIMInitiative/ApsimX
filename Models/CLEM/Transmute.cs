@@ -248,9 +248,10 @@ namespace Models.CLEM
                     htmlWriter.WriteLine(": B&#8594;A");
                 else
                 {
-                    htmlWriter.WriteLine(": B&#8594;$&#8594;A");
                     if (transmute.FinanceTypeForTransactionsName != null && transmute.FinanceTypeForTransactionsName != "")
                         htmlWriter.WriteLine(": B&#8594;$ $&#8594;A");
+                    else
+                        htmlWriter.WriteLine(": B&#8594;$&#8594;A");
                 }
                 return htmlWriter.ToString();
             }

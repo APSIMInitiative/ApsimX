@@ -99,7 +99,7 @@ namespace Models.CLEM
                 if (pricing.Any())
                 {
                     htmlWriter.Write($"using the resource purchase price ");
-                    var transmuteResourcePrice = ((this.FindAncestor<ResourcesHolder>()).GetResourceItem(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType).Price(PurchaseOrSalePricingStyleType.Purchase);
+                    var transmuteResourcePrice = ((this.FindAncestor<ResourcesHolder>()).GetResourceItem(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType)?.Price(PurchaseOrSalePricingStyleType.Purchase);
                     if (transmuteResourcePrice != null)
                     {
                         htmlWriter.Write("found");
