@@ -224,7 +224,7 @@ namespace UserInterface.Views
             if (string.IsNullOrEmpty(filter))
                 filter = checkpointFilter;
             else
-                filter = $" AND {checkpointFilter}";
+                filter += $" AND {checkpointFilter}";
 
             if (simulationNames != null)
             {
