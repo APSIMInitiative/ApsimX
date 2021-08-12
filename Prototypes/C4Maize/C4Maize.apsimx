@@ -5968,6 +5968,9 @@
             },
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
+              "InitialDMWeight": 0.01,
+              "InitialLAI": 380.0,
+              "InitialSLN": 1.7,
               "Albedo": 0.0,
               "Gsmax350": 0.0,
               "R50": 0.0,
@@ -6014,56 +6017,6 @@
               "DltSenescedLaiAge": 0.0,
               "Name": "Leaf",
               "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 380.0,
-                  "Units": null,
-                  "Name": "InitialLAIFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "This is really initial TPLA. Initial LAI is calculated as:\n\n```\nLAI = initialLAIFunction.Value() * smm2sm * SowingDensity;\n```",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.7,
-                  "Units": null,
-                  "Name": "InitialSLNFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
-                  "Units": "g/plant",
-                  "Name": "InitialWtFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "m^2/m^2",
-                  "Name": "LaiDeadFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "ExpansionStress",

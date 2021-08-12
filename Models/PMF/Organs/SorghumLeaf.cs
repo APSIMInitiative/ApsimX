@@ -178,20 +178,20 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
 
-        /// <summary>The senescence rate function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        private IFunction senescenceRate = null;
+        ///// <summary>The senescence rate function</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("/d")]
+        //private IFunction senescenceRate = null;
 
         /// <summary>Radiation level for onset of light senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("Mj/m^2")]
         private IFunction senRadnCrit = null;
 
-        /// <summary>The DM reallocation factor</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        private IFunction dmReallocationFactor = null;
+        ///// <summary>The DM reallocation factor</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("/d")]
+        //private IFunction dmReallocationFactor = null;
 
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -204,34 +204,34 @@ namespace Models.PMF.Organs
         private BiomassDemand nDemands = null;
 
         /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Description("Initial leaf dry matter weight")]
         [Units("g/m2")]
-        private IFunction initialWtFunction = null;
+        public double InitialDMWeight { get; set; } = 0.2;
 
-        /// <summary>The initial biomass dry matter weight</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        /// <summary>Initial LAI</summary>
+        [Description("Initial LAI")]
         [Units("g/m2")]
-        private IFunction initialLAIFunction = null;
+        public double InitialLAI { get; set; } = 200.0;
 
         /// <summary>The initial SLN value</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Description("Initial SLN")]
         [Units("g/m2")]
-        private IFunction initialSLNFunction = null;
+        public double InitialSLN { get; set; } = 1.5;
 
-        /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction maximumNConc = null;
+        ///// <summary>The maximum N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //private IFunction maximumNConc = null;
 
-        /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction minimumNConc = null;
+        ///// <summary>The minimum N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //private IFunction minimumNConc = null;
 
-        /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction criticalNConc = null;
+        ///// <summary>The critical N concentration</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+        //[Units("g/g")]
+        //private IFunction criticalNConc = null;
 
         ////#pragma warning disable 414
         ///// <summary>Carbon concentration</summary>
@@ -392,12 +392,10 @@ namespace Models.PMF.Organs
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
         public double RadiationIntercepted => CoverGreen * metData.Radn;
 
-        /// <summary>Stress.</summary>
-        [Description("Nitrogen Photosynthesis Stress")]
+        /// <summary>Nitrogen Photosynthesis Stress.</summary>
         public double NitrogenPhotoStress { get; set; }
 
-        /// <summary>Stress.</summary>
-        [Description("Nitrogen Phenology Stress")]
+        /// <summary>Nitrogen Phenology Stress.</summary>
         public double NitrogenPhenoStress { get; set; }
 
         /// <summary>Stress.</summary>
@@ -476,15 +474,15 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
-        public double MaxNconc => maximumNConc.Value();
+        public double MaxNconc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double MinNconc => minimumNConc.Value();
+        public double MinNconc => 0.0;
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
-        public double CritNconc => criticalNConc.Value();
+        public double CritNconc => 0.0;
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -1158,15 +1156,15 @@ namespace Models.PMF.Organs
             return availableDM;
         }
 
-        /// <summary>Computes the amount of DM available for reallocation.</summary>
-        private double availableDMReallocation()
-        {
-            double availableDM = StartLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
-            if (availableDM < -biomassToleranceValue)
-                throw new Exception("Negative DM reallocation value computed for " + Name);
+        ///// <summary>Computes the amount of DM available for reallocation.</summary>
+        //private double availableDMReallocation()
+        //{
+        //    double availableDM = StartLive.StorageWt * senescenceRate.Value() * dmReallocationFactor.Value();
+        //    if (availableDM < -biomassToleranceValue)
+        //        throw new Exception("Negative DM reallocation value computed for " + Name);
 
-            return availableDM;
-        }
+        //    return availableDM;
+        //}
 
         /// <summary>
         /// calculates todays LAI values - can change during retranslocation calculations
@@ -1256,10 +1254,10 @@ namespace Models.PMF.Organs
             {
                 leafInitialised = true;
 
-                Live.StructuralWt = initialWtFunction.Value() * SowingDensity;
+                Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
-                LAI = initialLAIFunction.Value() * smm2sm * SowingDensity;
-                SLN = initialSLNFunction.Value();
+                LAI = InitialLAI * smm2sm * SowingDensity;
+                SLN = InitialSLN;
 
                 Live.StructuralN = LAI * SLN;
                 Live.StorageN = 0;
@@ -1350,7 +1348,8 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetDMSupply")]
         private void setDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = availableDMReallocation();
+            //Reallocation usually comes form Storage - which sorghum doesn't utilise
+            DMSupply.Reallocation = 0.0; //availableDMReallocation();
             DMSupply.Retranslocation = availableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = dMSupplyFixation.Value();
