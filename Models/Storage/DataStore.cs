@@ -291,16 +291,8 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
-                try
-                {
-                    dbReader.ExecuteSql(selectSQL);
-                    connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
-                }
-                catch (Exception)
-                {
-                    // ignore and do not create view with invalid sql
-                    // prevents column collection exceptions in create datastore on loading the simulation in future
-                }
+                dbReader.ExecuteSql(selectSQL);
+                connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else
             {
