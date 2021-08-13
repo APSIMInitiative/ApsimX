@@ -1884,15 +1884,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].ExpansionStress",
-                  "Name": "expansionStress",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.5,
                   "Units": null,
@@ -2198,6 +2189,69 @@
                   "Units": null,
                   "Name": "slaMax",
                   "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "ExpansionStress",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WaterStressEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.5,
+                            1.1
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].SDRatio",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "NitrogenStressEffect",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "PhosphorusStressEffect",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -5985,16 +6039,17 @@
             },
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
+              "InitialDMWeight": 0.01,
+              "InitialLAI": 380.0,
+              "InitialSLN": 1.7,
               "NewLeafSLN": 1.0,
               "SenescedLeafSLN": 0.3,
               "NDilutionIntercept": -0.0017,
               "NDilutionSlope": 0.0043,
-              "InitialDMWeight": 0.01,
-              "InitialLAI": 380.0,
-              "InitialSLN": 1.7,
               "Albedo": 0.0,
               "Gsmax350": 0.0,
               "R50": 0.0,
+              "LeafInitialisationStage": "Emergence",
               "BaseHeight": 0.0,
               "Width": 0.0,
               "PotentialEP": 0.0,
@@ -6012,7 +6067,6 @@
               "MicroClimatePresent": false,
               "BiomassRUE": 0.0,
               "BiomassTE": 0.0,
-              "LeafInitialisationStage": "Emergence",
               "KDead": 0.03,
               "LAIDead": 0.0,
               "NitrogenPhotoStress": 0.0,
@@ -6038,69 +6092,6 @@
               "DltSenescedLaiAge": 0.0,
               "Name": "Leaf",
               "Children": [
-                {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "ExpansionStress",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WaterStressEffect",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.5,
-                            1.1
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].SDRatio",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "NitrogenStressEffect",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "PhosphorusStressEffect",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "ExtinctionCoefficientFunction",
@@ -8077,6 +8068,35 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Leaf].SlnAtFlag",
                       "Name": "PostEventValue",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                  "NumeratorErrVal": 0.0,
+                  "DenominatorErrVal": 1.0,
+                  "Name": "SDRatio",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].WatSupply",
+                      "Name": "WaterSupply",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].WDemand",
+                      "Name": "WaterDemand",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,

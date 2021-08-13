@@ -846,7 +846,7 @@ namespace Models.PMF.Struct
 				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipDensityScale;
 				linearLAI = pltsPerMetre * tpla / 10000.0;
 
-				double laiToday = leaf.calcLAI();
+				double laiToday = leaf.CalcLAI();
 				bool newLeaf = newLeafNo > currentLeafNo;
 				//is it a new leaf, and it is > leaf 6 (leaf 5 appearance triggers initial tiller appeaance)
 				//	bool newTiller = newLeaf && newLeafNo >= 6 && laiToday < maxLAIForTillering; 

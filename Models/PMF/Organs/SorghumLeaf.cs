@@ -1,17 +1,15 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
-using Models.Interfaces;
 using Models.Functions;
+using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
-using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using Models.PMF.Phen;
 using Models.PMF.Struct;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using Models.Functions.DemandFunctions;
-using Models.Functions.SupplyFunctions;
 using System.Text;
 
 namespace Models.PMF.Organs
@@ -71,6 +69,9 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction SDRatioFunction = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction SDRatio = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frgr = null;
@@ -568,7 +569,7 @@ namespace Models.PMF.Organs
                 //areaActual in old model
                 // culms.AreaActual() will update this.DltLAI
                 culms.AreaActual();
-                senesceArea();
+                SenesceArea();
             }
         }
 
@@ -655,7 +656,7 @@ namespace Models.PMF.Organs
                 throw new Exception($"Negative N in sorghum leaf '{Name}'");
             //n demand as calculated in apsim classic is different ot implementation of structural and metabolic
             // Same as metabolic demand in new apsim.
-            var classicLeafDemand = Math.Max(0.0, calcLAI() * targetSLN.Value() - Live.N);
+            var classicLeafDemand = Math.Max(0.0, CalcLAI() * targetSLN.Value() - Live.N);
             //need to remove pmf nDemand calcs from totalDemand to then add in what it should be from classic
             var pmfLeafDemand = nDemands.Structural.Value() + nDemands.Metabolic.Value();
 
@@ -669,7 +670,7 @@ namespace Models.PMF.Organs
         public double ProvideNRetranslocation(BiomassArbitrationType BAT, double requiredN, bool forLeaf)
         {
             int leafIndex = 2;
-            double laiToday = calcLAI();
+            double laiToday = CalcLAI();
             //whether the retranslocation is added or removed is confusing
             //Leaf::CalcSLN uses - dltNRetranslocate - but dltNRetranslocate is -ve
             double dltNGreen = BAT.StructuralAllocation[leafIndex] + BAT.MetabolicAllocation[leafIndex];
@@ -712,7 +713,7 @@ namespace Models.PMF.Organs
                 }
 
                 // recalc the SLN after this N has been removed
-                laiToday = calcLAI();
+                laiToday = CalcLAI();
                 slnToday = calcSLN(laiToday, nGreenToday);
 
                 var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
@@ -749,7 +750,7 @@ namespace Models.PMF.Organs
                         return nProvided;
 
                     // rest from senescence
-                    laiToday = calcLAI();
+                    laiToday = CalcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
                     var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
@@ -779,7 +780,7 @@ namespace Models.PMF.Organs
                     DltRetranslocatedN -= nProvided;
 
                     // rest from senescence
-                    laiToday = calcLAI();
+                    laiToday = CalcLAI();
                     slnToday = calcSLN(laiToday, nGreenToday);
 
                     var maxN = thermalTime * (NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
@@ -805,7 +806,7 @@ namespace Models.PMF.Organs
         private double totalLaiEqlbLight;
         private double avgLaiEquilibLight;
         private Queue<double> laiEqlbLightTodayQ;
-        private double updateAvLaiEquilibLight(double laiEqlbLightToday, int days)
+        private double UpdateAvLaiEquilibLight(double laiEqlbLightToday, int days)
         {
             totalLaiEqlbLight += laiEqlbLightToday;
             laiEqlbLightTodayQ.Enqueue(laiEqlbLightToday);
@@ -819,7 +820,7 @@ namespace Models.PMF.Organs
         private double totalLaiEquilibWater;
         private double avLaiEquilibWater;
         private Queue<double> laiEquilibWaterQ;
-        private double updateAvLaiEquilibWater(double valToday, int days)
+        private double UpdateAvLaiEquilibWater(double valToday, int days)
         {
             totalLaiEquilibWater += valToday;
             laiEquilibWaterQ.Enqueue(valToday);
@@ -833,7 +834,7 @@ namespace Models.PMF.Organs
         private double totalSDRatio;
         private double avSDRatio;
         private Queue<double> sdRatioQ;
-        private double updateAvSDRatio(double valToday, int days)
+        private double UpdateAvSDRatio(double valToday, int days)
         {
             totalSDRatio += valToday;
             sdRatioQ.Enqueue(valToday);
@@ -845,14 +846,14 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Senesce the Leaf Area.</summary>
-        private void senesceArea()
+        private void SenesceArea()
         {
             DltSenescedLai = 0.0;
             DltSenescedLaiN = 0.0;
 
             DltSenescedLaiAge = 0;
             if (phenology.Between("Emergence", "HarvestRipe"))
-                DltSenescedLaiAge = calcLaiSenescenceAge();
+                DltSenescedLaiAge = CalcLaiSenescenceAge();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiAge);
 
             //sLai - is the running total of dltSLai
@@ -860,13 +861,13 @@ namespace Models.PMF.Organs
             LossFromExpansionStress += (DltPotentialLAI - DltStressedLAI);
             var maxLaiPossible = LAI + SenescedLai - LossFromExpansionStress;
 
-            DltSenescedLaiLight = calcLaiSenescenceLight();
+            DltSenescedLaiLight = CalcLaiSenescenceLight();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiLight);
 
-            DltSenescedLaiWater = calcLaiSenescenceWater();
+            DltSenescedLaiWater = CalcLaiSenescenceWater();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiWater);
 
-            DltSenescedLaiFrost = calcLaiSenescenceFrost();
+            DltSenescedLaiFrost = CalcLaiSenescenceFrost();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
 
             DltSenescedLai = Math.Min(DltSenescedLai, LAI);
@@ -875,7 +876,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Calculate senescence due to frost.
         /// </summary>
-        private double calcLaiSenescenceFrost()
+        private double CalcLaiSenescenceFrost()
         {
             if (weather.MinT > FrostKill || !plant.IsEmerged)
                 return 0;
@@ -883,7 +884,7 @@ namespace Models.PMF.Organs
             if(MathUtilities.IsLessThanOrEqual(weather.MinT, frostKillSevere.Value()))
             {
                 // Temperature is below frostKillSevere parameter, senesce all LAI.
-                summary.WriteMessage(this, getFrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
                 return LAI;
             }
             // Temperature is warmer than frostKillSevere, but cooler than frostKill.
@@ -893,13 +894,13 @@ namespace Models.PMF.Organs
             {
                 // The plant will survive but all of the leaf area is removed except a fraction.
                 // 3 degrees is a default for now - extract to a parameter to customise it.
-                summary.WriteMessage(this, getFrostSenescenceMessage(fatal: false));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false));
                 return Math.Max(0, LAI - 0.1);
             }
             if (phenology.Between("FloralInitiation", "Flowering"))
             {
                 // Plant is between floral init and flowering - time to die.
-                summary.WriteMessage(this, getFrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
                 return LAI; // rip
             }
 
@@ -917,7 +918,7 @@ namespace Models.PMF.Organs
         /// messages multiple times.
         /// </summary>
         /// <param name="fatal">Was the frost event fatal?</param>
-        private string getFrostSenescenceMessage(bool fatal)
+        private string FrostSenescenceMessage(bool fatal)
         {
             StringBuilder message = new StringBuilder();
             message.AppendLine($"Frost Event: ({(fatal ? "Fatal" : "Non Fatal")})");
@@ -926,7 +927,7 @@ namespace Models.PMF.Organs
             return message.ToString();
         }
 
-        private double calcLaiSenescenceWater()
+        private double CalcLaiSenescenceWater()
         {
             //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
             //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
@@ -951,19 +952,16 @@ namespace Models.PMF.Organs
             else
                 laiEquilibWaterToday = LAI;
 
-            avLaiEquilibWater = updateAvLaiEquilibWater(laiEquilibWaterToday, 10);
-
-            avSDRatio = updateAvSDRatio(SDRatioFunction.Value(), 5);
-            //// average of the last 10 days of laiEquilibWater`
-            //laiEquilibWater.push_back(laiEquilibWaterToday);
-            //double avLaiEquilibWater = movingAvgVector(laiEquilibWater, 10);
+            // calculate average of the last 10 days of laiEquilibWater`
+            avLaiEquilibWater = UpdateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
             //// calculate a 5 day moving average of the supply demand ratio
-            //avSD.push_back(plant->water->getSdRatio());
+            avSDRatio = UpdateAvSDRatio(SDRatio.Value(), 5);
 
+            var movAvgSDRatio = SDRatioFunction.Value();
             double dltSlaiWater = 0.0;
-            //if (avSDRatio < senThreshold.Value()) //JKB TOO FIX
-            if (SDRatioFunction.Value() < senThreshold.Value())
+
+            if (avSDRatio < senThreshold.Value())
                 dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(LAI, dltSlaiWater);
             return dltSlaiWater;
@@ -971,9 +969,9 @@ namespace Models.PMF.Organs
         }
         
         /// <summary>Return the lai that would senesce on the current day from natural ageing</summary>
-        private double calcLaiSenescenceAge()
+        private double CalcLaiSenescenceAge()
         {
-            dltDeadLeaves = calcDltDeadLeaves();
+            dltDeadLeaves = CalcDltDeadLeaves();
             double deadLeaves = nDeadLeaves + dltDeadLeaves;
             double laiSenescenceAge = 0;
             if (MathUtilities.IsPositive(deadLeaves))
@@ -985,7 +983,7 @@ namespace Models.PMF.Organs
             return Math.Max(laiSenescenceAge - SenescedLai, 0);
         }
 
-        private double calcDltDeadLeaves()
+        private double CalcDltDeadLeaves()
         {
             double nDeadYesterday = nDeadLeaves;
             double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * phenology.AccumulatedEmergedTT);
@@ -993,7 +991,7 @@ namespace Models.PMF.Organs
             return nDeadToday - nDeadYesterday;
         }
 
-        private double calcLaiSenescenceLight()
+        private double CalcLaiSenescenceLight()
         {
             double critTransmission = MathUtilities.Divide(SenRadnCrit, metData.Radn, 1);
             /* TODO : Direct translation - needs cleanup */
@@ -1008,7 +1006,7 @@ namespace Models.PMF.Organs
                 laiEqlbLightToday = LAI;
             }
             // average of the last 10 days of laiEquilibLight
-            avgLaiEquilibLight = updateAvLaiEquilibLight(laiEqlbLightToday, 10);//senLightTimeConst?
+            avgLaiEquilibLight = UpdateAvLaiEquilibLight(laiEqlbLightToday, 10);//senLightTimeConst?
 
             // dh - In old apsim, we had another variable frIntcRadn which is always set to 0.
             // Set Plant::radnInt(void) in Plant.cpp.
@@ -1021,7 +1019,7 @@ namespace Models.PMF.Organs
             return dltSlaiLight;
         }
 
-        private void applySenescence()
+        private void ApplySenescence()
         {
             if (!MathUtilities.IsPositive(Live.Wt)) return;
 
@@ -1048,26 +1046,26 @@ namespace Models.PMF.Organs
             double nSenescingProportion = DltSenescedN / Live.N;
 
             //order is important as the proortion is calculated for each component of the live weight
-            updateBiomassComponent(Dead, Live, dmSenescingProportion);
-            updateBiomassComponent(Senesced, Live, dmSenescingProportion);
+            UpdateBiomassComponent(Dead, Live, dmSenescingProportion);
+            UpdateBiomassComponent(Senesced, Live, dmSenescingProportion);
             //the proportion needs to be removed from liveweight - so pass the -ve
-            updateBiomassComponent(Live, Live, dmSenescingProportion * -1);
+            UpdateBiomassComponent(Live, Live, dmSenescingProportion * -1);
 
             //order is important as the proortion is calculated for each component of the live weight
-            updateNComponent(Dead, Live, nSenescingProportion);
-            updateNComponent(Senesced, Live, nSenescingProportion);
+            UpdateNComponent(Dead, Live, nSenescingProportion);
+            UpdateNComponent(Senesced, Live, nSenescingProportion);
             //the proportion needs to be removed from liveweight - so pass the -ve
-            updateNComponent(Live, Live, nSenescingProportion * -1);
+            UpdateNComponent(Live, Live, nSenescingProportion * -1);
         }
 
-        private void updateNComponent(Biomass nComponent, Biomass proportionComponent, double senescingProportion)
+        private void UpdateNComponent(Biomass nComponent, Biomass proportionComponent, double senescingProportion)
         {
             nComponent.StructuralN += proportionComponent.StructuralN * senescingProportion;
             nComponent.MetabolicN += proportionComponent.MetabolicN * senescingProportion;
             nComponent.StorageN += proportionComponent.StorageN * senescingProportion;
         }
 
-        private void updateBiomassComponent(Biomass dmComponent, Biomass proportionComponent, double senescingProportion)
+        private void UpdateBiomassComponent(Biomass dmComponent, Biomass proportionComponent, double senescingProportion)
         {
             dmComponent.StructuralWt += proportionComponent.StructuralWt * senescingProportion;
             dmComponent.MetabolicWt += proportionComponent.MetabolicWt * senescingProportion;
@@ -1075,7 +1073,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
-        private double availableDMRetranslocation()
+        private double AvailableDMRetranslocation()
         {
             var leafWt = StartLive.Wt + potentialDMAllocation.Total;
             var leafWtAvail = leafWt - minPlantWt.Value() * SowingDensity;
@@ -1091,7 +1089,7 @@ namespace Models.PMF.Organs
         /// calculates todays LAI values - can change during retranslocation calculations
         /// </summary>
         /// this should be private - called from CalcTillerAppearanceDynamic in leafculms which needs to be refactored
-        public double calcLAI()
+        public double CalcLAI()
         {
             return Math.Max(0.0, LAI + DltLAI - DltSenescedLai);
         }
@@ -1105,7 +1103,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void onSimulationCommencing(object sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
             NDemand = new BiomassPoolType();
             DMDemand = new BiomassPoolType();
@@ -1128,7 +1126,7 @@ namespace Models.PMF.Organs
         }
 
         [EventSubscribe("StartOfDay")]
-        private void resetDailyVariables(object sender, EventArgs e)
+        private void ResetDailyVariables(object sender, EventArgs e)
         {
             BiomassRUE = 0;
             BiomassTE = 0;
@@ -1146,7 +1144,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoDailyInitialisation")]
-        private void onDoDailyInitialisation(object sender, EventArgs e)
+        private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             if (plant.IsAlive)
             {
@@ -1169,7 +1167,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Called when [phase changed].</summary>
         [EventSubscribe("PhaseChanged")]
-        private void onPhaseChanged(object sender, PhaseChangedType phaseChange)
+        private void OnPhaseChanged(object sender, PhaseChangedType phaseChange)
         {
             if (phaseChange.StageName == LeafInitialisationStage)
             {
@@ -1189,7 +1187,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoPotentialPlantGrowth")]
-        private void onDoPotentialPlantGrowth(object sender, EventArgs e)
+        private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
             // save current state
             if (plant.IsEmerged)
@@ -1216,13 +1214,13 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("DoActualPlantGrowth")]
-        private void onDoActualPlantGrowth(object sender, EventArgs e)
+        private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             // if (!parentPlant.IsAlive) return; wtf
             if (!plant.IsAlive) return;
             if (!leafInitialised) return;
 
-            applySenescence();
+            ApplySenescence();
 
             //UpdateVars
             SenescedLai += DltSenescedLai;
@@ -1266,18 +1264,18 @@ namespace Models.PMF.Organs
         {
             //Reallocation usually comes form Storage - which sorghum doesn't utilise
             DMSupply.Reallocation = 0.0; //availableDMReallocation();
-            DMSupply.Retranslocation = availableDMRetranslocation();
+            DMSupply.Retranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = dMSupplyFixation.Value();
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("SetNSupply")]
-        private void setNSupply(object sender, EventArgs e)
+        private void SetNSupply(object sender, EventArgs e)
         {
             var availableLaiN = DltLAI * NewLeafSLN;
 
-            double laiToday = calcLAI();
+            double laiToday = CalcLAI();
             double nGreenToday = Live.N;
             double slnToday = MathUtilities.Divide(nGreenToday, laiToday, 0.0);
 
@@ -1295,7 +1293,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("SetDMDemand")]
-        private void setDMDemand(object sender, EventArgs e)
+        private void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = dmDemands.Structural.Value(); // / dmConversionEfficiency.Value() + remobilisationCost.Value();
             DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value());
@@ -1304,7 +1302,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
         [EventSubscribe("SetNDemand")]
-        private void setNDemand(object sender, EventArgs e)
+        private void SetNDemand(object sender, EventArgs e)
         {
             //happening in potentialPlantPartitioning
             NDemand.Structural = nDemands.Structural.Value();
@@ -1316,7 +1314,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantSowing")]
-        private void onPlantSowing(object sender, SowingParameters data)
+        private void OnPlantSowing(object sender, SowingParameters data)
         {
             if (data.Plant == plant)
             {
@@ -1331,7 +1329,7 @@ namespace Models.PMF.Organs
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("PlantEnding")]
-        private void doPlantEnding(object sender, EventArgs e)
+        private void DoPlantEnding(object sender, EventArgs e)
         {
             if (Wt > 0.0)
             {
