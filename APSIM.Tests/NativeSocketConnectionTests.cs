@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Linq;
 using System.Text;
+using System.IO.Pipes;
 
 namespace APSIM.Tests
 {
@@ -13,20 +14,23 @@ namespace APSIM.Tests
     {
         private const string pipePath = "/tmp/CoreFxPipe_";
         private string pipeName;
-        private NativeSocketConnection conn;
+        private NamedPipeServerStream pipe;
+        private NativeCommunicationProtocol protocol;
 
         [SetUp]
         public void Initialise()
         {
             pipeName = Guid.NewGuid().ToString();
-            conn = new NativeSocketConnection(pipeName, false);
+            pipe = new NamedPipeServerStream(pipeName, PipeDirection.InOut, 1);
+            protocol = new NativeCommunicationProtocol(pipe);
         }
 
         [TearDown]
         public void Cleanup()
         {
-            conn.Disconnect();
-            conn.Dispose();
+            protocol = null;
+            pipe.Disconnect();
+            pipe.Dispose();
         }
 
         private Socket CreateClient()
@@ -42,8 +46,8 @@ namespace APSIM.Tests
             int target = 1234;
             Task server = Task.Run(() =>
             {
-                conn.WaitForConnection();
-                Assert.AreEqual(target, conn.ReadInt());
+                pipe.WaitForConnection();
+                Assert.AreEqual(target, protocol.ReadInt());
             });
             Socket client = CreateClient();
             byte[] buf = BitConverter.GetBytes(target);
@@ -61,8 +65,8 @@ namespace APSIM.Tests
             double target = -17.5;
             Task server = Task.Run(() =>
             {
-                conn.WaitForConnection();
-                Assert.AreEqual(target, conn.ReadDouble());
+                pipe.WaitForConnection();
+                Assert.AreEqual(target, protocol.ReadDouble());
             });
             Socket client = CreateClient();
             byte[] buf = BitConverter.GetBytes(target);
@@ -79,9 +83,9 @@ namespace APSIM.Tests
         {
             Task server = Task.Run(() =>
             {
-                conn.WaitForConnection();
-                Assert.AreEqual(true, conn.ReadBool());
-                Assert.AreEqual(false, conn.ReadBool());
+                pipe.WaitForConnection();
+                Assert.AreEqual(true, protocol.ReadBool());
+                Assert.AreEqual(false, protocol.ReadBool());
             });
             Socket client = CreateClient();
             foreach (bool target in new[] { true, false })
@@ -102,8 +106,8 @@ namespace APSIM.Tests
         {
             Task server = Task.Run(() =>
             {
-                conn.WaitForConnection();
-                Assert.Throws<NotImplementedException>(() => conn.ReadDate());
+                pipe.WaitForConnection();
+                Assert.Throws<NotImplementedException>(() => protocol.ReadDate());
             });
             Socket client = CreateClient();
             server.Wait();
@@ -116,8 +120,8 @@ namespace APSIM.Tests
             string target = "This is a short message";
             Task server = Task.Run(() =>
             {
-                conn.WaitForConnection();
-                Assert.AreEqual(target, conn.ReadString());
+                pipe.WaitForConnection();
+                Assert.AreEqual(target, protocol.ReadString());
             });
             Socket client = CreateClient();
             byte[] buf = Encoding.Default.GetBytes(target);

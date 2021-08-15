@@ -744,6 +744,21 @@ namespace APSIM.Shared.Utilities
         }
 
         /// <summary>
+        /// Merge a collection of data tables.
+        /// </summary>
+        /// <param name="tables">The tables to be merged.</param>
+        public static DataTable Merge(IEnumerable<DataTable> tables)
+        {
+            if (tables == null)
+                return null;
+
+            DataTable result = new DataTable();
+            foreach (DataTable table in tables)
+                result.Merge(table);
+            return result;
+        }
+
+        /// <summary>
         /// Rename a column
         /// </summary>
         /// <param name="table">The table.</param>

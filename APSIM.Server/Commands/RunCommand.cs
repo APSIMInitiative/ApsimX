@@ -67,6 +67,34 @@ namespace APSIM.Server.Commands
                 throw new AggregateException("File ran with errors", errors);
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is RunCommand command)
+            {
+                if (runPostSimulationTools != command.runPostSimulationTools)
+                    return false;
+                if (runTests != command.runTests)
+                    return false;
+                if (numberOfProcessors != command.numberOfProcessors)
+                    return false;
+                if (simulationNamesToRun.Count() != command.simulationNamesToRun.Count())
+                    return false;
+                if (simulationNamesToRun.Zip(command.simulationNamesToRun, (x, y) => x != y).Any(x => x))
+                    return false;
+                if (changes.Count() != command.changes.Count())
+                    return false;
+                if (changes.Zip(command.changes, (x, y) => !x.Equals(y)).Any(x => x))
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (runPostSimulationTools, runTests, numberOfProcessors, simulationNamesToRun, changes).GetHashCode();
+        }
+
         public override string ToString()
         {
             return $"{GetType().Name} with {changes.Count()} changes";
