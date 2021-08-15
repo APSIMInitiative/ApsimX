@@ -27,12 +27,9 @@ namespace Models.CLEM.Resources
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            foreach (var child in Children)
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
             {
-                if (child is IResourceWithTransactionType)
-                {
-                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
-                }
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
             }
         }
 

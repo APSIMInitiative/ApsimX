@@ -341,7 +341,9 @@ namespace Models.Optimisation
             newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Information);
             messages.Rows.Add(newRow);
 
-            storage.Writer.WriteTable(messages);
+            // Messages table will be automatically cleaned, unless the simulations
+            // are not run, in which case execution should never reach this point.
+            storage.Writer.WriteTable(messages, false);
         }
 
         /// <summary>

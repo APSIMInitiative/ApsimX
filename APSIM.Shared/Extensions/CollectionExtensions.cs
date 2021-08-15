@@ -34,5 +34,20 @@ namespace APSIM.Shared.Extensions.Collections
             foreach (T item in appendee)
                 yield return item;
         }
+
+        /// <summary>
+        /// Dequeue a chunk of items from the front of a queue.
+        /// </summary>
+        /// <remarks>
+        /// If the queue contains less elements than chunkSize, the
+        /// entire queue will be returned.
+        /// </remarks>
+        /// <param name="queue">The queue.</param>
+        /// <param name="chunkSize">Chunk size (number of items to dequeue).</param>
+        public static IEnumerable<T> DequeueChunk<T>(this Queue<T> queue, uint chunkSize)
+        {
+            for (int i = 0; i < chunkSize && queue.Any(); i++)
+                yield return queue.Dequeue();
+        }
     }
 }

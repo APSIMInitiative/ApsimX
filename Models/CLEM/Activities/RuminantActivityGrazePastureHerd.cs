@@ -74,32 +74,46 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The proportion of required graze that is available determined from parent activity arbitration
         /// </summary>
+        [JsonIgnore]
         public double GrazingCompetitionLimiter { get; set; }
 
         /// <summary>
         /// The biomass of pasture per hectare at start of allocation
         /// </summary>
+        [JsonIgnore]
         public double BiomassPerHectare { get; set; }
 
         /// <summary>
         /// Potential intake limiter based on pasture quality
         /// </summary>
+        [JsonIgnore]
         public double PotentialIntakePastureQualityLimiter { get; set; }
 
         /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double N { get; set; }
 
         /// <summary>
         /// Proportion of intake that can be taken from each pool
         /// </summary>
+        [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityGrazePastureHerd()
+        {
+            TransactionCategory = "Livestock.Grazing";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -133,11 +147,7 @@ namespace Models.CLEM.Activities
             this.PoolFeedLimits = null;
         }
 
-        /// <summary>
-        /// Method to get the resources required for this activity
-        /// this method overrides the base method to allow specific resource rules
-        /// and not remove resources immediately
-        /// </summary>
+        /// <inheritdoc/>
         public override void GetResourcesRequiredForActivity()
         {
             // if there is no ResourceRequestList (i.e. not created from parent pasture)
@@ -172,14 +182,15 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             // check if resource request list has been calculated from a parent call
             if (ResourceRequestList == null)
             {
                 ResourceRequestList = new List<ResourceRequest>();
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
-                if (herd.Count() > 0)
+                IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name);
+                if (herd.Any())
                 {
                     double amount = 0;
                     double indAmount = 0;
@@ -278,13 +289,14 @@ namespace Models.CLEM.Activities
             this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
         }
 
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             //Go through amount received and put it into the animals intake with quality measures.
             if (ResourceRequestList != null)
             {
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
-                if (herd.Count() > 0)
+                IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name);
+                if (herd.Any())
                 {
                     // Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
@@ -307,7 +319,7 @@ namespace Models.CLEM.Activities
                         {
                             ActivityModel = this,
                             AdditionalDetails = this,
-                            Category = "Grazing",
+                            Category = TransactionCategory,
                             RelatesToResource = RuminantTypeModel.NameWithParent,
                             Required = totalEaten,
                             Resource = GrazeFoodStoreModel as IResourceType
@@ -327,13 +339,10 @@ namespace Models.CLEM.Activities
                         {
                             double eaten;
                             if (ind.Weaned)
-                            {
                                 eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
-                            }
                             else
-                            {
                                 eaten = ind.PotentialIntake - ind.Intake;
-                            }
+
                             food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
                             ind.AddIntake(food);
                         }
@@ -350,77 +359,53 @@ namespace Models.CLEM.Activities
                             OnShortfallOccurred(rre);
 
                             if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-                            {
                                 throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock (" + GrazeFoodStoreModel.Name + ") in " + Clock.Today.Month.ToString() + "\\" + Clock.Today.Year.ToString());
-                            }
+
                             this.Status = ActivityStatus.Partial;
                         }
                     }
                     else
-                    {
                         Status = ActivityStatus.NotNeeded;
-                    }
                 }
             }
             else
             {
                 if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-                {
                     Status = ActivityStatus.NotNeeded;
-                }
             }
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -428,11 +413,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

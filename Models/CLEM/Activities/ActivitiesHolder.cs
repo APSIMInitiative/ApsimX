@@ -25,47 +25,41 @@ namespace Models.CLEM.Activities
     {
         private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
 
-        /// <summary>
-        /// List of the all the Activities.
-        /// </summary>
-        [JsonIgnore]
-        private List<IModel> activities;
-
-        private void BindEvents(List<IModel> root)
+        private void BindEvents(IEnumerable<IModel> root)
         {
-            foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+            foreach (var item in root.OfType<CLEMActivityBase>())
             {
                 if (item.GetType() != typeof(ActivityFolder))
                 {
                     (item as CLEMActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
                     (item as CLEMActivityBase).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
                 }
-                BindEvents(item.Children.Cast<IModel>().ToList());
+                BindEvents(item.FindAllChildren<IModel>());
             }
             // add link to all timers as children so they can fire activity performed
-            foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
+            foreach (var timer in root.OfType<IActivityPerformedNotifier>())
             {
-                (timer as IActivityPerformedNotifier).ActivityPerformed += ActivitiesHolder_ActivityPerformed;
+                timer.ActivityPerformed += ActivitiesHolder_ActivityPerformed;
             }
         }
 
-        private void UnBindEvents(List<IModel> root)
+        private void UnBindEvents(IEnumerable<IModel> root)
         {
-            if (root != null)
+            if (root.Any())
             {
-                foreach (var item in root.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
+                foreach (var item in root.OfType<CLEMActivityBase>())
                 {
                     if (item.GetType() != typeof(ActivityFolder))
                     {
                         (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
                         (item as CLEMActivityBase).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
                     }
-                    UnBindEvents(item.Children.Cast<IModel>().ToList());
+                    UnBindEvents(item.FindAllChildren<IModel>());
                 }
                 // remove link to all timers as children
-                foreach (var timer in root.Where(a => typeof(IActivityPerformedNotifier).IsAssignableFrom(a.GetType())))
+                foreach (var timer in root.OfType<IActivityPerformedNotifier>())
                 {
-                    (timer as IActivityPerformedNotifier).ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
+                    timer.ActivityPerformed -= ActivitiesHolder_ActivityPerformed;
                 }
             }
         }
@@ -84,15 +78,16 @@ namespace Models.CLEM.Activities
             if (FindAllDescendants<Folder>().Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
             }
             return results;
-        } 
+        }
         #endregion
 
         /// <summary>
         /// Last resource request that was in defecit
         /// </summary>
+        [JsonIgnore]
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
         /// <summary>
@@ -125,6 +120,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Details of the last activity performed
         /// </summary>
+        [JsonIgnore]
         public CLEMActivityBase LastActivityPerformed { get; set; }
         
         private void ActivitiesHolder_ActivityPerformed(object sender, EventArgs e)
@@ -149,63 +145,13 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Function to return an activity from the list of available activities.
-        /// </summary>
-        /// <param name="activity"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        private IModel SearchForNameInActivity(IModel activity, string name)
-        {
-            IModel found = activity.Children.Find(x => x.Name == name);
-            if (found != null)
-            {
-                return found;
-            }
-
-            foreach (var child in activity.Children)
-            {
-                found = SearchForNameInActivity(child, name);
-                if (found != null)
-                {
-                    return found;
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Function to return an activity from the list of available activities.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public IModel SearchForNameInActivities(string name)
-        {
-            IModel found = Children.Find(x => x.Name == name);
-            if (found != null)
-            {
-                return found;
-            }
-
-            foreach (var child in Children)
-            {
-                found = SearchForNameInActivity(child, name);
-                if (found != null)
-                {
-                    return found;
-                }
-            }
-            return null;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            activities = FindAllChildren<IModel>().ToList(); // = Children;
-            BindEvents(activities);
+            BindEvents(FindAllChildren<IModel>());
             int index = 0;
             foreach (var activity in FindAllDescendants<CLEMActivityBase>())
             {
@@ -220,7 +166,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            UnBindEvents(activities);
+            UnBindEvents(FindAllChildren<IModel>());
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
@@ -229,10 +175,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMGetResourcesRequired")]
         private void OnGetResourcesRequired(object sender, EventArgs e)
         {
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
                 child.GetResourcesForAllActivities(this);
-            }
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
@@ -241,10 +185,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
                 child.GetResourcesForAllActivityInitialisation();
-            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -254,13 +196,8 @@ namespace Models.CLEM.Activities
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // fire all activity performed triggers at end of time step
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                if (child.Enabled)
-                {
-                    child.ReportAllAllActivitiesPerformed();
-                }
-            }
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.ReportAllAllActivitiesPerformed();
 
             // report all timers that were due this time step
             foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())
@@ -296,41 +233,26 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            // fire all activity performed triggers at end of time step
-            foreach (CLEMActivityBase child in Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMActivityBase))))
-            {
-                if (child.Enabled)
-                {
-                    child.ClearAllAllActivitiesPerformedStatus();
-                }
-            }
+            // clear the activity performed status at start of time step
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.ClearAllAllActivitiesPerformedStatus();
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             return "\r\n<h1>Activities summary</h1>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";

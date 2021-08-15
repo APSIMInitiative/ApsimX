@@ -9,6 +9,7 @@
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using UnitTests.Storage;
@@ -635,6 +636,60 @@
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();
+            }
+        }
+
+        /// <summary>
+        /// In this test, we run only post-simualtion tools and ensure
+        /// that any old data is correctly cleaned.
+        /// </summary>
+        [Test]
+        public void EnsurePostSimulationToolsDoCleanup()
+        {
+            IEnumerable<RunTypeEnum> runTypes = new[] { RunTypeEnum.MultiThreaded, RunTypeEnum.SingleThreaded };
+            foreach (RunTypeEnum runType in runTypes)
+            {
+                // Open an in-memory database.
+                database = new SQLite();
+                database.OpenDatabase(":memory:", readOnly: false);
+
+                DataTable data = new DataTable("PostSimulationTool");
+                data.Columns.Add("x");
+                data.Rows.Add(data.NewRow());
+
+                var storage = new DataStore(database)
+                {
+                    Children = new List<IModel>()
+                    {
+                        new SimpleDataWriter(data)
+                    }
+                };
+
+                var sims = new Simulations()
+                {
+                    Children = new List<IModel>()
+                    {
+                        storage
+                    }
+                };
+
+                Runner runner = new Runner(sims, runType: runType, runSimulations: false);
+                List<Exception> errors = runner.Run();
+                Assert.AreEqual(0, errors.Count, errors.Count > 0 ? errors[0].ToString() : "");
+
+                storage.Reader.Refresh();
+                DataTable storedData = storage.Reader.GetData(data.TableName);
+                Assert.NotNull(storedData);
+                Assert.AreEqual(1, storedData.Rows.Count);
+
+                // Now run it again.
+                runner = new Runner(new[] { sims }, runType: runType, runSimulations: false);
+                errors = runner.Run();
+                Assert.AreEqual(0, errors.Count, errors.Count > 0 ? errors[0].ToString() : "");
+
+                storage.Reader.Refresh();
+                storedData = storage.Reader.GetData(data.TableName);
+                Assert.AreEqual(1, storedData.Rows.Count, "Post-simulation tool data was not cleaned when running only post-simulation tools");
             }
         }
 

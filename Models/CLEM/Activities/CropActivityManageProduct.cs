@@ -128,6 +128,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Units to Hectares converter from Land type
         /// </summary>
+        [JsonIgnore]
         public double UnitsToHaConverter { get; set; }
 
         /// <summary>
@@ -171,6 +172,7 @@ namespace Models.CLEM.Activities
         public CropActivityManageProduct()
         {
             this.SetDefaults();
+            TransactionCategory = "Crop.[Product]";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -365,11 +367,7 @@ namespace Models.CLEM.Activities
                 // don't rotate if no harvest tags or harvest type is not equal to "last"
                 if (!HarvestTagsUsed || NextHarvest.HarvestType == "last")
                 {
-                    // don't rotate activities that may have just had their enabled status changed in this timestep
-                    //if(this.ActivityEnabled & Status != ActivityStatus.Ignored)
-                    //{
-                        parentManagementActivity.RotateCrop();
-                    //}
+                    parentManagementActivity.RotateCrop();
                 }
             }
         }
@@ -423,20 +421,13 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
@@ -513,12 +504,10 @@ namespace Models.CLEM.Activities
                     daysNeeded = 0;
                 }
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Harvest", (LinkedResourceItem as CLEMModel).NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             int year = Clock.Today.Year;
@@ -556,7 +545,7 @@ namespace Models.CLEM.Activities
                             this.Status = ActivityStatus.Partial;
                         }
 
-                        // now limit further by fees not paid
+                        // TODO: now limit further by fees not paid
                         double financeLimit = this.LimitProportion(typeof(Finance));
 
                         limiter.AddWeightCarried(AmountHarvested);
@@ -619,46 +608,31 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
@@ -692,11 +666,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -745,19 +715,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return base.ModelSummaryClosingTags(formatForParentControl); 
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string html = "";

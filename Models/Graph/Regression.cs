@@ -86,6 +86,10 @@ namespace Models
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
             foreach (var checkpointName in storage.CheckpointNames)
             {
+                if (checkpointName != "Current" && !storage.GetCheckpointShowOnGraphs(checkpointName)) // smh
+                    // If "Show on graphs" is disabled on this checkpoint, skip it.
+                    continue;
+
                 // Get all x/y data
                 List<double> x = new List<double>();
                 List<double> y = new List<double>();

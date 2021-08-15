@@ -59,7 +59,7 @@ namespace Models.PMF
 
             //calc leaf demand separately - old sorghum doesn't quite fit
             var leaf = Organs[leafIndex] as SorghumLeaf;
-            var leafAdjustment = leaf.calculateClassicDemandDelta();
+            var leafAdjustment = leaf.CalculateClassicDemandDelta();
 
             //var totalPlantNDemand = BAT.TotalPlantDemand + leafAdjustment - grainDemand; // to replicate calcNDemand in old sorghum 
 
@@ -286,7 +286,7 @@ namespace Models.PMF
             if (MathUtilities.IsPositive(StructuralRequirement))
             {
                 bool forLeaf = iSupply == iSink;
-                double providedN = leaf.provideNRetranslocation(BAT, StructuralRequirement, forLeaf);
+                double providedN = leaf.ProvideNRetranslocation(BAT, StructuralRequirement, forLeaf);
                 BAT.StructuralAllocation[iSink] += providedN;
 
                 // Leaf's dltRetranslocatedN is negative (as in old apsim).

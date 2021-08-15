@@ -23,115 +23,82 @@ namespace Models.CLEM.Activities
     [Description("This activity will arange payment for a task based on the labour specified in the labour requirement.")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase, ICategoryActivity
+    public class LabourActivityTask : CLEMActivityBase
     {
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of task for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
         public LabourActivityTask()
         {
             this.SetDefaults();
+            TransactionCategory = "Labour.[Task]";
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = null;
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all days required as fixed only option from requirement
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    return new GetDaysLabourRequiredReturnArgs(requirement.LabourPerUnit, this.Category, null);
+                    return new GetDaysLabourRequiredReturnArgs(requirement.LabourPerUnit, TransactionCategory, null);
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\r\n<div class=\"activityentry\">This activity uses a category label ";
-            if (Category != null && Category != "")
+            if (TransactionCategory != null && TransactionCategory != "")
             {
-                html += "<span class=\"setvalue\">" + Category + "</span> ";
+                html += "<span class=\"setvalue\">" + TransactionCategory + "</span> ";
             }
             else
             {

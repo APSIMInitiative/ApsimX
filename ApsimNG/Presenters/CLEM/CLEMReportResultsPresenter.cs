@@ -15,20 +15,10 @@ namespace UserInterface.Presenters
 {
     class CLEMReportResultsPresenter : IPresenter, ICLEMPresenter, IRefreshPresenter
     {
-        ///// <summary>
-        ///// The GridView
-        ///// </summary>
-        //private GridView gridView;
-
         /// <summary>
         /// The data storage
         /// </summary>
         private IDataStore dataStore;
-
-        ///// <summary>
-        ///// The pivot model
-        ///// </summary>
-        //private ReportPivot pivot;
 
         /// <summary>
         /// The CLEM view

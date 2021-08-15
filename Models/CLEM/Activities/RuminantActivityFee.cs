@@ -53,11 +53,11 @@ namespace Models.CLEM.Activities
         public double Amount { get; set; }
 
         /// <summary>
-        /// Category label to use in ledger
+        /// Label to assign each transaction created by this activity in ledgers
         /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        public string TransactionCategory { get; set; }
 
         /// <summary>
         /// Store finance type to use
@@ -79,6 +79,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityFee()
         {
             this.SetDefaults();
+            TransactionCategory = "Livestock.[Activity]";
         }
 
         #region descriptive summary
@@ -106,9 +107,9 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                if (Category != null && Category != "")
+                if (TransactionCategory != null && TransactionCategory != "")
                 {
-                    htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                    htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
                 }
                 else
                 {

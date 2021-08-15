@@ -21,6 +21,31 @@ namespace Models.CLEM.Resources
         private double adultEquivalent;
 
         /// <summary>
+        /// Get the value to use for the transaction style requested
+        /// </summary>
+        /// <param name="transactionStyle">Style of transaction grouping</param>
+        /// <param name="pricingStyle">Style of pricing if necessary</param>
+        /// <returns>Label to group by</returns>
+        public string GetTransactionCategory(RuminantTransactionsGroupingStyle transactionStyle, PurchaseOrSalePricingStyleType pricingStyle = PurchaseOrSalePricingStyleType.Both)
+        {
+            string result = "N/A";
+            switch (transactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    return "All";
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    return BreedParams.ValueofIndividual(this, pricingStyle).Name;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    return this.Category;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    return this.FullCategory;
+                default:
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
         /// A list of attributes added to this individual
         /// </summary>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
@@ -74,6 +99,11 @@ namespace Models.CLEM.Resources
         public Sex Gender { get; set; }
 
         /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public Sex Sex { get { return (this is RuminantFemale)?Sex.Female:Sex.Male; } }
+
+        /// <summary>
         /// Gender as string for reports
         /// </summary>
         public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
@@ -97,7 +127,6 @@ namespace Models.CLEM.Resources
             {
                 age = value;
                 normalisedWeight = CalculateNormalisedWeight(age);
-                //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -132,13 +161,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <units>Months</units>
         public double PurchaseAge { get; set; }
-
-        /// <summary>
-        /// Will return 0.1 if Age is 0 for calculations (Months)
-        /// </summary>
-        /// <units>Months</units>
-        public double AgeZeroCorrected
-        {  get { return ((Age == 0) ? 0.1 : Age); } }
 
         /// <summary>
         /// Weight (kg)
@@ -212,6 +234,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// The current weight as a proportion of Standard Reference Weight
+        /// </summary>
+        public double ProportionOfSRW
+        {
+            get
+            {
+                return Weight / StandardReferenceWeight;
+            }
+        }
+
+        /// <summary>
         /// The current health score -2 to 2 with 0 standard weight
         /// </summary>
         public int HealthScore
@@ -271,13 +304,13 @@ namespace Models.CLEM.Resources
                         }
                         else if((this as RuminantMale).IsCastrated)
                         {
-                            return "Castraded";
+                            return "Castrate";
                         }
                         else
                         {
                             if((this as RuminantMale).IsWildBreeder)
                             {
-                                return "WildBreeder";
+                                return "Breeder";
                             }
                             else
                             {
@@ -286,6 +319,17 @@ namespace Models.CLEM.Resources
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Determine the category of this individual with sex
+        /// </summary>
+        public string FullCategory
+        {
+            get
+            {
+                return $"{Category}{Gender}";
             }
         }
 
@@ -313,18 +357,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return (!Weaned);
-            }
-        }
-
-
-        /// <summary>
-        /// The current weight as a proportion of Standard Reference Weight
-        /// </summary>
-        public double ProportionOfSRW
-        {
-            get
-            {
-                return Weight / StandardReferenceWeight;
             }
         }
 
@@ -399,7 +431,7 @@ namespace Models.CLEM.Resources
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// Determines if the change resson is her positive or negative
+        /// Determines if the change reason is positive or negative
         /// </summary>
         public int PopulationChangeDirection
         {
@@ -438,11 +470,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// SaleFlag as string for reports
-        /// </summary>
-        public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
-
-        /// <summary>
         /// Is the individual currently marked for sale?
         /// </summary>
         public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
@@ -473,7 +500,7 @@ namespace Models.CLEM.Resources
         public double EnergyIntake { get; set; }
 
         /// <summary>
-        /// Indicates if this individual has died
+        /// Indicates if this individual has died before removal from herd
         /// </summary>
         public bool Died { get; set; }
 
@@ -505,7 +532,6 @@ namespace Models.CLEM.Resources
             get
             {
                 return normalisedWeight;
-                //return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 

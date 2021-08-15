@@ -24,10 +24,15 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Finances/CalculateInterest.htm")]
     public class FinanceActivityCalculateInterest : CLEMActivityBase
     {
+        private Finance finance;
+
         /// <summary>
-        /// test for whether finances are included.
+        /// Constructor
         /// </summary>
-        private bool financesExist = false;
+        public FinanceActivityCalculateInterest()
+        {
+            TransactionCategory = "Interest";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -35,74 +40,53 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            financesExist = ((Resources.FinanceResource() != null));
+            finance = Resources.FindResourceGroup<Finance>();
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
-            if (financesExist)
+            if (finance != null)
             {
                 // make interest payments on bank accounts
-                foreach (FinanceType accnt in Resources.FinanceResource().FindAllChildren<FinanceType>())
+                foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
                 {
                     if (accnt.Balance > 0)
                     {
@@ -122,7 +106,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = interest,
                                 AllowTransmutation = false,
-                                Category = "Interest"
+                                Category = TransactionCategory
                             };
                             accnt.Remove(interestRequest);
 
@@ -159,10 +143,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
@@ -170,11 +151,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -185,7 +162,11 @@ namespace Models.CLEM.Activities
                 if (clemParent != null)
                 {
                     resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
-                    finance = resHolder.FinanceResource();
+                    finance = resHolder.FindResourceGroup<Finance>();
+                    if (!finance.Enabled)
+                    {
+                        finance = null;
+                    }
                 }
 
                 if (finance == null)
@@ -195,7 +176,7 @@ namespace Models.CLEM.Activities
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
-                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>())
+                    foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
                     {
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                         {

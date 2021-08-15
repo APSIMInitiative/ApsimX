@@ -513,9 +513,6 @@ namespace Models.PMF.Phen
                 row[1] = child.Name;
                 row[2] = (child as IPhase).Start;
                 row[3] = (child as IPhase).End;
-                if (child is GotoPhase)
-                    // fixme - this can be eliminated once #6631 is merged.
-                    row[3] = (child as GotoPhase).PhaseNameToGoto;
                 phaseTable.Rows.Add(row);
                 n++;
             }

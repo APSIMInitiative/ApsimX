@@ -98,6 +98,17 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -143,8 +154,7 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double multiplier = 0;
-            double addAmount = 0;
-
+            double addAmount;
             switch (resourceAmount.GetType().Name)
             {
                 case "Double":

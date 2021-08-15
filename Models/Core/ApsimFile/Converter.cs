@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 137; } }
+        public static int LatestVersion { get { return 138; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3526,6 +3526,17 @@
         }
 
         /// <summary>
+        /// Rename RootShapeCylindre to RootShapeCylinder.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion137(JObject root, string fileName)
+        {
+            foreach (JObject cylinder in JsonUtilities.ChildrenRecursively(root, "RootShapeCylindre"))
+                cylinder["$type"] = "Models.Functions.RootShape.RootShapeCylinder, Models";
+        }
+
+        /// <summary>
         /// Changes to facilitate the autodocs refactor:
         /// - Rename Models.Axis to APSIM.Services.Graphing.Axis.
         /// - Copy the value of all folders' IncludeInDocumentation property
@@ -3533,7 +3544,7 @@
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion137(JObject root, string fileName)
+        private static void UpgradeToVersion138(JObject root, string fileName)
         {
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {

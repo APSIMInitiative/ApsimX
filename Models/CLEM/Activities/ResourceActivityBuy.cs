@@ -55,6 +55,14 @@ namespace Models.CLEM.Activities
         private IResourceType resourceToBuy;
         private double unitsCanAfford;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ResourceActivityBuy()
+        {
+            TransactionCategory = "Expense";
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -81,10 +89,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> requests = new List<ResourceRequest>();
@@ -126,11 +131,7 @@ namespace Models.CLEM.Activities
             return requests;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
@@ -145,12 +146,10 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Buy", (resourceToBuy as CLEMModel).NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (resourceToBuy as CLEMModel).NameWithParent);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // adjust amount needed by labour shortfall.
@@ -186,9 +185,7 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
@@ -208,7 +205,7 @@ namespace Models.CLEM.Activities
 
             if (provided > 0)
             {
-                resourceToBuy.Add(provided, this, "", "Purchase");
+                resourceToBuy.Add(provided, this, "", TransactionCategory);
                 Status = ActivityStatus.Success;
             }
 
@@ -222,7 +219,7 @@ namespace Models.CLEM.Activities
                     Required = provided / price.PacketSize * price.PricePerPacket,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = bankAccount.Name,
-                    Category = "Purchase",
+                    Category = TransactionCategory,
                     RelatesToResource = (resourceToBuy as CLEMModel).NameWithParent,
                     ActivityModel = this
                 };
@@ -231,38 +228,25 @@ namespace Models.CLEM.Activities
 
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -270,11 +254,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

@@ -74,8 +74,13 @@
                     connection.BeginTransaction();
 
                     if (deleteExistingRows)
-                        connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}]");
-
+                    {
+                        // fixme - this assumes that "Current" checkpoint ID is always 1.
+                        // This should always be correct afaik, but it would be better to
+                        // verify this at runtime.
+                        bool tableHasCheckpointID = connection.GetColumns(dataToWrite.TableName).Any(c => c.Item1 == "CheckpointID");
+                        connection.ExecuteNonQuery($"DELETE FROM [{dataToWrite.TableName}] {(tableHasCheckpointID ? "WHERE CheckpointID = 1" : "")}");
+                    }
                     // Write all rows.
                     foreach (DataRow row in dataToWrite.Rows)
                         query.ExecuteQuery(connection, columnNames, row.ItemArray);

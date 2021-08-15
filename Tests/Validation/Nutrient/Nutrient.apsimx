@@ -9333,7 +9333,7 @@
                                 "[Soil].Nutrient.TotalC[2] as TOC10_30cm",
                                 "[Soil].Nutrient.TotalC[3] as TOC30_60cm",
                                 "([Soil].Nutrient.TotalC[1]+[Soil].Nutrient.TotalC[2]+[Soil].Nutrient.TotalC[3]) as TOC0_30cm",
-                                "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.NO3[1]+[Soil].Nutrient.NH4[1]) as TON0_10cm",
+                                "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.NO3+[Soil].Nutrient.NH4) as TON0_10cm",
                                 "([Soil].Nutrient.TotalN[1]+[Soil].Nutrient.TotalN[2]+[Soil].Nutrient.TotalN[3]) as TON0_30cm",
                                 "sum([Soil].Nutrient.NO3.kgha)"
                               ],

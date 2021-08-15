@@ -111,6 +111,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityPredictiveStockingENSO()
         {
             this.SetDefaults();
+            TransactionCategory = "Livestock.Destock";
         }
 
         #region validation
@@ -170,7 +171,7 @@ namespace Models.CLEM.Activities
             }
             else
             { 
-                Summary.WriteError(this, String.Format("@error:Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
             }
 
             this.InitialiseHerd(false, true);
@@ -227,8 +228,7 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.NotNeeded;
 
                 // calculate dry season pasture available for each managed paddock holding stock
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
-                foreach (var newgroup in ruminantHerd.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
+                foreach (var newgroup in HerdResource.Herd.Where(a => a.Location != "").GroupBy(a => a.Location))
                 {
                     double aELocationNeeded = 0;
 
@@ -236,7 +236,7 @@ namespace Models.CLEM.Activities
                     double totalAE = newgroup.Sum(a => a.AdultEquivalent);
                     // determine AE marked for sale and purchase of managed herd
                     double markedForSaleAE = newgroup.Where(a => a.ReadyForSale).Sum(a => a.AdultEquivalent);
-                    double purchaseAE = ruminantHerd.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
+                    double purchaseAE = HerdResource.PurchaseIndividuals.Where(a => a.Location == newgroup.Key).Sum(a => a.AdultEquivalent);
 
                     double herdChange = 1.0;
                     bool relationshipFound = false;
@@ -322,11 +322,10 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
-            if (destockGroups.Count() == 0)
+            if (!destockGroups.Any())
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
@@ -337,30 +336,29 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // remove individuals to sale as specified by destock groups
-            foreach (RuminantGroup item in destockGroups)
+            foreach (var item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
                 var herd = CurrentHerd(false)
                     .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item).FilterRuminants(item).FilterRuminants(item)
-                    .ToList();
+                    .FilterRuminants(item);
 
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsForSale > 0)
+                foreach (Ruminant ruminant in herd)
                 {
-                    if (herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsForSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsForSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsForSale <= 0)
-                {
-                    return 0;
+
+                    if (animalEquivalentsForSale <= 0)
+                    {
+                        this.Status = ActivityStatus.Success;
+                        return 0;
+                    }
                 }
             }
+
             return animalEquivalentsForSale;
 
             // handling of sucklings with sold female is in RuminantActivityBuySell
@@ -409,7 +407,7 @@ namespace Models.CLEM.Activities
                             throw new ApsimXException(this, $"Specified individual added during restock cannot have no weight in [{this.Name}]");
                         }
 
-                        Resources.RuminantHerd().PurchaseIndividuals.Add(newIndividual);
+                        HerdResource.PurchaseIndividuals.Add(newIndividual);
                         double indAE = newIndividual.AdultEquivalent;
                         animalEquivalentsToBuy -= indAE;
                         sumAE += indAE;
@@ -420,73 +418,49 @@ namespace Models.CLEM.Activities
             return animalEquivalentsToBuy;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             return null;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             return; ;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
@@ -494,11 +468,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -608,10 +578,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "</div>";

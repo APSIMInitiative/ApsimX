@@ -12,8 +12,6 @@ namespace Models.Functions.RootShape
     /// The formula used for the circle is wrong as it does not account for the coordinate of the centre!
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Root))]
     public class RootShapeSemiCircleSorghum : Model, IRootShape
     {

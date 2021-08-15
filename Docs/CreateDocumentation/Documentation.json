@@ -98,15 +98,15 @@
                     ]
                 },
                 {
-                    "Name": "Chickpea (Under Review)",
+                    "Name": "Chickpea",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx"
+                            "FileName": "Tests/Validation/Chickpea/Chickpea.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Chickpea/Chickpea.apsimx",
+                            "FileName": "Tests/Validation/Chickpea/Chickpea.apsimx",
                             "ModelNameToDocument": "Chickpea"
                         }
                     ]
@@ -228,15 +228,15 @@
                     ]
                 },
                 {
-                    "Name": "Peanut (Under Review)",
+                    "Name": "Peanut",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Peanut/Peanut.apsimx"
+                            "FileName": "Tests/Validation/Peanut/Peanut.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Peanut/Peanut.apsimx",
+                            "FileName": "Tests/Validation/Peanut/Peanut.apsimx",
                             "ModelNameToDocument": "Peanut"
                         }
                     ]
