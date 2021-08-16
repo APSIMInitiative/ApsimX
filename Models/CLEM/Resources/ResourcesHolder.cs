@@ -543,10 +543,8 @@ namespace Models.CLEM.Resources
                     if (resourceTypeInShortfall != null)
                     {
                         if (queryOnly)
-                        {
                             // clear any transmutations before checking
                             request.SuccessfulTransmutation = null;
-                        }
 
                         // get all transmutations if query only otherwise only successful transmutations previously checked
                         var transmutationsAvailable = (resourceTypeInShortfall as IModel).FindAllChildren<Transmutation>().Where(a => (queryOnly || (a == request.SuccessfulTransmutation)));
@@ -600,10 +598,8 @@ namespace Models.CLEM.Resources
                                 }
                             }
                             else // assumed successful transaction based on where clause in transaction selection
-                            {
                                 // Add resource: tops up resource from tansmutation so available in CheckResources
                                 (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * transmutation.TransmutationPacketSize, request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
-                            }
                         }
                     }
                 }
