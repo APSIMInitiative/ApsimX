@@ -327,7 +327,7 @@ namespace UserInterface.Views
 
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
-                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.Last();
+                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.LastOrDefault();
 
             Initialised?.Invoke(this, new EventArgs());
             GrabFocus();
