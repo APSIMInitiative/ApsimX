@@ -24,6 +24,8 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
     public class Land: ResourceBaseWithTransactions
     {
+        private bool ChangeOccurred = false;
+
         /// <summary>
         /// Unit of area to be used in this simulation
         /// </summary>
@@ -66,36 +68,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public LandActivityAllocation ReportedLandAllocation { get; set; }
-
-        private bool ChangeOccurred = false;
         
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            foreach (var child in Children)
-            {
-                if (child is IResourceWithTransactionType)
-                {
-                    (child as IResourceWithTransactionType).TransactionOccurred += Resource_TransactionOccurred; ;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
-            }
-        }
-
         /// <summary>
         /// Report allocatios at start of timestep
         /// </summary>
@@ -131,33 +104,6 @@ namespace Models.CLEM.Resources
             ChangeOccurred = false;
         }
 
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-            ChangeOccurred = true;
-        }
-
-        #endregion
-
         /// <summary>
         /// Override base event
         /// </summary>
@@ -185,20 +131,15 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Reported in ");
                 if (UnitsOfArea == null || UnitsOfArea == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Unspecified units of area</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + UnitsOfArea + "</span>");
-                }
                 htmlWriter.Write("</span>");
 
 
                 if (UnitsOfAreaToHaConversion != 1)
-                {
                     htmlWriter.Write(" (1 " + UnitsOfArea + " = <span class=\"setvalue\">" + UnitsOfAreaToHaConversion.ToString() + "</span> hectares)");
-                }
+
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

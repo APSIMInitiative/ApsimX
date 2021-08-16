@@ -29,6 +29,7 @@ namespace Models.CLEM.Resources
         private List<string> WarningsMultipleEntry = new List<string>();
         private List<string> WarningsNotFound = new List<string>();
         private Relationship adultEquivalentRelationship = null;
+        private LabourAvailabilityList availabilityList;
 
         /// <summary>
         /// Get the Clock.
@@ -56,8 +57,6 @@ namespace Models.CLEM.Resources
         [Description("Allow individuals to age")]
         [Required]
         public bool AllowAging { get; set; }
-
-        private LabourAvailabilityList availabilityList;
 
         /// <summary>
         /// Current pay rate value of individuals
@@ -150,7 +149,7 @@ namespace Models.CLEM.Resources
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             // locate AE relationship
             adultEquivalentRelationship = this.FindAllChildren<Relationship>().FirstOrDefault(a => a.Name.ToUpper().Contains("AE"));
@@ -209,16 +208,14 @@ namespace Models.CLEM.Resources
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (LabourType childModel in this.FindAllChildren<LabourType>())
-            {
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
-            }
+
             if (Items != null)
-            {
                 Items.Clear();
-            }
+
             Items = null;
         }
 
@@ -233,9 +230,7 @@ namespace Models.CLEM.Resources
                 item.AvailabilityLimiter = 1.0;
                 CheckAssignLabourAvailability(item);
                 if (item.DietaryComponentList != null)
-                {
                     item.DietaryComponentList.Clear();
-                }
             }
 
             // A LabourActivityPayHired may take place after this in CLEMStartOfTimeStep to limit availability
@@ -249,10 +244,8 @@ namespace Models.CLEM.Resources
         {
             int currentmonth = Clock.Today.Month;
             foreach (LabourType item in Items)
-            {
                 // set available days from availabilityitem
                 item.SetAvailableDays(currentmonth);
-            }
         }
 
         private void CheckAssignLabourAvailability(LabourType labour)
@@ -262,9 +255,7 @@ namespace Models.CLEM.Resources
             {
                 // check labour availability still ok
                 if (checkList.Filter(labour.LabourAvailability).Count() == 0)
-                {
                     labour.LabourAvailability = null;
-                }
             }
 
             // if not assign new value
@@ -302,9 +293,7 @@ namespace Models.CLEM.Resources
                 foreach (LabourType item in Items)
                 {
                     if (!item.Hired)
-                    {
                         item.AgeInMonths++;
-                    }
 
                     //Update labour available if needed.
                     CheckAssignLabourAvailability(item);
@@ -320,14 +309,10 @@ namespace Models.CLEM.Resources
         public double? CalculateAE(double ageInMonths)
         {
             if (adultEquivalentRelationship != null)
-            {
                 return adultEquivalentRelationship.SolveY(ageInMonths);
-            }
             else
-            {
                 // no AE relationship provided.
                 return null;
-            }
         }
 
         /// <summary>
@@ -339,12 +324,8 @@ namespace Models.CLEM.Resources
         {
             double ae = 0;
             foreach (LabourType person in Items)
-            {
                 if (!person.Hired | (includeHired))
-                {
                     ae += (CalculateAE(person.AgeInMonths)??1)*person.Individuals;
-                }
-            }
             return ae;
         }
 
@@ -362,9 +343,7 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1)
-                    {
                         return item.Value;
-                    }
                 }
                 // no price match found.
                 string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
@@ -395,17 +374,13 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (labourList.Filter(item).Count() == 1 && matchIndividual == null)
-                    {
                         matchIndividual = item;
-                    }
 
                     // check that pricing item meets the specified criteria.
                     if (item.FindAllChildren<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
-                        {
                             matchCriteria = item;
-                        }
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
@@ -430,9 +405,8 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value;
                     }
                     else
-                    {
                         Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
-                    }
+
                     if (!WarningsNotFound.Contains(criteria))
                     {
                         WarningsNotFound.Add(criteria);
@@ -440,9 +414,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 else
-                {
                     price = matchCriteria.Value;
-                }
             }
             return price;
         }
@@ -455,41 +427,13 @@ namespace Models.CLEM.Resources
         public double GetAvailabilityForEntry(int index)
         {
             if (index < Items.Count)
-            {
                 return Items[index].AvailableDays;
-            }
             else
-            {
                 return 0;
-            }
         }
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-        }
-
-        #endregion
 
         #region descriptive summary
+
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
@@ -524,7 +468,6 @@ namespace Models.CLEM.Resources
                 return htmlWriter.ToString(); 
             }
         }
-
 
         #endregion
     }

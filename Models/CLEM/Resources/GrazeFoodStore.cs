@@ -31,17 +31,20 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public List<GrazeFoodStoreType> Items;
 
+        /// <summary>
+        /// Ecological indicators calculated event
+        /// </summary>
+        public event EventHandler EcologicalIndicatorsCalculated;
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<GrazeFoodStoreType>();
 
-            IEnumerable<IModel> childNodes = FindAllChildren<IModel>();
-
-            foreach (IModel childModel in childNodes)
+            foreach (IModel childModel in FindAllChildren<IModel>())
             {
                 switch (childModel.GetType().ToString())
                 {
@@ -65,7 +68,7 @@ namespace Models.CLEM.Resources
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
             {
@@ -100,57 +103,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Override base event
-        /// </summary>
-        public event EventHandler EcologicalIndicatorsCalculated;
-
-        /// <summary>
         /// Last ecological indicators received
         /// </summary>
         [JsonIgnore]
         public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
         #endregion
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-        }
-
-        #endregion
-
-        #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
-        {
-            string html = "";
-            return html;
-        } 
-        #endregion
-
     }
-
-
 }
