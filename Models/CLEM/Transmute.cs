@@ -188,7 +188,7 @@ namespace Models.CLEM
                     object result = Resources.GetResourceGroupByName(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation will not suceed without this resource");
+                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
                     }
                     else
                     {
@@ -196,7 +196,7 @@ namespace Models.CLEM
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };
-                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation will not suceed without this resource", memberNames));
+                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames));
                         }
                     }
                 }
