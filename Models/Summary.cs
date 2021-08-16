@@ -26,6 +26,9 @@
     /// This model collects the simulation initial conditions and stores into the DataStore.
     /// It also provides an API for writing messages to the DataStore.
     /// </summary>
+    /// <remarks>
+    /// The _Messages table is automatically cleaned before simulations are run.
+    /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.SummaryView")]
     [PresenterName("UserInterface.Presenters.SummaryPresenter")]
@@ -107,18 +110,6 @@
                 CreateInitialConditionsTable();
         }
 
-        /// <summary>Invoked when a simulation is completed.</summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            // The messages table will be automatically cleaned prior to a simulation
-            // run, so we don't need to delete existing data in this call to WriteTable().
-            if (messages != null)
-                storage?.Writer?.WriteTable(messages, false);
-        }
-
         /// <summary>Initialise the summary messages table.</summary>
         private void Initialise()
         {
@@ -130,6 +121,15 @@
                 messages.Columns.Add("Date", typeof(DateTime));
                 messages.Columns.Add("Message", typeof(string));
                 messages.Columns.Add("MessageType", typeof(int));
+            }
+            else
+            {
+                // Messages are written immediately during calls to the
+                // writer functions. We therefore need to clear the table
+                // after writing, or else we will re-insert the previous
+                // rows every time we write new rows. This is pretty nasty,
+                // but it's not the only questionable part of this class.
+                messages.Clear();
             }
         }
 
@@ -154,6 +154,7 @@
                 newRow[3] = message;
                 newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Information);
                 messages.Rows.Add(newRow);
+                storage.Writer.WriteTable(messages.Copy(), false);
             }
         }
 
@@ -178,6 +179,7 @@
                 newRow[3] = message;
                 newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning, CultureInfo.InvariantCulture);
                 messages.Rows.Add(newRow);
+                storage.Writer.WriteTable(messages.Copy(), false);
             }
         }
 
@@ -202,6 +204,7 @@
                 newRow[3] = message;
                 newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error, CultureInfo.InvariantCulture);
                 messages.Rows.Add(newRow);
+                storage.Writer.WriteTable(messages.Copy(), false);
             }
         }
 
