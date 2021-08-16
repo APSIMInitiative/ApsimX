@@ -16,6 +16,7 @@ using OxyPlot.Series;
 using APSIM.Shared.Utilities;
 using LineSeries = APSIM.Services.Graphing.LineSeries;
 using OxyLineSeries = OxyPlot.Series.LineSeries;
+using Series = OxyPlot.Series.Series;
 
 namespace APSIM.Tests.Graphing.SeriesExporters
 {
@@ -37,7 +38,7 @@ namespace APSIM.Tests.Graphing.SeriesExporters
 
             string title = "asdf";
             LineSeries input = new LineSeries(title, Color.Blue, true, x, y, line, marker);
-            var output = exporter.Export(input);
+            Series output = exporter.Export(input);
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -69,11 +70,38 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
 
             LineSeries input = new LineSeries("", Color.Blue, true, x, y, line, marker);
-            var output = exporter.Export(input);
+            Series output = exporter.Export(input);
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
             Assert.AreEqual(0, series.ItemsSource.Count());
+        }
+
+        /// <summary>
+        /// Ensure that an exception is thrown if x or y is null.
+        /// </summary>
+        [Test]
+        public void TestNullData()
+        {
+            Line line = new Line(LineType.Solid, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
+
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, null, new double[0], line, marker));
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, new double[0], null, line, marker));
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, (double[])null, null, line, marker));
+        }
+
+        /// <summary>
+        /// Ensure that attempting to create an oxyplot series in which the x/y
+        /// fields are of different lengths.
+        /// </summary>
+        [Test]
+        public void TestDataLengthMismatch()
+        {
+            Line line = new Line(LineType.Solid, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", Color.Blue, true, new double[1], new double[2], line, marker);
+            Assert.Throws<ArgumentException>(() => exporter.Export(inputSeries));
         }
 
         /// <summary>
@@ -107,13 +135,47 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
 
             // Convert the series to an oxyplot series.
-            var output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries);
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
 
             // Ensure that the line type matches the expected line type.
             Assert.AreEqual(expectedOutput, series.LineStyle);
+        }
+
+        /// <summary>
+        /// Test all line thicknesses. This test doesn't test the absolute
+        /// line thickness, but rather it ensures that "large" is thicker
+        /// than "normal", which is thicker than "small".
+        /// </summary>
+        [Test]
+        public void TestLineThicknesses()
+        {
+            double thick = GetExportedLineThickness(LineThickness.Normal);
+            double thin = GetExportedLineThickness(LineThickness.Thin);
+            Assert.Greater(thick, thin);
+        }
+
+        /// <summary>
+        /// Crate a series with the specified line thickness, convert it to
+        /// an oxyplot series and return the generated series' line thickness.
+        /// </summary>
+        /// <param name="lineThickness">Desired line thickness.</param>
+        private double GetExportedLineThickness(LineThickness lineThickness)
+        {
+            IEnumerable<object> x = Enumerable.Empty<object>();
+            IEnumerable<object> y = Enumerable.Empty<object>();
+            Line line = new Line(LineType.Solid, lineThickness);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+            return series.StrokeThickness;
         }
 
         /// <summary>
@@ -160,7 +222,7 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
 
             // Convert the series to an oxyplot series.
-            var output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries);
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -187,6 +249,11 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Assert.Greater(small, verySmall);
         }
 
+        /// <summary>
+        /// Create a series with the given marker size, conver it to an oxyplot
+        /// series, and return the generated series' marker size.
+        /// </summary>
+        /// <param name="markerSize">Desired marker size.</param>
         private double GetExportedMarkerSize(MarkerSize markerSize)
         {
             IEnumerable<object> x = Enumerable.Empty<object>();
@@ -194,12 +261,146 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Line line = new Line(LineType.Solid, LineThickness.Normal);
             Marker marker = new Marker(MarkerType.FilledCircle, markerSize, 1);
             LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
+
             // Convert the series to an oxyplot series.
-            var output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries);
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
+
             return series.MarkerSize;
+        }
+
+        /// <summary>
+        /// Ensure that the output series' title matches the input series' title.
+        /// </summary>
+        [Test]
+        public void TestTitle()
+        {
+            // Create an apsim series with the given inputs.
+            IEnumerable<object> x = Enumerable.Empty<object>();
+            IEnumerable<object> y = Enumerable.Empty<object>();
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            string[] titles = new[]
+            {
+                null,
+                "",
+                "A somewhat long title containing spaces"
+            };
+            foreach (string title in titles)
+            {
+                LineSeries inputSeries = new LineSeries(title, Color.Black, true, x, y, line, marker);
+                Assert.AreEqual(title, exporter.Export(inputSeries).Title);
+            }
+        }
+
+        /// <summary>
+        /// Ensure that the output series' colour matches the input series' colour.
+        /// </summary>
+        [Test]
+        public void TestColours()
+        {
+            foreach ((Color inColour, OxyColor outColour) in GetColourMap())
+                TestColour(inColour, outColour);
+        }
+
+        /// <summary>
+        /// Return a collection of tuples; with the item of the tuple
+        /// being a System.Drawing.Color and the second item being an
+        /// equivalent OxyColor instance.
+        /// </summary>
+        private IEnumerable<(Color, OxyColor)> GetColourMap()
+        {
+            return new List<(Color, OxyColor)>()
+            {
+                (Color.Red, OxyColors.Red),
+                (Color.Blue, OxyColors.Blue),
+                (Color.Green, OxyColors.Green),
+                (Color.Black, OxyColors.Black),
+                (Color.White, OxyColors.White)
+            };
+        }
+
+        /// <summary>
+        /// Create a series with the given colour, convert it to an oxyplot
+        /// series, and ensure that the generated series' colour matches
+        /// the expected output colour.
+        /// </summary>
+        /// <remarks>
+        /// Note: this is testing the series' colour, not the marker colour.
+        /// </remarks>
+        /// <param name="inputColour">Input colour.</param>
+        /// <param name="expectedOutput">Output colour.</param>
+        [Test]
+        private void TestColour(Color inputColour, OxyColor expectedOutput)
+        {
+            // Create an apsim series with the given inputs.
+            IEnumerable<object> x = Enumerable.Empty<object>();
+            IEnumerable<object> y = Enumerable.Empty<object>();
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+            Assert.AreEqual(expectedOutput, series.Color);
+        }
+
+        /// <summary>
+        /// Ensure that "filled" marker types result in the marker colour
+        /// being set.
+        /// </summary>
+        [Test]
+        public void TestFilledMarkers()
+        {
+            foreach ((Color inColour, OxyColor outColour) in GetColourMap())
+            {
+                TestMarkerColour(inColour, MarkerType.FilledCircle, outColour);
+                TestMarkerColour(inColour, MarkerType.FilledDiamond, outColour);
+                TestMarkerColour(inColour, MarkerType.FilledSquare, outColour);
+                TestMarkerColour(inColour, MarkerType.FilledTriangle, outColour);
+            }
+        }
+
+        /// <summary>
+        /// Ensure that "unfilled" marker types result in the marker colour
+        /// being set to "undefined".
+        /// </summary>
+        [Test]
+        public void TestUnfilledMarkers()
+        {
+            foreach ((Color inColour, OxyColor _) in GetColourMap())
+            {
+                TestMarkerColour(inColour, MarkerType.Circle, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Cross, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Diamond, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.None, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Plus, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Square, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Star, OxyColors.Undefined);
+                TestMarkerColour(inColour, MarkerType.Triangle, OxyColors.Undefined);
+            }
+        }
+
+        private void TestMarkerColour(Color inputColour, MarkerType markerType, OxyColor expectedOutput)
+        {
+            // Create an apsim series with the given inputs.
+            IEnumerable<object> x = Enumerable.Empty<object>();
+            IEnumerable<object> y = Enumerable.Empty<object>();
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(markerType, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+            Assert.AreEqual(expectedOutput, series.MarkerFill);
         }
     }
 }
