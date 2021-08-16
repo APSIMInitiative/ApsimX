@@ -28,6 +28,14 @@ namespace APSIM.Tests.Graphing.SeriesExporters
     {
         private LineSeriesExporter exporter = new LineSeriesExporter();
 
+        /// <summary>
+        /// This test creates a series and converts it to an oxyplot series,
+        /// then checks everything about the generated series.
+        /// </summary>
+        /// <remarks>
+        /// This is probably unnecessary. Each individual component is tested
+        /// in isolation in the other tests.
+        /// </remarks>
         [Test]
         public void TestSimpleCase()
         {
@@ -93,15 +101,14 @@ namespace APSIM.Tests.Graphing.SeriesExporters
 
         /// <summary>
         /// Ensure that attempting to create an oxyplot series in which the x/y
-        /// fields are of different lengths.
+        /// fields are of different lengths results in an exception.
         /// </summary>
         [Test]
         public void TestDataLengthMismatch()
         {
             Line line = new Line(LineType.Solid, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Blue, true, new double[1], new double[2], line, marker);
-            Assert.Throws<ArgumentException>(() => exporter.Export(inputSeries));
+            Assert.Throws<ArgumentException>(() => new LineSeries("", Color.Blue, true, new double[1], new double[2], line, marker));
         }
 
         /// <summary>
@@ -332,7 +339,6 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </remarks>
         /// <param name="inputColour">Input colour.</param>
         /// <param name="expectedOutput">Output colour.</param>
-        [Test]
         private void TestColour(Color inputColour, OxyColor expectedOutput)
         {
             // Create an apsim series with the given inputs.
@@ -386,6 +392,14 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             }
         }
 
+        /// <summary>
+        /// Create a series with the given System.Drawing.Color and marker type,
+        /// then convert to an oxyplot series and ensure that the generated series'
+        /// marker colour matches the given colour.
+        /// </summary>
+        /// <param name="inputColour">Colour to use when creating the series.</param>
+        /// <param name="markerType">Marker type for the created series.</param>
+        /// <param name="expectedOutput">Expected colour of the output series.</param>
         private void TestMarkerColour(Color inputColour, MarkerType markerType, OxyColor expectedOutput)
         {
             // Create an apsim series with the given inputs.
@@ -401,6 +415,212 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
             Assert.AreEqual(expectedOutput, series.MarkerFill);
+        }
+
+        /// <summary>
+        /// Test the 'show on legend' property. This should cause the series'
+        /// title to be null.
+        /// </summary>
+        [Test]
+        public void TestShowOnLegend()
+        {
+            string[] titles = new[]
+            {
+                null,
+                "",
+                "Series title"
+            };
+            foreach (string title in titles)
+            {
+                // Setting 'show on legend' to false should result in title being set to empty string.
+                TestShowOnLegend(title, false, string.Empty);
+
+                // Setting 'show on legend' to true should result in title being set to `title`.
+                TestShowOnLegend(title, true, title);
+            }
+        }
+
+        /// <summary>
+        /// Create a series with the given title and 'show on legend' value.
+        /// Then convert to an oxyplot series and ensure that the generated
+        /// series' title matches the specified expected value.
+        /// </summary>
+        /// <param name="title">Input title.</param>
+        /// <param name="showOnLegend">Input value for 'show on legend'.</param>
+        /// <param name="expectedTitle">Expected title of the oxyplot series.</param>
+        private void TestShowOnLegend(string title, bool showOnLegend, string expectedTitle)
+        {
+            // Create an apsim series with the given inputs.
+            IEnumerable<object> x = Enumerable.Empty<object>();
+            IEnumerable<object> y = Enumerable.Empty<object>();
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries(title, Color.Black, false, x, y, line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+            Assert.Null(series.Title);
+        }
+
+        /// <summary>
+        /// Test a series containing DateTime data for both x- and y-values.
+        /// Ensure that the generated series' values are correct (should be
+        /// represented as a double).
+        /// </summary>
+        [Test]
+        public void TestTwoDateSeries()
+        {
+            int n = 10;
+            IEnumerable<DateTime> x = Enumerable.Range(1, n).Select(i => new DateTime(2000, 1, i));
+            IEnumerable<DateTime> y = Enumerable.Range(2000, n).Select(i => new DateTime(i, 1, 1));
+
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+
+            Assert.AreEqual(n, series.ItemsSource.Count());
+            double[] expectedX = new double[] { 36526, 36527, 36528, 36529, 36530, 36531, 36532, 36533, 36534, 36535 };
+            double[] expectedY = new double[] { 36526, 36892, 37257, 37622, 37987, 38353, 38718, 39083, 39448, 39814 };
+            int i = 0;
+            foreach (DataPoint point in series.ItemsSource)
+            {
+                Assert.AreEqual(expectedX[i], point.X);
+                Assert.AreEqual(expectedY[i], point.Y);
+                i++;
+            }
+        }
+
+        /// <summary>
+        /// Test a series containing DateTime x-data and numeric (double) y-data.
+        /// Ensure that the generated series' values are correct.
+        /// </summary>
+        [Test]
+        public void TestOneDateSeries()
+        {
+            int n = 10;
+            IEnumerable<DateTime> x = Enumerable.Range(2, n).Select(i => new DateTime(1900, i, 1));
+            double[] y = Enumerable.Range(100, n).Select(i => Convert.ToDouble(i)).ToArray();
+
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker);
+
+            // Convert the series to an oxyplot series.
+            Series output = exporter.Export(inputSeries);
+            Assert.NotNull(output);
+            Assert.True(output is OxyLineSeries);
+            OxyLineSeries series = (OxyLineSeries)output;
+
+            Assert.AreEqual(n, series.ItemsSource.Count());
+            double[] expectedX = new double[] { 33, 61, 92, 122, 153, 183, 214, 245, 275, 306 };
+            int i = 0;
+            foreach (DataPoint point in series.ItemsSource)
+            {
+                Assert.AreEqual(expectedX[i], point.X);
+                Assert.AreEqual(y[i], point.Y);
+                i++;
+            }
+        }
+
+        /// <summary>
+        /// Ensure that unsupported data types for series values cause
+        /// an exception (rather than silently failing).
+        /// </summary>
+        [Test]
+        public void TestUnsupportedDataTypes()
+        {
+            // These data types should all be valid.
+            TestDataTypeValidity<short>(true);
+            TestDataTypeValidity<ushort>(true);
+            TestDataTypeValidity<int>(true);
+            TestDataTypeValidity<uint>(true);
+            TestDataTypeValidity<long>(true);
+            TestDataTypeValidity<ulong>(true);
+            TestDataTypeValidity<decimal>(true);
+            TestDataTypeValidity<float>(true);
+            TestDataTypeValidity<double>(true);
+            TestDataTypeValidity<DateTime>(true);
+
+            // These types are invalid and should result in exception.
+            TestDataTypeValidity<bool>(false);
+            TestDataTypeValidity<char>(false);
+            TestDataTypeValidity<string>(false);
+        }
+
+        /// <summary>
+        /// Ensure that the given data type is valid or invalid for series data.
+        /// Ensure that the appropriate exception type is thrown for invalid
+        /// data types, or that no exception is thrown for valid data types.
+        /// </summary>
+        /// <param name="valid">Is this data type valid.</param>
+        /// <typeparam name="T">Data type.</typeparam>
+        private void TestDataTypeValidity<T>(bool valid)
+        {
+            Line line = new Line(LineType.None, LineThickness.Thin);
+            Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
+
+            IEnumerable<T> emptyInvalid = Enumerable.Empty<T>();
+            IEnumerable<T> populatedInvalid = new List<T>() { default(T) };
+            IEnumerable<double> emptyValid = Enumerable.Empty<double>();
+            IEnumerable<double> populatedValid = new double[1];
+
+            // If the data type is an invalid nullable type, we should except an ArgumentNullException.
+            // If the datatype is any other invalid type, we expect a NotImplementedException.
+            Type exceptionType = default(T) == null ? typeof(ArgumentNullException) : typeof(NotImplementedException);
+
+            IEnumerable<object> x = null;
+            IEnumerable<object> y = null;
+            TestDelegate createDefaultSeries = () => exporter.Export(new LineSeries("", Color.Black, false, x, y, line, marker));
+
+            string errorHelper = $"DataType = {typeof(T)}";
+
+            // 1. Empty invalid x, valid y - no error should be thrown, because no data.
+            x = emptyInvalid.Cast<object>();
+            y = emptyValid.Cast<object>();
+            Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+
+            // 2. Populated invalid x, valid y.
+            x = populatedInvalid.Cast<object>();
+            y = populatedValid.Cast<object>();
+            if (valid)
+                Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+            else
+                Assert.Throws(exceptionType, createDefaultSeries, errorHelper);
+
+            // 3. Empty invalid x, invalid y - no error should be thrown, because no data.
+            x = emptyInvalid.Cast<object>();
+            y = emptyInvalid.Cast<object>();
+            Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+
+            // 4. Populated invalid x, invalid y.
+            x = populatedInvalid.Cast<object>();
+            y = populatedInvalid.Cast<object>();
+            if (valid)
+                Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+            else
+                Assert.Throws(exceptionType, createDefaultSeries, errorHelper);
+
+            // 5. Valid x, Empty invalid y - no error should be thrown, because no data.
+            x = emptyValid.Cast<object>();
+            y = emptyInvalid.Cast<object>();
+            Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+
+            // 6. Valid x, Populated invalid y.
+            x = populatedValid.Cast<object>();
+            y = populatedInvalid.Cast<object>();
+            if (valid)
+                Assert.DoesNotThrow(createDefaultSeries, errorHelper);
+            else
+                Assert.Throws(exceptionType, createDefaultSeries, errorHelper);
         }
     }
 }
