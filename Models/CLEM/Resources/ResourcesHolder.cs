@@ -85,56 +85,70 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Find a resource type from name identifier
+        /// Find a resource type from  type of resources and name of resource type component
         /// </summary>
-        /// <typeparam name="T">Type of ResourceType to find</typeparam>
-        /// <param name="requestingModel">The model requestng this resource</param>
-        /// <param name="resourceAndTypeNames">The name identifier NameOfResource.NameOfResourceType or simply NameOfResourceType</param>
+        /// <typeparam name="T">Type of ResourceType to return</typeparam>
+        /// <typeparam name="R">Type of Resource group containing resource type</typeparam>
+        /// <param name="requestingModel">The model requesting this resource</param>
+        /// <param name="resourceName">The name identifier NameOfResource.NameOfResourceType or simply NameOfResourceType</param>
         /// <param name="missingResourceAction">Action if resource group missing</param>
         /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
-        /// <returns>A resource type model</returns>
-        public T FindResourceType<T>(IModel requestingModel, string resourceAndTypeNames, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T: IResourceType
+        /// <returns>A resource type component</returns>
+        public T FindResourceType<R, T>(IModel requestingModel, string resourceName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
-            string resourceName = "";
-            string resourceTypeName = "";
-            var split = resourceAndTypeNames.Split('.');
-            if (split.Length == 2)
+            string[] nameParts = new string[] { "", resourceName };
+            if (nameParts.Last().Contains('.'))
             {
-                resourceTypeName = split[1];
-                resourceName = split[0];
-            }
-            else if(split.Length > 2)
-            {
-                throw new ApsimXException(requestingModel, $"Invalid resource group and type string for [{requestingModel.Name}], expecting 'ResourceName.ResourceTypeName'. Value provided [{resourceTypeName}]");
+                nameParts = nameParts.Last().Split('.');
+                if (nameParts.Length > 2)
+                    throw new ApsimXException(requestingModel, $"Invalid resource name identifier for [{requestingModel.Name}], expecting 'ResourceName.ResourceTypeName' or 'ResourceTypeName'. Value provided [{resourceName}]");
             }
 
-            var resType = FindDescendant<T>(resourceTypeName);
+            // we only need to find a resource type matching the type T and name specified 
+            // we cannot have more than 1 resource group, so there is only one place each type T can exist
+            // therefore we do not need to worry about finding the resource group other than to report errors
+
+            // not sure it's quickets to find the resource then look at it's children
+            // or look through all descendents for the type and name
+
+            var resGroup = FindResource<R>();
+            bool resGroupNameMatch = (nameParts.First() != "" && resGroup.Name == nameParts.First());
+
+            string errorMsg;
+            if (!resGroupNameMatch & resGroup != null)
+            {
+                errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
+                Warnings.CheckAndWrite(errorMsg, Summary, this);
+            }
+
+            if (resGroup == null)
+            {
+                errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] for [a={requestingModel.Name}]";
+
+                switch (missingResourceAction)
+                {
+                    case OnMissingResourceActionTypes.ReportErrorAndStop:
+                        throw new Exception(errorMsg);
+                    case OnMissingResourceActionTypes.ReportWarning:
+                        Warnings.CheckAndWrite(errorMsg, Summary, this);
+                        break;
+                    default:
+                        break;
+                }
+                    return default(T);
+            }
+
+            var resType = (resGroup as IModel).FindChild<T>(nameParts.Last());
+
             if (resType as IModel is null)
             {
-                var res = FindResource<ResourceBaseWithTransactions>(resourceName);
-                // check group
-                string errorMsg;
-                if (res is null)
-                {
-                    errorMsg = $"Unable to locate resource named [r={resourceName}] for [a={requestingModel.Name}]";
-                    switch (missingResourceAction)
-                    {
-                        case OnMissingResourceActionTypes.ReportErrorAndStop:
-                            throw new Exception(errorMsg);
-                        case OnMissingResourceActionTypes.ReportWarning:
-                            Summary.WriteWarning(requestingModel, errorMsg);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                errorMsg = $"Unable to locate resource type [r={resourceTypeName}] in resources [r={resourceName}] for [a={requestingModel.Name}]";
+                errorMsg = $"Unable to locate resource type [r={nameParts.Last()}] in [r={resGroup.Name}] for [a={requestingModel.Name}]";
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new Exception(errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        Summary.WriteWarning(requestingModel, errorMsg);
+                        Warnings.CheckAndWrite(errorMsg, Summary, this);
                         break;
                     default:
                         break;
@@ -144,42 +158,23 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Find a resource type from type of resources and name of resource type component
+        /// Find a resource type from details supplied from a ResourceRequest
         /// </summary>
         /// <typeparam name="T">Type of ResourceType to return</typeparam>
-        /// <typeparam name="R">Type of Resource group to search in</typeparam>
-        /// <param name="requestingModel">The model requesting this resource</param>
-        /// <param name="resourceTypeName">The name of the resource type to find</param>
-        /// <param name="missingResourceAction">Action if resource group missing</param>
-        /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
-        /// <returns>A resource type component</returns>
-        public T FindResourceType<R, T>(IModel requestingModel, string resourceTypeName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
-        {
-            if (resourceTypeName.Contains("."))
-                return FindResourceType<T>(requestingModel, resourceTypeName, missingResourceAction, missingResourceTypeAction);
-            else
-            {
-                // need to locate the resource group first based on R
-                R resource = FindResource<R>();
-                return FindResourceType<T>(requestingModel, $"{((resource is null) ? typeof(R).Name : resource.Name)}.{resourceTypeName}", missingResourceAction, missingResourceTypeAction);
-            }
-        }
-
-        /// <summary>
-        /// Find a resource type from type of resources and name of resource type component
-        /// </summary>
-        /// <typeparam name="T">Type of ResourceType to return</typeparam>
+        /// <typeparam name="R">Type of Resource group containing resource type</typeparam>
         /// <param name="request">Resource request with all required information</param>
         /// <param name="missingResourceAction">Action if resource group missing</param>
         /// <param name="missingResourceTypeAction">Action if resource type is missing</param>
         /// <returns>A resource type component</returns>
-        public T FindResourceType<T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType
+        public T FindResourceType<R,T>(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
-            string resourceID = request.ResourceTypeName;
-            if (!resourceID.Contains("."))
-                resourceID = $"{request.ResourceType.Name}.{resourceID}";
-            return FindResourceType<T>(request.ActivityModel, resourceID, missingResourceAction, missingResourceTypeAction);
+            if (request.Resource is T)
+                return (T)Convert.ChangeType(request.Resource, typeof(T));
+
+            return FindResourceType<R,T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
         }
+
+
 
 
 
@@ -437,11 +432,7 @@ namespace Models.CLEM.Resources
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
                 string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
-                if (!Warnings.Exists(warn) & Summary != null)
-                {
-                    Summary.WriteWarning(this, warn);
-                    Warnings.Add(warn);
-                }
+                Warnings.CheckAndWrite(warn, Summary, this);
                 return null;
             }
 
@@ -521,17 +512,16 @@ namespace Models.CLEM.Resources
                     {
                         if (request.ResourceTypeName.Contains('.'))
                         {
-                            resourceTypeInShortfall = this.FindResourceType<IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                            resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                         }
                         else
                         {
                             var resourceGroup = FindResource(request.ResourceType);
                             if (resourceGroup != null)
-                                resourceTypeInShortfall = this.FindResourceType<IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                                resourceTypeInShortfall = this.FindResourceType<ResourceBaseWithTransactions,IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                             else
                                 resourceTypeInShortfall = null;
                         }
-                        //resourceTypeInShortfall = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
                     }
 
                     if (resourceTypeInShortfall != null)
@@ -637,17 +627,22 @@ namespace Models.CLEM.Resources
         {
             var results = new List<ValidationResult>();
 
-            var t = this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1);
-
             // check that only one instance of each resource group is present
-            foreach (var item in this.Children.Where(a => a.GetType().FullName != "Models.Memo").GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
+            foreach (var item in this.FindAllChildren<IResourceType>().GroupBy(a => a.GetType()).Where(b => b.Count() > 1))
             {
                 string[] memberNames = new string[] { item.Key.FullName };
                 results.Add(new ValidationResult(String.Format("Only one (1) instance of any resource group is allowed in the Resources Holder. Multiple Resource Groups [{0}] found!", item.Key.FullName), memberNames));
             }
+
+            // check that only one resource type with a given name is present
+            foreach (var item in this.FindAllDescendants<IResourceType>().GroupBy(a => $"{a.GetType().Name}:{a.Name}").Where(b => b.Count() > 1))
+            {
+                var bits = item.Key.Split(':');
+                string[] memberNames = new string[] { "Multiple resource type with same name" };
+                results.Add(new ValidationResult($"Only one component of type [r={bits.First()}] can be named [{bits.Last()}] in [{this.NameWithParent}]", memberNames));
+            }
             return results;
         }
-
 
         #endregion
 
