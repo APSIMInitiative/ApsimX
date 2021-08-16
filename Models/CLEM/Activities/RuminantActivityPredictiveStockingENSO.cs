@@ -247,7 +247,7 @@ namespace Models.CLEM.Activities
                         case ENSOState.ElNino:
                             if (!(pastureToStockingChangeElNino is null))
                             {
-                                GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
+                                GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                                 double kgha = pasture.TonnesPerHectare * 1000;
                                 herdChange = pastureToStockingChangeElNino.SolveY(kgha);
                                 relationshipFound = true;
@@ -256,7 +256,7 @@ namespace Models.CLEM.Activities
                         case ENSOState.LaNina:
                             if (!(pastureToStockingChangeLaNina is null))
                             {
-                                GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStoreType), newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GrazeFoodStoreType;
+                                GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, newgroup.Key, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                                 double kgha = pasture.TonnesPerHectare * 1000;
                                 herdChange = pastureToStockingChangeLaNina.SolveY(kgha);
                                 relationshipFound = true;
@@ -370,7 +370,7 @@ namespace Models.CLEM.Activities
             if (animalEquivalentsToBuy <= 0) 
                 return 0;
 
-            GrazeFoodStoreType foodStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreType foodStore = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, paddockName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // ensure min pasture for restocking
             if ((foodStore == null) || ((foodStore.TonnesPerHectare * 1000) > MinimumFeedBeforeRestock))

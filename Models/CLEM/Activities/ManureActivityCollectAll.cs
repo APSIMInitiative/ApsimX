@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMCollectManure not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
+            manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>

@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, false);
 
             // get herd to add to 
-            herdToUse = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if(!herdToUse.PricingAvailable())
             {

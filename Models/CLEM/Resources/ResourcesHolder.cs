@@ -76,12 +76,12 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="type">The type of the resource</param>
         /// <returns>The resource</returns>
-        public IModel FindResource(Type type)
+        public ResourceBaseWithTransactions FindResource(Type type)
         {
             if (type is null) throw new ArgumentNullException(nameof(type));
             MethodInfo method = this.GetType().GetMethod("FindResource", new Type[] { } );
             MethodInfo generic = method.MakeGenericMethod(type);
-            return generic.Invoke(this, null) as IModel;
+            return generic.Invoke(this, null) as ResourceBaseWithTransactions;
         }
 
         /// <summary>
@@ -155,8 +155,14 @@ namespace Models.CLEM.Resources
         /// <returns>A resource type component</returns>
         public T FindResourceType<R, T>(IModel requestingModel, string resourceTypeName, OnMissingResourceActionTypes missingResourceAction = OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes missingResourceTypeAction = OnMissingResourceActionTypes.Ignore) where T : IResourceType where R : ResourceBaseWithTransactions
         {
-            var resource = FindResource<R>();
-            return FindResourceType<T>(requestingModel, $"{((resource is null) ? typeof(R).Name : resource.Name)}.{resourceTypeName}", missingResourceAction, missingResourceTypeAction);
+            if (resourceTypeName.Contains("."))
+                return FindResourceType<T>(requestingModel, resourceTypeName, missingResourceAction, missingResourceTypeAction);
+            else
+            {
+                // need to locate the resource group first based on R
+                R resource = FindResource<R>();
+                return FindResourceType<T>(requestingModel, $"{((resource is null) ? typeof(R).Name : resource.Name)}.{resourceTypeName}", missingResourceAction, missingResourceTypeAction);
+            }
         }
 
         /// <summary>
@@ -172,7 +178,7 @@ namespace Models.CLEM.Resources
             string resourceID = request.ResourceTypeName;
             if (!resourceID.Contains("."))
                 resourceID = $"{request.ResourceType.Name}.{resourceID}";
-            return FindResourceType<T>(request.ActivityModel, resourceID, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            return FindResourceType<T>(request.ActivityModel, resourceID, missingResourceAction, missingResourceTypeAction);
         }
 
 
@@ -465,32 +471,6 @@ namespace Models.CLEM.Resources
             return resType as IResourceWithTransactionType;
         }
 
-        ///// <summary>
-        ///// Gets the names of all the items for each ResourceGroup whose items you want to put into a dropdown list.
-        ///// eg. "AnimalFoodStore,HumanFoodStore,ProductStore"
-        ///// Will create a dropdown list with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
-        ///// 
-        ///// To help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
-        ///// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. 
-        ///// </summary>
-        ///// <returns>Will create a string array with all the items from the AnimalFoodStore, HumanFoodStore and ProductStore.
-        ///// to help uniquely identify items in the dropdown list will need to add the ResourceGroup name to the item name.
-        ///// eg. The names in the drop down list will become AnimalFoodStore.Wheat, HumanFoodStore.Wheat, ProductStore.Wheat, etc. </returns>
-        //public string[] GetCLEMResourceNames(Type resourceGroupType)
-        //{
-        //    List<string> resourseTypes = new List<string>();
-        //    if (resourceGroupType != null)
-        //    {
-        //        // resource groups specified (use them)
-        //        IModel resGroup = this.Children.Find(c => resourceGroupType.IsAssignableFrom(c.GetType()));
-        //        if (resGroup != null)  //see if this group type is included in this particular simulation.
-        //            foreach (IModel item in resGroup.Children.Where(a => a.Enabled))
-        //                if (item.GetType() != typeof(Memo))
-        //                    resourseTypes.Add(resGroup.Name  + "." + item.Name);
-        //    }
-        //    return resourseTypes.ToArray();
-        //}
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -536,9 +516,23 @@ namespace Models.CLEM.Resources
                 // Check if transmutation would be successful 
                 if (request.AllowTransmutation && (queryOnly || request.TransmutationPossible))
                 {
-                    // get resource type
+                    // get resource type if not already provided from request
                     if (!(request.Resource is IResourceType resourceTypeInShortfall))
-                        resourceTypeInShortfall = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                    {
+                        if (request.ResourceTypeName.Contains('.'))
+                        {
+                            resourceTypeInShortfall = this.FindResourceType<IResourceType>(request.ActivityModel, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                        }
+                        else
+                        {
+                            var resourceGroup = FindResource(request.ResourceType);
+                            if (resourceGroup != null)
+                                resourceTypeInShortfall = this.FindResourceType<IResourceType>(request.ActivityModel, $"{resourceGroup.Name}.{request.ResourceTypeName}", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                            else
+                                resourceTypeInShortfall = null;
+                        }
+                        //resourceTypeInShortfall = this.GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+                    }
 
                     if (resourceTypeInShortfall != null)
                     {

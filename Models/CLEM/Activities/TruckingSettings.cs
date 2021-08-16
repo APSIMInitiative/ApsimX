@@ -149,33 +149,33 @@ namespace Models.CLEM.Activities
             {
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
                 {
-                    MethaneStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+                    MethaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 }
                 else
                 {
-                    MethaneStore = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    MethaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
                 }
             }
             if (TruckCO2Emissions > 0)
             {
                 if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
                 {
-                    CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+                    CO2Store = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 }
                 else
                 {
-                    CO2Store = Resources.GetResourceItem(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    CO2Store = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 }
             }
             if (TruckN2OEmissions > 0)
             {
                 if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
                 {
-                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
+                    N2OStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 }
                 else
                 {
-                    N2OStore = Resources.GetResourceItem(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    N2OStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 }
             }
         }
