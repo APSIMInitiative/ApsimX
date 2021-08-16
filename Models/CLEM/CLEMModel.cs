@@ -181,13 +181,31 @@ namespace Models.CLEM
         #region descriptive summary
 
         /// <summary>
+        /// Create a html snippet
+        /// </summary>
+        /// <param name="value">The value to report</param>
+        /// <param name="errorString">Error text when missing</param>
+        /// <returns>HTML span snippet</returns>
+        public static string DisplaySummaryValueSnippet(string value, string errorString)
+        {
+            if (value != null && value != "")
+            {
+                return $"<span class=\"setvalue\">{value}</span>";
+            }
+            else
+            {
+                return $"<span class=\"errorlink\">{errorString}</span>";
+            }
+        }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
         public virtual string ModelSummary(bool formatForParentControl)
         {
-            return "<div class=\"resourcenote\">No description provided</div>";
+            return "";
         }
 
         /// <summary>
