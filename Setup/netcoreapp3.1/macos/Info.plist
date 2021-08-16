@@ -19,9 +19,9 @@
    <key>NSAppleScriptEnabled</key>
    <string>NO</string>
    <key>CFBundleName</key>
-   <string>APSIM1.2.3.4</string>
+   <string>APSIM@Version</string>
    <key>CFBundleVersion</key>
-   <string>1.2.3.4</string>
+   <string>@Version</string>
    <key>CFBundleShortVersionString</key>
    <string></string>
 </dict>
