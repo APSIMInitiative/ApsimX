@@ -153,7 +153,9 @@ namespace Models.CLEM
                         }
                         else if (type is Type)
                         {
-                            results.AddRange(resources.GetCLEMResourceNames(type as Type));
+                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent);
+                            if (list != null)
+                                results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
                         }
                     }
                 }

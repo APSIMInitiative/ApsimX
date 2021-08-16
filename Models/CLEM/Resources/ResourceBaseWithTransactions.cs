@@ -59,7 +59,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Provie full name of resource StoreName.TypeName
+        /// Provide full name of resource StoreName.TypeName
         /// </summary>
         public string FullName => $"{CLEMParentName}.{Name}";
     }
