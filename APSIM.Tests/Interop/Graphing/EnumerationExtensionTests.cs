@@ -17,37 +17,19 @@ namespace APSIM.Tests.Graphing.SeriesExporters
     public class EnumerationExtensionTests
     {
         /// <summary>
-        /// Ensure that apsim line types convert to the correct oxyplot line styles.
-        /// </summary>
-        [Test]
-        public void TestLineStyleConversion()
-        {
-            TestLineStyleConversion(LineType.Dash, LineStyle.Dash);
-            TestLineStyleConversion(LineType.DashDot, LineStyle.DashDot);
-            TestLineStyleConversion(LineType.Dot, LineStyle.Dot);
-            TestLineStyleConversion(LineType.None, LineStyle.None);
-            TestLineStyleConversion(LineType.Solid, LineStyle.Solid);
-        }
-
-        /// <summary>
         /// Convert the input linetype to an oxyplot linestyle and ensure that
         /// the result matches the expected value.
         /// </summary>
         /// <param name="input">Input line type.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestLineStyleConversion(LineType input, LineStyle expectedOutput)
+        [TestCase(LineType.Dash, LineStyle.Dash)]
+        [TestCase(LineType.DashDot, LineStyle.DashDot)]
+        [TestCase(LineType.Dot, LineStyle.Dot)]
+        [TestCase(LineType.None, LineStyle.None)]
+        [TestCase(LineType.Solid, LineStyle.Solid)]
+        public void TestLineStyleConversion(LineType input, LineStyle expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLineStyle());
-        }
-
-        /// <summary>
-        /// Ensure that apsim line thicknesses convert to the correct oxyplot line thickness.
-        /// </summary>
-        [Test]
-        public void TestLineThicknessConversion()
-        {
-            TestLineThicknessConversion(LineThickness.Normal, 0.5);
-            TestLineThicknessConversion(LineThickness.Thin, 0.25);
         }
 
         /// <summary>
@@ -56,30 +38,11 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input line type.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestLineThicknessConversion(LineThickness input, double expectedOutput)
+        [TestCase(LineThickness.Normal, 0.5)]
+        [TestCase(LineThickness.Thin, 0.25)]
+        public void TestLineThicknessConversion(LineThickness input, double expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotThickness());
-        }
-
-        /// <summary>
-        /// Ensure that apsim marker types convert to the correct oxyplot line thickness.
-        /// </summary>
-        [Test]
-        public void TestMarkerTypeConversion()
-        {
-            // Series with un-filled markers should have marker colour set to undefined.
-            TestMarkerTypeConversion(MarkerType.Circle, OxyPlot.MarkerType.Circle);
-            TestMarkerTypeConversion(MarkerType.Cross, OxyPlot.MarkerType.Cross);
-            TestMarkerTypeConversion(MarkerType.Diamond, OxyPlot.MarkerType.Diamond);
-            TestMarkerTypeConversion(MarkerType.FilledCircle, OxyPlot.MarkerType.Circle);
-            TestMarkerTypeConversion(MarkerType.FilledDiamond, OxyPlot.MarkerType.Diamond);
-            TestMarkerTypeConversion(MarkerType.FilledSquare, OxyPlot.MarkerType.Square);
-            TestMarkerTypeConversion(MarkerType.FilledTriangle, OxyPlot.MarkerType.Triangle);
-            TestMarkerTypeConversion(MarkerType.None, OxyPlot.MarkerType.None);
-            TestMarkerTypeConversion(MarkerType.Plus, OxyPlot.MarkerType.Plus);
-            TestMarkerTypeConversion(MarkerType.Square, OxyPlot.MarkerType.Square);
-            TestMarkerTypeConversion(MarkerType.Star, OxyPlot.MarkerType.Star);
-            TestMarkerTypeConversion(MarkerType.Triangle, OxyPlot.MarkerType.Triangle);
         }
 
         /// <summary>
@@ -88,21 +51,21 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input marker type.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestMarkerTypeConversion(MarkerType input, OxyPlot.MarkerType expectedOutput)
+        [TestCase(MarkerType.Circle, OxyPlot.MarkerType.Circle)]
+        [TestCase(MarkerType.Cross, OxyPlot.MarkerType.Cross)]
+        [TestCase(MarkerType.Diamond, OxyPlot.MarkerType.Diamond)]
+        [TestCase(MarkerType.FilledCircle, OxyPlot.MarkerType.Circle)]
+        [TestCase(MarkerType.FilledDiamond, OxyPlot.MarkerType.Diamond)]
+        [TestCase(MarkerType.FilledSquare, OxyPlot.MarkerType.Square)]
+        [TestCase(MarkerType.FilledTriangle, OxyPlot.MarkerType.Triangle)]
+        [TestCase(MarkerType.None, OxyPlot.MarkerType.None)]
+        [TestCase(MarkerType.Plus, OxyPlot.MarkerType.Plus)]
+        [TestCase(MarkerType.Square, OxyPlot.MarkerType.Square)]
+        [TestCase(MarkerType.Star, OxyPlot.MarkerType.Star)]
+        [TestCase(MarkerType.Triangle, OxyPlot.MarkerType.Triangle)]
+        public void TestMarkerTypeConversion(MarkerType input, OxyPlot.MarkerType expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotMarkerType());
-        }
-
-        /// <summary>
-        /// Ensure that apsim marker sizes convert to the correct numeric value.
-        /// </summary>
-        [Test]
-        public void TestMarkerSizeConversion()
-        {
-            TestMarkerSizeConversion(MarkerSize.VerySmall, 3);
-            TestMarkerSizeConversion(MarkerSize.Small, 5);
-            TestMarkerSizeConversion(MarkerSize.Normal, 7);
-            TestMarkerSizeConversion(MarkerSize.Large, 9);
         }
 
         /// <summary>
@@ -111,20 +74,13 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input marker size.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestMarkerSizeConversion(MarkerSize input, double expectedOutput)
+        [TestCase(MarkerSize.VerySmall, 3)]
+        [TestCase(MarkerSize.Small, 5)]
+        [TestCase(MarkerSize.Normal, 7)]
+        [TestCase(MarkerSize.Large, 9)]
+        public void TestMarkerSizeConversion(MarkerSize input, double expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotMarkerSize());
-        }
-
-        /// <summary>
-        /// Ensure that apsim legend orientations convert to the correct oxyplot
-        /// legend orietnation.
-        /// </summary>
-        [Test]
-        public void TestLegendOrientationConversion()
-        {
-            TestLegendOrientationConversion(LegendOrientation.Horizontal, OxyPlot.LegendOrientation.Horizontal);
-            TestLegendOrientationConversion(LegendOrientation.Vertical, OxyPlot.LegendOrientation.Vertical);
         }
 
         /// <summary>
@@ -133,30 +89,11 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input legend orientation.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestLegendOrientationConversion(LegendOrientation input, OxyPlot.LegendOrientation expectedOutput)
+        [TestCase(LegendOrientation.Horizontal, OxyPlot.LegendOrientation.Horizontal)]
+        [TestCase(LegendOrientation.Vertical, OxyPlot.LegendOrientation.Vertical)]
+        public void TestLegendOrientationConversion(LegendOrientation input, OxyPlot.LegendOrientation expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendOrientation());
-        }
-
-        /// <summary>
-        /// Ensure that apsim legend positions convert to the correct oxyplot
-        /// legend position.
-        /// </summary>
-        [Test]
-        public void TestLegendPositionConversion()
-        {
-            TestLegendPositionConversion(LegendPosition.TopLeft, OxyPlot.LegendPosition.TopLeft);
-            TestLegendPositionConversion(LegendPosition.TopCenter, OxyPlot.LegendPosition.TopCenter);
-            TestLegendPositionConversion(LegendPosition.TopRight, OxyPlot.LegendPosition.TopRight);
-            TestLegendPositionConversion(LegendPosition.BottomLeft, OxyPlot.LegendPosition.BottomLeft);
-            TestLegendPositionConversion(LegendPosition.BottomCenter, OxyPlot.LegendPosition.BottomCenter);
-            TestLegendPositionConversion(LegendPosition.BottomRight, OxyPlot.LegendPosition.BottomRight);
-            TestLegendPositionConversion(LegendPosition.LeftTop, OxyPlot.LegendPosition.LeftTop);
-            TestLegendPositionConversion(LegendPosition.LeftMiddle, OxyPlot.LegendPosition.LeftMiddle);
-            TestLegendPositionConversion(LegendPosition.LeftBottom, OxyPlot.LegendPosition.LeftBottom);
-            TestLegendPositionConversion(LegendPosition.RightTop, OxyPlot.LegendPosition.RightTop);
-            TestLegendPositionConversion(LegendPosition.RightMiddle, OxyPlot.LegendPosition.RightMiddle);
-            TestLegendPositionConversion(LegendPosition.RightBottom, OxyPlot.LegendPosition.RightBottom);
         }
 
         /// <summary>
@@ -165,7 +102,19 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input legend position.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        private void TestLegendPositionConversion(LegendPosition input, OxyPlot.LegendPosition expectedOutput)
+        [TestCase(LegendPosition.TopLeft, OxyPlot.LegendPosition.TopLeft)]
+        [TestCase(LegendPosition.TopCenter, OxyPlot.LegendPosition.TopCenter)]
+        [TestCase(LegendPosition.TopRight, OxyPlot.LegendPosition.TopRight)]
+        [TestCase(LegendPosition.BottomLeft, OxyPlot.LegendPosition.BottomLeft)]
+        [TestCase(LegendPosition.BottomCenter, OxyPlot.LegendPosition.BottomCenter)]
+        [TestCase(LegendPosition.BottomRight, OxyPlot.LegendPosition.BottomRight)]
+        [TestCase(LegendPosition.LeftTop, OxyPlot.LegendPosition.LeftTop)]
+        [TestCase(LegendPosition.LeftMiddle, OxyPlot.LegendPosition.LeftMiddle)]
+        [TestCase(LegendPosition.LeftBottom, OxyPlot.LegendPosition.LeftBottom)]
+        [TestCase(LegendPosition.RightTop, OxyPlot.LegendPosition.RightTop)]
+        [TestCase(LegendPosition.RightMiddle, OxyPlot.LegendPosition.RightMiddle)]
+        [TestCase(LegendPosition.RightBottom, OxyPlot.LegendPosition.RightBottom)]
+        public void TestLegendPositionConversion(LegendPosition input, OxyPlot.LegendPosition expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendPosition());
         }
