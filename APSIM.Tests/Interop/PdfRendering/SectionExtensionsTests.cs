@@ -1,13 +1,6 @@
 using System;
 using NUnit.Framework;
-using APSIM.Server.IO;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Linq;
-using System.Text;
-using APSIM.Interop.Markdown.Renderers;
 using System.Collections.Generic;
-using APSIM.Interop.Documentation.Renderers;
 using APSIM.Interop.Documentation.Extensions;
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;

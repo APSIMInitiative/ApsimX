@@ -1,21 +1,10 @@
 using System;
-using APSIM.Interop.Documentation.Helpers;
-using APSIM.Interop.Markdown;
-using APSIM.Services.Documentation;
-using System.Collections.Generic;
-using System.Linq;
 #if NETCOREAPP
-using MigraDocCore.DocumentObjectModel;
 using Table = MigraDocCore.DocumentObjectModel.Tables.Table;
 using Section = MigraDocCore.DocumentObjectModel.Section;
-using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
-using Image = MigraDocCore.DocumentObjectModel.Shapes.Image;
 #else
-using MigraDoc.DocumentObjectModel;
 using Table = MigraDoc.DocumentObjectModel.Tables.Table;
 using Section = MigraDoc.DocumentObjectModel.Section;
-using Paragraph = MigraDoc.DocumentObjectModel.Paragraph;
-using Image = MigraDoc.DocumentObjectModel.Shapes.Image;
 #endif
 
 namespace APSIM.Interop.Documentation.Extensions

@@ -190,6 +190,17 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Use the given tag renderer to render applicable tags.
+        /// </summary>
+        /// <param name="tagRenderer">The tag renderer.</param>
+        internal void UseTagRenderer(ITagRenderer tagRenderer)
+        {
+            if (tagRenderer == null)
+                throw new ArgumentNullException(nameof(tagRenderer));
+            renderers = renderers.Append(tagRenderer);
+        }
+
+        /// <summary>
         /// Render the markdown object to the PDF document.
         /// </summary>
         /// <param name="markdownObject">The markdown object to be rendered.</param>
