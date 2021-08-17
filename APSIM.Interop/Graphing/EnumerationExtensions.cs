@@ -7,6 +7,10 @@ using LegendPosition = APSIM.Services.Graphing.LegendPosition;
 
 namespace APSIM.Interop.Graphing
 {
+    /// <summary>
+    /// Extension methods for converting apsim graphing enumerations
+    /// into their oxyplot equivalents.
+    /// </summary>
     public static class EnumerationExtensions
     {
         /// <summary>
