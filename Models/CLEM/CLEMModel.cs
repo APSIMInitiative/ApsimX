@@ -33,7 +33,6 @@ namespace Models.CLEM
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
