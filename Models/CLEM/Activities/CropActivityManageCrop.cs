@@ -29,6 +29,9 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
+        private bool gotLandRequested = false; //was this crop able to get the land it requested ?
+        private int CurrentCropIndex = 0;
+
         /// <summary>
         /// Land type where crop is to be grown
         /// </summary>
@@ -62,10 +65,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public LandType LinkedLandItem { get; set; }
 
-        private bool gotLandRequested = false; //was this crop able to get the land it requested ?
-
-        private int CurrentCropIndex = 0;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -87,14 +86,13 @@ namespace Models.CLEM.Activities
                 LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                 if (UseAreaAvailable)
-                {
                     LinkedLandItem.TransactionOccurred += LinkedLandItem_TransactionOccurred;
-                }
 
                 ResourceRequestList = new List<ResourceRequest>
                 {
                 new ResourceRequest()
                 {
+                    Resource = LinkedLandItem,
                     AllowTransmutation = false,
                     Required = UseAreaAvailable ? LinkedLandItem.AreaAvailable : AreaRequested,
                     ResourceType = typeof(Land),
@@ -110,11 +108,8 @@ namespace Models.CLEM.Activities
 
                 //Now the Land has been allocated we have an Area 
                 if (gotLandRequested)
-                {
                     //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                     Area = ResourceRequestList.FirstOrDefault().Provided;
-                }
-
             }
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
@@ -133,9 +128,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
         {
             if (Area == 0 && UseAreaAvailable)
-            {
                 Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
-            }
         }
 
         /// <summary>
@@ -148,24 +141,16 @@ namespace Models.CLEM.Activities
             {
                 CurrentCropIndex++;
                 if (CurrentCropIndex >= numberCrops)
-                {
                     CurrentCropIndex = 0;
-                }
+
                 int i = 0;
                 foreach (var item in this.Children.OfType<CropActivityManageProduct>())
                 {
                     item.ActivityEnabled = (i == CurrentCropIndex);
                     if (item.ActivityEnabled)
-                    {
                         item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
-                        
-
-
-                    }
                     else
-                    {
                         item.FirstTimeStepOfRotation = 0;
-                    }
                     i++;
                 }
             }
@@ -178,9 +163,7 @@ namespace Models.CLEM.Activities
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (LinkedLandItem != null && UseAreaAvailable)
-            {
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
-            }
         }
 
         // Method to listen for land use transactions 
@@ -191,51 +174,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NoTask;
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
             return;
         }
 
@@ -271,36 +212,22 @@ namespace Models.CLEM.Activities
                 Land parentLand = null;
                 IModel clemParent = FindAncestor<ZoneCLEM>();
                 if (LandItemNameToUse != null && LandItemNameToUse != "")
-                {
                     if (clemParent != null && clemParent.Enabled)
-                    {
                         parentLand = clemParent.FindInScope(LandItemNameToUse.Split('.')[0]) as Land;
-                    }
-                }
 
                 if (UseAreaAvailable)
-                {
                     htmlWriter.Write("the unallocated portion of ");
-                }
                 else
                 {
                     if (parentLand == null)
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> <span class=\"errorlink\">[UNITS NOT SET]</span> of ");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
-                    }
                 }
                 if (LandItemNameToUse == null || LandItemNameToUse == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[LAND NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + LandItemNameToUse + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
@@ -312,9 +239,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (this.FindAllChildren<CropActivityManageProduct>().Count() > 0)
-                {
                     htmlWriter.Write("\r\n</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -334,9 +259,7 @@ namespace Models.CLEM.Activities
                 {
                     bool rotation = this.FindAllChildren<CropActivityManageProduct>().Count() > 1;
                     if (rotation)
-                    {
                         htmlWriter.Write("\r\n<div class=\"croprotationlabel\">Rotating through crops</div>");
-                    }
                     htmlWriter.Write("\r\n<div class=\"croprotationborder\">");
                 }
                 return htmlWriter.ToString(); 

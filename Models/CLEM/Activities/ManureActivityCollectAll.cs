@@ -51,9 +51,8 @@ namespace Models.CLEM.Activities
             double amountAvailable = 0;
             // determine wet weight to move
             foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
-            {
                 amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
-            }
+
             double daysNeeded = 0;
             switch (requirement.UnitType)
             {
@@ -67,12 +66,6 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, manureStore.NameWithParent);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         /// <inheritdoc/>
@@ -106,43 +99,11 @@ namespace Models.CLEM.Activities
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
             if (manureStore != null)
-            {
                 // get resources
                 GetResourcesRequiredForActivity();
-            }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
+        ///<inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";

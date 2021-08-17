@@ -150,9 +150,7 @@ namespace Models.CLEM.Activities
                                         int maleCount = location.Where(a => a.Gender == Sex.Male).Count();
                                         // get a list of males to provide attributes when incontrolled mating.
                                         if (maleCount > 0 && location.FirstOrDefault().BreedParams.IncludedAttributeInheritanceWhenMating)
-                                        {
                                             maleBreeders = location.Where(a => a.Gender == Sex.Male).ToList();
-                                        }
 
                                         int femaleCount = location.OfType<RuminantFemale>().Count();
                                         double matingsPossible = maleCount * location.FirstOrDefault().BreedParams.MaximumMaleMatingsPerDay * 30;
@@ -289,10 +287,8 @@ namespace Models.CLEM.Activities
                     {
                         female.OneOffspringDies();
                         if (female.NumberOfOffspring == 0)
-                        {
                             // report conception status changed when last multiple birth dies.
                             female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Failed, female, Clock.Today));
-                        }
                     }
                 }
 
@@ -575,54 +571,6 @@ namespace Models.CLEM.Activities
             {
                 return (useControlledMating) ? controlledMating.TimingOK:  base.TimingOK;
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         #region descriptive summary

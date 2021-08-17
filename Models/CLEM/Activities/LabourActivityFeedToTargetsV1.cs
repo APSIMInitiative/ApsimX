@@ -355,33 +355,33 @@ namespace Models.CLEM.Activities
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
+        ///// <summary>
+        ///// Resource shortfall event handler
+        ///// </summary>
+        //public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
+        ///// <summary>
+        ///// Shortfall occurred 
+        ///// </summary>
+        ///// <param name="e"></param>
+        //protected override void OnShortfallOccurred(EventArgs e)
+        //{
+        //    ResourceShortfallOccurred?.Invoke(this, e);
+        //}
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
+        ///// <summary>
+        ///// Resource shortfall occured event handler
+        ///// </summary>
+        //public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
+        ///// <summary>
+        ///// Shortfall occurred 
+        ///// </summary>
+        ///// <param name="e"></param>
+        //protected override void OnActivityPerformed(EventArgs e)
+        //{
+        //    ActivityPerformed?.Invoke(this, e);
+        //}
 
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)

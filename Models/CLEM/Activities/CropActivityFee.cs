@@ -134,6 +134,7 @@ namespace Models.CLEM.Activities
                 }
                 resourcesNeeded.Add(new ResourceRequest()
                 {
+                    Resource = BankAccount,
                     AllowTransmutation = false,
                     Required = sumneeded,
                     ResourceType = typeof(Finance),
@@ -147,42 +148,6 @@ namespace Models.CLEM.Activities
                 return resourcesNeeded;
             }
             return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary

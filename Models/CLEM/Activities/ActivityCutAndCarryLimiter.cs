@@ -22,6 +22,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityCutAndCarryLimiter: CLEMModel
     {
+        private double amountUsedThisMonth = 0;
+
         /// <summary>
         /// Monthly weight limit (kg/day)
         /// </summary>
@@ -29,8 +31,6 @@ namespace Models.CLEM.Activities
         [ArrayItemCount(12)]
         [Units("kg/day")]
         public double[] WeightLimitPerDay { get; set; }
-
-        private double amountUsedThisMonth = 0;
 
         /// <summary>
         /// Get the amount of cut and carry available.

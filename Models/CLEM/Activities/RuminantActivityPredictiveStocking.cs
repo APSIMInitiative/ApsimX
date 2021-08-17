@@ -170,13 +170,10 @@ namespace Models.CLEM.Activities
                     {
                         // only include detachemnt if current biomass is positive, not already overeaten
                         if (pastureBiomass > 0)
-                        {
                             pastureBiomass *= (1.0 - detachrate);
-                        }
+
                         if (i > 0) // not in current month as already consumed by this time.
-                        {
                             pastureBiomass -= (feedRequiredAE * totalAE);
-                        }
                     }
 
                     // Shortfall in Fodder in kg per hectare
@@ -189,9 +186,7 @@ namespace Models.CLEM.Activities
                     double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
                     if (pastureShortFallKg == 0)
-                    {
                         return;
-                    }
 
                     // number of AE to sell to balance shortfall_kg over entire season
                     shortfallAE = pastureShortFallKg / (feedRequiredAE* this.DrySeasonLength);
@@ -205,9 +200,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
         }
 
         private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
@@ -259,54 +252,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
         public event EventHandler ReportStatus;
 
         /// <inheritdoc/>
@@ -329,9 +274,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(AssessmentMonth.ToString());
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No month set");
-                }
+
                 htmlWriter.Write("</span> for a dry season of ");
                 if (DrySeasonLength > 0)
                 {
@@ -339,9 +283,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(DrySeasonLength.ToString("#0"));
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No length");
-                }
+
                 htmlWriter.Write("</span> months ");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
@@ -367,9 +310,7 @@ namespace Models.CLEM.Activities
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
             if (FindAllChildren<RuminantGroup>().Count() == 0)
-            {
                 html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
-            }
             return html;
         } 
         #endregion

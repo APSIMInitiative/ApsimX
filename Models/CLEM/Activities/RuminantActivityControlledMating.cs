@@ -236,13 +236,10 @@ namespace Models.CLEM.Activities
                     }
 
                     if (limiter < 1)
-                    {
                         this.Status = ActivityStatus.Partial;
-                    }
                     else if (limiter == 1)
-                    {
                         this.Status = ActivityStatus.Success;
-                    }
+
                     breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
@@ -252,41 +249,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Private method to determine resources required for this activity in the current month
+        /// Provate method to determin resources required for this activity in the current month
         /// This method is local to this activity and not called with CLEMGetResourcesRequired event
         /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <param name="breederList">The breeders being mated</param>
+        /// <returns>List of resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }

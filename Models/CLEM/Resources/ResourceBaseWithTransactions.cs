@@ -73,7 +73,6 @@ namespace Models.CLEM.Resources
                 childModel.TransactionOccurred -= Resource_TransactionOccurred;
         }
 
-
         /// <summary>
         /// 
         /// </summary>

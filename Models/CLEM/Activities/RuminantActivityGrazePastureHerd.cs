@@ -173,13 +173,9 @@ namespace Models.CLEM.Activities
             // this will still occur when grazing on improved, irrigated or crops. 
             // CLEM does not allow grazing on two pastures in the month, whereas NABSA allowed irrigated pasture and supplemented with native for remainder needed.
             if ((0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100) >= 0)
-            {
                 return 1 - GrazeFoodStoreModel.IntakeQualityCoefficient * (0.8 - GrazeFoodStoreModel.IntakeTropicalQualityCoefficient - pastureDMD / 100);
-            }
             else
-            {
                 return 1;
-            }
         }
 
         /// <inheritdoc/>
@@ -221,6 +217,7 @@ namespace Models.CLEM.Activities
                         {
                             AllowTransmutation = true,
                             Required = amount,
+                            Resource = GrazeFoodStoreModel,
                             ResourceType = typeof(GrazeFoodStore),
                             ResourceTypeName = this.GrazeFoodStoreModel.Name,
                             ActivityModel = this,
@@ -230,10 +227,8 @@ namespace Models.CLEM.Activities
                     }
 
                     if ( GrazeFoodStoreTypeName != null && GrazeFoodStoreModel != null)
-                    {
                         // Stand alone model has not been set by parent RuminantActivityGrazePasture
                         SetupPoolsAndLimits(1.0);
-                    }
                 }
             }
             return ResourceRequestList;
@@ -251,18 +246,12 @@ namespace Models.CLEM.Activities
 
             // calculate breed feed limits
             if (this.PoolFeedLimits == null)
-            {
                 this.PoolFeedLimits = new List<GrazeBreedPoolLimit>();
-            }
             else
-            {
                 this.PoolFeedLimits.Clear();
-            }
 
             foreach (var pool in GrazeFoodStoreModel.Pools)
-            {
                 this.PoolFeedLimits.Add(new GrazeBreedPoolLimit() { Limit = 1.0, Pool = pool });
-            }
 
             // if Jan-March then use first three months otherwise use 2
             int greenage = (Clock.Today.Month <= 3) ? 2 : 1;
@@ -276,14 +265,10 @@ namespace Models.CLEM.Activities
             double greenlimit = (this.RuminantTypeModel.GreenDietMax*100) * (1 - Math.Exp(-this.RuminantTypeModel.GreenDietCoefficient * ((propgreen*100) - (this.RuminantTypeModel.GreenDietZero*100))));
             greenlimit = Math.Max(0.0, greenlimit);
             if (propgreen > 0.9)
-            {
                 greenlimit = 100;
-            }
 
             foreach (var pool in this.PoolFeedLimits.Where(a => a.Pool.Age <= greenage))
-            {
                 pool.Limit = greenlimit / 100.0;
-            }
 
             // order feedpools by age so that diet is taken from youngest greenest first
             this.PoolFeedLimits = this.PoolFeedLimits.OrderBy(a => a.Pool.Age).ToList();
@@ -322,7 +307,7 @@ namespace Models.CLEM.Activities
                             Category = TransactionCategory,
                             RelatesToResource = RuminantTypeModel.NameWithParent,
                             Required = totalEaten,
-                            Resource = GrazeFoodStoreModel as IResourceType
+                            Resource = GrazeFoodStoreModel
                         };
                         GrazeFoodStoreModel.Remove(request);
 
@@ -375,42 +360,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -419,34 +368,15 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals of ");
-                if (RuminantTypeName == null || RuminantTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[HERD NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(RuminantTypeName, "Herd not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" in ");
-                if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" will graze for ");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
                 if (HoursGrazed <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
                 else
-                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
-
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 

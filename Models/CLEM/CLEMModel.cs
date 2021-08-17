@@ -208,6 +208,7 @@ namespace Models.CLEM
                 case HTMLSummaryStyle.Helper:
                     break;
                 case HTMLSummaryStyle.FileReader:
+                    spanClass = "filelink";
                     break;
                 default:
                     break;

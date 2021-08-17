@@ -86,34 +86,27 @@ namespace Models.CLEM.Activities
                             OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                         };
                         if (ragpb.Resources == null)
-                        {
                             ragpb.Resources = this.Resources;
-                        }
+
                         if (ragpb.Clock == null)
-                        {
                             ragpb.Clock = this.Clock;
-                        }
+
                         ragpb.InitialiseHerd(true, true);
                         if (ragp.ActivityList == null)
-                        {
                             ragp.ActivityList = new List<CLEMActivityBase>();
-                        }
+
                         ragp.ActivityList.Add(ragpb);
                         ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
                         ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     }
                     if (ActivityList == null)
-                    {
                         ActivityList = new List<CLEMActivityBase>();
-                    }
                     ActivityList.Add(ragp);
 
                 }
             }
             else
-            {
                 Summary.WriteWarning(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!");
-            }
         }
 
         /// <summary>
@@ -143,13 +136,8 @@ namespace Models.CLEM.Activities
 
         private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)
         {
-            ActivityPerformed?.Invoke(sender, e);
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
+            OnActivityPerformed(e);
+            //ActivityPerformed?.Invoke(sender, e);
         }
 
         /// <inheritdoc/>
@@ -168,18 +156,14 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -190,43 +174,11 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-            {
                 Status = ActivityStatus.NoTask;
-            }
             return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -238,13 +190,9 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
                 if (HoursGrazed <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
                 else
-                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
 
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");

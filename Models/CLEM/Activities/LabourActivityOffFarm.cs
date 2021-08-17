@@ -70,12 +70,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             // days provided from labour set in the requests in the resourceResquestList
@@ -84,36 +78,6 @@ namespace Models.CLEM.Activities
             {
                 bankType.Add(ResourceRequestList.Sum(a => a.Value), this, "", TransactionCategory);
             }
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region validation
@@ -126,9 +90,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             if (bankType == null && Resources.GetResourceGroupByType(typeof(Finance)) != null)
-            {
                 Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
-            }
 
             // get check labour required
             if (labourRequired == null)
@@ -165,17 +127,9 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
                 htmlWriter.Write("Earnings will be paid to ");
-                if (BankAccountName == null || BankAccountName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" based on <span class=\"resourcelink\">Labour Pricing</span> set in the <span class=\"resourcelink\">Labour</span>");
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

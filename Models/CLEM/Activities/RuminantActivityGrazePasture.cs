@@ -196,7 +196,8 @@ namespace Models.CLEM.Activities
 
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
-            ActivityPerformed?.Invoke(sender, e);
+            OnActivityPerformed(e);
+            //ActivityPerformed?.Invoke(sender, e);
         }
 
         /// <inheritdoc/>
@@ -207,36 +208,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -245,24 +216,12 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in ");
-                if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" will graze for ");
                 if (HoursGrazed <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
                 else
-                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
-
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 

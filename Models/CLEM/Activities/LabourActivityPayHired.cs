@@ -4,6 +4,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,11 +25,11 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Labour/PayHiredLabour.htm")]
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
     {
-        /// <summary>
-        /// Get the Clock.
-        /// </summary>
         [Link]
         Clock Clock = null;
+
+        private FinanceType bankAccount;
+        private Labour labour;
 
         /// <summary>
         /// Account to use
@@ -37,9 +38,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
-
-        private FinanceType bankAccount;
-        private Labour labour;
 
         /// <summary>
         /// Constructor
@@ -70,12 +68,6 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimestep(object sender, EventArgs e)
         {
             GetResourcesRequiredForActivity();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         /// <inheritdoc/>
@@ -172,12 +164,6 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
         #region validation
         /// <summary>
         /// Validate model
@@ -219,17 +205,13 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            return html;
         } 
         #endregion
 

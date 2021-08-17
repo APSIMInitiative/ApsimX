@@ -34,6 +34,16 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
+        // amount requested
+        private double feedEstimated = 0;
+        // amount actually needed to satisfy animals
+        private double feedToSatisfy = 0;
+        // amount actually needed to satisfy animals allowing for overfeeding
+        private double feedToOverSatisfy = 0;
+        // does this feeding style need a potential intake modifier
+        private bool usingPotentialintakeMultiplier = false;
+        private double overfeedProportion = 1;
+
         /// <summary>
         /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
         /// eg. AnimalFoodStore.RiceStraw
@@ -55,17 +65,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public IFeedType FeedType { get; set; }
-
-        // amount requested
-        private double feedEstimated = 0;
-        // amount actually needed to satisfy animals
-        private double feedToSatisfy = 0;
-        // amount actually needed to satisfy animals allowing for overfeeding
-        private double feedToOverSatisfy = 0;
-        // does this feeding style need a potential intake modifier
-        private bool usingPotentialintakeMultiplier = false;
-
-        private double overfeedProportion = 1;
 
         /// <summary>
         /// Feeding style to use
@@ -153,22 +152,14 @@ namespace Models.CLEM.Activities
 
                 double value = 0;
                 if (child is RuminantFeedGroup)
-                {
                     value = (child as RuminantFeedGroup).Value;
-                }
                 else
-                {
                     value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
-                }
 
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                {
                     feedEstimated += value * 30.4;
-                }
                 else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                {
                     feedEstimated += value * FeedType.Amount;
-                }
                 else
                 {
                     foreach (Ruminant ind in selectedIndividuals)
@@ -195,10 +186,8 @@ namespace Models.CLEM.Activities
             }
 
             if(StopFeedingWhenSatisfied)
-            {
                 // restrict to max intake permitted by individuals and avoid overfeed wastage
                 feedEstimated = Math.Min(feedEstimated, Math.Max(feedToOverSatisfy, feedToSatisfy));
-            }
 
             if (feedEstimated > 0)
             {
@@ -210,6 +199,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = feedEstimated,
+                        Resource = FeedType,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
@@ -247,17 +237,15 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perKg:
@@ -266,9 +254,8 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perUnit:
                     numberUnits = feedEstimated / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -305,6 +292,7 @@ namespace Models.CLEM.Activities
                             AllowTransmutation = false,
                             Required = wasted,
                             Available = wasted,
+                            Resource = item.Resource,
                             ResourceType = typeof(AnimalFoodStore),
                             ResourceTypeName = item.ResourceTypeName,
                             ActivityModel = this,
@@ -324,14 +312,10 @@ namespace Models.CLEM.Activities
                 {
                     excess = Math.Min(item.Available, item.Required) - feedToOverSatisfy;
                     if(feedToOverSatisfy > feedToSatisfy)
-                    {
                         overfeedProportion = 1;
-                    }
                 }
                 else if(feedToOverSatisfy > feedToSatisfy && Math.Min(item.Available, item.Required) > feedToSatisfy)
-                {
                     overfeedProportion = (Math.Min(item.Available, item.Required) - feedToSatisfy) / (feedToOverSatisfy - feedToSatisfy);
-                }
                 if (excess > 0)
                 {
                     ResourceRequest excessRequest = new ResourceRequest()
@@ -339,6 +323,7 @@ namespace Models.CLEM.Activities
                         AllowTransmutation = false,
                         Required = excess,
                         Available = excess,
+                        Resource = item.Resource,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = item.ResourceTypeName,
                         ActivityModel = this,
@@ -381,13 +366,9 @@ namespace Models.CLEM.Activities
                 {
                     double value = 0;
                     if (child is RuminantFeedGroup)
-                    {
                         value = (child as RuminantFeedGroup).Value;
-                    }
                     else
-                    {
                         value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
-                    }
 
                     foreach (Ruminant ind in herd.FilterRuminants(child))
                     {
@@ -419,12 +400,9 @@ namespace Models.CLEM.Activities
                         }
                         // check amount meets intake limits
                         if (usingPotentialintakeMultiplier)
-                        {
                             if (details.Amount > (ind.PotentialIntake + (Math.Max(0,ind.BreedParams.OverfeedPotentialIntakeModifier-1)*overfeedProportion*ind.PotentialIntake)) - ind.Intake)
-                            {
                                 details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
-                            }
-                        }
+
                         ind.AddIntake(details);
 
                     }
@@ -432,33 +410,7 @@ namespace Models.CLEM.Activities
                 SetStatusSuccess();
             }
             else
-            {
                 Status = ActivityStatus.NotNeeded;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -469,21 +421,10 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Feed ruminants ");
-
-                if (FeedTypeName == null || FeedTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 if (ProportionTramplingWastage > 0)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\"> <span class=\"setvalue\">" + (ProportionTramplingWastage).ToString("0.##%") + "</span> is lost through trampling</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         } 

@@ -150,42 +150,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, RelatesToResourceName);
         }
 
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
         #region validation
 
         /// <summary>
@@ -200,9 +164,8 @@ namespace Models.CLEM.Activities
             while(!(follow is ActivitiesHolder))
             {
                 if(follow is CropActivityManageProduct)
-                {
                     return results;
-                }
+
                 if(!(follow is ActivityFolder))
                 {
                     string[] memberNames = new string[] { "Parent model" };
@@ -223,20 +186,11 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
-                {
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                }
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                    if (TransactionCategory != null && TransactionCategory != "")
-                    {
-                        htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
-                    }
+                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not Set"));
                     htmlWriter.Write(" for all transactions</div>");
                 }
                 return htmlWriter.ToString(); 

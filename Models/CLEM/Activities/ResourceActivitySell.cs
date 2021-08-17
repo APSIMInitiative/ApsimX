@@ -28,6 +28,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ResourceActivitySell: CLEMActivityBase, IValidatableObject
     {
+        private FinanceType bankAccount;
+        private IResourceType resourceToSell;
+        private IResourceType resourceToPlace;
+        private ResourcePricing price;
+        private double unitsAvailable;
+
         /// <summary>
         /// Bank account to use
         /// </summary>
@@ -57,12 +63,6 @@ namespace Models.CLEM.Activities
         [Description("Value for selling style")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        private FinanceType bankAccount;
-        private IResourceType resourceToSell;
-        private IResourceType resourceToPlace;
-        private ResourcePricing price;
-        private double unitsAvailable;
 
         /// <summary>
         /// Constructor
@@ -116,17 +116,14 @@ namespace Models.CLEM.Activities
             Market market = Resources.FoundMarket;
             // find a suitable store to place resource
             if(market != null)
-            {
                 resourceToPlace = market.Resources.LinkToMarketResourceType(resourceToSell as CLEMResourceTypeBase) as IResourceType;
-            }
+
             if(resourceToPlace != null)
-            {
                 price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
-            }
+
             if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
-            {
                 price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
-            }
+
         }
 
         /// <summary>
@@ -160,9 +157,8 @@ namespace Models.CLEM.Activities
                 amount = Math.Max(0, amount);
                 double units = amount / price.PacketSize;
                 if(price.UseWholePackets)
-                {
                     units = Math.Truncate(units);
-                }
+
                 return units;
             }
         }
@@ -212,9 +208,7 @@ namespace Models.CLEM.Activities
             {
                 units = unitsAvailableForSale * labourlimit;
                 if (price.UseWholePackets)
-                {
                     units = Math.Truncate(units);
-                }
             }
 
             if(units>0)
@@ -247,30 +241,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary 
 
         /// <inheritdoc/>
@@ -299,26 +269,10 @@ namespace Models.CLEM.Activities
                     default:
                         break;
                 }
-
-                if (ResourceTypeName == null || ResourceTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" with sales placed in ");
-                if (AccountName == null || AccountName == "")
-                {
-                    htmlWriter.Write(" <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write(" <span class=\"resourcelink\">" + AccountName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         }

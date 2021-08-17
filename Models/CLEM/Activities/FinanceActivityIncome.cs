@@ -64,12 +64,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             if (Amount > 0)
@@ -77,42 +71,6 @@ namespace Models.CLEM.Activities
                 bankAccount.Add(Amount, this, "", TransactionCategory);
                 SetStatusSuccess();
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         #region descriptive summary
@@ -125,15 +83,11 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Earn ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> into ");
                 if (AccountName == null || AccountName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
-                }
-                htmlWriter.Write("</div>");
 
+                htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
         } 

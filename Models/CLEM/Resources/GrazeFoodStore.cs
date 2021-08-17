@@ -50,13 +50,8 @@ namespace Models.CLEM.Resources
                 {
                     case "Models.CLEM.Resources.GrazeFoodStoreType":
                         GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
-                        grazefood.TransactionOccurred += Resource_TransactionOccurred;
                         grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
                         Items.Add(grazefood);
-                        break;
-                    case "Models.CLEM.Resources.CommonLandFoodStoreType":
-                        CommonLandFoodStoreType commonfood = childModel as CommonLandFoodStoreType;
-                        commonfood.TransactionOccurred += Resource_TransactionOccurred;
                         break;
                     default:
                         break;
@@ -71,18 +66,10 @@ namespace Models.CLEM.Resources
         private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
-            }
-            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
-            }
+
             if (Items != null)
-            {
                 Items.Clear();
-            }
             Items = null;
         }
 
@@ -95,7 +82,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Override base event
+        /// On ecological indicators calculated event
         /// </summary>
         protected void OnEcologicalIndicatorsCalculated(EventArgs e)
         {

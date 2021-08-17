@@ -32,6 +32,9 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
+        private Relationship pastureToStockingChangeElNino { get; set; }
+        private Relationship pastureToStockingChangeLaNina { get; set; }
+
         /// <summary>
         /// File containing SOI measure from BOM http://www.bom.gov.au/climate/influences/timeline/
         /// Year Jan Feb Mar.....
@@ -62,9 +65,6 @@ namespace Models.CLEM.Activities
         [Description("SOI cutoff (-ve) before considered El Niño")]
         [Required, GreaterThanEqualValue(0)]
         public double SOIForElNino { get; set; }
-
-        private Relationship pastureToStockingChangeElNino { get; set; }
-        private Relationship pastureToStockingChangeLaNina { get; set; }
 
         /// <summary>
         /// Minimum estimated feed (kg/ha) before restocking
@@ -138,13 +138,9 @@ namespace Models.CLEM.Activities
 
             Simulation simulation = FindAncestor<Simulation>();
             if (simulation != null)
-            {
                 fullFilename = PathUtilities.GetAbsolutePath(this.MonthlySOIFile, simulation.FileName);
-            }
             else
-            {
                 fullFilename = this.MonthlySOIFile;
-            }
 
             //check file exists
             if (File.Exists(fullFilename))
@@ -170,9 +166,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            { 
                 Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
-            }
 
             this.InitialiseHerd(false, true);
 
@@ -195,17 +189,11 @@ namespace Models.CLEM.Activities
             // get average SIOIndex
             ensoValue /= monthsAvailable;
             if(ensoValue <= SOIForElNino)
-            {
                 return ENSOState.ElNino;
-            }
             else if (ensoValue >= SOIForLaNina)
-            {
                 return ENSOState.LaNina;
-            }
             else
-            {
                 return ENSOState.Neutral;
-            }
         } 
 
         /// <summary>An event handler to call for all resources other than food for feeding activity</summary>
@@ -295,13 +283,9 @@ namespace Models.CLEM.Activities
                 if(this.Status != ActivityStatus.Warning & AeToDestock + AeToRestock > 0)
                 {
                     if(Math.Max(0,AeToRestock - AeRestocked) + Math.Max(0, AeToDestock - AeDestocked) == 0)
-                    {
                         this.Status = ActivityStatus.Success;
-                    }
                     else
-                    {
                         this.Status = ActivityStatus.Partial;
-                    }
                 }
             }
         }
@@ -418,54 +402,6 @@ namespace Models.CLEM.Activities
             return animalEquivalentsToBuy;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return; ;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -476,23 +412,17 @@ namespace Models.CLEM.Activities
                 bool extracomps = false;
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Monthly SOI data are provided by ");
                 if (MonthlySOIFile == null || MonthlySOIFile == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">File not set</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"filelink\">" + MonthlySOIFile + "</span>");
-                }
+
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The mean of the previous ");
                 if(AssessMonths == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not set</span>");
-                }
                 else
-                {
                     htmlWriter.Write($"<span class=\"setvalue\">{AssessMonths}</span>");
-                }
+
                 htmlWriter.Write($" months will determine the current ENSO phase where:");
                 htmlWriter.Write("</div>");
 
@@ -504,9 +434,7 @@ namespace Models.CLEM.Activities
                 // relationship to use
                 var relationship = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nino")).FirstOrDefault();
                 if(relationship is null)
-                {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                }
                 else
                 {
                     extracomps = true;
@@ -524,9 +452,7 @@ namespace Models.CLEM.Activities
                 // relationship to use
                 relationship = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nina")).FirstOrDefault();
                 if (relationship is null)
-                {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"otherlink\">Relationship</span> provided!</span> No herd change will be calculated for this phase</div>");
-                }
                 else
                 {
                     extracomps = true;
@@ -540,9 +466,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
                 var rumGrps = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
                 if (rumGrps.Count() == 0)
-                {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> were provided</span>. No destocking will be performed</div>");
-                }
                 else
                 {
                     extracomps = true;
@@ -553,9 +477,7 @@ namespace Models.CLEM.Activities
                 // pasture
                 var specs = FindAllChildren<SpecifyRuminant>();
                 if(specs.Count() == 0)
-                {
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">SpecifyRuminant</span> were provided</span>. No restocking will be performed</div>");
-                }
                 else
                 {
                     extracomps = true;
@@ -566,13 +488,9 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("\r\n<div style=\"margin-top:10px;\" class=\"activitygroupsborder\">");
                 if (extracomps)
-                {
                     htmlWriter.Write("<div class=\"labournote\">Additional components used by this activity</div>");
-                }
                 else
-                {
                     htmlWriter.Write("<div class=\"labournote\">No additional components have been supplied</div>");
-                }
 
                 return htmlWriter.ToString();
             }

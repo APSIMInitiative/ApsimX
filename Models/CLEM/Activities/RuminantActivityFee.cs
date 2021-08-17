@@ -97,24 +97,12 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ");
                 htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ");
                 htmlWriter.Write(" from ");
-                if (BankAccountName != null)
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ");
-                }
+
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                if (TransactionCategory != null && TransactionCategory != "")
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
-                }
+
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
                 htmlWriter.Write(" for all transactions</div>");
                 return htmlWriter.ToString(); 
             }

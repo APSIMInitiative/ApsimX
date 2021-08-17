@@ -29,6 +29,10 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
+        private GrazeFoodStoreType pasture { get; set; }
+        private AnimalFoodStoreType foodstore { get; set; }
+        private ActivityCutAndCarryLimiter limiter;
+
         /// <summary>
         /// Name of graze food store/paddock to cut and carry from
         /// </summary>
@@ -71,10 +75,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
-
-        private GrazeFoodStoreType pasture { get; set; }
-        private AnimalFoodStoreType foodstore { get; set; }
-        private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>
         /// Constructor
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                         AdditionalDetails = this,
                         Category = TransactionCategory,
                         Required = AmountHarvested,
-                        Resource = pasture,
+                        Resource = pasture
                     }
                 };
             }
@@ -278,30 +278,6 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -330,25 +306,10 @@ namespace Models.CLEM.Activities
                 }
 
                 htmlWriter.Write("from ");
-                if (PaddockName == null || PaddockName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" and carry to ");
-                if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Fodd store not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 
