@@ -303,7 +303,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Provides the closing html tags for object
+        /// Provides the opening html tags for object
         /// </summary>
         /// <returns></returns>
         public virtual string ModelSummaryOpeningTags(bool formatForParentControl)

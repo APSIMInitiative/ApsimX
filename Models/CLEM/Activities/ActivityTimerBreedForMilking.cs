@@ -224,20 +224,15 @@ namespace Models.CLEM.Activities
                     {
                         htmlWriter.Write($"\r\nAllowing <span class=\"setvalueextra\">{RestMonths}</span> month{((RestMonths>1)?"s":"")} rest after lactation");
                         if(ShortenLactationMonths > 0)
-                        {
                             htmlWriter.Write(" and ");
-                        }
                     }
                     if (ShortenLactationMonths > 0)
-                    {
                         htmlWriter.Write($" breeding {ShortenLactationMonths}</span> month{((ShortenLactationMonths > 1) ? "s" : "")} before end of lactation");
-                    }
                 }
                 htmlWriter.Write("\r\n</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
+
                 return htmlWriter.ToString();
             }
         }

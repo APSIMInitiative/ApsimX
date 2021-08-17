@@ -171,9 +171,7 @@ namespace Models.CLEM.Activities
                         dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                     }
                     else
-                    {
                         return new int[] {0,0 };
-                    }
                 }
             }
             else
@@ -197,9 +195,7 @@ namespace Models.CLEM.Activities
                     dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                 }
                 else
-                {
                     return new int[] { 0, 0 };
-                }
             }
 
             for (int i = 0; i < 2; i++)
@@ -220,9 +216,8 @@ namespace Models.CLEM.Activities
             {
                 int today = clock.Today.Year * 12 + clock.Today.Month;
                 if (lastDate != today)
-                {
                     month = CalculateMonthBounds(today);
-                }
+
                 return (month[0] < today && month[1] < today);
             }
         }
@@ -316,9 +311,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</div>");
                 }
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
+
                 return htmlWriter.ToString(); 
             }
         }

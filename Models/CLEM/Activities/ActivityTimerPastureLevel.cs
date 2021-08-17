@@ -110,21 +110,12 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Perform when ");
-                if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ");
-                }
+                htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" is between <span class=\"setvalueextra\">");
                 htmlWriter.Write(MinimumPastureLevel.ToString());
                 htmlWriter.Write("</span> and ");
                 if (MaximumPastureLevel <= MinimumPastureLevel)
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -133,9 +124,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(" kg per hectare</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -153,9 +142,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

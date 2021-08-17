@@ -110,9 +110,7 @@ namespace Models.CLEM.Activities
 
             bool inrange = ((date >= startDate) && (date <= endDate));
             if (Invert)
-            {
                 inrange = !inrange;
-            }
             return inrange;
         }
 
@@ -135,14 +133,11 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 string invertString = "";
                 if (Invert)
-                {
                     invertString = "when <b>NOT</b> ";
-                }
+
                 htmlWriter.Write("Perform " + invertString + "between ");
                 if (startDate.Year == 1)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -151,9 +146,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(" and ");
                 if (EndDate <= StartDate)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[must be > StartDate]");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -161,14 +154,10 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span>");
                 if (StartDate != startDate || EndDate != endDate)
-                {
                     htmlWriter.Write(" (modified for monthly timestep)");
-                }
                 htmlWriter.Write("</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -186,9 +175,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

@@ -93,9 +93,7 @@ namespace Models.CLEM.Activities
                 while(dd2c<=dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval*-1);
                 }
@@ -106,9 +104,7 @@ namespace Models.CLEM.Activities
                 while (dd2c >= dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval);
                 }
@@ -123,9 +119,7 @@ namespace Models.CLEM.Activities
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (this.ActivityDue)
-            {
                 NextDueDate = NextDueDate.AddMonths(Interval);
-            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -138,16 +132,12 @@ namespace Models.CLEM.Activities
             if (monthDue != 0)
             {
                 if (monthDue >= clock.StartDate.Month)
-                {
                     NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
-                }
                 else
                 {
                     NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
                     while (clock.StartDate > NextDueDate)
-                    {
                         NextDueDate = NextDueDate.AddMonths(Interval);
-                    }
                 }
             }
         }
@@ -190,9 +180,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -210,9 +198,8 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
+
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
