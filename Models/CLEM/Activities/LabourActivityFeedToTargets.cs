@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount;
 
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
 
             // determine feed limits (max kg per AE per day * AEs * days)
             double intakeLimit = DailyIntakeLimit * aE * daysInMonth;
@@ -336,7 +336,7 @@ namespace Models.CLEM.Activities
             // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
             if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0) && fundsAvailable > 0)
             {
-                ResourcesHolder resourcesHolder = Resources;
+                ResourcesHolder resourcesHolder = base.Resources;
                 // if market is present point to market to find the resource
                 if (Market != null)
                     resourcesHolder = Market.FindChild<ResourcesHolder>();
@@ -494,7 +494,7 @@ namespace Models.CLEM.Activities
 
                 for (int i = 1; i <= MonthsStorage; i++)
                 {
-                    DateTime month = Clock.Today.AddMonths(i);
+                    DateTime month = clock.Today.AddMonths(i);
                     daysInMonth[i] = DateTime.DaysInMonth(month.Year, month.Month);
                     target[i] = daysInMonth[i] * aE * feedTarget.TargetValue;
                 }

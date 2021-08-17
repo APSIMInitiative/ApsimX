@@ -26,16 +26,13 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
-        private List<string> WarningsMultipleEntry = new List<string>();
-        private List<string> WarningsNotFound = new List<string>();
+        [Link]
+        Clock clock = null;
+
+        private List<string> warningsMultipleEntry = new List<string>();
+        private List<string> warningsNotFound = new List<string>();
         private Relationship adultEquivalentRelationship = null;
         private LabourAvailabilityList availabilityList;
-
-        /// <summary>
-        /// Get the Clock.
-        /// </summary>
-        [Link]
-        Clock Clock = null;
 
         /// <summary>
         /// Labour types currently available.
@@ -79,7 +76,7 @@ namespace Models.CLEM.Resources
             // locate resources
             availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
 
-            if (Clock.Today.Day != 1)
+            if (clock.Today.Day != 1)
             {
                 OnStartOfMonth(this, null);
             }
@@ -115,7 +112,7 @@ namespace Models.CLEM.Resources
         /// <returns>Amount eaten per day</returns>
         public double GetDailyDietaryValue(string metric, bool includeHiredLabour, bool reportPerAE)
         {
-            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
             return GetDietaryValue(metric, includeHiredLabour, reportPerAE) / daysInMonth;
         }
 
@@ -134,9 +131,9 @@ namespace Models.CLEM.Resources
             if (FindAllChildren<LabourType>().Count() > 0 && this.FindAllChildren<LabourType>().Cast<LabourType>().Sum(a => a.Individuals) == 0)
             {
                 string warningString = "No individuals have been set in any [r=LabourType]\r\nAdd individuals or consider removing or disabling [r=Labour]";
-                if (!WarningsNotFound.Contains(warningString))
+                if (!warningsNotFound.Contains(warningString))
                 {
-                    WarningsNotFound.Add(warningString);
+                    warningsNotFound.Add(warningString);
                     Summary.WriteWarning(this, warningString);
                 }
             }
@@ -242,7 +239,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMUpdateLabourAvailability")]
         private void OnCLEMUpdateLabourAvailability(object sender, EventArgs e)
         {
-            int currentmonth = Clock.Today.Month;
+            int currentmonth = clock.Today.Month;
             foreach (LabourType item in Items)
                 // set available days from availabilityitem
                 item.SetAvailableDays(currentmonth);
@@ -347,9 +344,9 @@ namespace Models.CLEM.Resources
                 }
                 // no price match found.
                 string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
-                if (!WarningsNotFound.Contains(warningString))
+                if (!warningsNotFound.Contains(warningString))
                 {
-                    WarningsNotFound.Add(warningString);
+                    warningsNotFound.Add(warningString);
                     Summary.WriteWarning(this, warningString);
                 }
             }
@@ -384,9 +381,9 @@ namespace Models.CLEM.Resources
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
-                            if (!WarningsMultipleEntry.Contains(criteria))
+                            if (!warningsMultipleEntry.Contains(criteria))
                             {
-                                WarningsMultipleEntry.Add(criteria);
+                                warningsMultipleEntry.Add(criteria);
                                 Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
                             }
                         }
@@ -407,9 +404,9 @@ namespace Models.CLEM.Resources
                     else
                         Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
 
-                    if (!WarningsNotFound.Contains(criteria))
+                    if (!warningsNotFound.Contains(criteria))
                     {
-                        WarningsNotFound.Add(criteria);
+                        warningsNotFound.Add(criteria);
                         Summary.WriteWarning(this, warningString);
                     }
                 }

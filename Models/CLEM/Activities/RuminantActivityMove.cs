@@ -26,6 +26,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
     public class RuminantActivityMove: CLEMRuminantActivityBase, IValidatableObject
     {
+        private string pastureName = "";
+
         /// <summary>
         /// Managed pasture to move to
         /// </summary>
@@ -33,8 +35,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string ManagedPastureName { get; set; }
-
-        private string pastureName = "";
 
         /// <summary>
         /// Determines whether this must be performed to setup herds at the start of the simulation

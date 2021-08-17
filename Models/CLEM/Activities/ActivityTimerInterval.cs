@@ -29,9 +29,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -73,7 +72,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month);
+                return (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month);
             }
         }
 
@@ -81,7 +80,7 @@ namespace Models.CLEM.Activities
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
+            if (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month)
             {
                 return true;
             }
@@ -138,14 +137,14 @@ namespace Models.CLEM.Activities
             int monthDue = (int)MonthDue;
             if (monthDue != 0)
             {
-                if (monthDue >= Clock.StartDate.Month)
+                if (monthDue >= clock.StartDate.Month)
                 {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
                 }
                 else
                 {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
-                    while (Clock.StartDate > NextDueDate)
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
+                    while (clock.StartDate > NextDueDate)
                     {
                         NextDueDate = NextDueDate.AddMonths(Interval);
                     }

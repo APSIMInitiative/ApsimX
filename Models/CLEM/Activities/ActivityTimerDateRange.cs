@@ -27,10 +27,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        [NonSerialized]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Start date of period to perform activities
@@ -76,11 +74,11 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (Clock is null)
+                if (clock is null)
                 {
                     return true;
                 }
-                bool inrange = IsMonthInRange(Clock.Today);
+                bool inrange = IsMonthInRange(clock.Today);
                 if(inrange)
                 {
                     // report activity performed.

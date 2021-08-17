@@ -32,9 +32,9 @@ namespace Models.CLEM
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
-        Summary Summary = null;
+        Summary summary = null;
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -168,7 +168,7 @@ namespace Models.CLEM
         /// <returns></returns>
         public bool IsEcologicalIndicatorsCalculationMonth()
         {
-            return this.EcologicalIndicatorsNextDueDate.Year == Clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == Clock.Today.Month;
+            return this.EcologicalIndicatorsNextDueDate.Year == clock.Today.Year && this.EcologicalIndicatorsNextDueDate.Month == clock.Today.Month;
         }
 
         /// <summary>Data stores to clear at start of month</summary>
@@ -191,20 +191,20 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (Clock.StartDate.ToShortDateString() == "1/01/0001")
+            if (clock.StartDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
+                results.Add(new ValidationResult(String.Format("Invalid start date {0}", clock.StartDate.ToShortDateString()), memberNames));
             }
-            if (Clock.EndDate.ToShortDateString() == "1/01/0001")
+            if (clock.EndDate.ToShortDateString() == "1/01/0001")
             {
                 string[] memberNames = new string[] { "Clock.EndDate" };
-                results.Add(new ValidationResult(String.Format("Invalid end date {0}", Clock.EndDate.ToShortDateString()), memberNames));
+                results.Add(new ValidationResult(String.Format("Invalid end date {0}", clock.EndDate.ToShortDateString()), memberNames));
             }
-            if (Clock.StartDate.Day != 1)
+            if (clock.StartDate.Day != 1)
             {
                 string[] memberNames = new string[] { "Clock.StartDate" };
-                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", Clock.StartDate.ToShortDateString()), memberNames));
+                results.Add(new ValidationResult(String.Format("CLEM must commence on the first day of a month. Invalid start date {0}", clock.StartDate.ToShortDateString()), memberNames));
             }
             // check that one resources and on activities are present.
             int holderCount = this.FindAllChildren<ResourcesHolder>().Count();
@@ -244,30 +244,30 @@ namespace Models.CLEM
             // some values assigned in commencing will not be checked before processing, but will be caught here
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-            if (!Validate(this, "", this, Summary))
+            if (!Validate(this, "", this, summary))
             {
                 string error = ""; //"@i:Invalid parameters in model";
 
                 // get all validations 
-                if(Summary.Messages() != null)
-                    foreach (DataRow item in Summary.Messages().Rows)
+                if(summary.Messages() != null)
+                    foreach (DataRow item in summary.Messages().Rows)
                         if (item[3].ToString().StartsWith("Invalid"))
                             error += "\r\n" + item[3].ToString();
                 throw new ApsimXException(this, error.Replace("&shy;","."));
             }
 
-            if (Clock.StartDate.Year > 1) // avoid checking if clock not set.
-            if ((int)EcologicalIndicatorsCalculationMonth >= Clock.StartDate.Month)
+            if (clock.StartDate.Year > 1) // avoid checking if clock not set.
+            if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
             {
-                DateTime trackDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= Clock.Today)
+                DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
                     trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
                 EcologicalIndicatorsNextDueDate = trackDate;
             }
             else
             {
-                EcologicalIndicatorsNextDueDate = new DateTime(Clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, Clock.StartDate.Day);
-                while (Clock.StartDate > EcologicalIndicatorsNextDueDate)
+                EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                while (clock.StartDate > EcologicalIndicatorsNextDueDate)
                     EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
             }
         }

@@ -34,6 +34,11 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
     public class ReportResourceLedger : Models.Report
     {
+        [Link]
+        private ResourcesHolder resources = null;
+        [Link]
+        ISummary summary = null;
+
         /// <summary>
         /// Style of transaction report to use
         /// </summary>
@@ -70,12 +75,6 @@ namespace Models.CLEM.Reporting
         [Description("Include all unit conversions")]
         public bool IncludeConversions { get; set; }
 
-        [Link]
-        private ResourcesHolder Resources = null;
-
-        [Link]
-        ISummary Summary = null;
-
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -100,10 +99,10 @@ namespace Models.CLEM.Reporting
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
                 // check it is a ResourceGroup
-                CLEMModel model = Resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
+                CLEMModel model = resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
                 if (model == null)
                 {
-                    Summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
+                    summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
                 }
                 else
                 {

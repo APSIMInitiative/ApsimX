@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private Relationship pastureToStockingChangeElNino { get; set; }
         private Relationship pastureToStockingChangeLaNina { get; set; }
@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
             // if average >= 7 assumed La Nina. If <= 7 El Nino, else Neutral
             // http://www.bom.gov.au/climate/influences/timeline/
 
-            DateTime date = new DateTime(Clock.Today.Year, Clock.Today.Month, 1);
+            DateTime date = new DateTime(clock.Today.Year, clock.Today.Month, 1);
             int monthsAvailable = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Count();
             // get sum of previous 6 months
             double ensoValue = ForecastSequence.Where(a => a.Key >= date && a.Key <= date.AddMonths(-6)).Sum(a => a.Value);

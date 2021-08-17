@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         private int shortenLactationMonths;
         private double milkingsPerConceptionsCycle;
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, $"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityControlledMating].[f=ActivityTimerBreedForMilking]");
             }
             breedParent = controlledMatingParent.Parent as RuminantActivityBreed;
-            breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            breedParams = resources.FindResourceType<RuminantHerd, RuminantType>(this, breedParent.PredictedHerdBreed, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             int monthsOfMilking = Convert.ToInt32(Math.Ceiling(breedParams.MilkingDays / 30.4), CultureInfo.InvariantCulture);
             shortenLactationMonths = Math.Max(0, monthsOfMilking - ShortenLactationMonths);

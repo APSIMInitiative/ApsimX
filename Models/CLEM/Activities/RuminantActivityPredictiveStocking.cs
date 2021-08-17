@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Month for assessing dry season feed requirements
@@ -138,7 +138,7 @@ namespace Models.CLEM.Activities
             AeToDestock = 0;
             AeDestocked = 0;
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == (int)AssessmentMonth)
+            if (clock.Today.Month == (int)AssessmentMonth)
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale

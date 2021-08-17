@@ -26,7 +26,8 @@ namespace Models.CLEM
     public class Transmute : CLEMModel, IValidatableObject, ITransmute
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
+
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;
         private double shortfallPacketSize = 1;
@@ -78,7 +79,7 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // determine resource type from name
-            TransmuteResourceType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+            TransmuteResourceType = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             if (TransmuteResourceType != null)
             {
@@ -101,7 +102,7 @@ namespace Models.CLEM
                         transmutePricing = TransmuteResourceType.Price(PurchaseOrSalePricingStyleType.Sale);
                         if (FinanceTypeForTransactionsName != "No transactions")
                             // link to first bank account
-                            financeType = Resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+                            financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
                 }
             }
@@ -185,14 +186,14 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    object result = Resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
+                    object result = resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
                         Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
                     }
                     else
                     {
-                        object resultType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                        object resultType = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };

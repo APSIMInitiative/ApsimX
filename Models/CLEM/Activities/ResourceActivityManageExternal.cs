@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal: CLEMActivityBase
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private FileResource fileResource = null;
         private FinanceType bankAccount = null;
@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
             spent = 0;
 
             // get data
-            currentEntries = fileResource.GetCurrentResourceData(Clock.Today.Month, Clock.Today.Year);
+            currentEntries = fileResource.GetCurrentResourceData(clock.Today.Month, clock.Today.Year);
             resourceList = new List<IResourceType>();
             if (currentEntries.Count > 0)
             {

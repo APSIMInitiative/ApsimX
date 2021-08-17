@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private GrazeFoodStoreType pasture { get; set; }
         private AnimalFoodStoreType foodstore { get; set; }
@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
                 // reduce amount by limiter if present.
                 if (limiter != null)
                 {
-                    double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                    double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                     AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
                     limiter.AddWeightCarried(AmountHarvested);
                 }

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder Resources = null;
+        ResourcesHolder resources = null;
 
         /// <summary>
         /// Paddock or pasture to graze
@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>

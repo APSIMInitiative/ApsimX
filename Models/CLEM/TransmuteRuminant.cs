@@ -26,7 +26,8 @@ namespace Models.CLEM
     public class TransmuteRuminant : CLEMModel, ITransmute, IValidatableObject
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
+
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
         private FinanceType financeType = null;
@@ -176,7 +177,7 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // get herd for transmutating
-            ResourceGroup = Resources.FindResourceGroup<RuminantHerd>();
+            ResourceGroup = resources.FindResourceGroup<RuminantHerd>();
             TransmuteResourceTypeName = ResourceGroup.Name;
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
@@ -189,7 +190,7 @@ namespace Models.CLEM
                 if (FinanceTypeForTransactionsName != "No transactions")
                 {
                     // link to first bank account
-                    financeType = Resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+                    financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                 }
             }
         }

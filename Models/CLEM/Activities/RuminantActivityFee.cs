@@ -23,11 +23,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
     public class RuminantActivityFee: CLEMModel
     {
-        /// <summary>
-        /// Link to resources
-        /// </summary>
         [Link]
-        public ResourcesHolder Resources = null;
+        ResourcesHolder resources = null;
 
         /// <summary>
         /// Bank account to use
@@ -70,7 +67,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            BankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>

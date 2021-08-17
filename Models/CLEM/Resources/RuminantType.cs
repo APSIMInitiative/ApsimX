@@ -28,6 +28,10 @@ namespace Models.CLEM.Resources
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         private RuminantHerd parentHerd = null;
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<string> mandatoryAttributes = new List<string>();
+        private readonly List<string> warningsMultipleEntry = new List<string>();
+        private readonly List<string> warningsNotFound = new List<string>();
 
         /// <summary>
         /// Unit type
@@ -94,11 +98,6 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
-
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-        private List<string> mandatoryAttributes = new List<string>();
-        private readonly List<string> WarningsMultipleEntry = new List<string>();
-        private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
@@ -212,9 +211,9 @@ namespace Models.CLEM.Resources
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
-                            if (!WarningsMultipleEntry.Contains(criteria))
+                            if (!warningsMultipleEntry.Contains(criteria))
                             {
-                                WarningsMultipleEntry.Add(criteria);
+                                warningsMultipleEntry.Add(criteria);
                                 Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
                         }
@@ -236,9 +235,9 @@ namespace Models.CLEM.Resources
                     {
                         warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
-                    if (!WarningsNotFound.Contains(criteria))
+                    if (!warningsNotFound.Contains(criteria))
                     {
-                        WarningsNotFound.Add(criteria);
+                        warningsNotFound.Add(criteria);
                         Summary.WriteWarning(this, warningString);
                     }
                 }

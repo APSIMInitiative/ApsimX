@@ -22,6 +22,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public abstract class CLEMActivityBase: CLEMModel
     {
+        /// <summary>
+        /// A public link to the CLEM resource holder
+        /// </summary>
+        [Link]
+        public ResourcesHolder Resources = null;
+
         private bool enabled = true;
         private IEnumerable<CLEMActivityBase> activityChildren = null;
         private ZoneCLEM parentZone = null;
@@ -38,12 +44,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Insufficient resources available action")]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
-
-        /// <summary>
-        /// Link to resources
-        /// </summary>
-        [Link]
-        public ResourcesHolder Resources = null;
 
         /// <summary>
         /// Current list of resources requested by this activity

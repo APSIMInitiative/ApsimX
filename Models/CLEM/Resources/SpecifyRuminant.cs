@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
-        ResourcesHolder Resources = null;
+        ResourcesHolder resources = null;
 
         private RuminantType ruminantType;
 
@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
-            ruminantType = Resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // create example ruminant
             Details.Number = 1;

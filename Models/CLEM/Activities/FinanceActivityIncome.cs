@@ -25,6 +25,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Finances/Income.htm")]
     public class FinanceActivityIncome : CLEMActivityBase
     {
+        private FinanceType bankAccount;
+
         /// <summary>
         /// Amount earned
         /// </summary>
@@ -39,11 +41,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
-        private FinanceType bankAccount;
 
         /// <summary>
         /// Constructor

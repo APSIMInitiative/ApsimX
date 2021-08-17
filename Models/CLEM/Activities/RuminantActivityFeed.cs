@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         // amount requested
         private double feedEstimated = 0;
@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                 if (child is RuminantFeedGroup)
                     value = (child as RuminantFeedGroup).Value;
                 else
-                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
+                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[clock.Today.Month - 1];
 
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
                     feedEstimated += value * 30.4;
@@ -368,7 +368,7 @@ namespace Models.CLEM.Activities
                     if (child is RuminantFeedGroup)
                         value = (child as RuminantFeedGroup).Value;
                     else
-                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
+                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[clock.Today.Month - 1];
 
                     foreach (Ruminant ind in herd.FilterRuminants(child))
                     {

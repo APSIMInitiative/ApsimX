@@ -26,11 +26,8 @@ namespace Models.CLEM
 
     public class RainfallShuffler: CLEMModel
     {
-        /// <summary>
-        /// A link to the clock model.
-        /// </summary>
         [Link]
-        private readonly Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season

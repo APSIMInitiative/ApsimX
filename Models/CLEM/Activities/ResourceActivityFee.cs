@@ -22,11 +22,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ResourceActivityFee: CLEMModel
     {
-        /// <summary>
-        /// Link to resources
-        /// </summary>
         [Link]
-        public ResourcesHolder Resources = null;
+        ResourcesHolder resources = null;
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -79,7 +76,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            BankAccount = resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         #region descriptive summary

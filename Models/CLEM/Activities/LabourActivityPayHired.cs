@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private FinanceType bankAccount;
         private Labour labour;
@@ -94,7 +94,7 @@ namespace Models.CLEM.Activities
                 if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
                 {
                     Status = ActivityStatus.Partial;
-                    int currentmonth = Clock.Today.Month;
+                    int currentmonth = clock.Today.Month;
                     double currentCost = 0;
 
                     // step through all hired labour in order and set limiter where needed
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-            int currentmonth = Clock.Today.Month;
+            int currentmonth = clock.Today.Month;
             double total = 0;
             foreach (LabourType item in labour.Items.Where(a => a.Hired))
             {

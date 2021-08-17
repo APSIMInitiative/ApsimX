@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
-        private Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
                     RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture
                     {
                         GrazeFoodStoreModel = pastureType,
-                        Clock = Clock,
+                        Clock = clock,
                         Parent = this,
                         Name = "Graze_" + (pastureType as Model).Name,
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
                             ragpb.Resources = this.Resources;
 
                         if (ragpb.Clock == null)
-                            ragpb.Clock = this.Clock;
+                            ragpb.Clock = this.clock;
 
                         ragpb.InitialiseHerd(true, true);
                         if (ragp.ActivityList == null)

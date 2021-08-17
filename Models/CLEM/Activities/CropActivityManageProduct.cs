@@ -27,9 +27,9 @@ namespace Models.CLEM.Activities
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
         [Link]
-        Simulation Simulation = null;
+        Simulation simulation = null;
 
         private ActivityCutAndCarryLimiter limiter;
         private string addReason = "Harvest";
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
                 throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
 
@@ -203,9 +203,9 @@ namespace Models.CLEM.Activities
             // Retrieve harvest data from the forage file for the entire run. 
             // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               Clock.StartDate, Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+                                                               clock.StartDate, clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
-                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{Clock.StartDate.ToShortDateString()}] and [{Clock.EndDate.ToShortDateString()}]");
+                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clock.StartDate.ToShortDateString()}] and [{clock.EndDate.ToShortDateString()}]");
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
 
@@ -233,7 +233,7 @@ namespace Models.CLEM.Activities
 
             if (HarvestData.Count() > 0)
             {
-                int clockYrMth = CalculateYearMonth(Clock.Today);
+                int clockYrMth = CalculateYearMonth(clock.Today);
                 int position; // passed -1, current 0, future 1
                 do
                 {
@@ -350,7 +350,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // rotate harvest if needed
-            if ((this.ActivityEnabled & Status != ActivityStatus.Ignored) && HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
+            if ((this.ActivityEnabled & Status != ActivityStatus.Ignored) && HarvestData.Count() > 0 && clock.Today.Year * 100 + clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
             {
                 // don't rotate if no harvest tags or harvest type is not equal to "last"
                 if (!HarvestTagsUsed || NextHarvest.HarvestType == "last")
@@ -407,8 +407,8 @@ namespace Models.CLEM.Activities
             double daysNeeded = 0;
             if (this.TimingOK)
             {
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month;
+                int year = clock.Today.Year;
+                int month = clock.Today.Month;
                 double amount = 0;
                 if (NextHarvest != null)
                 {
@@ -424,7 +424,7 @@ namespace Models.CLEM.Activities
 
                             if (limiter != null)
                             {
-                                double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                                 amount = Math.Max(amount, canBeCarried);
                             }
                         }
@@ -474,8 +474,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            int year = Clock.Today.Year;
-            int month = Clock.Today.Month;
+            int year = clock.Today.Year;
+            int month = clock.Today.Month;
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
 
@@ -493,7 +493,7 @@ namespace Models.CLEM.Activities
                     // reduce amount by limiter if present.
                     if (limiter != null)
                     {
-                        double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                         AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
 
                         // now modify by labour limits as this is the amount labour was calculated for.

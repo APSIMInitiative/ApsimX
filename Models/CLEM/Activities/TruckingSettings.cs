@@ -23,11 +23,11 @@ namespace Models.CLEM.Activities
     public class TruckingSettings : CLEMModel
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
-        private GreenhouseGasesType CO2Store;
-        private GreenhouseGasesType MethaneStore;
-        private GreenhouseGasesType N2OStore;
+        private GreenhouseGasesType co2Store;
+        private GreenhouseGasesType methaneStore;
+        private GreenhouseGasesType n2oStore;
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -147,21 +147,21 @@ namespace Models.CLEM.Activities
         {
             if (TruckMethaneEmissions > 0)
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                    MethaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                    methaneStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                    MethaneStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+                    methaneStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
 
             if (TruckCO2Emissions > 0)
                 if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
-                    CO2Store = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                    co2Store = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                    CO2Store = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                    co2Store = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if (TruckN2OEmissions > 0)
                 if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                    N2OStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                    n2oStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                    N2OStore = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                    n2oStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
@@ -181,15 +181,15 @@ namespace Models.CLEM.Activities
                     switch (gas)
                     {
                         case "Methane":
-                            gasstore = MethaneStore;
+                            gasstore = methaneStore;
                             emissions = TruckMethaneEmissions;
                             break;
                         case "CO2":
-                            gasstore = CO2Store;
+                            gasstore = co2Store;
                             emissions = TruckCO2Emissions;
                             break;
                         case "N2O":
-                            gasstore = N2OStore;
+                            gasstore = n2oStore;
                             emissions = TruckN2OEmissions;
                             break;
                         default:

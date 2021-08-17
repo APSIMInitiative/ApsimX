@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
         [Link]
         Clock Clock = null;
 
-        private string RelatesToResourceName = "";
+        private string relatesToResourceName = "";
         private bool timingIssueReported = false;
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
@@ -147,7 +147,7 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
 
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, RelatesToResourceName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, relatesToResourceName);
         }
 
         #region validation

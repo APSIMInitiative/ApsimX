@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         /// <summary>
         /// Name of Feed to use
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
 
             // get feed required
             // zero based month index for array
-            int month = Clock.Today.Month - 1;
+            int month = clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
             foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())

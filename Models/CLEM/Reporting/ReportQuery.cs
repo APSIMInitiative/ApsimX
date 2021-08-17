@@ -21,8 +21,6 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private IDataStore dataStore = null;
-        //[Link]
-        //private Summary summary = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes

@@ -28,9 +28,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private int startMonth;
         private int endMonth;
@@ -69,7 +68,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return IsMonthInRange(Clock.Today);
+                return IsMonthInRange(clock.Today);
             }
         }
 

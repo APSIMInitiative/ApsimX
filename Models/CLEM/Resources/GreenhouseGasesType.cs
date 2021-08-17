@@ -22,6 +22,9 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -40,8 +43,6 @@ namespace Models.CLEM.Resources
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
 
         /// <summary>
         /// Total value of resource

@@ -23,6 +23,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
+        private string relatesToResourceName = "";
+
         /// <summary>
         /// Account to use
         /// </summary>
@@ -51,8 +53,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public FinanceType BankAccount { get; set; }
 
-        private string RelatesToResourceName = "";
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
         {
             BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         #region validation
@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
                     ResourceTypeName = AccountName,
                     ActivityModel = this,
                     FilterDetails = null,
-                    RelatesToResource = RelatesToResourceName,
+                    RelatesToResource = relatesToResourceName,
                     Category = TransactionCategory
                 }
                 );

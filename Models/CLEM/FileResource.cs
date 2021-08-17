@@ -32,6 +32,17 @@ namespace Models.CLEM
     public class FileResource : CLEMModel, IValidatableObject
     {
         /// <summary>
+        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
+        /// </summary>
+        private DataTable resourceFileAsTable;
+
+        /// <summary>
+        /// A reference to the text file reader object
+        /// </summary>
+        [NonSerialized]
+        private ApsimTextFile reader = null;
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
@@ -87,17 +98,6 @@ namespace Models.CLEM
         /// </summary>
         [JsonIgnore]
         public DateStyle StyleOfDateEntry { get; set; }
-
-        /// <summary>
-        /// A reference to the text file reader object
-        /// </summary>
-        [NonSerialized]
-        private ApsimTextFile reader = null;
-
-        /// <summary>
-        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
-        /// </summary>
-        private DataTable resourceFileAsTable;
 
         /// <summary>
         /// Gets or sets the full file name (with path). 

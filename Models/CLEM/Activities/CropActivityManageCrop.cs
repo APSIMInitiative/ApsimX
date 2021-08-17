@@ -27,10 +27,10 @@ namespace Models.CLEM.Activities
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
-        private int CurrentCropIndex = 0;
+        private int currentCropIndex = 0;
 
         /// <summary>
         /// Land type where crop is to be grown
@@ -115,8 +115,8 @@ namespace Models.CLEM.Activities
             int i = 0;
             foreach (var item in this.Children.OfType<CropActivityManageProduct>())
             {
-                item.ActivityEnabled = (i == CurrentCropIndex);
-                item.FirstTimeStepOfRotation = Clock.StartDate.Year*100 + Clock.StartDate.Month;
+                item.ActivityEnabled = (i == currentCropIndex);
+                item.FirstTimeStepOfRotation = clock.StartDate.Year*100 + clock.StartDate.Month;
                 i++;
             }
         }
@@ -139,16 +139,16 @@ namespace Models.CLEM.Activities
             int numberCrops = this.Children.OfType<CropActivityManageProduct>().Count();
             if (numberCrops>1)
             {
-                CurrentCropIndex++;
-                if (CurrentCropIndex >= numberCrops)
-                    CurrentCropIndex = 0;
+                currentCropIndex++;
+                if (currentCropIndex >= numberCrops)
+                    currentCropIndex = 0;
 
                 int i = 0;
                 foreach (var item in this.Children.OfType<CropActivityManageProduct>())
                 {
-                    item.ActivityEnabled = (i == CurrentCropIndex);
+                    item.ActivityEnabled = (i == currentCropIndex);
                     if (item.ActivityEnabled)
-                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = Clock.Today.AddDays(1).Year * 100 + Clock.Today.AddDays(1).Month;
+                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = clock.Today.AddDays(1).Year * 100 + clock.Today.AddDays(1).Month;
                     else
                         item.FirstTimeStepOfRotation = 0;
                     i++;

@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private readonly Clock Clock = null;
+        private Clock clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                     ind.Wean(true, "Natural");
                     if (ind.Mother != null)
                         // report conception status changed when offspring weans.
-                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
                 }
             }
         }
@@ -283,7 +283,7 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = ruminantHerd.Herd;
 
-            int cmonth = Clock.Today.Month;
+            int cmonth = clock.Today.Month;
 
             // grow individuals
 
@@ -381,7 +381,7 @@ namespace Models.CLEM.Activities
                     string warn = $"individuals of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }
@@ -391,7 +391,7 @@ namespace Models.CLEM.Activities
                     string warn = $"calves of [r={breed}] not fed";
                     if (!Warnings.Exists(warn))
                     {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
                         Summary.WriteWarning(this, warnfull);
                         Warnings.Add(warn);
                     }

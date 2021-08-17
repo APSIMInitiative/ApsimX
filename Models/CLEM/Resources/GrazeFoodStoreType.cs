@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]
-        ZoneCLEM ZoneCLEM = null;
+        ZoneCLEM zoneCLEM = null;
 
         /// <summary>
         /// Unit type
@@ -463,7 +463,7 @@ namespace Models.CLEM.Resources
                 Pools.RemoveAll(a => a.Amount < 0.01);
             }
 
-            if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
                 // reset so available is sum of years growth

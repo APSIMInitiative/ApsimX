@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
     public class Land: ResourceBaseWithTransactions
     {
-        private bool ChangeOccurred = false;
+        private bool changeOccurred = false;
 
         /// <summary>
         /// Unit of area to be used in this simulation
@@ -83,14 +83,14 @@ namespace Models.CLEM.Resources
                     foreach (LandActivityAllocation item in childModel.AllocatedActivitiesList)
                     {
                         ReportedLandAllocation = item;
-                        if (ChangeOccurred)
+                        if (changeOccurred)
                         {
                             OnAllocationReported(new EventArgs());
                         }
                     }
                     total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
                 }
-                if (ChangeOccurred && childModel.LandArea - total > 0)
+                if (changeOccurred && childModel.LandArea - total > 0)
                 {
                     ReportedLandAllocation = new LandActivityAllocation()
                     {
@@ -101,7 +101,7 @@ namespace Models.CLEM.Resources
                     OnAllocationReported(new EventArgs());
                 }
             }
-            ChangeOccurred = false;
+            changeOccurred = false;
         }
 
         /// <summary>

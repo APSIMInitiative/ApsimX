@@ -22,6 +22,9 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Water/WaterStoreType.htm")]
     public class WaterType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -39,8 +42,6 @@ namespace Models.CLEM.Resources
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

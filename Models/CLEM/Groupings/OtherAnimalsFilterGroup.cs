@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     public class OtherAnimalsFilterGroup: CLEMModel, IFilterGroup
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Combined ML ruleset for LINQ expression tree
@@ -69,7 +69,7 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SelectedOtherAnimalsType = Resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
+            SelectedOtherAnimalsType = resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
             if (SelectedOtherAnimalsType == null)
             {
                 throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);

@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         [Link]
-        Clock Clock = null;
+        Clock clock = null;
 
         private string grazeStore;
 
@@ -137,7 +137,7 @@ namespace Models.CLEM.Activities
                         weanedCount++;
                         if (ind.Mother != null)
                             // report conception status changed when offspring weaned.
-                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity

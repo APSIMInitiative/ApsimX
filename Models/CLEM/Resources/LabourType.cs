@@ -25,6 +25,8 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double ageInMonths = 0;
+
         /// <summary>
         /// A list of attributes added to this individual
         /// </summary>
@@ -56,9 +58,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
-
-        private double ageInMonths = 0;
-        
+       
         /// <summary>
         /// Age in months.
         /// </summary>

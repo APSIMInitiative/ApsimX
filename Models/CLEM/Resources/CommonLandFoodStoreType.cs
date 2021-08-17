@@ -27,14 +27,11 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
+        [Link]
+        ResourcesHolder resources = null;
+
         [NonSerialized]
         private object pasture = new object();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [Link]
-        public ResourcesHolder Resources = null;
 
         /// <summary>
         /// Unit type
@@ -215,7 +212,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null && !PastureLink.StartsWith("Not specified"))
             {
                 // check animalFoodStoreType
-                pasture = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                pasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (pasture == null)
                 {
                     string[] memberNames = new string[] { "Pasture link" };

@@ -29,6 +29,7 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+        private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
@@ -100,8 +101,6 @@ namespace Models.CLEM
                 }
             }
         }
-
-        private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
         /// A list of activity timers for this activity
