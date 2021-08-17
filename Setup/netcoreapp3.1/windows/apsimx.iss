@@ -106,7 +106,7 @@ begin
     try
         try
             DownloadPage.Download();
-            CreateDir(ExpandConstant('{#GtkInstallPath}'));
+            ForceDirectories(ExpandConstant('{#GtkInstallPath}'));
             UnZip(ExpandConstant('{tmp}\{#GtkArchive}'), ExpandConstant('{#GtkInstallPath}'));
             DeleteFile('{tmp}\{#GtkArchive}');
             Result:= True;

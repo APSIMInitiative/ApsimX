@@ -26,6 +26,13 @@ namespace Models.CLEM.Activities
         private ResourcesHolder Resources = null;
 
         /// <summary>
+        /// Label to assign each transaction created by this activity in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        public string TransactionCategory { get; set; }
+
+        /// <summary>
         /// Distance to market
         /// </summary>
         [Description("Distance to market (km)")]
@@ -129,6 +136,7 @@ namespace Models.CLEM.Activities
         public TruckingSettings()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Livestock.Trucking";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -207,7 +215,7 @@ namespace Models.CLEM.Activities
 
                     if (gasstore != null && emissions > 0)
                     {
-                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "", "Trucking "+(isSales?"sales":"purchases"));
+                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, (isSales ? "sales" : "purchases"), TransactionCategory);
                     }
                 }
             }
@@ -215,11 +223,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

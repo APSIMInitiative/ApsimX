@@ -26,8 +26,15 @@ namespace Models.CLEM.Resources
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         /// <summary>
+        /// A list of attributes added to this individual
+        /// </summary>
+        [JsonIgnore]
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
+
+        /// <summary>
         /// Unit type
         /// </summary>
+        [JsonIgnore]
         public string Units { get { return "NA"; } }
 
         /// <summary>
@@ -99,8 +106,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
         /// Monthly dietary components
         /// </summary>
+        [JsonIgnore]
         public List<LabourDietComponent> DietaryComponentList { get; set; }
 
         /// <summary>

@@ -55,6 +55,17 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
         #region transactions
 
         /// <summary>

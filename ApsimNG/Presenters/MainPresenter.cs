@@ -479,7 +479,7 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
@@ -914,7 +914,6 @@
         /// <returns>The explorer presenter.</returns>
         private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
-            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ViewBase newView;
             IPresenter newPresenter;
             try

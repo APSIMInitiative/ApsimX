@@ -69,16 +69,15 @@
 
             // Create a runner for our folder.
             Runner runner = new Runner(folder);
-            GenerateApsimXFiles.Generate(runner, path, (s) => { progress.Add(s); });
+            IEnumerable<string> generatedFiles = GenerateApsimXFiles.Generate(runner, 1, path, (s) => { progress.Add(s); });
 
-            Assert.AreEqual(progress.Count, 2);
-            Assert.AreEqual(progress[0], 0.5);
-            Assert.AreEqual(progress[1], 1);
+            Assert.AreEqual(2, progress.Count);
+            Assert.AreEqual(0.5, progress[0]);
+            Assert.AreEqual(1, progress[1]);
 
-            var generatedFiles = Directory.GetFiles(path).OrderBy(x => x).ToArray();
-            Assert.AreEqual(generatedFiles.Length, 2);
-            Assert.AreEqual("Sim1.apsimx", Path.GetFileName(generatedFiles[0]));
-            Assert.AreEqual("Sim2.apsimx", Path.GetFileName(generatedFiles[1]));
+            Assert.AreEqual(2, generatedFiles.Count());
+            Assert.AreEqual("generated-0.apsimx", Path.GetFileName(generatedFiles.First()));
+            Assert.AreEqual("generated-1.apsimx", Path.GetFileName(generatedFiles.Last()));
             Directory.Delete(path, true);
         }
 
@@ -141,8 +140,9 @@
             string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             try
             {
-                GenerateApsimXFiles.Generate(runner, temp, _ => {});
-                string file = Path.Combine(temp, "exptx1.apsimx");
+                IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
+                Assert.AreEqual(1, files.Count());
+                string file = files.First();
                 sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
                 Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
             }

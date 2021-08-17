@@ -18,11 +18,30 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(!AttributeExists("Castrated"))
+                if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
                 {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Indicates if individual is breeding sire
+        /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
+        /// </summary>
+        public bool IsWildBreeder
+        {
+            get
+            {
+                if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
+                {
+                    if (Age >= BreedParams.MinimumAge1stMating)
+                    {
                         return true;
                     }
                 }
@@ -37,7 +56,18 @@ namespace Models.CLEM.Resources
         { 
             get
             {
-                return AttributeExists("Castrated");
+                return Attributes.Exists("Castrated");
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return this.IsSire | this.IsWildBreeder;
             }
         }
 

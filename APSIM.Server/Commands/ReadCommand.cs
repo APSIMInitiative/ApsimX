@@ -18,7 +18,7 @@ namespace APSIM.Server.Commands
         /// <summary>
         /// Name of the table from which parameters will be read.
         /// </summary>
-        private string table;
+        public string TableName { get; private set; }
 
         /// <summary>
         /// Parameter names to be read.
@@ -29,14 +29,14 @@ namespace APSIM.Server.Commands
         /// The result of the ReadCommand.
         /// Contains the data 
         /// </summary>
-        public DataTable Result { get; private set; }
+        public DataTable Result { get; set; }
 
         /// <summary>
         /// Creates a <see cref="RunCommand" /> instance with sensible defaults.
         /// </summary>
         public ReadCommand(string tablename, IEnumerable<string> parameters)
         {
-            this.table = tablename;
+            this.TableName = tablename;
             this.Parameters = parameters;
         }
 
@@ -46,12 +46,35 @@ namespace APSIM.Server.Commands
         /// <param name="runner">Job runner.</param>
         public void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage)
         {
-            Result = storage.Reader.GetData(table, fieldNames: Parameters);
+            Result = storage.Reader.GetData(TableName, fieldNames: Parameters);
+            Result.TableName = TableName;
         }
 
         public override string ToString()
         {
             return $"{GetType().Name} with {Parameters.Count()} parameters";
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is ReadCommand command)
+            {
+                if (TableName != command.TableName)
+                    return false;
+                if (Parameters == null && command.Parameters == null)
+                    return true;
+                if (Parameters == null || command.Parameters == null)
+                    return false;
+                if (Parameters.Zip(command.Parameters, (x, y) => x != y).Any(x => x))
+                    return false;
+                return true;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return (TableName, Parameters).GetHashCode();
         }
     }
 }

@@ -187,7 +187,11 @@ namespace Models.CLEM
         /// <summary>
         /// Value per kg live weight
         /// </summary>
-        perKg
+        perKg,
+        /// <summary>
+        /// Value per adult equivalent
+        /// </summary>
+        perAE,
     }
 
     /// <summary>
@@ -688,7 +692,92 @@ namespace Models.CLEM
         /// Use boolean of whether the attribute exists on the individual
         /// </summary>
         Exists
+    }
 
+    /// <summary>
+    /// The style of accessing date
+    /// </summary>
+    public enum DateStyle
+    {
+        /// <summary>
+        /// Accept single datestamp (CulturalInvariant)
+        /// </summary>
+        DateStamp,
+        /// <summary>
+        /// Use Year and Month entries
+        /// </summary>
+        YearAndMonth
+    }
+
+    /// <summary>
+    /// Style to report transactions involving individuals in herd
+    /// </summary>
+    public enum RuminantTransactionsGroupingStyle
+    {
+        /// <summary>
+        /// Combine all individuals
+        /// </summary>
+        Combined,
+        /// <summary>
+        /// Grouped by pricing groups
+        /// </summary>
+        ByPriceGroup,
+        /// <summary>
+        /// Grouped by class
+        /// </summary>
+        ByClass,
+        /// <summary>
+        /// Grouped by class and sex
+        /// </summary>
+        BySexAndClass,
+    }
+
+    /// <summary>
+    /// General classes of ruminants
+    /// </summary>
+    public enum RuminantClass
+    {
+        /// <summary>
+        /// Calf
+        /// </summary>
+        Calf,
+        /// <summary>
+        /// Weaner
+        /// </summary>
+        Weaner,
+        /// <summary>
+        /// PreBreeder
+        /// </summary>
+        PreBreeder,
+        /// <summary>
+        /// Breeder
+        /// </summary>
+        Breeder,
+        /// <summary>
+        /// Castrate
+        /// </summary>
+        Castrate,
+        /// <summary>
+        /// Sire
+        /// </summary>
+        Sire
+    }
+
+    /// <summary>
+    /// Style of Transmute
+    /// </summary>
+    public enum TransmuteStyle
+    {
+        /// <summary>
+        /// Direct transmute resource (B) to shortfall resource (A) e.g. barter
+        /// </summary>
+        Direct,
+        /// <summary>
+        /// Use pricing details of transmute resource (B) and shortfall resource (A) to calculate exchange rate
+        /// </summary>
+        UsePricing
     }
 
 }
+
+

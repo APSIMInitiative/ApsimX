@@ -29,6 +29,13 @@ namespace Models.CLEM.Activities
         public ResourcesHolder Resources = null;
 
         /// <summary>
+        /// Label to assign each transaction created by this activity in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        public string TransactionCategory { get; set; }
+
+        /// <summary>
         /// Account to use
         /// </summary>
         [Description("Account to use")]
@@ -63,6 +70,7 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Expense";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

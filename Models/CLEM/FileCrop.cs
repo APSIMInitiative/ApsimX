@@ -202,7 +202,7 @@ namespace Models.CLEM
         {
             if (!this.FileExists)
             {
-                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", FullFileName.Replace("\\", "\\&shy;"), this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
             this.soilNumIndex = 0;
@@ -444,7 +444,7 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     this.soilNumIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, SoilTypeColumnName);
@@ -459,7 +459,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(SoilTypeColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
+                            throw new Exception($"Cannot find Land Id column [o={SoilTypeColumnName??"Empty"}] in crop file [x={this.FullFileName.Replace("\\", "\\&shy;")}] for [x={this.Name}]");
                         }
                     }
 
@@ -467,7 +467,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(CropNameColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find CropName column [o={CropNameColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -475,7 +475,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(YearColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -483,7 +483,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -491,7 +491,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
                 }

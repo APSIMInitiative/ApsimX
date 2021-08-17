@@ -81,7 +81,7 @@ namespace Models.CLEM
             {
                 if (bankAccount == null)
                 {
-                    bankAccount = Resources.FinanceResource().Children.FirstOrDefault() as FinanceType;
+                    bankAccount = Resources.FindResourceGroup<Finance>()?.FindAllChildren<FinanceType>().FirstOrDefault() as FinanceType;
                 }
                 return bankAccount;
             }

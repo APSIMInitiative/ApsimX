@@ -306,7 +306,7 @@
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObject(variableName);
+                IVariable var = locator.GetObjectProperties(variableName);
                 if (var != null)
                 {
                     Units = var.UnitsLabel;

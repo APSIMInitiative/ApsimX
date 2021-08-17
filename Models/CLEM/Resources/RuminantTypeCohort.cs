@@ -31,9 +31,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Gender
         /// </summary>
@@ -131,7 +128,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
 
                 for (int i = 1; i <= number; i++)
                 {
@@ -172,6 +169,7 @@ namespace Models.CLEM.Resources
                         if (this.Gender == Sex.Male)
                         {
                             RuminantMale ruminantMale = ruminantBase as RuminantMale;
+                            ruminantMale.Attributes.Add("Sire");
                         }
                         else
                         {
@@ -185,7 +183,6 @@ namespace Models.CLEM.Resources
                     if (this.Gender == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                        ruminantFemale.DryBreeder = true;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
                     }
@@ -193,7 +190,7 @@ namespace Models.CLEM.Resources
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
                     {
-                        ruminant.AddAttribute(item.AttributeName, item.GetRandomSetAttribute());
+                        ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
                     }
 
                     individuals.Add(ruminantBase as Ruminant);

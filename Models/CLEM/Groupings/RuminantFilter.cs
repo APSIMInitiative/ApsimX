@@ -21,8 +21,8 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(RuminantActivityGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 3, "Now uses IsState() terminology for all state filter properties")]
     [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
@@ -93,6 +93,17 @@ namespace Models.CLEM.Groupings
             {
                 switch (parameter)
                 {
+                    case RuminantFilterParameters.Gender:
+                        if(Value.ToUpper() == "MALE" & Operator == FilterOperators.Equal)
+                        {
+                            return "Male";
+                        }
+                        if (Value.ToUpper() == "FEMALE" & Operator == FilterOperators.NotEqual)
+                        {
+                            return "Male";
+                        }
+                        return "Female";
+
                     case RuminantFilterParameters.IsDraught:
                     case RuminantFilterParameters.IsSire:
                     case RuminantFilterParameters.IsCastrate:
@@ -280,7 +291,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
-        IsBreedingCondition = 15,
+        IsAbleToBreed = 25, //15
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
@@ -288,7 +299,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Identified as a replacement breeder growing up
         /// </summary>
-        ReplacementBreeder = 18,
+        ReplacementBreeder = 28, //18
         /// <summary>
         /// Is female a pre-breeder (weaned, less than set age, up to first birth)
         /// </summary>
@@ -312,7 +323,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Weight as proportion of High weight achieved
         /// </summary>
-        ProportionOfHighWeight = 6,
+        ProportionOfHighWeight = 26,  //6
         /// <summary>
         /// Weight as proportion of Standard Reference Weight
         /// </summary>
