@@ -50,7 +50,11 @@ namespace APSIM.Interop.Graphing
             if (y == null)
                 throw new ArgumentNullException("y data is null");
             List<DataPoint> data = new List<DataPoint>();
+#if NETCOREAPP
             foreach ((object xi, object yi) in x.Zip(y))
+#else
+            foreach ((object xi, object yi) in x.Zip(y, (xi, yi) => (xi, yi)))
+#endif
                 data.Add(new DataPoint(GetDataPointValue(xi), GetDataPointValue(yi)));
             return data;
         }
