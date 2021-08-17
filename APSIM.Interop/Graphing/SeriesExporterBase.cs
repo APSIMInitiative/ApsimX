@@ -50,7 +50,9 @@ namespace APSIM.Interop.Graphing
             if (y == null)
                 throw new ArgumentNullException("y data is null");
             List<DataPoint> data = new List<DataPoint>();
-            return x.Zip(y, (xi, yi) => new DataPoint(GetDataPointValue(xi), GetDataPointValue(yi)))/*.ToList()*/;
+            foreach ((object xi, object yi) in x.Zip(y))
+                data.Add(new DataPoint(GetDataPointValue(xi), GetDataPointValue(yi)));
+            return data;
         }
 
         /// <summary>
@@ -60,10 +62,13 @@ namespace APSIM.Interop.Graphing
         /// <returns></returns>
         protected double GetDataPointValue(object value)
         {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
             Type valueType = value.GetType();
             if (valueType == typeof(DateTime))
                 return DateTimeAxis.ToDouble((DateTime)value);
-            else if (valueType == typeof(double) || valueType == typeof(float))
+            else if (valueType == typeof(double))
                 return (double)value;
             else if (double.TryParse(value.ToString(), out double x))
                 return x;
