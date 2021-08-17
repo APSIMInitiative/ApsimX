@@ -147,9 +147,7 @@ namespace Models.CLEM
                     foreach (object type in typesToFind)
                     {
                         if (type is string)
-                        {
                             results.Add(type as string);
-                        }
                         else if (type is Type)
                         {
                             var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent);
@@ -184,12 +182,41 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="value">The value to report</param>
         /// <param name="errorString">Error text when missing</param>
+        /// <param name="entryStyle">Style of snippet</param>
         /// <returns>HTML span snippet</returns>
-        public static string DisplaySummaryValueSnippet(string value, string errorString)
+        public static string DisplaySummaryValueSnippet(string value, string errorString, HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default)
         {
+            string spanClass = "setvalue";
+            switch (entryStyle)
+            {
+                case HTMLSummaryStyle.Default:
+                    break;
+                case HTMLSummaryStyle.Resource:
+                    spanClass = "resourcelink";
+                    break;
+                case HTMLSummaryStyle.SubResource:
+                    break;
+                case HTMLSummaryStyle.SubResourceLevel2:
+                    break;
+                case HTMLSummaryStyle.Activity:
+                    spanClass = "activitylink";
+                    break;
+                case HTMLSummaryStyle.SubActivity:
+                    break;
+                case HTMLSummaryStyle.SubActivityLevel2:
+                    break;
+                case HTMLSummaryStyle.Helper:
+                    break;
+                case HTMLSummaryStyle.FileReader:
+                    break;
+                default:
+                    break;
+            }
+
+
             if (value != null && value != "")
             {
-                return $"<span class=\"setvalue\">{value}</span>";
+                return $"<span class=\"{spanClass}\">{value}</span>";
             }
             else
             {
