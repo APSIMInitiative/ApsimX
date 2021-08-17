@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             //Create list of children by breed
             foreach (RuminantType herdType in Resources.FindResourceGroup<RuminantHerd>().FindAllChildren<RuminantType>())

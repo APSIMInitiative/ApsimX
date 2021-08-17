@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             // locate Land Type resource for this forage.
-            LinkedLandItem = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+            LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             FilePasture = ZoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
                 {
                     throw new ApsimXException(this, $"No pasture production records were located by [x={(FilePasture as Model).Name}] for [a={this.Name}] given [Region id] = [{clem.ClimateRegion}] as specified in [{clem.Name}]");
                 }
-                LandType land = Resources.GetResourceItem(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+                LandType land = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (land != null)
                 {
                     recs = FilePasture.RecordsFound((FilePasture as FileSQLitePasture).LandIdColumnName, land.SoilType);
@@ -226,7 +226,7 @@ namespace Models.CLEM.Activities
                 unitsOfArea2Ha = Resources.FindResourceGroup<Land>().UnitsOfAreaToHaConversion;
 
                 // locate Pasture Type resource
-                LinkedNativeFoodType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                LinkedNativeFoodType = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                 //Assign the area actually got after taking it. It might be less than AreaRequested (if partial)
                 Area = ResourceRequestList.FirstOrDefault().Provided;

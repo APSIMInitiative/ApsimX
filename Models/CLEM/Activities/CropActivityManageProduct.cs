@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
             }
 
-            LinkedResourceItem = Resources.GetResourceItem(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
             {
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);

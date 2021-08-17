@@ -28,6 +28,11 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
+        private string grazeStore = "";
+        private RuminantType herdToUse;
+        private Relationship numberToStock;
+        private GrazeFoodStoreType foodStore;
+
         /// <summary>
         /// Months kept before sale
         /// </summary>
@@ -51,12 +56,7 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
-        private string grazeStore = "";
-        private RuminantType herdToUse;
-        private Relationship numberToStock;
-        private GrazeFoodStoreType foodStore;
-
-        //TODO: decide how many to stock.
+        // TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
 
@@ -127,34 +127,26 @@ namespace Models.CLEM.Activities
             herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if(!herdToUse.PricingAvailable())
-            {
                 Summary.WriteWarning(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
-            }
 
             // check GrazeFoodStoreExists
             grazeStore = "";
             if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-            {
                 grazeStore = GrazeFoodStoreName.Split('.').Last();
-            }
 
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
                     Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
-                }
             }
 
             numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if(numberToStock != null)
             {
                 if (grazeStore != "")
-                {
-                    foodStore = Resources.GetResourceItem(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-                }
+                    foodStore = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
         }
 
@@ -176,10 +168,8 @@ namespace Models.CLEM.Activities
                     RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
-                    {
                         //NOTE: ensure calculation method in relationship is fixed values
                         number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
-                    }
 
                     number *= purchaseSpecific.Proportion;
 
@@ -194,13 +184,9 @@ namespace Models.CLEM.Activities
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
 
                         if (purchasetype.Gender == Sex.Male)
-                        {
                             ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
-                        }
                         else
-                        {
                             ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
-                        }
 
                         Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
@@ -313,13 +299,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-                }
+
                 htmlWriter.Write("</div>");
 
                 Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
@@ -327,13 +310,10 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-                    {
                         htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
-                    }
                     else
-                    {
                         htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
-                    }
+
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString(); 

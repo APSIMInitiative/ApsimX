@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get pasture
-            pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
             {

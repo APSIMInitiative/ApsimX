@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMStartOfTimestep not default CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             labour = Resources.FindResourceGroup<Labour>();
         }

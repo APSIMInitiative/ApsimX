@@ -74,8 +74,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            resourceTypeProcessModel = Resources.GetResourceItem(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
-            resourceTypeCreatedModel = Resources.GetResourceItem(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceTypeProcessModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            resourceTypeCreatedModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>

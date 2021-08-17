@@ -104,23 +104,44 @@ namespace Models.CLEM.Resources
                     throw new ApsimXException(requestingModel, $"Invalid resource name identifier for [{requestingModel.Name}], expecting 'ResourceName.ResourceTypeName' or 'ResourceTypeName'. Value provided [{resourceName}]");
             }
 
-            // we only need to find a resource type matching the type T and name specified 
-            // we cannot have more than 1 resource group, so there is only one place each type T can exist
-            // therefore we do not need to worry about finding the resource group other than to report errors
-
             // not sure it's quickets to find the resource then look at it's children
             // or look through all descendents for the type and name
+            // if we find children then we use R as a double check
 
-            var resGroup = FindResource<R>();
-            bool resGroupNameMatch = (nameParts.First() != "" && resGroup.Name == nameParts.First());
-
-            string errorMsg;
-            if (!resGroupNameMatch & resGroup != null)
+            bool searchForAllIresourceType = false;
+            bool resGroupNameMatch = true;
+            T resType = default(T);
+            ResourceBaseWithTransactions resGroup = null;
+            if (!typeof(R).IsSubclassOf(typeof(ResourceBaseWithTransactions)))
             {
-                errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
-                Warnings.CheckAndWrite(errorMsg, Summary, this);
+                if (nameParts.First() == "")
+                    searchForAllIresourceType = true;
+                else
+                {
+                    // find resource by name
+                    resGroup = FindChild<R>(nameParts.First());
+                }
+            }
+            else
+            {
+                resGroup = (nameParts.First() != "") ? FindResource<R>(nameParts.First()) : FindResource<R>();
+                if (resGroup == null && nameParts.First() != "")
+                {
+                    // no resource name match so try with just the type
+                    resGroupNameMatch = false;
+                    resGroup = FindResource<R>();
+                }
             }
 
+            if (searchForAllIresourceType)
+                resType = FindAllDescendants<T>(nameParts.Last()).FirstOrDefault();
+            else
+            {
+                if (resGroup != null)
+                    resType = (resGroup as IModel).FindChild<T>(nameParts.Last());
+            }
+
+            string errorMsg;
             if (resGroup == null)
             {
                 errorMsg = $"Unable to locate resource group [r={typeof(R).Name}] for [a={requestingModel.Name}]";
@@ -137,8 +158,14 @@ namespace Models.CLEM.Resources
                 }
                     return default(T);
             }
-
-            var resType = (resGroup as IModel).FindChild<T>(nameParts.Last());
+            else
+            {
+                if (!resGroupNameMatch)
+                {
+                    errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
+                    Warnings.CheckAndWrite(errorMsg, Summary, this);
+                }
+            }
 
             if (resType as IModel is null)
             {
@@ -449,11 +476,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market does not have the resource
                 string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
-                if (!Warnings.Exists(warn) & Summary != null)
-                {
-                    Summary.WriteWarning(this, warn);
-                    Warnings.Add(warn);
-                }
+                Warnings.CheckAndWrite(warn, Summary, this);
                 return null;
             }
 

@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get other animal type model
-            SelectedOtherAnimalsType = Resources.GetResourceItem(this, AnimalType, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as OtherAnimalsType;
+            SelectedOtherAnimalsType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, AnimalType, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
         /// <summary>An event handler to perform herd breeding </summary>

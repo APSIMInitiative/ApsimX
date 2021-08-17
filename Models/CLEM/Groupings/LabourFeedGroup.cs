@@ -82,11 +82,9 @@ namespace Models.CLEM.Groupings
 
                 ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
                 ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
-                HumanFoodStoreType food = resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                HumanFoodStoreType food = resHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 if (food != null)
-                {
                     htmlWriter.Write(" " + food.Units + " ");
-                }
 
                 htmlWriter.Write("<span class=\"setvalue\">");
                 switch (ft)
@@ -134,9 +132,8 @@ namespace Models.CLEM.Groupings
             {
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
                 if (this.FindAllChildren<LabourFilter>().Count() == 0)
-                {
                     htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                }
+
                 return htmlWriter.ToString(); 
             }
         }

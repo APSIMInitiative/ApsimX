@@ -78,7 +78,7 @@ namespace Models.CLEM
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
             // determine resource type from name
-            TransmuteResourceType = Resources.GetResourceItem(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType;
+            TransmuteResourceType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             if (TransmuteResourceType != null)
             {
@@ -101,7 +101,7 @@ namespace Models.CLEM
                         transmutePricing = TransmuteResourceType.Price(PurchaseOrSalePricingStyleType.Sale);
                         if (FinanceTypeForTransactionsName != "No transactions")
                             // link to first bank account
-                            financeType = Resources.GetResourceItem(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as FinanceType;
+                            financeType = Resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
                 }
             }
@@ -185,18 +185,18 @@ namespace Models.CLEM
                 }
                 else
                 {
-                    object result = Resources.GetResourceGroupByName(TransmuteResourceTypeName.Split('.').First());
+                    object result = Resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
                         Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
                     }
                     else
                     {
-                        object resultType = Resources.GetResourceItem(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                        object resultType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, TransmuteResourceTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                         if (resultType is null)
                         {
                             string[] memberNames = new string[] { "ResourceType" };
-                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames));
+                            results.Add(new ValidationResult($"Could not find resource [r={TransmuteResourceTypeName.Split('.').First()}][r={TransmuteResourceTypeName.Split('.').Last()}] for [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", memberNames));
                         }
                     }
                 }

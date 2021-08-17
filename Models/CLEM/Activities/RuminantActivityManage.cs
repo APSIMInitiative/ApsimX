@@ -559,7 +559,7 @@ namespace Models.CLEM.Activities
             if(GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
             {
                 grazeStoreBreeders = GrazeFoodStoreNameBreeders.Split('.').Last();
-                foodStoreBreeders = Resources.GetResourceItem(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
             // check for managed paddocks and warn if breeders placed in yards.
@@ -577,7 +577,7 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
             {
                 grazeStoreSires = GrazeFoodStoreNameSires.Split('.').Last();
-                foodStoreSires = Resources.GetResourceItem(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                foodStoreSires = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
             // check for managed paddocks and warn if sires placed in yards.

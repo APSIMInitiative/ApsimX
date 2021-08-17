@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         {
             people = Resources.FindResourceGroup<Labour>();
             food = Resources.FindResourceGroup<HumanFoodStore>();
-            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
         /// <inheritdoc/>
@@ -351,7 +351,7 @@ namespace Models.CLEM.Activities
                 // move through specified purchase list
                 foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
                 {
-                    HumanFoodStoreType foodtype = resourcesHolder.GetResourceItem(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                    HumanFoodStoreType foodtype = resourcesHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                     if (foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
                     {
                         LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();

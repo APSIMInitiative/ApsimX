@@ -189,7 +189,7 @@ namespace Models.CLEM
                 if (FinanceTypeForTransactionsName != "No transactions")
                 {
                     // link to first bank account
-                    financeType = Resources.GetResourceItem(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning) as FinanceType;
+                    financeType = Resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                 }
             }
         }

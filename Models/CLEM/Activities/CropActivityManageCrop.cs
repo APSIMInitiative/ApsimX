@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
             if (LandItemNameToUse != null && LandItemNameToUse != "")
             {
                 // locate Land Type resource for this forage.
-                LinkedLandItem = Resources.GetResourceItem(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as LandType;
+                LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandItemNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
                 if (UseAreaAvailable)
                 {

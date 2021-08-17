@@ -94,10 +94,10 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             
             // get pasture
-            pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get food store
-            foodstore = Resources.GetResourceItem(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+            foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);

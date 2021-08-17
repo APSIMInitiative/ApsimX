@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("This activity timer is used to determine whether a pasture biomass (t/ha) is within a specified range.")]
     [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
+    public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
         ResourcesHolder Resources = null;
@@ -71,24 +71,13 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>

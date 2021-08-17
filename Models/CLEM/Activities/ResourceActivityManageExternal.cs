@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
             // get bank account object to use if provided
             if (AccountName != "No financial implications")
             {
-                bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
+                bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
             }
 
             // get reader
@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
 
                     if (resName.Contains("."))
                     {
-                        resource = Resources.GetResourceItem(this, resName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+                        resource = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, resName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                     }
                     else
                     {

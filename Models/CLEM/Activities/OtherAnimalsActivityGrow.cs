@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate OtherAnimalsType resource
-            animalType = Resources.GetResourceItem(this, OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as OtherAnimalsType;
+            animalType = Resources.FindResourceType<OtherAnimals, OtherAnimalsType>(this, OtherAnimalType, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
