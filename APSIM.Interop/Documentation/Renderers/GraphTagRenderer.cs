@@ -19,6 +19,25 @@ namespace APSIM.Interop.Documentation.Renderers
         private const double aspectRatio = 16d / 9d;
 
         /// <summary>
+        /// The graph exporter to be used.
+        /// </summary>
+        private IGraphExporter exporter;
+
+        /// <summary>
+        /// Create a GraphTagRenderer with the default image exporter.
+        /// </summary>
+        public GraphTagRenderer() : this(new GraphExporter()) { }
+
+        /// <summary>
+        /// Create a GraphTagRenderer with a custom image exporter.
+        /// </summary>
+        /// <param name="exporter">Graph exporter to be used.</param>
+        public GraphTagRenderer(IGraphExporter exporter)
+        {
+            this.exporter = exporter;
+        }
+
+        /// <summary>
         /// Render the given graph tag to the PDF document.
         /// </summary>
         /// <param name="graph">Graph tag to be rendered.</param>
@@ -28,7 +47,7 @@ namespace APSIM.Interop.Documentation.Renderers
             renderer.GetPageSize(out double width, out _);
 
             renderer.StartNewParagraph();
-            renderer.AppendImage(graph.ToImage(width, width / aspectRatio));
+            renderer.AppendImage(exporter.Export(graph, width, width / aspectRatio));
             renderer.StartNewParagraph();
         }
     }

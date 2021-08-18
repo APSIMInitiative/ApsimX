@@ -16,14 +16,15 @@ namespace APSIM.Tests.Interop.Graphing
 {
     /// <summary>
     /// This class contains tests for the conversion of an apsim graph
-    /// (<see cref="APSIM.Services.Documentation.Graph"/>) into an
-    /// oxyplot graph.
+    /// into an oxyplot plot model. See:
+    /// <see cref="GraphExporter"/>
     /// </summary>
     [TestFixture]
-    public class GraphToOxyPlotTests
+    public class GraphExporterTests
     {
         private IGraph graph;
         private ILegendConfiguration legend;
+        private IGraphExporter exporter;
 
         // Modifying these properties will modify the graph.
         // Do NOT assign to these properties. They should really be readonly,
@@ -48,6 +49,8 @@ namespace APSIM.Tests.Interop.Graphing
             mockGraph.Setup(g => g.Axes).Returns(axes);
             mockGraph.Setup(g => g.Legend).Returns(legend);
             graph = mockGraph.Object;
+
+            exporter = new GraphExporter();
         }
 
         /// <summary>
@@ -56,7 +59,7 @@ namespace APSIM.Tests.Interop.Graphing
         [Test]
         public void TestEmptyGraph()
         {
-            PlotModel plot = (PlotModel)graph.ToPlotModel();
+            PlotModel plot = (PlotModel)exporter.ToPlotModel(graph);
             Assert.AreEqual(0, plot.Series.Count);
             Assert.AreEqual(0, plot.Axes.Count);
         }
@@ -68,7 +71,7 @@ namespace APSIM.Tests.Interop.Graphing
         public void TestSeriesWithNoData()
         {
             series.Add(CreateSimpleLineSeries(Enumerable.Empty<object>(), Enumerable.Empty<object>()));
-            PlotModel plot = (PlotModel)graph.ToPlotModel();
+            PlotModel plot = (PlotModel)exporter.ToPlotModel(graph);
             // Plot model should have 0 axes, and 1 series with no data.
             Assert.AreEqual(1, plot.Series.Count);
             Assert.AreEqual(0, plot.Axes.Count);

@@ -14,6 +14,25 @@ namespace APSIM.Interop.Documentation.Renderers
     internal class GraphPageTagRenderer : TagRendererBase<GraphPage>
     {
         /// <summary>
+        /// The graph exporter to be used.
+        /// </summary>
+        private IGraphExporter exporter;
+
+        /// <summary>
+        /// Create a GraphTagRenderer with the default image exporter.
+        /// </summary>
+        public GraphPageTagRenderer() : this(new GraphExporter()) { }
+
+        /// <summary>
+        /// Create a GraphTagRenderer with a custom image exporter.
+        /// </summary>
+        /// <param name="exporter">Graph exporter to be used.</param>
+        public GraphPageTagRenderer(IGraphExporter exporter)
+        {
+            this.exporter = exporter;
+        }
+
+        /// <summary>
         /// Render the given graph page to the PDF document.
         /// </summary>
         /// <param name="GraphPage">Graph page to be rendered.</param>
@@ -30,11 +49,11 @@ namespace APSIM.Interop.Documentation.Renderers
             renderer.StartNewParagraph();
             foreach (Graph graph in page.Graphs)
             {
-                var model = graph.ToPlotModel();
+                var model = exporter.ToPlotModel(graph);
                 if (model is OxyPlot.PlotModel plot)
                     FixSizing(ref plot);
 
-                renderer.AppendImage(model.ToImage(width, height/*width * 2 / 3*/));
+                renderer.AppendImage(exporter.Export(model, width, height/*width * 2 / 3*/));
             }
             renderer.StartNewParagraph();
         }
