@@ -1252,8 +1252,8 @@
             {
                 int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
+                string resources = Path.Combine(apsimx, "Models", "Resources");
                 if (!Directory.Exists(resources))
                     throw new Exception("Unable to locate resources directory");
                 IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);
