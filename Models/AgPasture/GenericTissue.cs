@@ -182,7 +182,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs args)
         {
-            ClearDailyDeltas();
+            ClearDailyFlows();
         }
     }
 }
