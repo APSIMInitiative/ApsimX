@@ -1,12 +1,11 @@
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
-using APSIM.Tests.Interop.Documentation;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using NUnit.Framework;
 using System;
 
-namespace APSIM.Tests
+namespace APSIM.Tests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="TagRendererBase{T}"/> class.

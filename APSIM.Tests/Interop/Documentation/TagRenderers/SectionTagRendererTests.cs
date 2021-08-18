@@ -13,7 +13,7 @@ using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using Section = APSIM.Services.Documentation.Section;
 using APSIM.Interop.Documentation.Extensions;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace APSIM.Tests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="PdfBuilder"/> class.
