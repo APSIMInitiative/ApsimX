@@ -37,7 +37,7 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">Graph to be exported.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        public Image Export(Graph graph, double width, double height)
+        public Image Export(IGraph graph, double width, double height)
         {
             return Export(ToPlotModel(graph), width, height);
         }

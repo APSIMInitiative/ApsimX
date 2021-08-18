@@ -15,7 +15,7 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">Graph to be converted.</param>
         /// <param name="width">Desired width of the image (in px).</param>
         /// <param name="height">Desired height of the image (in px).</param>
-        Image Export(Graph graph, double width, double height);
+        Image Export(IGraph graph, double width, double height);
 
         /// <summary>
         /// Export a plot model to an image.

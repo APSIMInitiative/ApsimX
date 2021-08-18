@@ -16,6 +16,8 @@ using APSIM.Services.Graphing;
 using Image = System.Drawing.Image;
 using APSIM.Interop.Graphing;
 using Moq;
+using System.Drawing;
+using APSIM.Shared.Utilities;
 
 namespace APSIM.Tests.Interop.Documentation.TagRenderers
 {
@@ -28,7 +30,7 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
         private PdfBuilder pdfBuilder;
         private Document document;
         private GraphTagRenderer renderer;
-        private Graph graph;
+        private IGraph graph;
         private static Image image;
 
         [SetUp]
@@ -37,14 +39,14 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
             document = new MigraDocCore.DocumentObjectModel.Document();
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             pdfBuilder.UseTagRenderer(new MockTagRenderer());
-            image = null; // fixme
+            image = new Bitmap(4, 4); // fixme
 
-            Mock<Graph> mockGraph = new Mock<Graph>();
+            Mock<IGraph> mockGraph = new Mock<IGraph>();
             graph = mockGraph.Object;
 
             // Mock graph exporter - this will just return the image field of this class.
             Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
-            mockExporter.Setup<Image>(e => e.Export(It.IsAny<Graph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<Image>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
 
             renderer = new GraphTagRenderer(mockExporter.Object);
         }
@@ -56,6 +58,7 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
 
             List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
             Assert.AreEqual(1, paragraphs.Count);
+            Assert.AreEqual(image, paragraphs[0].Elements.OfType<MigraDocCore.DocumentObjectModel.Shapes.Image>().First());
         }
     }
 }

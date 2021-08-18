@@ -9,7 +9,7 @@ namespace APSIM.Interop.Documentation.Renderers
     /// <see cref="Graph" /> to a PDF document.
     /// </summary>
     /// <typeparam name="T">The type of tag which this class can render.</typeparam>
-    internal class GraphTagRenderer : TagRendererBase<Graph>
+    internal class GraphTagRenderer : TagRendererBase<IGraph>
     {
         /// <summary>
         /// The graph will always be given full page width. The graph's
@@ -42,7 +42,7 @@ namespace APSIM.Interop.Documentation.Renderers
         /// </summary>
         /// <param name="graph">Graph tag to be rendered.</param>
         /// <param name="renderer">PDF renderer to use for rendering the tag.</param>
-        protected override void Render(Graph graph, PdfBuilder renderer)
+        protected override void Render(IGraph graph, PdfBuilder renderer)
         {
             renderer.GetPageSize(out double width, out _);
 
