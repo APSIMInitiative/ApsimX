@@ -1,8 +1,5 @@
 using System;
 using NUnit.Framework;
-using APSIM.Server.IO;
-using System.Threading.Tasks;
-using System.Net.Sockets;
 using System.Linq;
 using System.Text;
 using APSIM.Interop.Documentation;
@@ -15,7 +12,6 @@ using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using Section = APSIM.Services.Documentation.Section;
 using APSIM.Interop.Documentation.Extensions;
-using MigraDocCore.DocumentObjectModel;
 
 namespace APSIM.Tests.Interop.Documentation
 {
@@ -81,7 +77,7 @@ namespace APSIM.Tests.Interop.Documentation
                 Assert.Null(document.LastSection);
             else
             {
-                List<Paragraph> paragraphs = document.LastSection.Elements?.OfType<Paragraph>()?.ToList();
+                List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
 
                 // There should be 1 paragraph for title, plus 1 more paragraph if there are
                 // any children of this section.
@@ -91,6 +87,44 @@ namespace APSIM.Tests.Interop.Documentation
                 if (numChildren > 0)
                     Assert.AreEqual(paragraphText.ToString(), paragraphs[1].GetRawText());
             }
+        }
+
+        /// <summary>
+        /// Ensure that child tags' headings are subheadings (ie 1.X instead of 2).
+        /// </summary>
+        [Test]
+        public void EnsureChildrenUseSubheadings()
+        {
+            string title = "Section title";
+            string childTitle = "subsection";
+            Section section = new Section(title, new MockTag(p => p.AppendHeading(childTitle)));
+            renderer.Render(section, pdfBuilder);
+
+            List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
+            Assert.AreEqual(2, paragraphs.Count);
+            Assert.AreEqual($"1 {title}", paragraphs[0].GetRawText());
+            Assert.AreEqual($"1.1 {childTitle}", paragraphs[1].GetRawText());
+        }
+
+        /// <summary>
+        /// Ensure that serial sections write to the same heading level.
+        /// </summary>
+        [Test]
+        public void HeadingLevelSerialSections()
+        {
+            string title1 = "section 1";
+            string title2 = "section 2";
+
+            Section section1 = new Section(title1, new MockTag(p => { }));
+            Section section2 = new Section(title2, new MockTag(p => { }));
+
+            renderer.Render(section1, pdfBuilder);
+            renderer.Render(section2, pdfBuilder);
+
+            List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
+            Assert.AreEqual(2, paragraphs.Count);
+            Assert.AreEqual($"1 {title1}", paragraphs[0].GetRawText());
+            Assert.AreEqual($"2 {title2}", paragraphs[1].GetRawText());
         }
     }
 }
