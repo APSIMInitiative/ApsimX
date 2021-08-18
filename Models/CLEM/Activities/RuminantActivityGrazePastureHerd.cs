@@ -74,31 +74,37 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The proportion of required graze that is available determined from parent activity arbitration
         /// </summary>
+        [JsonIgnore]
         public double GrazingCompetitionLimiter { get; set; }
 
         /// <summary>
         /// The biomass of pasture per hectare at start of allocation
         /// </summary>
+        [JsonIgnore]
         public double BiomassPerHectare { get; set; }
 
         /// <summary>
         /// Potential intake limiter based on pasture quality
         /// </summary>
+        [JsonIgnore]
         public double PotentialIntakePastureQualityLimiter { get; set; }
 
         /// <summary>
         /// Dry matter digestibility of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double DMD { get; set; }
 
         /// <summary>
         /// Nitrogen of pasture consumed (%)
         /// </summary>
+        [JsonIgnore]
         public double N { get; set; }
 
         /// <summary>
         /// Proportion of intake that can be taken from each pool
         /// </summary>
+        [JsonIgnore]
         public List<GrazeBreedPoolLimit> PoolFeedLimits { get; set; }
 
         /// <summary>
@@ -183,8 +189,8 @@ namespace Models.CLEM.Activities
             if (ResourceRequestList == null)
             {
                 ResourceRequestList = new List<ResourceRequest>();
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
-                if (herd.Count() > 0)
+                IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name);
+                if (herd.Any())
                 {
                     double amount = 0;
                     double indAmount = 0;
@@ -289,8 +295,8 @@ namespace Models.CLEM.Activities
             //Go through amount received and put it into the animals intake with quality measures.
             if (ResourceRequestList != null)
             {
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name).ToList();
-                if (herd.Count() > 0)
+                IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == this.GrazeFoodStoreModel.Name && a.HerdName == this.RuminantTypeModel.Name);
+                if (herd.Any())
                 {
                     // Get total amount
                     // assumes animals will stop eating at potential intake if they have been feed before grazing.
@@ -333,13 +339,10 @@ namespace Models.CLEM.Activities
                         {
                             double eaten;
                             if (ind.Weaned)
-                            {
                                 eaten = ind.PotentialIntake * PotentialIntakePastureQualityLimiter * (HoursGrazed / 8);
-                            }
                             else
-                            {
                                 eaten = ind.PotentialIntake - ind.Intake;
-                            }
+
                             food.Amount = eaten * GrazingCompetitionLimiter * shortfall;
                             ind.AddIntake(food);
                         }
@@ -356,24 +359,19 @@ namespace Models.CLEM.Activities
                             OnShortfallOccurred(rre);
 
                             if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
-                            {
                                 throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock (" + GrazeFoodStoreModel.Name + ") in " + Clock.Today.Month.ToString() + "\\" + Clock.Today.Year.ToString());
-                            }
+
                             this.Status = ActivityStatus.Partial;
                         }
                     }
                     else
-                    {
                         Status = ActivityStatus.NotNeeded;
-                    }
                 }
             }
             else
             {
                 if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-                {
                     Status = ActivityStatus.NotNeeded;
-                }
             }
         }
 

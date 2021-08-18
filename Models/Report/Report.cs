@@ -410,7 +410,11 @@ namespace Models
                         table.Rows.Add(row);
                     }
                 }
-                storage.Writer.WriteTable(table);
+
+                // Report tables are automatically cleaned before the simulation is run,
+                // as an optimisation specifically designed for this call to WriteTable().
+                // Therefore, we do not need to delete existing data here.
+                storage.Writer.WriteTable(table, false);
             }
         }
     }

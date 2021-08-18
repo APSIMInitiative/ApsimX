@@ -102,6 +102,23 @@ namespace Models.CLEM
             }
         }
 
+        private IEnumerable<IActivityTimer> activityTimers = null;
+
+        /// <summary>
+        /// A list of activity timers for this activity
+        /// </summary>
+        public IEnumerable<IActivityTimer> ActivityTimers
+        {
+            get
+            {
+                if (activityTimers is null)
+                {
+                    activityTimers = FindAllChildren<IActivityTimer>();
+                }
+                return activityTimers;
+            }
+        }
+
         /// <summary>
         /// Is timing ok for the current model
         /// </summary>
@@ -109,12 +126,8 @@ namespace Models.CLEM
         {
             get
             {
-                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
-                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                return (res == 0);
+                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                return (result == 0);
             }
         }
 
@@ -371,6 +384,15 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Provide the text to place in the model summary header row
+        /// </summary>
+        /// <returns>header text</returns>
+        public virtual string ModelSummaryNameTypeHeaderText()
+        {
+            return this.GetType().Name;
+        }
+
+        /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
@@ -378,7 +400,7 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>");
+                htmlWriter.Write($"<div class=\"namediv\">{ModelSummaryNameTypeHeaderText()} {((!this.Enabled) ? " - DISABLED!" : "")}</div>");
                 if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 {
                     htmlWriter.Write("<div class=\"partialdiv\"");
@@ -398,7 +420,7 @@ namespace Models.CLEM
                     }
                     htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
                 return htmlWriter.ToString(); 
             }
         }
@@ -484,6 +506,7 @@ namespace Models.CLEM
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+                ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
                 ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
                 ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin-bottom:10px; margin-top:10px;}" +
                 ".memo-head {background-color:DeepSkyBlue;padding:10px;color:white;font-weight:bold;}" +

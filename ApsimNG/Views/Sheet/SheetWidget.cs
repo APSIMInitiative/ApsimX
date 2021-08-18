@@ -261,20 +261,27 @@ namespace UserInterface.Views
         /// <param name="expose">The expose event arguments.</param>
         protected override bool OnExposeEvent(EventExpose expose)
         {
-            Context cr = CairoHelper.Create(expose.Window);
+            try
+            {
+                Context cr = CairoHelper.Create(expose.Window);
 
-            // Do initialisation
-            if (ColumnWidths == null)
-                Initialise(cr);
+                // Do initialisation
+                if (ColumnWidths == null)
+                    Initialise(cr);
 
-            base.OnExposeEvent(expose);
+                base.OnExposeEvent(expose);
 
-            foreach (var columnIndex in VisibleColumnIndexes)
-                foreach (var rowIndex in VisibleRowIndexes)
-                    DrawCell(cr, columnIndex, rowIndex);
+                foreach (var columnIndex in VisibleColumnIndexes)
+                    foreach (var rowIndex in VisibleRowIndexes)
+                        DrawCell(cr, columnIndex, rowIndex);
 
-            ((IDisposable)cr.Target).Dispose();
-            ((IDisposable)cr).Dispose();
+                ((IDisposable)cr.Target).Dispose();
+                ((IDisposable)cr).Dispose();
+            }
+            catch (Exception err)
+            {
+                ViewBase.MasterView.ShowError(err);
+            }
 
             return true;
         }
@@ -283,15 +290,22 @@ namespace UserInterface.Views
         /// <param name="cr">The context to draw in.</param>
         protected override bool OnDrawn(Context cr)
         {
-            // Do initialisation
-            if (ColumnWidths == null)
-                Initialise(cr);
+            try
+            {
+                // Do initialisation
+                if (ColumnWidths == null)
+                    Initialise(cr);
 
-            base.OnDrawn(cr);
+                base.OnDrawn(cr);
 
-            foreach (var columnIndex in VisibleColumnIndexes)
-                foreach (var rowIndex in VisibleRowIndexes)
-                    DrawCell(cr, columnIndex, rowIndex);
+                foreach (var columnIndex in VisibleColumnIndexes)
+                    foreach (var rowIndex in VisibleRowIndexes)
+                        DrawCell(cr, columnIndex, rowIndex);
+            }
+            catch (Exception err)
+            {
+                ViewBase.MasterView.ShowError(err);
+            }
 
             return true;
         }
@@ -313,7 +327,7 @@ namespace UserInterface.Views
 
             // The first time through here calculate maximum number of hidden rows.
             if (MaximumNumberHiddenRows == 0)
-                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.Last();
+                MaximumNumberHiddenRows = DataProvider.RowCount - FullyVisibleRowIndexes.LastOrDefault();
 
             Initialised?.Invoke(this, new EventArgs());
             GrabFocus();
@@ -321,13 +335,20 @@ namespace UserInterface.Views
 
         protected override void OnSizeAllocated(Gdk.Rectangle allocation)
         {
-            base.OnSizeAllocated(allocation);
-
-            if (allocation.Width != Width || allocation.Height != Height)
+            try
             {
-                ColumnWidths = null;
-                MaximumNumberHiddenRows = 0;
-                Refresh();
+                base.OnSizeAllocated(allocation);
+
+                if (allocation.Width != Width || allocation.Height != Height)
+                {
+                    ColumnWidths = null;
+                    MaximumNumberHiddenRows = 0;
+                    Refresh();
+                }
+            }
+            catch (Exception err)
+            {
+                ViewBase.MasterView.ShowError(err);
             }
         }
 
@@ -366,20 +387,27 @@ namespace UserInterface.Views
 
         protected override bool OnScrollEvent(EventScroll e)
         {
-            int delta;
+            try
+            {
+                int delta;
 #if NETFRAMEWORK
-            delta = e.Direction == Gdk.ScrollDirection.Down ? -120 : 120;
+                delta = e.Direction == Gdk.ScrollDirection.Down ? -120 : 120;
 #else
-            if (e.Direction == Gdk.ScrollDirection.Smooth)
-                delta = e.DeltaY < 0 ? mouseWheelScrollRows : -mouseWheelScrollRows;
-            else
-                delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
+                if (e.Direction == Gdk.ScrollDirection.Smooth)
+                    delta = e.DeltaY < 0 ? mouseWheelScrollRows : -mouseWheelScrollRows;
+                else
+                    delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
 #endif
-            if (delta < 0)
-                ScrollDown();
-            else
-                ScrollUp();
-            Refresh();
+                if (delta < 0)
+                    ScrollDown();
+                else
+                    ScrollUp();
+                Refresh();
+            }
+            catch (Exception err)
+            {
+                ViewBase.MasterView.ShowError(err);
+            }
             return true;
         }
 

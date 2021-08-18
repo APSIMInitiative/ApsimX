@@ -247,7 +247,7 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            List<LabourType> group = Resources.FindResourceGroup<Labour>().Items.Where(a => a.Hired != true).ToList();
             int head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
@@ -313,7 +313,7 @@ namespace Models.CLEM.Activities
         {
             // add all provided requests to the individuals intake pools.
 
-            List<LabourType> group = Resources.Labour().Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
+            List<LabourType> group = Resources.FindResourceGroup<Labour>().Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
             double aE = group.Sum(a => a.AdultEquivalent);
             Status = ActivityStatus.NotNeeded;
             if (group != null && group.Count > 0)

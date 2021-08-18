@@ -47,8 +47,6 @@ namespace Models.CLEM
         [Description("Worksheet name if spreadsheet")]
         public string ExcelWorkSheetName { get; set; }
 
-        //public DateStyle StyleOfDateEntry { get; set; }
-
         /// <summary>
         /// Name of column holding year or date data
         /// </summary>
@@ -87,6 +85,7 @@ namespace Models.CLEM
         /// <summary>
         /// Style of date input to use
         /// </summary>
+        [JsonIgnore]
         public DateStyle StyleOfDateEntry { get; set; }
 
         /// <summary>
@@ -150,7 +149,7 @@ namespace Models.CLEM
                 {
                     filename = "Not set";
                 }
-                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", filename, this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
             this.resourceFileAsTable = GetAllData();
@@ -298,14 +297,14 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, ResourceNameColumnName) == -1)
                     {
                         if (this.reader == null || this.reader.Constant(ResourceNameColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -313,7 +312,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(YearColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -323,7 +322,7 @@ namespace Models.CLEM
                         {
                             if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
                             {
-                                throw new Exception($"@error:Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                                throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                             }
                         }
 
@@ -332,7 +331,7 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
                 }

@@ -121,7 +121,16 @@
             List<Subscriber> subscribers = Subscriber.FindAll(eventName, relativeTo, scope);
 
             foreach (Subscriber subscriber in subscribers)
-                subscriber.Invoke(args);
+            {
+                try
+                {
+                    subscriber.Invoke(args);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Failed to publish event {eventName}. Error from subscriber {subscriber.Name}.{subscriber.MethodName}", err);
+                }
+            }
         }
 
         /// <summary>
@@ -263,6 +272,18 @@
             /// <returns>The delegate. Never returns null.</returns>
             internal virtual Delegate CreateDelegate(Type handlerType)
             {
+                if (typeof(EventHandler).IsAssignableFrom(handlerType))
+                {
+                    // We can give a specific error message for EventHandler delegate types.
+                    ParameterInfo[] parameters = methodInfo.GetParameters();
+                    if (parameters.Length != 2)
+                        throw new Exception($"{methodInfo.Name} is a not a valid event handler: should have two arguments, but has {parameters.Length} arguments");
+                    if (parameters[0].ParameterType != typeof(object))
+                        throw new Exception($"{methodInfo.Name} is not a valid event handler: first argument should be of type object, but is {parameters[0].ParameterType}");
+                    if (!typeof(EventArgs).IsAssignableFrom(parameters[1].ParameterType))
+                        throw new Exception($"{methodInfo.Name} is not a valid event handler: second argument should be of type EventArgs, but is {parameters[1].ParameterType}");
+                }
+
                 return Delegate.CreateDelegate(handlerType, Model, methodInfo);
             }
 

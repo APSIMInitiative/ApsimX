@@ -37,6 +37,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            filterGroups = FindAllChildren<RuminantGroup>();
         }
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValueAttribute(TagApplicationStyle.Add)]
         public TagApplicationStyle ApplicationStyle { get; set; }
 
-        private int filterGroupsCount = 0;
+        private IEnumerable<RuminantGroup> filterGroups;
         private int numberToTag = 0;
 
         /// <summary>
@@ -73,13 +74,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
 
-            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
-            if (filterGroupsCount > 0)
+            if (filterGroups.Any())
             {
                 numberToTag = 0;
-                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                foreach (RuminantGroup item in filterGroups)
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
                     {
@@ -143,10 +143,10 @@ namespace Models.CLEM.Activities
         {
             if (this.TimingOK)
             {
-                List<Ruminant> herd = CurrentHerd(false);
+                IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
                 {
-                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                    foreach (RuminantGroup item in filterGroups)
                     {
                         foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
                             numberToTag--;
                         }
                     }
-                    if(filterGroupsCount == 0)
+                    if(!filterGroups.Any())
                     {
                         foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {

@@ -98,12 +98,15 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public double CurrentPrice { get { return PricePerPacket; } }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public double PreviousPrice { get; set; }
 
         /// <inheritdoc/>

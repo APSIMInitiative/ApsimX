@@ -55,9 +55,7 @@ namespace Models.CLEM.Reporting
         [Description("Automatically create HTML report at end of simulation")]
         public bool AutoCreateHTML { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -408,16 +406,11 @@ namespace Models.CLEM.Reporting
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// 
-        /// </summary>
+
+        ///<inheritdoc/>
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -447,13 +440,7 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="formatForParentControl"></param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string GetFullSummary(object model, bool formatForParentControl, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -481,21 +468,13 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>\r\n</div>";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string overall = "default";
@@ -511,44 +490,28 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// Returns the opacity value for this component in the summary display
-        /// </summary>
+        ///<inheritdoc/>
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTagsBeforeSummary()
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryNameTypeHeader()
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -563,6 +526,12 @@ namespace Models.CLEM.Reporting
                 htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
+        }
+
+        ///<inheritdoc/>
+        public string ModelSummaryNameTypeHeaderText()
+        {
+            return this.Name;
         }
         #endregion
     }

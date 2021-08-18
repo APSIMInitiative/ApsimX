@@ -142,17 +142,17 @@ namespace Models.CLEM.Activities
             }
 
             // check for individual nesting.
-            foreach (LabourFilterGroup fg in this.Children.OfType<LabourFilterGroup>())
+            foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())
             {
                 LabourFilterGroup currentfg = fg;
-                while (currentfg != null && currentfg.Children.OfType<LabourFilterGroup>().Count() >= 1)
+                while (currentfg != null && currentfg.FindAllChildren<LabourFilterGroup>().Any())
                 {
-                    if (currentfg.Children.OfType<LabourFilterGroup>().Count() > 1)
+                    if (currentfg.FindAllChildren<LabourFilterGroup>().Count() > 1)
                     {
                         string[] memberNames = new string[] { "Labour requirement" };
                         results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
                     }
-                    currentfg = currentfg.Children.OfType<LabourFilterGroup>().FirstOrDefault();
+                    currentfg = currentfg.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                 }
             }
 
