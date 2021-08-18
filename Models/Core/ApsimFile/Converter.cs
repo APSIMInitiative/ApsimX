@@ -23,7 +23,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 137; } }
+        public static int LatestVersion { get { return 138; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3534,6 +3534,47 @@
         {
             foreach (JObject cylinder in JsonUtilities.ChildrenRecursively(root, "RootShapeCylindre"))
                 cylinder["$type"] = "Models.Functions.RootShape.RootShapeCylinder, Models";
+        }
+
+        /// <summary>
+        /// Add priority factor functions into each demand function 
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion138(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
+            {
+                JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+
+                JObject DMDemands = JsonUtilities.ChildWithName(organ, "DMDemands");
+                if (DMDemands != null)
+                {
+                    if (PriorityFactors != null)
+                    {
+                        JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "QStructuralPriority");
+                        (DMDemands["Children"] as JArray).Add(Structural);
+                        JObject Metabolic = JsonUtilities.ChildWithName(PriorityFactors, "QMetabolicPriority");
+                        (DMDemands["Children"] as JArray).Add(Metabolic);
+                        JObject Storage = JsonUtilities.ChildWithName(PriorityFactors, "QStructuralPriority");
+                        (DMDemands["Children"] as JArray).Add(Storage);
+                    }
+                    else
+                    {
+                        JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStructuralPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QMetabolicPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStoragePriority", "1");
+                    }
+                }
+                JObject NDemands = JsonUtilities.ChildWithName(organ, "NDemands");
+                if (NDemands != null)
+                {
+                    JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStructuralPriority", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
+                }
+            }
         }
 
         /// <summary>

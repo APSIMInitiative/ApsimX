@@ -7,7 +7,7 @@ using System;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for calculating the demands for each biomass fraction
+    /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
@@ -27,6 +27,21 @@ namespace Models.PMF
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         public IFunction Storage = null;
+
+        /// <summary>Factor for Structural biomass priority</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction QStructuralPriority = null;
+
+        /// <summary>Factor for Metabolic biomass priority</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction QMetabolicPriority = null;
+
+        /// <summary>Factor for Storage biomass priority</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction QStoragePriority = null;
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
