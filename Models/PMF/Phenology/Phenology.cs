@@ -134,7 +134,7 @@ namespace Models.PMF.Phen
         }
         
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
-        public double Zadok {  get { return zadok.Stage; } }
+        public double Zadok {  get { return zadok?.Stage ?? 0; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -514,8 +514,6 @@ namespace Models.PMF.Phen
                     row[1] = child.Name;
                     row[2] = (child as IPhase).Start;
                     row[3] = (child as IPhase).End;
-                    if (child is GotoPhase)
-                        row[3] = (child as GotoPhase).PhaseNameToGoto;
                     tableData.Rows.Add(row);
                     N++;
                 }

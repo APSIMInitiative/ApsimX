@@ -29,9 +29,7 @@ namespace Models.CLEM
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
-        IDataStore DataStore = null;
-        [Link]
-        ISummary Summary = null;
+        Summary Summary = null;
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
@@ -83,7 +81,7 @@ namespace Models.CLEM
             {
                 if (bankAccount == null)
                 {
-                    bankAccount = Resources.FinanceResource().Children.FirstOrDefault() as FinanceType;
+                    bankAccount = Resources.FindResourceGroup<Finance>()?.FindAllChildren<FinanceType>().FirstOrDefault() as FinanceType;
                 }
                 return bankAccount;
             }
@@ -105,19 +103,18 @@ namespace Models.CLEM
             {
                 string error = "@i:Invalid parameters in model";
 
-                // find IStorageReader of simulation
-                IModel parentSimulation = FindAncestor<Simulation>();
-                IStorageReader ds = DataStore.Reader;
-                if (ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages") != null)
+                // get all validations 
+                if (Summary.Messages() != null)
                 {
-                    DataRow[] dataRows = ds.GetData(simulationNames: new string[] { parentSimulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[7].ToString()).ToArray();
-                    // all all current errors and validation problems to error string.
-                    foreach (DataRow dr in dataRows)
+                    foreach (DataRow item in Summary.Messages().Rows)
                     {
-                        error += "\r\n" + dr[6].ToString();
+                        if (item[3].ToString().StartsWith("Invalid"))
+                        {
+                            error += "\r\n" + item[3].ToString();
+                        }
                     }
                 }
-                throw new ApsimXException(this, error);
+                throw new ApsimXException(this, error.Replace("&shy;", "."));
             }
         }
 

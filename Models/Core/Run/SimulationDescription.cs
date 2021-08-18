@@ -1,7 +1,6 @@
 ﻿namespace Models.Core.Run
 {
     using APSIM.Shared.JobRunning;
-    using Models.Soils.Standardiser;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -22,6 +21,7 @@
         private Simulation baseSimulation;
 
         /// <summary>A list of all replacements to apply to simulation to run.</summary>
+        [NonSerialized]
         private List<IReplacement> replacementsToApply = new List<IReplacement>();
 
         /// <summary>Do we clone the simulation before running?</summary>
@@ -107,11 +107,31 @@
             replacementsToApply.Add(new PropertyReplacement(path, replacement));
         }
 
+        /// <summary>
+        /// Prepare the simulation to be run.
+        /// </summary>
+        public void Prepare()
+        {
+            SimulationToRun = ToSimulation();
+            SimulationToRun.Prepare();
+        }
+
+        /// <summary>
+        /// Run a simulation with a number of specified changes.
+        /// </summary>
+        /// <param name="cancelToken"></param>
+        /// <param name="changes"></param>
+        public void Run(CancellationTokenSource cancelToken, IEnumerable<IReplacement> changes)
+        {
+            foreach (IReplacement change in changes)
+                change.Replace(SimulationToRun);
+            Run(cancelToken);
+        }
+
         /// <summary>Run the simulation.</summary>
         /// <param name="cancelToken"></param>
         public void Run(CancellationTokenSource cancelToken)
         {
-            SimulationToRun = ToSimulation();
             SimulationToRun.Run(cancelToken);
         }
 
@@ -153,11 +173,6 @@
                 if (newSimulation.Descriptors == null || Descriptors.Count > 0)
                     newSimulation.Descriptors = Descriptors;
                 newSimulation.Services = GetServices();
-
-                // Standardise the soil.
-                var soils = newSimulation.FindAllDescendants<Soils.Soil>();
-                foreach (Soils.Soil soil in soils)
-                    SoilStandardiser.Standardise(soil);
 
                 newSimulation.ClearCaches();
                 return newSimulation;

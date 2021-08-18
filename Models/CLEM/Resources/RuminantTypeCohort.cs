@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
+using System.Globalization;
 
 namespace Models.CLEM.Resources
 {
@@ -24,14 +25,12 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(SpecifyRuminant))]
-    [Description("This specifies a ruminant cohort used for identifying purchase individuals and initalising the herd at the start of the simulation.")]
+    [Description("This specifies a ruminant cohort for sprecifying an inidivual or initalising the herd at the start of the simulation.")]
+    [Version(1, 0, 2, "Includes attribute specification")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
         /// <summary>
         /// Gender
         /// </summary>
@@ -95,13 +94,18 @@ namespace Models.CLEM.Resources
         /// Create the individual ruminant animals using the Cohort parameterisations.
         /// </summary>
         /// <param name="initialAttributes">The initial attributes found from parent</param>
+        /// <param name="ruminantType">The breed parameters if overwritten</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(List<ISetRuminantAttribute> initialAttributes)
+        public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
         {
             // Add any attributes defined at the cohort level
-            initialAttributes.AddRange(this.FindAllChildren<ISetRuminantAttribute>().ToList());
+            if(initialAttributes is null)
+            {
+                initialAttributes = new List<ISetAttribute>();
+            }
+            initialAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
-            return CreateIndividuals(Convert.ToInt32(this.Number), initialAttributes);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), initialAttributes, ruminantType);
         }
 
         /// <summary>
@@ -109,17 +113,22 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="number">The number of individuals to create</param>
         /// <param name="initialAttributes">The initial attributes found from parent and this cohort</param>
+        /// <param name="ruminantType">The breed parameters if overwritten</param>
         /// <returns>List of ruminants</returns>
-        public List<Ruminant> CreateIndividuals(int number, List<ISetRuminantAttribute> initialAttributes)
+        public List<Ruminant> CreateIndividuals(int number, List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
         {
             List<Ruminant> individuals = new List<Ruminant>();
 
             if (number > 0)
             {
-                RuminantType parent = FindAncestor<RuminantType>();
+                RuminantType parent = ruminantType;
+                if (parent is null)
+                {
+                    parent = FindAncestor<RuminantType>();
+                }
 
                 // get Ruminant Herd resource for unique ids
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
+                RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
 
                 for (int i = 1; i <= number; i++)
                 {
@@ -160,7 +169,7 @@ namespace Models.CLEM.Resources
                         if (this.Gender == Sex.Male)
                         {
                             RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                            ruminantMale.Sire = true;
+                            ruminantMale.Attributes.Add("Sire");
                         }
                         else
                         {
@@ -174,15 +183,14 @@ namespace Models.CLEM.Resources
                     if (this.Gender == Sex.Female)
                     {
                         RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                        ruminantFemale.DryBreeder = true;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
                     }
 
                     // initialise attributes
-                    foreach (ISetRuminantAttribute item in initialAttributes)
+                    foreach (ISetAttribute item in initialAttributes)
                     {
-                        ruminant.AddAttribute(item.AttributeName, item.GetRandomSetAttribute);
+                        ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
                     }
 
                     individuals.Add(ruminantBase as Ruminant);
@@ -201,20 +209,32 @@ namespace Models.CLEM.Resources
         /// <returns></returns>
         public override string ModelSummary(bool formatForParentControl)
         {
-            RuminantType rumType; 
+            RuminantType rumType;
+            bool specifyRuminantParent = false;
 
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (!formatForParentControl)
                 {
                     rumType = FindAncestor<RuminantType>();
+                    if(rumType is null)
+                    {
+                        // look for rum type in SpecifyRuminant
+                        var specParent = this.FindAllAncestors<SpecifyRuminant>().FirstOrDefault();
+                        if (specParent != null)
+                        {
+                            var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
+                            rumType = resHolder.GetResourceItem(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as RuminantType;
+                            specifyRuminantParent = true;
+                        }
+                    }
 
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    if (Number <= 0)
+                    if (!specifyRuminantParent & Number <= 0)
                     {
                         htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
                     }
-                    else if (Number > 1)
+                    else if (!specifyRuminantParent & Number > 1)
                     {
                         htmlWriter.Write("<span class=\"setvalue\">" + Number.ToString() + "</span> x ");
                     }

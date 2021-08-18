@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,13 +51,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public FinanceType BankAccount { get; set; }
 
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
-
         private string RelatesToResourceName = "";
 
         /// <summary>
@@ -66,9 +60,10 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
+            TransactionCategory = "Crop.[Activity]";
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>At start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
@@ -99,23 +94,16 @@ namespace Models.CLEM.Activities
                 }
             }
             return results;
-        } 
+        }
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requirement"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             return new GetDaysLabourRequiredReturnArgs(0, null, null);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             if (this.TimingOK)
@@ -153,7 +141,7 @@ namespace Models.CLEM.Activities
                     ActivityModel = this,
                     FilterDetails = null,
                     RelatesToResource = RelatesToResourceName,
-                    Category = Category
+                    Category = TransactionCategory
                 }
                 );
                 return resourcesNeeded;
@@ -161,65 +149,44 @@ namespace Models.CLEM.Activities
             return null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -237,9 +204,9 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                if (Category != null && Category != "")
+                if (TransactionCategory != null && TransactionCategory != "")
                 {
-                    htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
+                    htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
                 }
                 else
                 {

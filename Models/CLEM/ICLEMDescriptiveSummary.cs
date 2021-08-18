@@ -63,9 +63,15 @@ namespace Models.CLEM
         string ModelSummaryInnerOpeningTagsBeforeSummary();
 
         /// <summary>
-        /// Provides the closing html tags for object
+        /// Generates the header for description
         /// </summary>
-        /// <returns></returns>
+        /// <returns>HTML of header</returns>
         string ModelSummaryNameTypeHeader();
+
+        /// <summary>
+        /// Provide the text to place in the model summary header row
+        /// </summary>
+        /// <returns>header text</returns>
+        string ModelSummaryNameTypeHeaderText();
     }
 }

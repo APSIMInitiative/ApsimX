@@ -75,7 +75,9 @@ namespace UserInterface.Presenters
                     {
                         propPresenterName = "UserInterface.Presenters.PropertyPresenter";
                         if(viewName != "UserInterface.Views.PropertyMultiModelView")
+                        {
                             viewName = "UserInterface.Views.PropertyView";
+                        }
                     }
 
                     var props = model.GetType().GetProperties(
@@ -88,7 +90,7 @@ namespace UserInterface.Presenters
                     if (categoryAttributeFound)
                     {
                         propPresenterName = "UserInterface.Presenters.PropertyCategorisedPresenter";
-                        // need to set view accordingly
+                        viewName = "UserInterface.Views.PropertyCategorisedView";
                     }
 
                     // check if it has properties

@@ -71,8 +71,10 @@ namespace UnitTests
             if (errors != null && errors.Count > 0)
                 throw errors[0];
 
-            var faultySeries = sim.Children[3].Children[0] as Series;
-            List<SeriesDefinition> definitions = faultySeries.GetSeriesDefinitions(storage.Reader).ToList();
+            var faultyGraph = sim.Children[3] as Models.Graph;
+            var page = new GraphPage();
+            page.Graphs.Add(faultyGraph);
+            var definitions = page.GetAllSeriesDefinitions(faultyGraph, storage.Reader, null);
             if (definitions == null || definitions.Count < 1)
                 throw new Exception("Unable to graph data from a report which exists directly under a simulation.");
         }

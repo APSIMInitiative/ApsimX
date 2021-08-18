@@ -1133,6 +1133,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="idx">The index.</param>
         /// <returns>The SupplementItem</returns>
+        [JsonIgnore]
         public SupplementItem this[int idx]
         {
             get
@@ -1175,7 +1176,7 @@ namespace Models.GrazPlan
         {
             if (!paddocksGiven)
                 theModel.ClearPaddockList();
-            theModel.Clear();
+            theModel.TotalAmount = 0;
         }
 
         /// <summary>

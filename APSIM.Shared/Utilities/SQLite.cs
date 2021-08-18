@@ -493,8 +493,13 @@ namespace APSIM.Shared.Utilities
                 }
                 else
                 {
-                    dataType = typeof(string);
-                    values.Add(value);
+                    if (string.IsNullOrEmpty(value) && (dataType == typeof(double) || dataType == typeof(int)))
+                        addNull();
+                    else
+                    {
+                        dataType = typeof(string);
+                        values.Add(value);
+                    }
                 }
             }
             public void addNull()
@@ -827,7 +832,7 @@ namespace APSIM.Shared.Utilities
             return tableNames.Contains(tableName);
         }
 
-        /// <summary>Does the specified table exist?</summary>
+        /// <summary>Does the specified view exist?</summary>
         /// <param name="viewName">The view name to look for</param>
         public bool ViewExists(string viewName)
         {

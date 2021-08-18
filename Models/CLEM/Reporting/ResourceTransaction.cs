@@ -39,7 +39,7 @@ namespace Models.CLEM
         {
             get
             {
-                return (Style == TransactionStyle.Gain) ? Amount : 0;
+                return (TransactionType == TransactionType.Gain) ? Amount : 0;
             }
         }
             
@@ -50,19 +50,34 @@ namespace Models.CLEM
         {
             get
             {
-                return (Style == TransactionStyle.Loss) ? Amount * -1 : 0;
+                return (TransactionType == TransactionType.Loss) ? Amount * -1 : 0;
             }
         }
 
         /// <summary>
-        /// 
+        /// Transaction type
         /// </summary>
-        public TransactionStyle Style { get; set; }
+        public TransactionType TransactionType { get; set; }
 
         /// <summary>
-        /// 
+        /// The amount of the transaction
         /// </summary>
         public double Amount { get; set; }
+
+        /// <summary>
+        /// Allows inclusion of -ve in losses
+        /// </summary>
+        /// <param name="lossesAsNegative">convert losses to negative</param>
+        /// <returns>The modified amount</returns>
+        public double AmountModifiedForLoss(bool lossesAsNegative)
+        {
+            double amount = Amount;
+            if (lossesAsNegative && TransactionType == TransactionType.Loss)
+            {
+                amount *= -1;
+            }
+            return amount;
+        }
 
         /// <summary>
         /// Object to sotre specific extra information such as cohort details
@@ -74,8 +89,9 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="converterName">Name of converter to use</param>
         /// <param name="transactionType">Indicates if it is a Gain or Loss to convert</param>
+        /// <param name="reportLossesAsNegative">report losses as negative values</param>
         /// <returns>Value to report</returns>
-        public object ConvertTo(string converterName, string transactionType)
+        public object ConvertTo(string converterName, string transactionType, bool reportLossesAsNegative)
         {
             if(ResourceType!=null)
             {
@@ -87,11 +103,31 @@ namespace Models.CLEM
                         break;
                     case "loss":
                         amount = this.Loss;
+                        if (reportLossesAsNegative)
+                        {
+                            amount *= -1;
+                        }
                         break;
                     default:
 
                         break;
                 }
+                return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Convert transaction to another value using ResourceType supplied converter and using the TransactionType
+        /// </summary>
+        /// <param name="converterName">Name of converter to use</param>
+        /// <param name="reportLossesAsNegative">Report losses as negative</param>
+        /// <returns>Value to report</returns>
+        public object ConvertTo(string converterName, bool reportLossesAsNegative)
+        {
+            if (ResourceType != null)
+            {
+                double amount = Amount * ((reportLossesAsNegative && TransactionType == TransactionType.Loss )?-1:1);
                 return (ResourceType as CLEMResourceTypeBase).ConvertTo(converterName, amount);
             }
             return null;

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 130,
+  "Version": 137,
   "Name": "Simulations",
   "Children": [
     {
@@ -1419,7 +1419,7 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
               "Name": "RootShape",
               "Children": []
             },
@@ -2649,7 +2649,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
-                  "Name": "DroughtInducedSenAcceleration",
+                  "Name": "SenescenceAcceleration",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -2669,7 +2669,7 @@
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": null,
-                  "Name": "DroughtInducedLagAcceleration",
+                  "Name": "LagAcceleration",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,

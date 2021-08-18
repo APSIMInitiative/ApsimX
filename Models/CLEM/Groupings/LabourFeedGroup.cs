@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourActivityFeed))]
     [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/LabourFeedGroup.htm")]
     public class LabourFeedGroup: CLEMModel, IFilterGroup
     {
         /// <summary>

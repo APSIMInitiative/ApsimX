@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -161,7 +162,7 @@ namespace Models.CLEM.Activities
                             // if finances
                             if (resource != null && bankAccount != null)
                             {
-                                double amount = Convert.ToDouble(item[fileResource.AmountColumnName]);
+                                double amount = Convert.ToDouble(item[fileResource.AmountColumnName], CultureInfo.InvariantCulture);
 
                                 // get price of resource
                                 ResourcePricing price = resource.Price((amount > 0 ? PurchaseOrSalePricingStyleType.Purchase : PurchaseOrSalePricingStyleType.Sale));
@@ -281,7 +282,7 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"@error:Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.Name}]");
+                                Summary.WriteWarning(this, $"Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.Name}]");
                                 Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.Name}]");
                                 Status = ActivityStatus.Critical;
                                 throw new ApsimXException(this, $"@i:Insufficient resources [r={AccountName}] for activity [a={this.Name}]");
@@ -308,7 +309,7 @@ namespace Models.CLEM.Activities
                     else
                     {
                         // matching resource was found
-                        double amount = Convert.ToDouble(currentEntries[i][fileResource.AmountColumnName]);
+                        double amount = Convert.ToDouble(currentEntries[i][fileResource.AmountColumnName], CultureInfo.InvariantCulture);
                         bool isSale = (amount < 0);
                         amount = Math.Abs(amount);
                         ResourcePricing price = null;
@@ -379,38 +380,25 @@ namespace Models.CLEM.Activities
 
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -418,11 +406,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

@@ -75,6 +75,11 @@ namespace Models.CLEM.Resources
         public double Growth { get; set; }
 
         /// <summary>
+        /// Name of component
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// pricing
         /// </summary>
         public ResourcePricing Price(PurchaseOrSalePricingStyleType priceStyle)
@@ -82,9 +87,22 @@ namespace Models.CLEM.Resources
             return null;
         }
 
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         /// <summary>
         /// Get the amount of the last gain in this resource 
         /// </summary>
+        [JsonIgnore]
         public double LastGain { get; set; }
 
         /// <summary>

@@ -648,7 +648,7 @@
 
         /// <summary>Exponent controlling the effect of temperature on respiration (>1.0).</summary>
         [Units("-")]
-        private double myRespirationExponent = 1.5;
+        public double RespirationExponent { get; set; } = 1.5;
 
         ////- Germination and emergence >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2423,6 +2423,7 @@
         public double Population { get { return 0; } }
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
+        [JsonIgnore]
         public double AssimilateAvailable => throw new NotImplementedException();
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2444,7 +2445,11 @@
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
-        [EventSubscribe("Commencing")]
+        /// <remarks>
+        /// This occurs in StartOfSimulation so that various other components (such as GenericTissue) have time
+        /// to initialise themselves during the Commencing event.
+        /// </remarks>
+        [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             // get the number of layers in the soil and initialise water and N variables
@@ -2546,6 +2551,24 @@
 
             // Calculate the values for LAI
             EvaluateLAI();
+
+            glfRadn = 1;
+            glfCO2 = 1;
+            glfNc = 1;
+            glfTemp = 1;
+            usingHeatStressFactor = true;
+            usingColdStressFactor = true;
+            glfHeat = 1;
+            highTempStress = 1;
+            cumulativeDDHeat = 0;
+            glfCold = 1;
+            lowTempStress = 1;
+            cumulativeDDCold = 0;
+            glfWaterSupply = 1;
+            cumWaterLogging = 0;
+            glfWaterLogging = 1;
+            glfNSupply = 1;
+            tempEffectOnRespiration = 0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
@@ -4078,7 +4101,7 @@
             else
             {
                 double scalef = 1.0 - Math.Exp(-1.0);
-                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / RespirationTReference, myRespirationExponent));
+                double baseEffect = 1.0 - Math.Exp(-Math.Pow(temperature / RespirationTReference, RespirationExponent));
                 result = baseEffect / scalef;
             }
 

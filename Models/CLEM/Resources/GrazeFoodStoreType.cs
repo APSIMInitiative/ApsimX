@@ -192,6 +192,17 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
+        /// <summary>
         /// The biomass per hectare of pasture available
         /// </summary>
         public double KilogramsPerHa
@@ -555,7 +566,7 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Style = TransactionStyle.Gain,
+                    TransactionType = TransactionType.Gain,
                     Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
@@ -661,7 +672,7 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Style = TransactionStyle.Loss,
+                    TransactionType = TransactionType.Loss,
                     Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
@@ -700,7 +711,7 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Style = TransactionStyle.Loss,
+                    TransactionType = TransactionType.Loss,
                     Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,

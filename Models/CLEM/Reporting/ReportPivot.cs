@@ -19,6 +19,9 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 0, "")]
     public class ReportPivot : Model, ICLEMUI
     {
+        [Link]
+        private IDataStore dataStore = null;
+
         /// <summary>
         /// The report data
         /// </summary>
@@ -27,7 +30,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Tracks the active selection in the value box
         /// </summary>
-        [Description("The column to aggregate values for")]
+        [Description("Values column")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetValueNames))]
         public string Value { get; set; }
 
@@ -39,7 +42,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Tracks the active selection in the row box
         /// </summary>
-        [Description("The column to pivot into rows")]
+        [Description("Rows column")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetRowNames))]
         public string Row { get; set; }
 
@@ -51,7 +54,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Tracks the active selection in the column box
         /// </summary>
-        [Description("The column to pivot into columns")]
+        [Description("Columns columns")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetColumnNames))]
         public string Column { get; set; }
 
@@ -63,7 +66,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Tracks the active selection in the time box
         /// </summary>
-        [Description("The time filter")]
+        [Description("Time filter")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetTimes))]
         public string Time { get; set; }
 
@@ -75,7 +78,7 @@ namespace Models.CLEM.Reporting
         /// <summary>
         /// Tracks the active selection in the time box
         /// </summary>
-        [Description("The aggregation method")]
+        [Description("Aggregation method")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetAggregators))]
         public string Aggregator { get; set; }
 
@@ -98,7 +101,9 @@ namespace Models.CLEM.Reporting
             report = report ?? storage.Reader.GetData(Parent.Name);
             
             if (report is null)
+            {
                 return new string[] { "No available data" };
+            }
 
             // Find the columns that meet our criteria
             var columns = report.Columns.Cast<DataColumn>();
@@ -115,15 +120,22 @@ namespace Models.CLEM.Reporting
         public DataTable GenerateTable()
         {
             // Find the DataStore
-            var storage = FindInScope("DataStore") as IDataStore;
+            var storage = dataStore;
+            if(storage == null)
+            {
+                storage = FindInScope<IDataStore>();
+            }
+            //var storage = FindInScope("DataStore") as IDataStore;
 
             // Find the data
             report = report ?? storage.Reader.GetData(Parent.Name);
 
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
+            {
                 return null;
-            
+            }
+
             var columns = FindPivotColumns(report);
 
             // Create the pivot table and populate it
@@ -132,9 +144,21 @@ namespace Models.CLEM.Reporting
             pivot.Columns.AddRange(columns.ToArray());
             AddPivotRows(report, pivot);
 
+            var dataTable = pivot.DefaultView.ToTable();
+            dataTable.TableName = this.Name;
+
             // Add the pivoted table to the datastore
-            storage.Writer.WriteTable(pivot.DefaultView.ToTable());
+            storage.Writer.WriteTable(dataTable);
             return pivot;
+        }
+
+        /// <summary>
+        /// Saves the view post-simulation
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnCompleted(object sender, EventArgs e)
+        {
+            GenerateTable();
         }
 
         /// <summary>
@@ -148,17 +172,18 @@ namespace Models.CLEM.Reporting
         private bool HasDataValues(DataColumn col)
         {
             if (col.DataType.Name == "String")
+            {
                 return false;
+            }
 
             // We are looking for data values, not IDs
             if (col.ColumnName.EndsWith("ID"))
+            {
                 return false;
+            }
 
             // DateTime is handled separately from other value types
-            if (col.DataType == typeof(DateTime))
-                return false;
-
-            return true;
+            return col.DataType != typeof(DateTime);
         }
 
         /// <summary>
@@ -196,13 +221,21 @@ namespace Models.CLEM.Reporting
         private string FormatDate(DateTime date)
         {
             if (Time == "Day")
+            {
                 return date.ToString("dd/MM/yyyy");
+            }
             else if (Time == "Month")
+            {
                 return date.ToString("MM/yyyy");
+            }
             else if (Time == "Year")
+            {
                 return date.ToString("yyyy");
+            }
             else
+            {
                 throw new Exception("");
+            }
         }
 
         /// <summary>
@@ -234,7 +267,9 @@ namespace Models.CLEM.Reporting
 
                     // Aggregate the data, leaving blank cells for missing values
                     if (values.Any())
+                    {
                         row[col] = AggregateValues(values);
+                    }
                 }
 
                 pivot.Rows.Add(row);

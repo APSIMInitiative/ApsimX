@@ -255,13 +255,13 @@ namespace Models.CLEM
                     }
                     catch (Exception ex)
                     {
-                        ErrorMessage = "@error:There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name +"]\r\n" + ex.Message;
+                        ErrorMessage = "There was a problem opening the SQLite database [o=" + FullFileName + "for [x=" + this.Name +"]\r\n" + ex.Message;
                         return false;
                     }
                 }
                 else
                 {
-                    ErrorMessage = "@error:The SQLite database [o=" + FullFileName + "] could not be found for [x="+this.Name+"]";
+                    ErrorMessage = "The SQLite database [o=" + FullFileName + "] could not be found for [x="+this.Name+"]";
                     return false;
                 }
             }
@@ -745,7 +745,7 @@ namespace Models.CLEM
             {
                 foreach (DataRow row in results.Rows)
                 {
-                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"])).FirstOrDefault().Year;
+                    row["Year"] = shuffler.ShuffledYears.Where(a => a.RandomYear == Convert.ToInt32(row["Year"], CultureInfo.InvariantCulture)).FirstOrDefault().Year;
                 }
             }
 

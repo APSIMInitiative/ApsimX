@@ -1,733 +1,1464 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Simulations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Version="2">
-  <Name>Simulations</Name>
-  <Simulation>
-    <Name>Rain_Evap_Test</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Ingham.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>1990-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>Pond</Name>
-      <PondWater>
-        <Name>PondWater</Name>
-        <SurfaceArea>10000</SurfaceArea>
-        <MaxPondDepth>1</MaxPondDepth>
-        <Kpan>1</Kpan>
-      </PondWater>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Weather].Rain as Rain</string>
-          <string>[Weather].PanEvap as PanEvap</string>
-          <string>[PondWater].PondEvap as PondEvap</string>
-          <string>[PondWater].PondDepth as PondDepth</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Graph>
-      <Name>Graph</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>Rain</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series2</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>PondEvap</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series3</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Right</YAxis>
-        <ColourArgb>-65281</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>PondDepth</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series4</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16744448</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>PanEvap</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Rain</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Right</Type>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <Simulation>
-    <Name>Salinity_RainDilute_EvapConcentrate_Test</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Ingham.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>1990-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>Pond</Name>
-      <PondWater>
-        <Name>PondWater</Name>
-        <SurfaceArea>10000</SurfaceArea>
-        <MaxPondDepth>1</MaxPondDepth>
-        <Kpan>1</Kpan>
-      </PondWater>
-      <Folder>
-        <Name>Manager folder</Name>
-        <Manager>
-          <Name>Add water on fixed date</Name>
-          <Script>
-            <added_date>01-jan</added_date>
-            <volume>10000</volume>
-            <temperature>15</temperature>
-            <salinity>5</salinity>
-            <ph>2</ph>
-            <n>3</n>
-            <p>4</p>
-            <tss>10</tss>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
 {
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] PondWater PondWater;
-		
-		
-	    [Description("Add Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
-		
-		[Description("Volume of Water Added (m^3)")]
-		public double volume {get; set;}
-		
-		[Description("Temperature of Water Added (oC)")]
-		public double temperature {get; set;}
-		
-		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity {get; set;}
-		
-		[Description("PH of Water Added")]
-		public double ph {get; set;}
-		
-		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n {get; set;}
-	
-	    [Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p {get; set;}
-		
-		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss {get; set;}
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
-			}
-
-		}
-      
-	}
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 300,
+  "Version": 133,
+  "ApsimVersion": "0.0.0.0",
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "Rain_Evap_Test",
+      "Children": [
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "Ingham.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.MicroClimate, Models",
+          "a_interception": 0.0,
+          "b_interception": 1.0,
+          "c_interception": 0.0,
+          "d_interception": 0.0,
+          "SoilHeatFluxFraction": 0.4,
+          "MinimumHeightDiffForNewLayer": 0.0,
+          "NightInterceptionFraction": 0.5,
+          "ReferenceHeight": 2.0,
+          "Name": "MicroClimate",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1990-01-01T00:00:00",
+          "End": "2000-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Pond",
+          "Children": [
+            {
+              "$type": "Models.Aqua.PondWater, Models",
+              "SurfaceArea": 10000.0,
+              "MaxPondDepth": 1.0,
+              "Kpan": 1.0,
+              "Name": "PondWater",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].Rain as Rain",
+                "[Weather].PanEvap as PanEvap",
+                "[PondWater].PondEvap as PondEvap",
+                "[PondWater].PondDepth as PondDepth"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Soil, Models",
+              "RecordNumber": 0,
+              "ASCOrder": "Vertosol",
+              "ASCSubOrder": "Black",
+              "SoilType": "Clay",
+              "LocalName": null,
+              "Site": "Norwin",
+              "NearestTown": "Norwin",
+              "Region": "Darling Downs and Granite Belt",
+              "State": "Queensland",
+              "Country": "Australia",
+              "NaturalVegetation": "Qld. Bluegrass, possible Qld. Blue gum",
+              "ApsoilNumber": "900",
+              "Latitude": -27.581836,
+              "Longitude": 151.320206,
+              "LocationAccuracy": " +/- 20m",
+              "YearOfSampling": null,
+              "DataSource": "CSIRO Sustainable Ecosystems, Toowoomba; Characteriesd as part of the GRDC funded project\"Doing it better, doing it smarter, managing soil water in Australian agriculture' 2011",
+              "Comments": "OC, CLL for all crops estimated-based on Bongeen Mywybilla Soil No1",
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Soils.Physical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "ParticleSizeClay": null,
+                  "ParticleSizeSand": null,
+                  "ParticleSizeSilt": null,
+                  "Rocks": null,
+                  "Texture": null,
+                  "BD": [
+                    1.01056473311131,
+                    1.07145631083388,
+                    1.09393858528057,
+                    1.15861335018721,
+                    1.17301160318016,
+                    1.16287303586874,
+                    1.18749547755906
+                  ],
+                  "AirDry": [
+                    0.130250054518252,
+                    0.198689390775399,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "LL15": [
+                    0.260500109036505,
+                    0.248361738469248,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28,
+                    0.28
+                  ],
+                  "DUL": [
+                    0.52100021807301,
+                    0.496723476938497,
+                    0.488437607673005,
+                    0.480296969355493,
+                    0.471583596524955,
+                    0.457070570557793,
+                    0.452331759845006
+                  ],
+                  "SAT": [
+                    0.588654817693846,
+                    0.565676863836273,
+                    0.557192986686577,
+                    0.532787415023694,
+                    0.527354112007486,
+                    0.531179986464627,
+                    0.521888499034317
+                  ],
+                  "KS": [
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0,
+                    20.0
+                  ],
+                  "BDMetadata": null,
+                  "AirDryMetadata": null,
+                  "LL15Metadata": null,
+                  "DULMetadata": null,
+                  "SATMetadata": null,
+                  "KSMetadata": null,
+                  "RocksMetadata": null,
+                  "TextureMetadata": null,
+                  "ParticleSizeSandMetadata": null,
+                  "ParticleSizeSiltMetadata": null,
+                  "ParticleSizeClayMetadata": null,
+                  "Name": "Physical",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilCrop, Models",
+                      "LL": [
+                        0.261,
+                        0.248,
+                        0.28,
+                        0.306,
+                        0.36,
+                        0.392,
+                        0.446
+                      ],
+                      "KL": [
+                        0.06,
+                        0.06,
+                        0.06,
+                        0.04,
+                        0.04,
+                        0.02,
+                        0.01
+                      ],
+                      "XF": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "LLMetadata": null,
+                      "KLMetadata": null,
+                      "XFMetadata": null,
+                      "Name": "WheatSoil",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.WaterModel.WaterBalance, Models",
+                  "SummerDate": "1-Nov",
+                  "SummerU": 5.0,
+                  "SummerCona": 5.0,
+                  "WinterDate": "1-Apr",
+                  "WinterU": 5.0,
+                  "WinterCona": 5.0,
+                  "DiffusConst": 40.0,
+                  "DiffusSlope": 16.0,
+                  "Salb": 0.12,
+                  "CN2Bare": 73.0,
+                  "CNRed": 20.0,
+                  "CNCov": 0.8,
+                  "DischargeWidth": "NaN",
+                  "CatchmentArea": "NaN",
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "SWCON": [
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3,
+                    0.3
+                  ],
+                  "KLAT": null,
+                  "ResourceName": "WaterBalance",
+                  "Name": "SoilWater",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "Carbon": [
+                    1.2,
+                    0.96,
+                    0.6,
+                    0.3,
+                    0.18,
+                    0.12,
+                    0.12
+                  ],
+                  "SoilCNRatio": [
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0,
+                    12.0
+                  ],
+                  "FBiom": [
+                    0.04,
+                    0.02,
+                    0.02,
+                    0.02,
+                    0.01,
+                    0.01,
+                    0.01
+                  ],
+                  "FInert": [
+                    0.4,
+                    0.6,
+                    0.8,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "FOM": [
+                    347.1290323127564,
+                    270.3443621919937,
+                    163.97214434990104,
+                    99.45413288704063,
+                    60.32198083112468,
+                    36.58713082867487,
+                    22.1912165985086
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Chemical, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3N": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "NH4N": [
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1,
+                    0.1
+                  ],
+                  "PH": [
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0,
+                    8.0
+                  ],
+                  "CL": null,
+                  "EC": null,
+                  "ESP": null,
+                  "LabileP": null,
+                  "UnavailableP": null,
+                  "ECMetadata": null,
+                  "CLMetadata": null,
+                  "ESPMetadata": null,
+                  "PHMetadata": null,
+                  "Name": "Chemical",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.InitialWater, Models",
+                  "PercentMethod": 1,
+                  "FractionFull": 1.0,
+                  "DepthWetSoil": "NaN",
+                  "RelativeTo": null,
+                  "Name": "InitialWater",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Sample, Models",
+                  "Depth": [
+                    "0-15",
+                    "15-30",
+                    "30-60",
+                    "60-90",
+                    "90-120",
+                    "120-150",
+                    "150-180"
+                  ],
+                  "Thickness": [
+                    150.0,
+                    150.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0,
+                    300.0
+                  ],
+                  "NO3": null,
+                  "NH4": null,
+                  "LabileP": null,
+                  "UnavailableP": null,
+                  "SW": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "OC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "EC": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "CL": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "ESP": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "PH": [
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN",
+                    "NaN"
+                  ],
+                  "SWUnits": 0,
+                  "OCUnits": 0,
+                  "PHUnits": 0,
+                  "Name": "InitialN",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.CERESSoilTemperature, Models",
+                  "Name": "Temperature",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+              "InitialResidueName": "wheat_stubble",
+              "InitialResidueType": "wheat",
+              "InitialResidueMass": 500.0,
+              "InitialStandingFraction": 0.0,
+              "InitialCPR": 0.0,
+              "InitialCNR": 100.0,
+              "ResourceName": "SurfaceOrganicMatter",
+              "Name": "SurfaceOrganicMatter",
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 0,
+              "Title": "Rain",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 2,
+              "Title": null,
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationPosition": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Graph",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "Rain",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series 0",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PondEvap",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 2,
+              "ColourArgb": -65281,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PondDepth",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series3",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16744448,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "PanEvap",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series4",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "Salinity_RainDilute_EvapConcentrate_Test",
+      "Children": [
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "Ingham.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1990-01-01T00:00:00",
+          "End": "2000-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "Pond",
+          "Children": [
+            {
+              "$type": "Models.Aqua.PondWater, Models",
+              "SurfaceArea": 10000.0,
+              "MaxPondDepth": 1.0,
+              "Kpan": 1.0,
+              "Name": "PondWater",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Manager folder",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Aqua;\nusing APSIM.Shared.Utilities;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] PondWater PondWater;\n        \n        \n        [Description(\"Add Water on this date (dd-mmm)\")]\n        public string added_date {get; set;}\n        \n        [Description(\"Volume of Water Added (m^3)\")]\n        public double volume {get; set;}\n        \n        [Description(\"Temperature of Water Added (oC)\")]\n        public double temperature {get; set;}\n        \n        [Description(\"Salinity of Water Added (kg/m^3)\")]\n        public double salinity {get; set;}\n        \n        [Description(\"PH of Water Added\")]\n        public double ph {get; set;}\n        \n        [Description(\"Nitrogen of Water Added (kg/m^3)\")]\n        public double n {get; set;}\n    \n        [Description(\"Phosphorus of Water Added (kg/m^3)\")]\n        public double p {get; set;}\n        \n        [Description(\"Total Suspended Solids of Water Added (kg/m^3)\")]\n        public double tss {get; set;}\n\n\n        \n       [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n        }\n        \n        \n        \n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\n            {\n            WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);\n            PondWater.Fill(Volume: volume, WaterProperties: addedProps);\n            }\n\n        }\n      \n    }\n}\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "01-jan"
+                    },
+                    {
+                      "Key": "volume",
+                      "Value": "10000"
+                    },
+                    {
+                      "Key": "temperature",
+                      "Value": "15"
+                    },
+                    {
+                      "Key": "salinity",
+                      "Value": "5"
+                    },
+                    {
+                      "Key": "ph",
+                      "Value": "2"
+                    },
+                    {
+                      "Key": "n",
+                      "Value": "3"
+                    },
+                    {
+                      "Key": "p",
+                      "Value": "4"
+                    },
+                    {
+                      "Key": "tss",
+                      "Value": "10"
+                    }
+                  ],
+                  "Name": "Add water on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].Rain as Rain",
+                "[PondWater].PondEvap as PondEvap",
+                "[PondWater].PondDepth as PondDepth",
+                "[PondWater].PondTemp as PondTemp",
+                "[PondWater].Salinity as Salinity",
+                "[PondWater].PH as PH",
+                "[PondWater].N as N",
+                "[PondWater].P as P",
+                "[PondWater].TSS as TSS"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 3,
+                  "Title": "Date",
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 0,
+                  "Title": "PondDepth",
+                  "Inverted": false,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                },
+                {
+                  "$type": "Models.Axis, Models",
+                  "Type": 2,
+                  "Title": null,
+                  "Inverted": false,
+                  "Minimum": "NaN",
+                  "Maximum": "NaN",
+                  "Interval": "NaN",
+                  "DateTimeAxis": false,
+                  "CrossesAtZero": false
+                }
+              ],
+              "LegendPosition": 5,
+              "LegendOrientation": 0,
+              "AnnotationPosition": 0,
+              "DisabledSeries": null,
+              "LegendOutsideGraph": false,
+              "Name": "Graph",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16776961,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "PondDepth",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series 0",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -65536,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Salinity",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Series2",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Core.Simulation, Models",
+      "IsRunning": false,
+      "Descriptors": null,
+      "Name": "MixingTest",
+      "Children": [
+        {
+          "$type": "Models.Climate.Weather, Models",
+          "ConstantsFile": null,
+          "FileName": "Ingham.met",
+          "ExcelWorkSheetName": null,
+          "Name": "Weather",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Clock, Models",
+          "Start": "1990-01-01T00:00:00",
+          "End": "2000-12-31T00:00:00",
+          "Name": "clock",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Summary, Models",
+          "CaptureErrors": true,
+          "CaptureWarnings": true,
+          "CaptureSummaryText": true,
+          "Name": "summaryfile",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "PrawnPond",
+          "Children": [
+            {
+              "$type": "Models.Aqua.PondWater, Models",
+              "SurfaceArea": 10000.0,
+              "MaxPondDepth": 1.0,
+              "Kpan": 1.0,
+              "Name": "PondWater",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Manager folder",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Aqua;\nusing APSIM.Shared.Utilities;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] PondWater PondWater;\n        \n        \n        [Description(\"Add Water on this date (dd-mmm)\")]\n        public string added_date {get; set;}\n        \n        [Description(\"Volume of Water Added (m^3)\")]\n        public double volume {get; set;}\n        \n        [Description(\"Temperature of Water Added (oC)\")]\n        public double temperature {get; set;}\n        \n        [Description(\"Salinity of Water Added (kg/m^3)\")]\n        public double salinity {get; set;}\n        \n        [Description(\"PH of Water Added\")]\n        public double ph {get; set;}\n        \n        [Description(\"Nitrogen of Water Added (kg/m^3)\")]\n        public double n {get; set;}\n    \n        [Description(\"Phosphorus of Water Added (kg/m^3)\")]\n        public double p {get; set;}\n        \n        [Description(\"Total Suspended Solids of Water Added (kg/m^3)\")]\n        public double tss {get; set;}\n\n\n        \n       [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n        }\n        \n        \n        \n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\n            {\n            WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);\n            PondWater.Fill(Volume: volume, WaterProperties: addedProps);\n            }\n\n        }\n      \n    }\n}\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "01-jan"
+                    },
+                    {
+                      "Key": "volume",
+                      "Value": "10000"
+                    },
+                    {
+                      "Key": "temperature",
+                      "Value": "15"
+                    },
+                    {
+                      "Key": "salinity",
+                      "Value": "5"
+                    },
+                    {
+                      "Key": "ph",
+                      "Value": "2"
+                    },
+                    {
+                      "Key": "n",
+                      "Value": "3"
+                    },
+                    {
+                      "Key": "p",
+                      "Value": "4"
+                    },
+                    {
+                      "Key": "tss",
+                      "Value": "10"
+                    }
+                  ],
+                  "Name": "Add water to PrawnPond on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].Rain as Rain",
+                "[PondWater].PondEvap as P_PondEvap",
+                "[PondWater].PondDepth as P_PondDepth",
+                "[PondWater].PondTemp as P_PondTemp",
+                "[PondWater].Salinity as P_Salinity",
+                "[PondWater].PH as P_PH",
+                "[PondWater].N as P_N",
+                "[PondWater].P as P_P",
+                "[PondWater].TSS as P_TSS"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Zone, Models",
+          "Area": 1.0,
+          "Slope": 0.0,
+          "AspectAngle": 0.0,
+          "Altitude": 50.0,
+          "Name": "SettlingPond",
+          "Children": [
+            {
+              "$type": "Models.Aqua.PondWater, Models",
+              "SurfaceArea": 10000.0,
+              "MaxPondDepth": 1.0,
+              "Kpan": 1.0,
+              "Name": "PondWater",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowPageOfGraphs": true,
+              "Name": "Manager folder",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Aqua;\nusing APSIM.Shared.Utilities;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] PondWater PondWater;\n        \n        \n        [Description(\"Add Water on this date (dd-mmm)\")]\n        public string added_date {get; set;}\n        \n        [Description(\"Volume of Water Added (m^3)\")]\n        public double volume {get; set;}\n        \n        [Description(\"Temperature of Water Added (oC)\")]\n        public double temperature {get; set;}\n        \n        [Description(\"Salinity of Water Added (kg/m^3)\")]\n        public double salinity {get; set;}\n        \n        [Description(\"PH of Water Added\")]\n        public double ph {get; set;}\n        \n        [Description(\"Nitrogen of Water Added (kg/m^3)\")]\n        public double n {get; set;}\n    \n        [Description(\"Phosphorus of Water Added (kg/m^3)\")]\n        public double p {get; set;}\n        \n        [Description(\"Total Suspended Solids of Water Added (kg/m^3)\")]\n        public double tss {get; set;}\n\n\n        \n       [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n        }\n        \n        \n        \n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\n            {\n            WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);\n            PondWater.Fill(Volume: volume, WaterProperties: addedProps);\n            }\n\n        }\n      \n    }\n}\n",
+                  "Parameters": [
+                    {
+                      "Key": "added_date",
+                      "Value": "01-jan"
+                    },
+                    {
+                      "Key": "volume",
+                      "Value": "5000"
+                    },
+                    {
+                      "Key": "temperature",
+                      "Value": "10"
+                    },
+                    {
+                      "Key": "salinity",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "ph",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "n",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "p",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "tss",
+                      "Value": "0"
+                    }
+                  ],
+                  "Name": "Add water on SettlingPond on fixed date",
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Report, Models",
+              "VariableNames": [
+                "[Clock].Today",
+                "[Weather].Rain as Rain",
+                "[PondWater].PondEvap as S_PondEvap",
+                "[PondWater].PondDepth as S_PondDepth",
+                "[PondWater].PondTemp as S_PondTemp",
+                "[PondWater].Salinity as S_Salinity",
+                "[PondWater].PH as S_PH",
+                "[PondWater].N as S_N",
+                "[PondWater].P as S_P",
+                "[PondWater].TSS as S_TSS"
+              ],
+              "EventNames": [
+                "[Clock].DoReport"
+              ],
+              "GroupByVariableName": null,
+              "Name": "Report",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Manager, Models",
+          "Code": "using Models.Aqua;\nusing APSIM.Shared.Utilities;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\n        [Link] Clock Clock;\n        [Link] Summary Summary;\n        [Link] Zone PrawnPond;\n        [Link] Zone SettlingPond;\n        \n        PondWater prawnWater;\n        PondWater settlingWater;\n        \n        \n        [Description(\"Transfer Water on this date (dd-mmm)\")]\n        public string added_date {get; set;}\n        \n        [Description(\"Volume of Water Transfered (m^3)\")]\n        public double volume {get; set;}\n        \n\n\n        \n       [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            prawnWater = (PondWater)PrawnPond.FindInScope(\"PondWater\");\n            settlingWater = (PondWater)SettlingPond.FindInScope(\"PondWater\");\n        }\n        \n        \n        \n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n\n        if (DateUtilities.DatesEqual(added_date, Clock.Today))\n            {\n            \n            prawnWater.Empty(volume);\n            settlingWater.Fill(Volume: volume, WaterProperties: prawnWater.PondProps);\n            \n            }\n\n        }\n      \n    }\n}\n",
+          "Parameters": [
+            {
+              "Key": "added_date",
+              "Value": "02-jan"
+            },
+            {
+              "Key": "volume",
+              "Value": "5000"
+            }
+          ],
+          "Name": "Transfer water from PrawnPond to SettlingPond",
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 0,
+              "Title": "PondDepth",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationPosition": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "PondDepth",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "P_PondDepth",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series 0",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 1,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "S_PondDepth",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 3,
+              "Title": "Date",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            },
+            {
+              "$type": "Models.Axis, Models",
+              "Type": 0,
+              "Title": "Rain",
+              "Inverted": false,
+              "Minimum": "NaN",
+              "Maximum": "NaN",
+              "Interval": "NaN",
+              "DateTimeAxis": false,
+              "CrossesAtZero": false
+            }
+          ],
+          "LegendPosition": 5,
+          "LegendOrientation": 0,
+          "AnnotationPosition": 0,
+          "DisabledSeries": null,
+          "LegendOutsideGraph": false,
+          "Name": "Salinity",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -16776961,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "P_Salinity",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series 0",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -65536,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 11,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "Clock.Today",
+              "YFieldName": "S_Salinity",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": true,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Series2",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "IncludeInDocumentation": false,
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [],
+      "IncludeInDocumentation": true,
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "IncludeInDocumentation": true,
+  "Enabled": true,
+  "ReadOnly": false
 }
-]]></Code>
-        </Manager>
-      </Folder>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Weather].Rain as Rain</string>
-          <string>[PondWater].PondEvap as PondEvap</string>
-          <string>[PondWater].PondDepth as PondDepth</string>
-          <string>[PondWater].PondTemp as PondTemp</string>
-          <string>[PondWater].Salinity as Salinity</string>
-          <string>[PondWater].PH as PH</string>
-          <string>[PondWater].N as N</string>
-          <string>[PondWater].P as P</string>
-          <string>[PondWater].TSS as TSS</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Graph>
-        <Name>Graph</Name>
-        <Series>
-          <Name>Series 0</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Left</YAxis>
-          <ColourArgb>-16776961</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>PondDepth</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Series>
-          <Name>Series2</Name>
-          <Type>Scatter</Type>
-          <XAxis>Bottom</XAxis>
-          <YAxis>Right</YAxis>
-          <ColourArgb>-65536</ColourArgb>
-          <Marker>None</Marker>
-          <Line>Solid</Line>
-          <TableName>Report</TableName>
-          <XFieldName>Clock.Today</XFieldName>
-          <YFieldName>Salinity</YFieldName>
-          <ShowInLegend>true</ShowInLegend>
-          <Cumulative>false</Cumulative>
-          <CumulativeX>false</CumulativeX>
-        </Series>
-        <Caption />
-        <Axis>
-          <Type>Bottom</Type>
-          <Title>Date</Title>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Left</Type>
-          <Title>PondDepth</Title>
-          <Inverted>false</Inverted>
-          <Minimum>0</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <Axis>
-          <Type>Right</Type>
-          <Inverted>false</Inverted>
-          <Minimum>NaN</Minimum>
-          <Maximum>NaN</Maximum>
-          <Interval>NaN</Interval>
-        </Axis>
-        <LegendPosition>BottomRight</LegendPosition>
-        <DisabledSeries />
-        <IncludeInDocumentation>false</IncludeInDocumentation>
-      </Graph>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <Simulation>
-    <Name>MixingTest</Name>
-    <Weather>
-      <Name>Weather</Name>
-      <FileName>Ingham.met</FileName>
-    </Weather>
-    <Clock>
-      <Name>clock</Name>
-      <StartDate>1990-01-01T00:00:00</StartDate>
-      <EndDate>2000-12-31T00:00:00</EndDate>
-    </Clock>
-    <Summary>
-      <Name>summaryfile</Name>
-    </Summary>
-    <Zone>
-      <Name>PrawnPond</Name>
-      <PondWater>
-        <Name>PondWater</Name>
-        <SurfaceArea>10000</SurfaceArea>
-        <MaxPondDepth>1</MaxPondDepth>
-        <Kpan>1</Kpan>
-      </PondWater>
-      <Folder>
-        <Name>Manager folder</Name>
-        <Manager>
-          <Name>Add water to PrawnPond on fixed date</Name>
-          <Script>
-            <added_date>01-jan</added_date>
-            <volume>10000</volume>
-            <temperature>15</temperature>
-            <salinity>5</salinity>
-            <ph>2</ph>
-            <n>3</n>
-            <p>4</p>
-            <tss>10</tss>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] PondWater PondWater;
-		
-		
-	    [Description("Add Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
-		
-		[Description("Volume of Water Added (m^3)")]
-		public double volume {get; set;}
-		
-		[Description("Temperature of Water Added (oC)")]
-		public double temperature {get; set;}
-		
-		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity {get; set;}
-		
-		[Description("PH of Water Added")]
-		public double ph {get; set;}
-		
-		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n {get; set;}
-	
-	    [Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p {get; set;}
-		
-		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss {get; set;}
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-      </Folder>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Weather].Rain as Rain</string>
-          <string>PondWater.PondEvap as P_PondEvap</string>
-          <string>PondWater.PondDepth as P_PondDepth</string>
-          <string>PondWater.PondTemp as P_PondTemp</string>
-          <string>PondWater.Salinity as P_Salinity</string>
-          <string>PondWater.PH as P_PH</string>
-          <string>PondWater.N as P_N</string>
-          <string>PondWater.P as P_P</string>
-          <string>PondWater.TSS as P_TSS</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Zone>
-      <Name>SettlingPond</Name>
-      <PondWater>
-        <Name>PondWater</Name>
-        <SurfaceArea>10000</SurfaceArea>
-        <MaxPondDepth>1</MaxPondDepth>
-        <Kpan>1</Kpan>
-      </PondWater>
-      <Folder>
-        <Name>Manager folder</Name>
-        <Manager>
-          <Name>Add water on SettlingPond on fixed date</Name>
-          <Script>
-            <added_date>01-jan</added_date>
-            <volume>5000</volume>
-            <temperature>10</temperature>
-            <salinity>0</salinity>
-            <ph>0</ph>
-            <n>0</n>
-            <p>0</p>
-            <tss>0</tss>
-          </Script>
-          <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] PondWater PondWater;
-		
-		
-	    [Description("Add Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
-		
-		[Description("Volume of Water Added (m^3)")]
-		public double volume {get; set;}
-		
-		[Description("Temperature of Water Added (oC)")]
-		public double temperature {get; set;}
-		
-		[Description("Salinity of Water Added (kg/m^3)")]
-		public double salinity {get; set;}
-		
-		[Description("PH of Water Added")]
-		public double ph {get; set;}
-		
-		[Description("Nitrogen of Water Added (kg/m^3)")]
-		public double n {get; set;}
-	
-	    [Description("Phosphorus of Water Added (kg/m^3)")]
-		public double p {get; set;}
-		
-		[Description("Total Suspended Solids of Water Added (kg/m^3)")]
-		public double tss {get; set;}
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			WaterProperties addedProps = new WaterProperties(temperature, salinity, ph, n, p, tss);
-			PondWater.Fill(Volume: volume, WaterProperties: addedProps);
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-        </Manager>
-      </Folder>
-      <Report>
-        <Name>Report</Name>
-        <VariableNames>
-          <string>[Clock].Today</string>
-          <string>[Weather].Rain as Rain</string>
-          <string>PondWater.PondEvap as S_PondEvap</string>
-          <string>PondWater.PondDepth as S_PondDepth</string>
-          <string>PondWater.PondTemp as S_PondTemp</string>
-          <string>PondWater.Salinity as S_Salinity</string>
-          <string>PondWater.PH as S_PH</string>
-          <string>PondWater.N as S_N</string>
-          <string>PondWater.P as S_P</string>
-          <string>PondWater.TSS as S_TSS</string>
-        </VariableNames>
-        <EventNames>
-          <string>[Clock].DoReport</string>
-        </EventNames>
-      </Report>
-      <Area>1</Area>
-      <Slope>0</Slope>
-    </Zone>
-    <Manager>
-      <Name>Transfer water from PrawnPond to SettlingPond</Name>
-      <Script>
-        <added_date>02-jan</added_date>
-        <volume>5000</volume>
-      </Script>
-      <Code><![CDATA[using System;
-using Models.Core;
-using APSIM.Shared.Utilities;
-using Models.Aqua;
-
-namespace Models
-{
-	[Serializable]
-	[System.Xml.Serialization.XmlInclude(typeof(Model))]
-	public class Script : Model
-	{
-
-		[Link] Clock Clock;
-		[Link] Summary Summary;
-		[Link] Zone PrawnPond;
-		[Link] Zone SettlingPond;
-		
-		PondWater prawnWater;
-		PondWater settlingWater;
-		
-		
-	    [Description("Transfer Water on this date (dd-mmm)")]
-		public string added_date {get; set;}
-		
-		[Description("Volume of Water Transfered (m^3)")]
-		public double volume {get; set;}
-		
-
-
-        
-       [EventSubscribe("StartOfSimulation")]
-		private void OnStartOfSimulation(object sender, EventArgs e)
-		{
-	    	prawnWater = (PondWater)Apsim.Find(PrawnPond,"PondWater");
-	    	settlingWater = (PondWater)Apsim.Find(SettlingPond,"PondWater");
-		}
-        
-        
-        
-		[EventSubscribe("StartOfDay")]
-		private void OnStartOfDay(object sender, EventArgs e)
-		{
-
-        if (DateUtilities.DatesEqual(added_date, Clock.Today))
-			{
-			
-			prawnWater.Empty(volume);
-			settlingWater.Fill(Volume: volume, WaterProperties: prawnWater.PondProps);
-			
-			}
-
-		}
-      
-	}
-}
-]]></Code>
-    </Manager>
-    <Graph>
-      <Name>PondDepth</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>P_PondDepth</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series2</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Dash</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>S_PondDepth</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>PondDepth</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Graph>
-      <Name>Salinity</Name>
-      <Series>
-        <Name>Series 0</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-16776961</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>P_Salinity</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Series>
-        <Name>Series2</Name>
-        <Type>Scatter</Type>
-        <XAxis>Bottom</XAxis>
-        <YAxis>Left</YAxis>
-        <ColourArgb>-65536</ColourArgb>
-        <Marker>None</Marker>
-        <Line>Solid</Line>
-        <TableName>Report</TableName>
-        <XFieldName>Clock.Today</XFieldName>
-        <YFieldName>S_Salinity</YFieldName>
-        <ShowInLegend>true</ShowInLegend>
-        <Cumulative>false</Cumulative>
-        <CumulativeX>false</CumulativeX>
-      </Series>
-      <Caption />
-      <Axis>
-        <Type>Bottom</Type>
-        <Title>Date</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <Axis>
-        <Type>Left</Type>
-        <Title>Rain</Title>
-        <Inverted>false</Inverted>
-        <Minimum>NaN</Minimum>
-        <Maximum>NaN</Maximum>
-        <Interval>NaN</Interval>
-      </Axis>
-      <LegendPosition>BottomRight</LegendPosition>
-      <DisabledSeries />
-      <IncludeInDocumentation>false</IncludeInDocumentation>
-    </Graph>
-    <Area>0</Area>
-    <Slope>0</Slope>
-  </Simulation>
-  <DataStore>
-    <Name>DataStore</Name>
-    <AutoExport>false</AutoExport>
-  </DataStore>
-  <ExplorerWidth>250</ExplorerWidth>
-</Simulations>

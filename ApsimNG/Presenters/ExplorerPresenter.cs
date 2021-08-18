@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Threading.Tasks;
     using Utility;
     using Views;
 
@@ -166,6 +167,9 @@
                 this.view.Tree.ExpandNodes(file.ExpandedNodes);
 
             this.PopulateMainMenu();
+
+            // After opening a file, ensure that the root node is selected.
+            SelectNode(ApsimXFile, false);
         }
 
         /// <summary>
@@ -674,7 +678,7 @@
         /// Path which the files will be saved to. 
         /// If null, the user will be prompted to choose a directory.
         /// </param>
-        public bool GenerateApsimXFiles(IModel model, string path = null)
+        public async Task<bool> GenerateApsimXFiles(IModel model, string path = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -690,20 +694,16 @@
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                var runner = new Runner(model);
-                var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) =>
+                try
                 {
-                    MainPresenter.ShowProgress(percent, false);
-                });
-
-                if (errors == null || errors.Count == 0)
-                {
+                    var runner = new Runner(model);
+                    await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, 1, path, p => MainPresenter.ShowProgress(p, false), true));
                     MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                     return true;
                 }
-                else
+                catch (Exception err)
                 {
-                    MainPresenter.ShowError(errors);
+                    MainPresenter.ShowError(err);
                     return false;
                 }
             }

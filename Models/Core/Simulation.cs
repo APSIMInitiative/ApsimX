@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
+using Models.Soils.Standardiser;
 using Models.Storage;
 using Newtonsoft.Json;
 using System;
@@ -202,21 +203,18 @@ namespace Models.Core
         }
 
         /// <summary>
-        /// Runs the simulation on the current thread and waits for the simulation
-        /// to complete before returning to caller. Simulation is NOT cloned before
-        /// running. Use instance of Runner to get more options for running a 
-        /// simulation or groups of simulations. 
+        /// Prepare the simulation for running.
         /// </summary>
-        /// <param name="cancelToken">Is cancellation pending?</param>
-        public void Run(CancellationTokenSource cancelToken = null)
+        public void Prepare()
         {
-            // If the cancelToken is null then give it a default one. This can happen 
-            // when called from the unit tests.
-            if (cancelToken == null)
-                cancelToken = new CancellationTokenSource();
 
             // Remove disabled models.
             RemoveDisabledModels(this);
+
+            // Standardise the soil.
+            var soils = FindAllDescendants<Soils.Soil>();
+            foreach (Soils.Soil soil in soils)
+                SoilStandardiser.Standardise(soil);
 
             // If this simulation was not created from deserialisation then we need
             // to parent all child models correctly and call OnCreated for each model.
@@ -263,8 +261,33 @@ namespace Models.Core
                 // Resolve all links
                 links.Resolve(this, true);
 
-                IsRunning = true;
+                events.Publish("SubscribeToEvents", new object[] { this, EventArgs.Empty });
+            }
+            catch (Exception err)
+            {
+                throw new SimulationException("", err, Name, FileName);
+            }
+        }
 
+        /// <summary>
+        /// Runs the simulation on the current thread and waits for the simulation
+        /// to complete before returning to caller. Simulation is NOT cloned before
+        /// running. Use instance of Runner to get more options for running a 
+        /// simulation or groups of simulations. 
+        /// </summary>
+        /// <param name="cancelToken">Is cancellation pending?</param>
+        public void Run(CancellationTokenSource cancelToken = null)
+        {
+            IsRunning = true;
+            Exception simulationError = null;
+
+            // If the cancelToken is null then give it a default one. This can happen 
+            // when called from the unit tests.
+            if (cancelToken == null)
+                cancelToken = new CancellationTokenSource();
+
+            try
+            {
                 // Invoke our commencing event to let all models know we're about to start.
                 Commencing?.Invoke(this, new EventArgs());
 
@@ -274,27 +297,28 @@ namespace Models.Core
             catch (Exception err)
             {
                 // Exception occurred. Write error to summary.
-                string errorMessage = "ERROR in file: " + FileName + Environment.NewLine +
-                                      "Simulation name: " + Name + Environment.NewLine;
-                errorMessage += err.ToString();
-
-                summary?.WriteError(this, errorMessage);
+                simulationError = new SimulationException("", err, Name, FileName);
+                summary?.WriteError(this, simulationError.ToString());
 
                 // Rethrow exception
-                throw new Exception(errorMessage, err);
+                throw simulationError;
             }
             finally
             {
-                // Signal that the simulation is complete.
-                Completed?.Invoke(this, new EventArgs());
-
-                // Disconnect our events.
-                events.DisconnectEvents();
-
-                // Unresolve all links.
-                links.Unresolve(this, true);
-
-                IsRunning = false;
+                try
+                {
+                    // Signal that the simulation is complete.
+                    Completed?.Invoke(this, new EventArgs());
+                    IsRunning = false;
+                }
+                catch (Exception error)
+                {
+                    // If an exception was thrown at this point
+                    Exception cleanupError = new SimulationException($"Error while performing simulation cleanup", error, Name, FileName);
+                    if (simulationError == null)
+                        throw cleanupError;
+                    throw new AggregateException(simulationError, cleanupError);
+                }
             }
         }
 

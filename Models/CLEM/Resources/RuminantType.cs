@@ -27,8 +27,7 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
-        [Link]
-        private ResourcesHolder Resources = null;
+        private RuminantHerd parentHerd = null;
 
         /// <summary>
         /// Unit type
@@ -64,15 +63,30 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            parentHerd = this.Parent as RuminantHerd;
+
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if(this.FindAllChildren<AnimalPricing>().Count() > 0)
             {
-                PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+                PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+
                 priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
             }
 
             // get conception parameters and rate calculation method
             ConceptionModel = this.FindAllChildren<Model>().Where(a => typeof(IConceptionModel).IsAssignableFrom(a.GetType())).Cast<IConceptionModel>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
         }
 
         /// <summary>
@@ -87,6 +101,11 @@ namespace Models.CLEM.Resources
         private readonly List<string> WarningsNotFound = new List<string>();
 
         /// <summary>
+        /// Property indicates whether to include attribute inheritance when mating
+        /// </summary>
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+
+        /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
         /// </summary>
         /// <param name="name">name of attribute</param>
@@ -99,7 +118,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Add a attribute name to the list of mandatory attributes for the type
+        /// Determins whether a specified attribute is mandatory
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public bool IsMandatoryAttribute(string name)
+        {
+            return mandatoryAttributes.Contains(name);
+        }
+
+        /// <summary>
+        /// Check whether an individual has all mandotory attributes
         /// </summary>
         /// <param name="ind">Individual ruminant to check</param>
         /// <param name="model">Model adding individuals</param>
@@ -107,7 +135,7 @@ namespace Models.CLEM.Resources
         {
             foreach (var attribute in mandatoryAttributes)
             {
-                if(!ind.AttributeExists(attribute))
+                if(!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
                     if (!Warnings.Exists(warningString))
@@ -123,7 +151,7 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
         {
             if (PricingAvailable())
             {
@@ -133,9 +161,10 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1)
+                    if (animalList.FilterRuminants(item).Count() == 1)
                     {
-                        return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                        //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                        return item;
                     }
                 }
 
@@ -148,14 +177,14 @@ namespace Models.CLEM.Resources
                     Summary.WriteWarning(this, warningString);
                 }
             }
-            return 0;
+            return null;
         }
 
         /// <summary>
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
         {
             double price = 0;
             if (PricingAvailable())
@@ -168,7 +197,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
+                    if (animalList.FilterRuminants(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
@@ -215,10 +244,10 @@ namespace Models.CLEM.Resources
                 }
                 else
                 {
-                    price = matchCriteria.Value * ((matchCriteria.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                    return matchCriteria;
                 }
             }
-            return price;
+            return null;
         }
 
         #region validation
@@ -309,9 +338,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
                 }
                 return 0;
             }
@@ -324,9 +353,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
                 }
                 return 0;
             }

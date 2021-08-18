@@ -2,6 +2,7 @@ namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Storage;
     using System;
     using System.Collections;
@@ -50,8 +51,11 @@ namespace Models
 
         /// <summary>Get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
+        /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationsFilter">Unused simulation names filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationsFilter = null)
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
+                                                                  List<SimulationDescription> simDescriptions,
+                                                                  List<string> simulationsFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
             IEnumerable<SeriesDefinition> definitions;
@@ -60,10 +64,10 @@ namespace Models
                 Graph graph = FindAncestor<Graph>();
                 if (graph == null)
                     throw new Exception("Regression model must be a descendant of a series");
-                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.GetSeriesDefinitions(storage, simulationsFilter));
+                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));
             }
             else
-                definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationsFilter);
+                definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationsFilter);
         }
@@ -81,17 +85,26 @@ namespace Models
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
             foreach (var checkpointName in storage.CheckpointNames)
             {
+                if (checkpointName != "Current" && !storage.GetCheckpointShowOnGraphs(checkpointName)) // smh
+                    // If "Show on graphs" is disabled on this checkpoint, skip it.
+                    continue;
+
                 // Get all x/y data
                 List<double> x = new List<double>();
                 List<double> y = new List<double>();
                 foreach (SeriesDefinition definition in definitions)
                 {
                     if (definition.CheckpointName == checkpointName)
-                        if (definition.X is double[] && definition.Y is double[])
+                    {
+                        if (definition.X != null && definition.Y != null)
                         {
-                            x.AddRange(definition.X as IEnumerable<double>);
-                            y.AddRange(definition.Y as IEnumerable<double>);
+                            if (ReflectionUtilities.IsNumericType(definition.X.GetType().GetElementType()) && ReflectionUtilities.IsNumericType(definition.Y.GetType().GetElementType()))
+                            {
+                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).ToArray());
+                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).ToArray());
+                            }
                         }
+                    }
                 }
 
                 if (ForEachSeries)

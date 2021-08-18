@@ -38,10 +38,16 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Store finance type to use
-        /// </summary>
         private FinanceType bankAccount;
+        private Labour labour;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public LabourActivityPayHired()
+        {
+            TransactionCategory = "Labour";
+        }
 
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
@@ -53,6 +59,8 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+
+            labour = Resources.FindResourceGroup<Labour>();
         }
 
         /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
@@ -64,17 +72,13 @@ namespace Models.CLEM.Activities
             GetResourcesRequiredForActivity();
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.Warning;
@@ -82,7 +86,7 @@ namespace Models.CLEM.Activities
             // get amount of finance needed and provided
             double financeRequired = 0;
             double financeProvided = 0;
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)).ToList())
+            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)))
             {
                 financeRequired += item.Required;
                 financeProvided += item.Provided;
@@ -90,9 +94,7 @@ namespace Models.CLEM.Activities
             }
 
             if(financeRequired > 0)
-            {
                 Status = ActivityStatus.Success;
-            }
 
             // reduce limiters based on financial shortfall
             if (financeProvided < financeRequired)
@@ -104,7 +106,7 @@ namespace Models.CLEM.Activities
                     double currentCost = 0;
 
                     // step through all hired labour in order and set limiter where needed
-                    foreach (LabourType item in Resources.Labour().Items.Where(a => a.Hired))
+                    foreach (LabourType item in labour.Items.Where(a => a.Hired))
                     {
                         // get days needed
                         double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
@@ -133,26 +135,19 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return new GetDaysLabourRequiredReturnArgs(0, "Hire labour", null);
+            return new GetDaysLabourRequiredReturnArgs(0, TransactionCategory, null);
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
             int currentmonth = Clock.Today.Month;
             double total = 0;
-            foreach (LabourType item in Resources.Labour().Items.Where(a => a.Hired))
+            foreach (LabourType item in labour.Items.Where(a => a.Hired))
             {
                 // get days needed
                 double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
@@ -171,16 +166,13 @@ namespace Models.CLEM.Activities
                 Required = total,
                 ResourceTypeName = this.AccountName,
                 ActivityModel = this,
-                Category = "Hire labour"
+                Category = TransactionCategory
             }
             );
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
@@ -199,28 +191,32 @@ namespace Models.CLEM.Activities
             // make sure finance present
             // this is performed in the assignment of bankaccount in InitialiseActivity
 
-            // make sure labour hired present
-            if (Resources.Labour().Items.Where(a => a.Hired).Count() == 0)
+            if (labour is null)
             {
-                string[] memberNames = new string[] { "Hired labour" };
-                results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
+                string[] memberNames = new string[] { "Labour" };
+                results.Add(new ValidationResult("No [r=Labour] is provided in resources\r\nThis activity will not be performed without labour.", memberNames));
             }
-            // make sure pay rates present
-            if (!Resources.Labour().PricingAvailable)
+            else
             {
-                string[] memberNames = new string[] { "Labour pay rate" };
-                results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
+                // make sure labour hired present
+                if (labour.Items.Where(a => a.Hired).Count() == 0)
+                {
+                    string[] memberNames = new string[] { "Hired labour" };
+                    results.Add(new ValidationResult("No [r=LabourType] of hired labour has been defined in [r=Labour]\r\nThis activity will not be performed without hired labour.", memberNames));
+                }
+                // make sure pay rates present
+                if (!labour.PricingAvailable)
+                {
+                    string[] memberNames = new string[] { "Labour pay rate" };
+                    results.Add(new ValidationResult("No [r=LabourPricing] is available for [r=Labour]\r\nThis activity will not be performed without labour pay rates.", memberNames));
+                }
             }
             return results;
         }
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ";

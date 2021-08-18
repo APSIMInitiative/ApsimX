@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 130,
+  "Version": 137,
   "Name": "Simulations",
   "Children": [
     {
@@ -75,7 +75,7 @@
       "MinimumGreenWt": 100.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "ReferenceCO2": 380.0,
+      "WaterAvailableMethod": 0,
       "CO2EffectScaleFactor": 700.0,
       "CO2EffectOffsetFactor": 600.0,
       "CO2EffectMinimum": 0.7,

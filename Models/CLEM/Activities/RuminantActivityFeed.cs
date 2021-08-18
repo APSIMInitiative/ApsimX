@@ -88,6 +88,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityFeed()
         {
             this.SetDefaults();
+            TransactionCategory = "Livestock.Feed";
         }
 
         #region validation
@@ -122,21 +123,18 @@ namespace Models.CLEM.Activities
             FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            var herd = CurrentHerd(false);
             feedEstimated = 0;
             feedToSatisfy = 0;
             feedToOverSatisfy = 0;
 
             // get list from filters
-            foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+            foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
-                var selectedIndividuals = herd.Filter(child);
+                var selectedIndividuals = herd.FilterRuminants(child);
 
                 switch (FeedStyle)
                 {
@@ -215,7 +213,7 @@ namespace Models.CLEM.Activities
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Category = "Feed",
+                        Category = TransactionCategory,
                         RelatesToResource = this.PredictedHerdName
                     }
                 };
@@ -226,19 +224,15 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+            foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
             {
-                var subherd = herd.Filter(child).ToList();
+                var subherd = herd.FilterRuminants(child);
                 head += subherd.Count();
                 adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
             }
@@ -280,12 +274,10 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", this.PredictedHerdName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // labour shortfall if any
@@ -317,7 +309,7 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = item.ResourceTypeName,
                             ActivityModel = this,
                             Category = "Wastage",
-                            RelatesToResource = this.PredictedHerdName
+                            RelatesToResource = this.PredictedHerdName,
                         };
                         ResourceRequestList.Insert(0, wastedRequest);
                         item.Required -= wasted;
@@ -361,13 +353,11 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
-            List<Ruminant> herd = CurrentHerd(false);
-            if (herd != null && herd.Count > 0)
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
+            if (herd != null && herd.Any())
             {
                 double feedLimit = 0.0;
 
@@ -387,7 +377,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // get list from filters
-                foreach (Model child in this.Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
+                foreach (IFilterGroup child in Children.Where(a => a.GetType().ToString().Contains("RuminantFeedGroup")))
                 {
                     double value = 0;
                     if (child is RuminantFeedGroup)
@@ -399,7 +389,7 @@ namespace Models.CLEM.Activities
                         value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                     }
 
-                    foreach (Ruminant ind in herd.Filter(child))
+                    foreach (Ruminant ind in herd.FilterRuminants(child))
                     {
                         switch (FeedStyle)
                         {
@@ -447,38 +437,25 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForinitialisation()
         {
             return null;
         }
 
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ResourceShortfallOccurred;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
+        /// <inheritdoc/>
         public override event EventHandler ActivityPerformed;
 
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected override void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -486,11 +463,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

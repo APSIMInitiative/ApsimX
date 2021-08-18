@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Condition cutoff for conception
         /// </summary>
-        [Description("Condition index (wt/normalised wt) below which no conception")]
+        [Description("Condition index (wt/normalised wt for age) below which no conception")]
         [Required, GreaterThanValue(0)]
         public double ConditionCutOff { get; set; }
 

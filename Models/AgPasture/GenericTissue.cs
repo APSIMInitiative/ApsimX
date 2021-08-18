@@ -178,5 +178,11 @@
                 Digestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);
             }
         }
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs args)
+        {
+            ClearDailyDeltas();
+        }
     }
 }

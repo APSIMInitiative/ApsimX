@@ -10,6 +10,8 @@ using Models.Core.Attributes;
 using Models.CLEM.Reporting;
 using System.Globalization;
 using Models.CLEM.Interfaces;
+using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Resources
 {
@@ -18,14 +20,23 @@ namespace Models.CLEM.Resources
     /// Parent model of Ruminant Types.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyCategorisedView")]
-    [PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    //[ViewName("UserInterface.Views.PropertyCategorisedView")]
+    //[PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
+        /// <summary>
+        /// Transaction grouping style
+        /// </summary>
+        [Description("Herd transactions grouping style")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Herd transactions grouping style required")]
+        public RuminantTransactionsGroupingStyle TransactionStyle { get; set; }
+
         /// <summary>
         /// Current state of this resource.
         /// </summary>
@@ -78,7 +89,7 @@ namespace Models.CLEM.Resources
             {
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
-                if (herd.Count() > 0)
+                if (herd.Any())
                 {
                     // get list of all sucking individuals
                     var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.Age).OrderByDescending(a => a.Key);
@@ -86,11 +97,11 @@ namespace Models.CLEM.Resources
                     foreach (var sucklingList in sucklingGroups)
                     {
                         // get list of females of breeding age and condition
-                        List<RuminantFemale> breedFemales = herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList().Cast<RuminantFemale>().ToList();
+                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
-                        if (breedFemales.Count() == 0)
+                        if (!breedFemales.Any())
                         {
-                            if (sucklingList.Count() > 0)
+                            if (sucklingList.Any())
                             {
                                 Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
                                 break;
@@ -110,8 +121,6 @@ namespace Models.CLEM.Resources
                                     // if next new female set up some details
                                     if (breedFemales[0].ID != previousRuminantID)
                                     {
-                                        breedFemales[0].DryBreeder = false;
-
                                         //Initialise female milk production in at birth so ready for sucklings to consume
                                         double milkTime = (suckling.Age * 30.4) + 15; // +15 equivalent to mid month production
 
@@ -179,9 +188,8 @@ namespace Models.CLEM.Resources
                     // assigning values for the remaining females who haven't just bred.
                     // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
-                    foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)).Cast<RuminantFemale>().Where(a => !a.IsLactating & !a.IsPregnant))
+                    foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)))
                     {
-                        female.DryBreeder = true;
                         // generalised curve
                         double currentIPI = Math.Pow(herd[0].BreedParams.InterParturitionIntervalIntercept * (female.Weight / female.StandardReferenceWeight), herd[0].BreedParams.InterParturitionIntervalCoefficient);
                         // restrict minimum period between births (previously +61)
@@ -203,6 +211,8 @@ namespace Models.CLEM.Resources
                     }
                 }
             }
+            // group herd ready for reporting
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -242,7 +252,7 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = 1,
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
@@ -288,7 +298,7 @@ namespace Models.CLEM.Resources
             // report transaction of herd change
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = 1,
                 Activity = model as CLEMModel,
                 Category = ind.SaleFlag.ToString(),
@@ -313,6 +323,39 @@ namespace Models.CLEM.Resources
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
+        }
+
+        /// <summary>
+        /// Statstical summar of a list of numbers (e.g. attribute values)
+        /// </summary>
+        [JsonIgnore]
+        public ListStatistics LastListStatistics { get; set; }
+
+        /// <summary>
+        /// Return the mean and standard deviation of an attribute value
+        /// </summary>
+        public int SummariseAttribute(string tag, bool ignoreNotFound)
+        {
+            LastListStatistics = new ListStatistics();
+            if (Herd is null)
+            {
+                return 0;
+            }
+
+            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
+            if (values.Count() == 0)
+            {
+                return 0;
+            }
+            double sd = 0;
+            double mean = values.Average();
+            double sum = values.Sum(d => Math.Pow(d - mean, 2));
+            sd = Math.Sqrt((sum) / values.Count() - 1);
+            LastListStatistics.Average = mean;
+            LastListStatistics.StandardDeviation = sd;
+            LastListStatistics.Count = values.Count();
+            LastListStatistics.Total = Herd.Count();
+            return Herd.Count();
         }
 
         /// <summary>
@@ -352,6 +395,121 @@ namespace Models.CLEM.Resources
         /// </summary>
         public int NextUniqueID { get { return id++; } }
         private int id = 1;
+
+        #region group tracking
+
+        /// <summary>
+        /// Access to the herd grouped by transaction style for reporting in FinalizeTimeStep before EndTimeStep
+        /// </summary>
+        private IEnumerable<RuminantReportTypeDetails> groupedHerdForReporting;
+
+        /// <summary>
+        /// Overrides the base class method to allow for changes before end of month reporting
+        /// </summary>
+        [EventSubscribe("CLEMHerdSummary")]
+        private void OnCLEMHerdSummary(object sender, EventArgs e)
+        {
+            // group herd ready for reporting
+            // performed at herd summary to avoid end of step aging purchases etc
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+        }
+
+        /// <summary>
+        /// Get the specific report group with details to report from the grouped herd
+        /// </summary>
+        /// <param name="ruminantTypeName">Name of ruminant type</param>
+        /// <param name="groupName">Name of group category</param>
+        /// <returns>The group details</returns>
+        public RuminantReportGroupDetails GetRuminantReportGroup(string ruminantTypeName, string groupName)
+        {
+            if(groupedHerdForReporting.Any())
+            {
+                var rumGroup = groupedHerdForReporting.FirstOrDefault(a => a.RuminantTypeName == ruminantTypeName);
+                if(rumGroup != null)
+                {
+                    var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
+                    if (catGroup != null)
+                    {
+                        return catGroup;
+                    }
+                }
+            }
+            return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
+        }
+
+        /// <summary>
+        /// Generate the store for tracking individuals in groups for reporting
+        /// </summary>
+        /// <returns>Dicitonary of ResourceTypes and categories for each</returns>
+        public IEnumerable<string> GetReportingGroups(RuminantType ruminantType)
+        {
+            List<string> catNames = new List<string>();
+            switch (TransactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    catNames.Add("All");
+                    break;
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    var animalPricing = ruminantType.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                    if (animalPricing != null)
+                    {
+                        catNames.AddRange(animalPricing.FindAllChildren<AnimalPriceGroup>().Select(a => a.Name));
+                    }
+                    break;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
+                    break;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    var classes = Enum.GetNames(typeof(RuminantClass));
+                    foreach (var item in classes)
+                    {
+                        switch (item)
+                        {
+                            case "Castrate":
+                            case "Sire":
+                                catNames.Add($"{item}Male");
+                                break;
+                            default:
+                                catNames.Add($"{item}Female");
+                                catNames.Add($"{item}Male");
+                                break;
+                        }
+                    }
+                    break;
+            default:
+                    break;
+            }
+            return catNames;
+        }
+
+        /// <summary>
+        /// Group and summarize individuals by transaction style for reporting
+        /// </summary>
+        /// <param name="individuals">Individuals to summarize</param>
+        /// <param name="priceStyle">Price style to use</param>
+        /// <returns>A grouped summary of individuals</returns>
+        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle)
+        {
+            var groupedInd = from ind in individuals
+                                    group ind by ind.BreedParams.Name into breedGroup
+                                    select new RuminantReportTypeDetails()
+                                    {
+                                        RuminantTypeName = breedGroup.Key,
+                                        RuminantTypeGroup = from gind in breedGroup
+                                                 group gind by gind.GetTransactionCategory(TransactionStyle, priceStyle) into catind
+                                                 select new RuminantReportGroupDetails()
+                                                 {
+                                                     GroupName = catind.Key,
+                                                     Count = catind.Count(),
+                                                     TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
+                                                     TotalWeight = catind.Sum(a => a.Weight),
+                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle)?.CalculateValue(a))
+                                                 }
+                                    };
+            return groupedInd;
+        }
+
+        #endregion 
 
         #region Transactions
 
@@ -434,9 +592,88 @@ namespace Models.CLEM.Resources
         public override string ModelSummary(bool formatForParentControl)
         {
             string html = "";
+            html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";
+            switch (TransactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    html += " into a single transaction per RuminantType.";
+                    break;
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    html += " by the pricing groups provided for the RuminantType.";
+                    break;
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    html += " by the class of individual.";
+                    break;
+                default:
+                    break;
+            }
+            html += "</div>";
             return html;
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// A list of the ruminant type groups found in herd
+    /// </summary>
+    public class RuminantReportTypeDetails
+    {
+        /// <summary>
+        /// Name of ruminant type
+        /// </summary>
+        public string RuminantTypeName { get; set; }
+
+        /// <summary>
+        /// A list of all the details for the type
+        /// </summary>
+        public IEnumerable<RuminantReportGroupDetails> RuminantTypeGroup { get; set; }
+    }
+
+    /// <summary>
+    /// Details of a ruminant reporting group
+    /// </summary>
+    public class RuminantReportGroupDetails
+    {
+        /// <summary>
+        /// Name of group
+        /// </summary>
+        public string GroupName { get; set; }
+
+        /// <summary>
+        /// Number of individuals
+        /// </summary>
+        public int? Count { get; set; }
+
+        /// <summary>
+        /// Sum of adult equivalents
+        /// </summary>
+        public double? TotalAdultEquivalent { get; set; }
+
+        /// <summary>
+        /// Sum of weight
+        /// </summary>
+        public double? TotalWeight { get; set; }
+
+        /// <summary>
+        /// Sum of price
+        /// </summary>
+        public double? TotalPrice { get; set; }
+
+        /// <summary>
+        /// Average adult equivalents
+        /// </summary>
+        public double AverageAdultEquivalent { get { return (TotalAdultEquivalent??0.0) / Convert.ToDouble(Count??1); } }
+
+        /// <summary>
+        /// Average weight
+        /// </summary>
+        public double AverageWeight { get { return (TotalWeight ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
+
+        /// <summary>
+        /// Average price
+        /// </summary>
+        public double AveragePrice { get { return (TotalPrice ?? 0.0) / Convert.ToDouble(Count ?? 1); } }
+
     }
 }

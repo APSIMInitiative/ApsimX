@@ -92,6 +92,18 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
+
         #region Transactions
 
         /// <summary>
@@ -103,6 +115,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount
         /// </summary>
+        [JsonIgnore]
         public double Amount { get; set; }
 
         /// <summary>
@@ -148,7 +161,7 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = cohortToAdd.Number,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
@@ -190,7 +203,7 @@ namespace Models.CLEM.Resources
             LastCohortChanged = cohortToRemove;
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = cohortToRemove.Number,
                 Activity = activity,
                 Category = reason,

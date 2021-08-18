@@ -338,6 +338,14 @@
         {
             get
             {
+                if (lowerArraySpecifier != 0 && lowerArraySpecifier == upperArraySpecifier)
+                {
+                    if (property.PropertyType.HasElementType)
+                        return property.PropertyType.GetElementType();
+                    if (property.PropertyType.IsGenericType)
+                        return property.PropertyType.GenericTypeArguments.First();
+                    // return typeof(object); // this corresponds to the non-generic type IEnumetable.
+                }
                 return this.property.PropertyType;
             }
         }
@@ -354,103 +362,97 @@
                     obj = ProcessPropertyOfArrayElement();
                 else
                     obj = this.property.GetValue(this.Object, null);
-                if ((lowerArraySpecifier != 0 || upperArraySpecifier != 0)
-                    && obj != null 
-                    && obj is IList)
+                if (lowerArraySpecifier != 0 || upperArraySpecifier != 0)
                 {
-                    IList array = obj as IList;
-                    if (array.Count == 0)
-                        return null;
+                    if (obj is IList array)
+                    {
+                        if (array.Count == 0)
+                            return null;
 
-                    // Get the type of the items in the array.
-                    Type elementType;
-                    if (array.GetType().HasElementType)
-                        elementType = array.GetType().GetElementType();
+                        // Get the type of the items in the array.
+                        Type elementType;
+                        if (array.GetType().HasElementType)
+                            elementType = array.GetType().GetElementType();
+                        else
+                        {
+                            Type[] genericArguments = array.GetType().GetGenericArguments();
+                            if (genericArguments.Length > 0)
+                                elementType = genericArguments[0];
+                            else
+                                throw new Exception("Unknown type of array");
+                        }
+
+                        int startIndex = lowerArraySpecifier;
+                        if (startIndex == -1)
+                            startIndex = 1;
+
+                        int endIndex = upperArraySpecifier;
+                        if (endIndex == -1)
+                            endIndex = array.Count;
+
+                        int numElements = endIndex - startIndex + 1;
+                        Array values = Array.CreateInstance(elementType, numElements);
+                        for (int i = startIndex; i <= endIndex; i++)
+                        {
+                            int index = i - startIndex;
+                            if (i < 1 || i > array.Count)
+                                throw new Exception("Array index out of bounds while getting variable: " + this.Name);
+
+                            values.SetValue(array[i - 1], index);
+                        }
+                        if (values.Length == 1)
+                        {
+                            return values.GetValue(0);
+                        }
+
+                        return values;
+                    }
                     else
                     {
-                        Type[] genericArguments = array.GetType().GetGenericArguments();
-                        if (genericArguments.Length > 0)
-                            elementType = genericArguments[0];
-                        else
-                            throw new Exception("Unknown type of array");
+                        int index = lowerArraySpecifier != 0 ? lowerArraySpecifier : upperArraySpecifier;
+                        throw new Exception($"Array index {index} is invalid for {property.Name} ({property.Name} is not an array)");
                     }
-
-                    int startIndex = lowerArraySpecifier;
-                    if (startIndex == -1)
-                        startIndex = 1;
-
-                    int endIndex = upperArraySpecifier;
-                    if (endIndex == -1)
-                        endIndex = array.Count;
-
-                    int numElements = endIndex - startIndex + 1;
-                    Array values = Array.CreateInstance(elementType, numElements);
-                    for (int i = startIndex; i <= endIndex; i++)
-                    {
-                        int index = i - startIndex;
-                        if (i < 1 || i > array.Count)
-                            throw new Exception("Array index out of bounds while getting variable: " + this.Name);
-
-                        values.SetValue(array[i - 1], index);
-                    }
-                    if (values.Length == 1)
-                    {
-                        return values.GetValue(0);
-                    }
-
-                    return values;
                 }
+                
 
                 return obj;
             }
 
             set
             {
-                if (value is string)
+                Type targetType = DataType;
+                if (this.lowerArraySpecifier != 0)
+                {
+                    object obj = property.GetValue(this.Object, null);
+                    for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
+                    {
+                        if (obj is IList array)
+                        {
+                            if (targetType.IsGenericType)
+                                targetType = targetType.GenericTypeArguments.First();
+                            object newValue = value;
+                            if (value is IList list)
+                            {
+                                if ((i - 1) < list.Count)
+                                    newValue = list[i - 1];
+                                else if (list.Count == 1)
+                                    newValue = list[0];
+                                else
+                                    throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
+                            }
+                            if (newValue is string str && targetType != typeof(string))
+                                newValue = ReflectionUtilities.StringToObject(targetType, str);
+                            array[i - 1] = newValue; // this will modify obj as well
+                        }
+                    }
+                    this.property.SetValue(this.Object, obj, null);
+                }
+                else if (value is string)
                 {
                     this.SetFromString(value as string);
                 }
                 else
-                {
-                    if (this.lowerArraySpecifier != 0)
-                    {
-                        object obj = null;
-                        try
-                        {
-                            obj = this.property.GetValue(this.Object, null);
-                        }
-                        catch (Exception err)
-                        {
-                            throw err.InnerException;
-                        }
-                        for (int i = lowerArraySpecifier; i <= upperArraySpecifier; i++)
-                        {
-                            IList array = obj as IList;
-                            if (array != null)
-                            {
-                                object newValue = value;
-                                if (newValue != null)
-                                {
-                                    IList list = value as IList;
-                                    if (list != null)
-                                    {
-                                        if ((i - 1) < list.Count)
-                                            newValue = list[i - 1];
-                                        else if (list.Count == 1)
-                                            newValue = list[0];
-                                        else
-                                            throw new Exception(string.Format("Array index {0} out of bounds. Array length = {1}", i - 1, list.Count));
-                                    }
-                                }
-
-                                array[i - 1] = newValue; // this will modify obj as well
-                            }
-                        }
-                        this.property.SetValue(this.Object, obj, null);
-                    }
-                    else
-                        this.property.SetValue(this.Object, value, null);
-                }
+                    this.property.SetValue(this.Object, value, null);
             }
         }
 

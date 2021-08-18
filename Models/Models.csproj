@@ -3,14 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -18,12 +17,10 @@
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.1'">
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
-    <OutputPath>..\NetCoreBin\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
     <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-    <OutputPath>..\Bin\</OutputPath>
   </PropertyGroup>
   
   <ItemGroup>
@@ -46,7 +43,6 @@
     <PackageReference Include="MathNet.Numerics" Version="4.11.0" />
     <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.CodeDom" Version="5.0.0-preview.5.20278.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.1" />
@@ -89,6 +85,7 @@
     <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
 	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
   <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -99,7 +96,7 @@
   </ItemGroup>
 
   <Target Name="CopySQLiteBinary" BeforeTargets="BeforeBuild">
-    <Exec Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" command="copy ..\DeploymentSupport\Windows\Bin64\sqlite3.dll $(OutputPath)\* &gt;nul" />
+    <Copy Condition="'$(OS)' == 'Windows_NT'" ContinueOnError="WarnAndContinue" SkipUnchangedFiles="true" SourceFiles="..\DeploymentSupport\Windows\Bin64\sqlite3.dll" DestinationFolder="$(OutputPath)" />
   </Target>
 
 </Project>

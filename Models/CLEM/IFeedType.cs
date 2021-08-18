@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,8 @@ namespace Models.CLEM
         /// <summary>
         /// Amount (kg)
         /// </summary>
+        [JsonIgnore]
         new double Amount { get; }
+
     }
 }

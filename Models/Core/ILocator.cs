@@ -27,6 +27,13 @@ namespace Models.Core
         /// <returns>The found object or null if not found</returns>
         IVariable GetObject(string namePath);
 
+        /// <summary>
+        /// Get the properties of the underlying variable object for the given path.
+        /// Unlike the GetObject method, this does not return the data value of the object.
+        /// </summary>
+        /// <param name="namePath">The name of the variable to return</param>
+        /// <returns>The found object or null if not found</returns>
+        IVariable GetObjectProperties(string namePath);
 
     }
 }

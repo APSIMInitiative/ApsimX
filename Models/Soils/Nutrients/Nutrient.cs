@@ -136,8 +136,12 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
-                int numLayers = values.Length;
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
                 IEnumerable<NutrientPool> pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in pools)
@@ -155,9 +159,14 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
 
-                foreach (CarbonFlow f in FindAllChildren<CarbonFlow>())
+                foreach (CarbonFlow f in FindAllDescendants<CarbonFlow>())
                     values = MathUtilities.Add(values, f.Catm);
                 return values;
             }
@@ -171,9 +180,14 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
 
-                foreach (NFlow f in FindAllChildren<NFlow>())
+                foreach (NFlow f in FindAllDescendants<NFlow>())
                     values = MathUtilities.Add(values, f.Natm);
                 return values;
             }
@@ -187,9 +201,14 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
 
-                foreach (NFlow f in FindAllChildren<NFlow>())
+                foreach (NFlow f in FindAllDescendants<NFlow>())
                     values = MathUtilities.Add(values, f.N2Oatm);
                 return values;
             }
@@ -203,7 +222,12 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
 
                 // Get a list of N flows that make up mineralisation.
                 // All flows except the surface residue N flow.
@@ -239,7 +263,12 @@
                 // Get the denitrification N flow under NO3.
                 var no3NFlow = (NO3 as IModel).FindChild<NFlow>("Denitrification");
 
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
                 for (int i = 0; i < values.Length; i++)
                     values[i] = no3NFlow.Value[i] + no3NFlow.Natm[i];
 
@@ -256,7 +285,12 @@
                 // Get the denitrification N flow under NO3.
                 var nh4NFlow = (NH4 as IModel).FindChild<NFlow>("Nitrification");
 
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
                 for (int i = 0; i < values.Length; i++)
                     values[i] = nh4NFlow.Value[i] + nh4NFlow.Natm[i];
 
@@ -285,7 +319,12 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.C.Length];
+                int numLayers;
+                if (FOMLignin.C == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.C.Length;
+                double[] values = new double[numLayers];
                 double[] nh4 = NH4.kgha;
                 double[] no3 = NO3.kgha;
                 values = MathUtilities.Add(values, nh4);
@@ -333,8 +372,12 @@
         {
             get
             {
-                double[] values = new double[FOMLignin.N.Length];
-                int numLayers = values.Length;
+                int numLayers;
+                if (FOMLignin.N == null)
+                    numLayers = 0;
+                else
+                    numLayers = FOMLignin.N.Length;
+                double[] values = new double[numLayers];
                 IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
 
                 foreach (NutrientPool P in Pools)

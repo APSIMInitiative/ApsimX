@@ -64,7 +64,7 @@ namespace UnitTests
             string rowFilter = null;
             if (checkpointName != null)
                 rowFilter += "CheckpointName = '" + checkpointName + "'";
-            if (simulationNames != null)
+            if (simulationNames != null && simulationNames.Any())
             {
                 if (rowFilter != null) rowFilter += " AND ";
                 rowFilter += $"SimulationName in ({simulationNames.Enclose("'","'").Join(",")})";
@@ -174,6 +174,22 @@ namespace UnitTests
             simulationID = 0;
             return true;
         }
-    }
 
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            var ids = new List<int>();
+
+            foreach (var name in simulationNames)
+            {
+                string id = name.Replace("Sim", "");
+                ids.Add(Convert.ToInt32(id));
+            }
+            return ids;
+        }
+		
+		public void ExecuteSql(string sql)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

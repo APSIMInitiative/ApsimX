@@ -24,7 +24,7 @@ namespace Models.PMF.Struct
 	/// </remarks>
 	[Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
-	[ViewName("UserInterface.Views.GridView")]
+	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
@@ -129,10 +129,10 @@ namespace Models.PMF.Struct
 		private IFunction aX0 = null;
 
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction noSeed = null;
+		private IFunction leafNumSeed = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction initRate = null;
+		private IFunction leafInitRate = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction noRateChange1 = null;
@@ -259,11 +259,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltPotentialLAI;
+				return leaf.DltPotentialLAI;
 			}
 			set
 			{
-				leaf.dltPotentialLAI = value;
+				leaf.DltPotentialLAI = value;
 			}
 		}
 
@@ -274,11 +274,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltStressedLAI;
+				return leaf.DltStressedLAI;
 			}
 			set
 			{
-				leaf.dltStressedLAI = value;
+				leaf.DltStressedLAI = value;
 			}
 		}
 
@@ -443,8 +443,8 @@ namespace Models.PMF.Struct
 			{
 				LeafNoCorrection = leafNoCorrection,
 				AX0 = aX0,
-				NoSeed = noSeed,
-				InitRate = initRate,
+				NoSeed = leafNumSeed,
+				InitRate = leafInitRate,
 				AppearanceRate1 = appearanceRate1,
 				AppearanceRate2 = appearanceRate2,
 				AppearanceRate3 = appearanceRate3,
@@ -484,6 +484,8 @@ namespace Models.PMF.Struct
 			dltLeafNo = 0;
 			tpla = 0;
 			radiationValues = new List<double>();
+
+			NLeaves = 0;
 		}
 
 		/// <summary>
@@ -844,7 +846,7 @@ namespace Models.PMF.Struct
 				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipDensityScale;
 				linearLAI = pltsPerMetre * tpla / 10000.0;
 
-				double laiToday = leaf.calcLAI();
+				double laiToday = leaf.CalcLAI();
 				bool newLeaf = newLeafNo > currentLeafNo;
 				//is it a new leaf, and it is > leaf 6 (leaf 5 appearance triggers initial tiller appeaance)
 				//	bool newTiller = newLeaf && newLeafNo >= 6 && laiToday < maxLAIForTillering; 
