@@ -346,9 +346,6 @@
         /// </summary>
         public BiomassSupplyType DMSupply { get; set; }
 
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
-
         /// <summary>
         /// The nitrogen supply.
         /// </summary>
@@ -833,6 +830,9 @@
                 DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
+                DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
+                DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
             }
             else
             {
@@ -864,10 +864,6 @@
         {
             startLive = new Biomass();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

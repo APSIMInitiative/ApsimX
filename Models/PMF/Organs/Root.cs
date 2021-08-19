@@ -104,11 +104,6 @@
         [Units("g/m2/d")]
         private BiomassDemand dmDemands = null;
 
-        /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Units("g/m2/d")]
-        private BiomassDemand dmDemandPriorityFactors = null;
-
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d/ppm")]
@@ -231,9 +226,6 @@
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -618,22 +610,12 @@
                     DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
                     DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                     DMDemand.Metabolic = 0;
+                    DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                    DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
+                    DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
                 }
                 else
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
-
-                if (dmDemandPriorityFactors != null)
-                {
-                    DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                    DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                    DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-                }
-                else
-                {
-                    DMDemandPriorityFactor.Structural = 1.0;
-                    DMDemandPriorityFactor.Metabolic = 1.0;
-                    DMDemandPriorityFactor.Storage = 1.0;
-                }
             }
         }
 
@@ -1138,7 +1120,6 @@
 
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
