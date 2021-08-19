@@ -352,7 +352,7 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, IPlant, ICanopy, IUptake
+    public class Sugarcane : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
