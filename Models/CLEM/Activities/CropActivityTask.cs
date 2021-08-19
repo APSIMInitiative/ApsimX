@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        private Clock Clock = null;
 
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;

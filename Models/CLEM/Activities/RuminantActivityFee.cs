@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityFee: CLEMModel
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Bank account to use

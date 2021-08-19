@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private List<string> warningsMultipleEntry = new List<string>();
         private List<string> warningsNotFound = new List<string>();

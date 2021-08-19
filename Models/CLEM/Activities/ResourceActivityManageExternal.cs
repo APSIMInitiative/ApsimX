@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityManageExternal: CLEMActivityBase
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private FileResource fileResource = null;
         private FinanceType bankAccount = null;

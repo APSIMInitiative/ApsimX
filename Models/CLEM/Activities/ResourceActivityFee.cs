@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     public class ResourceActivityFee: CLEMModel
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers

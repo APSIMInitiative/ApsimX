@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Number of hours grazed

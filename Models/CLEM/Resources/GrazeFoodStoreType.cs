@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]
-        ZoneCLEM zoneCLEM = null;
+        private ZoneCLEM zoneCLEM = null;
 
         /// <summary>
         /// Unit type

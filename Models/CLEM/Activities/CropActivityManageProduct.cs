@@ -27,9 +27,9 @@ namespace Models.CLEM.Activities
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
         [Link]
-        Simulation simulation = null;
+        private Simulation simulation = null;
 
         private ActivityCutAndCarryLimiter limiter;
         private string addReason = "Harvest";

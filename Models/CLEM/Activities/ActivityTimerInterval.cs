@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok

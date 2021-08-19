@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private bool gotLandRequested = false; //was this crop able to get the land it requested ?
         private int currentCropIndex = 0;

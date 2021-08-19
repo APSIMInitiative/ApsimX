@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Start date of period to perform activities

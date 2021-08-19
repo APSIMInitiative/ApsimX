@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Paddock or pasture to graze

@@ -37,7 +37,7 @@ namespace Models.CLEM.Reporting
         [Link]
         private ResourcesHolder resources = null;
         [Link]
-        ISummary summary = null;
+        private ISummary summary = null;
 
         /// <summary>
         /// Style of transaction report to use

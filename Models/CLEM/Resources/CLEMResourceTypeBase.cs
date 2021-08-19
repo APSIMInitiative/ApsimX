@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// A link to the equivalent market store for trading.

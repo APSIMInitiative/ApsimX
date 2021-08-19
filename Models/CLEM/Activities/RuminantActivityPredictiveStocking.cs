@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Month for assessing dry season feed requirements

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Months before harvest to start performing activities

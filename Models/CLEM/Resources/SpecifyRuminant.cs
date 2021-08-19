@@ -30,7 +30,7 @@ namespace Models.CLEM.Resources
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         private RuminantType ruminantType;
 

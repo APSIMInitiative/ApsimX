@@ -32,9 +32,9 @@ namespace Models.CLEM
     public class ZoneCLEM: Zone, IValidatableObject, ICLEMUI, ICLEMDescriptiveSummary
     {
         [Link]
-        Summary summary = null;
+        private Summary summary = null;
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Identifies the last selected tab for display

@@ -28,7 +28,7 @@ namespace Models.CLEM.Resources
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         [NonSerialized]
         private object pasture = new object();

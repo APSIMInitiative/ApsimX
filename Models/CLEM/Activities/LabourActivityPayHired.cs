@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private FinanceType bankAccount;
         private Labour labour;

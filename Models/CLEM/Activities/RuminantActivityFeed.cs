@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         // amount requested
         private double feedEstimated = 0;

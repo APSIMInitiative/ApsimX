@@ -30,7 +30,7 @@ namespace Models.CLEM
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
-        Summary summary = null;
+        private Summary summary = null;
 
         private ResourcesHolder resources;
 

@@ -30,9 +30,9 @@ namespace Models.CLEM.Activities
     public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
         [Link]
-        ZoneCLEM zoneCLEM = null;
+        private ZoneCLEM zoneCLEM = null;
 
         private double unitsOfArea2Ha;
         private IFilePasture filePasture = null;

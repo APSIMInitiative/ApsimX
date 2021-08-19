@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount;
 
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household

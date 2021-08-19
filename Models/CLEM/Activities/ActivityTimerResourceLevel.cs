@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Name of resource to check

@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private Relationship pastureToStockingChangeElNino { get; set; }
         private Relationship pastureToStockingChangeLaNina { get; set; }

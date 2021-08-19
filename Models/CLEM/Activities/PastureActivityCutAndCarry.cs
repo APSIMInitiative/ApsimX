@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         private GrazeFoodStoreType pasture { get; set; }
         private AnimalFoodStoreType foodstore { get; set; }

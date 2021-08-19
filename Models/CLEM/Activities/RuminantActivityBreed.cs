@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityBreed : CLEMRuminantActivityBase
     {
         [Link]
-        Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
