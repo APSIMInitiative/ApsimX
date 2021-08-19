@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
-    public class RuminantActivityGroup : FilterGroup<Ruminant>
+    public class RuminantActivityGroup : RuminantFilterGroup
     {
         #region descriptive summary
 

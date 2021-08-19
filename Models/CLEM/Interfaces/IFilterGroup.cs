@@ -18,11 +18,6 @@ namespace Models.CLEM.Interfaces
         IEnumerable<string> Parameters { get; }
 
         /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        object CombinedRules { get; set; }
-
-        /// <summary>
         /// The proportion of the filtered group to use
         /// </summary>
         double Proportion { get; set; }

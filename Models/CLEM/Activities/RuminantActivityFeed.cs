@@ -30,9 +30,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
     public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        Clock Clock = null;
-
         /// <summary>
         /// Name of Feed to use (with Resource Group name appended to the front [separated with a '.'])
         /// eg. AnimalFoodStore.RiceStraw
@@ -131,9 +128,9 @@ namespace Models.CLEM.Activities
             feedToOverSatisfy = 0;
 
             // get list from filters
-            foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
+            foreach (var child in Children.OfType<RuminantFeedGroup>())
             {
-                var selectedIndividuals = herd.FilterProportion(child);
+                var selectedIndividuals = child.FilterProportion(herd);
 
                 switch (FeedStyle)
                 {
@@ -157,7 +154,7 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
+                    //value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                 }
 
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
@@ -231,7 +228,7 @@ namespace Models.CLEM.Activities
             double adultEquivalents = 0;
             foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
             {
-                var subherd = herd.FilterRuminants(child);
+                var subherd = child.Filter(herd);
                 head += subherd.Count();
                 adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
             }
@@ -376,7 +373,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // get list from filters
-                foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
+                foreach (var child in Children.OfType<RuminantFeedGroup>())
                 {
                     double value = 0;
                     if (child is RuminantFeedGroup)
@@ -385,10 +382,10 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
+                        //value = (child as RuminantFeedGroupMonthly).MonthlyValues[Clock.Today.Month - 1];
                     }
 
-                    foreach (Ruminant ind in herd.FilterProportion(child))
+                    foreach (Ruminant ind in child.FilterProportion(herd))
                     {
                         switch (FeedStyle)
                         {

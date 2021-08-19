@@ -270,7 +270,7 @@ namespace Models.CLEM.Resources
             {
                 foreach (var availItem in availabilityList.FindAllChildren<ILabourSpecificationItem>())
                 {
-                    if (checkList.Filter(availItem).Any())
+                    if (availItem is IFilterGroup group && group.Filter(checkList).Any())
                     {
                         labour.LabourAvailability = availItem;
                         break;

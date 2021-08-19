@@ -101,9 +101,9 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, "No ruminant herd has been defined for [a=" + this.Name + "]" + Environment.NewLine + "You need to add Ruminants to the resources section of this simulation setup.");
             }
             IEnumerable<Ruminant> herd = HerdResource.Herd;
-            foreach (RuminantActivityGroup filter in HerdFilters)
+            foreach (RuminantActivityGroup group in HerdFilters)
             {
-                herd = herd.FilterRuminants(filter);
+                herd = group.Filter(herd);
             }
             return herd;
         }

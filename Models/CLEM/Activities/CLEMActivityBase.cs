@@ -432,7 +432,7 @@ namespace Models.CLEM.Activities
                         if (item.ApplyToAll)
                         {
                             // how many matches
-                            numberOfPpl = Resources.FindResourceGroup<Labour>().Items.Filter(fg).Count();
+                            numberOfPpl = fg.Filter(Resources.FindResourceGroup<Labour>().Items).Count();
                         }
                         for (int i = 0; i < numberOfPpl; i++)
                         {

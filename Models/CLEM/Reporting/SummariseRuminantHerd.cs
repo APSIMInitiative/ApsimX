@@ -107,8 +107,8 @@ namespace Models.CLEM
         {
             timestep++;
             IEnumerable<Ruminant> herd = ruminantHerd?.Herd;
-            foreach (RuminantGroup filter in herdFilters)
-                herd = herd.FilterRuminants(filter);
+            foreach (RuminantGroup group in herdFilters)
+                herd = group.Filter(herd);
 
             // group by breed
             foreach (var breedGroup in herd.GroupBy(a => a.Breed))

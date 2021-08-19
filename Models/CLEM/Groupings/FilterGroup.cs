@@ -45,11 +45,7 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IEnumerable<string> Parameters => properties.Keys;         
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public object CombinedRules { get; set; }
+        public IEnumerable<string> Parameters => properties.Keys;
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -59,7 +55,7 @@ namespace Models.CLEM
         public PropertyInfo GetProperty(string name) => properties[name];
 
         /// <inheritdoc/>
-        public IEnumerable<T> Filter<T>(IEnumerable<T> source)
+        public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source)
         {
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
@@ -67,7 +63,7 @@ namespace Models.CLEM
             var rules = FindAllChildren<Filter>().Select(filter => filter.CompileRule<T>());
 
             return rules.Any() ? source.Where(item => rules.All(rule => rule(item))) : source;
-        }        
+        }
     }
 
 }

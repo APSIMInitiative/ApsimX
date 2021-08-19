@@ -25,7 +25,7 @@ namespace Models.CLEM.Groupings
     [Description("No longer supported. Please use RuminantGroup.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantDestockGroup.htm")]
-    public class RuminantDestockGroup : FilterGroup<Ruminant>, IValidatableObject
+    public class RuminantDestockGroup : RuminantFilterGroup, IValidatableObject
     {
         /// <summary>
         /// Constructor

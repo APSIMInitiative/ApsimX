@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                 switch (FeedStyle)
                 {
                     case OtherAnimalsFeedActivityTypes.SpecifiedDailyAmount:
-                        amount += (group as OtherAnimalsFilterGroup).MonthlyValues[month] * 30.4 * total;
+                        amount += group.MonthlyValues[month] * 30.4 * total;
                         break;
                     case OtherAnimalsFeedActivityTypes.ProportionOfWeight:
                         throw new NotImplementedException("Proportion of weight is not implemented as a feed style for other animals");
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = Math.Ceiling(allIndividuals / requirement.UnitSize) * requirement.LabourPerUnit;
                     break;
                 default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                    throw new Exception(string.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, "Other animals");
         }

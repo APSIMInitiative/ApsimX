@@ -24,7 +24,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
+    public class AnimalPriceGroup : RuminantFilterGroup, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
