@@ -83,8 +83,8 @@ namespace Models.CLEM.Activities
             foreach (LabourFeedGroup child in FindAllChildren<LabourFeedGroup>())
             {
                 double value = child.Value;
-
-                foreach (LabourType ind in labour?.Items.Filter(child))
+                
+                foreach (LabourType ind in child.Filter(labour?.Items))
                 {
                     // feed limited to the daily intake per ae set in HumanFoodStoreType
                     switch (FeedStyle)

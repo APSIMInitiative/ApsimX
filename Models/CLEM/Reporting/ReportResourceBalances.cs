@@ -9,6 +9,7 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using Models.Storage;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {

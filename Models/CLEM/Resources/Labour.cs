@@ -268,7 +268,7 @@ namespace Models.CLEM.Resources
             // if not assign new value
             if (labour.LabourAvailability == null)
             {
-                foreach (Model availItem in availabilityList.FindAllChildren<LabourSpecificationItem>())
+                foreach (var availItem in availabilityList.FindAllChildren<ILabourSpecificationItem>())
                 {
                     if (checkList.Filter(availItem).Any())
                     {
@@ -391,10 +391,14 @@ namespace Models.CLEM.Resources
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
                 {
                     if (item.Filter(labourList).Count() == 1 && matchIndividual == null)                    
-                        matchIndividual = item;                    
+                        matchIndividual = item;
 
-                    // check that pricing item meets the specified criteria.                    
-                    if (item.FindAllChildren<LabourFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    // check that pricing item meets the specified criteria.
+                    var items = item.FindAllChildren<FilterByProperty>()
+                        .Where(f => item.GetProperty(f.Parameter) == property)
+                        .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
+
+                    if (items.Any())
                     {
                         if (matchCriteria == null)
                         {

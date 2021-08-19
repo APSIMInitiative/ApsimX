@@ -169,7 +169,7 @@ namespace Models.CLEM.Resources
                 }
 
                 // no price match found.
-                string warningString = $"No [{purchaseStyle.ToString()}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.GenderAsString}] [f=weight: {ind.Weight.ToString("##0")}]";
+                string warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.Sex}] [f=weight: {ind.Weight.ToString("##0")}]";
 
                 if (!Warnings.Exists(warningString))
                 {

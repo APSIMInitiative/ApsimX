@@ -58,6 +58,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Takes the conditions set by the user and converts them to a logical test as a lambda expression
         /// </summary>
+        //[EventSubscribe("StartOfSimulation")]
         public abstract Func<T, bool> CompileRule<T>();
     }
 }

@@ -459,7 +459,7 @@ namespace Models.CLEM.Activities
                     {
                         // breeders
                         int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
+                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
@@ -486,7 +486,7 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
-                            var breeders = individuals.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
+                            var breeders = individuals.Where(a => a.Sex == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in breeders)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
@@ -804,7 +804,7 @@ namespace Models.CLEM.Activities
 
                             // remove young males from sale herd to replace breeding sires (not those sold because too old)
                             // only consider individuals that will mature in next 12 months
-                            foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.None) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
+                            foreach (RuminantMale male in herd.Where(a => a.Sex == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.None) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
@@ -817,7 +817,7 @@ namespace Models.CLEM.Activities
                             // if still insufficent, look into current growing out herd for replacement before they are castrated below
                             // try get best male from grow out herd (not castrated)
                             // only consider individuals that will mature in next 12 months
-                            foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
+                            foreach (RuminantMale male in growOutHerd.Where(a => a.Sex == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
@@ -839,7 +839,7 @@ namespace Models.CLEM.Activities
                         // get grow-out males that are not castrated and not marked as replacement breeder
                         if (CastrateGrowOutMales)
                         {
-                            foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && !a.ReplacementBreeder && !a.Attributes.Exists("Castrated")))
+                            foreach (RuminantMale male in growOutHerd.Where(a => a.Sex == Sex.Male && !a.ReplacementBreeder && !a.Attributes.Exists("Castrated")))
                             {
                                 male.Attributes.Add("Castrated");
                             } 
@@ -1000,7 +1000,7 @@ namespace Models.CLEM.Activities
                             // can only remove those that will make breeder age in the next year before management
                             // includes suitable pre-breeders
                             // also includes suitable females in the grow out herd marked with AgeWeightSale
-                            foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            foreach (RuminantFemale female in herd.Where(a => a.Sex == Sex.Female & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 // keep by removing any tag for sale.
                                 female.SaleFlag = HerdChangeReason.None;
@@ -1013,7 +1013,7 @@ namespace Models.CLEM.Activities
                         // remove grow out heifers from grow out if of breeding in next year age
                         if (SellFemalesLikeMales & femaleBreedersRequired > 0)
                         {
-                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            foreach (Ruminant female in herd.Where(a => a.Sex == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 female.Attributes.Remove("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;

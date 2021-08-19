@@ -95,11 +95,6 @@ namespace Models.CLEM.Resources
         public abstract Sex Sex { get; }
 
         /// <summary>
-        /// Gender as string for reports
-        /// </summary>
-        public string GenderAsString { get { return Sex.ToString().Substring(0,1); } }
-
-        /// <summary>
         /// Marked as a replacement breeder
         /// </summary>
         public bool ReplacementBreeder { get; set; }
@@ -671,12 +666,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Factory for creating ruminants based on provided values
         /// </summary>
-        public static Ruminant Create(Sex sex, RuminantType type, double age = 0, double weight = 0)
+        public static Ruminant Create(Sex sex, RuminantType parameters, double age = 0, double weight = 0)
         {
             if (sex == Sex.Male)
-                return new RuminantMale(type, age, weight);
+                return new RuminantMale(parameters, age, weight);
             else
-                return new RuminantFemale(type, age, weight);
+                return new RuminantFemale(parameters, age, weight);
         }
     }
 

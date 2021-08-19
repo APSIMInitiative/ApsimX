@@ -111,8 +111,7 @@ namespace Models.CLEM.Activities
             // TODO: remove oftype when sex determination fixed
             var females = controlledMatingParent.CurrentHerd(true).OfType<RuminantFemale>();
 
-            //var breedersList = females.Where(r => r.IsBreeder);
-            var breedersList = controlledMatingParent.CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>();
+            var breedersList = females.Where(r => r.IsBreeder);
 
             var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= breedParams.MaximumAgeMating);
             if (!breedersNotTooOldToMate.Any())
