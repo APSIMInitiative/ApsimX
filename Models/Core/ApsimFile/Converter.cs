@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 138; } }
+        public static int LatestVersion { get { return 139; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3538,11 +3538,33 @@
         }
 
         /// <summary>
-        /// Add priority factor functions into each demand function 
+        /// Remove all parameters from sugarcane and change it to use the sugarcane resource.
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion138(JObject root, string fileName)
+        {
+            foreach (JObject sugar in JsonUtilities.ChildrenRecursively(root, "Sugarcane"))
+            {
+                if (sugar["ResourceName"] == null || sugar["ResourceName"].ToString() != "Sugarcane")
+                {
+                    sugar.RemoveAll();
+                    sugar["$type"] = "Models.Sugarcane, Models";
+                    sugar["Name"] = "Sugarcane";
+                    sugar["ResourceName"] = "Sugarcane";
+                    sugar["IncludeInDocumentation"] = true;
+                    sugar["Enabled"] = true;
+                    sugar["ReadOnly"] = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add priority factor functions into each demand function 
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion139(JObject root, string fileName)
         {
             foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
             {
