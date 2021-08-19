@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Provate method to determin resources required for this activity in the current month
+        /// Private method to determine resources required for this activity in the current month
         /// This method is local to this activity and not called with CLEMGetResourcesRequired event
         /// </summary>
         /// <param name="breederList">The breeders being mated</param>

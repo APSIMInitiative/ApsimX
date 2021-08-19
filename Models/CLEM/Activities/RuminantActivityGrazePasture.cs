@@ -197,7 +197,6 @@ namespace Models.CLEM.Activities
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
             OnActivityPerformed(e);
-            //ActivityPerformed?.Invoke(sender, e);
         }
 
         /// <inheritdoc/>

@@ -34,7 +34,7 @@ namespace Models.CLEM
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     {
         [Link]
-        private  Clock clock = null;
+        private Clock clock = null;
 
         private List<ValidationResult> validationResults;
         private RainfallShuffler shuffler = null;

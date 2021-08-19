@@ -25,10 +25,9 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Pasture/BurnPasture.htm")]
     public class PastureActivityBurn: CLEMActivityBase
     {
-        private GrazeFoodStoreType pasture { get; set; }
-        private GreenhouseGasesType methaneStore { get; set; }
-        private GreenhouseGasesType n2oStore { get; set; }
-
+        private GrazeFoodStoreType pasture;
+        private GreenhouseGasesType methaneStore;
+        private GreenhouseGasesType n2oStore;
 
         /// <summary>
         /// Minimum proportion green for fire to carry

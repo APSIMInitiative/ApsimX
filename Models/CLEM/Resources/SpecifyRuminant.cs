@@ -71,7 +71,7 @@ namespace Models.CLEM.Resources
         /// Records if a warning about set weight occurred
         /// </summary>
         [JsonIgnore]
-        public bool WeightWarningOccurred = false;
+        public bool WeightWarningOccurred { get; private set; } = false;
 
         /// <summary>
         /// Constructor

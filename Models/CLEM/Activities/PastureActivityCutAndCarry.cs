@@ -29,8 +29,8 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        private GrazeFoodStoreType pasture { get; set; }
-        private AnimalFoodStoreType foodstore { get; set; }
+        private GrazeFoodStoreType pasture;
+        private AnimalFoodStoreType foodstore;
         private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>

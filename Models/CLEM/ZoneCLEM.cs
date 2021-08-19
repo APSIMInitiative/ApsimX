@@ -354,7 +354,7 @@ namespace Models.CLEM
         #region Descriptive summary
 
         ///<inheritdoc/>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
+        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
