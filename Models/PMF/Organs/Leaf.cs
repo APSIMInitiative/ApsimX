@@ -60,7 +60,7 @@ namespace Models.PMF.Organs
         /// <summary>Factors for assigning priority to DM demands</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemandPriorityFactors = null;
+        private BiomassPoolType dmDemandPriorityFactors = null;
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
@@ -1557,9 +1557,9 @@ namespace Models.PMF.Organs
 
             if (dmDemandPriorityFactors != null)
             {
-                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
+                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural;
+                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic;
+                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage;
             }
             else
             {
