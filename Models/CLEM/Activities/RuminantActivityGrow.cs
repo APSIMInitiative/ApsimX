@@ -77,13 +77,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-            {
                 methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-            }
             else
-            {
                 methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            }
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
             ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
         }
@@ -437,7 +433,6 @@ namespace Models.CLEM.Activities
             double intakeDaily = ind.Intake / 30.4;
 
             // Sme 1 for females and castrates
-            // TODO: castrates available but not implemented
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
             if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)

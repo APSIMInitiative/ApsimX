@@ -241,7 +241,7 @@ namespace Models.CLEM
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <param name="htmlString"></param>
         /// <returns></returns>
-        public virtual string GetFullSummary(object model, bool formatForParentControl, string htmlString)
+        public virtual string GetFullSummary(IModel model, bool formatForParentControl, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -256,12 +256,21 @@ namespace Models.CLEM
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
 
-                    foreach (var item in (model as IModel).Children)
-                    {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString));
-                    }
+                    bool reportMemosInPlace = false;
+                    // think through the various model types that do not support memos being writen within children
+                    // for example all the filters in a filter group and timers and cohorts 
+                    // basically anyting that does special actions with all the children
+                    // if if the current model supports memos in place set reportMemosInPlace to true.
 
-                    htmlWriter.Write(AddMemosToSummary(model as IModel));
+                    foreach (var item in (model).Children)
+                    {
+                        if (reportMemosInPlace && item is Memo)
+                            htmlWriter.Write($"<div class='memo-container'><div class='memo-head'>Memo</div><div class='memo-text'>{(item as Memo).Text}</div></div>");
+                        else
+                            htmlWriter.Write(GetFullSummary(item, true, htmlString));
+                    }
+                    if(!reportMemosInPlace)
+                        htmlWriter.Write(AddMemosToSummary(model));
 
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
 
