@@ -632,6 +632,9 @@
             NDemand.Storage = nDemands.Storage.Value();
             if (NDemand.Storage < 0)
                 throw new Exception("Structural N demand function in root returning negative, check parameterisation");
+            NDemand.QStructuralPriority = nDemands.QStructuralPriority.Value();
+            NDemand.QStoragePriority = nDemands.QStoragePriority.Value();
+            NDemand.QMetabolicPriority = nDemands.QMetabolicPriority.Value();
 
             foreach (ZoneState Z in Zones)
             {

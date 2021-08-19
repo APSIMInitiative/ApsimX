@@ -323,6 +323,9 @@
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
+            NDemand.QStructuralPriority = nDemands.QStructuralPriority.Value();
+            NDemand.QStoragePriority = nDemands.QStoragePriority.Value();
+            NDemand.QMetabolicPriority = nDemands.QMetabolicPriority.Value();
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
