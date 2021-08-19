@@ -220,6 +220,12 @@ namespace UserInterface.Views
         private string GetFilter()
         {
             var filter = rowFilter;
+            string checkpointFilter = $"CheckpointID = {dataStore.GetCheckpointID(checkpointName)}";
+            if (string.IsNullOrEmpty(filter))
+                filter = checkpointFilter;
+            else
+                filter += $" AND {checkpointFilter}";
+
             if (simulationNames != null)
             {
                 var simulationFilter = $"SimulationID in ({dataStore.ToSimulationIDs(simulationNames).Join(",")})";

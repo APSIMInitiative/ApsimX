@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourPricing))]
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
     public class LabourPriceGroup : CLEMModel, IFilterGroup
     {
         /// <summary>

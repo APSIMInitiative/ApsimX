@@ -8,23 +8,53 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
+using System.IO;
 
 namespace Models.CLEM
 {
     ///<summary>
     /// Resource transmutation
     /// Will convert one resource into another (e.g. $ => labour) 
-    /// These re defined under each ResourceType in the Resources section of the UI tree
+    /// These transmutations are defined under each ResourceType in the Resources section of the UI tree
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IResourceType))]
     [Description("This Transmutation will convert any other resource into the current resource where there is a shortfall. This is placed under any resource type where you need to provide a transmutation. For example to convert Finance Type (money) into a Animal Food Store Type (Lucerne) or effectively purchase fodder when low.")]
+    [Version(2, 0, 1, "Full reworking of transmute resource (B) to shortfall resource (A)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Transmutation/Transmutation.htm")]
     public class Transmutation: CLEMModel, IValidatableObject
     {
+        /// <summary>
+        /// Resource in shortfall (A)
+        /// </summary>
+        [Description("Resource in shortfall (A)")]
+        [Core.Display(Type = DisplayType.FieldName)]
+        public string ResourceInShortfall { get { return (Parent as CLEMModel).NameWithParent; } private set {; } }
+
+        /// <summary>
+        /// Amount of resource in shortfall per transmutation packet
+        /// </summary>
+        [Description("Transmutation packet size (amount of A)")]
+        [Required, GreaterThanEqualValue(0)]
+        public double TransmutationPacketSize { get; set; }
+
+        /// <summary>
+        /// Enforce transmutation in whole packets
+        /// </summary>
+        [Description("Use whole packets")]
+        public bool UseWholePackets { get; set; }
+
+        /// <summary>
+        /// Label to assign each transaction created by this activity in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        public string TransactionCategory { get; set; }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -33,26 +63,6 @@ namespace Models.CLEM
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
             TransactionCategory = "Transmutation";
         }
-
-        /// <summary>
-        /// Amount of this resource per unit purchased
-        /// </summary>
-        [Description("Amount of this resource per unit purchased")]
-        [Required, GreaterThanEqualValue(0)]
-        public double AmountPerUnitPurchase { get; set; }
-
-        /// <summary>
-        /// Allow purchases to be in partial units (e.g. transmutate exactly what is needed
-        /// </summary>
-        [Description("Only work in whole units")]
-        public bool WorkInWholeUnits { get; set; }
-
-        /// <summary>
-        /// Label to assign each transaction created by this activity in ledgers
-        /// </summary>
-        [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
-        public string TransactionCategory { get; set; }
 
         #region validation
 
@@ -64,10 +74,10 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (this.Children.Where(a => a.GetType().Name.Contains("TransmutationCost")).Count() == 0) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
+            if (!this.FindAllChildren<ITransmute>().Where(a => (a as IModel).Enabled).Any()) //   Apsim.Children (this, typeof(TransmutationCost)).Count() == 0)
             {
-                string[] memberNames = new string[] { "TransmutationCosts" };
-                results.Add(new ValidationResult("No costs provided under this transmutation", memberNames));
+                string[] memberNames = new string[] { "Transmutes" };
+                results.Add(new ValidationResult("No transmute components provided under this transmutation", memberNames));
             }
             return results;
         }
@@ -78,44 +88,47 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "<div class=\"resourcebannerlight\">";
-            if (AmountPerUnitPurchase > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "When needed <span class=\"setvalue\">" + AmountPerUnitPurchase.ToString("#,##0.##") + "</span> of this resource will be converted from";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">Invalid transmutation provided. No amout to purchase set</span>";
-            }
-            html += "</div>";
+                htmlWriter.Write("<div class=\"activityentry\">");
 
-            //if (this.Children.OfType<TransmutationCost>().Count() + this.Children.OfType<TransmutationCostLabour>().Count() == 0)
-            if (this.Children.Where(a => a.GetType().Name.Contains("TransmutationCost")).Count() == 0)
-            {
-                html += "<div class=\"resourcebannerlight\">";
-                html += "Invalid transmutation provided. No transmutation costs provided";
-                html += "</div>";
+                var pricing = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.UsePricing);
+                var direct = this.FindAllChildren<ITransmute>().Where(a => a.TransmuteStyle == TransmuteStyle.Direct);
+
+                htmlWriter.Write($"The following resources (B) will transmute ");
+                if (pricing.Any())
+                {
+                    htmlWriter.Write($"using the resource purchase price ");
+                    var transmuteResourcePrice = ((this.FindAncestor<ResourcesHolder>()).GetResourceItem(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as IResourceType)?.Price(PurchaseOrSalePricingStyleType.Purchase);
+                    if (transmuteResourcePrice != null)
+                    {
+                        htmlWriter.Write("found");
+                    }
+                    else
+                    {
+                        htmlWriter.Write($"<span class=\"errorlink\">not found</span>");
+                    }
+                }
+                htmlWriter.WriteLine(" to provide this shortfall resource (A)");
+
+
+                if (direct.Any())
+                    htmlWriter.Write($" in {(UseWholePackets ? " whole" : "")} packets of <span class=\"setvalue\">{TransmutationPacketSize:#,##0.##}</span>");
+
+                if (pricing.Count() + direct.Count() > 1)
+                    htmlWriter.Write($" (or the largest packet size needed the individual transmutes)");
+
+                htmlWriter.WriteLine("</div>");
+
+                if (!this.FindAllChildren<ITransmute>().Any())
+                {
+                    htmlWriter.Write("<div class=\"errorbanner\">");
+                    htmlWriter.Write("No Transmute components provided");
+                    htmlWriter.WriteLine("</div>");
+                }
+                return htmlWriter.ToString();
             }
-            return html;
         }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            string html = "";
-            html += "\r\n<div class=\"resourcecontentlight clearfix\">";
-            if (!(this.Children.Where(a => a.GetType().Name.Contains("TransmutationCost")).Count() >= 1))
-            {
-                html += "<div class=\"errorlink\">No transmutation costs provided</div>";
-            }
-            return html;
-        } 
 
         #endregion
     }

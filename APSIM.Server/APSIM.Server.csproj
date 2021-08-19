@@ -11,5 +11,6 @@
     <ProjectReference Include="../Models/Models.csproj" />
     <ProjectReference Include="../APSIM.Shared/APSIM.Shared.csproj" />
     <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="KubernetesClient" Version="5.0.13" />
   </ItemGroup>
 </Project>

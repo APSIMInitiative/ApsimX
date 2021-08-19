@@ -104,7 +104,14 @@
 
             // Parent all models.
             newModel.Parent = null;
-            newModel.ParentAllDescendants();
+            try
+            {
+                newModel.ParentAllDescendants();
+            }
+            catch (Exception err)
+            {
+                errorHandler(err);
+            }
 
             // Call created in all models.
             if (initInBackground)

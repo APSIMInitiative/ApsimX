@@ -35,6 +35,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Records if a warning about set weight occurred
         /// </summary>
+        [JsonIgnore]
         public bool WeightWarningOccurred = false;
 
         /// <summary>
