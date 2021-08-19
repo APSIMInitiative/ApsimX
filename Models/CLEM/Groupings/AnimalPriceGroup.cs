@@ -23,7 +23,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
-    [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
     public class AnimalPriceGroup : RuminantFilterGroup, IResourcePricing, IReportPricingChange
     {
         /// <summary>
@@ -56,7 +56,22 @@ namespace Models.CLEM.Groupings
         {
             if(ind is Ruminant)
             {
-                return Value * ((PricingStyle == PricingStyleType.perKg) ? (ind as Ruminant).Weight : 1.0);
+                double multiplier = 1;
+                switch (PricingStyle)
+                {
+                    case PricingStyleType.perHead:
+                        break;
+                    case PricingStyleType.perKg:
+                        multiplier = (ind as Ruminant).Weight;
+                        break;
+                    case PricingStyleType.perAE:
+                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        break;
+                    default:
+                        break;
+                }
+
+                return Value * multiplier;
             }
             else
             {
@@ -92,6 +107,7 @@ namespace Models.CLEM.Groupings
         public double CurrentPrice { get { return Value; } }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public double PreviousPrice { get; set; }
 
 

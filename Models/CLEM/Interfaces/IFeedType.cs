@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Newtonsoft.Json;
 using System;
 
 namespace Models.CLEM.Interfaces
@@ -29,6 +30,7 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Amount (kg)
         /// </summary>
+        [JsonIgnore]
         new double Amount { get; }
 
     }

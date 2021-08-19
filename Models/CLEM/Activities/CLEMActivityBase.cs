@@ -471,10 +471,8 @@ namespace Models.CLEM.Activities
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
                 foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
-                {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
                         proportion *= item.Provided / item.Required;
-                }
                 return proportion;
             }
         }
@@ -495,10 +493,8 @@ namespace Models.CLEM.Activities
             foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
             {
                 if (resourceType == typeof(LabourType))
-                {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
                         proportion *= item.Provided / item.Required;
-                }
                 else // all other types
                     proportion *= item.Provided / item.Required;
             }
@@ -514,10 +510,8 @@ namespace Models.CLEM.Activities
             get
             {
                 foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
-                {
                     if (item.LabourShortfallAffectsActivity)
                         return true;
-                }
                 return false;
             }
         }
@@ -733,7 +727,7 @@ namespace Models.CLEM.Activities
             if (shortfallRequests.Any())
             {
                 // check what transmutations can occur
-                Resources.TransmutateShortfall(shortfallRequests, true);
+                Resources.TransmutateShortfall(shortfallRequests);
             }
 
             // check if need to do transmutations
@@ -762,7 +756,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => a.Required > a.Available))
+            foreach (var item in resourceRequests.Where(a => (a.Available - a.Required) > 0.000001))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
@@ -791,7 +785,7 @@ namespace Models.CLEM.Activities
         public bool TakeResources(List<ResourceRequest> resourceRequestList, bool triggerActivityPerformed)
         {
             // no resources required or this is an Activity folder.
-            if ((resourceRequestList == null)||(resourceRequestList.Count() ==0))
+            if ((resourceRequestList == null)||(!resourceRequestList.Any()))
                 return false;
 
             // remove activity resources 

@@ -47,8 +47,6 @@ namespace Models.CLEM
         [Description("Worksheet name if spreadsheet")]
         public string ExcelWorkSheetName { get; set; }
 
-        //public DateStyle StyleOfDateEntry { get; set; }
-
         /// <summary>
         /// Name of column holding year or date data
         /// </summary>
@@ -87,6 +85,7 @@ namespace Models.CLEM
         /// <summary>
         /// Style of date input to use
         /// </summary>
+        [JsonIgnore]
         public DateStyle StyleOfDateEntry { get; set; }
 
         /// <summary>

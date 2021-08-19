@@ -127,6 +127,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Units to Hectares converter from Land type
         /// </summary>
+        [JsonIgnore]
         public double UnitsToHaConverter { get; set; }
 
         /// <summary>

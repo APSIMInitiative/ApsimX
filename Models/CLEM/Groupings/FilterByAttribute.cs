@@ -15,7 +15,6 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter

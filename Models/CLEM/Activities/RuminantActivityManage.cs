@@ -277,16 +277,6 @@ namespace Models.CLEM.Activities
         private GrazeFoodStoreType foodStoreBreeders;
 
         /// <summary>
-        /// Store graze for sires
-        /// </summary>
-        private GrazeFoodStoreType foodStoreGrowOutFemales;
-
-        /// <summary>
-        /// Store graze for breeders
-        /// </summary>
-        private GrazeFoodStoreType foodStoreGrowOutMales;
-
-        /// <summary>
         /// Breed params for this activity
         /// </summary>
         private RuminantType breedParams;
@@ -625,11 +615,9 @@ namespace Models.CLEM.Activities
             // check GrazeFoodStoreExists for grow out males
             if (MarkAgeWeightMalesForSale)
             {
-                grazeStoreGrowOutMales = "";
                 if (GrazeFoodStoreNameGrowOutMales != null && !GrazeFoodStoreNameGrowOutMales.StartsWith("Not specified"))
                 {
                     grazeStoreGrowOutMales = GrazeFoodStoreNameGrowOutMales.Split('.').Last();
-                    foodStoreGrowOutMales = Resources.GetResourceItem(this, GrazeFoodStoreNameGrowOutMales, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                 }
 
                 // check for managed paddocks and warn if sires placed in yards.
@@ -644,11 +632,9 @@ namespace Models.CLEM.Activities
 
                 if (SellFemalesLikeMales)
                 {
-                    grazeStoreGrowOutFemales = "";
                     if (GrazeFoodStoreNameGrowOutFemales != null && !GrazeFoodStoreNameGrowOutFemales.StartsWith("Not specified"))
                     {
                         grazeStoreGrowOutFemales = GrazeFoodStoreNameGrowOutFemales.Split('.').Last();
-                        foodStoreGrowOutFemales = Resources.GetResourceItem(this, GrazeFoodStoreNameGrowOutFemales, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
                     }
 
                     // check for managed paddocks and warn if sires placed in yards.

@@ -78,15 +78,16 @@ namespace Models.CLEM.Activities
             if (FindAllDescendants<Folder>().Any())
             {
                 string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Only CLEMFolders shoud be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
             }
             return results;
-        } 
+        }
         #endregion
 
         /// <summary>
         /// Last resource request that was in defecit
         /// </summary>
+        [JsonIgnore]
         public ResourceRequest LastShortfallResourceRequest { get; set; }
 
         /// <summary>
@@ -119,6 +120,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Details of the last activity performed
         /// </summary>
+        [JsonIgnore]
         public CLEMActivityBase LastActivityPerformed { get; set; }
         
         private void ActivitiesHolder_ActivityPerformed(object sender, EventArgs e)

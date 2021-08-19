@@ -114,6 +114,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Amount
         /// </summary>
+        [JsonIgnore]
         public double Amount { get; set; }
 
         /// <summary>

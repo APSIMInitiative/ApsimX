@@ -73,9 +73,13 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public bool AllowTransmutation { get; set; }
         ///<summary>
-        /// Allow transmutation
+        /// Successful transmutation
         ///</summary> 
-        public bool TransmutationPossible { get; set; }
+        public Transmutation SuccessfulTransmutation { get; set; }
+        ///<summary>
+        /// Is Transmutation possible?
+        ///</summary> 
+        public bool TransmutationPossible { get { return (SuccessfulTransmutation != null); } }
         ///<summary>
         /// Market transcation multiplier
         /// 0 (default) = not a market transaction
@@ -88,7 +92,7 @@ namespace Models.CLEM.Resources
         public ResourceRequest()
         {
             // default values
-            TransmutationPossible = false;
+            SuccessfulTransmutation = null;
             AllowTransmutation = false;
         }
     }

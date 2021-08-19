@@ -100,6 +100,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Get the amount of the last gain in this resource 
         /// </summary>
+        [JsonIgnore]
         public double LastGain { get; set; }
 
         /// <summary>

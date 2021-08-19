@@ -479,7 +479,7 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
@@ -914,7 +914,6 @@
         /// <returns>The explorer presenter.</returns>
         private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
-            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ViewBase newView;
             IPresenter newPresenter;
             try
@@ -1253,8 +1252,8 @@
             {
                 int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
+                string resources = Path.Combine(apsimx, "Models", "Resources");
                 if (!Directory.Exists(resources))
                     throw new Exception("Unable to locate resources directory");
                 IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);

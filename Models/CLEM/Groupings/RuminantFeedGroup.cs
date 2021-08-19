@@ -13,15 +13,15 @@ using System.IO;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants
+    /// Contains a group of filters to identify individual ruminants for feeding
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
+    [Description("This ruminant filter group selects specific individuals for feeding")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantFeedGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroup.htm")]
     public class RuminantFeedGroup : RuminantFilterGroup
     {
         /// <summary>
