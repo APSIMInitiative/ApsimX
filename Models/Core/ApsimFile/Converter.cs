@@ -3570,22 +3570,13 @@
             {
                 if (JsonUtilities.Type(organ) == "Leaf")
                 {
-                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
-                    if (PriorityFactors == null)
-                    {
-                        PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
-                    }
-                    if (PriorityFactors != null)
-                    {
-                        BiomassPoolType PFactors = new BiomassPoolType();
-                        PFactors.Name = "DMDemandPriorityFactors";
-                        PFactors.QStructuralPriority = 1.0;
-                        PFactors.QMetabolicPriority = 1.0;
-                        PFactors.QStoragePriority = 1.0;
-                        JsonUtilities.AddModel(organ, PFactors);
-                        JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
-                        JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
-                    }
+                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                    BiomassPoolType PFactors = new BiomassPoolType();
+                    PFactors.QStructuralPriority = 1.0;
+                    PFactors.QMetabolicPriority = 1.0;
+                    PFactors.QStoragePriority = 1.0;
+                    JsonUtilities.AddModel(organ, PFactors);
+                    JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
                 }
                 else
                 {
