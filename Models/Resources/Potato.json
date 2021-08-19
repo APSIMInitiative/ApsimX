@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 138,
+  "Version": 137,
   "Name": "Simulations",
   "Children": [
     {
@@ -1221,21 +1221,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1344,21 +1329,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1396,21 +1366,6 @@
                   "$type": "Models.Functions.Constant, Models",
                   "Name": "Storage",
                   "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ]
             },
@@ -1423,6 +1378,27 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Tuber].MinimumNConc"
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "dmDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -1917,21 +1893,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2040,21 +2001,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -2093,21 +2039,6 @@
                   "$type": "Models.Functions.Constant, Models",
                   "Name": "Storage",
                   "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ]
             },
@@ -2125,8 +2056,8 @@
           "$type": "Models.PMF.Organs.Leaf, Models",
           "Leaves": [],
           "CurrentExpandingLeaf": 34.0,
-          "StartFractionExpanded": 0.83819041077407885,
-          "FractionNextleafExpanded": 0.92664093062319453,
+          "StartFractionExpanded": 0.8381904107740789,
+          "FractionNextleafExpanded": 0.9266409306231945,
           "DeadNodesYesterday": 0.0,
           "MaxCover": 1.0,
           "GrowthRespiration": 0.0,
@@ -3582,21 +3513,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3705,21 +3621,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3757,21 +3658,6 @@
                   "$type": "Models.Functions.Constant, Models",
                   "Name": "Storage",
                   "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ]
             },
@@ -3784,6 +3670,27 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Stem].MinimumNConc"
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "dmDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,

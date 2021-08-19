@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 138,
+  "Version": 137,
   "Name": "Simulations",
   "Children": [
     {
@@ -82,7 +82,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1E+15,
+                  "FixedValue": 1000000000000000.0,
                   "Units": "d",
                   "Name": "Target",
                   "Children": [],
@@ -704,21 +704,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -827,21 +812,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -880,21 +850,6 @@
                   "$type": "Models.Functions.Constant, Models",
                   "Name": "Storage",
                   "FixedValue": "0.0"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ]
             },
@@ -1346,21 +1301,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1469,21 +1409,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStructuralPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QMetabolicPriority",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "QStoragePriority",
-                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
