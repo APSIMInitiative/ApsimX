@@ -3546,18 +3546,32 @@
             foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
             {
                 JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
-                JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+                if (PriorityFactors != null)
+                {
+                    JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+                }
+                if (PriorityFactors == null)
+                {
+                    PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
 
+                    if (PriorityFactors != null)
+                    {
+                        JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
+                    }
+                }
                 JObject DMDemands = JsonUtilities.ChildWithName(organ, "DMDemands");
                 if (DMDemands != null)
                 {
                     if (PriorityFactors != null)
                     {
-                        JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "QStructuralPriority");
+                        JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "Structural");
+                        Structural["Name"] = "QStructuralPriority";
                         (DMDemands["Children"] as JArray).Add(Structural);
-                        JObject Metabolic = JsonUtilities.ChildWithName(PriorityFactors, "QMetabolicPriority");
+                        JObject Metabolic = JsonUtilities.ChildWithName(PriorityFactors, "Metabolic");
+                        Metabolic["Name"] = "QMetabolicPriority";
                         (DMDemands["Children"] as JArray).Add(Metabolic);
-                        JObject Storage = JsonUtilities.ChildWithName(PriorityFactors, "QStructuralPriority");
+                        JObject Storage = JsonUtilities.ChildWithName(PriorityFactors, "Storage");
+                        Storage["Name"] = "QStoragePriority";
                         (DMDemands["Children"] as JArray).Add(Storage);
                     }
                     else
@@ -3573,6 +3587,16 @@
                     JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStructuralPriority", "1");
                     JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
                     JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
+                }
+                JObject InitialWt = JsonUtilities.ChildWithName(organ, "InitialWt");
+                if (InitialWt != null)
+                {
+                    if (InitialWt["$type"].ToString() == "Models.PMF.BiomassDemand, Models")
+                    {
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QStructuralPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QMetabolicPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QStoragePriority", "1");
+                    }
                 }
             }
         }
