@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
-using Models.CLEM.Interfaces;
 using System.IO;
 
 namespace Models.CLEM
