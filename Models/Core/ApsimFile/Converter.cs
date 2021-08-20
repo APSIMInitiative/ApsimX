@@ -3568,26 +3568,35 @@
         {
             foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
             {
-                if (JsonUtilities.Type(organ) == "Leaf")
+                // Add priority factors to leaf and reproductive organ where they are currently optional
+                if ((JsonUtilities.Type(organ) == "Leaf")||(JsonUtilities.Type(organ)== "ReproductiveOrgan"))
                 {
                     JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
                     if (PriorityFactors == null)
                     {
                         PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
                     }
-                    if (PriorityFactors != null)
+                    if (PriorityFactors == null)
                     {
-                        BiomassPoolType PFactors = new BiomassPoolType();
-                        PFactors.Name = "DMDemandPriorityFactors";
-                        PFactors.QStructuralPriority = 1.0;
-                        PFactors.QMetabolicPriority = 1.0;
-                        PFactors.QStoragePriority = 1.0;
-                        JsonUtilities.AddModel(organ, PFactors);
-                        JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
-                        JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+                        JObject PFactors = new JObject();
+                        PFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                        PFactors["Name"] = "DMDemandPriorityFactors";
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Structural", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Metabolic", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Storage", "1");
+                        (organ["Childern"] as JArray).Add(PFactors);
                     }
+
+                    JObject NPFactors = new JObject();
+                    NPFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                    NPFactors["Name"] = "NDemandPriorityFactors";
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Structural", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Metabolic", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Storage", "1");
+                    (organ["Childern"] as JArray).Add(NPFactors);
                 }
                 else
+                // Move proority factors into Demand node and add if not currently there
                 {
                     JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
                     if (PriorityFactors != null)
@@ -3606,6 +3615,7 @@
                     JObject DMDemands = JsonUtilities.ChildWithName(organ, "DMDemands");
                     if (DMDemands != null)
                     {
+                        DMDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
                         if (PriorityFactors != null)
                         {
                             JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "Structural");
@@ -3628,11 +3638,13 @@
                     JObject NDemands = JsonUtilities.ChildWithName(organ, "NDemands");
                     if (NDemands != null)
                     {
+                        NDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
                         JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStructuralPriority", "1");
                         JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
                         JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
                     }
-                    JObject InitialWt = JsonUtilities.ChildWithName(organ, "InitialWt");
+                    
+                    /*JObject InitialWt = JsonUtilities.ChildWithName(organ, "InitialWt");
                     if (InitialWt != null)
                     {
                         if (InitialWt["$type"].ToString() == "Models.PMF.BiomassDemand, Models")
@@ -3641,7 +3653,7 @@
                             JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QMetabolicPriority", "1");
                             JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QStoragePriority", "1");
                         }
-                    }
+                    }*/
                 }
             }
         }
