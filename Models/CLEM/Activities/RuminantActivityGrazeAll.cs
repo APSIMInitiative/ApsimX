@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                     };
                     ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
-                    ragp.Resources = this.Resources;
+                    ragp.SetLinkedModels(Resources);
                     ragp.InitialiseHerd(true, true);
 
                     foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
@@ -85,8 +85,8 @@ namespace Models.CLEM.Activities
                             Name = ragp.Name + "_" + herdType.Name,
                             OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                         };
-                        if (ragpb.Resources == null)
-                            ragpb.Resources = this.Resources;
+
+                        ragpb.SetLinkedModels(Resources);
 
                         if (ragpb.Clock == null)
                             ragpb.Clock = this.clock;
@@ -102,7 +102,6 @@ namespace Models.CLEM.Activities
                     if (ActivityList == null)
                         ActivityList = new List<CLEMActivityBase>();
                     ActivityList.Add(ragp);
-
                 }
             }
             else

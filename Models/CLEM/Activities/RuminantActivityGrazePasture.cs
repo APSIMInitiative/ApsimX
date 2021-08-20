@@ -88,8 +88,8 @@ namespace Models.CLEM.Activities
                     Clock = this.Clock,
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
                 };
-                if (ragpb.Resources == null)
-                    ragpb.Resources = this.Resources;
+
+                ragpb.SetLinkedModels(Resources);
 
                 if (ragpb.Clock == null)
                     ragpb.Clock = this.Clock;

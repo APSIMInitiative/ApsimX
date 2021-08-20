@@ -23,10 +23,10 @@ namespace Models.CLEM.Activities
     public abstract class CLEMActivityBase: CLEMModel
     {
         /// <summary>
-        /// A public link to the CLEM resource holder
+        /// A protected link to the CLEM resource holder
         /// </summary>
         [Link]
-        public ResourcesHolder Resources = null;
+        protected ResourcesHolder Resources = null;
 
         private bool enabled = true;
         private IEnumerable<CLEMActivityBase> activityChildren = null;
@@ -194,6 +194,15 @@ namespace Models.CLEM.Activities
                 }
                 return (result != 0);
             }
+        }
+
+        /// <summary>
+        /// A method to allow the resource holder to be set when [Link] not possible for dynamically created model
+        /// </summary>
+        /// <param name="resourceHolder">The resource holder to provide</param>
+        public void SetLinkedModels(ResourcesHolder resourceHolder)
+        {
+            Resources = resourceHolder;
         }
 
         /// <summary>
