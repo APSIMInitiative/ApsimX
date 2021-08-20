@@ -177,14 +177,14 @@
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private BiomassDemandAndPriority dmDemands = null;
 
         /// <summary>
         /// The N demand function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private BiomassDemandAndPriority nDemands = null;
 
         /// <summary>
         /// The initial biomass dry matter weight.
