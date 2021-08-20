@@ -8,8 +8,6 @@ namespace Models.PMF
 {
     /// <summary>
     /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction. 
-    /// The biomass priority functions will be redundant for InitialWt demand and any demands where priority arbitration is 
-    /// not used
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
