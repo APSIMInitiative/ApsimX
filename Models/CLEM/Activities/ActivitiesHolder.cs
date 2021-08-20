@@ -125,7 +125,7 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An method to perform core actions when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+        /// <summary>A method to get all resources required in the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMGetResourcesRequired")]
@@ -150,7 +150,7 @@ namespace Models.CLEM.Activities
                 child.GetResourcesForAllActivities(this);
         }
 
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+        /// <summary>A method to allow all activities to initialise themselves</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
                 child.GetResourcesForAllActivityInitialisation();
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>A method to allow all activities to get ready for the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMStartOfTimeStep")]
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                 child.ClearAllAllActivitiesPerformedStatus();
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Overrides the base class method to allow for clean up
+        /// A method to clean up at the end of the simulation
         /// </summary>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
