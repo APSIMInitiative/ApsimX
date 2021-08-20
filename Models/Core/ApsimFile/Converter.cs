@@ -3584,7 +3584,7 @@
                         JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Structural", "1");
                         JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Metabolic", "1");
                         JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Storage", "1");
-                        (organ["Childern"] as JArray).Add(PFactors);
+                        (organ["Children"] as JArray).Add(PFactors);
                     }
 
                     JObject NPFactors = new JObject();
@@ -3593,7 +3593,7 @@
                     JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Structural", "1");
                     JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Metabolic", "1");
                     JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Storage", "1");
-                    (organ["Childern"] as JArray).Add(NPFactors);
+                    (organ["Children"] as JArray).Add(NPFactors);
                 }
                 else
                 // Move proority factors into Demand node and add if not currently there
