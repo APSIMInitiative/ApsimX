@@ -130,6 +130,11 @@ namespace Models.PMF.Organs
         [Units("g/g")]
         public IFunction RemobilisationCost = null;
 
+        /// <summary>Factors for assigning priority to DM demands</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemandPriorityFactors = null;
+
         /// <summary>The ripe stage</summary>
         [Description("Stage at which this organ becomes ripe")]
         public string RipeStage { get; set; }
@@ -283,6 +288,9 @@ namespace Models.PMF.Organs
         private void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
+            DMDemand.QStructuralPriority = dmDemandPriorityFactors.Structural.Value();
+            DMDemand.QMetabolicPriority = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemand.QStoragePriority = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
