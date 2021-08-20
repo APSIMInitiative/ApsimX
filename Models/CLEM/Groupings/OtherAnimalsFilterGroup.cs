@@ -63,7 +63,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public OtherAnimalsType SelectedOtherAnimalsType;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to perform checks when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]

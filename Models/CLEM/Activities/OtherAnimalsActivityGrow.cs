@@ -52,7 +52,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Function to age other animals
+        /// Method to age other animals
         /// This needs to be undertaken prior to herd management
         /// </summary>
         /// <param name="sender">The sender.</param>

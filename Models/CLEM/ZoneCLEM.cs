@@ -232,7 +232,7 @@ namespace Models.CLEM
             return results;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to validate properties and setup</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMValidate")]
@@ -379,7 +379,7 @@ namespace Models.CLEM
                 }
 
                 // find random number generator
-                RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault() as RandomNumberGenerator;
+                RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault();
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -440,7 +440,7 @@ namespace Models.CLEM
                 htmlWriter.Write("This farm is identified as region ");
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
-                ResourcesHolder resources = this.FindChild<ResourcesHolder>() as ResourcesHolder;
+                ResourcesHolder resources = this.FindChild<ResourcesHolder>();
                 if(resources != null)
                     if (resources.FoundMarket != null)
                     {
