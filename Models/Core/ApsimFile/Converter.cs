@@ -3569,7 +3569,7 @@
             foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
             {
                 // Add priority factors to leaf and reproductive organ where they are currently optional
-                if ((JsonUtilities.Type(organ) == "Leaf")||(JsonUtilities.Type(organ)== "ReproductiveOrgan"))
+                if ((JsonUtilities.Type(organ) == "Leaf") || (JsonUtilities.Type(organ) == "ReproductiveOrgan"))
                 {
                     JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
                     if (PriorityFactors == null)
@@ -3595,7 +3595,8 @@
                     JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Storage", "1");
                     (organ["Children"] as JArray).Add(NPFactors);
                 }
-                else
+                else if ((JsonUtilities.Type(organ) == "SimpleLeaf") || (JsonUtilities.Type(organ) == "GenericOrgan")
+                    || (JsonUtilities.Type(organ) == "Root"))
                 // Move proority factors into Demand node and add if not currently there
                 {
                     JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
@@ -3643,17 +3644,6 @@
                         JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
                         JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
                     }
-                    
-                    /*JObject InitialWt = JsonUtilities.ChildWithName(organ, "InitialWt");
-                    if (InitialWt != null)
-                    {
-                        if (InitialWt["$type"].ToString() == "Models.PMF.BiomassDemand, Models")
-                        {
-                            JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QStructuralPriority", "1");
-                            JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QMetabolicPriority", "1");
-                            JsonUtilities.AddConstantFunctionIfNotExists(InitialWt, "QStoragePriority", "1");
-                        }
-                    }*/
                 }
             }
         }
