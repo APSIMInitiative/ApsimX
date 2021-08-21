@@ -8910,7 +8910,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.07758,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Structural",
                   "Children": [],
@@ -8920,7 +8920,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Metabolic",
                   "Children": [],
@@ -8930,7 +8930,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.001,
+                  "FixedValue": 1.0,
                   "Units": null,
                   "Name": "Storage",
                   "Children": [],
