@@ -202,8 +202,7 @@ namespace Models.PMF
 
         /// <summary>Setup all demands</summary>
         /// <param name="demandsForEachOrgan">The organs demands</param>
-        /// <param name="prioritiesForEachOrgan">the priority q factors</param>
-        public void GetDemands(BiomassPoolType[] demandsForEachOrgan, BiomassPoolType[] prioritiesForEachOrgan = null)
+        public void GetDemands(BiomassPoolType[] demandsForEachOrgan)
         {
 
             for (int i = 0; i < demandsForEachOrgan.Length; i++)
@@ -224,12 +223,9 @@ namespace Models.PMF
                 StructuralAllocation[i] = 0;
                 MetabolicAllocation[i] = 0;
                 StorageAllocation[i] = 0;
-                if (prioritiesForEachOrgan != null)
-                {
-                    QStructural[i] = prioritiesForEachOrgan[i].Structural;
-                    QMetabolic[i] = prioritiesForEachOrgan[i].Metabolic;
-                    QStorage[i] = prioritiesForEachOrgan[i].Storage;
-                }
+                QStructural[i] = demandsForEachOrgan[i].QStructuralPriority;
+                QMetabolic[i] = demandsForEachOrgan[i].QMetabolicPriority;
+                QStorage[i] = demandsForEachOrgan[i].QStoragePriority;
             }
 
             Allocated = 0;
