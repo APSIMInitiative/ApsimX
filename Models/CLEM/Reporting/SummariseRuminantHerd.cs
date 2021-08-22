@@ -27,7 +27,7 @@ namespace Models.CLEM
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         private int timestep = 0;
         private RuminantHerd ruminantHerd;
 
@@ -68,7 +68,7 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
+            ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
 
             // determine any herd filtering
             herdFilters = new List<RuminantGroup>();

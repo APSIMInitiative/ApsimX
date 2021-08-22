@@ -21,13 +21,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminant/RuminantAdvancedConception.htm")]
     public class RuminantConceptionAdvanced: CLEMModel, IConceptionModel
     {
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionAdvanced()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
 
         /// <summary>
         /// Conception rate coefficient of breeder
@@ -47,6 +40,14 @@ namespace Models.CLEM.Resources
         [Description("Conception rate assymtote (<12 mnth, 24 mth, 2nd calf, 3rd+ calf)")]
         [Required, ArrayItemCount(4)]
         public double[] ConceptionRateAsymptote { get; set; }
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public RuminantConceptionAdvanced()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
 
         /// <summary>
         /// Calculate conception rate for a female

@@ -74,8 +74,8 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            resourceTypeProcessModel = Resources.GetResourceItem(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
-            resourceTypeCreatedModel = Resources.GetResourceItem(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceTypeProcessModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            resourceTypeCreatedModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
@@ -198,6 +198,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = false,
                         Required = sumneeded,
+                        Resource = item.BankAccount,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = item.BankAccount.Name,
                         ActivityModel = this,
@@ -217,6 +218,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amountToProcess,
+                        Resource = resourceTypeProcessModel,
                         ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
                         ResourceTypeName = (resourceTypeProcessModel as Model).Name,
                         ActivityModel = this,
@@ -228,30 +230,6 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-           return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -260,32 +238,14 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
-                if (ResourceTypeProcessedName == null || ResourceTypeProcessedName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeProcessedName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, "Resource not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" into ");
-                if (ResourceTypeCreatedName == null || ResourceTypeCreatedName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeCreatedName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, "Resource not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" at a rate of ");
                 if (ConversionRate <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[RATE NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 if (Reserve > 0)
                 {

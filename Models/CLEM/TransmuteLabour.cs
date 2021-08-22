@@ -25,7 +25,8 @@ namespace Models.CLEM
     public class TransmuteLabour : CLEMModel, ITransmute, IValidatableObject
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
+
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
         private List<object> groupings;
@@ -70,7 +71,7 @@ namespace Models.CLEM
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs e)
         {
-            ResourceGroup = Resources.FindResourceGroup<Labour>();
+            ResourceGroup = resources.FindResourceGroup<Labour>();
             shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
             shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
             groupings = this.FindAllChildren<RuminantGroup>().ToList<object>();
@@ -84,7 +85,7 @@ namespace Models.CLEM
             if (request.Required > 0)
             {
                 request.FilterDetails = groupings;
-                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, Resources, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
+                CLEMActivityBase.TakeLabour(request, !queryOnly, request.ActivityModel, resources, OnPartialResourcesAvailableActionTypes.UseResourcesAvailable);
             }
             return (request.Provided >= request.Required);
         }

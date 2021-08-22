@@ -19,16 +19,8 @@ namespace UserInterface.Presenters
     /// </summary>
     public class CLEMSummaryPresenter : IPresenter, IRefreshPresenter
     {
-        /// <summary>
-        /// The model
-        /// </summary>
         private Model model;
-
-        /// <summary>
-        /// The view to use
-        /// </summary>
         private IMarkdownView genericView;
-
         private ExplorerPresenter explorer;
         private string htmlFilePath = "";
         private string targetFilePath = "";

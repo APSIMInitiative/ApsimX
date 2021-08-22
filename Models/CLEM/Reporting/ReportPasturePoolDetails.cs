@@ -30,18 +30,12 @@ namespace Models.CLEM.Reporting
     [HelpUri(@"Content/Features/Reporting/PasturePoolDetails.htm")]
     public class ReportPasturePoolDetails: Models.Report
     {
-        [Link]
-        private ResourcesHolder Resources = null;
-
-        private GrazeFoodStoreType grazeStore;
-
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            IModel zone = FindAncestor<Zone>();
             List<string> variableNames = new List<string>();
             if (VariableNames != null)
             {
@@ -52,24 +46,17 @@ namespace Models.CLEM.Reporting
                     if (!isDuplicate && this.VariableNames[i] != string.Empty)
                     {
                         if (this.VariableNames[i].StartsWith("["))
-                        {
                             variableNames.Add(this.VariableNames[i]);
-                        }
                         else
                         {
                             string[] splitName = this.VariableNames[i].Split('.');
                             if (splitName.Count() == 2)
                             {
-                                // get specified grazeFoodStoreType
-                                grazeStore = Resources.GetResourceItem(this, typeof(GrazeFoodStore), splitName[0], OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-
                                 // make each pool entry
                                 for (int j = 0; j <= 12; j++)
                                 {
                                     if (splitName[1].ToLower() != "growth" | j == 0)
-                                    {
                                         variableNames.Add("[Resources].GrazeFoodStore." + splitName[0] + ".Pool(" + j.ToString() + ", true)." + splitName[1] + " as " + splitName[0] + "" + j.ToString() + "" + splitName[1]);
-                                    }
                                 }
                                 if (splitName[1] == "Amount")
                                 {
@@ -79,24 +66,19 @@ namespace Models.CLEM.Reporting
                                 }
                             }
                             else
-                            {
                                 throw new ApsimXException(this, "Invalid report property. Expecting full property link or GrazeFoodStoreTypeName.Property");
-                            }
                         }
                     }
                 }
                 // check if clock.today was included.
                 if(!variableNames.Contains("[Clock].Today"))
-                {
                     variableNames.Insert(0, "[Clock].Today");
-                }
             }
 
             VariableNames = variableNames.ToArray();
             if (EventNames == null || EventNames.Count() == 0)
-            {
                 EventNames = new string[] { "[Clock].CLEMHerdSummary" };
-            }
+
             SubscribeToEvents();
         }
 
